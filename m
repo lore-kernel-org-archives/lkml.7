@@ -2,103 +2,93 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE60C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F13C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45AC2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513422072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn8RXgrb"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CoMIQEDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgAFBwg (ORCPT
+        id S1727330AbgAFBzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:52:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38827 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgAFBwf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:52:35 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w1so27367002ljh.5;
-        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
-        b=Jn8RXgrbA0x9c7VxoOnXr3F3Z7b0MDtzYYOElpNEWf3fMQTAoINw3ErXHyBmBI9B/f
-         ctqk1W2N357i0AjDIZY3b2NPliWisTvtPSDSh5QBhpzT00IG2XpOD0ziLuW7qa9m4c75
-         tdn4kN4brFKB6kjbwindIp1xczKU0ObDzsT5pSP7zgzb0hXyj+S0n9QtoGEm4s65DfHu
-         IXadbATsaE6O7M0sBU4KsRmZhEtMzpbMcQIMSHqpjpnyfzZAsJLQ+2wpNYMsTKEv4WhX
-         Kwu0hcyH6WiMu3/xrNpSEXdIv2iGyWvx0mxtGnsNLvhxuPfeCgMBqW1R3P6rtUxd42rX
-         pHsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
-        b=R9h0Tof1W7/oCJARktTZpFviQGl6jBYeohvzZn8VnIMNY5DI4Tr72IQRS5x/PhX88s
-         oVIOrIrEV8pxIoplAEVhgQv5TYcup7VS3D2kZKEsVSlfpPxnRkRkv0W72rmSJo4J9hfW
-         Ql455Y9ACggqGclNPGYQajbGPMSyyQPz5BZkOc+UARvVobWmdVxcnAyETLMDT1hyDu5a
-         pzd9I01GCxm3K/5M+5tMlz4tLD1xkSjZfJdE4dGwvA1+lkycisUpCab0UAYk3Bu99pCz
-         z6ptM61MvlNsiLAexKDgK5z1wcu8vCEr+Btid51AHa3oruzgxehh/Tgl8MJDayMCrW8I
-         Tsrw==
-X-Gm-Message-State: APjAAAV18RHAQhI+tU7WPSf5uBsndXZ1qdHoop/AXB/sf7dzzXhyqUaI
-        161L68Y4gT6k4vt12nraCBw=
-X-Google-Smtp-Source: APXvYqyRELmENNsXGyiNlWWLXXV9nzG/DrG1gI0e4jsLV5xffbexDIkmohhIwDBJagerlHbfX18vKg==
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr58842955ljb.150.1578275553133;
-        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id y25sm28131951lfy.59.2020.01.05.17.52.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:52:32 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
-Date:   Mon,  6 Jan 2020 04:51:54 +0300
-Message-Id: <20200106015154.12040-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 5 Jan 2020 20:55:40 -0500
+Received: from ozlabs.org ([203.11.71.1]:40341 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727226AbgAFBzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:55:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rdrT1tm4z9sPJ;
+        Mon,  6 Jan 2020 12:55:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578275737;
+        bh=H8huH0kHSTplQmOfDL3UG9eTTuXnRHDVPGYIItGVNwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CoMIQEDINd6JcqxZRnnBV5qztqn9gPn1h6L/M5OcDNoxpcN1O0l2kcmZZSKj9r/zs
+         ed0+sNSp10WIH6goQ+lC2XDofTdAaV3cv67jEIKntJdls8vVPWfWGgrmDBdbCi6al2
+         UeLjV/nWAf5zgeTxUJa5j+wsYK222KkdmReDHrHeN9aVoMLbGXZBxWSEde6EICmXfw
+         EHUhLJ2q6uwQ5alyfOHDxxlj/QyExsZYB5cxE5ujicV35qR2XBoRexW4Xy5iZoefqP
+         WBsGiwW217koFQ4rNXHIFc/fOqG0y30+cosMpHt1JbNPqETNBBkBmPHzF1fbw4V+7E
+         7AskMCowbqV6A==
+Date:   Mon, 6 Jan 2020 12:55:36 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the risc-v tree with Linus' tree
+Message-ID: <20200106125536.42fa3df4@canb.auug.org.au>
+In-Reply-To: <alpine.DEB.2.21.9999.2001051749560.484919@viisi.sifive.com>
+References: <20200106093246.6abbb7e9@canb.auug.org.au>
+        <alpine.DEB.2.21.9999.2001051749560.484919@viisi.sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/+cGBlbluk_+o6SF.ktlJQ/T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver fails to compile in a minimized kernel's configuration because of
-the missing dependency on GPIOLIB_IRQCHIP.
+--Sig_/+cGBlbluk_+o6SF.ktlJQ/T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
- error: ‘struct gpio_chip’ has no member named ‘irq’
-   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+Hi Paul,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Sun, 5 Jan 2020 17:50:35 -0800 (PST) Paul Walmsley <paul.walmsley@sifive=
+.com> wrote:
+>=20
+> Thanks, I just reset our for-next branch to v5.5-rc5, so this won't=20
+> reappear.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 29689c7384ee..9e99d09a64c6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1146,6 +1146,7 @@ config GPIO_MADERA
- config GPIO_MAX77620
- 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
- 	depends on MFD_MAX77620
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
- 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
--- 
-2.24.0
+Excellent, thanks.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+cGBlbluk_+o6SF.ktlJQ/T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Sk5gACgkQAVBC80lX
+0Gw0Owf9EGr7v1YpBlpF5thV9GQWkE2gQ5/p9GQ78vTSscEut3TAKP6svS2b/74c
+NK8mpeIjVLPiIacaZNe4eWnFIxGb8Z0hbBVSYiU4eMQSU8OnEWOYWoRtWwOYHuRj
+WqizGY2hvK6T2VDmZb502cSH2cgIzv9h7lXZ9G8+F18qy9jF9XdjKDko/Gtn4e0o
+6lCvlsxZvoCiZBwq+e/KHAUgz0sq+BkPC1sT9iVmZvPZL75/ZPTfONlWM8v4yHPa
+XOpXhYuacnMw6sy7EWJoNgtyXyRnLG5DQTmeyp3M9OpH22nBh/HX+cKeTLAAWrDe
+AFfVAVnt6n+SGD9QjMn20EnGN+c4QA==
+=zceD
+-----END PGP SIGNATURE-----
+
+--Sig_/+cGBlbluk_+o6SF.ktlJQ/T--
