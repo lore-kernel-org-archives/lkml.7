@@ -2,195 +2,134 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B0EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97021C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1249D206DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:06:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Q5qXUAWv"
+	by mail.kernel.org (Postfix) with ESMTP id 7787B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgAFRGD (ORCPT
+        id S1726647AbgAFRJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:06:03 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43725 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgAFRGC (ORCPT
+        Mon, 6 Jan 2020 12:09:49 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45473 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFRJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:06:02 -0500
-Received: by mail-qk1-f194.google.com with SMTP id t129so40032142qke.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 09:06:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EwZ+SLXyd+u2b7lSTZL/WS+X23E/iu51rmn5Dj8RxnU=;
-        b=Q5qXUAWvBBsS0lE0zD06JyRJt1XslmfI2fUrY3Zp6Hi15hdFgGzbEb08oQ1NQSDMdX
-         xwbDoXhjO48Vwc+GB1UKy3VfEHx8ZPIIQSiqgOiVf6ZcwxFCVJIQ843zXAhkSi9Y1s5X
-         HAUj7LQK+6WsqGqD7nuCUN7cc20OOmh7zCFylmDfN69tEZzTEtF2E2CmfXgWo/BUAWo5
-         oVqChTiF+R4imFAc/YjlYyN7sh4egG0B+g2oHmE7eKOdNx4VaTbyDcMsW8cbE5RwyIXR
-         DCYcSTdUHV3C7EBjCfB2GyUuX/ESGUr9yqt9Z/f8B+5L+4csrTsyQfG6AlP9i2cvJrw5
-         Wevg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EwZ+SLXyd+u2b7lSTZL/WS+X23E/iu51rmn5Dj8RxnU=;
-        b=mmQD6a9i5v8V47fhBerao4MnFQYnaoYqqTCmRuD/DFSoIXymEX4t243P64HFSNoMHn
-         XVGDgq+zfIG6t7jfnYvhsj2PJtRvHyCkxmMNZlpbg64N1NxuIJ0Hu7ZR/D3hXZN0QqsP
-         sBqN3GloVyGrAKkLIyd2g7Ky2e1B65Teaf3/GXPZFwQ+CHSIPVwBucFpxrg5RwrTdSjH
-         X6uypxSTJoLTnSlhxLzF3UGx3LRbGihqNCD/8/2AHGVjFsFXDOJR7Gquo5FYpTdZye8T
-         bxWezJ3Z9UV9Kz20L47p21CJXJwM+Sec4X+E49fcL81qrel+KiCMeuhgX2D6bEla3dd0
-         6KXw==
-X-Gm-Message-State: APjAAAUSkrAKwUhikEltLEeZcoYTuJ1vkN6PK+8Ir2/CU/m7SjDNKtcu
-        55wwDHANIUTVf/pNhctz/UPHTg==
-X-Google-Smtp-Source: APXvYqwJxhahEu6YInys2SPBQzG2qgwGLQ9TdDO43Oo052eW8PdglS1AO9SL6TIVmGaJT+LGtb0lyg==
-X-Received: by 2002:a05:620a:78f:: with SMTP id 15mr9230475qka.295.1578330361188;
-        Mon, 06 Jan 2020 09:06:01 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w25sm17147166qts.91.2020.01.06.09.06.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 09:06:00 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: "ftrace: Rework event_create_dir()" triggers boot error messages
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20191218233101.73044ce3@rorschach.local.home>
-Date:   Mon, 6 Jan 2020 12:05:58 -0500
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux@googlegroups.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3F343134-63CB-4D99-97AD-F512B8760C94@lca.pw>
-References: <0FA8C6E3-D9F5-416D-A1B0-5E4CD583A101@lca.pw>
- <20191218233101.73044ce3@rorschach.local.home>
-To:     Steven Rostedt <rostedt@goodmis.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Mon, 6 Jan 2020 12:09:49 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 93514C000D;
+        Mon,  6 Jan 2020 17:09:44 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 18:12:09 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 2/3] ARM: dts: imx6qdl-icore-1.5: Remove duplicate phy
+ reset methods
+Message-ID: <20200106171209.bkberpu4it5qo6qj@uno.localdomain>
+References: <20191230120021.32630-1-jagan@amarulasolutions.com>
+ <20191230120021.32630-2-jagan@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u75eg3etc6nba3gs"
+Content-Disposition: inline
+In-Reply-To: <20191230120021.32630-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--u75eg3etc6nba3gs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> On Dec 18, 2019, at 11:31 PM, Steven Rostedt <rostedt@goodmis.org> =
-wrote:
->=20
-> On Wed, 18 Dec 2019 22:58:23 -0500
-> Qian Cai <cai@lca.pw> wrote:
->=20
->> The linux-next commit "ftrace: Rework event_create_dir()=E2=80=9D [1] =
-triggers boot warnings
->> for Clang-build (Clang version 8.0.1) kernels (reproduced on both =
-arm64 and powerpc).
->> Reverted it (with trivial conflict fixes) on the top of today=E2=80=99s=
- linux-next fixed the issue.
->>=20
->> configs:
->> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
->> =
-https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
->>=20
->> [1] =
-https://lore.kernel.org/lkml/20191111132458.342979914@infradead.org/
->>=20
->> [  115.799327][    T1] Registered efivars operations
->> [  115.849770][    T1] clocksource: Switched to clocksource =
-arch_sys_counter
->> [  115.901145][    T1] Could not initialize trace point =
-events/sys_enter_rt_sigreturn
->> [  115.908854][    T1] Could not create directory for event =
-sys_enter_rt_sigreturn
->> [  115.998949][    T1] Could not initialize trace point =
-events/sys_enter_restart_syscall
->> [  116.006802][    T1] Could not create directory for event =
-sys_enter_restart_syscall
->> [  116.062702][    T1] Could not initialize trace point =
-events/sys_enter_getpid
->> [  116.069828][    T1] Could not create directory for event =
-sys_enter_getpid
->> [  116.078058][    T1] Could not initialize trace point =
-events/sys_enter_gettid
->> [  116.085181][    T1] Could not create directory for event =
-sys_enter_gettid
->> [  116.093405][    T1] Could not initialize trace point =
-events/sys_enter_getppid
->> [  116.100612][    T1] Could not create directory for event =
-sys_enter_getppid
->> [  116.108989][    T1] Could not initialize trace point =
-events/sys_enter_getuid
->> [  116.116058][    T1] Could not create directory for event =
-sys_enter_getuid
->> [  116.124250][    T1] Could not initialize trace point =
-events/sys_enter_geteuid
->> [  116.131457][    T1] Could not create directory for event =
-sys_enter_geteuid
->> [  116.139840][    T1] Could not initialize trace point =
-events/sys_enter_getgid
->> [  116.146908][    T1] Could not create directory for event =
-sys_enter_getgid
->> [  116.155163][    T1] Could not initialize trace point =
-events/sys_enter_getegid
->> [  116.162370][    T1] Could not create directory for event =
-sys_enter_getegid
->> [  116.178015][    T1] Could not initialize trace point =
-events/sys_enter_setsid
->> [  116.185138][    T1] Could not create directory for event =
-sys_enter_setsid
->> [  116.269307][    T1] Could not initialize trace point =
-events/sys_enter_sched_yield
->> [  116.276811][    T1] Could not create directory for event =
-sys_enter_sched_yield
->> [  116.527652][    T1] Could not initialize trace point =
-events/sys_enter_munlockall
->> [  116.535126][    T1] Could not create directory for event =
-sys_enter_munlockall
->> [  116.622096][    T1] Could not initialize trace point =
-events/sys_enter_vhangup
->> [  116.629307][    T1] Could not create directory for event =
-sys_enter_vhangup
->> [  116.783867][    T1] Could not initialize trace point =
-events/sys_enter_sync
->> [  116.790819][    T1] Could not create directory for event =
-sys_enter_sync
->> [  117.723402][    T1] pnp: PnP ACPI init
->=20
-> I noticed that all of the above have zero parameters. Does the
-> following patch fix it?
->=20
-> (note, I prefer "ret" and "i" on different lines anyway)
->=20
-> -- Steve
->=20
-> diff --git a/kernel/trace/trace_syscalls.c =
-b/kernel/trace/trace_syscalls.c
-> index 53935259f701..abb70c71fe60 100644
-> --- a/kernel/trace/trace_syscalls.c
-> +++ b/kernel/trace/trace_syscalls.c
-> @@ -269,7 +269,8 @@ static int __init =
-syscall_enter_define_fields(struct trace_event_call *call)
-> 	struct syscall_trace_enter trace;
-> 	struct syscall_metadata *meta =3D call->data;
-> 	int offset =3D offsetof(typeof(trace), args);
-> -	int ret, i;
-> +	int ret =3D 0;
-> +	int i;
->=20
-> 	for (i =3D 0; i < meta->nb_args; i++) {
-> 		ret =3D trace_define_field(call, meta->types[i],
+Hi Jagan,
+   small detail, this should come -after= 3/3 in the series, am I
+   wrong ?
 
-Steve, those errors are still there in today=E2=80=99s linux-next. Is =
-this patch on the way to the linux-next?
+On Mon, Dec 30, 2019 at 05:30:20PM +0530, Jagan Teki wrote:
+> From: Michael Trimarchi <michael@amarulasolutions.com>
+>
+> Engicam i.CoreM6 1.5 Quad/Dual MIPI dtsi is reusing fec node
+> from Engicam i.CoreM6 dtsi but have sampe copy of phy-reset-gpio
+> and phy-mode properties.
+>
+> So, drop this phy reset methods from imx6qdl-icore-1.5 dsti file.
+>
+> Cc: Jacopo Mondi <jacopo@jmondi.org>
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
+Anyway, I've tested on my iCore 1.5 Quad starter kit and things are
+still working.
+
+Pending acceptance of 3/3, which seem correct to me but I cannot
+really judge knowing very few things about net:
+
+Tested-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+   j
+
+> ---
+> Changes for v2:
+> - new patch.
+>
+>  arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+> index d91d46b5898f..0fd7f2e24d9c 100644
+> --- a/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+> @@ -25,10 +25,8 @@
+>  &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+> -	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>  	clocks = <&clks IMX6QDL_CLK_ENET>,
+>  		 <&clks IMX6QDL_CLK_ENET>,
+>  		 <&clks IMX6QDL_CLK_ENET_REF>;
+> -	phy-mode = "rmii";
+>  	status = "okay";
+>  };
+> --
+> 2.18.0.321.gffc6fa0e3
+>
+
+--u75eg3etc6nba3gs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl4TamkACgkQcjQGjxah
+VjydUhAAhZ1rpFfpJEhocX9PC/9nhJAgmt1D+IOAudsNBlc41dVfVL/QWHzL0Fkl
+x2SAuFR0UuYRlXWddg0XlbF3WzYgiiNS4eHcoSlK9v9d2KIXo5NrFLJ18xRoont9
+fyD6bwDc7R4ZITur+r8OXfd/mIs8Gj5NTQv/AcKsS94siZGzrhGxxIdSWdkaliZq
+XwIsVRf1q9jNifFvUIDFDUGuEYLm9NYY8uOWSvA0Pj0ZOTkCgrOvMmcAUy69+uUq
+Sqznbj28XP2daw4n9PZ+1rj2Nluiou/SbGpeAq5qoEe+O+ZAPO+++eVroRKQt2q7
+kDEM3FZ8sUiyfKchp+iqZK9qAdFbCldvzhy4xeZFdCBQnNKHOn8obq0DlfUoXMYl
+pf/h4cusUeF8Ip4EL1G9yJDCmqrUsZ0bBma4fI17TjHfNQBed1KpjM+F66lL00m1
+gFOSKICn4CUQUSVqK0nPJ96ZEHObKVQbL+SQdJoPRcwjaTCGjXWZIaLJ5iWsgO05
+NOA//juKke2Lv8IslxD0fA3dhMj8ws3MI0N1q2rI06XX9+lwmUrlU00awWazPLgd
+Fz2Av+sxAi+aWIt+4X4tYH9IjFE0qn1d7yZFqBjQGQHQg4S9xn6sRs4rD/Dcf2BN
+rXDGW5/tIo+z4lcR0cpRusLAlHwYHvxKYzB+u795bdIKwS44gdI=
+=Qc8J
+-----END PGP SIGNATURE-----
+
+--u75eg3etc6nba3gs--
