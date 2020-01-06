@@ -2,95 +2,107 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3345BC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF51C32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A382071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0020C2071A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:32:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="oYMjMuac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbgAFE1P (ORCPT
+        id S1727502AbgAFEcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 23:27:15 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40021 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbgAFE1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 23:27:14 -0500
-Received: by mail-ed1-f65.google.com with SMTP id b8so46413852edx.7;
-        Sun, 05 Jan 2020 20:27:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RwRP4ECi3xByfI1AHY6eFXxg+DNLJFdWayS/RcdVemU=;
-        b=IEPvxW+5pliFKZOvQ54n+TkAbfNxusZQQJ1Xt6vtUxmjXk4jHO/lowrQS0zSlAr9U1
-         99b0dWjgcS4Tq26U6+T0vYhMjAh9Tuf9eRXLk53qqNCJ5+3t+DN/433jJD3096G/2Rje
-         xU3LL21KCK4YLGBSrpHoZnbtLRK4IM5IGR/j8zppc8dMEmoylw70hA4zoFXffRNtH9Wt
-         DGfK3+v+NUAT2QKKF7VEVqW4RpaaK/M7qU85IQw/JJIUCbd5uCHyd6FrmRYHzRCbd6xi
-         ckEz8xwX5rTi1ZeHKPUwUrKtXT+HK44+HsvhRKfkU/exbcdN0rpO0ZcA73hYYsI5q2v+
-         qHLg==
-X-Gm-Message-State: APjAAAV/mvWy7xXD6dGbk3tQsc6WK1Vx6jFZS+BsZUZMnV0Xc4z7kpnE
-        kSANJn+wmPzZU3ofSfra6WkJ/MpMQiM=
-X-Google-Smtp-Source: APXvYqxsuFjd6KIlUxup71uAFtWbBiXXOLCYfRpRiK/1LTv9g0h/ZYmV6qgV9USBX2seJ2aH7cCvLQ==
-X-Received: by 2002:a17:906:b2d1:: with SMTP id cf17mr107937673ejb.192.1578284832637;
-        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id y25sm8003412ejj.68.2020.01.05.20.27.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
-Received: by mail-wr1-f48.google.com with SMTP id y17so48268940wrh.5;
-        Sun, 05 Jan 2020 20:27:12 -0800 (PST)
-X-Received: by 2002:adf:ef4e:: with SMTP id c14mr102268897wrp.142.1578284831822;
- Sun, 05 Jan 2020 20:27:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20200105012416.23296-1-samuel@sholland.org> <20200105012416.23296-10-samuel@sholland.org>
-In-Reply-To: <20200105012416.23296-10-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 6 Jan 2020 12:27:01 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66jxw5acPXEQd0KwVbL96dOjeTj=8jZsC7DFiB_-=i0MA@mail.gmail.com>
-Message-ID: <CAGb2v66jxw5acPXEQd0KwVbL96dOjeTj=8jZsC7DFiB_-=i0MA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 9/9] power: supply: axp20x_usb_power:
- Only poll while offline
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jan 2020 23:32:02 -0500
+Received: from m15-114.126.com ([220.181.15.114]:56266 "EHLO m15-114.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727432AbgAFEcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 23:32:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=cWQkz6qx21BS5TQBK7
+        +VbOfvvvchtkcRVBlxJ7ItxpI=; b=oYMjMuacVpmXv0xRnkdTGU2dd/l+KHkrqk
+        4dLwIRLBkG+NvsYIUp57IWUKRzR5wgcFzS2U9TUpLZ66Nl5BYciX7d1i/BA1JRB8
+        D+scuBb9G1rduN+iR+NIEvV3oNt2tAKt98lM2kqLMv6XTYGjn916pTA6NM+14K+a
+        TA/UL8jjQ=
+Received: from yingjieb-VirtualBox.int.nokia-sbell.com (unknown [223.104.212.216])
+        by smtp7 (Coremail) with SMTP id DsmowADHfD_ItxJeAqb_BA--.16223S3;
+        Mon, 06 Jan 2020 12:30:20 +0800 (CST)
+From:   yingjie_bai@126.com
+To:     Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>
+Cc:     Bai Yingjie <byj.tea@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Diana Craciun <diana.craciun@nxp.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/2] powerpc/mpc85xx: also write addr_h to spin table for 64bit boot entry
+Date:   Mon,  6 Jan 2020 12:29:54 +0800
+Message-Id: <20200106042957.26494-2-yingjie_bai@126.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200106042957.26494-1-yingjie_bai@126.com>
+References: <20200106042957.26494-1-yingjie_bai@126.com>
+X-CM-TRANSID: DsmowADHfD_ItxJeAqb_BA--.16223S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWfKr43Gw4UuFy5KryUKFg_yoW8Xr45pF
+        ykGFnxtrZ5Kr1rZa12qF40grZ0yF4Sg3yjg347AasI93W3Xr9FyF4kZry3XF4kWrWDKFWr
+        Zr4ayFZ0kwsrXa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jDL0nUUUUU=
+X-Originating-IP: [223.104.212.216]
+X-CM-SenderInfo: p1lqwyxlhbutbl6rjloofrz/1tbimRWc91pD-oMzJQACsX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 5, 2020 at 9:24 AM Samuel Holland <samuel@sholland.org> wrote:
->
-> Investigation on the AXP803 shows that VBUS_PLUGIN/VBUS_REMOVAL IRQs are
-> triggered on the rising/falling edge of AXP20X_PWR_STATUS_VBUS_USED. The
-> reason IRQs do not arrive while N_VBUSEN/DRIVEVBUS is high is because
-> AXP20X_PWR_STATUS_VBUS_USED also never goes high.
->
-> This also means that if VBUS is online, a VBUS_REMOVAL IRQ is received
-> immediately on setting N_VBUSEN/DRIVEVBUS high (and VBUS_PLUGIN shortly
-> after it is set back low). This was also verified to be the case when
-> manually offlining VBUS through AXP20X_VBUS_PATH_SELECT.
->
-> As long as VBUS is online, a present->absent transition necessarily
-> implies an online->offline transition. Since will cause an IRQ, there is
-> no need to poll while VBUS is online.
->
-> To ensure the driver's view of VBUS online status remains accurate,
-> unconditionally poll once when receiving an IRQ and when resuming. If
-> VBUS is still online at that time, polling will cease until the next
-> VBUS_REMOVAL IRQ.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+From: Bai Yingjie <byj.tea@gmail.com>
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+CPU like P4080 has 36bit physical address, its DDR physical
+start address can be configured above 4G by LAW registers.
+
+For such systems in which their physical memory start address was
+configured higher than 4G, we need also to write addr_h into the spin
+table of the target secondary CPU, so that addr_h and addr_l together
+represent a 64bit physical address.
+Otherwise the secondary core can not get correct entry to start from.
+
+Signed-off-by: Bai Yingjie <byj.tea@gmail.com>
+---
+ arch/powerpc/platforms/85xx/smp.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index 8c7ea2486bc0..48f7d96ae37d 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -252,6 +252,15 @@ static int smp_85xx_start_cpu(int cpu)
+ 	out_be64((u64 *)(&spin_table->addr_h),
+ 		__pa(ppc_function_entry(generic_secondary_smp_init)));
+ #else
++#ifdef CONFIG_PHYS_ADDR_T_64BIT
++	/*
++	 * We need also to write addr_h to spin table for systems
++	 * in which their physical memory start address was configured
++	 * to above 4G, otherwise the secondary core can not get
++	 * correct entry to start from.
++	 */
++	out_be32(&spin_table->addr_h, __pa(__early_start) >> 32);
++#endif
+ 	out_be32(&spin_table->addr_l, __pa(__early_start));
+ #endif
+ 	flush_spin_table(spin_table);
+-- 
+2.17.1
+
