@@ -2,115 +2,269 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A15BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACE6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CEB2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXwsf8wO"
+	by mail.kernel.org (Postfix) with ESMTP id D4B6620731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgAFMfV (ORCPT
+        id S1726454AbgAFMid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 07:35:21 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35951 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgAFMfU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:35:20 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so49438858wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 04:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=etHpp/b+tlLKLxjZ6TvTwVRA6Mmf6McMbwfMAQQfH4k=;
-        b=BXwsf8wOueR/7Su482SHlTV1NZOq9Sek0uktcbPx49LyYUqGYpdX1/KKBGw4c1qhOP
-         3VeMM6AJ295vWqtr1HogZQL2jggx/d7H9l8aTCGvsp8NO5J/KlVynSX7f+KmAcTjEnh8
-         ATDQnjZWp2xFqMUBCl1ZbIAeKap/QiobXrF3B+Jx8fgjg3Ccw9Nk+1ra6iBGNbeVGKy9
-         lZv4pqSa3IJOh3G++W23H4qvyeQL0ZJ8py2UFrWPHHrCllgLTkG8lcC95LD71Nh52b0A
-         1rQsgNiCVL5VdStupvzTG9JiWOnObcDVFW1sWWWdg6TjTs1dk4Gfpmxp4UqCABomegcq
-         i83A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=etHpp/b+tlLKLxjZ6TvTwVRA6Mmf6McMbwfMAQQfH4k=;
-        b=VqUBHuNcWRuIRJluNSoZxk3rb7cfSgDPRr6WdvYyGa4/FV/AJ18pQuE9jHKeaH59O1
-         hawfC5vfbdMhS5FSCT0m2GAFB7N/sd9ZM8q1OrPkNYCazenX6ShfG/h2fwypruZE9lpR
-         4jX8EP0/RPF693M4Kv3s1h6Q0mkxB2L2vnaV0x1+xm/2U9nHxQCjVYoGDU0l2YLj0fU7
-         AX1UHou3f2jf0EnJUC5RHpAs+HmmpUcUeZ3zO85ChZ2dn3nJwYFaI4wiir9lfuocXb+T
-         xxaKiDAT3TDbTeojZcTyJeO3rnc8QLcemNQzc/6HaE47LnRK06t4VAB1ERIG/rN4loI5
-         UtnQ==
-X-Gm-Message-State: APjAAAWdZtGMP5essZFY1qLv5dO4z1IItFMmXQShp0G8Qr+iHbobFPOv
-        iMzymWENtSO21E3wYoi972xCYkKQsj0=
-X-Google-Smtp-Source: APXvYqy3oBNdsjFPXDVHPqhQuVUEc+K3UjrdOr8x429sFlMq1oz4I+8J9YqRlNLlkhJ3y728gc9Z5Q==
-X-Received: by 2002:a5d:4045:: with SMTP id w5mr96791354wrp.59.1578314118603;
-        Mon, 06 Jan 2020 04:35:18 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id w22sm21853573wmk.34.2020.01.06.04.35.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 04:35:17 -0800 (PST)
-Subject: Re: [PATCH] nvmem: core: Fix a potential use after free
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     linux-kernel@vger.kernel.org
-References: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a5734013-f80b-772a-7fed-b548ff98ec4b@linaro.org>
-Date:   Mon, 6 Jan 2020 12:35:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 6 Jan 2020 07:38:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:43542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgAFMic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:38:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F4F4328;
+        Mon,  6 Jan 2020 04:38:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C44FA3F534;
+        Mon,  6 Jan 2020 04:38:30 -0800 (PST)
+Date:   Mon, 6 Jan 2020 12:38:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 2/6] PCI: iproc: Add INTx support with better modeling
+Message-ID: <20200106123828.GS42593@e119886-lin.cambridge.arm.com>
+References: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
+ <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Thanks for the patch.
-
-On 27/12/2019 09:20, Xu Wang wrote:
-> Free the nvmem structure only after we are done using it.
-> This patch just moves the put_device() down a bit to avoid the
-> use after free.
-
-Could you explain the issue bit more here on what exactly could go wrong 
-with the exiting order?
-may be the stack trace of the use-after-free case? Or steps to reproduce 
-the issue?
-
-nvmem device is protected with kref.
-
---srini
-
+On Fri, Dec 20, 2019 at 09:24:14AM +0530, Srinath Mannam wrote:
+> From: Ray Jui <ray.jui@broadcom.com>
 > 
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+> INTD share the same interrupt line connected to the GIC in the system,
+> while the status of each INTx can be obtained through the INTX CSR
+> register
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
 > ---
->   drivers/nvmem/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/controller/pcie-iproc.c | 108 +++++++++++++++++++++++++++++++++++-
+>  drivers/pci/controller/pcie-iproc.h |   6 ++
+>  2 files changed, 112 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 9f1ee9c..7051d34 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -535,8 +535,8 @@ static struct nvmem_device *__nvmem_device_get(void *data,
->   
->   static void __nvmem_device_put(struct nvmem_device *nvmem)
->   {
-> -	put_device(&nvmem->dev);
->   	module_put(nvmem->owner);
-> +	put_device(&nvmem->dev);
->   	kref_put(&nvmem->refcnt, nvmem_device_release);
->   }
->   
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 0a468c7..485967b 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
+>  
+>  	/* enable INTx */
+>  	IPROC_PCIE_INTX_EN,
+> +	IPROC_PCIE_INTX_CSR,
+>  
+>  	/* outbound address mapping */
+>  	IPROC_PCIE_OARR0,
+> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
+>  };
+>  
+> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -846,9 +851,103 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>  	return link_is_active ? 0 : -ENODEV;
+>  }
+>  
+> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> +			       irq_hw_number_t hwirq)
+>  {
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = iproc_pcie_intx_map,
+> +};
+> +
+> +static void iproc_pcie_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct iproc_pcie *pcie;
+> +	struct device *dev;
+> +	unsigned long status;
+> +	u32 bit, virq;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pcie = irq_desc_get_handler_data(desc);
+> +	dev = pcie->dev;
+> +
+> +	/* go through INTx A, B, C, D until all interrupts are handled */
+> +	do {
+> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> +			virq = irq_find_mapping(pcie->irq_domain, bit);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +			else
+> +				dev_err(dev, "unexpected INTx%u\n", bit);
+> +		}
+> +	} while ((status & SYS_RC_INTX_MASK) != 0);
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *node;
+> +	int ret;
+> +
+> +	/*
+> +	 * BCMA devices do not map INTx the same way as platform devices. All
+> +	 * BCMA needs below line to enable INTx
+> +	 */
+>  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
+> +
+> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+> +	if (node)
+> +		pcie->irq = of_irq_get(node, 0);
+> +
+> +	if (!node || pcie->irq <= 0)
+> +		return 0;
+> +
+> +	/* set IRQ handler */
+> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
+> +
+> +	/* add IRQ domain for INTx */
+> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						 &intx_domain_ops, pcie);
+> +	if (!pcie->irq_domain) {
+> +		dev_err(dev, "failed to add INTx IRQ domain\n");
+> +		ret = -ENOMEM;
+> +		goto err_rm_handler_data;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_rm_handler_data:
+> +	of_node_put(node);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> +
+> +	return ret;
+> +}
+> +
+> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
+> +{
+> +	uint32_t offset, virq;
+> +
+> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
+> +
+> +	if (pcie->irq <= 0)
+> +		return;
+> +
+> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
+> +		virq = irq_find_mapping(pcie->irq_domain, offset);
+> +		if (virq)
+> +			irq_dispose_mapping(virq);
+> +	}
+> +
+> +	irq_domain_remove(pcie->irq_domain);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+>  }
+>  
+>  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
+> @@ -1518,7 +1617,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  		goto err_power_off_phy;
+>  	}
+>  
+> -	iproc_pcie_enable(pcie);
+> +	ret = iproc_pcie_intx_enable(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable INTx\n");
+> +		goto err_power_off_phy;
+> +	}
+>  
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+>  		if (iproc_pcie_msi_enable(pcie))
+> @@ -1562,6 +1665,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
+>  	pci_remove_root_bus(pcie->root_bus);
+>  
+>  	iproc_pcie_msi_disable(pcie);
+> +	iproc_pcie_intx_disable(pcie);
+>  
+>  	phy_power_off(pcie->phy);
+>  	phy_exit(pcie->phy);
+> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+> index 4f03ea5..103e568 100644
+> --- a/drivers/pci/controller/pcie-iproc.h
+> +++ b/drivers/pci/controller/pcie-iproc.h
+> @@ -74,6 +74,9 @@ struct iproc_msi;
+>   * @ib: inbound mapping related parameters
+>   * @ib_map: outbound mapping region related parameters
+>   *
+> + * @irq: interrupt line wired to the generic GIC for INTx
+> + * @irq_domain: IRQ domain for INTx
+> + *
+>   * @need_msi_steer: indicates additional configuration of the iProc PCIe
+>   * controller is required to steer MSI writes to external interrupt controller
+>   * @msi: MSI data
+> @@ -102,6 +105,9 @@ struct iproc_pcie {
+>  	struct iproc_pcie_ib ib;
+>  	const struct iproc_pcie_ib_map *ib_map;
+>  
+> +	int irq;
+> +	struct irq_domain *irq_domain;
+> +
+>  	bool need_msi_steer;
+>  	struct iproc_msi *msi;
+>  };
+> -- 
+> 2.7.4
 > 
