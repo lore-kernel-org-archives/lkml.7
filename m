@@ -2,113 +2,77 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC007C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB91C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE777215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C5121734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgAFJSv (ORCPT
+        id S1726368AbgAFJTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:18:51 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2228 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725996AbgAFJSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:18:51 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 6D602A401906294B73BE;
-        Mon,  6 Jan 2020 09:18:49 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 6 Jan 2020 09:18:49 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 6 Jan 2020
- 09:18:48 +0000
-Subject: Re: [PATCH] merge_config.sh: Add option for allmodconfig
-To:     <masahiroy@kernel.org>
-CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <anders.roxell@linaro.org>
-References: <1575979754-184896-1-git-send-email-john.garry@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <7e769634-eb22-5827-e2d8-df68134056c0@huawei.com>
-Date:   Mon, 6 Jan 2020 09:18:47 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 6 Jan 2020 04:19:38 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36541 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgAFJTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:19:38 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1ioOXx-0004Zk-C1; Mon, 06 Jan 2020 10:19:37 +0100
+Message-ID: <12b992550e8fa7d3e7cbfa7930bba8f9fd5d01f8.camel@pengutronix.de>
+Subject: Re: [PATCH v3 0/2] reset: Add Broadcom STB RESCAL reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jim Quinlan <jim2101024@gmail.com>
+Date:   Mon, 06 Jan 2020 10:19:35 +0100
+In-Reply-To: <20200103190429.1847-1-f.fainelli@gmail.com>
+References: <20200103190429.1847-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <1575979754-184896-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 12:09, John Garry wrote:
+Hi Florian,
 
-Hi Masahiro,
+On Fri, 2020-01-03 at 11:04 -0800, Florian Fainelli wrote:
+> Hi Philipp,
+> 
+> This patch series adds support for the BCM7216 RESCAL reset controller
+> which is necessary to initialize SATA and PCIe0/1 on that chip.
+> 
+> Please let us know if you have any comments. Thanks!
+> 
+> Changes in v3:
+> 
+> - indented "base" variable with a space
+> - return ret directly out of readl_poll_timeout()
+> - removed additional register read after write, not necessary
+> - removed call to platform_set_drvdata, unnecessary either
+> - corrected Jim's email in Signed-off-by in patch #2
 
-Could you please consider this patch?
+Thank you, both applied to reset/next.
 
-Thanks,
-John
-
-> Recently there has been some work in reporting and fixing bugs in booting
-> an allmodconfig kernel - here are a few examples:
-> 
-> https://lore.kernel.org/linux-edac/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com/T/#t
-> https://lore.kernel.org/linux-ide/bdf02e03-86a1-3d35-2908-28187f504495@huawei.com/T/#t
-> https://lore.kernel.org/netdev/CADYN=9LCPfbpwdTWKw03B22-y3Text=RWXW7XP7wJBHYsMOgrA@mail.gmail.com/
-> https://sourceforge.net/p/openipmi/mailman/message/36871567/
-> 
-> If we want to boot an allmodconfig kernel we may still want to force some
-> loadable modules built-in, like UART drivers. Or just still turn off some
-> configs.
-> 
-> So add an option to add add fragments to an allmodconfig kernel.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> 
-> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
-> index 63c8565206a4..01697fb6dfbe 100755
-> --- a/scripts/kconfig/merge_config.sh
-> +++ b/scripts/kconfig/merge_config.sh
-> @@ -23,6 +23,7 @@ clean_up() {
->   usage() {
->   	echo "Usage: $0 [OPTIONS] [CONFIG [...]]"
->   	echo "  -h    display this help text"
-> +	echo "  -a    use allmodconfig instead of alldefconfig"
->   	echo "  -m    only merge the fragments, do not execute the make command"
->   	echo "  -n    use allnoconfig instead of alldefconfig"
->   	echo "  -r    list redundant entries when merging fragments"
-> @@ -41,6 +42,11 @@ CONFIG_PREFIX=${CONFIG_-CONFIG_}
->   
->   while true; do
->   	case $1 in
-> +	"-a")
-> +		ALLTARGET=allmodconfig
-> +		shift
-> +		continue
-> +		;;
->   	"-n")
->   		ALLTARGET=allnoconfig
->   		shift
-> @@ -171,6 +177,7 @@ fi
->   
->   # Use the merged file as the starting point for:
->   # alldefconfig: Fills in any missing symbols with Kconfig default
-> +# allmodconfig: Fills in any missing symbols with =m when loadable
->   # allnoconfig: Fills in any missing symbols with # CONFIG_* is not set
->   make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
->   
-> 
+regards
+Philipp
 
