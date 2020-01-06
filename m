@@ -2,102 +2,104 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFE7C32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CDBC32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFABB2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48365222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578281589;
+	bh=RAivqP6Lc204pepIUJNVEUcohHJoNfajiFio/GMszE8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ygYZTwKWpBJ/svufQAhucQGYos3gEBa/71TF5/vinze/26/rYvOv4Vn6omkPOEtcH
+	 3wjLvMxGQMqervvABr3xcfOr6dNIvOSq+yowPeyaqMZQnAzN5BfFqlurEyL+ORS9GO
+	 LOsoS1vDHI4If5FfLL+1Vk6M5Qt03utsS8KJiqzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgAFDbq (ORCPT
+        id S1727468AbgAFDdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 22:31:46 -0500
-Received: from ozlabs.org ([203.11.71.1]:59061 "EHLO ozlabs.org"
+        Sun, 5 Jan 2020 22:33:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbgAFDbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 22:31:46 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727307AbgAFDdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 22:33:08 -0500
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rgzM5PMRz9sNH;
-        Mon,  6 Jan 2020 14:31:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1578281504;
-        bh=XeP8e7qXes4HkHyMRiVW9bZkBg9wHSfCUbqH7aV7fWI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=PseaXQkADJFYGx4SaZsY8sR8oWICr+mRYyYr5fMd+fnxepINCrjznL1PLsh6Nvlcn
-         C1u/dXFf4MPhZL0D3/iqEg9lgO6lddEzi7k8X0HlcU7EhFoWF8V4KqQ1Ld2vrgfOmF
-         8xJRGQoZEGXrYoUV/poOaGavJ6HBQ2pGlgOVg5ya1DWljIM/GdntvZDnnQIq1d0vrn
-         hTzu3/amT42926Hf0wiuK4vD84ztJ5fo4OrAw0rbPyiT9uWXu/81Da9MUXvFi6V7H1
-         lLmTIKEcYguwgRIibijKxb9zOk2IpkUFVNbaOcqwzS7oP1rsO6pmo5ALTydI/FzVoh
-         lt/4slorVh1DA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] powerpc: add support for folded p4d page tables
-In-Reply-To: <20200102081059.GA12063@rapoport-lnx>
-References: <20191209150908.6207-1-rppt@kernel.org> <20200102081059.GA12063@rapoport-lnx>
-Date:   Mon, 06 Jan 2020 14:31:41 +1100
-Message-ID: <87v9ppi7ky.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id EDBB121734;
+        Mon,  6 Jan 2020 03:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578281587;
+        bh=RAivqP6Lc204pepIUJNVEUcohHJoNfajiFio/GMszE8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DCJkixNIAx6N/hQEBPBeeiFIpRxC0c4/OoS1rg51bOpMTu44h1posLfP+qCgXMBlT
+         XIOWsDKVF5zhYGBZS21T9iopw56c8Be+zqyQBmoOg+wMqFcsfP6tOTwrmMd5z5el9P
+         k+Zxmiw36ck+qs/tGqeVA/9jbtWfPSiTL8+86uns=
+Received: by mail-lj1-f178.google.com with SMTP id y6so41473963lji.0;
+        Sun, 05 Jan 2020 19:33:06 -0800 (PST)
+X-Gm-Message-State: APjAAAXRL8AyBU+6ifAzRtv1VAzQ/8THDYgg2pQlB+EmaaMh4hvplBo+
+        jMDTm9tFx1GYIhyx2VCTtfuaRVTz+3oS9JFeKYQ=
+X-Google-Smtp-Source: APXvYqzL5X4e3S2WYpXmpAiY0PBKY24mqCoVG3XGpDe5FmGNtilugBgiKA2yUQhIeuLRLGsFN50LfS2JMjtDUg5Mlns=
+X-Received: by 2002:a2e:8745:: with SMTP id q5mr59668391ljj.208.1578281585149;
+ Sun, 05 Jan 2020 19:33:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200105025215.2522-1-guoren@kernel.org> <20200105025215.2522-2-guoren@kernel.org>
+ <20200106024515.GA1021@andestech.com>
+In-Reply-To: <20200106024515.GA1021@andestech.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Mon, 6 Jan 2020 11:32:53 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRd=PmNAj3T-_pD-k4x7aOgzRr54h_J-HCqUjLvVNCoTg@mail.gmail.com>
+Message-ID: <CAJF2gTRd=PmNAj3T-_pD-k4x7aOgzRr54h_J-HCqUjLvVNCoTg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: Add vector ISA support
+To:     Alan Kao <alankao@andestech.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>, aou@eecs.berkeley.edu,
+        Guo Ren <ren_guo@c-sky.com>, Arnd Bergmann <arnd@arndb.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, vincent.chen@sifive.com,
+        Palmer Dabbelt <palmer@dabbelt.com>, zong.li@sifive.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        Bin Meng <bmeng.cn@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike Rapoport <rppt@kernel.org> writes:
-> Any updates on this?
+Let's talk about libc abi for sigcontext and our cpu has the vector
+features, so we need start the work to support stress-test.
 
-It's very ... big, and kind of intrusive.
+I think it's the same to andes, because andes also announced the
+vector processor. The linux and libc are only small part of vector
+ISA, let's work together :)
 
-It's not an improvement as far as the powerpc code's readability is
-concerned. I assume the plan is that the 5-level hack can eventually be
-removed and so this conversion is a prerequisite for that?
+On Mon, Jan 6, 2020 at 10:45 AM Alan Kao <alankao@andestech.com> wrote:
+>
+> Hi Guo,
+>
+> On Sun, Jan 05, 2020 at 10:52:15AM +0800, guoren@kernel.org wrote:
+> > From: Guo Ren <ren_guo@c-sky.com>
+> >
+> > The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
+> > 128bit-vlen and it's based on linux-5.5-rc4.
+> >
+>
+> According to https://lkml.org/lkml/2019/11/22/2169, in which Paul has stated
+> that "we plan to only accept patches for new modules or extensions that have
+> been frozen or ratified by the RISC-V Foundation."
+>
+> Is v0.8 ratified enough for now?
+>
+>
 
-cheers
 
-> On Mon, Dec 09, 2019 at 05:09:08PM +0200, Mike Rapoport wrote:
->> From: Mike Rapoport <rppt@linux.ibm.com>
->> 
->> Implement primitives necessary for the 4th level folding, add walks of p4d
->> level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
->> 
->> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->> ---
->>  arch/powerpc/include/asm/book3s/32/pgtable.h  |  1 -
->>  arch/powerpc/include/asm/book3s/64/hash.h     |  4 +-
->>  arch/powerpc/include/asm/book3s/64/pgalloc.h  |  4 +-
->>  arch/powerpc/include/asm/book3s/64/pgtable.h  | 58 ++++++++++--------
->>  arch/powerpc/include/asm/book3s/64/radix.h    |  6 +-
->>  arch/powerpc/include/asm/nohash/32/pgtable.h  |  1 -
->>  arch/powerpc/include/asm/nohash/64/pgalloc.h  |  2 +-
->>  .../include/asm/nohash/64/pgtable-4k.h        | 32 +++++-----
->>  arch/powerpc/include/asm/nohash/64/pgtable.h  |  6 +-
->>  arch/powerpc/include/asm/pgtable.h            |  8 +++
->>  arch/powerpc/kvm/book3s_64_mmu_radix.c        | 59 ++++++++++++++++---
->>  arch/powerpc/lib/code-patching.c              |  7 ++-
->>  arch/powerpc/mm/book3s32/mmu.c                |  2 +-
->>  arch/powerpc/mm/book3s32/tlb.c                |  4 +-
->>  arch/powerpc/mm/book3s64/hash_pgtable.c       |  4 +-
->>  arch/powerpc/mm/book3s64/radix_pgtable.c      | 19 ++++--
->>  arch/powerpc/mm/book3s64/subpage_prot.c       |  6 +-
->>  arch/powerpc/mm/hugetlbpage.c                 | 28 +++++----
->>  arch/powerpc/mm/kasan/kasan_init_32.c         |  8 +--
->>  arch/powerpc/mm/mem.c                         |  4 +-
->>  arch/powerpc/mm/nohash/40x.c                  |  4 +-
->>  arch/powerpc/mm/nohash/book3e_pgtable.c       | 15 +++--
->>  arch/powerpc/mm/pgtable.c                     | 25 +++++++-
->>  arch/powerpc/mm/pgtable_32.c                  | 28 +++++----
->>  arch/powerpc/mm/pgtable_64.c                  | 10 ++--
->>  arch/powerpc/mm/ptdump/hashpagetable.c        | 20 ++++++-
->>  arch/powerpc/mm/ptdump/ptdump.c               | 22 ++++++-
->>  arch/powerpc/xmon/xmon.c                      | 17 +++++-
->>  28 files changed, 284 insertions(+), 120 deletions(-)
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
