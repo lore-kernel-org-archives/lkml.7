@@ -2,129 +2,107 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091A3C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FC3C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8E62072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F6C2072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 14:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BICInZD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgAFOb2 (ORCPT
+        id S1726561AbgAFOb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:31:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:44612 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAFOb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:31:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA4A231B;
-        Mon,  6 Jan 2020 06:31:26 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8043E3F6C4;
-        Mon,  6 Jan 2020 06:31:25 -0800 (PST)
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <7b375d79-2d3c-422b-27a6-68972fbcbeaf@arm.com>
- <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
- <c0e82c31-8ed6-4739-6b01-2594c58df95a@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340B3203@dggemm526-mbx.china.huawei.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <51a7d543-e35f-6492-fa51-02828832c154@arm.com>
-Date:   Mon, 6 Jan 2020 15:31:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Jan 2020 09:31:57 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:42114 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFOb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 09:31:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uumXoL+eYMvAU/Zhkw4q7M7e56seiyLsNiF+bQNF7sE=; b=BICInZD+JKwdDFrOYAuBrn8Cs
+        yxZBuD06qT5ZkcbPLGVRyV4H8q8S+E0mpqpxBeuWbRV1XdqVTsxa+uzzNy/AsQ31Mersxn7vPI2z1
+        szBg4Xgm1dzB5EK95/T538UMfksmWU4Yq49ng2gx8p5EF+gudK2fdielHviqK1NsrLrJciJDusf6j
+        F9ihZ13fbRgevOUMpANt5aXUOH1oERvnkpw8z+M9OgO/fKwkdWLkHrrldxiF6g/ukXAe0WQ6iq03L
+        ZFeGkcg6NSnTD1nI1cheNvcEaVEwX0zJg1V9dRmI+6FY0X+U9FPdXqD8CRRl5I7O1E+w1EEqxUKF6
+        VHYDjFO2A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioTPx-0002qk-GX; Mon, 06 Jan 2020 14:31:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1B12A306CEE;
+        Mon,  6 Jan 2020 15:30:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 365EC2B283CC0; Mon,  6 Jan 2020 15:31:38 +0100 (CET)
+Date:   Mon, 6 Jan 2020 15:31:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
+        eranian@google.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com
+Subject: Re: [RFC PATCH V2 2/7] perf: Init/fini PMU specific data
+Message-ID: <20200106143138.GN2844@hirez.programming.kicks-ass.net>
+References: <1578080364-5928-1-git-send-email-kan.liang@linux.intel.com>
+ <1578080364-5928-2-git-send-email-kan.liang@linux.intel.com>
+ <20200106103832.GO2810@hirez.programming.kicks-ass.net>
+ <20200106142343.GK15478@tassilo.jf.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340B3203@dggemm526-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106142343.GK15478@tassilo.jf.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/2020 02:48, Zengtao (B) wrote:
-
-[...]
-
->> -----Original Message-----
->> From: Dietmar Eggemann [mailto:dietmar.eggemann@arm.com]
->> Sent: Saturday, January 04, 2020 1:21 AM
->> To: Valentin Schneider; Zengtao (B); Sudeep Holla
->> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
->> linux-kernel@vger.kernel.org; Morten Rasmussen
->> Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts
->> with lower layer
->>
->> On 03/01/2020 13:14, Valentin Schneider wrote:
->>> On 03/01/2020 10:57, Valentin Schneider wrote:
-
->> Still don't see the actual problem case. The closest I came is:
->>
->> qemu-system-aarch64 -kernel ... -append ' ... loglevel=8 sched_debug'
->> -smp cores=4,sockets=2 ... -numa node,cpus=0-2,nodeid=0
->> -numa node,cpus=3-7,nodeid=1
->>
+On Mon, Jan 06, 2020 at 06:23:43AM -0800, Andi Kleen wrote:
+> > > +	rcu_read_lock();
+> > > +	for_each_process_thread(g, p) {
+> > > +		mutex_lock(&p->perf_event_mutex);
+> > > +		if (p->perf_ctx_data) {
+> > > +			/*
+> > > +			 * The perf_ctx_data for this thread may has been
+> > > +			 * allocated by per-task event.
+> > > +			 * Only update refcount for the case.
+> > > +			 */
+> > > +			refcount_inc(&p->perf_ctx_data->refcount);
+> > > +			mutex_unlock(&p->perf_event_mutex);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		if (pos < num_thread) {
+> > > +			refcount_set(&data[pos]->refcount, 1);
+> > > +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
+> > > +		} else {
+> > > +			/*
+> > > +			 * There may be some new threads created,
+> > > +			 * when we allocate space.
+> > > +			 * Track the number in nr_new_tasks.
+> > > +			 */
+> > > +			nr_new_tasks++;
+> > > +		}
+> > > +		mutex_unlock(&p->perf_event_mutex);
+> > > +	}
+> > > +	rcu_read_unlock();
+> > > +
+> > > +	raw_spin_unlock_irqrestore(&task_data_sys_wide_events_lock, flags);
+> > 
+> > Still NAK. That's some mightly broken code there.
 > 
-> It's related to the HW topology, if you hw have got 2 clusters 0~3, 4~7, 
-> with the mainline qemu, you will see the issue.
-> I think you can manually modify the MPIDR parsing to reproduce the 
-> issue.
-> Linux will use the MPIDR to guess the MC topology since currently qemu
-> don't provide it.
-> Refer to: https://patchwork.ozlabs.org/cover/939301/
+> Yes, Kan you cannot use a mutex (sleeping) inside rcu_read_lock().
+> Can perf_event_mutex be a spin lock?
 
-That makes sense to me. Valentin and I already discussed this setup as a
-possible system where this issue can happen.
-
-I already suspected that virt machines only support flat cpu toplogy.
-Good to know. Although I was able to to pass '... -smp cores=8 -dtb
-foo.dtb ...' into mainline qemu to achieve a 2 cluster system (MC and
-DIE sd level) with an extra cpu-map entry in the dts file:
-
-               cpu-map {
-                        cluster0 {
-                                core0 {
-                                        cpu = <&A53_0>;
-                                };
-                                ...
-                        };
-
-                        cluster1 {
-                                core0 {
-                                        cpu = <&A53_4>;
-                                };
-                                ...
-                        };
-                };
-
-But I didn't succeed in combining this with the '... -numa
-node,cpus=0-3,nodeid=0 -numa node,cpus=4-7,nodeid=1 ...' params to
-create a system like yours.
-
-Your issue is related to the 'numa mask check for scheduler MC
-selection' functionality.  It was introduced by commit 37c3ec2d810f and
-re-introduced by commit e67ecf647020 later. I don't know why we need
-this functionality?
-
-How does your setup behave when you revert commit e67ecf647020? Or do
-you want an explicit warning in case of NUMA boundaries not respecting
-physical topology?
+Or insize that raw_spin_lock. And last time I expressly said to not do
+what whole tasklist iteration under a spinlock.
