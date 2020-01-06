@@ -2,74 +2,99 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D53AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47938C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA6C20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578329747;
-	bh=r/gL3xL0bP+hz0aZoUX/RJVh/m700l8OJ/DXqxnkKQw=;
-	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
-	b=GTV9rlHGqHmK7qUlwu0B5e5ZLMEYCtVdOjMqlMT9j3nrG11DzbICM2drKLffUDdD5
-	 oAFsiFB0xuvr1AN8JuqRsZMxIvpVKjKtlZh8blNg77P6vqrbaZRMgvFnGs28sCLGef
-	 8mCrxRbI48jC4qPs3YskiNAFgdDrAz7p0tR1dcmY=
+	by mail.kernel.org (Postfix) with ESMTP id 1C9FC2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:57:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a5X7Xgvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgAFQzq (ORCPT
+        id S1726695AbgAFQ5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:55:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgAFQzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:55:46 -0500
-Received: from kernel.org (unknown [104.132.0.74])
+        Mon, 6 Jan 2020 11:57:16 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:43152 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFQ5P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:57:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KtA6VhFyLFqi7kWb+PYao12HEhPZ8hVXP/AvLkDg57w=; b=a5X7Xgvn+fusWiITMXIBJxch6
+        EibH0GZfsBa2Tv9KJ+ZrJeS+EMTFUA37iCHDQ/323udgQbtuCpXVVvBd2Cb47R25VSxG2xSyKYPoH
+        Mg4HVzLO1jpMtvDH/YH0NMqO8phqEKdv8gwhGNdVwRb5rVIcSf0XB5xLWl1Wgd+Ifl16JA37EXwaS
+        aAJOJnW0/B1z9hvPB6HziekS9RhBQ/qb1DMlJIqpu1mONgo4IEaaiUsFfub1LuVbNUtWf/DolglDm
+        KaEVL1bzv8juBkJM4P1B8MhCoMUPZwSewjJRJLwdhjw8AtT9mr6JESczMhgynMp9FsMRptO6rtteP
+        gu+7D+CfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioVgY-00046W-7E; Mon, 06 Jan 2020 16:56:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484402072E;
-        Mon,  6 Jan 2020 16:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578329745;
-        bh=r/gL3xL0bP+hz0aZoUX/RJVh/m700l8OJ/DXqxnkKQw=;
-        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
-        b=rxoHZA8XR4MjGJthBCiv4gJ7EmKp7bqDTzao7EHDqrTQDNu5ZusIbXyAZ8Kg2+cgu
-         0D9wOTBK6CeX4Rlmcp2PsxFtb53a4NfdrVxT8T1Qfi3vnubz67wUXE9iCNhABYTK8v
-         pEiCKvDI+eivtZJ/3zJMFMau40LNQXSaMv7DmkFc=
-Content-Type: text/plain; charset="utf-8"
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CC2CF3012DC;
+        Mon,  6 Jan 2020 17:55:22 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E06D12B2844FC; Mon,  6 Jan 2020 17:56:54 +0100 (CET)
+Date:   Mon, 6 Jan 2020 17:56:54 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     bpf@vger.kernel.org, live-patching@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: BPF tracing trampoline synchronization between update/freeing
+ and execution?
+Message-ID: <20200106165654.GP2844@hirez.programming.kicks-ass.net>
+References: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200106080546.3192125-2-bjorn.andersson@linaro.org>
-References: <20200106080546.3192125-1-bjorn.andersson@linaro.org> <20200106080546.3192125-2-bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 06 Jan 2020 08:55:44 -0800
-Message-Id: <20200106165545.484402072E@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-01-06 00:05:45)
-> The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
-> SoC. Update the definition of these clocks to allow this to be wired up
-> to the appropriate clock source.
->=20
-> Retain "xo" as the global named parent to make the change a nop in the
-> event that DT doesn't carry the necessary clocks definition.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+On Mon, Jan 06, 2020 at 05:39:30PM +0100, Jann Horn wrote:
+> Hi!
+> 
+> I was chatting with kpsingh about BPF trampolines, and I noticed that
+> it looks like BPF trampolines (as of current bpf-next/master) seem to
+> be missing synchronization between trampoline code updates and
+> trampoline execution. Or maybe I'm missing something?
+> 
+> If I understand correctly, trampolines are executed directly from the
+> fentry placeholders at the start of arbitrary kernel functions, so
+> they can run without any locks held. So for example, if task A starts
+> executing a trampoline on entry to sys_open(), then gets preempted in
+> the middle of the trampoline, and then task B quickly calls
+> BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
+> task A will end up executing the middle of newly-written machine code,
+> which can probably end up crashing the kernel somehow?
+> 
+> I think that at least to synchronize trampoline text freeing with
+> concurrent trampoline execution, it is necessary to do something
+> similar to what the livepatching code does with klp_check_stack(), and
+> then either use a callback from the scheduler to periodically re-check
+> tasks that were in the trampoline or let the trampoline tail-call into
+> a cleanup helper that is part of normal kernel text. And you'd
+> probably have to gate BPF trampolines on
+> CONFIG_HAVE_RELIABLE_STACKTRACE.
 
-Applied to clk-next
-
+ftrace uses synchronize_rcu_tasks() to flip between trampolines iirc.
