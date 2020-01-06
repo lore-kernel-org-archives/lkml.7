@@ -2,124 +2,242 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5519C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC4EC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771A420848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5341F20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AseWuJl8"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="R0fF4H1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgAFQkh (ORCPT
+        id S1726722AbgAFQlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:40:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQkh (ORCPT
+        Mon, 6 Jan 2020 11:41:02 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41116 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgAFQlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:40:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578328836;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=O6LewDrc9QZp2Fx1nmEvO1S1UQTKNlKRcTEhAcucP8o=;
-        b=AseWuJl8PNRAfyYw5HMWyWXZSbwEo6Qf3KvsSuxkXRpWrptirgCy7v29Uq/gTbSve/hTdz
-        j+FqEh1+1HA8rEUx3RFZVN0Hqm+L3McYLDzot5hsSAzQvhmKfn8AmYslqLVwmigaBHt/8+
-        jinEuLuHerJfaPiX0+gTQ85RHXI5sKQ=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-gRVGo6LQPPKG9QrTdaIxPA-1; Mon, 06 Jan 2020 11:40:35 -0500
-X-MC-Unique: gRVGo6LQPPKG9QrTdaIxPA-1
-Received: by mail-qt1-f198.google.com with SMTP id t4so34683207qtd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:40:35 -0800 (PST)
+        Mon, 6 Jan 2020 11:41:01 -0500
+Received: by mail-qt1-f194.google.com with SMTP id k40so42911514qtk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 08:41:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DFcuK4X/UUJLk4ruiVCgQbLVxObW665BJKm+aavigS0=;
+        b=R0fF4H1GmJ4CUoqbfBTj0/x4N7W6Xzx5ngHYkHkHafLcehpBN0XLDw+1j254xb9/ML
+         ECSb0xaGd6lsYgmX42/AiLu+zJ1JaZVwNtK/lJoH+l2VxN7jpZfvlnbARu3435Rk0haE
+         bdmae6srpJ//x0XvDRMaKxOtYKA/D0Hfqo5MkpdH8IUcH+DYX2pBp3SZSDOL2KUV75UL
+         yvlvi6ff0foGt4qNt03LG4v/8YdZ1zR8rxD1Pfjs9gal7GiVheg73sM4SVNA6jNxKfTr
+         xascTeQ8DIZeEmiTUaPc/OChRgN+2YANoei/AcfuSZtRmtg1w1lJDi8XtYtoAL4rynm4
+         x13A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O6LewDrc9QZp2Fx1nmEvO1S1UQTKNlKRcTEhAcucP8o=;
-        b=NYRqbiMbqIW4NvGnjeDZcyp3fw+sr3TsLeUoyBcnNT60HfrBPCQXEHze2DYTNDU39i
-         unCzqLxXm3ifbzcea538Tr/7E26nfDUccqrkApnUJFQCWv9YioVceXGX7gfAwvKXj+OI
-         9kppIEnlyRQxAff1eNC6NE0hhDXR7dE/Bg4+S5DEBTHUzSLLOUwrrq4THpYLuTaCIJcn
-         EnwfcsrTgYZQpS9qJgRZBJA8uMZoGhV22fJAEnPFaqt6AUm7yAEdMZUXByUhxNuyzFj7
-         8A4X0Lytz3wl1cDQE4q7GGz8VkT5+E4cLVfEsNtPy50mIQvBaDdSxd/1Sd7itdzNgsFf
-         Im3A==
-X-Gm-Message-State: APjAAAWqHQVBTuWUxl1QYWIiqAjnQTJdCW6Hr3ezcvwLK7350G55zDF/
-        n2UOtrvIZ1hAIFkkJtffhWiz0shqwdD69NNfbLhk74anQZUclhtuAVWOx4narjCFprrgJLrEwk8
-        VXnbNS9ABiHSxxo/Re0fWZd8U
-X-Received: by 2002:a05:620a:133a:: with SMTP id p26mr83379097qkj.50.1578328834265;
-        Mon, 06 Jan 2020 08:40:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz86EFELGFsqREDWCmqpdtGkHrNej4Uny9NeI7c3Rc+mtT/asiV1IsiQd+5zJ0IbvClK0n+bQ==
-X-Received: by 2002:a05:620a:133a:: with SMTP id p26mr83379075qkj.50.1578328833961;
-        Mon, 06 Jan 2020 08:40:33 -0800 (PST)
-Received: from xz-x1 ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id k62sm20793608qkc.95.2020.01.06.08.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 08:40:33 -0800 (PST)
-Date:   Mon, 6 Jan 2020 11:40:31 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 0/3] smp: Allow smp_call_function_single_async() to
- insert locked csd
-Message-ID: <20200106164031.GA219677@xz-x1>
-References: <20191216213125.9536-1-peterx@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DFcuK4X/UUJLk4ruiVCgQbLVxObW665BJKm+aavigS0=;
+        b=Q09KygUsp8eIrG8U0lSvU2xnnAO6sgsgo88w0kaIW7UBaLQUuNfl7KAleHnwifDNx8
+         5GBuHjnd0FMMMxyBeFzRcUzxeyq7e3Qgle+c40WWQCvXkNME1YMH9MvDCDILUvtwdQ8s
+         gcAZrcaHwRw7IyqH9Q9v28ffOpJOa0rIaS3WqFXhIRzLEfDzjr31y7DeP0RY1ZRGGbDg
+         b5I9zzNZz+PnmSXCELUv+l6047i1n4wLv6WV/VbeMHVPeajEeSCdXKmMXvDj6JeDWXtx
+         IPsFz3EY4E68hVCKgcLQNGBJT1CLhVjpyakA7ItOtaAE5M0PzYAxnJYOoFZfhLrfk/5W
+         NNKQ==
+X-Gm-Message-State: APjAAAW+UOVlZYOnScPzMG+Vr7cv8UQIcYhxME2y1DL6ZgMTBYK21ETR
+        TnwzocwLFD7ZR8wUuPWVQfIzO1yVkPoG6w==
+X-Google-Smtp-Source: APXvYqxx4xfRerAhp62npcyI2Raw+ucDUWsCxyklKFVllsYbRs8Jfxoqwz1EaC28k2fM41F9yEBwSQ==
+X-Received: by 2002:ac8:3853:: with SMTP id r19mr76518266qtb.69.1578328860126;
+        Mon, 06 Jan 2020 08:41:00 -0800 (PST)
+Received: from ?IPv6:2620:10d:c0a8:1102:ce0:3629:8daa:1271? ([2620:10d:c091:480::6941])
+        by smtp.gmail.com with ESMTPSA id l25sm20815974qkk.115.2020.01.06.08.40.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 08:40:59 -0800 (PST)
+Subject: Re: [PATCH v3 6/6] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+To:     Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>
+Cc:     Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
+ <20200103223334.20669-7-zaslonko@linux.ibm.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <d9aa84d2-3274-9310-234f-b91e07c9fc0e@toxicpanda.com>
+Date:   Mon, 6 Jan 2020 11:40:58 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191216213125.9536-1-peterx@redhat.com>
+In-Reply-To: <20200103223334.20669-7-zaslonko@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping - Would anyone like to review/pick this series?
+On 1/3/20 5:33 PM, Mikhail Zaslonko wrote:
+> In order to benefit from s390 zlib hardware compression support,
+> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
+> s390 zlib hardware support is enabled on the machine). This brings up
+> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
+> buffer and much more compared to the software zlib processing in btrfs.
+> In case of memory pressure fall back to a single page buffer during
+> workspace allocation.
+> 
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> ---
+>   fs/btrfs/compression.c |   2 +-
+>   fs/btrfs/zlib.c        | 128 ++++++++++++++++++++++++++++++-----------
+>   2 files changed, 94 insertions(+), 36 deletions(-)
+> 
+> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+> index ee834ef7beb4..6bd0e75a822c 100644
+> --- a/fs/btrfs/compression.c
+> +++ b/fs/btrfs/compression.c
+> @@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
+>   	/* copy bytes from the working buffer into the pages */
+>   	while (working_bytes > 0) {
+>   		bytes = min_t(unsigned long, bvec.bv_len,
+> -				PAGE_SIZE - buf_offset);
+> +				PAGE_SIZE - (buf_offset % PAGE_SIZE));
+>   		bytes = min(bytes, working_bytes);
+>   
+>   		kaddr = kmap_atomic(bvec.bv_page);
+> diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
+> index a6c90a003c12..159486801631 100644
+> --- a/fs/btrfs/zlib.c
+> +++ b/fs/btrfs/zlib.c
+> @@ -20,9 +20,12 @@
+>   #include <linux/refcount.h>
+>   #include "compression.h"
+>   
+> +#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
+> +
+>   struct workspace {
+>   	z_stream strm;
+>   	char *buf;
+> +	unsigned long buf_size;
+>   	struct list_head list;
+>   	int level;
+>   };
+> @@ -61,7 +64,17 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
+>   			zlib_inflate_workspacesize());
+>   	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
+>   	workspace->level = level;
+> -	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> +	workspace->buf = NULL;
+> +	if (zlib_deflate_dfltcc_enabled()) {
+> +		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
+> +					 __GFP_NOMEMALLOC | __GFP_NORETRY |
+> +					 __GFP_NOWARN | GFP_NOIO);
+> +		workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
+> +	}
+> +	if (!workspace->buf) {
+> +		workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> +		workspace->buf_size = PAGE_SIZE;
+> +	}
+>   	if (!workspace->strm.workspace || !workspace->buf)
+>   		goto fail;
+>   
+> @@ -78,6 +91,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>   		unsigned long *total_in, unsigned long *total_out)
+>   {
+>   	struct workspace *workspace = list_entry(ws, struct workspace, list);
+> +	int i;
+>   	int ret;
+>   	char *data_in;
+>   	char *cpage_out;
+> @@ -85,6 +99,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>   	struct page *in_page = NULL;
+>   	struct page *out_page = NULL;
+>   	unsigned long bytes_left;
+> +	unsigned long in_buf_pages;
+>   	unsigned long len = *total_out;
+>   	unsigned long nr_dest_pages = *out_pages;
+>   	const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
+> @@ -102,9 +117,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>   	workspace->strm.total_in = 0;
+>   	workspace->strm.total_out = 0;
+>   
+> -	in_page = find_get_page(mapping, start >> PAGE_SHIFT);
+> -	data_in = kmap(in_page);
+> -
+>   	out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+>   	if (out_page == NULL) {
+>   		ret = -ENOMEM;
+> @@ -114,12 +126,48 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>   	pages[0] = out_page;
+>   	nr_pages = 1;
+>   
+> -	workspace->strm.next_in = data_in;
+> +	workspace->strm.next_in = workspace->buf;
+> +	workspace->strm.avail_in = 0;
+>   	workspace->strm.next_out = cpage_out;
+>   	workspace->strm.avail_out = PAGE_SIZE;
+> -	workspace->strm.avail_in = min(len, PAGE_SIZE);
+>   
+>   	while (workspace->strm.total_in < len) {
+> +		/* get next input pages and copy the contents to
+> +		 * the workspace buffer if required
+> +		 */
+> +		if (workspace->strm.avail_in == 0) {
+> +			bytes_left = len - workspace->strm.total_in;
+> +			in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
+> +					   workspace->buf_size / PAGE_SIZE);
+> +			if (in_buf_pages > 1) {
+> +				for (i = 0; i < in_buf_pages; i++) {
+> +					if (in_page) {
+> +						kunmap(in_page);
+> +						put_page(in_page);
+> +					}
+> +					in_page = find_get_page(mapping,
+> +								start >> PAGE_SHIFT);
+> +					data_in = kmap(in_page);
+> +					memcpy(workspace->buf + i*PAGE_SIZE,
+> +					       data_in, PAGE_SIZE);
+> +					start += PAGE_SIZE;
+> +				}
 
-Peter, is this series ok for you?
+Is there a reason to leave the last in_page mapped here?  I realize we'll clean 
+it up further down, but since we're copying everything into the buf anyway why 
+not just map->copy->unmap for everything?
 
-Thanks,
+> +				workspace->strm.next_in = workspace->buf;
+> +			} else {
+> +				if (in_page) {
+> +					kunmap(in_page);
+> +					put_page(in_page);
+> +				}
+> +				in_page = find_get_page(mapping,
+> +							start >> PAGE_SHIFT);
+> +				data_in = kmap(in_page);
+> +				start += PAGE_SIZE;
+> +				workspace->strm.next_in = data_in;
+> +			}
+> +			workspace->strm.avail_in = min(bytes_left,
+> +						       workspace->buf_size);
+> +		}
+> +
+>   		ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
+>   		if (ret != Z_OK) {
+>   			pr_debug("BTRFS: deflate in loop returned %d\n",
+> @@ -136,6 +184,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>   			ret = -E2BIG;
+>   			goto out;
+>   		}
+> +
 
-On Mon, Dec 16, 2019 at 04:31:22PM -0500, Peter Xu wrote:
-> This v2 introduced two more patches to let mips/kernel/smp.c and
-> kernel/sched/core.c to start using the new feature, then we can drop
-> the customized implementations.
-> 
-> One thing to mention is that cpuidle_coupled_poke_pending is another
-> candidate that we can consider, however that cpumask is special in
-> that it's not only used for singleton test of the per-vcpu csd when
-> injecting new calls, but also in cpuidle_coupled_any_pokes_pending()
-> or so to check whether there's any pending pokes.  In that sense it
-> should be good to still keep the mask because it could be faster than
-> looping over each per-cpu csd.
-> 
-> Patch 1 is the same as v1, no change.  Patch 2-3 are new ones.
-> 
-> Smoke tested on x86_64 only.
-> 
-> Please review, thanks.
-> 
-> Peter Xu (3):
->   smp: Allow smp_call_function_single_async() to insert locked csd
->   MIPS: smp: Remove tick_broadcast_count
->   sched: Remove rq.hrtick_csd_pending
-> 
->  arch/mips/kernel/smp.c |  8 +-------
->  kernel/sched/core.c    |  9 ++-------
->  kernel/sched/sched.h   |  1 -
->  kernel/smp.c           | 14 +++++++++++---
->  4 files changed, 14 insertions(+), 18 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+Extra newline.  Thanks,
 
--- 
-Peter Xu
-
+Josef
