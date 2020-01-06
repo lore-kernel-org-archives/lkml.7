@@ -2,137 +2,107 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95EAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A44DC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F98921734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB1120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XA+w1MAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgAFJCB (ORCPT
+        id S1726358AbgAFJDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:02:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50152 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgAFJCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:02:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B2328B027;
-        Mon,  6 Jan 2020 09:01:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 821931E0B47; Mon,  6 Jan 2020 10:01:47 +0100 (CET)
-Date:   Mon, 6 Jan 2020 10:01:47 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Ran Rozenstein <ranro@mellanox.com>
-Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
-Message-ID: <20200106090147.GA9176@quack2.suse.cz>
-References: <20191219132607.GA410823@unreal>
- <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
- <20191219210743.GN17227@ziepe.ca>
- <20191220182939.GA10944@unreal>
- <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
- <20191222132357.GF13335@unreal>
- <49d57efe-85e1-6910-baf5-c18df1382206@nvidia.com>
- <20191225052612.GA212002@unreal>
- <b879d191-a07c-e808-e48f-2b9bd8ba4fa3@nvidia.com>
- <612aa292-ec45-295c-b56c-c622876620fa@nvidia.com>
+        Mon, 6 Jan 2020 04:03:17 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41865 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFJDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:03:17 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so50188327ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 01:03:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CeH+kQ0Qe8jVFl0FEZFj+JiqWbIaJiNDGyhGbyxRwj4=;
+        b=XA+w1MAQwy4oE7FoGRn4Ac2fYBZydctJDh5Jb7kz7jErQaINP0+KvyQ50gqNwiZyCS
+         4YWjZcvg4tZpWZSwHneQMGnBfazen79DSAkgN8eyiVAY1xjN/hjh4bFDoEpLfHO+gOGz
+         quWftU/KkRI78okF7/BNkniOzH0hjILfz5N6n1REhnkiI5Z7wygjilreH3MnhSZ7UIbo
+         Sgdh+tmW1HQ+8KHtC7At5UNSnfI6RJgid3CQK8W4VdCWnulJMI8QdwTgaf8JnWZGls3z
+         HiY0N45FGP3rvfektTexAH91mLX6eOivmLwuMjVfBEXsoV9eZfhkqWQEhhmamw/VwonI
+         uY/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CeH+kQ0Qe8jVFl0FEZFj+JiqWbIaJiNDGyhGbyxRwj4=;
+        b=oKWqwBXxDHVpKeqs2Ylhkm1/o/3JihR9Z0vzC6UKmfVBDp4aFmRizN+VRrbhmuLZrC
+         5YsatvVideEBxFIYQfJgqgqstNg+xohoNTc35lL5EaikT+vyXkHipCSieLrHipSQ5WBv
+         mdqiZU44IhcN8g85Ga8eD6H7CTX5VohpuOQXJRUPqkAzrTUtnehjHoOgCeR7y6EHgRIT
+         67HyPg3fD/wEinzQ+IWQGbq2MWMmTz/ssufytJgLIIAgrgXcpT5EIHx/0rLbBbLHjazd
+         PXr+VP73UPotbryTQuSwcsC+73nDIzZ5TwA8M1kLGDIwGxZQEdYl4qI5+2EsWU+E28Ra
+         RqcQ==
+X-Gm-Message-State: APjAAAXAhXEY50HDtOO/sTxTmTGLMLx+ILVpGyGRjLu9XIr+xbf/dJcG
+        hVjKMouJQg3j/5QZvqBDqr+l7umIA8m4zbyJSC5Asg==
+X-Google-Smtp-Source: APXvYqyyYyXfN4bIo8fVghXO5BARXcu9jDvUQwl48nA0BGLXNo7fhOgd419s0X2DFiqJLbTMsn07A84oMJZGJ0aGPVk=
+X-Received: by 2002:a2e:5357:: with SMTP id t23mr60119946ljd.227.1578301394444;
+ Mon, 06 Jan 2020 01:03:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <612aa292-ec45-295c-b56c-c622876620fa@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200102215829.911231638@linuxfoundation.org> <CA+G9fYuPkOGKbeQ0FKKx4H0Bs-nRHALsFtwyRw0Rt5DoOCvRHg@mail.gmail.com>
+ <CAK8P3a1+Srey_7cUd0xfaO8HdMv5tkUcs6DeDXzcUKkUD-DnGQ@mail.gmail.com>
+ <CAK8P3a24EkUXTu-K2c-5B3w-LZwY7zNcX0dZixb3gd59vRw_Kw@mail.gmail.com>
+ <20200103154518.GB1064304@kroah.com> <CAK8P3a00SpVfSE5oL8_F_8jHdg_8A5fyEKH_DWNyPToxack=zA@mail.gmail.com>
+ <a2fc8b36-c512-b6dd-7349-dfb551e348b6@oracle.com> <8283b231-f6e8-876f-7094-d3265096ab9a@oracle.com>
+ <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjvWTFn=C3mT5wA=mtOwXw44U+OHLVxk5DCe4v+7nOvKg@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 6 Jan 2020 14:33:02 +0530
+Message-ID: <CA+G9fYvzkPz6Ewm00ie+HqBpfQHFuRGn694Av-gj8Pt8iKrDQg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/191] 5.4.8-stable review
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, LTP List <ltp@lists.linux.it>,
+        Jan Stancek <jstancek@redhat.com>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 28-12-19 20:33:32, John Hubbard wrote:
-> On 12/27/19 1:56 PM, John Hubbard wrote:
-> ...
-> >> It is ancient verification test (~10y) which is not an easy task to
-> >> make it understandable and standalone :).
-> >>
-> > 
-> > Is this the only test that fails, btw? No other test failures or hints of
-> > problems?
-> > 
-> > (Also, maybe hopeless, but can *anyone* on the RDMA list provide some
-> > characterization of the test, such as how many pins per page, what page
-> > sizes are used? I'm still hoping to write a test to trigger something
-> > close to this...)
-> > 
-> > I do have a couple more ideas for test runs:
-> > 
-> > 1. Reduce GUP_PIN_COUNTING_BIAS to 1. That would turn the whole override of
-> > page->_refcount into a no-op, and so if all is well (it may not be!) with the
-> > rest of the patch, then we'd expect this problem to not reappear.
-> > 
-> > 2. Active /proc/vmstat *foll_pin* statistics unconditionally (just for these
-> > tests, of course), so we can see if there is a get/put mismatch. However, that
-> > will change the timing, and so it must be attempted independently of (1), in
-> > order to see if it ends up hiding the repro.
-> > 
-> > I've updated this branch to implement (1), but not (2), hoping you can give
-> > this one a spin?
-> > 
-> >     git@github.com:johnhubbard/linux.git  pin_user_pages_tracking_v11_with_diags
-> > 
-> > 
-> 
-> Also, looking ahead:
-> 
-> a) if the problem disappears with the latest above test, then we likely have
->    a huge page refcount overflow, and there are a couple of different ways to
->    fix it. 
-> 
-> b) if it still reproduces with the above, then it's some other random mistake,
->    and in that case I'd be inclined to do a sort of guided (or classic, unguided)
->    git bisect of the series. Because it could be any of several patches.
-> 
->    If that's too much trouble, then I'd have to fall back to submitting a few
->    patches at a time and working my way up to the tracking patch...
+On Sat, 4 Jan 2020 at 00:10, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, Jan 3, 2020 at 9:59 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >
+> > Before I started investigating, Jan Stancek found and fixed the issue.
+> >
+> > http://lkml.kernel.org/r/a14b944b6e5e207d2f84f43227c98ed1f68290a2.1578072927.git.jstancek@redhat.com
+>
+> Applied upstream as commit 15f0ec941f4f ("mm/hugetlbfs: fix
+> for_each_hstate() loop in init_hugetlbfs_fs()").
 
-It could also be that an ordinary page reference is dropped with 'unpin'
-thus underflowing the page refcount...
+After applying above patch.
+LTP test case memfd_create04 getting PASS on mainline Linus's tree
+from Jan 3rd onwards.
 
-								Honza
+ref link,
+https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/ltp-syscalls-tests/memfd_create04
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+- Naresh Kamboju
