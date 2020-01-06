@@ -2,94 +2,164 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670B5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3F5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBEC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DBF217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W1Pg0Ikb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgAFBUh (ORCPT
+        id S1727263AbgAFBae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:20:37 -0500
-Received: from mga12.intel.com ([192.55.52.136]:63845 "EHLO mga12.intel.com"
+        Sun, 5 Jan 2020 20:30:34 -0500
+Received: from ozlabs.org ([203.11.71.1]:50345 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbgAFBUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:20:36 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 17:20:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,400,1571727600"; 
-   d="scan'208";a="253191050"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Jan 2020 17:20:31 -0800
-Date:   Mon, 6 Jan 2020 09:20:34 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200106012034.GA15705@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
- <alpine.DEB.2.21.2001031128200.160920@chino.kir.corp.google.com>
- <20200103233925.GA3678@richard>
- <alpine.DEB.2.21.2001031642530.92066@chino.kir.corp.google.com>
+        id S1726731AbgAFBae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:30:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rdHS6FrZz9sR1;
+        Mon,  6 Jan 2020 12:30:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578274230;
+        bh=yMDpAd1QOKFjQar6fmYKLCg+bdrTlcJiiHW/xzSmJDU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=W1Pg0Ikbf7pht31LX0B7lwOCDSnxE3PdmFg/ffmp/ul7eMnkqHv1QDkvUX0KdYIZ1
+         2kffyE0d8my7N2RmaISOtbdIW4CUpaF5ZRLfCtxbm6pbwLfBlOyp6JXKZWH21DTEjo
+         S0JM43ksTPIf2hpuVqO6E+GVu55lcdzd6DQTnDzzNf7RGbbfZ3vnoxXalFdSGYpAGl
+         HzOROSE+Qc24Gqn6j1ULuBHgSIO4hUSGA7TUFYObz7zysVTND5oPp8O3pWp3kXDIfy
+         ZHgD3sB3PrsGM1e6fnh9DUiuiBamRybJan6LrcjuGtLCY2mGAoxKjH7GOXST5dDKx/
+         qChEIc/At24Yg==
+Date:   Mon, 6 Jan 2020 12:30:27 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20200106123027.1a162197@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001031642530.92066@chino.kir.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/Pqe+0R3zoI8vqIGsIjsOL5B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 04:44:59PM -0800, David Rientjes wrote:
->On Sat, 4 Jan 2020, Wei Yang wrote:
->
->> On Fri, Jan 03, 2020 at 11:29:06AM -0800, David Rientjes wrote:
->> >On Fri, 3 Jan 2020, Wei Yang wrote:
->> >
->> >> As all the other places, we grab the lock before manipulate the defer list.
->> >> Current implementation may face a race condition.
->> >> 
->> >> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
->> >> 
->> >> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> >> 
->> >> ---
->> >> I notice the difference during code reading and just confused about the
->> >> difference. No specific test is done since limited knowledge about cgroup.
->> >> 
->> >> Maybe I miss something important?
->> >
->> >The check for !list_empty(page_deferred_list(page)) must certainly be 
->> >serialized with doing list_del_init(page_deferred_list(page)).
->> >
->> 
->> Hi David
->> 
->> Would you mind giving more information? You mean list_empty and list_del_init
->> is atomic?
->> 
->
->I mean your patch is obviously correct :)  It should likely also have a 
->stable@vger.kernel.org # 5.4+
+--Sig_/Pqe+0R3zoI8vqIGsIjsOL5B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah, my poor English ;-)
+Hi all,
 
->
->Acked-by: David Rientjes <rientjes@google.com>
+After merging the block tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
--- 
-Wei Yang
-Help you, Help me
+fs/open.c:977:12: error: conflicting types for 'build_open_flags'
+  977 | inline int build_open_flags(const struct open_how *how,
+      |            ^~~~~~~~~~~~~~~~
+In file included from /home/sfr/next/next/fs/open.c:36:
+fs/internal.h:127:12: note: previous declaration of 'build_open_flags' was =
+here
+  127 | extern int build_open_flags(int flags, umode_t mode, struct open_fl=
+ags *op);
+      |            ^~~~~~~~~~~~~~~~
+
+Caused by commits
+
+  4e9e15c9426e ("fs: make build_open_flags() available internally")
+  3bba3e571bc8 ("io_uring: add support for IORING_OP_OPENAT")
+
+interacting with commit
+
+  0a51692d49ec ("open: introduce openat2(2) syscall")
+
+from the vfs tree.
+
+I have applied the following fix up patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 20 Dec 2019 11:50:51 +1100
+Subject: [PATCH] io_uring: fix up for "open: introduce openat2(2) syscall"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/internal.h | 3 ++-
+ fs/io_uring.c | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/internal.h b/fs/internal.h
+index 166134be439f..dabf747c14fd 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -124,7 +124,8 @@ extern struct file *do_filp_open(int dfd, struct filena=
+me *pathname,
+ 		const struct open_flags *op);
+ extern struct file *do_file_open_root(struct dentry *, struct vfsmount *,
+ 		const char *, const struct open_flags *);
+-extern int build_open_flags(int flags, umode_t mode, struct open_flags *op=
+);
++extern struct open_how build_open_how(int flags, umode_t mode);
++extern int build_open_flags(const struct open_how *how, struct open_flags =
+*op);
+=20
+ long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
+ long do_faccessat(int dfd, const char __user *filename, int mode);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c770c2c0eb52..60ebdea1d8c6 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2476,16 +2476,18 @@ static int io_openat(struct io_kiocb *req, struct i=
+o_kiocb **nxt,
+ 		     bool force_nonblock)
+ {
+ 	struct open_flags op;
++	struct open_how how;
+ 	struct file *file;
+ 	int ret;
+=20
+-	ret =3D build_open_flags(req->open.flags, req->open.mode, &op);
++	how =3D build_open_how(req->open.flags, req->open.mode);
++	ret =3D build_open_flags(&how, &op);
+ 	if (ret)
+ 		goto err;
+ 	if (force_nonblock)
+ 		op.lookup_flags |=3D LOOKUP_NONBLOCK;
+=20
+-	ret =3D get_unused_fd_flags(req->open.flags);
++	ret =3D get_unused_fd_flags(how.flags);
+ 	if (ret < 0)
+ 		goto err;
+=20
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Pqe+0R3zoI8vqIGsIjsOL5B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SjbMACgkQAVBC80lX
+0Gzf4AgAh3FFiUW5b1cLfbDX6dNTw7MYybIsttqrSvB8zf98dtkz9pb4vMYwaGC+
+w0RlNABraY/NnNz7QJIjhwx+vbSM0LUwpt1bWidnPSvfdOwduPVonaRrDsACzmTw
+ZbfcQTqh/yqJpRuPc6sxCiai6SIT7LB59iVPKwhqim9bunO25qBg68QC4iiHzLGW
+Ggc0i3PsuOvdgLIi2PmiEiRxUwuF49OOEMTtNHGgpkoDPz0TQwtN+E1YPCdwe+gv
+kUcfyF5Io0Br2WkRw9iAGy4YfTYYeL07PjspfCuv9lC1M6qEHJgsh7shgvYk0mVu
+6yVN1dLdqP5karbSWA/GdEQdT5qoLg==
+=JwN7
+-----END PGP SIGNATURE-----
+
+--Sig_/Pqe+0R3zoI8vqIGsIjsOL5B--
