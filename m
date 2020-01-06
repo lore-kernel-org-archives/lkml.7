@@ -2,105 +2,66 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C777DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61617C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973892467C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578301235;
-	bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GbKAL7KrsJpwdz63d0+r/Mio+WKmgm13tk5Z+H0Huqv6nf26jOtLHdPFC7ZNueMkM
-	 y2XE2GPXbsfCHSDApWg5z+OSbuwmF4nHDjX9/KHZsu3bYfV0K5a4RGNRsRjrG6Wa+M
-	 0jwVVHr7h2NjBYazzy7/vXD0u0ZSEsBcVdt2zp+s=
+	by mail.kernel.org (Postfix) with ESMTP id 3C5C720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgAFJAe (ORCPT
+        id S1726290AbgAFJBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:00:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAFJAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:00:34 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17F320848;
-        Mon,  6 Jan 2020 09:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578301234;
-        bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w46tN5kAiqSuaX0ajqvmx8wQw/Nx2eAOWF4NO+0j4/P9Y8otmSdz/PqG2VV15OIOP
-         zD19L0rsREe3T8cVPZYxFKXNPElV4HTcQxAkDQ0jlI3/NY/LGJaM8I9BzvVeUiOyCa
-         NAAjcCvEwgIfcdvZQrAPxykh4kpMcCSl8nqUm1/4=
-Received: by wens.tw (Postfix, from userid 1000)
-        id A9E705FC12; Mon,  6 Jan 2020 17:00:32 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: sun50i-a64: Use macros for newly exported clocks
-Date:   Mon,  6 Jan 2020 17:00:30 +0800
-Message-Id: <20200106090030.9165-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 6 Jan 2020 04:01:15 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8679 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgAFJBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:01:15 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 78F401989D9DF3C45777;
+        Mon,  6 Jan 2020 17:01:12 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 Jan 2020
+ 17:01:10 +0800
+Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
+From:   Chao Yu <yuchao0@huawei.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
+ <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
+ <20191231004633.GA85441@jaegeuk-macbookpro.roam.corp.google.com>
+ <7a579223-39d4-7e51-c361-4aa592b2500d@huawei.com>
+ <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
+ <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
+ <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
+Message-ID: <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
+Date:   Mon, 6 Jan 2020 17:01:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On 2020/1/3 14:50, Chao Yu wrote:
+> This works to me. Could you run fsstress tests on compressed root directory?
+> It seems still there are some bugs.
 
-A few clocks from the CCU were exported later, and references to them in
-the device tree were using raw numbers.
+Jaegeuk,
 
-Now that the DT binding header changes are in as well, switch to the
-macros for more clarity.
+Did you mean running por_fsstress testcase?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Now, at least I didn't hit any problem for normal fsstress case.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 92688b89c2a4..293059ffbbf6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -590,7 +590,7 @@ pio: pinctrl@1c20800 {
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-@@ -1091,7 +1091,7 @@ hdmi_phy: hdmi-phy@1ef0000 {
- 			compatible = "allwinner,sun50i-a64-hdmi-phy";
- 			reg = <0x01ef0000 0x10000>;
- 			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
--				 <&ccu 7>;
-+				 <&ccu CLK_PLL_VIDEO0>;
- 			clock-names = "bus", "mod", "pll-0";
- 			resets = <&ccu RST_BUS_HDMI0>;
- 			reset-names = "phy";
-@@ -1121,7 +1121,8 @@ r_intc: interrupt-controller@1f00c00 {
- 		r_ccu: clock@1f01400 {
- 			compatible = "allwinner,sun50i-a64-r-ccu";
- 			reg = <0x01f01400 0x100>;
--			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>, <&ccu 11>;
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>,
-+				 <&ccu CLK_PLL_PERIPH0>;
- 			clock-names = "hosc", "losc", "iosc", "pll-periph";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
--- 
-2.24.1
-
+Thanks,
