@@ -2,90 +2,116 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31606C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F095820707
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA8821744
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgAFVAr (ORCPT
+        id S1726931AbgAFVAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:00:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgAFVAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:00:46 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF4E2072C;
-        Mon,  6 Jan 2020 20:52:33 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 15:52:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        users@linux.kernel.org
-Subject: Re: [kernel.org users] [RFC] tools lib traceevent: How to do
- library versioning being in the Linux kernel source?
-Message-ID: <20200106155232.4061d755@gandalf.local.home>
-In-Reply-To: <20200106204715.GA22353@ziepe.ca>
-References: <20200102122004.216c85da@gandalf.local.home>
-        <20200102234950.GA14768@krava>
-        <20200102185853.0ed433e4@gandalf.local.home>
-        <20200103133640.GD9715@krava>
-        <20200103181614.7aa37f6d@gandalf.local.home>
-        <20200106151902.GB236146@krava>
-        <20200106162623.GA11285@kernel.org>
-        <20200106113615.4545e3c5@gandalf.local.home>
-        <20200106204715.GA22353@ziepe.ca>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 Jan 2020 16:00:53 -0500
+Received: from mail-qt1-f197.google.com ([209.85.160.197]:48597 "EHLO
+        mail-qt1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbgAFVAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 16:00:51 -0500
+Received: by mail-qt1-f197.google.com with SMTP id 38so27652278qty.15
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:00:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=hQ0VUd4anpfZBkhboMtHMpou3T+xFEcqGfWYXlUJbuI=;
+        b=YLQSuIfT+kqiBfs96SGUeyBByH5buNWjNQjGTYHbS86D29JngbUD4AIhQQioUpi5ez
+         r57p3Q0Xd6bgrU8gWcG4jSIvH99ReB0fV7VU9jehzqA3RmWJMYaupqTUuuddm4noU1OK
+         M/WAG/d+Gn8NaQHEaTVz/kCYkt+vtHHB30/Kd2mHLlrlZy1eMbSEcTlzodryvhebX2Qf
+         W5ggiAJr4MRVlEGmSKAh2oc94NOgUfuMxMF5WEJr3AZn58jzoEVaIi0fCTCMJRVOtD9u
+         uRHoVRjiv1rWaieIQcbhF5hyVcz2bIb6xDlPlbaf0tPu+3m4Wzq0hU/jOPmMg4mqJNt7
+         vz9w==
+X-Gm-Message-State: APjAAAUnjua1Q7R/hrzvRJF5RWRJp7gGhpvlZumCwzhfwiZce77sgqrV
+        mn6seUJDdHk6d4tqcHTEoZFf8LJXFt9Jns9eluwpUJc+Vyfh
+X-Google-Smtp-Source: APXvYqxQ6z9NKh46eCnFOPrOGqkIJJlqV0WOPFrKnwNTf0qTq4nxAyE+TIuBaHSp9KMJW4jCsgR5ofszXvdpoNT28Hv21mm2rYx7
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:620c:: with SMTP id d12mr9247806jac.116.1578344052401;
+ Mon, 06 Jan 2020 12:54:12 -0800 (PST)
+Date:   Mon, 06 Jan 2020 12:54:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000093b204059b7edce0@google.com>
+Subject: WARNING in restore_regulatory_settings
+From:   syzbot <syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jan 2020 16:47:15 -0400
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
-
-> If it is not tightly linked to the kernel and is just a normal
-
-Well, it's used by perf, trace-cmd, power-top and rasdaemon (and
-perhaps even more). It lives in the kernel tree mainly because of perf.
-
-> library, you might consider using github. This is what we do for the
-> rdma user space and it works well. We still take patches from the
-> mailing list flow, but do use a fair amount of the github stuff too:
-> 
-> https://github.com/linux-rdma/rdma-core
-> 
-> With github actions now able to provide a quite good CI it covers a
-> lot of required stuff for a library in one place, in a way that
-> doesn't silo all the build infrastucture.
-
-Github has ways to help with libraries? I'm totally clueless about
-this. I'm interested in hearing more.
-
-Thanks,
-
--- Steve
-
-
-> 
-> If you are interested in how we set it up I can write a longer email.
-
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgYzc5ZjQ2YTIgTGludXggNS41LXJjNQ0KZ2l0IHRyZWU6ICAgICAgIHVwc3RyZWFt
+DQpjb25zb2xlIG91dHB1dDogaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9sb2cudHh0
+P3g9MTM1NzUxM2VlMDAwMDANCmtlcm5lbCBjb25maWc6ICBodHRwczovL3N5emthbGxlci5hcHBz
+cG90LmNvbS94Ly5jb25maWc/eD00MmM4MjY5NGY3OTJiMmY1DQpkYXNoYm9hcmQgbGluazogaHR0
+cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20vYnVnP2V4dGlkPWQ0NTE0MDFmZmQwMGE2MDY3N2Vl
+DQpjb21waWxlcjogICAgICAgZ2NjIChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50YWwp
+DQpzeXogcmVwcm86ICAgICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5z
+eXo/eD0xMTUzODExNWUwMDAwMA0KQyByZXByb2R1Y2VyOiAgIGh0dHBzOi8vc3l6a2FsbGVyLmFw
+cHNwb3QuY29tL3gvcmVwcm8uYz94PTExZDZlZTNlZTAwMDAwDQoNCklNUE9SVEFOVDogaWYgeW91
+IGZpeCB0aGUgYnVnLCBwbGVhc2UgYWRkIHRoZSBmb2xsb3dpbmcgdGFnIHRvIHRoZSBjb21taXQ6
+DQpSZXBvcnRlZC1ieTogc3l6Ym90K2Q0NTE0MDFmZmQwMGE2MDY3N2VlQHN5emthbGxlci5hcHBz
+cG90bWFpbC5jb20NCg0KLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tDQpVbmV4
+cGVjdGVkIHVzZXIgYWxwaGEyOiAAAA0KV0FSTklORzogQ1BVOiAwIFBJRDogMjgxMCBhdCBuZXQv
+d2lyZWxlc3MvcmVnLmM6NDE4IGlzX3VzZXJfcmVnZG9tX3NhdmVkICANCm5ldC93aXJlbGVzcy9y
+ZWcuYzo0MTggW2lubGluZV0NCldBUk5JTkc6IENQVTogMCBQSUQ6IDI4MTAgYXQgbmV0L3dpcmVs
+ZXNzL3JlZy5jOjQxOCByZXN0b3JlX2FscGhhMiAgDQpuZXQvd2lyZWxlc3MvcmVnLmM6MzA5MiBb
+aW5saW5lXQ0KV0FSTklORzogQ1BVOiAwIFBJRDogMjgxMCBhdCBuZXQvd2lyZWxlc3MvcmVnLmM6
+NDE4ICANCnJlc3RvcmVfcmVndWxhdG9yeV9zZXR0aW5ncysweDIyNi8weDEzZTAgbmV0L3dpcmVs
+ZXNzL3JlZy5jOjMxODQNCktlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBwYW5pY19vbl93YXJu
+IHNldCAuLi4NCkNQVTogMCBQSUQ6IDI4MTAgQ29tbToga3dvcmtlci8wOjU1IE5vdCB0YWludGVk
+IDUuNS4wLXJjNS1zeXprYWxsZXIgIzANCkhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29t
+cHV0ZSBFbmdpbmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TICANCkdvb2dsZSAwMS8wMS8y
+MDExDQpXb3JrcXVldWU6IGV2ZW50c19wb3dlcl9lZmZpY2llbnQgY3JkYV90aW1lb3V0X3dvcmsN
+CkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVd
+DQogIGR1bXBfc3RhY2srMHgxOTcvMHgyMTAgbGliL2R1bXBfc3RhY2suYzoxMTgNCiAgcGFuaWMr
+MHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6MjIxDQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzZSBr
+ZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0X2J1ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1
+DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoxNzQgW2lubGluZV0NCiAgZml4
+dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFwcy5jOjE2OSBbaW5saW5lXQ0KICBkb19lcnJvcl90
+cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tlcm5lbC90cmFwcy5jOjI2Nw0KICBkb19pbnZhbGlk
+X29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJuZWwvdHJhcHMuYzoyODYNCiAgaW52YWxpZF9vcCsw
+eDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50cnlfNjQuUzoxMDI3DQpSSVA6IDAwMTA6aXNfdXNl
+cl9yZWdkb21fc2F2ZWQgbmV0L3dpcmVsZXNzL3JlZy5jOjQxOCBbaW5saW5lXQ0KUklQOiAwMDEw
+OnJlc3RvcmVfYWxwaGEyIG5ldC93aXJlbGVzcy9yZWcuYzozMDkyIFtpbmxpbmVdDQpSSVA6IDAw
+MTA6cmVzdG9yZV9yZWd1bGF0b3J5X3NldHRpbmdzKzB4MjI2LzB4MTNlMCBuZXQvd2lyZWxlc3Mv
+cmVnLmM6MzE4NA0KQ29kZTogMDMgNDQgODkgZjYgZTggMmIgYmEgMWYgZmEgNDUgODQgZjYgMGYg
+ODUgOWEgMDcgMDAgMDAgZTggZGQgYjggMWYgZmEgIA0KNDEgMGYgYmUgZDUgMGYgYmUgZjMgNDgg
+YzcgYzcgMDAgYmEgZWQgODggZTggZjkgNjAgZjAgZjkgPDBmPiAwYiBlOCBjMyBiOCAgDQoxZiBm
+YSA0YyA4YiAyZCA2YyBlMiAxMiAwMyA0OCBiOCAwMCAwMCAwMCAwMCAwMCBmYw0KUlNQOiAwMDE4
+OmZmZmZjOTAwMDgwZGZjMjAgRUZMQUdTOiAwMDAxMDI4Ng0KUkFYOiAwMDAwMDAwMDAwMDAwMDAw
+IFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMDAwMDAwMDANClJEWDogMDAwMDAw
+MDAwMDAwMDAwMCBSU0k6IGZmZmZmZmZmODE1ZThiNDYgUkRJOiBmZmZmZjUyMDAxMDFiZjc2DQpS
+QlA6IGZmZmZjOTAwMDgwZGZkMjAgUjA4OiBmZmZmODg4MDlmNmNhMDgwIFIwOTogZmZmZmVkMTAx
+NWQwNjYyMQ0KUjEwOiBmZmZmZWQxMDE1ZDA2NjIwIFIxMTogZmZmZjg4ODBhZTgzMzEwNyBSMTI6
+IDAwMDAwMDAwMDAwMDAwMDENClIxMzogMDAwMDAwMDAwMDAwMDAwMCBSMTQ6IDAwMDAwMDAwMDAw
+MDAwMDAgUjE1OiBmZmZmODg4MGFlODM2YjQwDQogIGNyZGFfdGltZW91dF93b3JrKzB4MjEvMHgz
+MCBuZXQvd2lyZWxlc3MvcmVnLmM6NTIwDQogIHByb2Nlc3Nfb25lX3dvcmsrMHg5YWYvMHgxNzQw
+IGtlcm5lbC93b3JrcXVldWUuYzoyMjY0DQogIHdvcmtlcl90aHJlYWQrMHg5OC8weGU0MCBrZXJu
+ZWwvd29ya3F1ZXVlLmM6MjQxMA0KICBrdGhyZWFkKzB4MzYxLzB4NDMwIGtlcm5lbC9rdGhyZWFk
+LmM6MjU1DQogIHJldF9mcm9tX2ZvcmsrMHgyNC8weDMwIGFyY2gveDg2L2VudHJ5L2VudHJ5XzY0
+LlM6MzUyDQpLZXJuZWwgT2Zmc2V0OiBkaXNhYmxlZA0KUmVib290aW5nIGluIDg2NDAwIHNlY29u
+ZHMuLg0KDQoNCi0tLQ0KVGhpcyBidWcgaXMgZ2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29u
+dGFpbiBlcnJvcnMuDQpTZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0
+aW9uIGFib3V0IHN5emJvdC4NCnN5emJvdCBlbmdpbmVlcnMgY2FuIGJlIHJlYWNoZWQgYXQgc3l6
+a2FsbGVyQGdvb2dsZWdyb3Vwcy5jb20uDQoNCnN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhp
+cyBidWcgcmVwb3J0LiBTZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojc3RhdHVzIGZvciBob3cg
+dG8gY29tbXVuaWNhdGUgd2l0aCBzeXpib3QuDQpzeXpib3QgY2FuIHRlc3QgcGF0Y2hlcyBmb3Ig
+dGhpcyBidWcsIGZvciBkZXRhaWxzIHNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21FSiN0ZXN0aW5n
+LXBhdGNoZXMNCg==
