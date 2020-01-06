@@ -2,120 +2,174 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B836C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FB6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C70C21734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6C5217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgAFAiR (ORCPT
+        id S1727215AbgAFAjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 19:38:17 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:56062 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgAFAiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 19:38:16 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id F259F8050A;
-        Mon,  6 Jan 2020 01:38:10 +0100 (CET)
-Date:   Mon, 6 Jan 2020 01:38:09 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] drm/panel: simple: Add support for the Frida
- FRD350H54004 panel
-Message-ID: <20200106003809.GA552@ravnborg.org>
-References: <20191202154123.64139-1-paul@crapouillou.net>
- <20191202154123.64139-3-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202154123.64139-3-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=4eiu5t_5MPiKWv0nutYA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
+        Sun, 5 Jan 2020 19:39:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:39236 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgAFAjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 19:39:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F2D531B;
+        Sun,  5 Jan 2020 16:39:06 -0800 (PST)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4D53F703;
+        Sun,  5 Jan 2020 16:39:04 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v2] ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes
+Date:   Mon,  6 Jan 2020 00:38:49 +0000
+Message-Id: <20200106003849.16666-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+The Allwinner R40 SoC contains four SPI controllers, using the newer
+sun6i design (but at the legacy addresses).
+The controller seems to be fully compatible to the A64 one, so no driver
+changes are necessary.
+The first three controllers can be used on two sets of pins, but SPI3 is
+only routed to one set on Port A.
+Only the pin groups for SPI0 on PortC and SPI1 on PortI are added here,
+because those seem to be the only one exposed on the Bananapi boards.
 
-On Mon, Dec 02, 2019 at 04:41:23PM +0100, Paul Cercueil wrote:
-> The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
-> instance inside the Anbernic RG-350 handheld gaming console.
-> 
-> v2: Order alphabetically
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 28fa6ba7b767..0e5e33a57f0c 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1402,6 +1402,32 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
->  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
->  };
->  
-> +static const struct drm_display_mode frida_frd350h54004_mode = {
-> +	.clock = 6777,
-> +	.hdisplay = 320,
-> +	.hsync_start = 320 + 70,
-> +	.hsync_end = 320 + 70 + 50,
-> +	.htotal = 320 + 70 + 50 + 10,
-> +	.vdisplay = 240,
-> +	.vsync_start = 240 + 5,
-> +	.vsync_end = 240 + 5 + 1,
-> +	.vtotal = 240 + 5 + 1 + 5,
-> +	.vrefresh = 60,
-> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> +};
-> +
-> +static const struct panel_desc frida_frd350h54004 = {
-> +	.modes = &frida_frd350h54004_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 77,
-> +		.height = 64,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +};
-connector_type is mandatory for new panel-simple panels.
+Tested by connecting a SPI flash to a Bananapi M2 Berry SPI0 and SPI1
+header pins.
 
-	Sam
-> +
->  static const struct drm_display_mode friendlyarm_hd702e_mode = {
->  	.clock		= 67185,
->  	.hdisplay	= 800,
-> @@ -3189,6 +3215,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "foxlink,fl500wvr00-a0t",
->  		.data = &foxlink_fl500wvr00_a0t,
-> +	}, {
-> +		.compatible = "frida,frd350h54004",
-> +		.data = &frida_frd350h54004,
->  	}, {
->  		.compatible = "friendlyarm,hd702e",
->  		.data = &friendlyarm_hd702e,
-> -- 
-> 2.24.0
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+Changes from v1 3/3 ... v2:
+- Removed most pin groups except SPI0-PC and SPI1-PI
+- Split off CS pins
+- Add omit-if-no-ref tags
+
+ arch/arm/boot/dts/sun8i-r40.dtsi | 90 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 8dcbc4465fbb..c5654fd034be 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -418,6 +418,36 @@
+ 				bias-pull-up;
+ 			};
+ 
++			/omit-if-no-ref/
++			spi0_pc_pins: spi0-pc-pins {
++				pins = "PC0", "PC1", "PC2";
++				function = "spi0";
++			};
++
++			/omit-if-no-ref/
++			spi0_cs0_pc_pin: spi0-cs0-pc-pin {
++				pins = "PC23";
++				function = "spi0";
++			};
++
++			/omit-if-no-ref/
++			spi1_pi_pins: spi1-pi-pins {
++				pins = "PI17", "PI18", "PI19";
++				function = "spi1";
++			};
++
++			/omit-if-no-ref/
++			spi1_cs0_pi_pin: spi1-cs0-pi-pin {
++				pins = "PI16";
++				function = "spi1";
++			};
++
++			/omit-if-no-ref/
++			spi1_cs1_pi_pin: spi1-cs1-pi-pin {
++				pins = "PI15";
++				function = "spi1";
++			};
++
+ 			uart0_pb_pins: uart0-pb-pins {
+ 				pins = "PB22", "PB23";
+ 				function = "uart0";
+@@ -594,6 +624,66 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		spi0: spi@1c05000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c05000 0x1000>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
++			clock-names = "ahb", "mod";
++			dmas = <&dma 24>, <&dma 24>;
++			dma-names = "rx", "tx";
++			resets = <&ccu RST_BUS_SPI0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		spi1: spi@1c06000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c06000 0x1000>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
++			clock-names = "ahb", "mod";
++			dmas = <&dma 25>, <&dma 25>;
++			dma-names = "rx", "tx";
++			resets = <&ccu RST_BUS_SPI1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		spi2: spi@1c07000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c07000 0x1000>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
++			clock-names = "ahb", "mod";
++			dmas = <&dma 26>, <&dma 26>;
++			dma-names = "rx", "tx";
++			resets = <&ccu RST_BUS_SPI2>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		spi3: spi@1c0f000 {
++			compatible = "allwinner,sun8i-r40-spi",
++				     "allwinner,sun8i-h3-spi";
++			reg = <0x01c0f000 0x1000>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
++			clock-names = "ahb", "mod";
++			dmas = <&dma 27>, <&dma 27>;
++			dma-names = "rx", "tx";
++			resets = <&ccu RST_BUS_SPI3>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		ahci: sata@1c18000 {
+ 			compatible = "allwinner,sun8i-r40-ahci";
+ 			reg = <0x01c18000 0x1000>;
+-- 
+2.14.5
+
