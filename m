@@ -2,172 +2,177 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F1EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BEC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5442520731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578306429;
-	bh=ZoIVcu6xJXpboG2PWJK8jcaF4ig8GVv2FUyIC3KZTT4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j2mF/VjHLEmOcEgEEFFz5oSQCBulHHvw/NK1EBxWWSX+r/JJTeq/GX2EvXicuOPSL
-	 bOklerPuhhAQfdQw7HLWdiWppZiCxdxzqNsJ82zteczqCr0WuLV8aaXYH6SsQSSG6t
-	 n0jVai1PHQ9Tnb6RhF1uV5SqMKNn1boWL74sI448=
+	by mail.kernel.org (Postfix) with ESMTP id 9113720731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RYFVFEjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgAFK1I (ORCPT
+        id S1726358AbgAFK2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:27:08 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:60795 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFK1I (ORCPT
+        Mon, 6 Jan 2020 05:28:35 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40422 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFK2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:27:08 -0500
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 006AQxd8031185;
-        Mon, 6 Jan 2020 19:27:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 006AQxd8031185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578306420;
-        bh=8PkpWVUdySY51bUMOM4KhlKE4NHl+5/7vU1rEUIqJ74=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t1xERg3M5OoLY8eI1HE1qeopn4zm+lDun8hAHIoNqc9Z/hSPLdU3iR75gK1mF0+/a
-         NTo0YC5YG+e5yOwbtfBuQpfjSiU1dQffQVJtRDsK6ZaPoKiJojI66MKR9lbEhGC3Cs
-         235PXWqYr2R+Z2ae8FTKbvArkKY6eaNRpvsTp0HrlTfd19t4KJkzzJ1JXSy+IWlXSi
-         MTkkP/p3d7lwPbCnHBqEY8Np0AS8QAQXyTgizJzjkLsXBouRsowZP6cxyoyW6BWBkP
-         /0HgC+zWk+5hfOwhwE6lutwpK1WZR/rWdTerM969zfjZ7AfMKCVAbsoHpKHU6svg1R
-         Z9C8bijSGb4pw==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id c7so13949644uaf.5;
-        Mon, 06 Jan 2020 02:26:59 -0800 (PST)
-X-Gm-Message-State: APjAAAX5aOjrTGuJQ7FpEio/XLMRpwsuGqal5dL+FPud11tXhdXSglQB
-        QejvO11T7N/8eSxSbxOMK4G9G3tlfPCvSdjTyN0=
-X-Google-Smtp-Source: APXvYqxgU3jMDo9bKZjHgpqMc+GLjt6jxilfwf2oNo2fDwQPFlGVv3FnjZk4Uygr+k8RNOj2/thH79yiUnmAOA0MjvY=
-X-Received: by 2002:ab0:14ea:: with SMTP id f39mr49189518uae.40.1578306418628;
- Mon, 06 Jan 2020 02:26:58 -0800 (PST)
+        Mon, 6 Jan 2020 05:28:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Lz46G6qRS0iXyjoqa8gTgIUca8qdvcSqxaUA8OlqGiA=; b=RYFVFEjG2yG4Q+Y7aFP46IKAz
+        ndmqMBU4hVaUjfQZ0ot9M7T5I6lXeU2ZXGFx3UkRkssrcOF0/hSvq1H8Nge9H7xH1A0LMEphTq3Ec
+        xRGZ2h82ux/ALJpOnxEMhXQLxevkaPIg2pqELwDJGNpwVAzd4RaLvGG+zqZ5R4u4MQW8JRLVi94aO
+        D1v4XPBlq1C0uE/mSrdEy4PsnO8NrqG/ApcQurqx22kjAPan+nL3TdzrPAb0FusoNqqQjBDd7e1kP
+        DyF9hEAmMTzOQV9fr6ysxgMSJsZ5f0PaQ0WR/BXg+qmvBxztf5SLKDmhuCf55oMkvB4XpjuO+lU6L
+        vyEZY4T4A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioPcQ-0000wS-9o; Mon, 06 Jan 2020 10:28:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B3420306368;
+        Mon,  6 Jan 2020 11:26:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B72F62B27B121; Mon,  6 Jan 2020 11:28:16 +0100 (CET)
+Date:   Mon, 6 Jan 2020 11:28:16 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, qais.yousef@arm.com,
+        morten.rasmussen@arm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH v2] sched/fair: fix sgc->{min,max}_capacity miscalculate
+Message-ID: <20200106102816.GN2810@hirez.programming.kicks-ass.net>
+References: <20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ>
+ <e034b806-bb3d-98c0-5d60-53610bfe6ca0@arm.com>
 MIME-Version: 1.0
-References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-5-masahiroy@kernel.org>
- <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com>
-In-Reply-To: <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 6 Jan 2020 19:26:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
-Message-ID: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
-To:     Greg Thelen <gthelen@google.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e034b806-bb3d-98c0-5d60-53610bfe6ca0@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC Ben Hutchings, H. Peter Anvin)
+On Mon, Jan 06, 2020 at 10:25:49AM +0100, Dietmar Eggemann wrote:
+> On 04/01/2020 14:08, Peng Liu wrote:
+> 
+> Could you add a hint that this is about the SD_OVERLAP path? Something
+> like 'Fix sgc->{min,max}_capacity calculation for SD_OVERLAP'
+> 
+> > commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
+> > sched_group_capacity") introduced per-cpu min_capacity.
+> > 
+> > commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
+> > introduced per-cpu max_capacity.
+> > 
+> > Here, capacity is the accumulated sum of (maybe) many CPUs' capacity.
+> > Compare with capacity to get {min,max}_capacity makes no sense. Instead,
+> > we should compare one by one in each iteration to get
+> > sgc->{min,max}_capacity of the group.
+> > 
+> > Also, the only CPU in rq->sd->groups should be rq's CPU. Thus,
+> > capacity_of(cpu_of(rq)) should be equal to rq->sd->groups->sgc->capacity.
+> > Code can be simplified by removing the if/else.
+> 
+> Could we improve the description of the issue and the change a little
+> bit? Something like:
+> 
+> In the SD_OVERLAP case, the local variable 'capacity' represents the sum
+> of CPU capacity of all CPUs in the first sched group (sg) of the sched
+> domain (sd).
+> 
+> It is erroneously used to calculate sg's min and max CPU capacity.
+> To fix this use capacity_of(cpu) instead of 'capacity'.
+> 
+> The code which achieves this via cpu_rq(cpu)->sd->groups->sgc->capacity
+> (for rq->sd != NULL) can be removed since it delivers the same value as
+> capacity_of(cpu) which is currently only used for the (!rq->sd) case
+> (see update_cpu_capacity()).
+> A sg of the lowest sd (rq->sd or sd->child == NULL) represents a single
+> CPU (and hence sg->sgc->capacity == capacity_of(cpu)).
+> 
 
-In my understanding, the klibc build system is standalone.
-So, the change in Linux kernel does not affect klibc at all.
-Only the depending part is UAPI headers (make headers_install).
+I've made it like so.
 
-So, this patch
-(https://lore.kernel.org/patchwork/patch/1175336/)
-should be OK.
+---
+Subject: sched/fair: Fix sgc->{min,max}_capacity calculation for SD_OVERLAP
+From: Peng Liu <iwtbavbm@gmail.com>
+Date: Sat, 4 Jan 2020 21:08:28 +0800
 
-Please correct me if I am wrong.
+commit bf475ce0a3dd ("sched/fair: Add per-CPU min capacity to
+sched_group_capacity") introduced per-cpu min_capacity.
 
+commit e3d6d0cb66f2 ("sched/fair: Add sched_group per-CPU max capacity")
+introduced per-cpu max_capacity.
 
-On Mon, Jan 6, 2020 at 4:43 PM Greg Thelen <gthelen@google.com> wrote:
->
-> Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> > The comments in usr/Makefile wrongly refer to the script name (twice).
-> >
-> > Line 37:
-> >     # The dependency list is generated by gen_initramfs.sh -l
-> >
-> > Line 54:
-> >     # 4) Arguments to gen_initramfs.sh changes
-> >
-> > There does not exist such a script.
-> >
-> > I was going to fix the comments, but after some consideration, I thought
-> > "gen_initramfs.sh" would be more suitable than "gen_initramfs_list.sh"
-> > because it generates an initramfs image in the common usage.
-> >
-> > The script generates a list that can be fed to gen_init_cpio only when
-> > it is directly run without -o or -l option.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> > Changes in v2: None
-> >
-> >  usr/Makefile                                    | 2 +-
-> >  usr/{gen_initramfs_list.sh => gen_initramfs.sh} | 0
-> >  2 files changed, 1 insertion(+), 1 deletion(-)
-> >  rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (100%)
->
-> Will this break klibc?  It might have a ref to the old name.
-> https://git.kernel.org/pub/scm/libs/klibc/klibc.git/tree/usr/Kbuild#n55
+In the SD_OVERLAP case, the local variable 'capacity' represents the sum
+of CPU capacity of all CPUs in the first sched group (sg) of the sched
+domain (sd).
 
-I do not think so.
+It is erroneously used to calculate sg's min and max CPU capacity.
+To fix this use capacity_of(cpu) instead of 'capacity'.
 
-As I stated above, the klibc build system is independent of
-any script in the Linux kernel.
+The code which achieves this via cpu_rq(cpu)->sd->groups->sgc->capacity
+(for rq->sd != NULL) can be removed since it delivers the same value as
+capacity_of(cpu) which is currently only used for the (!rq->sd) case
+(see update_cpu_capacity()).
+An sg of the lowest sd (rq->sd or sd->child == NULL) represents a single
+CPU (and hence sg->sgc->capacity == capacity_of(cpu)).
 
-The klibc Makefile refers to
-scripts/gen_initramfs_list.sh, which does not exist.
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20200104130828.GA7718@iZj6chx1xj0e0buvshuecpZ
+---
+ kernel/sched/fair.c |   26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
-My path is renaming
-usr/gen_initramfs_list.sh to usr/gen_initramfs.sh
-
-
-If the renaming had been problematic for klibc,
-commit f6f57a46435d7253a52a1a07a58183678ad266a0
-("initramfs: move gen_initramfs_list.sh from scripts/ to usr/")
-would have already caused a problem.
-
-
-
-Ben, Hans,
-Is usr/Kbuild in klibc used?
-If it is not used, is it better to delete it to avoid confusion?
-
-
-Masahiro Yamada
-
-
-
-
-> > diff --git a/usr/Makefile b/usr/Makefile
-> > index 55c942da01cd..e44a66b8c051 100644
-> > --- a/usr/Makefile
-> > +++ b/usr/Makefile
-> > @@ -24,7 +24,7 @@ $(obj)/initramfs_data.o: $(obj)/$(datafile_y) FORCE
-> >  # Generate the initramfs cpio archive
-> >
-> >  hostprogs-y := gen_init_cpio
-> > -initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs_list.sh
-> > +initramfs   := $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs.sh
-> >  ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
-> >                       $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
-> >  ramfs-args  := \
-> > diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs.sh
-> > similarity index 100%
-> > rename from usr/gen_initramfs_list.sh
-> > rename to usr/gen_initramfs.sh
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7855,29 +7855,11 @@ void update_group_capacity(struct sched_
+ 		 */
+ 
+ 		for_each_cpu(cpu, sched_group_span(sdg)) {
+-			struct sched_group_capacity *sgc;
+-			struct rq *rq = cpu_rq(cpu);
++			unsigned long cpu_cap = capacity_of(cpu);
+ 
+-			/*
+-			 * build_sched_domains() -> init_sched_groups_capacity()
+-			 * gets here before we've attached the domains to the
+-			 * runqueues.
+-			 *
+-			 * Use capacity_of(), which is set irrespective of domains
+-			 * in update_cpu_capacity().
+-			 *
+-			 * This avoids capacity from being 0 and
+-			 * causing divide-by-zero issues on boot.
+-			 */
+-			if (unlikely(!rq->sd)) {
+-				capacity += capacity_of(cpu);
+-			} else {
+-				sgc = rq->sd->groups->sgc;
+-				capacity += sgc->capacity;
+-			}
+-
+-			min_capacity = min(capacity, min_capacity);
+-			max_capacity = max(capacity, max_capacity);
++			capacity += cpu_cap;
++			min_capacity = min(cpu_cap, min_capacity);
++			max_capacity = max(cpu_cap, max_capacity);
+ 		}
+ 	} else  {
+ 		/*
