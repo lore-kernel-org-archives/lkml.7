@@ -2,214 +2,122 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD4BC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDCEC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECDE21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFB621582
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgAFC1r (ORCPT
+        id S1727369AbgAFCe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:27:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:39896 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbgAFC1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:27:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A348631B;
-        Sun,  5 Jan 2020 18:27:46 -0800 (PST)
-Received: from [10.162.41.131] (p8cg001049571a15.blr.arm.com [10.162.41.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABD163F534;
-        Sun,  5 Jan 2020 18:27:42 -0800 (PST)
-Subject: Re: [RFC] mm/memblock: Define memblock_physmem()
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Collin Walling <walling@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578040866-3844-1-git-send-email-anshuman.khandual@arm.com>
- <20200105085921.GB7261@rapoport-lnx>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <1e5e2ff2-03f9-387f-e566-38657cd9dfe2@arm.com>
-Date:   Mon, 6 Jan 2020 07:58:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 5 Jan 2020 21:34:56 -0500
+Received: from mail.windriver.com ([147.11.1.11]:54151 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgAFCe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:34:56 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0062Ydr3018153
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Sun, 5 Jan 2020 18:34:40 -0800 (PST)
+Received: from pek-lpggp2 (128.224.153.75) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.468.0; Sun, 5 Jan 2020
+ 18:34:39 -0800
+Received: by pek-lpggp2 (Postfix, from userid 20544)    id 37ED9720E75; Mon,  6
+ Jan 2020 10:33:41 +0800 (CST)
+From:   Jiping Ma <jiping.ma2@windriver.com>
+To:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>
+CC:     <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <jiping.ma2@windriver.com>
+Subject: [PATCH] stmmac: debugfs entry name is not be changed when udev rename device name.
+Date:   Mon, 6 Jan 2020 10:33:41 +0800
+Message-ID: <20200106023341.206459-1-jiping.ma2@windriver.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200105085921.GB7261@rapoport-lnx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add one notifier for udev changes net device name.
 
-On 01/05/2020 02:29 PM, Mike Rapoport wrote:
-> Hi Anshuman,
-> 
-> On Fri, Jan 03, 2020 at 02:11:06PM +0530, Anshuman Khandual wrote:
->> On s390 platform memblock.physmem array is being built by directly calling
->> into memblock_add_range() which is a low level function not intended to be
->> used outside of memblock. Hence lets conditionally add helper functions for
->> physmem array when HAVE_MEMBLOCK_PHYS_MAP is enabled. Also use MAX_NUMNODES
->> instead of 0 as node ID similar to memblock_add() and memblock_reserve().
->> While here replace some function name strings with (%s __func__) in various
->> memblock_dbg() call sites.
->  
-> I'd prefer to have memblock_dbg() updates as a separate patch.
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Sure, will do.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b14f46a57154..8d927e455123 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -104,6 +104,7 @@ MODULE_PARM_DESC(chain_mode, "To use chain instead of ring mode");
+ static irqreturn_t stmmac_interrupt(int irq, void *dev_id);
+ 
+ #ifdef CONFIG_DEBUG_FS
++static const struct net_device_ops stmmac_netdev_ops;
+ static int stmmac_init_fs(struct net_device *dev);
+ static void stmmac_exit_fs(struct net_device *dev);
+ #endif
+@@ -4038,6 +4039,34 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
+ }
+ DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
+ 
++/* Use network device events to rename debugfs file entries.
++ */
++static int stmmac_device_event(struct notifier_block *unused,
++			       unsigned long event, void *ptr)
++{
++	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
++	struct stmmac_priv *priv = netdev_priv(dev);
++
++	if (dev->netdev_ops != &stmmac_netdev_ops)
++		goto done;
++
++	switch (event) {
++	case NETDEV_CHANGENAME:
++		if (priv->dbgfs_dir)
++			priv->dbgfs_dir = debugfs_rename(stmmac_fs_dir,
++							 priv->dbgfs_dir,
++							 stmmac_fs_dir,
++							 dev->name);
++		break;
++	}
++done:
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block stmmac_notifier = {
++	.notifier_call = stmmac_device_event,
++};
++
+ static int stmmac_init_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+@@ -4076,6 +4105,8 @@ static int stmmac_init_fs(struct net_device *dev)
+ 		return -ENOMEM;
+ 	}
+ 
++	register_netdevice_notifier(&stmmac_notifier);
++
+ 	return 0;
+ }
+ 
+@@ -4083,6 +4114,7 @@ static void stmmac_exit_fs(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 
++	unregister_netdevice_notifier(&stmmac_notifier);
+ 	debugfs_remove_recursive(priv->dbgfs_dir);
+ }
+ #endif /* CONFIG_DEBUG_FS */
+-- 
+2.23.0
 
-> 
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
->> Cc: Collin Walling <walling@linux.ibm.com>
->> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
->> Cc: Philipp Rudo <prudo@linux.ibm.com>
->> Cc: Mike Rapoport <rppt@linux.ibm.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> Only build tested for s390, will appreciate if some one can give it a try
->> on a real system.
->>
->>  arch/s390/kernel/setup.c | 14 ++++----------
->>  include/linux/memblock.h |  3 +++
->>  mm/memblock.c            | 20 ++++++++++++++++----
->>  3 files changed, 23 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
->> index 9cbf490fd162..79a7b1872e5a 100644
->> --- a/arch/s390/kernel/setup.c
->> +++ b/arch/s390/kernel/setup.c
->> @@ -761,14 +761,6 @@ static void __init free_mem_detect_info(void)
->>  		memblock_free(start, size);
->>  }
->>  
->> -static void __init memblock_physmem_add(phys_addr_t start, phys_addr_t size)
->> -{
->> -	memblock_dbg("memblock_physmem_add: [%#016llx-%#016llx]\n",
->> -		     start, start + size - 1);
->> -	memblock_add_range(&memblock.memory, start, size, 0, 0);
->> -	memblock_add_range(&memblock.physmem, start, size, 0, 0);
->> -}
->> -
->>  static const char * __init get_mem_info_source(void)
->>  {
->>  	switch (mem_detect.info_source) {
->> @@ -793,8 +785,10 @@ static void __init memblock_add_mem_detect_info(void)
->>  		     get_mem_info_source(), mem_detect.info_source);
->>  	/* keep memblock lists close to the kernel */
->>  	memblock_set_bottom_up(true);
->> -	for_each_mem_detect_block(i, &start, &end)
->> -		memblock_physmem_add(start, end - start);
->> +	for_each_mem_detect_block(i, &start, &end) {
->> +		memblock_add(start, end - start);
->> +		memblock_physmem(start, end - start);
-> 
-> Maybe memblock_physmem_add()?
-
-Okay.
-
-> 
-> And, since memblock_add_range() will actually become private, cab you
-> please make it static?
-
-Sure, will do.
-
-> 
->> +	}
->>  	memblock_set_bottom_up(false);
->>  	memblock_dump_all();
->>  }
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index 1510b12de031..d17e7b841cb6 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -115,6 +115,9 @@ int memblock_add(phys_addr_t base, phys_addr_t size);
->>  int memblock_remove(phys_addr_t base, phys_addr_t size);
->>  int memblock_free(phys_addr_t base, phys_addr_t size);
->>  int memblock_reserve(phys_addr_t base, phys_addr_t size);
->> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
->> +int memblock_physmem(phys_addr_t base, phys_addr_t size);
->> +#endif
->>  void memblock_trim_memory(phys_addr_t align);
->>  bool memblock_overlaps_region(struct memblock_type *type,
->>  			      phys_addr_t base, phys_addr_t size);
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 3e20c6ba2101..f6d17a1f30e3 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -694,7 +694,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
->>  {
->>  	phys_addr_t end = base + size - 1;
->>  
->> -	memblock_dbg("memblock_add: [%pa-%pa] %pS\n",
->> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->>  		     &base, &end, (void *)_RET_IP_);
->>  
->>  	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
->> @@ -795,7 +795,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
->>  {
->>  	phys_addr_t end = base + size - 1;
->>  
->> -	memblock_dbg("memblock_remove: [%pa-%pa] %pS\n",
->> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->>  		     &base, &end, (void *)_RET_IP_);
->>  
->>  	return memblock_remove_range(&memblock.memory, base, size);
->> @@ -813,7 +813,7 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
->>  {
->>  	phys_addr_t end = base + size - 1;
->>  
->> -	memblock_dbg("   memblock_free: [%pa-%pa] %pS\n",
->> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->>  		     &base, &end, (void *)_RET_IP_);
->>  
->>  	kmemleak_free_part_phys(base, size);
->> @@ -824,12 +824,24 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
->>  {
->>  	phys_addr_t end = base + size - 1;
->>  
->> -	memblock_dbg("memblock_reserve: [%pa-%pa] %pS\n",
->> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->>  		     &base, &end, (void *)_RET_IP_);
->>  
->>  	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
->>  }
->>  
->> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
->> +int __init_memblock memblock_physmem(phys_addr_t base, phys_addr_t size)
->> +{
->> +	phys_addr_t end = base + size - 1;
->> +
->> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->> +		     &base, &end, (void *)_RET_IP_);
->> +
->> +	return memblock_add_range(&memblock.physmem, base, size, MAX_NUMNODES, 0);
->> +}
->> +#endif
->> +
->>  /**
->>   * memblock_setclr_flag - set or clear flag for a memory region
->>   * @base: base address of the region
->> -- 
->> 2.20.1
->>
->>
-> 
