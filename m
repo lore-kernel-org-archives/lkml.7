@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDD9C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CBEC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB9E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1ED207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgAFPtN (ORCPT
+        id S1726895AbgAFPtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:49:13 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:41192 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgAFPtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jan 2020 10:49:09 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:41166 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgAFPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:49:05 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 197EDFB02;
-        Mon,  6 Jan 2020 16:49:07 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 7C33CFB04;
+        Mon,  6 Jan 2020 16:49:03 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id UrIqahHrEVJn; Mon,  6 Jan 2020 16:49:05 +0100 (CET)
+        with ESMTP id eVdHpQW_EqiV; Mon,  6 Jan 2020 16:49:02 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3842B49D41; Mon,  6 Jan 2020 16:48:56 +0100 (CET)
+        id 5934949D44; Mon,  6 Jan 2020 16:48:56 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
@@ -35,9 +35,9 @@ To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/6] leds: lm3692x: Make sure we don't exceed the maximum led current
-Date:   Mon,  6 Jan 2020 16:48:50 +0100
-Message-Id: <b00fc4fc813483e126cf078e38774a87256828af.1578324703.git.agx@sigxcpu.org>
+Subject: [PATCH v4 5/6] dt: bindings: lm3692x: Add ti,brightness-mapping-exponential property
+Date:   Mon,  6 Jan 2020 16:48:54 +0100
+Message-Id: <3da232fdab3112a54d63bd42d5100c921d5b8b20.1578324703.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1578324703.git.agx@sigxcpu.org>
 References: <cover.1578324703.git.agx@sigxcpu.org>
@@ -49,67 +49,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current is given by the formular from page 12 of
-https://www.ti.com/lit/ds/symlink/lm36922.pdf. We use this to limit the
-led's max_brightness using the led-max-microamp DT property.
-
-The formula for the lm36923 is identical according to the data sheet.
+This allows to select exponential brightness mode instead of the default
+linear mode.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/leds/leds-lm3692x.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 28973cc5a6cc..1b056af60bd6 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -6,6 +6,7 @@
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/leds.h>
-+#include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-@@ -321,11 +322,24 @@ static int lm3692x_init(struct lm3692x_led *led)
- 	return ret;
- }
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+index 501468aa4d38..b8939fdd19d6 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+@@ -18,6 +18,8 @@ Required properties:
+ Optional properties:
+ 	- enable-gpios : gpio pin to enable/disable the device.
+ 	- vled-supply : LED supply
++	- ti,brightness-mapping-exponential: Whether to use exponential
++	    brightness mapping
+ 	- ti,ovp-microvolt: Overvoltage protection in
+ 	    micro-volt, can be 17000000, 21000000, 25000000 or
+ 	    29000000. If ti,ovp-microvolt is not specified it
+@@ -51,6 +53,7 @@ led-controller@36 {
+ 	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+ 	vled-supply = <&vbatt>;
+ 	ti,ovp-microvolt = <29000000>;
++	ti,brightness-mapping-exponential;
  
-+static enum led_brightness lm3692x_max_brightness(struct lm3692x_led *led,
-+						  u32 max_cur)
-+{
-+	u32 max_code;
-+
-+	/* see p.12 of LM36922 data sheet for brightness formula */
-+	max_code = ((max_cur * 1000) - 37806) / 12195;
-+	if (max_code > 0x7FF)
-+		max_code = 0x7FF;
-+
-+	return max_code >> 3;
-+}
-+
- static int lm3692x_probe_dt(struct lm3692x_led *led)
- {
- 	struct fwnode_handle *child = NULL;
- 	struct led_init_data init_data = {};
--	u32 ovp;
-+	u32 ovp, max_cur;
- 	int ret;
- 
- 	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-@@ -391,6 +405,10 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
- 		return ret;
- 	}
- 
-+	ret = fwnode_property_read_u32(child, "led-max-microamp", &max_cur);
-+	led->led_dev.max_brightness = ret ? LED_FULL :
-+		lm3692x_max_brightness(led, max_cur);
-+
- 	init_data.fwnode = child;
- 	init_data.devicename = led->client->name;
- 	init_data.default_label = ":";
+ 	led@0 {
+ 		reg = <0>;
 -- 
 2.23.0
 
