@@ -2,99 +2,108 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBA4C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2950C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9762072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CB1207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvRZwXcj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjCtEYgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgAFVx4 (ORCPT
+        id S1727001AbgAFVz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:53:56 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:47058 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgAFVxz (ORCPT
+        Mon, 6 Jan 2020 16:55:28 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52885 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726713AbgAFVz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:53:55 -0500
-Received: by mail-vk1-f193.google.com with SMTP id u6so12889474vkn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:53:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=faKcBWRoBE2UlX7M22RMok2qsMWbJzCtmjkdjEhBadM=;
-        b=KvRZwXcjreqaUPQ8TQS+8WGmX5JXgVz7Aa9cosBD9uIqp73RCLi8IaddTYv+Bb9+h7
-         GG8wLl5227sVwjU/+vyr0VolH7MIFadz+ccCHeWYZfBVvNx1dQAAE2/51+k1bF87UHvw
-         VrZJS+oLe9imzSxxt+SDyBB4xP9x9UU2clpSE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=faKcBWRoBE2UlX7M22RMok2qsMWbJzCtmjkdjEhBadM=;
-        b=GXrWpn1PEczexFhY4k3QbsPRzOpXxYmv3LZaoI0OKUD2BkBf7ouTIbBiyMYm7Fe8qR
-         mXwk795iuDLjeD6Rex6XgDv/W2UyFvLCO7IJ4m1HCLCVo7Uki8KWsNcafcZ+4Jfuw0z4
-         3tMxaucwo7POg9R5vm9eugCIPNG2olg9Gt/KkSqszqDCgYzphIx0To/R4Qyh3LRe0fdj
-         ctNC46dieDEgIQ7dWjxpASa2QC+2GeWPfXA6cbFtoxsRJp0q/c4vxDawmBJEDcG7czll
-         c+3H/lvJ01E0yTauAla7MvAEL3/W6tK5WbvHPfZT7Ud3lsH0taferWEnBLtfxb3pwkaf
-         3UxA==
-X-Gm-Message-State: APjAAAXRmLm5D2MFVd0Y/3hNgTh4AT+DvfODxgldA3LqDMIXgRf32BHz
-        fBe3tx55JQLcMYuxv+JztPegez91sSo=
-X-Google-Smtp-Source: APXvYqwUaVHRWXcpmv48gewQmlJb806IwxdkkaPvEzxKVctsJMYavQpN2gAbMpq0v7gY/1kpS9n26g==
-X-Received: by 2002:a1f:fe45:: with SMTP id l66mr61305918vki.9.1578347634378;
-        Mon, 06 Jan 2020 13:53:54 -0800 (PST)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id m11sm18766358vkl.31.2020.01.06.13.53.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 13:53:53 -0800 (PST)
-Received: by mail-vk1-f174.google.com with SMTP id i78so12887542vke.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:53:53 -0800 (PST)
-X-Received: by 2002:a1f:2197:: with SMTP id h145mr55322972vkh.75.1578347632921;
- Mon, 06 Jan 2020 13:53:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
-In-Reply-To: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 6 Jan 2020 13:53:41 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WcpjiVQ6zNN8fO4ZUCTr6GZkcPXjMW1hq8fvif6_QBpw@mail.gmail.com>
-Message-ID: <CAD=FV=WcpjiVQ6zNN8fO4ZUCTr6GZkcPXjMW1hq8fvif6_QBpw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: rockchip: Use ABI name for write protect pin on
- veyron fievel/tiger
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jan 2020 16:55:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578347727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vmmECI1BArQVwUDJptXcPvRtU+ySdyFJRPuvbFtEwis=;
+        b=LjCtEYgppRW2Uw0WHIadd4vNzmJNVA6glK9u4Jfge/eQFyEn9TzPdU5gAHOTbOVa67KolJ
+        kDTULtjNdZ2Z7jDK0+WZoNxr+psMH7TVZ0DM49eDfd5R9Ylz9cRUK5kTuDnMV3RexfN3Ub
+        ryPxEaBj/L/s4092rLUt07aLxHzWVv4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-RrKuuhBfPFKSJHwusUSmsQ-1; Mon, 06 Jan 2020 16:55:23 -0500
+X-MC-Unique: RrKuuhBfPFKSJHwusUSmsQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DAF7800D48;
+        Mon,  6 Jan 2020 21:55:21 +0000 (UTC)
+Received: from localhost (ovpn-112-4.rdu2.redhat.com [10.10.112.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 28C537BA28;
+        Mon,  6 Jan 2020 21:55:17 +0000 (UTC)
+Date:   Mon, 06 Jan 2020 13:55:16 -0800 (PST)
+Message-Id: <20200106.135516.1925975914161500836.davem@redhat.com>
+To:     mkubecek@suse.cz
+Cc:     netdev@vger.kernel.org, merez@codeaurora.org, kvalo@codeaurora.org,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        romieu@fr.zoreil.com, linux-kernel@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com
+Subject: Re: [PATCH net-next v2 0/3] ethtool: allow nesting of begin() and
+ complete() callbacks
+From:   David Miller <davem@redhat.com>
+In-Reply-To: <cover.1578292157.git.mkubecek@suse.cz>
+References: <cover.1578292157.git.mkubecek@suse.cz>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon,  6 Jan 2020 07:39:26 +0100 (CET)
 
-On Mon, Jan 6, 2020 at 1:52 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The flash write protect pin is currently named 'FW_WP_AP', which is
-> how the signal is called in the schematics. The Chrome OS ABI
-> requires the pin to be named 'AP_FLASH_WP_L', which is also how
-> it is called on all other veyron devices. Rename the pin to match
-> the ABI.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->
->  arch/arm/boot/dts/rk3288-veyron-fievel.dts | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> The ethtool ioctl interface used to guarantee that ethtool_ops callbacks
+> were always called in a block between calls to ->begin() and ->complete()
+> (if these are defined) and that this whole block was executed with RTNL
+> lock held:
+> 
+> 	rtnl_lock();
+> 	ops->begin();
+> 	/* other ethtool_ops calls */
+> 	ops->complete();
+> 	rtnl_unlock();
+> 
+> This prevented any nesting or crossing of the begin-complete blocks.
+> However, this is no longer guaranteed even for ioctl interface as at least
+> ethtool_phys_id() releases RTNL lock while waiting for a timer. With the
+> introduction of netlink ethtool interface, the begin-complete pairs are
+> naturally nested e.g. when a request triggers a netlink notification.
+> 
+> Fortunately, only minority of networking drivers implements begin() and
+> complete() callbacks and most of those that do, fall into three groups:
+> 
+>   - wrappers for pm_runtime_get_sync() and pm_runtime_put()
+>   - wrappers for clk_prepare_enable() and clk_disable_unprepare()
+>   - begin() checks netif_running() (fails if false), no complete()
+> 
+> First two have their own refcounting, third is safe w.r.t. nesting of the
+> blocks.
+> 
+> Only three in-tree networking drivers need an update to deal with nesting
+> of begin() and complete() calls: via-velocity and epic100 perform resume
+> and suspend on their own and wil6210 completely serializes the calls using
+> its own mutex (which would lead to a deadlock if a request request
+> triggered a netlink notification). The series addresses these problems.
+> 
+> changes between v1 and v2:
+>   - fix inverted condition in epic100 ethtool_begin() (thanks to Andrew
+>     Lunn)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Series applied, thanks.
+
