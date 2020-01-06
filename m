@@ -2,135 +2,97 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436A2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5BAC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F73A2072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6E82072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qxDusWjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgAFKD7 (ORCPT
+        id S1726496AbgAFKFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:03:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42809 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAFKD5 (ORCPT
+        Mon, 6 Jan 2020 05:05:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52184 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgAFKFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:03:57 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1ioPEp-00016j-2P; Mon, 06 Jan 2020 11:03:55 +0100
-Message-ID: <5cd1dc11df43d86d9db0dc2520de9b2e839ea7cc.camel@pengutronix.de>
-Subject: Re: [PATCH 2/6] drm/etnaviv: determine product, customer and eco id
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Date:   Mon, 06 Jan 2020 11:03:52 +0100
-In-Reply-To: <20200102100230.420009-3-christian.gmeiner@gmail.com>
-References: <20200102100230.420009-1-christian.gmeiner@gmail.com>
-         <20200102100230.420009-3-christian.gmeiner@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 6 Jan 2020 05:05:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+r5qrDtI/8MxA6roL/AaQoMQsqo1NbwF3DMmkPvjPAA=; b=qxDusWjv6hcOzqQdl6O56m8Tf
+        L+2LDJanP0A8qi6C/SvaV96bZjQYNTO4MC+4CME8ebUr4Ri1kjeluQZBmmPiajjfPuO/E6z8P3xD0
+        Ii0c1BjX1Hc1bWPL5L0vjk79glqK5gvxLdjXYPsN70sbXdfWKWMtZ81nB6T+a2z/Jfb83Xr32Ck18
+        1LhGW2H8oGhJpmsQJpEqR7bcyC29M0/Iw+BV8UBQYOF2KPlAooW34UaoUudp9/f8+SZBEKoENFBGe
+        3PZ/lo9yafS5KsRnD2D4gAQACQvvwR853zCvz3D7cTaLzi2htittH4NkhrOOb7sXDceW0/Jn+y5Qt
+        2V/taHdjg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioPFw-00071l-Qd; Mon, 06 Jan 2020 10:05:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F19B5306368;
+        Mon,  6 Jan 2020 11:03:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DAF302B627477; Mon,  6 Jan 2020 11:05:01 +0100 (CET)
+Date:   Mon, 6 Jan 2020 11:05:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
+ devm_kmalloc()
+Message-ID: <20200106100501.GM2844@hirez.programming.kicks-ass.net>
+References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
+ <bf020a68-00fd-2bb7-c3b6-00f5befa293a@free.fr>
+ <20191220140655.GN2827@hirez.programming.kicks-ass.net>
+ <9be1d523-e92c-836b-b79d-37e880d092a0@arm.com>
+ <20191220171359.GP2827@hirez.programming.kicks-ass.net>
+ <b2e0e322-a4e7-af26-d64a-1ba226e48476@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2e0e322-a4e7-af26-d64a-1ba226e48476@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Do, 2020-01-02 at 11:02 +0100, Christian Gmeiner wrote:
-> They will be used for extended HWDB support. The eco id logic was taken
-> from galcore kernel driver sources.
-> 
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 17 +++++++++++++++++
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  6 +++---
->  2 files changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> index d47d1a8e0219..253301be9e95 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -321,6 +321,18 @@ static void etnaviv_hw_specs(struct etnaviv_gpu *gpu)
->  		gpu->identity.varyings_count -= 1;
->  }
->  
-> +static void etnaviv_hw_eco_id(struct etnaviv_gpu *gpu)
-> +{
-> +	const u32 chipDate = gpu_read(gpu, VIVS_HI_CHIP_DATE);
-> +	gpu->identity.eco_id = gpu_read(gpu, VIVS_HI_CHIP_ECO_ID);
-> +
-> +	if (etnaviv_is_model_rev(gpu, GC1000, 0x5037) && (chipDate == 0x20120617))
-> +		gpu->identity.eco_id = 1;
-> +
-> +	if (etnaviv_is_model_rev(gpu, GC320, 0x5303) && (chipDate == 0x20140511))
-> +		gpu->identity.eco_id = 1;
+On Fri, Dec 20, 2019 at 10:02:13PM +0000, Robin Murphy wrote:
+> There is also the streaming API for one-off transfers
+> of data already existing at a given kernel address (think network packets,
+> USB URBs, etc), which on non-coherent architectures is achieved with
+> explicit cache maintenance plus an API contract that buffers must not be
+> explicitly accessed by CPUs for the duration of the mapping. Addresses from
+> kmalloc() are explicitly valid for dma_map_single() (and indeed are about
+> the only thing you'd ever reasonably feed it), which is the primary reason
+> why ARCH_KMALLOC_MINALIGN gets so big on architectures which can be
+> non-coherent and also suffer from creative cache designs.
 
-I'm not sure if those two checks warrant a separate function. Maybe
-just place them besides the other ID fixups?
+Would it make sense to extend KASAN (or something) to detect violations
+of this 'promise'? Because most obvious this was broken for the longest
+time and was only accidentally fixed due to the ARC alignment thingy.
+Who knows how many other sites are subtly broken too.
 
-> +}
-> +
->  static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
->  {
->  	u32 chipIdentity;
-> @@ -362,6 +374,8 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
->  			}
->  		}
->  
-> +		gpu->identity.product_id = gpu_read(gpu, VIVS_HI_CHIP_PRODUCT_ID);
-> +
->  		/*
->  		 * NXP likes to call the GPU on the i.MX6QP GC2000+, but in
->  		 * reality it's just a re-branded GC3000. We can identify this
-> @@ -375,6 +389,9 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
->  		}
->  	}
->  
-> +	etnaviv_hw_eco_id(gpu);
-> +	gpu->identity.customer_id = gpu_read(gpu, VIVS_HI_CHIP_CUSTOMER_ID);
-
-I don't like this scattering of identity register reads. Please move
-all of those reads to the else clause where we currently read
-model/rev. I doubt that the customer ID register is available on the
-really early cores, that only have the VIVS_HI_CHIP_IDENTITY register.
-
-Regards,
-Lucas
-
->  	dev_info(gpu->dev, "model: GC%x, revision: %x\n",
->  		 gpu->identity.model, gpu->identity.revision);
->  
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> index 8f9bd4edc96a..68bd966e3916 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-> @@ -15,11 +15,11 @@ struct etnaviv_gem_submit;
->  struct etnaviv_vram_mapping;
->  
->  struct etnaviv_chip_identity {
-> -	/* Chip model. */
->  	u32 model;
-> -
-> -	/* Revision value.*/
->  	u32 revision;
-> +	u32 product_id;
-> +	u32 customer_id;
-> +	u32 eco_id;
->  
->  	/* Supported feature fields. */
->  	u32 features;
-
+Have the dma_{,un}map_single() things mark the memory as
+uninitialized/unaccessible such that any concurrent access will trigger
+a splat.
