@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A5AC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E1FC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6442072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542862072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="17hBjJ4v"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iEMhehbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgAFPH4 (ORCPT
+        id S1726699AbgAFPIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:07:56 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53089 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgAFPH4 (ORCPT
+        Mon, 6 Jan 2020 10:08:06 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34594 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgAFPIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:07:56 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so15298268wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:07:54 -0800 (PST)
+        Mon, 6 Jan 2020 10:08:05 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so49977837wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:08:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=L4T6vAQjxiZ/aPBz48/7uQcrgS1Hqb7dcTR0eAasEHc=;
-        b=17hBjJ4vG7ooH/85TGBU+P2sOYmUXK50vXAGGrr7fJ9VptH2H+FcnpaoIl8ZaX20X3
-         PM48GXJ1LNP32DUooOee5dWIAbicdgtEhXddQ5CP5L3IkKsD0vH2uwXVV02wqhpRk1Dj
-         3h+g5h3WbEYrsI2jhGgxZsPursi3UW8lwX9fFtrNWO/FeCYYPPIz3j6o4tIZLUWDOl/Y
-         p6syHCM82kN4+9A3Xj8fqn0elft9FcDHmQaK9Ni7cl3kSdbenuobBQfCNz0XIL9NxuoD
-         zN5NOO2OEAfIBsNTqqsrInr8RBVcsAEr/qshSTwq9qgMcryUSk+oaZUkmmoYC6hni8u2
-         a8ag==
+        bh=+BBwbnfabT1uIIJs29bNXLndoEm/IJ8elKvwOxZ5AIY=;
+        b=iEMhehbOrT0mbz8Il2etnWT8Ht1BXiVEVd8mFf0Nz1fafkdaQLYy8bpB6rvmeH7Nzn
+         nu4LpYwyVIvJw3FZC/3rJm48MwvlupDLTmmKLMeoDsLQKzuxhsWgVmk4SwM3vBfoxHcE
+         0+DR/bS3uIDsCetg7Y/wTKb7j08RyXMdG6lnUPZTqSmptW2M1balErznoQUCcATHdg/J
+         eT7DavXwh//w2WqCOSScII2OKjNV7vvLxOKrZH01W18iVZk4ZeeCW+kI3R6OcWof3Hez
+         YyANN19pulmC3OKNSXlrnAOGLtj6yrH7ycgCX43ASpKCWoq8+a5jiLO293GGrQxEuv1v
+         EXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=L4T6vAQjxiZ/aPBz48/7uQcrgS1Hqb7dcTR0eAasEHc=;
-        b=nBbW1Usw9EkSoiqYPWS4rCjIpYmruPGPhhdKPIn82kzZRDqIgboSCq1lxARiSN0zSX
-         DMEIgqs9vnlDDZMgpHQJ6J+iZcmJZbtPulUZeIjwbqS788lTMB78RNCn15p/tN2a82Kc
-         RPYmJpMd/6UsrEt29Q2x94Xl8iEx49ypMpzDNkVDPV/zakV0Vt2IQI2iu99/TAui02sn
-         vPGwK3KCRkFyxmL0s9+Jxmeb7HmxW62gFvf3+fWuKa7Ur06/5HX7XbE8FToSb9O0CEBl
-         mpokqTcaGVZmBmJl/dFBmsdBByq7Ke9Evn0Bh4kjBDppLxFTxXsrWOFv59BgDzkrEjPp
-         ddIA==
-X-Gm-Message-State: APjAAAXttbUh0d0sZcYJXLbA6lYToQekz4ocq2HM2/sgB2JHqiqh7v/a
-        VWlUTg9ZhYoz5UJD/j4Tl+i1Ww==
-X-Google-Smtp-Source: APXvYqxPDd7/sJKEfL9Pi+3QGpH1YVY3p+GCBO2Ve193RJ0ZneVTvaANCAX/YfTEY7FqIvIsl/EfFg==
-X-Received: by 2002:a7b:c246:: with SMTP id b6mr34463861wmj.75.1578323273722;
-        Mon, 06 Jan 2020 07:07:53 -0800 (PST)
+        bh=+BBwbnfabT1uIIJs29bNXLndoEm/IJ8elKvwOxZ5AIY=;
+        b=aDxT3P/TIZ0pMyhf/CqRxjJ0qlii+ZO1SVT3g3v/bF/b07y0adCo8/FouxREru5hJY
+         Mv9rLbzM02sTfn/DolTAxIFXh9SfGpS819FnJI10MEZcFj2OwljQfqAo4ZJnghMwKW4Z
+         0JP1D0fM7LYh27S2vPWTpGdVPMWsv/aptK8xYraYCTvSxbbFj2c9nHp273QqjnWp16PD
+         PuTFTz40bXmSqQv+wwXV/+NnBzKcCU3qA4vptakAMByXAGi+R3RS0JYWOBQkjywvsThH
+         Gjvljql7QlmpD0WHDOIO74dA2itR9l64nTrsaCCrw5oogwvrjmLTwhPqzAMtY3u1PdcX
+         UsTQ==
+X-Gm-Message-State: APjAAAX1VMpr5H13uMOBlnKVF812CgFXaWVy/OevTsBajM7Td+YMfyTP
+        sBOwq4madFeQuY3aoP2f63VDsA==
+X-Google-Smtp-Source: APXvYqwNK7BngL3YD1KlI2PqASuOJCVSrnycYxxfPpDrAoIJXoyMiQwZylj8ISmF6G0OVmV8xlr/ZA==
+X-Received: by 2002:a5d:4a84:: with SMTP id o4mr102414298wrq.396.1578323283080;
+        Mon, 06 Jan 2020 07:08:03 -0800 (PST)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a1sm72107368wrr.80.2020.01.06.07.07.52
+        by smtp.gmail.com with ESMTPSA id f207sm25052052wme.9.2020.01.06.07.08.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 07:07:53 -0800 (PST)
-Subject: Re: [PATCH] drm/bridge: cdns: remove set but not used variable 'bpp'
+        Mon, 06 Jan 2020 07:08:02 -0800 (PST)
+Subject: Re: [PATCH] drm/bridge: cdns: remove set but not used variable
+ 'nlanes'
 To:     yu kuai <yukuai3@huawei.com>, a.hajda@samsung.com,
         Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
         jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         yi.zhang@huawei.com, zhengbin13@huawei.com
-References: <20191226121207.2099-1-yukuai3@huawei.com>
+References: <20191226121415.39483-1-yukuai3@huawei.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -116,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <e623257b-362b-cdd4-a47c-84c7f756f7af@baylibre.com>
-Date:   Mon, 6 Jan 2020 16:07:52 +0100
+Message-ID: <c195df5c-38d4-1034-80cf-830528ecb257@baylibre.com>
+Date:   Mon, 6 Jan 2020 16:08:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191226121207.2099-1-yukuai3@huawei.com>
+In-Reply-To: <20191226121415.39483-1-yukuai3@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -130,12 +131,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/12/2019 13:12, yu kuai wrote:
+On 26/12/2019 13:14, yu kuai wrote:
 > Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> drivers/gpu/drm/bridge/cdns-dsi.c: In function
-> ‘cdns_dsi_bridge_enable’:
-> drivers/gpu/drm/bridge/cdns-dsi.c:788:6: warning: variable ‘bpp’
+> drivers/gpu/drm/bridge/cdns-dsi.c: In function ‘cdns_dsi_mode2cfg’:
+> drivers/gpu/drm/bridge/cdns-dsi.c:515:11: warning: variable ‘nlanes’
 > set but not used [-Wunused-but-set-variable]
 > 
 > It is never used, and so can be removed.
@@ -146,24 +146,26 @@ On 26/12/2019 13:12, yu kuai wrote:
 >  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridge/cdns-dsi.c
-> index a6ab2d281a9b..b7c97f060241 100644
+> index 3a5bd4e7fd1e..a6ab2d281a9b 100644
 > --- a/drivers/gpu/drm/bridge/cdns-dsi.c
 > +++ b/drivers/gpu/drm/bridge/cdns-dsi.c
-> @@ -784,13 +784,12 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
->  	unsigned long tx_byte_period;
->  	struct cdns_dsi_cfg dsi_cfg;
->  	u32 tmp, reg_wakeup, div;
+> @@ -512,7 +512,7 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>  	struct cdns_dsi_output *output = &dsi->output;
+>  	unsigned int tmp;
+>  	bool sync_pulse = false;
 > -	int bpp, nlanes;
-> +	int nlanes;
+> +	int bpp;
 >  
->  	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
->  		return;
+>  	memset(dsi_cfg, 0, sizeof(*dsi_cfg));
 >  
->  	mode = &bridge->encoder->crtc->state->adjusted_mode;
-> -	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
->  	nlanes = output->dev->lanes;
+> @@ -520,7 +520,6 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>  		sync_pulse = true;
 >  
->  	WARN_ON_ONCE(cdns_dsi_check_conf(dsi, mode, &dsi_cfg, false));
+>  	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
+> -	nlanes = output->dev->lanes;
+>  
+>  	if (mode_valid_check)
+>  		tmp = mode->htotal -
 > 
 
 
