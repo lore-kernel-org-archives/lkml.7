@@ -2,131 +2,128 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61406C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D448C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDDE206DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2312B2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578347843;
+	bh=BZqjl5C0O+IW5Z5GFdY8nA7SPKsDOaxMIOyGcQ3RhWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pH6kYg/E+ACKk79XlgPqZ2mCb0D0ZOkHbloKbZ6RJp3HsLkEbSnBTUwc+70gUkcPk
+	 FgPIzehdriZV1qlDIdqrELONy3EgnOctpdsNtrNtpOVd3oq+vPl0HecoxlhVy44375
+	 S5aerc0ZccGCgtqgkNWjH/Q0OAkHkLUY9UhMXh68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgAFVz4 (ORCPT
+        id S1726930AbgAFV5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:55:56 -0500
-Received: from mga07.intel.com ([134.134.136.100]:51764 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbgAFVz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:55:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 13:55:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
-   d="scan'208";a="245719807"
-Received: from chewang-mobl.amr.corp.intel.com (HELO [10.254.185.10]) ([10.254.185.10])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Jan 2020 13:55:53 -0800
-Subject: Re: [PATCH] ASoC: rt5677: add SPI_MASTER dependency
-To:     Jon Hunter <jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Mon, 6 Jan 2020 16:57:22 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36977 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgAFV5W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 16:57:22 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z64so10673752oia.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:57:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CGQuR1M/qYi2xyMJHlEfzvhIn09Q2tETaZrs1ID5PBc=;
+        b=iqOg8U2zLanN0k7OOW27jHIAlMUGotdpFW0AUla5K01fajV7AQdFv4z/B2crCIGLtD
+         Rkngl0JVvwervnVz2VAuXmfzRKiwZgXaXeyLmT9FpgrjuvjLaedH7Xm3s80Njk+Xv571
+         eqIw+sWCdU1Q1gflsHjezPVPqhrjnBrlf4pz4S+9/RWNvVYtIAiU6KGrJOaMiK3JgEpB
+         zqm9fHPAGS9YjYcqNcGZfDy2kSrAtqVosW29SKgTXid089ktBTp5VjE0xUHLsDH6gEMs
+         MJbc17X2buMcrmIK8YwLuG/Y1TPKgDAZ29uFtHg6oiEeFJGBoxPonPf0AKa/tAeLFrzY
+         rpSQ==
+X-Gm-Message-State: APjAAAVP8M+b6lzkTWS0N6yNc7m7pA6gNWpDfe3O/ikmzaZF3HTmyIJY
+        NrUoJXpFSfUKcG0YB9YBx6g/kuQ=
+X-Google-Smtp-Source: APXvYqyU3tR9Vgu32Dxbi/FJCzzEASTY+BZWl7tm7AcoapEtyBfK+5oQ/U1mtBg1wiyVG/mb0UX8KQ==
+X-Received: by 2002:aca:1c0d:: with SMTP id c13mr5991721oic.44.1578347840795;
+        Mon, 06 Jan 2020 13:57:20 -0800 (PST)
+Received: from rob-hp-laptop (ip-70-5-121-225.ftwttx.spcsdns.net. [70.5.121.225])
+        by smtp.gmail.com with ESMTPSA id m185sm16487778oia.26.2020.01.06.13.57.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 13:57:19 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220d32
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 06 Jan 2020 15:57:16 -0600
+Date:   Mon, 6 Jan 2020 15:57:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chao Hao <chao.hao@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20191210195333.648018-1-arnd@arndb.de>
- <d739240f-aaa6-c310-9c68-16c1a08ce759@nvidia.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9c9169cc-0da5-f247-c8f7-f6913ca2bfb5@linux.intel.com>
-Date:   Mon, 6 Jan 2020 15:55:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Chao Hao <chao.hao@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <zhang.cui@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>
+Subject: Re: [PATCH v2 01/19] dt-bindings: mediatek: Add bindings for MT6779
+Message-ID: <20200106215716.GA31059@bogus>
+References: <20200105104523.31006-1-chao.hao@mediatek.com>
+ <20200105104523.31006-2-chao.hao@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <d739240f-aaa6-c310-9c68-16c1a08ce759@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200105104523.31006-2-chao.hao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/11/19 4:59 AM, Jon Hunter wrote:
+On Sun, 5 Jan 2020 18:45:05 +0800, Chao Hao wrote:
+> This patch adds description for MT6779 IOMMU.
 > 
-> On 10/12/2019 19:52, Arnd Bergmann wrote:
->> When CONFIG_SPI is disabled, the newly added code for the DSP
->> firmware loading fails to link:
->>
->> ERROR: "rt5677_spi_hotword_detected" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
->> ERROR: "rt5677_spi_write" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
+> MT6779 has two iommus, they are MM_IOMMU and APU_IOMMU which
+> use ARM Short-Descriptor translation format.
 > 
-> Would it be better if the above functions or the functions that call
-> these are conditional on CONFIG_SND_SOC_RT5677_SPI?
+> The MT6779 IOMMU hardware diagram is as below, it is only a brief
+> diagram about iommu, it don't focus on the part of smi_larb, so
+> I don't describe the smi_larb detailedly.
+> 
+> 			     EMI
+> 			      |
+> 	   --------------------------------------
+> 	   |					|
+>         MM_IOMMU                            APU_IOMMU
+> 	   |					|
+>        SMI_COMMOM-----------		     APU_BUS
+>           |		   |			|
+>     SMI_LARB(0~11)  SMI_LARB12(FAKE)	    SMI_LARB13(FAKE)
+> 	  |		   |			|
+> 	  |		   |		   --------------
+> 	  |		   |		   |	 |	|
+>    Multimedia engine	  CCU		  VPU   MDLA   EMDA
+> 
+> All the connections are hardware fixed, software can not adjust it.
+> 
+> >From the diagram above, MM_IOMMU provides mapping for multimedia engine,
+> but CCU is connected with smi_common directly, we can take them as larb12.
+> APU_IOMMU provides mapping for APU engine, we can take them larb13.
+> Larb12 and Larb13 are fake larbs.
+> 
+> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+> ---
+>  .../bindings/iommu/mediatek,iommu.txt         |   2 +
+>  include/dt-bindings/memory/mt6779-larb-port.h | 215 ++++++++++++++++++
+>  2 files changed, 217 insertions(+)
+>  create mode 100644 include/dt-bindings/memory/mt6779-larb-port.h
+> 
 
-they are already conditional, with a fallback provided:
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-#if IS_ENABLED(CONFIG_SND_SOC_RT5677_SPI)
-int rt5677_spi_read(u32 addr, void *rxbuf, size_t len);
-int rt5677_spi_write(u32 addr, const void *txbuf, size_t len);
-int rt5677_spi_write_firmware(u32 addr, const struct firmware *fw);
-void rt5677_spi_hotword_detected(void);
-#else
-static inline int rt5677_spi_read(u32 addr, void *rxbuf, size_t len)
-{
-	return -EINVAL;
-}
-static inline int rt5677_spi_write(u32 addr, const void *txbuf, size_t len)
-{
-	return -EINVAL;
-}
-static inline int rt5677_spi_write_firmware(u32 addr, const struct 
-firmware *fw)
-{
-	return -EINVAL;
-}
-static inline void rt5677_spi_hotword_detected(void){}
-#endif
-
-and since we have the following definition
-
-config SND_SOC_RT5677_SPI
-	tristate
-	default SND_SOC_RT5677 && SPI
-
-in theory if SPI is not enabled the fallback static inlines would always 
-be selected?
-
-Arnd, if you can share the .config that exposes this problem it'd be nice
-
-FWIW, there are other missing dependencies, the SPI controller was not 
-explicitly enabled so depending on the Kconfigs used by a distro the 
-machine driver probe could fail with the spi-RT5677AA component never 
-registered. The patch below seems to work for me (more testing needed)
-
-diff --git a/sound/soc/intel/boards/Kconfig b/sound/soc/intel/boards/Kconfig
-index b149e28a2076..cf1a2fde4c47 100644
---- a/sound/soc/intel/boards/Kconfig
-+++ b/sound/soc/intel/boards/Kconfig
-@@ -50,6 +50,9 @@ config SND_SOC_INTEL_BDW_RT5677_MACH
-         depends on I2C_DESIGNWARE_PLATFORM || COMPILE_TEST
-         depends on GPIOLIB || COMPILE_TEST
-         depends on X86_INTEL_LPSS || COMPILE_TEST
-+       depends on SPI_MASTER
-+       select SPI_PXA2XX
-+       select SND_SOC_RT5677_SPI
-         select SND_SOC_RT5677
-         help
-           This adds support for Intel Broadwell platform based boards with
+If a tag was not added on purpose, please state why and what changed.
