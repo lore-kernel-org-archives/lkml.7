@@ -2,94 +2,55 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CA3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D4BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0133B2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2D62072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tRIIzx9X"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YAQqV2fO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgAFXXM (ORCPT
+        id S1727163AbgAFX1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:23:12 -0500
-Received: from ozlabs.org ([203.11.71.1]:39233 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgAFXXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:23:12 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sBQ51trzz9sNH;
-        Tue,  7 Jan 2020 10:23:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578352989;
-        bh=iRoTQMD5mCvcOCd5jnHIkFA5apf7bDAYlWymXM1ohGY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tRIIzx9X2bp7NGPyFw1iotj39nDe2CIcCZ2m/sH+Jye5z9DRWbGQXS3RQk4TtBeDH
-         Nb0wS7675e7oBxDUeni25eAAO4ZXHCjMkKIguP5nzY9n3AYAi2W/7XYm8FHPKBbiz0
-         fkOUUscZWK7MqVF6W7fzxc8WoeEPkYk1o1k7rkDmaFkjV4BdTf3VYHuE3YWx9fjkOL
-         iHTFJvbqc4S6mxDUrTYO1dRDqLsM6gvSmwQVXRGOlaFUQztkBm/TYFjySRCuIFcgZj
-         f5fFYKaoeXLLVxLszRgLP6VbPlDu/Jdjod4VESsGol+U5xWcXhdLlnLWxyH2u+1dqe
-         Pa4S9ZxYINYcg==
-Date:   Tue, 7 Jan 2020 10:23:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: linux-next: build warning after merge of the iomap tree
-Message-ID: <20200107102308.3d89af44@canb.auug.org.au>
+        Mon, 6 Jan 2020 18:27:24 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39742 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgAFX1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 18:27:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1578353241; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=hm9iPs1F74ZQ5Kvwq86O7Y8wfg6BjQF4bC4mxGPIDDc=;
+        b=YAQqV2fO54vLyla2S7iJ6OPOah9rHhl3pfVh92pWXiJj96uRuy5b/r9kYpkGLfk5C7kzDd
+        +7VoOI2Rm4f+ZRmKytgOw+gXFwSTxVaEdvAKeuBrpe6e6s2OfnQWhqXnXDKJbVnqwAI6v+
+        7RuxqNAynrJIG6IToCR45hh7I3g8jtI=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] pinctrl: ingenic: cleanups
+Date:   Tue,  7 Jan 2020 00:27:06 +0100
+Message-Id: <20200106232711.559727-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VJZ9N8t7Rf9AdN.Ze56I1FB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VJZ9N8t7Rf9AdN.Ze56I1FB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Hi all,
+I saw you merged Zhou's patchset, here are some cleanup patches for
+pinctrl-ingenic that should be applied on top of his commits.
 
-After merging the iomap tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
-
-fs/ext4/inode.c: In function 'ext4_page_mkwrite':
-fs/ext4/inode.c:5910:24: warning: unused variable 'mapping' [-Wunused-varia=
-ble]
- 5910 |  struct address_space *mapping =3D inode->i_mapping;
-      |                        ^~~~~~~
-
-Introduced by commit
-
-  4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
-
---=20
 Cheers,
-Stephen Rothwell
+-Paul
 
---Sig_/VJZ9N8t7Rf9AdN.Ze56I1FB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4TwVwACgkQAVBC80lX
-0Gy7zgf+LLRf9j3cLHoEDCSvs00cbQ4qU0YycT05WBmzp63qQAsonRLH1ToPLsGy
-11inp5z8q2++/ex56b7tn56dKuLxK92CXE9K5HgdeiT1G3Qf04POeC+DitKe/IkU
-FC130lOio37Sv7EUrJmZ8aqLPXmNz28py3/WXD8FF7PwqY6N11tITFpYlRGRxHdw
-olUTnUoIKnt5vuPEagR1V/7mpc9EG4wcOM9RR6aa5BC2i+Dc7HFgfxvhY9GAoG0V
-BJCwXkNDftdFzW5od0aqFMQAVTSG49YbzZYS8RxzWK+cR2uFRJ9gqXefQm8MoWiz
-S1kO2xveNquOouVCq7JA2UR3tn6yOw==
-=kfCb
------END PGP SIGNATURE-----
-
---Sig_/VJZ9N8t7Rf9AdN.Ze56I1FB--
