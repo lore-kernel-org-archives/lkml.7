@@ -2,408 +2,169 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D907C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78EFC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F802081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFD320731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:16:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EjAlSWEC"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="WN35yULm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgAFLNz (ORCPT
+        id S1726508AbgAFLQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:13:55 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51774 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgAFLNz (ORCPT
+        Mon, 6 Jan 2020 06:16:09 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:20036 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgAFLQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:13:55 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006BDl1h127501;
-        Mon, 6 Jan 2020 05:13:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578309227;
-        bh=HJGTH6Q8gsRD6/e3keuuaD4sz9lTtUucnK3jDu4bszE=;
-        h=From:To:CC:Subject:Date;
-        b=EjAlSWECBcM54mUQ6LkGKaUxCaF3vjnAlHp1qukMwAcPgYbSEKUpsREhfPvtGIvDr
-         hNsSzeJcQDzZvPb5+eBK5GDyZTdM3MKUanZ9CaT5/pUYxNc1qHE37MUBciGZjjQ9pU
-         Y0aKIcX2yEp0pB3HK56WExb4kdP04MaMWxsva8ec=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006BDluj052552
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jan 2020 05:13:47 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 05:13:46 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 05:13:46 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006BDhuf086022;
-        Mon, 6 Jan 2020 05:13:44 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <faiz_abbas@ti.com>, <kishon@ti.com>
-Subject: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap driver
-Date:   Mon, 6 Jan 2020 16:45:17 +0530
-Message-ID: <20200106111517.15158-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 6 Jan 2020 06:16:09 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Cristian.Birsan@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="Cristian.Birsan@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Cristian.Birsan@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Cristian.Birsan@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: jua32p+UUQDAuBFmskyNkRODjNZLZXzxCg0erjENjxDTuZtQ0Zm1yqJ8GTFX/sjVj/qjJws9jy
+ KsdXGLyip0OTQdCG/6p+rxDO74DVUmN+q87EqoK8OeO/3YgoK8FgwzT1fviFUf47Ct/0Rk6w/1
+ 7GtDJrOyTQ+kKFzQvDpPfOifbvyKjHkjYdrzYyfkYEz779xViv8xrlvlw340y4XIqiFzyg9MVJ
+ QAfufXOXC1mrDS64mH0kLd2bENwZHSlYKo7IJzzwj5/hEgaBFL2JfhapCJmyQzMOUBvtuHIN5o
+ qo8=
+X-IronPort-AV: E=Sophos;i="5.69,402,1571727600"; 
+   d="scan'208";a="60932814"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jan 2020 04:16:09 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Jan 2020 04:16:07 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 6 Jan 2020 04:16:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VWEtgTeCMGxjDyF/rZiys99oiHAS1fNv3Kdpaa7e13dAqNXexLe/AjJ+5ua24f/Cozoqat1GWF0hLYXBVIzYz9iSk545HuyHFArMJ17JnImB5Pevw6sN3kp1I2jj71KWiArQ6HXsHkaz3j8Ksl0uigsW0jCiwHLld2BnDICK/MVdp3c2eAr3ij+M0+sgIQ6iz3/C7lXmlZPZYM8rnVai/QR2uLev1fJEVga3KpH6UdNxJgO/wNpkjpKRsDtvnqwTOg+NaTg/FFkdCoRvHQVm3/VcvhZNTkW6YGhA8IF6rKTnpplMqwgTgCUGGEQZsrB2M8yIoC0jlfyNrgLT/I9XIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3S5GGOi4rn37e+/hXKF3hAzXthDtUMZVhskDtpiMhDI=;
+ b=hsCKNj283b6+X8UYMCE9TELqgy7sUBjqkVPbAo8mXa5AZBdJisRANaVAhAmhAQFFU+9xBLcaY5tAy52rQL2+qxPwiZoS4Ucm+AZrAe1ZmCZKv4RwtIB36A2ziFvr6r7vCzRzjIzVAlCyMBVVgO3oQRz3dOfBmdIvQ7jnWUtWnL4i+zTmRPWdijYr+IUylY72Ixbvtr0yqeMi9v1Pg+yl4q/o4ats4UkjosNWI0TZeNpQY8+PLNoOWblhjb3l2vHDsaRfsQ1BFc09saM5TNjG6AdQvTBsZ2ZWibZAOrV70YjosmBjxDTFY+u4FaS6FTD16a6JMBaNuH2OmovnMmY3qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3S5GGOi4rn37e+/hXKF3hAzXthDtUMZVhskDtpiMhDI=;
+ b=WN35yULmJMbVbUsXBctftKh4Hlf5mTA/86/V3u5RDCll7GcX06pBmjrTjTqauLrWth5225PHAy/7FT2i1L2EV5Vd2GKGyJ0iJdiI1mdQQekTOh8bpDRzA/BlYzHbBaesbHZSobLTZm/ESLSAq0o55udn7mp/vdfy8SxU7TU5W/M=
+Received: from BYAPR11MB2647.namprd11.prod.outlook.com (52.135.223.12) by
+ BYAPR11MB3816.namprd11.prod.outlook.com (20.178.237.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Mon, 6 Jan 2020 11:16:05 +0000
+Received: from BYAPR11MB2647.namprd11.prod.outlook.com
+ ([fe80::8515:68aa:f5c5:3e09]) by BYAPR11MB2647.namprd11.prod.outlook.com
+ ([fe80::8515:68aa:f5c5:3e09%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 11:16:05 +0000
+From:   <Cristian.Birsan@microchip.com>
+To:     <Julia.Lawall@inria.fr>
+CC:     <kernel-janitors@vger.kernel.org>, <balbi@kernel.org>,
+        <gregkh@linuxfoundation.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/16] usb: gadget: udc: atmel: constify copied structure
+Thread-Topic: [PATCH 04/16] usb: gadget: udc: atmel: constify copied structure
+Thread-Index: AQHVwHxYb+XuVB9wJkuss4WrXtuD0afdhBWA
+Date:   Mon, 6 Jan 2020 11:16:05 +0000
+Message-ID: <d81c389b-f377-8ff0-7206-70c9b9a01f4a@microchip.com>
+References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr>
+ <1577864614-5543-5-git-send-email-Julia.Lawall@inria.fr>
+In-Reply-To: <1577864614-5543-5-git-send-email-Julia.Lawall@inria.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2468ebab-0052-4f22-dd24-08d79299d281
+x-ms-traffictypediagnostic: BYAPR11MB3816:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB3816266D275DDED2C48AF617EF3C0@BYAPR11MB3816.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(366004)(39860400002)(396003)(199004)(189003)(6916009)(36756003)(64756008)(71200400001)(8936002)(91956017)(66476007)(8676002)(478600001)(66556008)(81156014)(26005)(66946007)(76116006)(66446008)(186003)(81166006)(31686004)(4326008)(6486002)(5660300002)(6512007)(53546011)(6506007)(31696002)(316002)(86362001)(54906003)(4744005)(2906002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3816;H:BYAPR11MB2647.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lgQha65yrQJLOyJYcI8vmbFkZ0uB8wH2GVk7qNfA9rd1Y5V7ttrYZ2V9vSGx5OlT0rMT4G2ybRYUVmGGgpKDtfMZgkSEiBXa7heEr7BWrlb3olh2Dp34QrzwSBjgb3s4P/mwOrjZv2sgpKVYhIka2AFfG/yJ4LGws3k+Gwz64BP4Kk+G6En348UXGcmbHh2DCkGo/7rcEL0cDZXUGbf6X69GPuQdz+gPrncoabtcVdxWiyrmqSYxmmHkXIPu54OmHOYELzPwnU+uS+bgOAgrLJKxJPU2BZxDxeZvGEOeoR9cXn/Kkmrhs3n6I+bx5E2IBtBeweLUBNFtgCCNZjqSfMj3yig1gdQswxrvQkmFzgxhoYqupvI9Q7MOHf8jxp61TRG5lsA1Ig2sVQm79m1u2ukVzgmVopxfqQxUljgs+t122nmWJEpTUw6FD2EFEOVK
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C8DCC7C9D6128C4DAF7752243D95E7A8@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2468ebab-0052-4f22-dd24-08d79299d281
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 11:16:05.3363
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ABlGSI9Tqp7VuCCRJ4lkvieorQofe2imMMp4D5zYysgXPxlOmt//UNGsgL8CY/XHxNrH7iA/wIO8W5r6Xuc/M4m+byGj95IxIlsBJmfYyC4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3816
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move mmc nodes to be compatible with the sdhci-omap driver. The following
-modifications are required for omap_hsmmc specific properties:
 
-ti,non-removable: convert to the generic mmc non-removable
-ti,needs-special-reset:  co-opted into the sdhci-omap driver
-ti,dual-volt: removed. Legacy property not used in am335x or am43xx
-ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
+On 1/1/20 9:43 AM, Julia Lawall wrote:
 
-Also since the sdhci-omap driver does not support runtime PM, explicitly
-disable the mmc3 instance in the dtsi.
+> The usba_gadget_template structure is only copied into another
+> structure, so make it const.
+>=20
+> The opportunity for this change was found using Coccinelle.
+>=20
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
+Acked-by: Cristian Birsan <cristian.birsan@microchip.com>
 
-Driver modifications have been posted separately:
-https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
-
-Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
-am43xx-gp-evm, am43xx-epos-evm.
-
-I need some help with testing all other am335x variants and SDIO cards.
-
-Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
-
- arch/arm/boot/dts/am335x-baltos.dtsi              | 2 +-
- arch/arm/boot/dts/am335x-boneblack-common.dtsi    | 1 +
- arch/arm/boot/dts/am335x-boneblack-wireless.dts   | 1 -
- arch/arm/boot/dts/am335x-boneblue.dts             | 1 -
- arch/arm/boot/dts/am335x-bonegreen-wireless.dts   | 1 -
- arch/arm/boot/dts/am335x-evm.dts                  | 3 +--
- arch/arm/boot/dts/am335x-evmsk.dts                | 2 +-
- arch/arm/boot/dts/am335x-lxm.dts                  | 2 +-
- arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi | 2 +-
- arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts    | 2 +-
- arch/arm/boot/dts/am335x-pepper.dts               | 4 ++--
- arch/arm/boot/dts/am335x-phycore-som.dtsi         | 2 +-
- arch/arm/boot/dts/am33xx-l4.dtsi                  | 6 ++----
- arch/arm/boot/dts/am33xx.dtsi                     | 3 ++-
- arch/arm/boot/dts/am4372.dtsi                     | 3 ++-
- arch/arm/boot/dts/am437x-cm-t43.dts               | 2 +-
- arch/arm/boot/dts/am437x-gp-evm.dts               | 4 ++--
- arch/arm/boot/dts/am437x-l4.dtsi                  | 5 ++---
- arch/arm/boot/dts/am437x-sk-evm.dts               | 2 +-
- 19 files changed, 22 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi b/arch/arm/boot/dts/am335x-baltos.dtsi
-index 05e7b5d4a95b..04f0b1227efe 100644
---- a/arch/arm/boot/dts/am335x-baltos.dtsi
-+++ b/arch/arm/boot/dts/am335x-baltos.dtsi
-@@ -369,7 +369,7 @@
- &mmc2 {
- 	status = "okay";
- 	vmmc-supply = <&wl12xx_vmmc>;
--	ti,non-removable;
-+	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 7ad079861efd..83a71c4565eb 100644
---- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-@@ -22,6 +22,7 @@
- 	pinctrl-0 = <&emmc_pins>;
- 	bus-width = <8>;
- 	status = "okay";
-+	non-removable;
- };
- 
- &am33xx_pinmux {
-diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
-index 3124d94c0b3c..e07dd7979586 100644
---- a/arch/arm/boot/dts/am335x-boneblack-wireless.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
-@@ -75,7 +75,6 @@
- 	bus-width = <4>;
- 	non-removable;
- 	cap-power-off-card;
--	ti,needs-special-hs-handling;
- 	keep-power-in-suspend;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 5811fb8d4fdf..83f9452c9cd3 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -367,7 +367,6 @@
- 	bus-width = <4>;
- 	non-removable;
- 	cap-power-off-card;
--	ti,needs-special-hs-handling;
- 	keep-power-in-suspend;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
-diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
-index 4092cd193b8a..609c8db687ec 100644
---- a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
-+++ b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
-@@ -75,7 +75,6 @@
- 	bus-width = <4>;
- 	non-removable;
- 	cap-power-off-card;
--	ti,needs-special-hs-handling;
- 	keep-power-in-suspend;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc3_pins &wl18xx_pins>;
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 6f0a6be93098..cacfceb5765b 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -757,8 +757,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc3_pins &wlan_pins>;
--	ti,non-removable;
--	ti,needs-special-hs-handling;
-+	non-removable;
- 	cap-power-off-card;
- 	keep-power-in-suspend;
- 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index a97f9df460c1..f2ad6f614b52 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -675,7 +675,7 @@
- &mmc2 {
- 	status = "okay";
- 	vmmc-supply = <&wl12xx_vmmc>;
--	ti,non-removable;
-+	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
- 	keep-power-in-suspend;
-diff --git a/arch/arm/boot/dts/am335x-lxm.dts b/arch/arm/boot/dts/am335x-lxm.dts
-index fef582852820..dbedf729205c 100644
---- a/arch/arm/boot/dts/am335x-lxm.dts
-+++ b/arch/arm/boot/dts/am335x-lxm.dts
-@@ -339,7 +339,7 @@
- 	pinctrl-0 = <&emmc_pins>;
- 	vmmc-supply = <&vmmcsd_fixed>;
- 	bus-width = <8>;
--	ti,non-removable;
-+	non-removable;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-index 6495a125c01f..4e90f9c23d2e 100644
---- a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-@@ -159,7 +159,7 @@
- 	vmmc-supply = <&vmmcsd_fixed>;
- 	bus-width = <8>;
- 	pinctrl-0 = <&mmc1_pins_default>;
--	ti,non-removable;
-+	non-removable;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
-index 244df9c5a537..f03e72cada41 100644
---- a/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
-+++ b/arch/arm/boot/dts/am335x-moxa-uc-8100-me-t.dts
-@@ -451,7 +451,7 @@
- 	vmmc-supply = <&vmmcsd_fixed>;
- 	bus-width = <8>;
- 	pinctrl-0 = <&mmc2_pins_default>;
--	ti,non-removable;
-+	non-removable;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-index 6d7608d9377b..f9a027b47962 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -341,7 +341,7 @@
- 	pinctrl-0 = <&emmc_pins>;
- 	vmmc-supply = <&ldo3_reg>;
- 	bus-width = <8>;
--	ti,non-removable;
-+	non-removable;
- };
- 
- &mmc3 {
-@@ -351,7 +351,7 @@
- 	pinctrl-0 = <&wireless_pins>;
- 	vmmmc-supply = <&v3v3c_reg>;
- 	bus-width = <4>;
--	ti,non-removable;
-+	non-removable;
- 	dmas = <&edma_xbar 12 0 1
- 		&edma_xbar 13 0 2>;
- 	dma-names = "tx", "rx";
-diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-index 3d0672b53d77..7e46b4c02709 100644
---- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-@@ -69,7 +69,7 @@
- 	pinctrl-0 = <&emmc_pins>;
- 	vmmc-supply = <&vmmc_reg>;
- 	bus-width = <8>;
--	ti,non-removable;
-+	non-removable;
- 	status = "disabled";
- };
- 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 3a8a205c27b5..ba2bde6dd9e4 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1329,10 +1329,8 @@
- 			ranges = <0x0 0x60000 0x1000>;
- 
- 			mmc1: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
--				ti,dual-volt;
-+				compatible = "ti,am335-sdhci";
- 				ti,needs-special-reset;
--				ti,needs-special-hs-handling;
- 				dmas = <&edma_xbar 24 0 0
- 					&edma_xbar 25 0 0>;
- 				dma-names = "tx", "rx";
-@@ -1815,7 +1813,7 @@
- 			ranges = <0x0 0xd8000 0x1000>;
- 
- 			mmc2: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
-+				compatible = "ti,am335-sdhci";
- 				ti,needs-special-reset;
- 				dmas = <&edma 2 0
- 					&edma 3 0>;
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 646f11430dad..ddcfc8a40e41 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -255,10 +255,11 @@
- 			ranges = <0x0 0x47810000 0x1000>;
- 
- 			mmc3: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
-+				compatible = "ti,am335-sdhci";
- 				ti,needs-special-reset;
- 				interrupts = <29>;
- 				reg = <0x0 0x1000>;
-+				status = "disabled";
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index ca0aa3f26c0a..157a1ba15ca4 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -249,10 +249,11 @@
- 			ranges = <0x0 0x47810000 0x1000>;
- 
- 			mmc3: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
-+				compatible = "ti,am437-sdhci";
- 				ti,needs-special-reset;
- 				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <0x0 0x1000>;
-+				status = "disabled";
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
-index 063113a5da2d..a6b4fca8626a 100644
---- a/arch/arm/boot/dts/am437x-cm-t43.dts
-+++ b/arch/arm/boot/dts/am437x-cm-t43.dts
-@@ -291,7 +291,7 @@
- 	pinctrl-0 = <&emmc_pins>;
- 	vmmc-supply = <&vmmc_3v3>;
- 	bus-width = <8>;
--	ti,non-removable;
-+	non-removable;
- };
- 
- &spi0 {
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 811c8cae315b..cadf47ee337f 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -869,7 +869,7 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&emmc_pins_default>;
- 	pinctrl-1 = <&emmc_pins_sleep>;
--	ti,non-removable;
-+	non-removable;
- };
- 
- &mmc3 {
-@@ -886,7 +886,7 @@
- 	pinctrl-1 = <&mmc3_pins_sleep>;
- 	cap-power-off-card;
- 	keep-power-in-suspend;
--	ti,non-removable;
-+	non-removable;
- 
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 0dd59ee14585..99741be9bcfe 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1093,9 +1093,8 @@
- 			ranges = <0x0 0x60000 0x1000>;
- 
- 			mmc1: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
-+				compatible = "ti,am437-sdhci";
- 				reg = <0x0 0x1000>;
--				ti,dual-volt;
- 				ti,needs-special-reset;
- 				dmas = <&edma 24 0>,
- 					<&edma 25 0>;
-@@ -1616,7 +1615,7 @@
- 			ranges = <0x0 0xd8000 0x1000>;
- 
- 			mmc2: mmc@0 {
--				compatible = "ti,omap4-hsmmc";
-+				compatible = "ti,am437-sdhci";
- 				reg = <0x0 0x1000>;
- 				ti,needs-special-reset;
- 				dmas = <&edma 2 0>,
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 74eaa6a3b258..292153c6cb5d 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -694,7 +694,7 @@
- 	pinctrl-1 = <&mmc3_pins_sleep>;
- 	cap-power-off-card;
- 	keep-power-in-suspend;
--	ti,non-removable;
-+	non-removable;
- 
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--- 
-2.19.2
-
+>=20
+> ---
+>   drivers/usb/gadget/udc/atmel_usba_udc.c |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget=
+/udc/atmel_usba_udc.c
+> index 8a42768e3213..6e0432141c40 100644
+> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
+> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> @@ -1122,7 +1122,7 @@ static struct usb_endpoint_descriptor usba_ep0_desc=
+ =3D {
+>          .bInterval =3D 1,
+>   };
+>=20
+> -static struct usb_gadget usba_gadget_template =3D {
+> +static const struct usb_gadget usba_gadget_template =3D {
+>          .ops            =3D &usba_udc_ops,
+>          .max_speed      =3D USB_SPEED_HIGH,
+>          .name           =3D "atmel_usba_udc",
+> =
