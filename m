@@ -2,214 +2,87 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ECDC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2BAC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B42218AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7B520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578298478;
+	bh=yXPZEzyEe2lxjvA9yBEPFaWlEE97rNZigqPuHXUfQhI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FHjfxapQG0nQDeSjHXDoL7AdzfYFE/f5vJsx6+N2ojXVzmyMtuhBRe9Zco/JBPJ9r
+	 JhyrWJ1NS2/hTLq86s1E3NOUopRHg8XBrO09WOm1SoT1OBFZARU4flRrj6BAWYfoqY
+	 gZ9xF43S0j0WycdLgWMGLXlUm6LnhLKC8OJ2Dzq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgAFIMw (ORCPT
+        id S1726290AbgAFIOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:12:52 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40219 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFIMv (ORCPT
+        Mon, 6 Jan 2020 03:14:37 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:65323 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgAFIOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:12:51 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w21so62870207otj.7;
-        Mon, 06 Jan 2020 00:12:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dM6755OiAVxNNT/EGnm6GG38dRM8wbwsdCcOva50lrs=;
-        b=IEIOyi3XR0Jg2+UNFDUwTo2b0HKfSd3KRh4XmECpCeyLQFyiwlFS8LQSc3GyyEX+sN
-         o1hnzHuulSxw2dNRZFueVNJelWo5277dB2FutRhIlGpYVGFIfZfhFIDteepgsVwuOSLY
-         wHZmY89zMaVu7rDZmLqHjNe1ipt7/+RuLj/H5TrBV9khrBRM80u7gHpo2dCytnC482bW
-         1paPBoXnF1R/Mso0yjo/5dDiM/4QbNwlvkNpCOZRqe85eGkiVVTeFO3klyAS26Vx5oMi
-         +wfOA+PQUhrZlOVJpjOr1PvnlkdUazJp/Pk3a9q03QoFKWFJ2ctHtqtybKLgOWwnjfCV
-         iBdA==
-X-Gm-Message-State: APjAAAURtreuF5c5xJZ+/9EWIwIIWrSeswtZzaa0TX0PT5TuuNGrQ7WP
-        ui7LDm1wgvM6j5I1AQrgdv1WdTWzokg9Z67Wpdc=
-X-Google-Smtp-Source: APXvYqwcqgRqO0qXcQwJ8Pd4YYfDxrBjR3JlJCO+GW3JjxN2hl8WLdecJWnREVA5bFyZERrdDquJZt6zjdqazPmx9A0=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr116794369otm.297.1578298370564;
- Mon, 06 Jan 2020 00:12:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be> <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com> <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Jan 2020 09:12:39 +0100
-Message-ID: <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Jan 2020 03:14:37 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 0068E04v010428;
+        Mon, 6 Jan 2020 17:14:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 0068E04v010428
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578298441;
+        bh=LH1doj3R4Ug6XaJ/DgmUbm4M2ESZKsoWMh5zD0tz1YE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=m26R16tOyel28hSLnHaltw9doTTzbohPc9gFdR4ojFcp63lK7CBwrnXxTICgQ6cCY
+         qdyG/vNNUeJu1cOmuzWAAhHw3+HbAlKACSx3BKSxH4sQ+Uim46VfYmy1jxXIKKXLWr
+         +P/DIgceu3vdICR1pJ0Md3xpbMnCNk0i/m3NfPumPn+3cOM29/tNVyrAR4nwp8gnYV
+         yHJKIzTG7T8mnusCZMX9IWxfwENUszPu2C/5gWSjeTVm1H3X2CTfJUyZaEXWj/tZ+o
+         4f55/w1tWDd/PCFwSdReMbwOzNvE6frXOM7fwduZPUiNyWl5cZWhU7xCrvoZ2VCXxc
+         stNI/eUNF7fYw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fbdev: remove object duplication in Makefile
+Date:   Mon,  6 Jan 2020 17:13:52 +0900
+Message-Id: <20200106081352.27730-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+The objects in $(fb-objs) $(fb-y) $(fb-m) are linked to fb.ko .
 
-On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
-> > > On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
-> > > > Add Device Tree bindings for a GPIO repeater, with optional translation
-> > > > of physical signal properties.  This is useful for describing explicitly
-> > > > the presence of e.g. an inverter on a GPIO line, and was inspired by the
-> > > > non-YAML gpio-inverter bindings by Harish Jenny K N
-> > > > <harish_kandiga@mentor.com>[1].
-> > > >
-> > > > Note that this is different from a GPIO Nexus Node[2], which cannot do
-> > > > physical signal property translation.
-> > >
-> > > It can't? Why not? The point of the passthru mask is to not do
-> > > translation of flags, but without it you are always doing translation of
-> > > cells.
-> >
-> > Thanks for pushing me deeper into nexuses!
-> > You're right, you can map from one type to another.
-> > However, you cannot handle the "double inversion" of an ACTIVE_LOW
-> > signal with a physical inverter added:
-> >
-> >         nexus: led-nexus {
-> >                 #gpio-cells = <2>;
-> >                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
-> >                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
-> >                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
-> >                 gpio-map-mask = <3 0>;
-> >                 // default gpio-map-pass-thru = <0 0>;
-> >         };
-> >
-> >         leds {
-> >                 compatible = "gpio-leds";
-> >                 led6-inverted {
-> >                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
-> >                 };
-> >                 led7-noninverted {
-> >                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
-> >                 };
-> >                 led8-double-inverted {  // FAILS: still inverted
-> >                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
-> >                 };
-> >         };
-> >
-> > It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
-> > Still, the consumer would see the final translated polarity, and not the
-> > actual one it needs to program the consumer for.
->
-> I'm not really following. Why isn't a double inversion just the same
-> as no inversion?
+This line adds $(fb-y) to fb-objs, so the objects from $(fb-y) are
+listed twice as the dependency of the module.
 
-Because the nexus can only mask and/or substitute bits.
-It cannot do a XOR operation on the GPIO flags.
+It works because Kbuild trims the duplicated objects from linking,
+but there is no good reason to have this line.
 
-> > > > While an inverter can be described implicitly by exchanging the
-> > > > GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-> > > > Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-> > > > th provider and consumer sides:
-> > > >   1. The GPIO provider (controller) looks at the flags to know the
-> > > >      polarity, so it can translate between logical (active/not active)
-> > > >      and physical (high/low) signal levels.
-> > > >   2. While the signal polarity is usually fixed on the GPIO consumer
-> > > >      side (e.g. an LED is tied to either the supply voltage or GND),
-> > > >      it may be configurable on some devices, and both sides need to
-> > > >      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
-> > > >      match the actual polarity.
-> > > >      There exists a similar issue with interrupt flags, where both the
-> > > >      interrupt controller and the device generating the interrupt need
-> > > >      to agree, which breaks in the presence of a physical inverter not
-> > > >      described in DT (see e.g. [3]).
-> > >
-> > > Adding an inverted flag as I've suggested would also solve this issue.
-> >
-> > As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
-> > the inverter bindings"?
-> > https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
-> >
-> > Oh, now I understand. I was misguided by Harish' interpretation
-> > https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
-> > which assumed an "inverted" property, e.g.
-> >
-> >     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
-> >
-> > But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
-> > cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
-> >
-> >     /* Bit 6 expresses the presence of a physical inverter */
-> >     #define GPIO_INVERTED 64
->
-> Exactly.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-OK, makes sense.
+ drivers/video/fbdev/core/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > We need to be very careful in defining to which side the GPIO_ACTIVE_*
-> > applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
-> > Still, this doesn't help if e.g. a FET is used instead of a push-pull
-> > inverter, as the former needs translation of other flags (which the
-> > nexus can do, the caveats above still applies, though).
->
-> Yes. Historically the cells values are meaningful to the provider and
-> opaque to the consumer. Standardized cell values changes that
-> somewhat. I think we want the active flag to be from the provider's
-> prospective because the provider always needs to know. The consumer
-> often doesn't need to know. That also means things work without the
-> GPIO_INVERTED flag if the consumer doesn't care which is what we have
-> today already and we can't go back in time.
->
->
-> > Same for adding IRQ_TYPE_INVERTED.
->
-> I suppose so, yes.
->
-> > Related issue: how to handle physical inverters on SPI chip select lines,
-> > if the SPI slave can be configured for both polarities?
->
-> Good question. Perhaps in a different way because we have to handle
-> both h/w controlled and gpio chip selects.
->
-> However, how would one configure the polarity in the device in the
-> first place? You have to assert the CS first to give a command to
-> reprogram it.
-
-That's indeed true for a simple SPI slave.
-But if it is a smarter device (e.g. a generic micro controller), it may use the
-system's DTB to configure itself.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/video/fbdev/core/Makefile b/drivers/video/fbdev/core/Makefile
+index 37710316a680..26cbc965497c 100644
+--- a/drivers/video/fbdev/core/Makefile
++++ b/drivers/video/fbdev/core/Makefile
+@@ -16,7 +16,6 @@ fb-y				  += fbcon_rotate.o fbcon_cw.o fbcon_ud.o \
+ 				     fbcon_ccw.o
+ endif
+ endif
+-fb-objs                           := $(fb-y)
+ 
+ obj-$(CONFIG_FB_CFB_FILLRECT)  += cfbfillrect.o
+ obj-$(CONFIG_FB_CFB_COPYAREA)  += cfbcopyarea.o
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
