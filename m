@@ -2,85 +2,99 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FD4C00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAF9C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF992072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8102B215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 02:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hiWOUE/1"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gdmqaXuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgAFCEb (ORCPT
+        id S1727356AbgAFCLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:04:31 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22143 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726743AbgAFCEb (ORCPT
+        Sun, 5 Jan 2020 21:11:02 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:42135 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726743AbgAFCLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 21:04:31 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578276270; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ibkKkQF713Ci0VoGdUa5r7/qydExaOgwC183n6zUSwg=;
- b=hiWOUE/13fxRR01sjBApoJdxOUHg4FvAGWY4pWqjJUbFeKRabO607OPKHNH1vJEsIyMJbXyA
- XiCOLrRxCb2Arxrzx0PAFh4Z2tW8VnUAgYnivP/lvmNoMShjVQ70CPumUu/NwjHUv3eWKhov
- gYewIlZ/moyP+u52alPBb+fbUa8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1295aa.7f2e0b6cb110-smtp-out-n03;
- Mon, 06 Jan 2020 02:04:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2AC92C4479F; Mon,  6 Jan 2020 02:04:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wgong)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9C18C43383;
-        Mon,  6 Jan 2020 02:04:25 +0000 (UTC)
+        Sun, 5 Jan 2020 21:11:02 -0500
+X-UUID: cea53f88ddee40a7b53a34743a0b15f8-20200106
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=IFuraZzF877J9vJnN3oKRmiXLPR+UaYNdb3VQPcAbDo=;
+        b=gdmqaXuKYaoGGuPF3ser2AMo21j8w2Ooty0o/bWUH96XG5skMx24dEOGupWUnViBJDfumpNjgxotmED66lZzu9vStFb+xmbISY1KIy2ynZbyOQ5u8Mi/gb/L0zbT3zLXvDFo4demEG56exgjHGhL4CRPlaJkJdJ/jK8V9557tco=;
+X-UUID: cea53f88ddee40a7b53a34743a0b15f8-20200106
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1166485976; Mon, 06 Jan 2020 10:10:57 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 6 Jan
+ 2020 10:10:22 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 6 Jan 2020 10:09:53 +0800
+Message-ID: <1578276653.21256.12.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 1/2] phy: mediatek: Fix Kconfig indentation
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Date:   Mon, 6 Jan 2020 10:10:53 +0800
+In-Reply-To: <20200103164710.4829-1-krzk@kernel.org>
+References: <20200103164710.4829-1-krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 06 Jan 2020 10:04:25 +0800
-From:   Wen Gong <wgong@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in
- qrtr_node_enqueue
-In-Reply-To: <20200105.144704.221506192255563950.davem@davemloft.net>
-References: <20200103045016.12459-1-wgong@codeaurora.org>
- <20200105.144704.221506192255563950.davem@davemloft.net>
-Message-ID: <2540a09c73dd896bb793924275bdab0e@codeaurora.org>
-X-Sender: wgong@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-TM-SNTS-SMTP: 575598EFCB39BFB786417D543F5955B08556C0148A1349B2183C94FEB2DA7FA32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-06 06:47, David Miller wrote:
-> From: Wen Gong <wgong@codeaurora.org>
-> Date: Fri,  3 Jan 2020 12:50:16 +0800
-> 
->> The len used for skb_put_padto is wrong, it need to add len of hdr.
-> 
-> Thanks, applied.
-> 
-> There is another bug here, skb_put_padto() returns an error and frees
-> the SKB when the put fails.  There really needs to be a check here,
-> because currently the code right now will keep using the freed up
-> skb in that situation.
-> 
+T24gRnJpLCAyMDIwLTAxLTAzIGF0IDE3OjQ3ICswMTAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
+b3RlOg0KPiBBZGp1c3QgaW5kZW50YXRpb24gZnJvbSBzcGFjZXMgdG8gdGFiICgrb3B0aW9uYWwg
+dHdvIHNwYWNlcykgYXMgaW4NCj4gY29kaW5nIHN0eWxlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+S3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiANCj4gLS0tDQo+IA0KPiBD
+aGFuZ2VzIHNpbmNlIHYxOg0KPiAxLiBOb25lDQo+IC0tLQ0KPiAgZHJpdmVycy9waHkvbWVkaWF0
+ZWsvS2NvbmZpZyB8IDIwICsrKysrKysrKystLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwg
+MTAgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9waHkvbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZlcnMvcGh5L21lZGlhdGVrL0tjb25maWcN
+Cj4gaW5kZXggMzc2ZjVkMTg5ZGEwLi43ZDE5MTM0YzZiN2MgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvcGh5L21lZGlhdGVrL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9waHkvbWVkaWF0ZWsvS2Nv
+bmZpZw0KPiBAQCAtMywxMiArMywxMiBAQA0KPiAgIyBQaHkgZHJpdmVycyBmb3IgTWVkaWF0ZWsg
+ZGV2aWNlcw0KPiAgIw0KPiAgY29uZmlnIFBIWV9NVEtfVFBIWQ0KPiAtICAgIHRyaXN0YXRlICJN
+ZWRpYVRlayBULVBIWSBEcml2ZXIiDQo+IC0gICAgZGVwZW5kcyBvbiBBUkNIX01FRElBVEVLICYm
+IE9GDQo+IC0gICAgc2VsZWN0IEdFTkVSSUNfUEhZDQo+IC0gICAgaGVscA0KPiAtICAgICAgU2F5
+ICdZJyBoZXJlIHRvIGFkZCBzdXBwb3J0IGZvciBNZWRpYVRlayBULVBIWSBkcml2ZXIsDQo+IC0g
+ICAgICBpdCBzdXBwb3J0cyBtdWx0aXBsZSB1c2IyLjAsIHVzYjMuMCBwb3J0cywgUENJZSBhbmQN
+Cj4gKwl0cmlzdGF0ZSAiTWVkaWFUZWsgVC1QSFkgRHJpdmVyIg0KPiArCWRlcGVuZHMgb24gQVJD
+SF9NRURJQVRFSyAmJiBPRg0KPiArCXNlbGVjdCBHRU5FUklDX1BIWQ0KPiArCWhlbHANCj4gKwkg
+IFNheSAnWScgaGVyZSB0byBhZGQgc3VwcG9ydCBmb3IgTWVkaWFUZWsgVC1QSFkgZHJpdmVyLA0K
+PiArCSAgaXQgc3VwcG9ydHMgbXVsdGlwbGUgdXNiMi4wLCB1c2IzLjAgcG9ydHMsIFBDSWUgYW5k
+DQo+ICAJICBTQVRBLCBhbmQgbWVhbndoaWxlIHN1cHBvcnRzIHR3byB2ZXJzaW9uIFQtUEhZIHdo
+aWNoIGhhdmUNCj4gIAkgIGRpZmZlcmVudCBiYW5rcyBsYXlvdXQsIHRoZSBULVBIWSB3aXRoIHNo
+YXJlZCBiYW5rcyBiZXR3ZWVuDQo+ICAJICBtdWx0aS1wb3J0cyBpcyBmaXJzdCB2ZXJzaW9uLCBv
+dGhlcndpc2UgaXMgc2Vjb25kIHZlcmlvc24sDQo+IEBAIC0yNSwxMCArMjUsMTAgQEAgY29uZmln
+IFBIWV9NVEtfVUZTDQo+ICAJICBzcGVjaWZpZWQgTS1QSFlzLg0KPiAgDQo+ICBjb25maWcgUEhZ
+X01US19YU1BIWQ0KPiAtICAgIHRyaXN0YXRlICJNZWRpYVRlayBYUy1QSFkgRHJpdmVyIg0KPiAt
+ICAgIGRlcGVuZHMgb24gQVJDSF9NRURJQVRFSyAmJiBPRg0KPiAtICAgIHNlbGVjdCBHRU5FUklD
+X1BIWQ0KPiAtICAgIGhlbHANCj4gKwl0cmlzdGF0ZSAiTWVkaWFUZWsgWFMtUEhZIERyaXZlciIN
+Cj4gKwlkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgJiYgT0YNCj4gKwlzZWxlY3QgR0VORVJJQ19Q
+SFkNCj4gKwloZWxwDQo+ICAJICBFbmFibGUgdGhpcyB0byBzdXBwb3J0IHRoZSBTdXBlclNwZWVk
+UGx1cyBYUy1QSFkgdHJhbnNjZWl2ZXIgZm9yDQo+ICAJICBVU0IzLjEgR0VOMiBjb250cm9sbGVy
+cyBvbiBNZWRpYVRlayBjaGlwcy4gVGhlIGRyaXZlciBzdXBwb3J0cw0KPiAgCSAgbXVsdGlwbGUg
+VVNCMi4wLCBVU0IzLjEgR0VOMiBwb3J0cy4NCg0KDQpSZXZpZXdlZC1ieTogQ2h1bmZlbmcgWXVu
+IDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KDQpUaGFua3MNCg0K
 
-Thanks David.
-
-Yes, __skb_put_padto will return -ENOMEM if __skb_pad fail.
-I think it can return the same error immediately and do not do the next 
-steps in qrtr_node_enqueue.
-> Thanks.
