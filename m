@@ -2,194 +2,188 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C443DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E65C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D5C2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578346431;
-	bh=9xjcdTmTHFBtmtqEGw9ymke6KbH6TNuRC64eu6PBQ14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yWwleC5vHxF9EV4+BSH+1WZUvaQOHGl2Vb4GIbCRVc+ZZ1y/++iTQoxvzjgcZFAWs
-	 4vB1HxpzyrHquL69Ninu5zUbLkJc+Q1Ex9xq6Yg0l66ufHXNWphXhTop5ZZ8G4I6Ab
-	 kjy861EvmZ4w2Sg/AE8fwRgyvdvfSWE/kwdi7jVg=
+	by mail.kernel.org (Postfix) with ESMTP id 255062080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgAFVdu (ORCPT
+        id S1726930AbgAFVey convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:33:50 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44470 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbgAFVdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:33:45 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so27438011pgl.11;
-        Mon, 06 Jan 2020 13:33:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/YlYKPHpunNCuwNpgLXYWk+P5gDqWSvQ71BDe2+/jE4=;
-        b=N4j72bn0hNdQItfQfGkUaTpmwnyqrKkNrlAvj+xLTnxu0NQOeTbQBdk8DD0BDQ2yoQ
-         VzpltOJInN7hJSuF+ZgbeDJDcsQOidcI2NRZxXd4AMMikmHn5WyqmrBhkSS+1q/7eRSS
-         m+N3VndZbyQWIuZk5fogbxkxQj4XsUtQPYbSMBDG6PmuXf3yRB1gkPINkLw7Fu2t8jzd
-         NO/LvfCrSHlO7z6cKEDHSwTqZw4n4wT0CYaH/P7qqOEQbCPa3MYJ/SvHDPAAtggE3Sy7
-         cx4oAL0/SUKjwFomEwttomNiBm49+LNnJTI4S7UVOljDpB5/CB8OO6noiiPr2laRgR+M
-         Ry0A==
-X-Gm-Message-State: APjAAAUKzidBXOlevtkaqHg50aeyzIxbWL5KwbG0V9ZZf3A4Wtjg5C+W
-        qNir5xZQuw24l/uXO3Hj0Rk=
-X-Google-Smtp-Source: APXvYqwGiPQYAYwL9vWqDpJIl1HKxVMoDt4Ev4E/5klzEl3TNuNV/EZy4Blrnh13RzpOm/I800S+Nw==
-X-Received: by 2002:aa7:8e13:: with SMTP id c19mr76663440pfr.227.1578346424985;
-        Mon, 06 Jan 2020 13:33:44 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 11sm81070528pfz.25.2020.01.06.13.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 13:33:43 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1E46040321; Mon,  6 Jan 2020 21:33:43 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 21:33:43 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v10 05/10] test_firmware: add support for
- firmware_request_platform
-Message-ID: <20200106213343.GV11244@42.do-not-panic.com>
-References: <20191210115117.303935-1-hdegoede@redhat.com>
- <20191210115117.303935-6-hdegoede@redhat.com>
+        Mon, 6 Jan 2020 16:34:54 -0500
+Received: from mail-db8eur05olkn2026.outbound.protection.outlook.com ([40.92.89.26]:64353
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726739AbgAFVex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 16:34:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iB13g4a+9CaGRzPqiztnVe8Q6TOb27UcCgsauu6Wfwt+Trc2nhl+QVKvSD18T9EcKmoECK/n4kKqVzRpACGQelVmyu47Izw7EJhAYvN5lAmAeziLD73gGM3eDiUAPoIDXZYhqEfSwtd94DtyRFaD6u9ILgW3T46a5skUr2Sp87fJJ2MzwlryVzrCXXE/teOKwnV95f3CV3xjrXUuaKbn/KKQEuPE56z6aB1BTA7Qk8I8b5HFUKVuO5U4Qq0VJnlBrtqDsLQ4d5R6wGrcISvHXwzZg2PTwvJM5icD+vGaudIxMv6ABZwhTfrZlasHJMnhwJJUUvrJqIwN8RwQW4CuMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nw6b/alH9LKACQvFnNubK2S/y1jbpaLcCKbNTKSe/rE=;
+ b=lh/MzqMhxSKVnZbFnv9m1viO/foOyAsJZHPY3BjYotjPIIKrw39uRsH9+/6byoojDC994WY7C5y07CHCVGHTxYl0IxV18J7F9Bu9w9vbhBg1DLLf8xrFOg6ALcoXgvuAPFwFcodC3w9/4K8b7gdL8/qMtD44g8alUmgr8wCqu4W7piyOpecen8wkg64AD3mKYJOBB89H45aDYq+3o9cWGduXBPQE7gS1dylL6mpjoxVMXHUuhTv08MCwWF0zzq3fTWOfswIQ60J8FP4c5pfKI/EyMyiupEavMwKLfT0o11+oyd2509xXXDI6SBOhC+U3JF36bC85pouKM5E81VCNnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM6EUR05FT005.eop-eur05.prod.protection.outlook.com
+ (10.233.240.60) by AM6EUR05HT012.eop-eur05.prod.protection.outlook.com
+ (10.233.241.160) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
+ 2020 21:34:10 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.233.240.60) by
+ AM6EUR05FT005.mail.protection.outlook.com (10.233.241.71) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 21:34:10 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b957:6908:9f62:c28b]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::b957:6908:9f62:c28b%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 21:34:10 +0000
+Received: from [192.168.1.14] (98.128.173.80) by AM6PR10CA0015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 21:34:08 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     =?Windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+CC:     Sandy Huang <hjc@rock-chips.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Zheng Yang <zhengyang@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/15] drm/rockchip: vop: limit resolution width to 3840
+Thread-Topic: [PATCH 06/15] drm/rockchip: vop: limit resolution width to 3840
+Thread-Index: AQHVxNKkwe23wXzA60yXF+y5CyRgVqfeJCkAgAAEPoA=
+Date:   Mon, 6 Jan 2020 21:34:09 +0000
+Message-ID: <HE1PR06MB40113EDB12EB739D19AB225FAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20200106204812.5944-1-jonas@kwiboo.se>
+ <HE1PR06MB40111E90F5DA4718126E6A92AC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <3203294.bEmSZkBOq4@diego>
+In-Reply-To: <3203294.bEmSZkBOq4@diego>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR10CA0015.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:209:89::28) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:8C74F9B254BCE4D7261D55BE6378B54800A2013AAB3F44F9132E6C1935E33FE8;UpperCasedChecksum:89BBB864499F486BF86EB9710B521DC0C0FBA9B2791EABBDB4B696AAA03A8CFF;SizeAsReceived:8262;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [hvyXx3fCSnx0ewY9FcL/pnjUuZYfNQ03]
+x-microsoft-original-message-id: <ce0e48b0-7d4d-4bfe-e619-f92bad658873@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: fc2e7520-ae9f-459d-b70a-08d792f02a4c
+x-ms-traffictypediagnostic: AM6EUR05HT012:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rusViNSRXA2S6+LvdDO0hULQNXWaWjBxb6MkfBqBbVDfVg+sOmG9iZNQBsEZg8TO/3QzNkbaaPmyDmw7LpqKj9ZL+bBMNYJcfA0E0YDE7Kk3LgDzoIOs66mEkqSdw69i7Am86HnGQRa1wP0iFRAvATPfs4FXYjECRbNJW7BkPfa+qWkeHMLY1z8JVSricMPSq3PRQQ3+Y1wMAKYnazITvSfR+U8CJWISFThPlkXV7Fw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <C7279E574F34114DB66C0CD97F5F0DB6@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210115117.303935-6-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc2e7520-ae9f-459d-b70a-08d792f02a4c
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 21:34:09.9849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
-> Add support for testing firmware_request_platform through a new
-> trigger_request_platform trigger.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> index 251213c872b5..9af00cfc8979 100644
-> --- a/lib/test_firmware.c
-> +++ b/lib/test_firmware.c
-> @@ -24,6 +24,7 @@
->  #include <linux/delay.h>
->  #include <linux/kthread.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/efi_embedded_fw.h>
->  
->  #define TEST_FIRMWARE_NAME	"test-firmware.bin"
->  #define TEST_FIRMWARE_NUM_REQS	4
-> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
->  }
->  static DEVICE_ATTR_WO(trigger_request);
->  
-> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-> +static ssize_t trigger_request_platform_store(struct device *dev,
-> +					      struct device_attribute *attr,
-> +					      const char *buf, size_t count)
-> +{
-> +	static const u8 test_data[] = {
-> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
-> +	};
-> +	struct efi_embedded_fw fw;
-> +	int rc;
-> +	char *name;
-> +
-> +	name = kstrndup(buf, count, GFP_KERNEL);
-> +	if (!name)
-> +		return -ENOSPC;
-> +
-> +	pr_info("inserting test platform fw '%s'\n", name);
-> +	fw.name = name;
-> +	fw.data = (void *)test_data;
-> +	fw.length = sizeof(test_data);
-> +	list_add(&fw.list, &efi_embedded_fw_list);
-> +
-> +	pr_info("loading '%s'\n", name);
-> +
-> +	mutex_lock(&test_fw_mutex);
-> +	release_firmware(test_firmware);
-> +	test_firmware = NULL;
+On 2020-01-06 22:18, Heiko Stübner wrote:
+> Hi Jonas,
+>
+> Am Montag, 6. Januar 2020, 21:48:25 CET schrieb Jonas Karlman:
+>> Using a destination width that is more then 3840 pixels
+>> is not supported in scl_vop_cal_scl_fac().
+>>
+>> Work around this limitation by filtering all modes with
+>> a width above 3840 pixels.
+> could you try to send the whole series to people? I only get this patch6
+> of a series of 15 and that is way confusing not knowing what you want
+> to actually achieve.
 
-Seems odd to have the above two lines here before the request, why not
-after as noted below.
+Very strange, you are the recipient of all patches, and they where delivered to
+patchworks at [1] and [2], I also have a copy of this series at [3].
 
-> +	rc = firmware_request_platform(&test_firmware, name, dev);
-> +	if (rc) {
-> +		pr_info("load of '%s' failed: %d\n", name, rc);
-> +		goto out;
-> +	}
-> +	if (test_firmware->size != sizeof(test_data) ||
-> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
-> +		pr_info("firmware contents mismatch for '%s'\n", name);
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	pr_info("loaded: %zu\n", test_firmware->size);
-> +	rc = count;
+This is part of a series for adding support for more HDMI modes on the RK3228/RK3328.
+Also preparation for adding bus format negotiation for YUV420 and 10-bit output mode,
+early bus format work is located at [4].
 
-Here.
+[1] https://patchwork.kernel.org/cover/11320061/
+[2] https://patchwork.freedesktop.org/series/71675/
+[3] https://github.com/Kwiboo/linux-rockchip/commits/next-20200106-inno-hdmi-phy
+[4] https://github.com/Kwiboo/linux-rockchip/commits/next-20200106-bus-format
 
-> +
-> +out:
-> +	mutex_unlock(&test_fw_mutex);
-> +
-> +	list_del(&fw.list);
-> +	kfree(name);
-> +
-> +	return rc;
-> +}
-> +static DEVICE_ATTR_WO(trigger_request_platform);
-> +#endif
-> +
->  static DECLARE_COMPLETION(async_fw_done);
->  
->  static void trigger_async_request_cb(const struct firmware *fw, void *context)
->  {
->  	test_firmware = fw;
->  	complete(&async_fw_done);
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
->  }
+>
+> Hence I can also just point to rk3229, rk3328, rk3368 and rk3399 that
+> report a max output of 4096x2160 , which would be larger than that
+> 3840 value?
 
-Ummm, new empty lines without any code added... did you forget
-something?  Please address this.
+Currently the scaling code in rockchip drm driver is limiting the use of large framebuffers at [5].
+This scaling limitation made it impossible for me to use any 4096x mode that my TV supports.
 
-  Luis
+if (dst_w > 3840) {
+    DRM_DEV_ERROR(vop->dev, "Maximum dst width (3840) exceeded\n");
+
+[5] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/rockchip/rockchip_drm_vop.c#L329-L332
+
+Regards,
+Jonas
+
+>
+>
+> Heiko
+>
+>
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> ---
+>>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>> index d04b3492bdac..f181897cbfad 100644
+>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+>> @@ -1036,6 +1036,15 @@ static void vop_crtc_disable_vblank(struct drm_crtc *crtc)
+>>  	spin_unlock_irqrestore(&vop->irq_lock, flags);
+>>  }
+>>  
+>> +enum drm_mode_status vop_crtc_mode_valid(struct drm_crtc *crtc,
+>> +					 const struct drm_display_mode *mode)
+>> +{
+>> +	if (mode->hdisplay > 3840)
+>> +		return MODE_BAD_HVALUE;
+>> +
+>> +	return MODE_OK;
+>> +}
+>> +
+>>  static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+>>  				const struct drm_display_mode *mode,
+>>  				struct drm_display_mode *adjusted_mode)
+>> @@ -1377,6 +1386,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
+>>  }
+>>  
+>>  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
+>> +	.mode_valid = vop_crtc_mode_valid,
+>>  	.mode_fixup = vop_crtc_mode_fixup,
+>>  	.atomic_check = vop_crtc_atomic_check,
+>>  	.atomic_begin = vop_crtc_atomic_begin,
+>>
+
