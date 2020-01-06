@@ -2,133 +2,159 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B14DC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5F0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C89520731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="AZ/FYGHO"
+	by mail.kernel.org (Postfix) with ESMTP id B18942075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578311858;
+	bh=s5Sa1xRbZFFMGRaFBBUyOdwEz6ghW8w9muI3pbuLQac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lH1V1LChPWs4fkFVcJW5zXn9m7AXiQ5nr00sl3ql/lJ5YXv+oj8dHoYq5J9K2c44s
+	 q3SHWbSOQ7KCIYKs7SkFZ4avxBH7gCgGY3f4fNX0DwuVuHHnuT7AU2oIpP2pZoUTkp
+	 Jh6yEbRI8Q2EO+dNMusSMj8gwK++ooZM48V/cfpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgAFLza (ORCPT
+        id S1726422AbgAFL5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:55:30 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:40139 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgAFLz3 (ORCPT
+        Mon, 6 Jan 2020 06:57:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40712 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFL5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:55:29 -0500
-Received: from [192.168.2.10] ([62.249.185.68])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id oQyhiIwlNVPvpoQykipRs5; Mon, 06 Jan 2020 12:55:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578311727; bh=QM4+e/JWJcP7Xkl+d+2VWkVOC4Sr7FElVrguPTUV42g=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=AZ/FYGHOzh2LZmUbriH4hTl91gmctvWHHxt0nYsk+/KWRQoV34dEM9gMvNTsPp2+R
-         SleplPEw65KqpTJab+fzAgx9ze/8PwJM8fOvV4IGBRKc9eqWzWZWi04U9fMCf/ilpy
-         9kEUai6WTq1UcENAwSBl1ubT8PBAcdOrLJLH8ZhwO3Ry7DFWECgUzz9jtycc4P75Oy
-         Z90o5xBWrgWNEl6WPX4ApvBgP/8JEzUkA2fHseYKafa/1vWPRWeskYagnHMyHz2ByH
-         E358jubTaMDduviV2tdd3tS8Q9PPTzgdVOaG+C8A2Exugj472kkxYj14wyyt2Kcd9C
-         ftrWWX4ifwmFA==
-Subject: Re: [PATCH v2] media: davinci/vpfe_capture.c: Avoid BUG_ON for
- register failure
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217221254.1078-1-pakki001@umn.edu>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a3f1da01-79b0-f548-de4f-e0c82b8abbf9@xs4all.nl>
-Date:   Mon, 6 Jan 2020 12:55:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Jan 2020 06:57:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so14963456wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 03:57:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wq5ckQk7LFGLcvmKNi6yRQD928FRQYB9nCju3+NM16s=;
+        b=YqfmXAmAm86ENG9pp3gPOnICI/V/f3Y51o47AXNHGcq+aBDjpDatokZ+BAaKJqa0o1
+         ypwIHeEfXFtbtjRDcDb/watTGdPTNuWxwfcBI0emDJ7JOKVx3CpEVSAzJlhbsfyQEubW
+         TmYQrhPdWmiGJMnutBtkMRn9M3U1ObFgEUbKhK+ubNMQxoXm4vOrYJtLssYTwGhMYVT2
+         3pmRD7H5lSboo8aliiFgecfwkH2GPn0PlXsaA6HRIVyN4GXPQTI9DrnsQn8OY6t2/Nqv
+         X2s/WcenFu6uW9mjmoGimb15wsQvo65h2xIUo9w26hyzV82AjwfOoGFziOqxLNXSV3b7
+         1x5w==
+X-Gm-Message-State: APjAAAVfOFNnvB2untFCMNuIPmTUHY95S/prJSV2btp4dk6315Zo8tOh
+        nRI8sCWRaGaL2JXPzq6Vy0mjNA9Z
+X-Google-Smtp-Source: APXvYqz+K5ThOJvt/fr4HLv1TX9A/QH8tzGeDdL9+NBitXIU6Wt0jJh/hTjo2ms6UIQKX9U5J7xDGA==
+X-Received: by 2002:a05:600c:246:: with SMTP id 6mr35470768wmj.122.1578311855456;
+        Mon, 06 Jan 2020 03:57:35 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f127sm22452306wma.4.2020.01.06.03.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 03:57:34 -0800 (PST)
+Date:   Mon, 6 Jan 2020 12:57:33 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+Message-ID: <20200106115733.GH12699@dhcp22.suse.cz>
+References: <20191126165420.GL20912@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
+ <20191127162400.GT20912@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1911271625110.17727@www.lameter.com>
+ <20191127174317.GD26807@dhcp22.suse.cz>
+ <20191204132812.GF25242@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1912041524290.18825@www.lameter.com>
+ <20191204153225.GM25242@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
+ <20191204173224.GN25242@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191217221254.1078-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEr83cOGeYQWoPj0V4roRl0p7EsnNFj7+7aapH2ULA59deP4LNFV/8by4yb4wQqQqWjh9DoKir4JWaROfC5Q+q7F5b0+sCQ3ouV+tWMqga8znAXh3y5j
- DaWAVzkUQyNWekLezyoTMWeCda9uBjoBXZ5kJkzV8Q3u+Xcw+TzLjmO0wnznHq6QXBs1E/CfhdxElkIGD7NNX+QCzpX2tu0ktuDTplyACjCAcM9TU/ND1kPI
- jp34CLgQvgNYa/YwvyOu27PB5elcKRjFdlgCx/3Km609OnN69ywMs8A9qzpP6C/ELapbGf7l2lMowiRYUbaJBpB5z3uxVNQ0Tj4QIcvn2nQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191204173224.GN25242@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 11:12 PM, Aditya Pakki wrote:
-> In vpfe_register_ccdc_device(), failure to allocate dev->hw_ops
-> fields calls BUG_ON(). This patch returns the error to callers
-> instead of crashing. The issue was identified by a static
-> analysis tool.
+On Wed 04-12-19 18:32:24, Michal Hocko wrote:
+> [Cc akpm - the email thread starts
+> http://lkml.kernel.org/r/20191126121901.GE20912@dhcp22.suse.cz]
+
+ping.
+
+> On Wed 04-12-19 16:53:47, Cristopher Lameter wrote:
+> > On Wed, 4 Dec 2019, Michal Hocko wrote:
+> > 
+> > > As I've said I believe it is quite risky. But if you as a maintainer
+> > > believe this is the right thing to do I will not object. Care to send a
+> > > patch?
+> > 
+> > From: Christoph Lameter <cl@linux.com>
+> > Subject: slub: Remove userspace notifier for cache add/remove
+> > 
+> > Kmem caches are internal kernel structures so it is strange that
+> > userspace notifiers would be needed. And I am not aware of any use
+> > of these notifiers. These notifiers may just exist because in the
+> > initial slub release the sysfs code was copied from another
+> > subsystem.
+> > 
+> > Signed-off-by: Christoph Lameter <cl@linux.com>
+> > 
+> > Index: linux/mm/slub.c
+> > ===================================================================
+> > --- linux.orig/mm/slub.c	2019-12-02 15:13:23.948312925 +0000
+> > +++ linux/mm/slub.c	2019-12-04 16:32:34.648550310 +0000
+> > @@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
+> >  	.release = kmem_cache_release,
+> >  };
+> > 
+> > -static int uevent_filter(struct kset *kset, struct kobject *kobj)
+> > -{
+> > -	struct kobj_type *ktype = get_ktype(kobj);
+> > -
+> > -	if (ktype == &slab_ktype)
+> > -		return 1;
+> > -	return 0;
+> > -}
+> > -
+> > -static const struct kset_uevent_ops slab_uevent_ops = {
+> > -	.filter = uevent_filter,
+> > -};
+> > -
+> >  static struct kset *slab_kset;
+> > 
+> >  static inline struct kset *cache_kset(struct kmem_cache *s)
+> > @@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
+> >  #ifdef CONFIG_MEMCG
+> >  	kset_unregister(s->memcg_kset);
+> >  #endif
+> > -	kobject_uevent(&s->kobj, KOBJ_REMOVE);
+> >  out:
+> >  	kobject_put(&s->kobj);
+> >  }
+> > @@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
+> >  	}
+> >  #endif
+> > 
+> > -	kobject_uevent(&s->kobj, KOBJ_ADD);
+> >  	if (!unmergeable) {
+> >  		/* Setup first alias */
+> >  		sysfs_slab_alias(s, s->name);
+> > @@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
+> > 
+> >  	mutex_lock(&slab_mutex);
+> > 
+> > -	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
+> > +	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
+> >  	if (!slab_kset) {
+> >  		mutex_unlock(&slab_mutex);
+> >  		pr_err("Cannot register slab subsystem.\n");
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
-> v1: Fixed the type to a regular variable instead of a pointer,
-> also added fixes suggested by Ezequiel Garcia.
-> ---
->  drivers/media/platform/davinci/vpfe_capture.c | 31 ++++++++++---------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
-> index 916ed743d716..a3838a2e173f 100644
-> --- a/drivers/media/platform/davinci/vpfe_capture.c
-> +++ b/drivers/media/platform/davinci/vpfe_capture.c
-> @@ -168,21 +168,22 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
->  	int ret = 0;
->  	printk(KERN_NOTICE "vpfe_register_ccdc_device: %s\n", dev->name);
->  
-> -	BUG_ON(!dev->hw_ops.open);
-> -	BUG_ON(!dev->hw_ops.enable);
-> -	BUG_ON(!dev->hw_ops.set_hw_if_params);
-> -	BUG_ON(!dev->hw_ops.configure);
-> -	BUG_ON(!dev->hw_ops.set_buftype);
-> -	BUG_ON(!dev->hw_ops.get_buftype);
-> -	BUG_ON(!dev->hw_ops.enum_pix);
-> -	BUG_ON(!dev->hw_ops.set_frame_format);
-> -	BUG_ON(!dev->hw_ops.get_frame_format);
-> -	BUG_ON(!dev->hw_ops.get_pixel_format);
-> -	BUG_ON(!dev->hw_ops.set_pixel_format);
-> -	BUG_ON(!dev->hw_ops.set_image_window);
-> -	BUG_ON(!dev->hw_ops.get_image_window);
-> -	BUG_ON(!dev->hw_ops.get_line_length);
-> -	BUG_ON(!dev->hw_ops.getfid);
-> +	if (!dev->hw_ops.open ||
-> +			!dev->hw_ops.enable ||
-> +			!dev->hw_ops.set_hw_if_params ||
-> +			!dev->hw_ops.configure ||
-> +			!dev->hw_ops.set_buftype ||
-> +			!dev->hw_ops.get_buftype ||
-> +			!dev->hw_ops.enum_pix ||
-> +			!dev->hw_ops.set_frame_format ||
-> +			!dev->hw_ops.get_frame_format ||
-> +			!dev->hw_ops.get_pixel_format ||
-> +			!dev->hw_ops.set_pixel_format ||
-> +			!dev->hw_ops.set_image_window ||
-> +			!dev->hw_ops.get_image_window ||
-> +			!dev->hw_ops.get_line_length ||
-> +			!dev->hw_ops.getfid)
+> -- 
+> Michal Hocko
+> SUSE Labs
 
-Please align this under !dev->hw_ops.open. E.g.:
-
-	if (!dev->hw_ops.open ||
-	    !dev->hw_ops.enable ||
-	    !dev->hw_ops.set_hw_if_params ||
-	    ...etc...
-
-Regards,
-
-	Hans
-
-
-> +		return -EINVAL;
->  
->  	mutex_lock(&ccdc_lock);
->  	if (!ccdc_cfg) {
-> 
-
+-- 
+Michal Hocko
+SUSE Labs
