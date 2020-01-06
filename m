@@ -2,84 +2,136 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A9BC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5628C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A5521734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578283889;
-	bh=B7LdXSi/JWjxK6Dm4iNqV5LXa5Xz3Zef96dIAiZ9mAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vN1F+x0/bkgPi9W9QOlO/yrGZlbQ9mAc86V07KeUEYihJ4hTxb+sHun//UzrUtCU/
-	 Yppn7LcF/wxxoLf7aD+GJQ3UfGV9SCYBCFR8Z+2tZa09PgAw1elV8/x+hWzd9s8ouP
-	 6jy5HCDLtELlwcqfR+OO+DTTDzv4p5aL1Jt+jVsM=
+	by mail.kernel.org (Postfix) with ESMTP id 9BF48222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:17:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flUVars/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgAFEL2 (ORCPT
+        id S1727494AbgAFERa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 23:11:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbgAFEL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 23:11:28 -0500
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17FED21582;
-        Mon,  6 Jan 2020 04:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578283887;
-        bh=B7LdXSi/JWjxK6Dm4iNqV5LXa5Xz3Zef96dIAiZ9mAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uuWXR9ITds1qYZMkEPs2chZJ3MZX82/ziVIIMlEk0mvXOpLJlDW7XQpmSofwFBHH7
-         JZugrGnzEeMErDq+kCEbmphUKE8XGGr19kPQSjhgePQzUZTus3xs9Z8SpZDaJcYsyC
-         eQv32KzvZ5D1tJNrJwjWv1dYcE6DPmZK/HhR/i3c=
-Date:   Mon, 6 Jan 2020 05:11:25 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 09/17] x86/entry: Remove _TIF_NOHZ from
- _TIF_WORK_SYSCALL_ENTRY
-Message-ID: <20200106041124.GA26097@lenoir>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123118.491328859@linutronix.de>
+        Sun, 5 Jan 2020 23:17:30 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43622 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbgAFER3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 23:17:29 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so46368540edb.10;
+        Sun, 05 Jan 2020 20:17:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NM4cO7yx6XHdWkikFjcDmehOMtjxSh2FAaet+Jaova8=;
+        b=flUVars/F3OZbs1fd3Xo4NX+NdYi1GzRjlkAfssV8o73ZLfhUhSAFWX7ic15uGaFSK
+         1/iw1VTwqJhgM6Ze6NYcH/2chJJKw4SEDpqwhX8tW4dEkG5hO9YtP1cjNj0khmkvf3ow
+         ia3j4yquQawETubpeFmIXil8yekYP1yQmHAgiMEdN4PI2TvyXMxDFfe/r0Jhzub/txkq
+         BFEISeSvPO2RQ5PJhmyHKIRa7ZFlyD6f8GzxGl1AsLU9TgxgKx96jCgwFXzvx3xXaflJ
+         GxEvkE7HpOD+72FF6cFjh0BhzPWZ2DyXjw4FftC61WR62E3TRSt1l7FdAjtu11ipXO6o
+         W+8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NM4cO7yx6XHdWkikFjcDmehOMtjxSh2FAaet+Jaova8=;
+        b=fTcfXfYZDE5hPphO+uXhCRncVfgCPbD61bG9y+8R+0pkvt48gkvpZYFZKdYJlEBgYi
+         iuYNJ1Ls/wJqgs23rN4vLVM1q19JHA4XSRzbMhu8SblqjwDYCeawuC1/phr71lc6IgK6
+         zvQEBa1Tw0PpLGEeY8xaIx9C39B7QKjgc4RIhVLnmdFOdi9xwjQw2DJPFVWXwP3gHB9T
+         HrXNMkToRPzkU4UQ+oSaPYN9TZk0HeFXznnM3qhTsO+T12mB4YX7IYmumJJRXAAcEPpS
+         M36uyFusTNpB7u5kENTx71RpKztHlBSrpqFJHBlzQEK7A+A69QS47YNu3tJvIvPigXKU
+         9Zaw==
+X-Gm-Message-State: APjAAAVDwWTfqec3RBy4FYjvjStYQ0SIHt3PTYejx/2QJxTcnDbpJVvb
+        PrQvkaM4HCINjbTbWYCfgZFfQrSlyU1eklsj+OM=
+X-Google-Smtp-Source: APXvYqyL0u361qZHtYP5NXawXdgFVviSEzFvt2t+iyc4L3etqBxubixvgUGBf2C08rJKMqTlkvE+MGfhYtfKGSUrSwE=
+X-Received: by 2002:a05:6402:12d1:: with SMTP id k17mr105414587edx.291.1578284247470;
+ Sun, 05 Jan 2020 20:17:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023123118.491328859@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com>
+ <55183b0a7c466528361802fabef65a57f969d07b.1574922435.git.shubhrajyoti.datta@xilinx.com>
+ <20200105200014.4904320678@mail.kernel.org>
+In-Reply-To: <20200105200014.4904320678@mail.kernel.org>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Mon, 6 Jan 2020 09:47:16 +0530
+Message-ID: <CAKfKVtGZGw7FydE+3PJxbYW_JHB3hi_Mr144A+gvUfX24ffaDg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] clk: clock-wizard: Update the fixed factor divisors
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     devel@driverdev.osuosl.org, linux-clk@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:27:14PM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Evaluating _TIF_NOHZ to decide whether to use the slow syscall entry path
-> is not only pointless, it's actually counterproductive:
-> 
->  1) Context tracking code is invoked unconditionally before that flag is
->     evaluated.
-> 
->  2) If the flag is set the slow path is invoked for nothing due to #1
-> 
-> Remove it.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Mon, Jan 6, 2020 at 1:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting shubhrajyoti.datta@gmail.com (2019-11-27 22:36:14)
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > Update the fixed factor clock registration to register the divisors.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> >  drivers/clk/clk-xlnx-clock-wizard.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
+> > index 4c6155b..75ea745 100644
+> > --- a/drivers/clk/clk-xlnx-clock-wizard.c
+> > +++ b/drivers/clk/clk-xlnx-clock-wizard.c
+> > @@ -491,9 +491,11 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >         u32 reg, reg_f, mult;
+> >         unsigned long rate;
+> >         const char *clk_name;
+> > +       void __iomem *ctrl_reg;
+> >         struct clk_wzrd *clk_wzrd;
+> >         struct resource *mem;
+> >         int outputs;
+> > +       unsigned long flags = 0;
+> >         struct device_node *np = pdev->dev.of_node;
+> >
+> >         clk_wzrd = devm_kzalloc(&pdev->dev, sizeof(*clk_wzrd), GFP_KERNEL);
+> > @@ -564,19 +566,22 @@ static int clk_wzrd_probe(struct platform_device *pdev)
+> >                 goto err_disable_clk;
+> >         }
+> >
+> > -       /* register div */
+> > -       reg = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
+> > -                       WZRD_DIVCLK_DIVIDE_MASK) >> WZRD_DIVCLK_DIVIDE_SHIFT;
+> > +       outputs = of_property_count_strings(np, "clock-output-names");
+> > +       if (outputs == 1)
+> > +               flags = CLK_SET_RATE_PARENT;
+>
+> What does the number of clk outputs have to do with the ability to
+> change the rate of a parent clk? The commit text doesn't inform me of
+> what this is for either. Please help us understand.
 
-I'm borrowing this patch for a series of mine. But if you apply
-it in the meantime, that would be even better :-)
+If there are multiple clocks then changing the rate of the parent
+changes the rate of all the
+outputs so we donot allow changing the rate of the parent if there are
+multiple clocks.
+If there is only one output then that is not an issue.
 
-Thanks!
+I will update the description in the next version.
+>
+> >         clk_name = kasprintf(GFP_KERNEL, "%s_mul_div", dev_name(&pdev->dev));
+> >         if (!clk_name) {
+> >                 ret = -ENOMEM;
+> >                 goto err_rm_int_clk;
+> >         }
+> >
