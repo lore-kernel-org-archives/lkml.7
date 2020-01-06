@@ -2,93 +2,99 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F13C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B328C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513422072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE732072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CoMIQEDI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ji/Uri2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgAFBzk (ORCPT
+        id S1727374AbgAFB4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:55:40 -0500
-Received: from ozlabs.org ([203.11.71.1]:40341 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbgAFBzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:55:40 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rdrT1tm4z9sPJ;
-        Mon,  6 Jan 2020 12:55:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578275737;
-        bh=H8huH0kHSTplQmOfDL3UG9eTTuXnRHDVPGYIItGVNwg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CoMIQEDINd6JcqxZRnnBV5qztqn9gPn1h6L/M5OcDNoxpcN1O0l2kcmZZSKj9r/zs
-         ed0+sNSp10WIH6goQ+lC2XDofTdAaV3cv67jEIKntJdls8vVPWfWGgrmDBdbCi6al2
-         UeLjV/nWAf5zgeTxUJa5j+wsYK222KkdmReDHrHeN9aVoMLbGXZBxWSEde6EICmXfw
-         EHUhLJ2q6uwQ5alyfOHDxxlj/QyExsZYB5cxE5ujicV35qR2XBoRexW4Xy5iZoefqP
-         WBsGiwW217koFQ4rNXHIFc/fOqG0y30+cosMpHt1JbNPqETNBBkBmPHzF1fbw4V+7E
-         7AskMCowbqV6A==
-Date:   Mon, 6 Jan 2020 12:55:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the risc-v tree with Linus' tree
-Message-ID: <20200106125536.42fa3df4@canb.auug.org.au>
-In-Reply-To: <alpine.DEB.2.21.9999.2001051749560.484919@viisi.sifive.com>
-References: <20200106093246.6abbb7e9@canb.auug.org.au>
-        <alpine.DEB.2.21.9999.2001051749560.484919@viisi.sifive.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+cGBlbluk_+o6SF.ktlJQ/T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 5 Jan 2020 20:56:25 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55254 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAFB4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:56:24 -0500
+Received: by mail-pj1-f66.google.com with SMTP id kx11so6907009pjb.4;
+        Sun, 05 Jan 2020 17:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Bwykfnh9I+HBTex5KIv5flUDMZzUB+KXgYZaVTuNTVw=;
+        b=Ji/Uri2phyquI7tB8XXhe1WF/Q/QRG9LVCeX5W+cBP9IjDAeGBcb1e6BGAQw9tbTmo
+         1+5gUpRdr0mwzShSPcROxJl71xDR4R57tQezoQPsvZw93yUZCnlv7qYICAA1ca0W9yUC
+         NnhMGHxzOXPB0lsI214wqc1MSkaB/arMYEXBkeB2zmCGtX7m50ME2DJuFQkdsRzvYLRj
+         6d7tIf92A6XWNbrLe8ovm4Kn3LlFP+8r1qXXQb3VExQvcN5netq1WY0uueZakvojQ77w
+         fdxqGrJaHaiHC2FqYk5klZuPLIk/36/SuwPieoMdecy+iM+0NW89Cm72F75QIzEjw7fy
+         eBLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Bwykfnh9I+HBTex5KIv5flUDMZzUB+KXgYZaVTuNTVw=;
+        b=mg3F/7Yo7L1v0jeBrxyYCR6iPtOiavtRPPjgmleC48hcQlK1+vbD0UDp2Vgka3OePB
+         CWSE8XpvEifglm7cYPxTpE/TPi9ceKNySd2K8LOC2c2s7ns/OSVG3GZlxyjmBWRFUzHz
+         1sM1u9t7GJyZUyn+W8XJ39LjtQQSGlohHA2vWb1iofSyB/6AzQOHV/1lnejvgjId1LVU
+         //2V/+hZwWGX7fZhJtknVNHR4YqsLR10JmomNbCseJDv0YIAMocyq2mYRoV/BipN3dPm
+         +qvU8yep9HC8yBl1BTk3P3L51LTRC5DuLCBlQDCTEgWBbw4wPQTqprCSquZHTB4VUDB7
+         sxQw==
+X-Gm-Message-State: APjAAAWCj1IlPt9BEyHwjumt7HpeDmBORcEcPxrBCdEOhQ4JmjH9RIuD
+        n4xOoBTho4VRYUA41NVkA2U=
+X-Google-Smtp-Source: APXvYqwprWNudrZCAIdy2jEAfpLuiljLwlXloJdJDl3DL5bBJ0mppBmTwbVXm2ltIwpCH+09OxqEOw==
+X-Received: by 2002:a17:90b:1243:: with SMTP id gx3mr40570711pjb.117.1578275784141;
+        Sun, 05 Jan 2020 17:56:24 -0800 (PST)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id e16sm68495846pgk.77.2020.01.05.17.56.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 Jan 2020 17:56:23 -0800 (PST)
+From:   liuyang34 <yangliuxm34@gmail.com>
+X-Google-Original-From: liuyang34 <liuyang34@xiaomi.com>
+To:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     liuyang34 <liuyang34@xiaomi.com>
+Subject: [PATCH] selinuxfs: use scnprinft to get real length in sel_read_class
+Date:   Mon,  6 Jan 2020 09:56:18 +0800
+Message-Id: <ba3290e18f9867e110b77d058c3f8c7015bd868b.1578274288.git.liuyang34@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578274288.git.liuyang34@xiaomi.com>
+References: <cover.1578274288.git.liuyang34@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+cGBlbluk_+o6SF.ktlJQ/T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+as the return value of snprintf maybe over the size of TMPBUFLEN, 
+use scnprintf to instead of it
 
-Hi Paul,
+Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
+---
+ security/selinux/selinuxfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sun, 5 Jan 2020 17:50:35 -0800 (PST) Paul Walmsley <paul.walmsley@sifive=
-.com> wrote:
->=20
-> Thanks, I just reset our for-next branch to v5.5-rc5, so this won't=20
-> reappear.
+diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
+index ee94fa4..977c32d 100644
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -1672,7 +1672,7 @@ static ssize_t sel_read_class(struct file *file, char __user *buf,
+ {
+ 	unsigned long ino = file_inode(file)->i_ino;
+ 	char res[TMPBUFLEN];
+-	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
++	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
+ 	return simple_read_from_buffer(buf, count, ppos, res, len);
+ }
+ 
+-- 
+2.7.4
 
-Excellent, thanks.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+cGBlbluk_+o6SF.ktlJQ/T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Sk5gACgkQAVBC80lX
-0Gw0Owf9EGr7v1YpBlpF5thV9GQWkE2gQ5/p9GQ78vTSscEut3TAKP6svS2b/74c
-NK8mpeIjVLPiIacaZNe4eWnFIxGb8Z0hbBVSYiU4eMQSU8OnEWOYWoRtWwOYHuRj
-WqizGY2hvK6T2VDmZb502cSH2cgIzv9h7lXZ9G8+F18qy9jF9XdjKDko/Gtn4e0o
-6lCvlsxZvoCiZBwq+e/KHAUgz0sq+BkPC1sT9iVmZvPZL75/ZPTfONlWM8v4yHPa
-XOpXhYuacnMw6sy7EWJoNgtyXyRnLG5DQTmeyp3M9OpH22nBh/HX+cKeTLAAWrDe
-AFfVAVnt6n+SGD9QjMn20EnGN+c4QA==
-=zceD
------END PGP SIGNATURE-----
-
---Sig_/+cGBlbluk_+o6SF.ktlJQ/T--
