@@ -2,108 +2,111 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC53C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AE0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E49207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EEC2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+hT3DMz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4YbPMkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgAFLBx (ORCPT
+        id S1726439AbgAFLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:01:53 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59324 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgAFLBx (ORCPT
+        Mon, 6 Jan 2020 06:03:31 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40891 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgAFLDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:01:53 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006B1XRc071248;
-        Mon, 6 Jan 2020 05:01:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578308493;
-        bh=nU+R+AekjGPCatJkEq8nQWWY1T+REa1/hMCEdVGRCCc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=X+hT3DMz/bkpeDE+VqcQlceMQm5S3vHwDDQpanDpzzFVrwY3Nz6F9Ow8EBW4zWq+4
-         H9izaNKRBa4JTUY/WNKcWXTRkcIZA57EWQ0fsBQ96q7pr5SVwpEdJTQ3O+A3IUF6VX
-         01C32fVNBxvmPkSVZnSqMBetzsGMaYAd6RFgvN30=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006B1Xqh102683
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jan 2020 05:01:33 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 05:01:32 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 05:01:33 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006B00K2007044;
-        Mon, 6 Jan 2020 05:01:26 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>, <tony@atomide.com>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH v4 11/11] mmc: sdhci-omap: Add am335x and am437x specific compatibles
-Date:   Mon, 6 Jan 2020 16:31:33 +0530
-Message-ID: <20200106110133.13791-12-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200106110133.13791-1-faiz_abbas@ti.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
+        Mon, 6 Jan 2020 06:03:31 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w21so63517382otj.7;
+        Mon, 06 Jan 2020 03:03:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6vdryAwpAtjdLmL+w82hzip04Zqpf7RG2w9DyYsoli4=;
+        b=q4YbPMkfXd/I9FQeGyVxHlqjckdvE1tjIRfqafgAFdOgINud/OV2rTNYKuYY2RIcF5
+         Te998iW27gIX+djVeqLQfZ56J9Lcio6zw0E/D0Sj/UXX3Nm79WZgH2mSXxRdxb8PIx6j
+         MEl2Uct0/LoMaUGe4EqDrfufKVu2zwVScn1iMHz+V8RwFWdMryvKDijyIKjVdmlIYt5K
+         4MhPX0SbSxSAkoauQMOF6D4yxI9OZTV9aXcHQ5ihMcQrW3bU4MqF/s5oqNQuDjI6tVP8
+         cQnS2bzUbUvoxbMjxWQux/ZGFSqOjJgwBzuh5BlOXcVMt7gOUjAMyqsKj9NtDQ24Ypxv
+         vJdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6vdryAwpAtjdLmL+w82hzip04Zqpf7RG2w9DyYsoli4=;
+        b=pm89ymOwJfJvfFxGR8Ml0/k/mOOj2ZplrQdXQM1d8RUjFFwo/w3aW4VkTFX1C7BBFy
+         5iw3j1mxFD+puS1ORqVWR3xtZ+stBa9bZ8cv3GzYN8BA5BRR43Nm0Gv1oYR1gP+tOg40
+         nGUCjJ5LICavSy4/mD9gEDHo9PTmuPGhPeeI+ozyszM/yxLGhV3Wr1P0aRAGC5moozUD
+         oJQPTdCuDVQWAJA7zkb8Jl0+T6s+PL3IwRt7i6ZCzBxv1sTf2Ro20+6k0oqqyoHyOEO3
+         +/zkrTsjrbs26m9rfSkhxlNb5UbWL9QmzMgP+43nyor7DRSztnCVUyqjvihDxGKDZHp/
+         HClg==
+X-Gm-Message-State: APjAAAWWGb7rZQfnkqm0/ORzic8an3poAvEczLhZAo8XvfeQimJVlkOH
+        elYhqUXgqLSBU69JJm+hJW+ayVtW13q7A9J0LcI=
+X-Google-Smtp-Source: APXvYqw9wUMjHkz2hw3pD8PhUwQ5RLqU5K/0A4FMvhStPMw80kAZ3AUyK0h+3wc9r20fi7Q5O0KQdUUAv0+WcRqMao8=
+X-Received: by 2002:a05:6830:1e2d:: with SMTP id t13mr118894094otr.128.1578308610177;
+ Mon, 06 Jan 2020 03:03:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com> <20200102180130.GG8345@zn.tnic>
+In-Reply-To: <20200102180130.GG8345@zn.tnic>
+From:   Bhaskar Upadhaya <bhaskar.upadhaya.linux@gmail.com>
+Date:   Mon, 6 Jan 2020 16:33:19 +0530
+Message-ID: <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
+Subject: Re: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in
+ non-deferrable mode
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Bhaskar Upadhaya <bupadhaya@marvell.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-edac@vger.kernel.org, lenb@kernel.org, rafael@kernel.org,
+        gkulkarni@marvell.com, rrichter@marvell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for new compatible for TI's am335x and am437x devices.
+On Thu, Jan 2, 2020 at 11:31 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, Dec 17, 2019 at 11:03:38PM -0800, Bhaskar Upadhaya wrote:
+> > Currently Linux register ghes_poll_func with TIMER_DEFERRABLE flag,
+> > because of which it is serviced when the CPU eventually wakes up with a
+> > subsequent non-deferrable timer and not at the configured polling interval.
+> >
+> > For polling mode, the polling interval configured by firmware should not
+> > be exceeded as per ACPI_6_3 spec[refer Table 18-394],
+>
+> I see
+>
+> "Table 18-394 Hardware Error Notification Structure"
+>
+> where does it say that the interval should not be exceeded and what is
+> going to happen if it gets exceeded?
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci-omap.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Definition of poll interval as per spec (referred ACPI 6.3):
+"Indicates the poll interval in milliseconds OSPM should use to
+periodically check the error source for the presence of an error
+condition."
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 34df30edd450..4d7026daa8cd 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -919,6 +919,14 @@ static const struct sdhci_omap_data k2g_data = {
- 	.offset = 0x200,
- };
- 
-+static const struct sdhci_omap_data am335_data = {
-+	.offset = 0x200,
-+};
-+
-+static const struct sdhci_omap_data am437_data = {
-+	.offset = 0x200,
-+};
-+
- static const struct sdhci_omap_data dra7_data = {
- 	.offset = 0x200,
- 	.flags	= SDHCI_OMAP_REQUIRE_IODELAY,
-@@ -927,6 +935,8 @@ static const struct sdhci_omap_data dra7_data = {
- static const struct of_device_id omap_sdhci_match[] = {
- 	{ .compatible = "ti,dra7-sdhci", .data = &dra7_data },
- 	{ .compatible = "ti,k2g-sdhci", .data = &k2g_data },
-+	{ .compatible = "ti,am335-sdhci", .data = &am335_data },
-+	{ .compatible = "ti,am437-sdhci", .data = &am437_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, omap_sdhci_match);
--- 
-2.19.2
+This indicates OSPM should periodically check error source within poll
+interval, but with timer being configured with TIMER_DEFERRABLE, timer
+is not called within poll interval limit
+>
+> IOW, are you fixing something you're observing on some platform or
+> you're reading the spec only?
 
+We are observing an issue in our ThunderX2 platforms wherein
+ghes_poll_func is not called within poll interval when timer is
+configured with TIMER_DEFERRABLE flag(For NO_HZ kernel) and hence we
+are losing the error records.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
