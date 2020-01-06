@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C758AC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE993C33C99
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958F3215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55C5215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdA2yUgB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9t0YDM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgAFBf2 (ORCPT
+        id S1727592AbgAFBfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:35:28 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34470 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgAFBe4 (ORCPT
+        Sun, 5 Jan 2020 20:35:41 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38706 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgAFBey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:34:56 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z22so44495869ljg.1;
-        Sun, 05 Jan 2020 17:34:54 -0800 (PST)
+        Sun, 5 Jan 2020 20:34:54 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so27340347ljh.5;
+        Sun, 05 Jan 2020 17:34:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bBOdi+OKZRFZU4WYLXtV3AOw8+qJl80/HyzpZqYt9wQ=;
-        b=LdA2yUgBw+XwewIEmZXjTplQjbHVYwYexhqb2+aPPXi5Lf2HVtsyj5NKf2Xf3JVseD
-         vz9BH+JaKGETzIMbzIYgR18TLL5GL/fiBpN/tcgItror7ZQlCKcVlO9KC99silNsQxJT
-         tFKdbDPt3xybjAPxOw9fHKB8mLR1f0hLws5NmDlfk4DJ/IBdD/MK1oTwchZhfKkZh4jM
-         mzb442V0yuxDuUsZdrzXyjJb7tAkUNC2nr/6GVWasmQPaAhKuBhaoqhkl4mcXZvUnJ8N
-         TEZhBOOnqnKTQdBZfaYycu5j4+yu1Vhb0Mw1dUtF2B3rk4Qagr0hdCKPkxoltClhnygw
-         dmXw==
+        bh=dflUvxh9hQS7NEkqv7qNke7Xes24FVjfSEb+Lpz8tfc=;
+        b=E9t0YDM4Xxsgsty8Mg3J/EVllC/zYTXX7GsP6p1GIdG5XiyVEAQvZXjbf4uQKuRjjR
+         eTm0abx8E0pCe6sFyW8ZPgfBU7dTjPE9tjIM98MF/01GjSiv0lf9Wx+GQP/xHw+3wgzg
+         vrKLZi6e/RZxHRnVtqwXaEJa50YSdmB7QoaO6AWX/fOhwH8ct8apJwGa93/LSZ5O8wib
+         rz0Yoi0S1Iht1cqhzmk7BrDT0N4k6Qhy9rBxJdoj6y77wiUB0zoRQWioa2UNcozKRZzL
+         rBSvnjCo32sxu0MUPQ4ZDNfHbPW2iCUVnnB4ROODXdOJgyx26qvGuVkPBszF+HFWCnXd
+         NSsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bBOdi+OKZRFZU4WYLXtV3AOw8+qJl80/HyzpZqYt9wQ=;
-        b=HND7NJCHoraQQSGP1gjHBHH3JNCmUyEtS25ePiKvWGLAOSMiEVALFfe2oi/uqWKD5A
-         VPFHn1lBUenT1l10DRayFYnrPQzDi8dgdF9bbVHikmFd8NmP6YlzJF9Xl7krY+X3beMP
-         qS49+u/hUFhY9rYSAC1HeK1SgOb5nSbi069BGps8yFr9LBhWoDHFuOq0n/iDTgkTzqxL
-         GiV0nGhaT4vp9QyMcrFNO84urrT+V1VeWVleJHXPBEMLXANWMnNigNJiScvsTaK4B5H2
-         03xQ0+9E9h3pLGrEiHVIvwXilIV4zWGyIGQaUWu+1vB9eEo73c50oBV2e55UXfA77nf4
-         DiTw==
-X-Gm-Message-State: APjAAAVZYNTk1URQbKJC0NcsGlsaBfC0lK+6Lmylnob8XSpANxMjUAon
-        skuALVVSOmwPe6ZZXLg0+A8=
-X-Google-Smtp-Source: APXvYqyyhjwg8kpHsnaICuv2fadBZMPDwe4NGNHvRBQiC9YWl4W0NLGRp9laeLFLTQDylXd4CayFuA==
-X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr58773421ljj.148.1578274494089;
-        Sun, 05 Jan 2020 17:34:54 -0800 (PST)
+        bh=dflUvxh9hQS7NEkqv7qNke7Xes24FVjfSEb+Lpz8tfc=;
+        b=On8vkkNloL1hY/MDoG+o3VITn1gDD5aYJRZFJcmrf1zlznk85nKa/RDif585ZUqWUf
+         fm/MZC/6Rch+AxqU11+1XcAC5YimZXDRZ2NLILRFJ67nbRZbrzY7sTsvz/LKfxKZMzIT
+         LV0n8yYyZLVkAJqC+0NAogTH0kXk/q3plFPfB/B+6BC+r23WpJXgP7atpuvAi1Lw6YYE
+         cV+ruV52oqnmSHY8J+azYMB96vaSkBCbiMWv9+VuXqtzmYT7Gk7E6rltRjtxd9KvyrUx
+         8Foqi8c/YS03iC+azjsHxCE1kNj21skdKEFxSLx4hQH63IZJMkd7xfYUPz7IB4e6OXWk
+         afXQ==
+X-Gm-Message-State: APjAAAUm+clEkXkNmNV2mjcnKXpJY2wdoraFpJue50W4qZvmyzZN9GY5
+        n5XIxEhpDgsKgL098EDE6b2wX9ag
+X-Google-Smtp-Source: APXvYqxVKSwnEZdwUt2LK4IbiZJQHsEAJMBPngoRdgH1yCopshRt4D4JP8wdnrst7LPaajj+QkYTlg==
+X-Received: by 2002:a2e:b177:: with SMTP id a23mr54673523ljm.202.1578274491613;
+        Sun, 05 Jan 2020 17:34:51 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id h10sm28235739ljc.39.2020.01.05.17.34.53
+        by smtp.gmail.com with ESMTPSA id h10sm28235739ljc.39.2020.01.05.17.34.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:34:53 -0800 (PST)
+        Sun, 05 Jan 2020 17:34:51 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -66,9 +66,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 15/20] usb: phy: tegra: Move utmip_pad_count checking under lock
-Date:   Mon,  6 Jan 2020 04:34:11 +0300
-Message-Id: <20200106013416.9604-16-digetx@gmail.com>
+Subject: [PATCH v4 12/20] usb: phy: tegra: Use u32 for hardware register variables
+Date:   Mon,  6 Jan 2020 04:34:08 +0300
+Message-Id: <20200106013416.9604-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200106013416.9604-1-digetx@gmail.com>
 References: <20200106013416.9604-1-digetx@gmail.com>
@@ -79,61 +79,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's unlikely that two drivers could manage PHY's state simultaneously in
-practice, nevertheless the utmip_pad_count checking should be under lock,
-for consistency.
+There is a mix of u32/ULONG usage in the driver's code. Let's switch to
+u32 uniformly, for consistency.
 
+Suggested-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/phy/phy-tegra-usb.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-index 90b42e963a1e..1b9667b0aa11 100644
+index 9adbcdf8d3a1..f9acbab477cf 100644
 --- a/drivers/usb/phy/phy-tegra-usb.c
 +++ b/drivers/usb/phy/phy-tegra-usb.c
-@@ -348,30 +348,31 @@ static int utmip_pad_power_off(struct tegra_usb_phy *phy)
+@@ -204,7 +204,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
+ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	if (phy->soc_config->has_hostpc) {
+ 		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+@@ -223,7 +223,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+ static void set_phcd(struct tegra_usb_phy *phy, bool enable)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	if (phy->soc_config->has_hostpc) {
+ 		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+@@ -310,7 +310,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+ {
+ 	struct tegra_utmip_config *config = phy->config;
  	void __iomem *base = phy->pad_regs;
- 	unsigned long flags;
- 	u32 val;
--	int err;
-+	int ret;
-+
-+	ret = clk_prepare_enable(phy->pad_clk);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock_irqsave(&utmip_pad_lock, flags);
+-	unsigned long val, flags;
++	unsigned long flags;
++	u32 val;
+ 	int err;
+ 
+ 	err = clk_prepare_enable(phy->pad_clk);
+@@ -345,7 +346,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+ static int utmip_pad_power_off(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->pad_regs;
+-	unsigned long val, flags;
++	unsigned long flags;
++	u32 val;
+ 	int err;
  
  	if (!utmip_pad_count) {
- 		dev_err(phy->u_phy.dev, "UTMIP pad already powered off\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto ulock;
- 	}
+@@ -383,7 +385,7 @@ static int utmi_wait_register(void __iomem *reg, u32 mask, u32 result)
+ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
--	err = clk_prepare_enable(phy->pad_clk);
--	if (err)
--		return err;
--
--	spin_lock_irqsave(&utmip_pad_lock, flags);
--
- 	if (--utmip_pad_count == 0) {
- 		val = readl_relaxed(base + UTMIP_BIAS_CFG0);
- 		val |= UTMIP_OTGPD | UTMIP_BIASPD;
- 		writel_relaxed(val, base + UTMIP_BIAS_CFG0);
- 	}
--
-+ulock:
- 	spin_unlock_irqrestore(&utmip_pad_lock, flags);
+ 	/*
+ 	 * The USB driver may have already initiated the phy clock
+@@ -415,7 +417,7 @@ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+ static void utmi_phy_clk_enable(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
- 	clk_disable_unprepare(phy->pad_clk);
+ 	/*
+ 	 * The USB driver may have already initiated the phy clock
+@@ -450,7 +452,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+ {
+ 	struct tegra_utmip_config *config = phy->config;
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 	int err;
  
--	return 0;
-+	return ret;
- }
+ 	val = readl_relaxed(base + USB_SUSP_CTRL);
+@@ -601,7 +603,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
- static int utmi_wait_register(void __iomem *reg, u32 mask, u32 result)
+ 	utmi_phy_clk_disable(phy);
+ 
+@@ -636,7 +638,7 @@ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_TX_CFG0);
+ 	val |= UTMIP_HS_DISCON_DISABLE;
+@@ -646,7 +648,7 @@ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+ static void utmi_phy_postresume(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_TX_CFG0);
+ 	val &= ~UTMIP_HS_DISCON_DISABLE;
+@@ -657,7 +659,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+ 				   enum tegra_usb_phy_port_speed port_speed)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+ 	val &= ~UTMIP_DPDM_OBSERVE_SEL(~0);
+@@ -677,7 +679,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+ 	val &= ~UTMIP_DPDM_OBSERVE;
+@@ -688,7 +690,7 @@ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 	int err;
+ 
+ 	err = gpio_direction_output(phy->reset_gpio, 0);
 -- 
 2.24.0
 
