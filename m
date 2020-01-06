@@ -2,109 +2,155 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65426C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1176C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA45207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764622081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ebxUl9dh"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="IUEcCq/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgAFTNZ (ORCPT
+        id S1726788AbgAFTOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:13:25 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34560 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgAFTNZ (ORCPT
+        Mon, 6 Jan 2020 14:14:50 -0500
+Received: from mail.efficios.com ([167.114.142.138]:39458 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgAFTOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:13:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so20526526pfc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 11:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CWeF+qEiMx35B55O581zGPkQBg4u6jbLRdkEV6WWjg8=;
-        b=ebxUl9dh1FKnFxAkXnwnaZCuaaW7Za3VZTOLf6eUWfhcIgGX1Xz4QDGju8SuP5ORKP
-         +du3pSdkH3bQlfRjCN85Ni0pP7LTiGwkCL4usBBoPhMGs/VMDbPuDOhZXAs4jIC7YSpo
-         YUZgh/lxWqemlC2IiMVH7ZifwWjV3hC1ot50I8x0NIKEM7/T7oUPFcio0crZXbwyMGRK
-         USHhjFnz5ZPdh1xzGPh3VrEq2zf2esPa9ytQvLFI3zghZ9o+qrEICzfoLrWXxWgCeCUe
-         84RIcJbbsECIWTdE/mUg9cmjkk21JgRELcVxW66bZElpCAa+SGdAUEXOu2hpLWdnhP+u
-         hOXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CWeF+qEiMx35B55O581zGPkQBg4u6jbLRdkEV6WWjg8=;
-        b=F7i3p02U/5VX0If052ENdcC8jkxzwBFkcP64j89uiatzABAEOua/asPTXOthNn9lmj
-         K2lICZQvRQfca8y642zKeThc9Jm9H7G6IRFGoy+tTJv+meuZsXNEYmYpmfDnn8+E9PcK
-         qmpmkZ5aoU9KyLgbbPCr6o9vCla7ct1BZwxHs3F3qsUS4Ielk/u+Iqpz5bEWzcyP4o0i
-         uJrplXPZ1lsIyvDsHssBjKIb8xa/qdUPfwnvMfd7MK/cyRkZlUps8WapyWlpuKLjq4vM
-         dnKUyEISiLbhIg5ykQpycQAXazMFu+vjzO1cjns19Hgn3c/eZMVjhztXEn2MA+Bkg6mV
-         EnLA==
-X-Gm-Message-State: APjAAAUxjpQCL3A+WQo1Ty9qBdMYjW+NEcH417p+nNH5sizXh/EQRlEC
-        tJ+qM+WxPmGD/7Y1fUq6hyU9/Q==
-X-Google-Smtp-Source: APXvYqwVRgLXSzVPKren8Gq/VjMYYjdAkXhimprfkvlgbJfFMBCuRAYFriDOjImyXhnvrMbBQoyGsQ==
-X-Received: by 2002:a63:eb02:: with SMTP id t2mr112827707pgh.289.1578338004229;
-        Mon, 06 Jan 2020 11:13:24 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r66sm80457803pfc.74.2020.01.06.11.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 11:13:23 -0800 (PST)
-Date:   Mon, 6 Jan 2020 11:13:21 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Fix venus iommu nodename error
-Message-ID: <20200106191321.GU3755841@builder>
-References: <20200106102305.27059-1-stanimir.varbanov@linaro.org>
+        Mon, 6 Jan 2020 14:14:50 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id AF423694663;
+        Mon,  6 Jan 2020 14:14:48 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id y5UfXTZOn8ja; Mon,  6 Jan 2020 14:14:48 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 18393694660;
+        Mon,  6 Jan 2020 14:14:48 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 18393694660
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578338088;
+        bh=K3pne9AU9Zzqsb9l2TuNdNRJkqv0aH5vxyEQ5Haccnk=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=IUEcCq/brI8TE7E0DMhYPZgI5GekB4eVe8vaNGkrPeIlhuXWVV28HarV5vLIouREp
+         gBYukY4vAAr6LLafGjNQ1okwb0bG82t/6Btl5GSSS2GHHLbzzP4pLFUHn3GMtKrsTu
+         YSaFUP0MmRANWxXOsLvjKmN9jskh4xBXm1DCwOm0lznl5CFUjO5oCBezy33d6Aqi4h
+         dTXwDttX0sT9Bj9ijw47eIUZUx007AY68TuLVNsuL98wvRNyIrbqPh1POwVT7kIzxC
+         1o/X4SJnaiNbtqToDausna9jgoFFFh/rguUCA8CRY2/PK/N3v+8n6bfaGKFlxKf2l1
+         GcdMQhtTrFYLw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id mcgmQ7JAuRAw; Mon,  6 Jan 2020 14:14:48 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id F1D5C694655;
+        Mon,  6 Jan 2020 14:14:47 -0500 (EST)
+Date:   Mon, 6 Jan 2020 14:14:47 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-tip-commits <linux-tip-commits@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        stable <stable@vger.kernel.org>
+Message-ID: <1732849021.873.1578338087928.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1460494267.15769.1577399533860.JavaMail.zimbra@efficios.com>
+References: <20191211161713.4490-2-mathieu.desnoyers@efficios.com> <157727033331.30329.17206832903007175600.tip-bot2@tip-bot2> <20191225113932.GD18098@zn.tnic> <1460494267.15769.1577399533860.JavaMail.zimbra@efficios.com>
+Subject: Re: [tip: core/urgent] rseq: Reject unknown flags on rseq
+ unregister
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106102305.27059-1-stanimir.varbanov@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: core/urgent] rseq: Reject unknown flags on rseq unregister
+Thread-Index: BWaWCVXVOJYWOEoxqutpfh8/ngqLyH0/K6rf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06 Jan 02:23 PST 2020, Stanimir Varbanov wrote:
+----- On Dec 26, 2019, at 5:32 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-> Fix the following error/warn seen with make dtbs_check
+> ----- On Dec 25, 2019, at 6:39 AM, Borislav Petkov bp@alien8.de wrote:
 > 
-> arm,smmu-venus@d40000: $nodename:0: 'arm,smmu-venus@d40000' does not match '^iommu@[0-9a-f]*'
-> arm,smmu-venus@d40000: clock-names:0: 'bus' was expected
-> arm,smmu-venus@d40000: clock-names:1: 'iface' was expected
+>> On Wed, Dec 25, 2019 at 10:38:53AM -0000, tip-bot2 for Mathieu Desnoyers wrote:
+>>> The following commit has been merged into the core/urgent branch of tip:
+>>> 
+>>> Commit-ID:     66528a4575eee9f5a5270219894ab6178f146e84
+>>> Gitweb:
+>>> https://git.kernel.org/tip/66528a4575eee9f5a5270219894ab6178f146e84
+>>> Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>>> AuthorDate:    Wed, 11 Dec 2019 11:17:11 -05:00
+>>> Committer:     Ingo Molnar <mingo@kernel.org>
+>>> CommitterDate: Wed, 25 Dec 2019 10:41:20 +01:00
+>>> 
+>>> rseq: Reject unknown flags on rseq unregister
+>>> 
+>>> It is preferrable to reject unknown flags within rseq unregistration
+>>> rather than to ignore them. It is an oversight caused by the fact that
+>>> the check for unknown flags is after the rseq unregister flag check.
+>>> 
+>>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Link:
+>>> https://lkml.kernel.org/r/20191211161713.4490-2-mathieu.desnoyers@efficios.com
+>>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>>> ---
+>>>  kernel/rseq.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>> 
+>>> diff --git a/kernel/rseq.c b/kernel/rseq.c
+>>> index 27c48eb..a4f86a9 100644
+>>> --- a/kernel/rseq.c
+>>> +++ b/kernel/rseq.c
+>>> @@ -310,6 +310,8 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+>>> rseq_len,
+>>>  	int ret;
+>>>  
+>>>  	if (flags & RSEQ_FLAG_UNREGISTER) {
+>>> +		if (flags & ~RSEQ_FLAG_UNREGISTER)
+>>> +			return -EINVAL;
+>>>  		/* Unregister rseq for current thread. */
+>>>  		if (current->rseq != rseq || !current->rseq)
+>>>  			return -EINVAL;
+>> 
+>> Cc: stable perhaps?
 > 
-> by rename nodename to "iommu".
+> This could indeed be a candidate for stable, even though it's just a stricter
+> checking of unknown flags (returning an error rather than ignoring them).
 > 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Adding stable in CC here.
 
-Thanks Stan, applied.
+For the records, I had stable in CC in my original patch submission. The stable CC has
+been stripped when it was merged into the tip tree.
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+
+Mathieu
+
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 4ca2e7b44559..9bbcee31f28b 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -2267,7 +2267,7 @@
->  			};
->  		};
->  
-> -		venus_smmu: arm,smmu-venus@d40000 {
-> +		venus_smmu: iommu@d40000 {
->  			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
->  			reg = <0xd40000 0x20000>;
->  			#global-interrupts = <1>;
-> -- 
-> 2.17.1
+> Thanks,
 > 
+> Mathieu
+> 
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
