@@ -2,121 +2,135 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E45C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79ECC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3852072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lEzKvhIX"
+	by mail.kernel.org (Postfix) with ESMTP id A8EB42081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578337691;
+	bh=GTgBx/JA91ia0+OMvTgPUGoIEEqGYFmp61UBCTw+K+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KHYXu+jQynrP5CpmZEYLhf/OoUa4EjmCZZ6owtNDHVlAbH/YuM9QyU+5sitKzYghR
+	 j0+OzlwNQNDnvK3WxJQIJ0vLkEnWeRCitqCY7KxlEAZqNH+0o0NxW9gCD+r30w8rnI
+	 kXZbKz0Q8vbJ3g5tIQ4TSFrZHU/wC2rN59GPlbsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgAFTHW (ORCPT
+        id S1726793AbgAFTIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:07:22 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37955 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgAFTHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:07:21 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d7so68492397otf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 11:07:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6QFRvuleA9WtpvsAtXWm6tkQLzlSUPGr6FWwLguS1UA=;
-        b=lEzKvhIXr91MXTb56cIlkCFdxIGfn1wb+leI7kAlqh505eQx4XIbbW3iXFDoCWKoxX
-         mOs1RmmfTFgYe4yHHfYD5LFqNTnqFql2Z9xfShofUFB100OyFvlTyOnBVi0isgY42np+
-         I3KRUr9CUlqMKEZfB4ML2hRvz09e1OWKb1IzXOYymrl1YuuK/orPoMuD8SspO5epfeNV
-         jZiQOnOgEnzTDomie/0DSDsRM0aJGsNUjl+VGRcXFqGdOStmsEpbRjhkBlTbui3BZaX2
-         OECTnWMxW+b6CIJIjP4wlg1tmyxD8AEwVuUKTOl6RPucnbR2nAVWVQpY6PMrHcwpMUw0
-         Bpcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6QFRvuleA9WtpvsAtXWm6tkQLzlSUPGr6FWwLguS1UA=;
-        b=RDcB1Wb8sYFPh+9pFgXCm1lOaJZfqfQcR3Q2+P+JleuPp3Jst57H5ycbQGFYp8v3jF
-         Eg1wDWbrXoSheVCqUYyceR7cWrWcBzdT95TAQk91NIok935R2fZWB0WsR60oRlpxldjs
-         8i8sZrgIV/h1wV9xwsVqPmA8ErOsR87JiwTpen3GB/tQbncfFfyAwEBiAR0kqIQtbSuj
-         taVFE/Nj/C/fELIXNlJO1KZyogLbGJxtKpzzIzntTjmvrxrWqW9cImnjSpwUxlc0JD3R
-         gBSUBW4zhIgKlXkhlqP1qQ5Rh+Pw4kMFo1qiL8eiOU2L3GNwCUqCPEZjfRwuv5TmhJLU
-         oOWQ==
-X-Gm-Message-State: APjAAAVvpL/g4mGxwRPNw+doshWuZ5OsOhDeF0JeW4rxYooJX/F9FEmF
-        rWe6Uo+161IVnGvP/7RSVOHaiMd8mo0WCwz7ozddj87j
-X-Google-Smtp-Source: APXvYqw+VRmSCUpEIds5QED+DtM1KS2+eRws83HzlBVSSAISOci0Vwz/L50SKSyiLGt26WLuz7avtPw7YloHNkrxRHM=
-X-Received: by 2002:a9d:3676:: with SMTP id w109mr100975180otb.35.1578337640469;
- Mon, 06 Jan 2020 11:07:20 -0800 (PST)
+        Mon, 6 Jan 2020 14:08:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgAFTIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 14:08:10 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2549E2072E;
+        Mon,  6 Jan 2020 19:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578337690;
+        bh=GTgBx/JA91ia0+OMvTgPUGoIEEqGYFmp61UBCTw+K+g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jbPI6gd17MVlhjV1JDDBmHnf2an7DD5VWxs6DCFS9mIDC+HU5PAxeOfNzDqIIcHAp
+         Q7+mf9RkCC/aJ0DNn8E7UYnoHWpmjsLmcCGq3ikfuSC6y/emkVTDsdsIH23IbT6J7i
+         DCj8ab6ajH+5jyRGuttqhaYaNQjDMMsTd+WOQqWQ=
+Date:   Mon, 6 Jan 2020 11:08:09 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/4] f2fs: compress: fix error path in
+ prepare_compress_overwrite()
+Message-ID: <20200106190809.GE50058@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20200106080144.52363-1-yuchao0@huawei.com>
+ <20200106080144.52363-3-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <20200106181329.167322-1-hridya@google.com> <d78e4db4-5847-082c-189a-f13d7d6a6c7a@tycho.nsa.gov>
-In-Reply-To: <d78e4db4-5847-082c-189a-f13d7d6a6c7a@tycho.nsa.gov>
-From:   Hridya Valsaraju <hridya@google.com>
-Date:   Mon, 6 Jan 2020 11:06:44 -0800
-Message-ID: <CA+wgaPMHWOVYo_pVeYuvj6CrQOgy9=vQco+tnGHjPX3=CLh5wA@mail.gmail.com>
-Subject: Re: [PATCH] security: selinux: allow per-file labelling for binderfs
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106080144.52363-3-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 10:33 AM 'Stephen Smalley' via kernel-team
-<kernel-team@android.com> wrote:
->
-> On 1/6/20 1:13 PM, Hridya Valsaraju wrote:
-> > This patch allows genfscon per-file labeling for binderfs.
-> > This is required to have separate permissions to allow
-> > access to binder, hwbinder and vndbinder devices which are
-> > relocating to binderfs.
-> >
-> > Acked-by: Jeff Vander Stoep <jeffv@google.com>
-> > Acked-by: Mark Salyzyn <salyzyn@android.com>
-> > Signed-off-by: Hridya Valsaraju <hridya@google.com>
->
-> Do you want binderfs to also support userspace labeling of files via
-> setxattr()?  If so, you'll want to also add it to
-> selinux_is_genfs_special_handling() as well.
+On 01/06, Chao Yu wrote:
+> - fix to release cluster pages in retry flow
+> - fix to call f2fs_put_dnode() & __do_map_lock() in error path
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/compress.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index fc4510729654..3390351d2e39 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -626,20 +626,26 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>  	}
+>  
+>  	for (i = 0; i < cc->cluster_size; i++) {
+> +		f2fs_bug_on(sbi, cc->rpages[i]);
+> +
+>  		page = find_lock_page(mapping, start_idx + i);
+>  		f2fs_bug_on(sbi, !page);
+>  
+>  		f2fs_wait_on_page_writeback(page, DATA, true, true);
+>  
+> -		cc->rpages[i] = page;
+> +		f2fs_compress_ctx_add_page(cc, page);
+>  		f2fs_put_page(page, 0);
+>  
+>  		if (!PageUptodate(page)) {
+> -			for (idx = 0; idx < cc->cluster_size; idx++) {
+> -				f2fs_put_page(cc->rpages[idx],
+> -						(idx <= i) ? 1 : 0);
+> +			for (idx = 0; idx <= i; idx++) {
+> +				unlock_page(cc->rpages[idx]);
+>  				cc->rpages[idx] = NULL;
+>  			}
+> +			for (idx = 0; idx < cc->cluster_size; idx++) {
+> +				page = find_lock_page(mapping, start_idx + idx);
 
-Thank you for the quick response Stephen :) I cannot think of a
-use-case for the userspace labelling of files in binderfs via
-setxattr() as of now. I
-will make the change if one comes up!
+Why do we need to lock the pages again?
 
-Thanks,
-Hridya
+> +				f2fs_put_page(page, 1);
+> +				f2fs_put_page(page, 0);
+> +			}
+>  			kvfree(cc->rpages);
+>  			cc->nr_rpages = 0;
+>  			goto retry;
+> @@ -654,16 +660,20 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>  		for (i = cc->cluster_size - 1; i > 0; i--) {
+>  			ret = f2fs_get_block(&dn, start_idx + i);
+>  			if (ret) {
+> -				/* TODO: release preallocate blocks */
+>  				i = cc->cluster_size;
+> -				goto unlock_pages;
+> +				break;
+>  			}
+>  
+>  			if (dn.data_blkaddr != NEW_ADDR)
+>  				break;
+>  		}
+>  
+> +		f2fs_put_dnode(&dn);
 
+We don't neeed this, since f2fs_reserve_block() put the dnode.
 
->
-> > ---
-> >   security/selinux/hooks.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 116b4d644f68..3f0669a708e9 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -752,6 +752,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
-> >
-> >       if (!strcmp(sb->s_type->name, "debugfs") ||
-> >           !strcmp(sb->s_type->name, "tracefs") ||
-> > +         !strcmp(sb->s_type->name, "binderfs") ||
-> >           !strcmp(sb->s_type->name, "pstore"))
-> >               sbsec->flags |= SE_SBGENFS;
-> >
-> >
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+> +
+>  		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
+> +
+> +		if (ret)
+> +			goto unlock_pages;
+>  	}
+>  
+>  	*fsdata = cc->rpages;
+> -- 
+> 2.18.0.rc1
