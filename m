@@ -2,106 +2,113 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6294C32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC007C32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814C4207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE777215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgAFJKv convert rfc822-to-8bit (ORCPT
+        id S1726303AbgAFJSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:10:51 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43753 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgAFJKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:10:51 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 8640324000B;
-        Mon,  6 Jan 2020 09:10:44 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 10:10:42 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2] drm/panel: simple: Support reset GPIOs
-Message-ID: <20200106101042.5bb5b742@xps13>
-In-Reply-To: <20200102172700.GA15341@ravnborg.org>
-References: <20191224142134.22902-1-miquel.raynal@bootlin.com>
-        <20200102172700.GA15341@ravnborg.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 Jan 2020 04:18:51 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2228 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbgAFJSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:18:51 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 6D602A401906294B73BE;
+        Mon,  6 Jan 2020 09:18:49 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 6 Jan 2020 09:18:49 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 6 Jan 2020
+ 09:18:48 +0000
+Subject: Re: [PATCH] merge_config.sh: Add option for allmodconfig
+To:     <masahiroy@kernel.org>
+CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <anders.roxell@linaro.org>
+References: <1575979754-184896-1-git-send-email-john.garry@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <7e769634-eb22-5827-e2d8-df68134056c0@huawei.com>
+Date:   Mon, 6 Jan 2020 09:18:47 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1575979754-184896-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+On 10/12/2019 12:09, John Garry wrote:
 
-Sam Ravnborg <sam@ravnborg.org> wrote on Thu, 2 Jan 2020 18:27:00 +0100:
+Hi Masahiro,
 
-> Hi Miquel
-> 
-> On Tue, Dec 24, 2019 at 03:21:34PM +0100, Miquel Raynal wrote:
-> > The panel common bindings provide a gpios-reset property. Let's
-> > support it in the simple driver.
-> > 
-> > Two fields are added to the panel description structure: the time to
-> > assert the reset and the time to wait right after before starting to
-> > interact with it in any manner. In case these default values are not
-> > filled but the GPIO is present in the DT, default values are applied.  
-> 
-> Wehn we discussed this the last time you wrote:
-> 
-> """
-> my hardware is:
-> 
-> LVDS IP <----------> LVDS to RGB bridge <------------> Panel
-> 
-> While there is a simple "RGB to LVDS" bridge driver, there is none
-> doing the work the other way around. In my case, the bridge has a reset
-> pin.
-> 
-> As until now there is no way to represent the "LVDS to RGB" bridge and
-> because the bindings already document such reset pin, I decided to add
-> support for it in the simple panel driver.
-> """
-> 
-> Based on the information provided it seems that the correct way is to
-> add a "LVDS to RGB bridge" and then let the bridge handle the reset
-> functionality.
+Could you please consider this patch?
 
-This I agree, but we are talking about my current situation. 
+Thanks,
+John
 
+> Recently there has been some work in reporting and fixing bugs in booting
+> an allmodconfig kernel - here are a few examples:
 > 
-> It is obviously much more code to do it this way but then
-> other panels using the same type of brigde have the
-> same functionality without adding bridge functionality to the panel.
-
-This, I do not fully agree as bindings for the panel reset already
-exist and we could have a reset on both: the bridge and the panel.
-I choose to use a wrong (private) DT representation because I am not
-willing to add an LVDS->RGB bridge: as you say, it is much more work to
-do. But, IMHO, this is not related to the patch. If you consider this
-patch wrong because a panel cannot have a reset, then it should be
-stated clearly and maybe removed from the bindings?
-
-Anyway if you think this change can't be useful, let's put it aside.
-
-Thanks for your time,
-Miquèl
+> https://lore.kernel.org/linux-edac/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com/T/#t
+> https://lore.kernel.org/linux-ide/bdf02e03-86a1-3d35-2908-28187f504495@huawei.com/T/#t
+> https://lore.kernel.org/netdev/CADYN=9LCPfbpwdTWKw03B22-y3Text=RWXW7XP7wJBHYsMOgrA@mail.gmail.com/
+> https://sourceforge.net/p/openipmi/mailman/message/36871567/
+> 
+> If we want to boot an allmodconfig kernel we may still want to force some
+> loadable modules built-in, like UART drivers. Or just still turn off some
+> configs.
+> 
+> So add an option to add add fragments to an allmodconfig kernel.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+> index 63c8565206a4..01697fb6dfbe 100755
+> --- a/scripts/kconfig/merge_config.sh
+> +++ b/scripts/kconfig/merge_config.sh
+> @@ -23,6 +23,7 @@ clean_up() {
+>   usage() {
+>   	echo "Usage: $0 [OPTIONS] [CONFIG [...]]"
+>   	echo "  -h    display this help text"
+> +	echo "  -a    use allmodconfig instead of alldefconfig"
+>   	echo "  -m    only merge the fragments, do not execute the make command"
+>   	echo "  -n    use allnoconfig instead of alldefconfig"
+>   	echo "  -r    list redundant entries when merging fragments"
+> @@ -41,6 +42,11 @@ CONFIG_PREFIX=${CONFIG_-CONFIG_}
+>   
+>   while true; do
+>   	case $1 in
+> +	"-a")
+> +		ALLTARGET=allmodconfig
+> +		shift
+> +		continue
+> +		;;
+>   	"-n")
+>   		ALLTARGET=allnoconfig
+>   		shift
+> @@ -171,6 +177,7 @@ fi
+>   
+>   # Use the merged file as the starting point for:
+>   # alldefconfig: Fills in any missing symbols with Kconfig default
+> +# allmodconfig: Fills in any missing symbols with =m when loadable
+>   # allnoconfig: Fills in any missing symbols with # CONFIG_* is not set
+>   make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+>   
+> 
 
