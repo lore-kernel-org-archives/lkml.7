@@ -2,164 +2,96 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3F5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAC3C00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DBF217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W1Pg0Ikb"
+	by mail.kernel.org (Postfix) with ESMTP id 9C0B2215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 01:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgAFBae (ORCPT
+        id S1727303AbgAFBbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:30:34 -0500
-Received: from ozlabs.org ([203.11.71.1]:50345 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgAFBae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 20:30:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47rdHS6FrZz9sR1;
-        Mon,  6 Jan 2020 12:30:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578274230;
-        bh=yMDpAd1QOKFjQar6fmYKLCg+bdrTlcJiiHW/xzSmJDU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=W1Pg0Ikbf7pht31LX0B7lwOCDSnxE3PdmFg/ffmp/ul7eMnkqHv1QDkvUX0KdYIZ1
-         2kffyE0d8my7N2RmaISOtbdIW4CUpaF5ZRLfCtxbm6pbwLfBlOyp6JXKZWH21DTEjo
-         S0JM43ksTPIf2hpuVqO6E+GVu55lcdzd6DQTnDzzNf7RGbbfZ3vnoxXalFdSGYpAGl
-         HzOROSE+Qc24Gqn6j1ULuBHgSIO4hUSGA7TUFYObz7zysVTND5oPp8O3pWp3kXDIfy
-         ZHgD3sB3PrsGM1e6fnh9DUiuiBamRybJan6LrcjuGtLCY2mGAoxKjH7GOXST5dDKx/
-         qChEIc/At24Yg==
-Date:   Mon, 6 Jan 2020 12:30:27 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200106123027.1a162197@canb.auug.org.au>
+        Sun, 5 Jan 2020 20:31:18 -0500
+Received: from mail1.windriver.com ([147.11.146.13]:58892 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgAFBbR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 20:31:17 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 0061UvG4010178
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Sun, 5 Jan 2020 17:30:57 -0800 (PST)
+Received: from [128.224.162.195] (128.224.162.195) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server id 14.3.468.0; Sun, 5 Jan 2020
+ 17:30:56 -0800
+Subject: Re: [PATCH] stmmac: debugfs entry name is not be changed when udev
+ rename device name.
+To:     David Miller <davem@davemloft.net>
+CC:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, ytao <yue.tao@windriver.com>
+References: <20200102013544.19271-1-jiping.ma2@windriver.com>
+ <20200104.201833.91020607861340266.davem@davemloft.net>
+From:   Jiping Ma <Jiping.Ma2@windriver.com>
+Message-ID: <dd27bae8-46d0-6802-90b9-475d8489d528@windriver.com>
+Date:   Mon, 6 Jan 2020 09:30:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pqe+0R3zoI8vqIGsIjsOL5B";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200104.201833.91020607861340266.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Pqe+0R3zoI8vqIGsIjsOL5B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the block tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+On 01/05/2020 12:18 PM, David Miller wrote:
+> From: Jiping Ma <jiping.ma2@windriver.com>
+> Date: Thu, 2 Jan 2020 09:35:44 +0800
+>
+>> Add one notifier for udev changes net device name.
+>>
+>> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+>> ---
+>>   .../net/ethernet/stmicro/stmmac/stmmac_main.c | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> index b14f46a57154..3b05cb80eed7 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> @@ -4038,6 +4038,31 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
+>>   
+>> +/* Use network device events to rename debugfs file entries.
+>> + */
+>> +static int stmmac_device_event(struct notifier_block *unused,
+>> +			       unsigned long event, void *ptr)
+>> +{
+>> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+>> +	struct stmmac_priv *priv = netdev_priv(dev);
+>> +
+>> +	switch (event) {
+>> +	case NETDEV_CHANGENAME:
+> This notifier gets called for every single netdevice in the entire
+> system.
+>
+> You cannot just assume that the device that gets passed in here is
+> an stmmac device.
+>
+> Look at how other drivers handle this to see how to do it correctly.
+>
+> Thank you.
+Thanks to remind.  I will modify it and send it review again.
+>
 
-fs/open.c:977:12: error: conflicting types for 'build_open_flags'
-  977 | inline int build_open_flags(const struct open_how *how,
-      |            ^~~~~~~~~~~~~~~~
-In file included from /home/sfr/next/next/fs/open.c:36:
-fs/internal.h:127:12: note: previous declaration of 'build_open_flags' was =
-here
-  127 | extern int build_open_flags(int flags, umode_t mode, struct open_fl=
-ags *op);
-      |            ^~~~~~~~~~~~~~~~
-
-Caused by commits
-
-  4e9e15c9426e ("fs: make build_open_flags() available internally")
-  3bba3e571bc8 ("io_uring: add support for IORING_OP_OPENAT")
-
-interacting with commit
-
-  0a51692d49ec ("open: introduce openat2(2) syscall")
-
-from the vfs tree.
-
-I have applied the following fix up patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 20 Dec 2019 11:50:51 +1100
-Subject: [PATCH] io_uring: fix up for "open: introduce openat2(2) syscall"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/internal.h | 3 ++-
- fs/io_uring.c | 6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/fs/internal.h b/fs/internal.h
-index 166134be439f..dabf747c14fd 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -124,7 +124,8 @@ extern struct file *do_filp_open(int dfd, struct filena=
-me *pathname,
- 		const struct open_flags *op);
- extern struct file *do_file_open_root(struct dentry *, struct vfsmount *,
- 		const char *, const struct open_flags *);
--extern int build_open_flags(int flags, umode_t mode, struct open_flags *op=
-);
-+extern struct open_how build_open_how(int flags, umode_t mode);
-+extern int build_open_flags(const struct open_how *how, struct open_flags =
-*op);
-=20
- long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
- long do_faccessat(int dfd, const char __user *filename, int mode);
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index c770c2c0eb52..60ebdea1d8c6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2476,16 +2476,18 @@ static int io_openat(struct io_kiocb *req, struct i=
-o_kiocb **nxt,
- 		     bool force_nonblock)
- {
- 	struct open_flags op;
-+	struct open_how how;
- 	struct file *file;
- 	int ret;
-=20
--	ret =3D build_open_flags(req->open.flags, req->open.mode, &op);
-+	how =3D build_open_how(req->open.flags, req->open.mode);
-+	ret =3D build_open_flags(&how, &op);
- 	if (ret)
- 		goto err;
- 	if (force_nonblock)
- 		op.lookup_flags |=3D LOOKUP_NONBLOCK;
-=20
--	ret =3D get_unused_fd_flags(req->open.flags);
-+	ret =3D get_unused_fd_flags(how.flags);
- 	if (ret < 0)
- 		goto err;
-=20
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Pqe+0R3zoI8vqIGsIjsOL5B
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4SjbMACgkQAVBC80lX
-0Gzf4AgAh3FFiUW5b1cLfbDX6dNTw7MYybIsttqrSvB8zf98dtkz9pb4vMYwaGC+
-w0RlNABraY/NnNz7QJIjhwx+vbSM0LUwpt1bWidnPSvfdOwduPVonaRrDsACzmTw
-ZbfcQTqh/yqJpRuPc6sxCiai6SIT7LB59iVPKwhqim9bunO25qBg68QC4iiHzLGW
-Ggc0i3PsuOvdgLIi2PmiEiRxUwuF49OOEMTtNHGgpkoDPz0TQwtN+E1YPCdwe+gv
-kUcfyF5Io0Br2WkRw9iAGy4YfTYYeL07PjspfCuv9lC1M6qEHJgsh7shgvYk0mVu
-6yVN1dLdqP5karbSWA/GdEQdT5qoLg==
-=JwN7
------END PGP SIGNATURE-----
-
---Sig_/Pqe+0R3zoI8vqIGsIjsOL5B--
