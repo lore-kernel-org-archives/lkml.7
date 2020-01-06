@@ -2,157 +2,221 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E0C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA5C33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC9921775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04909207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3FuJlen"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="fT6SCqfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgAFJKK (ORCPT
+        id S1726313AbgAFJKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:10:10 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:34796 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAFJKJ (ORCPT
+        Mon, 6 Jan 2020 04:10:33 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35956 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgAFJKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:10:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00699SJd164287;
-        Mon, 6 Jan 2020 09:09:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=2XXWSUP1BjpVGTmZ+2CsgK5T/L+9UoxH989PAMTTewQ=;
- b=i3FuJlenU+Q3KZxLkfH8pZDQJf17bClyQVzh/zeQOdvRQumxQtgV9ik5VCe6ybpxq1uV
- TdeESViMJivYzap1LRiYqSnjEXTN1XR2PB9ZOeEFaweUpJSBe0D3RlTlwtPWl8yBZKET
- dao+7kQaRPtNIQKEZn5CNHXnunCYciDlDBdGhailorLhnvFkVErHYo8wF1Pyd95RHyUI
- xIxoe14WLIQhnXoT69Xf7muWdTzfxF38Vdzt89cFEcOFCicXx/fVHG5rUUaKtVCJm5Tj
- zkhKQsBFujxiorynothHr+xiNR7fjt7wmPa0eHxFjGLS+rJ17eBc/O+Qser9LmpbnagT Ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xakbqdvkw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Jan 2020 09:09:54 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00699af6020933;
-        Mon, 6 Jan 2020 09:09:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xb4unf3b0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Jan 2020 09:09:53 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0069978Y000590;
-        Mon, 6 Jan 2020 09:09:07 GMT
-Received: from [192.168.1.14] (/114.88.246.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Jan 2020 01:09:07 -0800
-Subject: Re: [resend v1 0/5] Add support for block disk resize notification
-To:     "Singh, Balbir" <sblbir@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Cc:     "hch@lst.de" <hch@lst.de>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "Sangaraju, Someswarudu" <ssomesh@amazon.com>
-References: <20200102075315.22652-1-sblbir@amazon.com>
- <62ef2cd2-42a2-6117-155d-ed052a136c5c@oracle.com>
- <f260159c7c56a08711240cc6c7f69d2d5327a449.camel@amazon.com>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <77a665c6-1409-3dd0-2fde-221a00e04b3c@oracle.com>
-Date:   Mon, 6 Jan 2020 17:08:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 6 Jan 2020 04:10:32 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so14516748wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 01:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
+        b=fT6SCqfFDxAfYyPaxe6fPt46NaZBg05eLaakaY5OWtAAWuA8tlYq/1EhcgGwgR/lm7
+         TB9OPasW7dnE+2SpOJkKnm56dXd2SYUgO6eC/bM+Wpn5qxyKB1aQv7XPTrvYDu10REr7
+         0AdNnaPOQ+InCGPLWxqNqC6wxk5DcECL+gxYWEY8yHGfJ6n/Cbrg+cqd/bGK2uYAxQX9
+         VWEJ0pdBZcygVY4J9H8sVEKXRUlD1/IMyEsZN8p8h+JRIlYz/plscGmswdweTxXZnf5Q
+         DbMn5NwXqqx8rXN+xbQZu6Ujc3uBwbIy6JIPb00/PbHZmlGf/VBknqwm+0Qq/Ns9PAv7
+         yA/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
+        b=PAOJmayRuLUkw7kIKD+suSEGhfGxS4HXmEptek0SQGJ0YGlRw+96xqrRtC3uaxMqhY
+         VPrXIwYAvlX5qVDC+DMeY5DHzGLmBSs7bpA7NsbsB0RQopqsitRKDSOGQQmzWenYU/Pi
+         /Cqkh5HWnRozBaclYBxid1Q5JHLE3HCBY645Zn6TD0QkAov77Tkv6TgNAKDajh4bEU6c
+         niOqovkaMeWz+Ul1kIkUitRr5TivJqdXf5ZGBMkPLRUSZHYS3d+HtcUWm215ciLlaJIU
+         BEclxGCM87oyfhz8MySRqdObNc6p2dUgRF0LSAEDn+ywrVLce16H9JHdkqQnvLmtDIzK
+         RLGA==
+X-Gm-Message-State: APjAAAVvCCe2nxuhTfHPCx/FAbyd0voJxD8Jc92Zg0Gz+YqgsfYjtAFZ
+        zYK7lUHsoapSq7VYBXIWECQXz18IPTcEFD+dDcZoyg==
+X-Google-Smtp-Source: APXvYqzAomKzQkxDUIrNi/Whr2s8NAVXtV7E9CPmSzog947HVmDY807POnBYfNs9xS73M7WtrMQ2fd94nJ5uHmoRjVo=
+X-Received: by 2002:a1c:66d5:: with SMTP id a204mr31955396wmc.64.1578301830614;
+ Mon, 06 Jan 2020 01:10:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f260159c7c56a08711240cc6c7f69d2d5327a449.camel@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001060084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9491 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001060084
+References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com> <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 6 Jan 2020 14:40:19 +0530
+Message-ID: <CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: cacheinfo: Add support to determine no. of
+ L2 cache way enabled
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Bin Meng <bmeng.cn@gmail.com>, green.wan@sifive.com,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
+        devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 4:47 PM, Singh, Balbir wrote:
-> On Mon, 2020-01-06 at 13:59 +0800, Bob Liu wrote:
->> On 1/2/20 3:53 PM, Balbir Singh wrote:
->>> Allow block/genhd to notify user space about disk size changes
->>> using a new helper disk_set_capacity(), which is a wrapper on top
->>> of set_capacity(). disk_set_capacity() will only notify if
->>> the current capacity or the target capacity is not zero.
->>>
->>
->> set_capacity_and_notify() may be a more straightforward name.
->>
-> 
-> Yes, agreed.
-> 
->>> Background:
->>>
->>> As a part of a patch to allow sending the RESIZE event on disk capacity
->>> change, Christoph (hch@lst.de) requested that the patch be made generic
->>> and the hacks for virtio block and xen block devices be removed and
->>> merged via a generic helper.
->>>
->>> This series consists of 5 changes. The first one adds the basic
->>> support for changing the size and notifying. The follow up patches
->>> are per block subsystem changes. Other block drivers can add their
->>> changes as necessary on top of this series.
->>>
->>> Testing:
->>> 1. I did some basic testing with an NVME device, by resizing it in
->>> the backend and ensured that udevd received the event.
->>>
->>> NOTE: After these changes, the notification might happen before
->>> revalidate disk, where as it occured later before.
->>>
->>
->> It's better not to change original behavior.
->> How about something like:
->>
->> +void set_capacity_and_notify(struct gendisk *disk, sector_t size, bool
->> revalidate)
->> {
->> 	sector_t capacity = get_capacity(disk);
->>
->> 	set_capacity(disk, size);
->>
->> +        if (revalidate)
->> +		revalidate_disk(disk);
-> 
-> Do you see a concern with the notification going out before revalidate_disk?
+On Fri, Jan 3, 2020 at 9:44 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> In order to determine the number of L2 cache ways enabled at runtime,
+> implement a private attribute using cache_get_priv_group() in cacheinfo
+> framework. Reading this attribute ("number_of_ways_enabled") will return
+> the number of enabled L2 cache ways at runtime.
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
+>  arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
+>  drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
+>  3 files changed, 38 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+> index 04f6748..217a42f 100644
+> --- a/arch/riscv/include/asm/sifive_l2_cache.h
+> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
+> @@ -10,6 +10,8 @@
+>  extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+>  extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+>
+> +int sifive_l2_largest_wayenabled(void);
+> +
+>  #define SIFIVE_L2_ERR_TYPE_CE 0
+>  #define SIFIVE_L2_ERR_TYPE_UE 1
+>
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 4c90c07..29bdb21 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <asm/sifive_l2_cache.h>
+>
+>  static void ci_leaf_init(struct cacheinfo *this_leaf,
+>                          struct device_node *node,
+> @@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+>         this_leaf->type = type;
+>  }
+>
+> +#ifdef CONFIG_SIFIVE_L2
+> +static ssize_t number_of_ways_enabled_show(struct device *dev,
+> +                                          struct device_attribute *attr,
+> +                                          char *buf)
+> +{
+> +       return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
+> +}
+> +
+> +static DEVICE_ATTR_RO(number_of_ways_enabled);
+> +
+> +static struct attribute *priv_attrs[] = {
+> +       &dev_attr_number_of_ways_enabled.attr,
+> +       NULL,
+> +};
+> +
+> +static const struct attribute_group priv_attr_group = {
+> +       .attrs = priv_attrs,
+> +};
+> +
+> +const struct attribute_group *
+> +cache_get_priv_group(struct cacheinfo *this_leaf)
+> +{
+> +       /* We want to use private group for L2 cache only */
+> +       if (this_leaf->level == 2)
+> +               return &priv_attr_group;
+> +       else
+> +               return NULL;
+> +}
+> +#endif /* CONFIG_SIFIVE_L2 */
+> +
 
-Not aware any, but keep the original behavior is safer especial when not must change..
+Instead of this, I would suggest to implement a generic ops
+structure.
 
-> I could keep the behaviour and come up with a suitable name
-> 
-> revalidate_disk_and_notify() (set_capacity is a part of the revalidation
-> process), or feel free to suggest a better name
-> 
+In arch/riscv/include/asm/cacheinfo.h:
 
-Feel free to add my reviewed-by next version in this series.
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
+struct riscv_caceinfo_ops {
+    const struct attribute_group * (*get_priv_group)(struct cacheinfo
+*this_leaf);
+};
 
-> Thanks,
-> Balbir Singh
-> 
+void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops);
 
+In arch/riscv/riscv/kernel/cacheinfo.h
+
+static struct riscv_caceinfo_ops *rv_cache_ops;
+
+void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops)
+{
+    rv_cache_ops = ops;
+}
+EXPORT_SYMBOL_GPL(riscv_set_cacheinfo_ops);
+
+const struct attribute_group *
+cache_get_priv_group(struct cacheinfo *this_leaf)
+{
+    if (rv_cache_ops && rv_cache_ops->get_priv_group)
+        return rv_cache_ops->get_priv_group(this_leaf)
+    return NULL;
+}
+
+Above will be a separate patch. In future, we can add more
+ops for SOC specific cacheinfo.
+
+Using riscv_set_cacheinfo_ops() you can have another patch
+to implement SiFive L2 info entirely in drivers/soc/sifive/sifive_l2_cache.c
+
+Also, I would strongly recommend moving
+arch/riscv/include/asm/sifive_l2_cache.h
+TO
+include/soc/sifive/sifive_l2_cache.h
+
+>  static int __init_cache_level(unsigned int cpu)
+>  {
+>         struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> index a9ffff3..f1a5f2c 100644
+> --- a/drivers/soc/sifive/sifive_l2_cache.c
+> +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> @@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
+>
+> +int sifive_l2_largest_wayenabled(void)
+> +{
+> +       return readl(l2_base + SIFIVE_L2_WAYENABLE);
+> +}
+> +
+>  static irqreturn_t l2_int_handler(int irq, void *device)
+>  {
+>         unsigned int add_h, add_l;
+> --
+> 2.7.4
+>
+
+Regards,
+Anup
