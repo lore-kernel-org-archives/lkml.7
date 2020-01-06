@@ -2,160 +2,76 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA96BC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6C6C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0AB206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsqGs8Ee"
+	by mail.kernel.org (Postfix) with ESMTP id 2B60B208C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgAFQ01 (ORCPT
+        id S1726657AbgAFQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:26:27 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33668 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgAFQ01 (ORCPT
+        Mon, 6 Jan 2020 11:28:06 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:49098 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFQ2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:26:27 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d71so32070008qkc.0;
-        Mon, 06 Jan 2020 08:26:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JQtEouoO14ibFdu5R0ExtR9RU4wVGRzBfAmbFruyaUA=;
-        b=lsqGs8EeesC12VRJVQx6YbN9hunSXuCn1drlRK4CMOlEpjymNwTXoZPhVtdAu9W68a
-         g/6D0I0VDQbU0+0cBscdlRHLYxX1GiES5hDJl9A7NI4DuRjE5joFsdCh3kmBZJDLa6qv
-         eqmoz5OJEPgtMBXpWZxhpzMP3b/Pb6mHJ1Qeg4Drzpxs3kfddkhGXTJPYU637rkXcIHC
-         gMtiLP52kppQjBrGoQCXSWPZW2xxC5hYczQ+btKqZpdjzvdGCuJ3Ok/xtaQVa7xvCw03
-         +HCuY0b/rE0w5nA87S2l8EXtTIx25o3tCpge8IDI9DpdU4yyjZZYjvCb4QXEhe1M5c2/
-         V1QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JQtEouoO14ibFdu5R0ExtR9RU4wVGRzBfAmbFruyaUA=;
-        b=dTZ4zIrUg21sq/9AY3Vqo6sNELprk6mtiRH9/qk8FtxQLqt9CNh5kx4x//DGk829qz
-         HEL5QWeGDKbUKUJikvwPSUjtaXLfzN2vyzTvyYgyJrOMahv6vy63oIqwIfYwJPSozgOh
-         vJIqQJROUoLJwWelQ8qZotEJRmvbyCiVBYKyyI3WYegNMvVQtAYxX8qYvxXr2ERQ7XMQ
-         K7U/Auiqzm/GY8OHnGEe54yDDXwT/HefZKTj+nZxMKraTSdDmMRuNerD65HIeXMmlXwG
-         l9uGyxp6XxFYUuPpBuganJYz6oSm0qffOUu7k47NFfMDo/OGsZR4oXKi74RyacGopihq
-         Dodg==
-X-Gm-Message-State: APjAAAV8BRhwVI39Hwp69/9AY5DS0liBXkOjNIWa+eznZPspqDEwBYa1
-        BzKa6ZPVCay6ePC2JaVuSYM=
-X-Google-Smtp-Source: APXvYqwRYizllbxOp6iQxO2ykkiYb6oLHdpU3gYtOdzJqv+FHGnhZsdGq11wpHk/jKTPveEV4k1jug==
-X-Received: by 2002:a37:ad0e:: with SMTP id f14mr72323328qkm.213.1578327986104;
-        Mon, 06 Jan 2020 08:26:26 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id s26sm15805987qtc.43.2020.01.06.08.26.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 08:26:25 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 56B3F40DFD; Mon,  6 Jan 2020 13:26:23 -0300 (-03)
-Date:   Mon, 6 Jan 2020 13:26:23 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        Mon, 6 Jan 2020 11:28:06 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8277F80536;
+        Mon,  6 Jan 2020 17:28:03 +0100 (CET)
+Date:   Mon, 6 Jan 2020 17:28:02 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        users@linux.kernel.org
-Subject: Re: [RFC] tools lib traceevent: How to do library versioning being
- in the Linux kernel source?
-Message-ID: <20200106162623.GA11285@kernel.org>
-References: <20200102122004.216c85da@gandalf.local.home>
- <20200102234950.GA14768@krava>
- <20200102185853.0ed433e4@gandalf.local.home>
- <20200103133640.GD9715@krava>
- <20200103181614.7aa37f6d@gandalf.local.home>
- <20200106151902.GB236146@krava>
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>
+Subject: Re: [PATCH v2 0/6] update hwdw for gc400
+Message-ID: <20200106162802.GA20675@ravnborg.org>
+References: <20200106151655.311413-1-christian.gmeiner@gmail.com>
+ <20200106153643.GA8535@ravnborg.org>
+ <CAH9NwWd7C+DzAKe97kURm=sGjDH+KQJOif3j=w6K+99xmYGncQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200106151902.GB236146@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAH9NwWd7C+DzAKe97kURm=sGjDH+KQJOif3j=w6K+99xmYGncQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8
+        a=xMcAtTC5Z7CYE8FbCH0A:9 a=CjuIK1q_8ugA:10 a=JZBxSqCIBzwA:10
+        a=W4TVW4IDbPiebHqcZpNg:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jan 06, 2020 at 04:19:02PM +0100, Jiri Olsa escreveu:
-> On Fri, Jan 03, 2020 at 06:16:14PM -0500, Steven Rostedt wrote:
-> > 
-> > [ Added Konstantin and kernel.org users mailing list ]
-> > 
-> > On Fri, 3 Jan 2020 14:36:40 +0100
-> > Jiri Olsa <jolsa@redhat.com> wrote:
-> > 
-> > > On Thu, Jan 02, 2020 at 06:58:53PM -0500, Steven Rostedt wrote:
-> > > > On Fri, 3 Jan 2020 00:49:50 +0100
-> > > > Jiri Olsa <jolsa@redhat.com> wrote:
-> > > >   
-> > > > > > Should we move libtraceevent into a stand alone git repo (on
-> > > > > > kernel.org), that can have tags and branches specifically for it? We
-> > > > > > can keep a copy in the Linux source tree for perf to use till it    
-> > > > > 
-> > > > > so libbpf 'moved' for this reason to github repo,
-> > > > > but keeping the kernel as the true/first source,
-> > > > > and updating github repo when release is ready
-> > > > > 
-> > > > > libbpf github repo is then source for fedora (and others)
-> > > > > package  
-> > > > 
-> > > > Ah, so perhaps I should follow this? I could keep it a kernel.org repo
-> > > > (as I rather have it there anyway).  
-> > > 
-> > > sounds good, and if it works out, we'll follow you with libperf :-)
-> > > 
-> > > if you want to check on the libbpf:
-> > >   https://github.com/libbpf/libbpf
-> > > 
-> > > there might be some syncs scripts worth checking
-> > 
-> > I wonder if there should be a:
-> > 
-> >   git://git.kernel.org/pub/scm/utils/lib/
-> > 
-> > directory to have:
-> > 
-> >   git://git.kernel.org/pub/scm/utils/lib/traceevent/
-> >   git://git.kernel.org/pub/scm/utils/lib/libbpf/
-> >   git://git.kernel.org/pub/scm/utils/lib/libperf/
+Hi Christian.
+
+> To be honest.. I forgot the change log thing this time - sorry.
+It was small changes - so no worries.
+
+> So the rule
+> is to have the change log in the normal commit message?
+This is what Danial Vetter tell people - but it is not documented as
+far as I can tell.
+
+> Funny - Lucas told me something different:
 > 
-> we could loose the 'lib' and just have:
-> 
->     git://git.kernel.org/pub/scm/utils/lib/perf/
+> "Please move those changelogs below the 3 dashes, so they don't end up
+> in the commit message. They don't really add any value to the
+> persistent kernel history."
+> https://lkml.org/lkml/2019/9/13/107
+Lucas is maintainer of etnaviv driver - so do as he says.
 
-So, we have:
+Keep up the good work on etnaviv in mesa too!
 
-https://www.kernel.org/pub/linux/kernel/tools/perf/
-
-trying to mimic the kernel sources tree structure, so perhaps we could
-have:
-
-https://www.kernel.org/pub/linux/kernel/tools/lib/{perf,traceevent}/
-
-To continue that directory tree mirror?
-
-> > That could hold the libraries that are tight to the kernel?
-
-> I don't think libbpf will change now after they are settled in github,
-> but we could consider this for libperf
-> 
-> jirka
-
--- 
-
-- Arnaldo
+	Sam
