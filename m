@@ -2,90 +2,246 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6CBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49177C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20EF2072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239AD2072E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgAFNmM (ORCPT
+        id S1726494AbgAFNom convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:42:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:44184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgAFNmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 08:42:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0C99328;
-        Mon,  6 Jan 2020 05:42:11 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BC153F534;
-        Mon,  6 Jan 2020 05:42:10 -0800 (PST)
-Date:   Mon, 6 Jan 2020 13:42:07 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: R40: Add SPI controllers nodes and
- pinmuxes
-Message-ID: <20200106134207.3088a74a@donnerap.cambridge.arm.com>
-In-Reply-To: <CAGb2v65=iJzPJneUF=e9Xsqj_ufhuZtr5javN5YNKtaApGq2zA@mail.gmail.com>
-References: <20200106003849.16666-1-andre.przywara@arm.com>
-        <20200106085613.mxe33t7eklj3aeld@gilmour.lan>
-        <CAGb2v65=iJzPJneUF=e9Xsqj_ufhuZtr5javN5YNKtaApGq2zA@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Mon, 6 Jan 2020 08:44:42 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:38561 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgAFNol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:44:41 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0EE02E000B;
+        Mon,  6 Jan 2020 13:44:38 +0000 (UTC)
+Date:   Mon, 6 Jan 2020 14:44:37 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200106144437.615698c1@xps13>
+In-Reply-To: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
+        <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jan 2020 21:37:38 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
+Hi Andy,
 
-Hi,
-
-> On Mon, Jan 6, 2020 at 4:56 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Mon, Jan 06, 2020 at 12:38:49AM +0000, Andre Przywara wrote:  
-> > > The Allwinner R40 SoC contains four SPI controllers, using the newer
-> > > sun6i design (but at the legacy addresses).
-> > > The controller seems to be fully compatible to the A64 one, so no driver
-> > > changes are necessary.
-> > > The first three controllers can be used on two sets of pins, but SPI3 is
-> > > only routed to one set on Port A.
-> > > Only the pin groups for SPI0 on PortC and SPI1 on PortI are added here,
-> > > because those seem to be the only one exposed on the Bananapi boards.
-> > >
-> > > Tested by connecting a SPI flash to a Bananapi M2 Berry SPI0 and SPI1
-> > > header pins.
-> > >
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>  
-> >
-> > Applied, thanks!
-> > Maxime  
+> >  #define PCA_INT                        BIT(8)
+> >  #define PCA_PCAL               BIT(9)  
 > 
-> Looks like this patch doesn't build. The SPI device nodes reference
-> a non-existent DMA node.
+> > +#define MAX_PWM                        BIT(10)  
+> 
+> Use same prefix.
 
-Argh, shoot, sorry for that. Looks like a rebase artefact (I originally had the DMA controller in, but then saw that this is actually not used by the SPI driver, so removed it).
+I am not sure it is relevant here, I think showing the specificity of
+the MAXIM PWM is okay.
 
-Thanks for testing!
+> 
+> ...
+> 
+> > +#define PWM_MAX_COUNT 16
+> > +#define PWM_PER_REG 2  
+> 
+> > +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)  
+> 
+> Can we simple put 4 here?
+> 
 
-Maxime, shall I send a fixup or redo the patch?
+Fine
 
-Cheers,
-Andre
+> ...
+> 
+> > +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)  
+> 
+> Please use plain numbers for the GENMASK() arguments.
+
+Ok
+
+> 
+> ...
+> 
+> > +struct max7313_pwm_data {
+> > +       struct gpio_desc *desc;
+> > +};  
+> 
+> Are you plan to extend this? Can we directly use struct gpio_desc pointer?
+
+I'm not a fan of this method at all, I think it is better practice to
+keep a container in this case, which can be easily extended when needed.
+
+> 
+> ...
+> 
+> > +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> > +           chip->driver_data & MAX_PWM) {  
+> 
+> Can't we simple check only for a flag for now?
+
+I don't get it. You just want the driver_data & MAX_PWM check?
+
+> 
+> > +               if (reg >= MAX7313_MASTER &&
+> > +                   reg < (MAX7313_INTENSITY + bank_sz))
+> > +                       return true;
+> > +       }  
+> 
+> ...
+> 
+> > +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
+> > +           chip->driver_data & MAX_PWM) {
+> > +               if (reg >= MAX7313_MASTER &&
+> > +                   reg < (MAX7313_INTENSITY + bank_sz))
+> > +                       return true;
+> > +       }  
+> 
+> This is a duplicate from above. Need a helper?
+
+Perhaps!
+
+> 
+> ...
+> 
+> > +/*
+> > + * Max7313 PWM specific methods
+> > + *
+> > + * Limitations:
+> > + * - Does not support a disabled state
+> > + * - Period fixed to 31.25ms
+> > + * - Only supports normal polarity
+> > + * - Some glitches cannot be prevented
+> > + */  
+> 
+> Can we have below in a separate file and attach it to the gpio-pca953x
+> code iff CONFIG_PWM != n?
+
+I'll check, why not.
+
+> 
+> ...
+> 
+> > +       mutex_lock(&pca_chip->i2c_lock);  
+> 
+> > +       regmap_read(pca_chip->regmap, reg, &val);  
+> 
+> No error check?
+> 
+> > +       mutex_unlock(&pca_chip->i2c_lock);  
+> 
+> ...
+> 
+> > +       if (shift)  
+> 
+> Redundant.
+
+Ok
+
+> 
+> > +               val >>= shift;  
+> 
+> ...
+> 
+> > +       mutex_lock(&pca_chip->i2c_lock);
+> > +       regmap_read(pca_chip->regmap, reg, &output);
+> > +       mutex_unlock(&pca_chip->i2c_lock);  
+> 
+> No error check?
+> 
+> ...
+> 
+> > +       mutex_lock(&pca_chip->i2c_lock);
+> > +       regmap_read(pca_chip->regmap, reg, &output);
+> > +       mutex_unlock(&pca_chip->i2c_lock);  
+> 
+> No error check?
+> 
+> ...
+> 
+> > +static int max7313_pwm_request(struct pwm_chip *chip,
+> > +                              struct pwm_device *pwm)
+> > +{
+> > +       struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +       struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +       struct max7313_pwm_data *data;
+> > +       struct gpio_desc *desc;
+> > +
+> > +       desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
+> > +                                        "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
+> > +       if (IS_ERR(desc)) {  
+> 
+> > +               dev_err(&pca_chip->client->dev,  
+> 
+> Can't we get to struct device easily?
+> If it's possible maybe we could move next line to this one?
+
+I'll try.
+
+> 
+> > +                       "pin already in use (probably as GPIO): %ld\n",
+> > +                       PTR_ERR(desc));
+> > +               return PTR_ERR(desc);
+> > +       }  
+> 
+> > +       return 0;
+> > +}  
+> 
+> ...
+> 
+> > +       if (intensity)
+> > +               set_bit(pwm->hwpwm, max_pwm->active_pwm);
+> > +       else
+> > +               clear_bit(pwm->hwpwm, max_pwm->active_pwm);  
+> 
+> assign_bit()
+
+Nice!
+
+> 
+> By the way, do you really need it to be atomic? Perhaps __asign_bit()?
+
+Maybe not, indeed.
+
+> 
+> ...
+> 
+> > +       active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);  
+> 
+> > +       if (!active)  
+> 
+> In this case more readable will be active == 0 since you compare this
+> to the exact value.
+> 
+
+"if (!active)" is read "if not active" which is IMHO very descriptive!
+
+I'll correct most of your comments and send a v5.
+
+Thanks,
+Miquèl
