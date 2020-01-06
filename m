@@ -2,211 +2,110 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583EDC00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFB4C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B31C206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B345821734
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="LnGpe1iK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbgAFDAa (ORCPT
+        id S1727415AbgAFDAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 22:00:30 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33502 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727323AbgAFDA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 22:00:29 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 644158C70891016C964B;
-        Mon,  6 Jan 2020 11:00:27 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.196) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 Jan 2020
- 11:00:20 +0800
-From:   "liwei (GF)" <liwei391@huawei.com>
-Subject: Re: [RFC PATCH] perf tools: cs-etm: fix endless record after being
- terminated
-To:     Leo Yan <leo.yan@linaro.org>
-CC:     <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <suzuki.poulose@arm.com>,
-        <mathieu.poirier@linaro.org>, <ilubashe@akamai.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>
-References: <20200102074144.10407-1-liwei391@huawei.com>
- <20200103082414.GB9814@leoy-ThinkPad-X240s>
-Message-ID: <acc0afd9-5d0e-dcb8-d56a-ac5680049c8c@huawei.com>
-Date:   Mon, 6 Jan 2020 11:00:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sun, 5 Jan 2020 22:00:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35526 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgAFDAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 22:00:42 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g17so48109572wro.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 19:00:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IObTHxdSrTA+4cLb5d5XPNdt7irAzNjJT7xEv05gP2U=;
+        b=LnGpe1iKssm4K/tw4IaseYnzPu1obNeWgBStdi3fyjqrOwhDsmG++a+dykUHhdYihU
+         i+GaQuNbafyCm5T395xfJ9txQmqWd/nT+d3cLKza7wjhP8HL30ulU8teKkLqRGG6k1O5
+         LEHSkt0zzGx3h09dQKoc7bcz5AotP0dRi0fhwA4VcqSG2mkHKCV/z7Z1hfmwKxlnA3Eb
+         /8EuTfEsmGNxdKJx6aZvyBGA8oPzi3wWrmRrqJcdjDdlGdxwIYC5lUbUDGMG+stbPqAn
+         /FcKYATNIps5xBq84LLZLv5baHL5wQTOG1wIOYiODet0TP3rCqkMcLPGmcCuopuWdFGJ
+         aocg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IObTHxdSrTA+4cLb5d5XPNdt7irAzNjJT7xEv05gP2U=;
+        b=ikzs+AqjxEISBSMphMLUNiD3QARra15asVOGzb/LSysZwc02EiU5cC6lBm5+yeZ54F
+         LKXGZqVQAESgYKWshRQa3OBB0uWcbd2HGaTqVhWQCgkGM+1ZRTnUPglpgghgZqzdnLdj
+         wb/JGTT/aRfEKZXV2iZ1guA+UL7/LZAtSIX1hpbYRSePRiVAPgXNMvwsKRjLM5/fXM8H
+         hQyLmz2zULUyWwh8/VkcrZYT+89N54zvF5OrrDz/1YoLo2GjfUUUIHdCSgs0DuaIzYAq
+         ltXctW3WUGt81DJXItZV7jef5UtI807/IL7tTgZEN8Wn4Q9yU35FBKbd6RHSMNfGirSv
+         z1AQ==
+X-Gm-Message-State: APjAAAWPUSzi91Pw0MSUQ8IbG4FkqqzZmt6dObpX1e3l/7T6c3+dXWcS
+        17hk69q3EoUXDVFgTfG4lb68medl10yPUEjMHcLBQw==
+X-Google-Smtp-Source: APXvYqwKkrzknw/83vnmM3PEodvoeLd8EHhzBeNAPpBu/M+mPCRybjaV4kVYmIXB2Q9S7tjmgF8MkKKLUPUbNNn+RnU=
+X-Received: by 2002:adf:dfc2:: with SMTP id q2mr97661644wrn.251.1578279639876;
+ Sun, 05 Jan 2020 19:00:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200103082414.GB9814@leoy-ThinkPad-X240s>
-Content-Type: multipart/mixed;
-        boundary="------------529A4C9796225E3A20E1E87B"
-X-Originating-IP: [10.173.221.196]
-X-CFilter-Loop: Reflected
+References: <20200105025215.2522-1-guoren@kernel.org> <20200105025215.2522-2-guoren@kernel.org>
+ <20200106024515.GA1021@andestech.com>
+In-Reply-To: <20200106024515.GA1021@andestech.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 6 Jan 2020 08:30:29 +0530
+Message-ID: <CAAhSdy2N1v20g-WGo99Utrvhj4NXZeFP-is1jqCs9DE_Zs2VKg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: Add vector ISA support
+To:     Alan Kao <alankao@andestech.com>
+Cc:     guoren@kernel.org, linux-arch@vger.kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <ren_guo@c-sky.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Bin Meng <bmeng.cn@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------529A4C9796225E3A20E1E87B
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
+On Mon, Jan 6, 2020 at 8:15 AM Alan Kao <alankao@andestech.com> wrote:
+>
+> Hi Guo,
+>
+> On Sun, Jan 05, 2020 at 10:52:15AM +0800, guoren@kernel.org wrote:
+> > From: Guo Ren <ren_guo@c-sky.com>
+> >
+> > The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
+> > 128bit-vlen and it's based on linux-5.5-rc4.
+> >
+>
+> According to https://lkml.org/lkml/2019/11/22/2169, in which Paul has stated
+> that "we plan to only accept patches for new modules or extensions that have
+> been frozen or ratified by the RISC-V Foundation."
+>
+> Is v0.8 ratified enough for now?
 
-Hi Leo,
+As-per the patch acceptance policy, we cannot merge it now (just like KVM
+patches) but we can always review and get the patches in final shape
+by the time spec is frozen or ratified.
 
-Thanks for your test and sorry for missing the reproducing info.
-The attachment is my test procedure, i can reproduce this issue
-with it on kernel 5.5-rc4 definitely.
+I think we should continue with the patch review and get this series in
+good shape.
 
-I have tested these patches on kernel 5.5-rc4, with intel-pt on Xeon
-Gold 6140 (72 cores) and arm-spe on HiSilicon Hi1620 (128 cores).
-But i can not test CoreSight temporarily, could you please test it
-with the test procedure again?
+In fact, having this patches early on LKML is very helpful for people working
+on RISC-V vector extension implementation in HW. On this line, this a good
+contribution coming at the right time.
 
-P.s. Running the test procedure as a normal process is enough.
-
-Thanks£¬
-Wei
-
-On 2020/1/3 16:24, Leo Yan wrote:
-
-> 
-> I took some time to test on Arm CoreSight, the perf program can be
-> terminated by Ctrl+c with SIGINT signal on the mainline kernel.
-> 
-> And after capturing ftrace data with below log:
-> 
-> 5242      migration/2-19    [002] d..3  4648.383155: sched_migrate_task: comm=perf pid=1692 prio=120 orig_cpu=2 dest_cpu=0
-> 5243      migration/2-19    [002] d..2  4648.383167: sched_switch: prev_comm=migration/2 prev_pid=19 prev_prio=0 prev_state=S ==> next_comm=swapper/2 next_pid=0 next_prio=120
-> 5244           <idle>-0     [000] d..2  4648.383167: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=1692 next_prio=120
-> 5245             perf-1692  [000] d..2  4648.383193: sched_stat_runtime: comm=perf pid=1692 runtime=35420 [ns] vruntime=1636633943 [ns]
-> 5246             perf-1692  [000] d..3  4648.383200: sched_waking: comm=migration/0 pid=11 prio=0 target_cpu=000
-> 5247             perf-1692  [000] dN.4  4648.383203: sched_wakeup: comm=migration/0 pid=11 prio=0 target_cpu=000
-> 5248             perf-1692  [000] dN.2  4648.383205: sched_stat_runtime: comm=perf pid=1692 runtime=9340 [ns] vruntime=1636643283 [ns]
-> 5249             perf-1692  [000] d..2  4648.383208: sched_switch: prev_comm=perf prev_pid=1692 prev_prio=120 prev_state=R+ ==> next_comm=migration/0 next_pid=11 next_prio=0
-> 5250      migration/0-11    [000] d..3  4648.383215: sched_migrate_task: comm=perf pid=1692 prio=120 orig_cpu=0 dest_cpu=1
-> 5251       algorithm1-721   [001] dN.2  4648.383225: sched_stat_runtime: comm=algorithm1 pid=721 runtime=2906000 [ns] vruntime=3501282256244 [ns]
-> 5252       algorithm1-721   [001] d..2  4648.383229: sched_switch: prev_comm=algorithm1 prev_pid=721 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=1692 next_prio=120
-> 5253      migration/0-11    [000] d..2  4648.383235: sched_switch: prev_comm=migration/0 prev_pid=11 prev_prio=0 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
-> 5254       algorithm1-721   [001] d..4  4648.383241: <stack trace>
-> 5255  => kprobe_breakpoint_handler
-> 5256  => call_break_hook
-> 5257  => brk_handler
-> 5258  => do_debug_exception
-> 5259  => el1_sync_handler
-> 5260  => el1_sync
-> 5261  => etm_event_stop
-> 5262  => event_sched_out.isra.106
-> 5263  => group_sched_out.part.108
-> 5264  => ctx_sched_out
-> 5265  => task_ctx_sched_out
-> 5266  => __perf_event_task_sched_out
-> 5267  => __schedule
-> 5268  => schedule
-> 5269  => do_notify_resume
-> 5270  => work_pending
-> 
-> We can see after send SIGINT signal, the process 'perf' will be
-> migrated from CPU2 to CPU0 (line 5242) and it will preempt process
-> 'algorithm1' (line 5252); after the process 'algorithm1' is scheduled
-> out, the function etm_event_stop() will be invoked to stop tracing.
-> 
-> If we connect with the code in cs_etm_read_finish(), it tries to call
-> ioctl PERF_EVENT_IOC_ENABLE, but because the process 'algorithm1' is
-> scheduled out, so the perf event should not be enabled afterwards.
-> 
-> I may miss something at here ... Could you confirm what's the type of
-> attached process?  normal process or RT process?
-> 
-> Thanks,
-> Leo
-> 
-> P.s. I tested IntelPT with 5.2-rc3 kernel, it also can be terminated
-> properly.
-> 
->>  	return -EINVAL;
->> -- 
->> 2.17.1
->>
-> 
-> .
-> 
-
-
---------------529A4C9796225E3A20E1E87B
-Content-Type: text/plain; charset="UTF-8"; name="perf_endless_record.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="perf_endless_record.c"
-
-#define _GNU_SOURCE
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysinfo.h>
-#include <unistd.h>
-#include <sched.h>
-#include <ctype.h>
-#include <string.h>
-#include <pthread.h>
-
-int num = 0;
-int test[65535];
-
-int mess_rw(int data)
-{
-    int i;
-
-    while (1) {
-        for (i = 0; i < (sizeof(test) / sizeof(test[0])); i++) {
-            if (test[i] != data)
-                test[i] = data;
-        }
-    }
-}
-
-void *test_thread(void *arg)
-{
-    int cpu = *(int *)arg;
-    cpu_set_t mask;
-
-    CPU_ZERO(&mask);
-    CPU_SET(cpu, &mask);
-    if (!sched_setaffinity(0, sizeof(mask), &mask))
-        printf("thread %d: running on cpu %d\n", cpu, cpu);
-    else
-        printf("thread %d: fail to set CPU affinity\n", cpu);
-
-    mess_rw(cpu);
-
-    return NULL;
-}
-
-int main(int argc, char *argv[])
-{
-    num = sysconf(_SC_NPROCESSORS_CONF);
-    pthread_t thread[num];
-    int id[num];
-    int i;
-
-    printf("PID %d on system with %d processor(s)\n", getpid(), num);
-
-    for (i = 0; i < num; i++) {
-        id[i] = i;
-        pthread_create(&thread[i], NULL, test_thread, (void *)&id[i]);
-    }
-
-    for (i = 0; i < num; i++) {
-        pthread_join(thread[i], NULL);
-    }
-
-    return 0;
-}
-
-
---------------529A4C9796225E3A20E1E87B--
+Regards,
+Anup
