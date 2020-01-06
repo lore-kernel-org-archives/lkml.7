@@ -2,91 +2,291 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE032C33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0FAC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46CA215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5A1215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HijrWx5D"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dOkfrdiV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgAFIXj (ORCPT
+        id S1726281AbgAFI1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:23:39 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57718 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFIXj (ORCPT
+        Mon, 6 Jan 2020 03:27:18 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19398 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFI1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:23:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nYOr/sf0nD1L6E/qjNg4zuKpPzCSoERM7P4MkiuiORA=; b=HijrWx5DY7NCS/gFZmqZ8abiU
-        e+aI9JakRwOWAEkl0/WwuV8+FIDdWoVILFVDZ6FO3AemSQ8V2zNHPBoXpqS0YodhIClCmaiRBBOk+
-        22aJFGVf4Un+DQolK0M2k2DNHpN9lp2f/mm+dyAnzoNs0w4N58fSwZJ+1TWQw5rvTbqHya0Io0aaR
-        Ype2ZK+wVhWx3Ir23o3L6fY/3AQXbLqxD+CYOwHYCHsqT+LaIZ22xcwmvXSAMgv1KKOMnHYSOuz1e
-        c1ljrjJTCkQKr+HQbhe2SzhZ4Npnpl6Y4ci6Euyuuo0QTJXOm4RcXPmYQPOCfvwKUzxfbJy8EzVbf
-        xoZM56CVQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioNfT-0003Np-16; Mon, 06 Jan 2020 08:23:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB4DE304124;
-        Mon,  6 Jan 2020 09:21:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AAEAC2B627466; Mon,  6 Jan 2020 09:23:15 +0100 (CET)
-Date:   Mon, 6 Jan 2020 09:23:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
-        linux-security-module@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Halcrow <mhalcrow@google.com>
-Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
-Message-ID: <20200106082315.GL2810@hirez.programming.kicks-ass.net>
-References: <20200103234725.22846-1-kpsingh@chromium.org>
- <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
+        Mon, 6 Jan 2020 03:27:18 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e12ef530000>; Mon, 06 Jan 2020 00:26:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jan 2020 00:27:16 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Jan 2020 00:27:16 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jan
+ 2020 08:27:15 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 6 Jan 2020 08:27:15 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e12ef600000>; Mon, 06 Jan 2020 00:27:15 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <andrew.murray@arm.com>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI: Add MCFG quirks for Tegra194 host controllers
+Date:   Mon, 6 Jan 2020 13:57:09 +0530
+Message-ID: <20200106082709.14370-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200103174935.5612-1-vidyas@nvidia.com>
+References: <20200103174935.5612-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578299219; bh=oJ+tQhxxPsNoHh9LR4gnWiuxMQsEWJd06NDgbl63OKs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=dOkfrdiVzqRbvjFzmU8g1MPNimft4c4dlYhvXdTFtWegdIFJRuCZtzT4F1tPEZtCo
+         jfI4/LdOlUW4kxKbgoHgiArof47Y7uZu84TOsA/Ose0BJ5a+GGUJSGtDA8MsDPnlwy
+         KTZ8UjdUjdjG4vJ/pC4Vi96YEHKTV4C7EIA9a1JMvLq+gQkMoSW7ic0CSmrCFguJ06
+         Yp7m3YbbXRGodhLzuHvgQIpeVC4BoyZcXBwYsbQ3FJldv+uSP0qJWINNtdDruDR43+
+         p+Z4gf+9+54GfGrOxI4iCzzeVquZ8PLtYg+iv4m87vLvyYFWKR3Dv4gZJKN69f/9pr
+         yyOa9WAjrHnDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 09:49:10AM +0900, Andy Lutomirski wrote:
+The PCIe controller in Tegra194 SoC is not completely ECAM-compliant.
+With the current hardware design limitations in place, ECAM can be enabled
+only for one controller (C5 controller to be precise) with bus numbers
+starting from 160 instead of 0. A different approach is taken to avoid this
+abnormal way of enabling ECAM  for just one controller and to also enable
+configuration space access for all the other controllers. In this approach,
+MCFG quirks are added for each controller with a 30MB PCIe aperture
+resource for each controller in the disguise of ECAM region. But, this
+region actually contains DesignWare core's internal Address Translation
+Unit (iATU) using which the ECAM ops access configuration space in the
+otherwise standard way of programming iATU registers in DesignWare core
+based IPs for a respective B:D:F.
 
-> > - Mark memory as non executable (set_memory_nx). While module_alloc for
-> > x86 allocates the memory as PAGE_KERNEL and not PAGE_KERNEL_EXEC, not
-> > all implementations of module_alloc do so
-> 
-> How about fixing this instead?
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+V2:
+* Fixed build issues reported by kbuild test bot
 
-We only care about STRICT_MODULE_RMW (iow, arm, arm64, s390, x86). Of
-those only s390 seems to be 'off'.
+ drivers/acpi/pci_mcfg.c                    |  13 +++
+ drivers/pci/controller/dwc/Kconfig         |   3 +-
+ drivers/pci/controller/dwc/Makefile        |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c | 100 +++++++++++++++++++++
+ include/linux/pci-ecam.h                   |   1 +
+ 5 files changed, 117 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+index 6b347d9920cc..a42918ecc19a 100644
+--- a/drivers/acpi/pci_mcfg.c
++++ b/drivers/acpi/pci_mcfg.c
+@@ -116,6 +116,19 @@ static struct mcfg_fixup mcfg_quirks[] = {
+ 	THUNDER_ECAM_QUIRK(2, 12),
+ 	THUNDER_ECAM_QUIRK(2, 13),
+ 
++	{ "NVIDIA", "TEGRA194", 1, 0, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x38200000, (30 * SZ_1M))},
++	{ "NVIDIA", "TEGRA194", 1, 1, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x30200000, (30 * SZ_1M))},
++	{ "NVIDIA", "TEGRA194", 1, 2, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x32200000, (30 * SZ_1M))},
++	{ "NVIDIA", "TEGRA194", 1, 3, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x34200000, (30 * SZ_1M))},
++	{ "NVIDIA", "TEGRA194", 1, 4, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x36200000, (30 * SZ_1M))},
++	{ "NVIDIA", "TEGRA194", 1, 5, MCFG_BUS_ANY, &tegra194_pcie_ops,
++	  DEFINE_RES_MEM(0x3a200000, (30 * SZ_1M))},
++
+ #define XGENE_V1_ECAM_MCFG(rev, seg) \
+ 	{"APM   ", "XGENE   ", rev, seg, MCFG_BUS_ANY, \
+ 		&xgene_v1_pcie_ecam_ops }
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 0830dfcfa43a..f5b9e75aceed 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -255,7 +255,8 @@ config PCIE_TEGRA194
+ 	select PHY_TEGRA194_P2U
+ 	help
+ 	  Say Y here if you want support for DesignWare core based PCIe host
+-	  controller found in NVIDIA Tegra194 SoC.
++	  controller found in NVIDIA Tegra194 SoC. ACPI platforms with Tegra194
++	  don't need to enable this.
+ 
+ config PCIE_UNIPHIER
+ 	bool "Socionext UniPhier PCIe controllers"
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index 8a637cfcf6e9..76a6c52b8500 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -17,7 +17,6 @@ obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+ obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+ obj-$(CONFIG_PCI_MESON) += pci-meson.o
+-obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ 
+ # The following drivers are for devices that use the generic ACPI
+@@ -33,4 +32,5 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ ifdef CONFIG_PCI
+ obj-$(CONFIG_ARM64) += pcie-al.o
+ obj-$(CONFIG_ARM64) += pcie-hisi.o
++obj-$(CONFIG_ARM64) += pcie-tegra194.o
+ endif
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index cbe95f0ea0ca..0b9bd2875ec2 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -21,6 +21,8 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
++#include <linux/pci-acpi.h>
++#include <linux/pci-ecam.h>
+ #include <linux/phy/phy.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+@@ -285,6 +287,101 @@ struct tegra_pcie_dw {
+ 	struct dentry *debugfs;
+ };
+ 
++#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
++struct tegra194_pcie_acpi  {
++	void __iomem *dbi_base;
++	void __iomem *iatu_base;
++};
++
++static int tegra194_acpi_init(struct pci_config_window *cfg)
++{
++	struct device *dev = cfg->parent;
++	struct tegra194_pcie_acpi *pcie;
++
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	pcie->dbi_base = cfg->win;
++	pcie->iatu_base = cfg->win + SZ_256K;
++	cfg->priv = pcie;
++
++	return 0;
++}
++
++static inline void atu_reg_write(struct tegra194_pcie_acpi *pcie, int index,
++				 u32 val, u32 reg)
++{
++	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
++
++	writel(val, pcie->iatu_base + offset + reg);
++}
++
++static void program_outbound_atu(struct tegra194_pcie_acpi *pcie, int index,
++				 int type, u64 cpu_addr, u64 pci_addr, u64 size)
++{
++	atu_reg_write(pcie, index, lower_32_bits(cpu_addr),
++		      PCIE_ATU_LOWER_BASE);
++	atu_reg_write(pcie, index, upper_32_bits(cpu_addr),
++		      PCIE_ATU_UPPER_BASE);
++	atu_reg_write(pcie, index, lower_32_bits(pci_addr),
++		      PCIE_ATU_LOWER_TARGET);
++	atu_reg_write(pcie, index, lower_32_bits(cpu_addr + size - 1),
++		      PCIE_ATU_LIMIT);
++	atu_reg_write(pcie, index, upper_32_bits(pci_addr),
++		      PCIE_ATU_UPPER_TARGET);
++	atu_reg_write(pcie, index, type, PCIE_ATU_CR1);
++	atu_reg_write(pcie, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
++}
++
++static void __iomem *tegra194_map_bus(struct pci_bus *bus,
++				      unsigned int devfn, int where)
++{
++	struct pci_config_window *cfg = bus->sysdata;
++	struct tegra194_pcie_acpi *pcie = cfg->priv;
++	u32 busdev;
++	int type;
++
++	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
++		return NULL;
++
++	if (bus->number == cfg->busr.start) {
++		if (PCI_SLOT(devfn) == 0)
++			return pcie->dbi_base + where;
++		else
++			return NULL;
++	}
++
++	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
++		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
++
++	if (bus->parent->number == cfg->busr.start) {
++		if (PCI_SLOT(devfn) == 0)
++			type = PCIE_ATU_TYPE_CFG0;
++		else
++			return NULL;
++	} else {
++		type = PCIE_ATU_TYPE_CFG1;
++	}
++
++	program_outbound_atu(pcie, PCIE_ATU_REGION_INDEX0, type,
++			     cfg->res.start + SZ_128K, busdev, SZ_128K);
++	return (void __iomem *)(pcie->dbi_base + SZ_128K + where);
++}
++
++struct pci_ecam_ops tegra194_pcie_ops = {
++	.bus_shift	= 20,
++	.init		= tegra194_acpi_init,
++	.pci_ops	= {
++		.map_bus	= tegra194_map_bus,
++		.read		= pci_generic_config_read,
++		.write		= pci_generic_config_write,
++	}
++};
++#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
++
++#ifdef CONFIG_PCIE_TEGRA194
++
+ static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+ {
+ 	return container_of(pci, struct tegra_pcie_dw, pci);
+@@ -1728,3 +1825,6 @@ MODULE_DEVICE_TABLE(of, tegra_pcie_dw_of_match);
+ MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
+ MODULE_DESCRIPTION("NVIDIA PCIe host controller driver");
+ MODULE_LICENSE("GPL v2");
++
++#endif /* CONFIG_PCIE_TEGRA194 */
++
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index a73164c85e78..6156140dcbb6 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -57,6 +57,7 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+ extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+ extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+ extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
++extern struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+ #endif
+ 
+ #ifdef CONFIG_PCI_HOST_COMMON
+-- 
+2.17.1
+
