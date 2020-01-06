@@ -2,103 +2,86 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACEC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5253DC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3F020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578295483;
-	bh=ZhmcAhSejz8Epok24JJ9UZlzx3xCZ+lKEygmAqKtvHk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iJRKfAspAalaIKPEq3rlOQg/v8GgWR7cO/ZENN8iArBcnlUrb47v5ism73q6gfqq4
-	 lGpMORRl9j2odV9aBRCI9NVOS9g9KBMp52DCg0pKW9GAwT4dEJoohbEflKHbKmwvVV
-	 9XnO1tJhlXGjnKi/QhTzZ07Ex5mj5hKvbjUVOBog=
+	by mail.kernel.org (Postfix) with ESMTP id 1D2B820848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 07:33:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWoh7npV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgAFHYm (ORCPT
+        id S1726383AbgAFHdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:24:42 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:59011 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgAFHYk (ORCPT
+        Mon, 6 Jan 2020 02:33:42 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:56711 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgAFHdm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 02:24:40 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 0067NuUJ027666;
-        Mon, 6 Jan 2020 16:23:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 0067NuUJ027666
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578295438;
-        bh=nH4dFfP1GgwyNJ1zJ0dHhCaaOD+Rq3zIautm+yHcSB0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uI4B/uwXD2uUt8T9ilWUdGrV5eqUYNK1Qyoczui8dMvAriIP3iwWjUcwCCVcaj46v
-         NESL8gqtR39wKMact7aYK6KaiLOrSiXcCsM8wMcMUudGq4kHmjwxSmIA1cYMHUDtv6
-         AwEs5+IUGNkJGa3yX2HkGeq9LzCMqOnjc8dBuHwTsFKa0dcZPKCALziJABSnVgy2Tw
-         99OzzmLMLMZ7UUdF+EV69yheIeFSTGEVAB7nn3OjyMdfSgqUxSEhC7EfRVS5/ogd9G
-         QUcepOYisf00v1/9rFi5UzqNXJ/q3JD6rj+O4vmeNCkuPzz5M7vYVTWORtW9EBPvHY
-         5MH3ZFomDPyMg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Fumiya Shigemitsu <shfy1014@gmail.com>,
-        Yongxin Liu <yongxin.liu@windriver.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] kbuild: get rid of duplication in the first line of *.mod files
-Date:   Mon,  6 Jan 2020 16:23:54 +0900
-Message-Id: <20200106072355.32178-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jan 2020 02:33:42 -0500
+Received: by mail-pj1-f73.google.com with SMTP id n89so10430554pji.6
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Jan 2020 23:33:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=DVTZeHtWLkUT+7QBPvqsFl2b+xU5ylPDczrCjXvkopY=;
+        b=lWoh7npVSUr5q9DKj2L4rWvZLI3HQOJ8cs+WkhVPBFoFYMpBeAqLnc5yYqH1Pq5Pqm
+         iEIKRH3A+hlfCjezT7yiHkLuLV0OeK4oDzecWzdFOtihUCkPd/oAjLNFy9/hr+l3+hAx
+         8ip7Q18hSPoJsW/apfj/+cNXdRSUneFDDH0KDH2bj2ZL7A3dk5jvAndqODKX/i1YFGiw
+         IEf5+JxC0/T2n/nY+TBXPdrJ5ChV1isRM9cJsAlMACRrAQ0W2CHmsvbgcprjziEQh+WF
+         xF24HyyYGTgSpw++bwJarPpsCXeeo/jl6r6v6nZkVR7xpDAWMjuf5YGQn38FakawkUbs
+         Uo5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=DVTZeHtWLkUT+7QBPvqsFl2b+xU5ylPDczrCjXvkopY=;
+        b=U1Gk0jQ+PteGaMqmM1b4HvYnhQO7c3f/mVKeFd/bexvvoougv3iCK1+7fOMehDnFpl
+         owVkdXpzUtmEV3Nhg0F86uYLGQFFHTUGcIlYqe+LUnZXOQI6T4F17yKVGFpSLhgpQThS
+         fLL2xZTaoW6OUo0VlIhVMD909yPyhLYgz66mgTW75breWlLZemwH2FrKiTsA6s8b0vDj
+         jnTkS/bWLoGEFaIKz/9SLLUoXaKmYXB8e0LH4YfcXIzLzrW1HNU2Iz9uCnCazTfdO1uz
+         UBP4ZY/IHzl5mjk4oTJfASp4MJsQycp2WU0Y3SYBkYT9KSIbZAMQXK7Kx3RdyihsSFPw
+         o12Q==
+X-Gm-Message-State: APjAAAWe6Gx5UkU5EhvQxXO4b19nU2m0BTZwTYxDkqgltvkwhmrypTOt
+        eDLlFm5zPpVhwJZQTVgOiU0anzJ/Zrds
+X-Google-Smtp-Source: APXvYqw9Jv5F45+lib3Sum5lOclNDhenY5qhh9P8ScD9+q9tQaBGrRkGdkh4pWnkdd9UrSnV4Ok99heNZwY7
+X-Received: by 2002:a63:a508:: with SMTP id n8mr105954525pgf.278.1578296021583;
+ Sun, 05 Jan 2020 23:33:41 -0800 (PST)
+Date:   Sun, 05 Jan 2020 23:33:39 -0800
+In-Reply-To: <20200104150238.19834-2-masahiroy@kernel.org>
+Message-Id: <xr93pnfx6nu4.fsf@gthelen.svl.corp.google.com>
+Mime-Version: 1.0
+References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-2-masahiroy@kernel.org>
+Subject: Re: [PATCH v2 01/13] initramfs: replace klibcdirs in Makefile with FORCE
+From:   Greg Thelen <gthelen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first line of *.mod lists the object files that consist of the
-module. This may contain duplication if the same object is added
-multiple times, like this:
+Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-  obj-m := foo.o
-  foo-$(CONFIG_FOO1_X) += foo1.o
-  foo-$(CONFIG_FOO1_Y) += foo1.o
-  foo-$(CONFIG_FOO2_X) += foo2.o
-  foo-$(CONFIG_FOO2_Y) += foo2.o
+> 'klibcdirs' was added by commit d39a206bc35d ("kbuild: rebuild initramfs
+> if content of initramfs changes"). If this is just a matter of forcing
+> execution of the recipe line, we can replace it with FORCE.
+>
+> I do not understand the purpose of
+>
+>    $(deps_initramfs): klibcdirs
+>
+> Remove it.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-This is probably not a big deal. As far as I know, the only small
-problem is scripts/mod/sumversion.c parses the same file over again.
-This can be avoided by adding $(sort ...). It has a side-effect that
-sorts the objects alphabetically, but it is not a big deal, either.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-Changes in v2:
-  - new patch
-
- scripts/Makefile.build | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index b734ac8a654e..d8445b696d5b 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -265,8 +265,10 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
- 	$(call cmd,force_checksrc)
- 	$(call if_changed_rule,cc_o_c)
- 
-+multi-m-prereqs = $(sort $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)))
-+
- cmd_mod = { \
--	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
-+	echo $(if $(multi-m-prereqs), $(multi-m-prereqs), $(@:.mod=.o)); \
- 	$(cmd_undef_syms); \
- 	} > $@
- 
--- 
-2.17.1
-
+Reviewed-by: Greg Thelen <gthelen@google.com>
