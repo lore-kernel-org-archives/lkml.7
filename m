@@ -2,125 +2,131 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A23C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DBCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C4F207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDFB20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iC/o4WF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgAFPtZ (ORCPT
+        id S1726858AbgAFPtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:49:25 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:41180 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgAFPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:49:07 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 3DF89FB06;
-        Mon,  6 Jan 2020 16:49:05 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wghSo_sjs6-k; Mon,  6 Jan 2020 16:49:00 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 4F5BA49D43; Mon,  6 Jan 2020 16:48:56 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/6] leds: lm3692x: Disable chip on brightness 0
-Date:   Mon,  6 Jan 2020 16:48:53 +0100
-Message-Id: <a3e6aab9e84e2bf4e662d64ba9c8e2046cabeba9.1578324703.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1578324703.git.agx@sigxcpu.org>
-References: <cover.1578324703.git.agx@sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 6 Jan 2020 10:49:52 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34303 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgAFPtv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:49:51 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z22so46582903ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 07:49:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ce/1aFrnoifjRzRwwUUN80DX+TjZ3K4olDu1l2r/o60=;
+        b=iC/o4WF2v67C4lJ3/1fEmvcx2oyjC9MHGxEXLT25m4l2GuS/YNbSQ9z8JW9YUnLFEE
+         nh8ZfG3VWAXKY9v5UpyOdz3imyGDDOlOxAtRynl3EZ+ReEmwiXjthyeiS7pVJoQf18nw
+         YyehXoFrcYbh3i5IXEbaE7Y0v9Op6aIDPTtA4010d3lMQSJUv3gnA/UBxNw6TOptS5R3
+         dd/+iJlXf6mkpejexqoZGo1it0TzrGP2zv6VtzlsDEyk5a1E9YhA8Ld50u8nyMjBpRld
+         Q44fTb3Tr9KC1+ymjfnWbBIXvfdi0glkA8tmT+MOCuBh6P1yXBMMTa1DQQrIuyUOc+SD
+         vPAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ce/1aFrnoifjRzRwwUUN80DX+TjZ3K4olDu1l2r/o60=;
+        b=L5/k4Ez9HiLVPHSJpaau3s0YxR7RB2rOymMbxY7IVGP3LmP7deasJpYxs3H3e2PPKP
+         ylg1NBeSxynaYrUE67F53lSJR/U+55WrSJSQYvtSkWB1rxD/Mwq9nfYC74I4uBKuiFMx
+         jmvK1jY9BwFQB6Ij7QgmOxYdSurQESgcvn4XFjJb2bVggEzb69zjwvZcTRZPQe3VPpDk
+         uyGL4SJwtmIePaoxNb12rMDM3UeqTyUDW9Hc/adatrHXtpwGSe1DPKT8Uia2NzEh/MXo
+         y5i6da/K9PPn1c2mTnq5OTu81sPd1wkhnfKI5FIbOYJX42GmRLmOe9xOZSAQ4iwQv6CO
+         JEyg==
+X-Gm-Message-State: APjAAAVMwZkYzFs1UqXcxACpbsP7hohPH5T5fWjBMnsFkDo105tZPHJ+
+        ccx96mhB0Dkbo8g0hYNTmre0NQ==
+X-Google-Smtp-Source: APXvYqwS0cfLO0xV7ze62Bq3045NzAxOrvxWUiPgixg34OagOq3t9eGLcU4qPScwFx2KriRqfgfysg==
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr61219423ljk.201.1578325789880;
+        Mon, 06 Jan 2020 07:49:49 -0800 (PST)
+Received: from localhost.localdomain ([37.157.136.193])
+        by smtp.gmail.com with ESMTPSA id x84sm29388259lfa.97.2020.01.06.07.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 07:49:49 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v4 00/12] Venus new features
+Date:   Mon,  6 Jan 2020 17:49:17 +0200
+Message-Id: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise there's a noticeable glow even with brightness 0. Also
-turning off the regulator can save additional power.
+Hello,
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/leds/leds-lm3692x.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Changes since v3:
 
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 1254695d7e94..28a51aeb28de 100644
---- a/drivers/leds/leds-lm3692x.c
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -116,7 +116,8 @@ struct lm3692x_led {
- 	int led_enable;
- 	int model_id;
- 
--	u8 boost_ctrl;
-+	u8 boost_ctrl, brightness_ctrl;
-+	bool enabled;
- };
- 
- static const struct reg_default lm3692x_reg_defs[] = {
-@@ -170,6 +171,9 @@ static int lm3692x_leds_enable(struct lm3692x_led *led)
- 	int enable_state;
- 	int ret, reg_ret;
- 
-+	if (led->enabled)
-+		return 0;
-+
- 	if (led->regulator) {
- 		ret = regulator_enable(led->regulator);
- 		if (ret) {
-@@ -272,6 +276,7 @@ static int lm3692x_leds_enable(struct lm3692x_led *led)
- 	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_ENABLE_MASK,
- 				 enable_state | LM3692X_DEVICE_EN);
- 
-+	led->enabled = true;
- 	return ret;
- out:
- 	dev_err(&led->client->dev, "Fail writing initialization values\n");
-@@ -293,6 +298,9 @@ static int lm3692x_leds_disable(struct lm3692x_led *led)
- {
- 	int ret;
- 
-+	if (!led->enabled)
-+		return 0;
-+
- 	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
- 	if (ret) {
- 		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
-@@ -310,6 +318,7 @@ static int lm3692x_leds_disable(struct lm3692x_led *led)
- 				"Failed to disable regulator: %d\n", ret);
- 	}
- 
-+	led->enabled = false;
- 	return ret;
- }
- 
-@@ -323,6 +332,13 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
- 
- 	mutex_lock(&led->lock);
- 
-+	if (brt_val == 0) {
-+		ret = lm3692x_leds_disable(led);
-+		goto out;
-+	} else {
-+		lm3692x_leds_enable(led);
-+	}
-+
- 	ret = lm3692x_fault_check(led);
- 	if (ret) {
- 		dev_err(&led->client->dev, "Cannot read/clear faults: %d\n",
+  - Dropped quotes in compatibles and fixed the number of iommu items
+  - Made iommus property required for video-firmware subnode
+
+v3 can be found at [1].
+
+regards,
+Stan
+
+[1] https://lkml.org/lkml/2019/12/23/184
+
+Aniket Masule (2):
+  media: venus: introduce core selection
+  media: venus: vdec: handle 10bit bitstreams
+
+Stanimir Varbanov (10):
+  venus: redesign clocks and pm domains control
+  venus: venc: blacklist two encoder properties
+  v4l: Add source event change for bit-depth
+  dt-bindings: media: venus: Convert msm8916 to DT schema
+  dt-bindings: media: venus: Convert msm8996 to DT schema
+  dt-bindings: media: venus: Convert sdm845 to DT schema
+  dt-bindings: media: venus: Add sdm845v2 DT schema
+  venus: core: add sdm845-v2 DT compatible and resource struct
+  arm64: dts: sdm845: follow venus-sdm845v2 DT binding
+  dt-bindings: media: venus: delete old binding document
+
+ .../bindings/media/qcom,msm8916-venus.yaml    | 119 +++
+ .../bindings/media/qcom,msm8996-venus.yaml    | 153 +++
+ .../bindings/media/qcom,sdm845-venus-v2.yaml  | 140 +++
+ .../bindings/media/qcom,sdm845-venus.yaml     | 156 +++
+ .../devicetree/bindings/media/qcom,venus.txt  | 120 ---
+ .../media/uapi/v4l/vidioc-dqevent.rst         |   8 +-
+ .../media/videodev2.h.rst.exceptions          |   1 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  25 +-
+ drivers/media/platform/qcom/venus/Makefile    |   2 +-
+ drivers/media/platform/qcom/venus/core.c      | 122 ++-
+ drivers/media/platform/qcom/venus/core.h      |  31 +-
+ drivers/media/platform/qcom/venus/helpers.c   | 435 ++------
+ drivers/media/platform/qcom/venus/helpers.h   |   4 -
+ drivers/media/platform/qcom/venus/hfi_cmds.c  |   2 +
+ .../media/platform/qcom/venus/hfi_helper.h    |   6 +
+ .../media/platform/qcom/venus/hfi_parser.h    |   5 +
+ .../media/platform/qcom/venus/pm_helpers.c    | 964 ++++++++++++++++++
+ .../media/platform/qcom/venus/pm_helpers.h    |  65 ++
+ drivers/media/platform/qcom/venus/vdec.c      |  88 +-
+ drivers/media/platform/qcom/venus/venc.c      |  75 +-
+ include/uapi/linux/videodev2.h                |   1 +
+ 21 files changed, 1875 insertions(+), 647 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8916-venus.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,sdm845-venus.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+ create mode 100644 drivers/media/platform/qcom/venus/pm_helpers.c
+ create mode 100644 drivers/media/platform/qcom/venus/pm_helpers.h
+
 -- 
-2.23.0
+2.17.1
 
