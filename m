@@ -2,84 +2,105 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6ACC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C777DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A241215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:59:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Y6yD6Dl8"
+	by mail.kernel.org (Postfix) with ESMTP id 973892467C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578301235;
+	bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GbKAL7KrsJpwdz63d0+r/Mio+WKmgm13tk5Z+H0Huqv6nf26jOtLHdPFC7ZNueMkM
+	 y2XE2GPXbsfCHSDApWg5z+OSbuwmF4nHDjX9/KHZsu3bYfV0K5a4RGNRsRjrG6Wa+M
+	 0jwVVHr7h2NjBYazzy7/vXD0u0ZSEsBcVdt2zp+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgAFI7q (ORCPT
+        id S1726467AbgAFJAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:59:46 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32925 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgAFI7q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:59:46 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d139so11504785wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 00:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/ZwyOis6F3QKO9vpXF7tA9K3dMi7rhKdiD8Hhm+STvI=;
-        b=Y6yD6Dl8fSrpCiMi6JFctDAcHcLCWwV4WbimfBvj3+DL9Ty8MfYj5w1Jus52QpCEJl
-         nlmHxj+yyP4MtkOxKVVgDe7K2MPPf5cMrUjhsM8svB3s9M6RYkSINppYo2FslFGuSox8
-         fRb6bdg9iqcq0j5GEsidiFjyXNfdXtYqabeDILKYHaPmBhD9Ipydv3If5LV3nXeNKcdt
-         EPO/FkJ9ZXJjNjxHdfr3Pz1/8pLLlOaGP+EuBz1Mv/SqE9k816wR/Ss6b7WH5sY734FS
-         d3wOMe/FAYyhHeGbZ+9XsFeKMFPxdF9RJ42+wHli+mv5DlaM7u7YwKnLlejHmga0BPn8
-         Qf8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/ZwyOis6F3QKO9vpXF7tA9K3dMi7rhKdiD8Hhm+STvI=;
-        b=FfXQvd2IzXW6blQ35mamd7bxih1RPVF6cZ+e5lJB18yYCMeX8g73vd4oRkHp21tWjG
-         ZQdKFr73yVu5Mk2y2719NQpQKY0SEU64XQWcOp2mCWlaJh7iQyE+jiVsef6nUEjka92F
-         XhNMdgSqseCQb4BXDyVUnFRMingA/WN3X4tghnicpfPFhGeFQdkPAFSrHSt6nKZ5gfBP
-         BbLAEGozFfWmnfH+c8CqbpXKjyFlw/CCRIwQVHpMV7hmOY0Vot+UhQbsyfnGX9QNbYJn
-         8KDNct7kX2wmw/b31Nz1JsB+MWb2Ogpmqe7Li+BWmmmF+z6KdsT44eRaZrUxm6sJC5g7
-         wr+w==
-X-Gm-Message-State: APjAAAU2wu/u+SXNh1M0KHu8xhbzi1TT+djCZej0Ffc4XCnd4DnP0bs1
-        8Oi/kmad5QGSwr6YvUnfCPW+pA==
-X-Google-Smtp-Source: APXvYqxF9x2VCzl/gJXkRc4d1WJjn/hIPNpdwO3oQ7KKNlfk2KXb1uw38kE6ewg/kcMvECWhpHrbPA==
-X-Received: by 2002:a05:600c:2551:: with SMTP id e17mr2841233wma.26.1578301184153;
-        Mon, 06 Jan 2020 00:59:44 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id x11sm73880628wre.68.2020.01.06.00.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 00:59:44 -0800 (PST)
-Date:   Mon, 6 Jan 2020 09:59:43 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     pablo@netfilter.org, laforge@gnumonks.org, davem@davemloft.net,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] gtp: simplify error handling code in 'gtp_encap_enable()'
-Message-ID: <20200106085943.GB10460@netronome.com>
-References: <20200105173607.5456-1-christophe.jaillet@wanadoo.fr>
+        Mon, 6 Jan 2020 04:00:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbgAFJAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:00:34 -0500
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F17F320848;
+        Mon,  6 Jan 2020 09:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578301234;
+        bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=w46tN5kAiqSuaX0ajqvmx8wQw/Nx2eAOWF4NO+0j4/P9Y8otmSdz/PqG2VV15OIOP
+         zD19L0rsREe3T8cVPZYxFKXNPElV4HTcQxAkDQ0jlI3/NY/LGJaM8I9BzvVeUiOyCa
+         NAAjcCvEwgIfcdvZQrAPxykh4kpMcCSl8nqUm1/4=
+Received: by wens.tw (Postfix, from userid 1000)
+        id A9E705FC12; Mon,  6 Jan 2020 17:00:32 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: allwinner: sun50i-a64: Use macros for newly exported clocks
+Date:   Mon,  6 Jan 2020 17:00:30 +0800
+Message-Id: <20200106090030.9165-1-wens@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200105173607.5456-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 06:36:07PM +0100, Christophe JAILLET wrote:
-> 'gtp_encap_disable_sock(sk)' handles the case where sk is NULL, so there
-> is no need to test it before calling the function.
-> 
-> This saves a few line of code.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Chen-Yu Tsai <wens@csie.org>
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+A few clocks from the CCU were exported later, and references to them in
+the device tree were using raw numbers.
+
+Now that the DT binding header changes are in as well, switch to the
+macros for more clarity.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 92688b89c2a4..293059ffbbf6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -590,7 +590,7 @@ pio: pinctrl@1c20800 {
+ 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
++			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
+ 			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+@@ -1091,7 +1091,7 @@ hdmi_phy: hdmi-phy@1ef0000 {
+ 			compatible = "allwinner,sun50i-a64-hdmi-phy";
+ 			reg = <0x01ef0000 0x10000>;
+ 			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
+-				 <&ccu 7>;
++				 <&ccu CLK_PLL_VIDEO0>;
+ 			clock-names = "bus", "mod", "pll-0";
+ 			resets = <&ccu RST_BUS_HDMI0>;
+ 			reset-names = "phy";
+@@ -1121,7 +1121,8 @@ r_intc: interrupt-controller@1f00c00 {
+ 		r_ccu: clock@1f01400 {
+ 			compatible = "allwinner,sun50i-a64-r-ccu";
+ 			reg = <0x01f01400 0x100>;
+-			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>, <&ccu 11>;
++			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>,
++				 <&ccu CLK_PLL_PERIPH0>;
+ 			clock-names = "hosc", "losc", "iosc", "pll-periph";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+-- 
+2.24.1
+
