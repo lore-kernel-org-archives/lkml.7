@@ -2,101 +2,181 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E0AC32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812D1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EEC21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493AA2465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 06:41:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmR96zu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgAFGjq (ORCPT
+        id S1727468AbgAFGlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 01:39:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42620 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbgAFGjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 01:39:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D0BECADBE;
-        Mon,  6 Jan 2020 06:39:41 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 847C5E048A; Mon,  6 Jan 2020 07:39:41 +0100 (CET)
-Message-Id: <4d6d90454847364e49b104caf5736493170f2bea.1578292157.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1578292157.git.mkubecek@suse.cz>
-References: <cover.1578292157.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v2 3/3] epic100: allow nesting of ethtool_ops begin()
- and complete()
-To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        Francois Romieu <romieu@fr.zoreil.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Date:   Mon,  6 Jan 2020 07:39:41 +0100 (CET)
+        Mon, 6 Jan 2020 01:41:17 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42717 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgAFGlQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 01:41:16 -0500
+Received: by mail-io1-f67.google.com with SMTP id n11so40788002iom.9;
+        Sun, 05 Jan 2020 22:41:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z4RgkHe4zTXWoSeMr/8tfNK+cQWSST31EnajqbmjDNg=;
+        b=TmR96zu9Up4TyH2vEMKBHgxzm7gJHlaCIjSL+YssOk/qfR/hOCCdIPZ/dlRN03byn8
+         TdZqVcsFc2CtytvbzM+qxW6bTwP221QHWWJ7ol9pUEqEXLqAWKQ4ZVxjirP2Q3slNybt
+         U9x3Y+iT7uBphWIzFZLgCn9hnMR7+sdfpgQUCwwCacnBuCOtVeni67dSLhTzZAqlsd/+
+         RRztZn/iiRDzkYhThN8inidUR9kjkr0SisND49JD+WrxqFaKJ9icpIVTScGv3KebeJ7P
+         xBgBJEpfKcGGiTRcoExOeOU05tjCmXaARTJ6UmhnidWbYcuPRIPQbg5ri+v/8jstwH1z
+         OxzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z4RgkHe4zTXWoSeMr/8tfNK+cQWSST31EnajqbmjDNg=;
+        b=bxtioRSOjJSU67K+N4L1U4MrZ2d3Doe37hwhoboiiY/SszBxnEtfGWAM13aD1YTnH2
+         DOynxpsoJZuFWW7fACfWpY7KhYECMHHdrpHJwWSHYGV3luszlusXKhja9W6cYTICivGy
+         UOsYBW9j/LkyOW7pLkR3y3khB395Rj6TLlW52LFeeN7x5S0RbHIu5bp3bidXwyou9Pdl
+         g8kUUYIYouHjuZXK+8fobktcs1/OiHdVpUp9JN6o8J4tenug4ulP7G+MHTHMgctIN83Z
+         TpNGWxp3pr/56pXoynKU//SLcuJOiPAcJ++g9qCkj4Dv/rwkm1JB8gHqiDh3Nu5c5OFG
+         OrVQ==
+X-Gm-Message-State: APjAAAWCR9iHeZwhCNRiGtGP7wX+Avn+KgpXOALTDLvHeRCinLH7XA+V
+        7q+lg3u6PMOfbIw8SO8SCqDdyvON4eOSp19pRiE=
+X-Google-Smtp-Source: APXvYqzl+7y0bB2lmWr+dwBwiezfzWk3Q3x5u2qaDWAdDjpnWXKpBk2OTa9cBgPuORHV2T6aoAyCc+YHEZ/n+yV9VCY=
+X-Received: by 2002:a02:8817:: with SMTP id r23mr79417470jai.120.1578292875785;
+ Sun, 05 Jan 2020 22:41:15 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1578225806.git.chris@chrisdown.name> <91b4ed6727712cb6d426cf60c740fe2f473f7638.1578225806.git.chris@chrisdown.name>
+ <4106bf3f-5c99-77a4-717e-10a0ffa6a3fa@huawei.com>
+In-Reply-To: <4106bf3f-5c99-77a4-717e-10a0ffa6a3fa@huawei.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 6 Jan 2020 08:41:03 +0200
+Message-ID: <CAOQ4uxijrY7mRkAW1OEym7Xi=v6+fDjhAVBfucwtWPx6bokr5Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] tmpfs: Add per-superblock i_ino support
+To:     "zhengbin (A)" <zhengbin13@huawei.com>
+Cc:     Chris Down <chris@chrisdown.name>, Linux MM <linux-mm@kvack.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike most networking drivers using begin() and complete() ethtool_ops
-callbacks to resume a device which is down and suspend it again when done,
-epic100 does not use standard refcounted infrastructure but sets device
-sleep state directly.
+On Mon, Jan 6, 2020 at 4:04 AM zhengbin (A) <zhengbin13@huawei.com> wrote:
+>
+>
+> On 2020/1/5 20:06, Chris Down wrote:
+> > get_next_ino has a number of problems:
+> >
+> > - It uses and returns a uint, which is susceptible to become overflowed
+> >   if a lot of volatile inodes that use get_next_ino are created.
+> > - It's global, with no specificity per-sb or even per-filesystem. This
+> >   means it's not that difficult to cause inode number wraparounds on a
+> >   single device, which can result in having multiple distinct inodes
+> >   with the same inode number.
+> >
+> > This patch adds a per-superblock counter that mitigates the second case.
+> > This design also allows us to later have a specific i_ino size
+> > per-device, for example, allowing users to choose whether to use 32- or
+> > 64-bit inodes for each tmpfs mount. This is implemented in the next
+> > commit.
+> >
+> > Signed-off-by: Chris Down <chris@chrisdown.name>
+> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> > Cc: Hugh Dickins <hughd@google.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Jeff Layton <jlayton@kernel.org>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: kernel-team@fb.com
+> > ---
+> >  include/linux/shmem_fs.h |  1 +
+> >  mm/shmem.c               | 30 +++++++++++++++++++++++++++++-
+> >  2 files changed, 30 insertions(+), 1 deletion(-)
+> >
+> > v5: Nothing in code, just resending with correct linux-mm domain.
+> >
+> > diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> > index de8e4b71e3ba..7fac91f490dc 100644
+> > --- a/include/linux/shmem_fs.h
+> > +++ b/include/linux/shmem_fs.h
+> > @@ -35,6 +35,7 @@ struct shmem_sb_info {
+> >       unsigned char huge;         /* Whether to try for hugepages */
+> >       kuid_t uid;                 /* Mount uid for root directory */
+> >       kgid_t gid;                 /* Mount gid for root directory */
+> > +     ino_t next_ino;             /* The next per-sb inode number to use */
+> >       struct mempolicy *mpol;     /* default memory policy for mappings */
+> >       spinlock_t shrinklist_lock;   /* Protects shrinklist */
+> >       struct list_head shrinklist;  /* List of shinkable inodes */
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > index 8793e8cc1a48..9e97ba972225 100644
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+> > @@ -2236,6 +2236,12 @@ static int shmem_mmap(struct file *file, struct vm_area_struct *vma)
+> >       return 0;
+> >  }
+> >
+> > +/*
+> > + * shmem_get_inode - reserve, allocate, and initialise a new inode
+> > + *
+> > + * If this tmpfs is from kern_mount we use get_next_ino, which is global, since
+> > + * inum churn there is low and this avoids taking locks.
+> > + */
+> >  static struct inode *shmem_get_inode(struct super_block *sb, const struct inode *dir,
+> >                                    umode_t mode, dev_t dev, unsigned long flags)
+> >  {
+> > @@ -2248,7 +2254,28 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+> >
+> >       inode = new_inode(sb);
+> >       if (inode) {
+> > -             inode->i_ino = get_next_ino();
+> > +             if (sb->s_flags & SB_KERNMOUNT) {
+> > +                     /*
+> > +                      * __shmem_file_setup, one of our callers, is lock-free:
+> > +                      * it doesn't hold stat_lock in shmem_reserve_inode
+> > +                      * since max_inodes is always 0, and is called from
+> > +                      * potentially unknown contexts. As such, use the global
+> > +                      * allocator which doesn't require the per-sb stat_lock.
+> > +                      */
+> > +                     inode->i_ino = get_next_ino();
+> > +             } else {
+> > +                     spin_lock(&sbinfo->stat_lock);
+>
+> Use spin_lock will affect performance, how about define
+>
+> unsigned long __percpu *last_ino_number; /* Last inode number */
+> atomic64_t shared_last_ino_number; /* Shared last inode number */
+> in shmem_sb_info, whose performance will be better?
+>
 
-With the introduction of netlink ethtool interface, we may have nested
-begin-complete blocks so that inner complete() would put the device back to
-sleep for the rest of the outer block.
+Please take a look at shmem_reserve_inode().
+spin lock is already being taken in shmem_get_inode()
+so there is nothing to be gained from complicating next_ino counter.
 
-To avoid rewriting an old and not very actively developed driver, just add
-a nesting counter and only perform resume and suspend on the outermost
-level.
+This fact would have been a lot clearer if next_ino was incremented
+inside shmem_reserve_inode() and its value returned to be used by
+shmem_get_inode(), but I am also fine with code as it is with the
+comment above.
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
-v2: fix inverted condition in ethtool_begin() (thanks to Andrew Lunn)
----
- drivers/net/ethernet/smsc/epic100.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/smsc/epic100.c b/drivers/net/ethernet/smsc/epic100.c
-index 912760e8514c..61ddee0c2a2e 100644
---- a/drivers/net/ethernet/smsc/epic100.c
-+++ b/drivers/net/ethernet/smsc/epic100.c
-@@ -280,6 +280,7 @@ struct epic_private {
- 	signed char phys[4];				/* MII device addresses. */
- 	u16 advertising;					/* NWay media advertisement */
- 	int mii_phy_cnt;
-+	u32 ethtool_ops_nesting;
- 	struct mii_if_info mii;
- 	unsigned int tx_full:1;				/* The Tx queue is full. */
- 	unsigned int default_port:4;		/* Last dev->if_port value. */
-@@ -1435,8 +1436,10 @@ static int ethtool_begin(struct net_device *dev)
- 	struct epic_private *ep = netdev_priv(dev);
- 	void __iomem *ioaddr = ep->ioaddr;
- 
-+	if (ep->ethtool_ops_nesting == U32_MAX)
-+		return -EBUSY;
- 	/* power-up, if interface is down */
--	if (!netif_running(dev)) {
-+	if (!ep->ethtool_ops_nesting++ && !netif_running(dev)) {
- 		ew32(GENCTL, 0x0200);
- 		ew32(NVCTL, (er32(NVCTL) & ~0x003c) | 0x4800);
- 	}
-@@ -1449,7 +1452,7 @@ static void ethtool_complete(struct net_device *dev)
- 	void __iomem *ioaddr = ep->ioaddr;
- 
- 	/* power-down, if interface is down */
--	if (!netif_running(dev)) {
-+	if (!--ep->ethtool_ops_nesting && !netif_running(dev)) {
- 		ew32(GENCTL, 0x0008);
- 		ew32(NVCTL, (er32(NVCTL) & ~0x483c) | 0x0000);
- 	}
--- 
-2.24.1
-
+Thanks,
+Amir.
