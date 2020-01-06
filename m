@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AAEC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A315FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D7F21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FBE21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578326845;
-	bh=5d0kv6mVsryuDV8YoMh8Ye38O4dNbjKKr6EewHzcn+M=;
+	s=default; t=1578326849;
+	bh=g9wZar1Zgj88/teH6zS44loQgY50JFMH1EKh60ggOTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ar4OYien94mJvRLdzuvOxak7wQJ9whPHi5S7Dazu3OqbYlu8A6Lyib/XQfSlwRCbB
-	 +MwxBTPFnoprc662NZ0EnHAaTM1j6oL9ZQnd/9BqlTH4HC9wx7HOLwjBTvsBWHI0zM
-	 HRw945jBY1I+C8hECFVjytBFMGb19W9J+tQd79j8=
+	b=FmbNFKoNJsMoePPVuHSe0DaBwL+y4yLbQ5sE6BESxXxUS9UhybmB+U3auQhI1brYm
+	 6pbjHTNtzJyKCIjddHUtEyTz7UJOs914BGL16S+RLWyuvSSjqcvSshNuvw2ko93vNu
+	 wpRloQaB+c/Q9alElE7gedVOUpxBJyQqu3mrQA8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgAFQHX (ORCPT
+        id S1726773AbgAFQH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:07:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44730 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 11:07:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgAFQHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:07:22 -0500
+        id S1726463AbgAFQHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:07:25 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18902081E;
-        Mon,  6 Jan 2020 16:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87975208C4;
+        Mon,  6 Jan 2020 16:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578326841;
-        bh=5d0kv6mVsryuDV8YoMh8Ye38O4dNbjKKr6EewHzcn+M=;
+        s=default; t=1578326844;
+        bh=g9wZar1Zgj88/teH6zS44loQgY50JFMH1EKh60ggOTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xj9meeyC5hekilZbw8jdtBPO9A9CEk+3mXKfBmcN76K1X+QLNTNEwDtJuWRBFFP89
-         0wIsHsfchd4x1kYtEsOunuGqsbSj54iP+05L0Cy3Vm5MEZ9h55934aqVGaUeUQ0e2M
-         Mhhl9uGojfGERSQggxDEqOEbUwpAZwb4K4MpgpgU=
+        b=HLVZx/Rc4a2F/hjYE4JWB2pSbvzHFEYpm+YyAxPM2spEzlmOQBmBkz7lODmS3jyJ4
+         sd1CpBd1dH8cWyUud3daBZhdR/SPLLMEB8RxcQeApS6ILzNaGiiSKIjziirrMpnGw+
+         DJ8Dl7ZDU1wOL8VcdjgQ/qNreNbmbu8UcDK6dSoA=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/20] tools bitmap: Implement bitmap_equal() operation at bitmap API
-Date:   Mon,  6 Jan 2020 13:06:46 -0300
-Message-Id: <20200106160705.10899-2-acme@kernel.org>
+Subject: [PATCH 02/20] perf mmap: Declare type for cpu mask of arbitrary length
+Date:   Mon,  6 Jan 2020 13:06:47 -0300
+Message-Id: <20200106160705.10899-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200106160705.10899-1-acme@kernel.org>
 References: <20200106160705.10899-1-acme@kernel.org>
@@ -66,12 +66,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Extend tools bitmap API with bitmap_equal() implementation.
+Declare a dedicated struct map_cpu_mask type for cpu masks of arbitrary
+length.
 
-The implementation has been derived from the kernel.
+The mask is available thru bits pointer and the mask length is kept in
+nbits field. MMAP_CPU_MASK_BYTES() macro returns mask storage size in
+bytes.
 
-Extend tools bitmap API with bitmap_free() implementation for symmetry
-with bitmap_alloc() function.
+The mmap_cpu_mask__scnprintf() function can be used to log text
+representation of the mask.
+
+Committer notes:
+
+To print the 'nbits' struct member we must use %zd, since it is a
+size_t, this fixes the build in some toolchains/arches.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -79,89 +87,63 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/43757993-0b28-d8af-a6c7-ede12e3a6877@linux.intel.com
+Link: http://lore.kernel.org/lkml/0fd2454f-477f-d15a-f4ee-79bcbd2585ff@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
- tools/lib/bitmap.c           | 15 +++++++++++++++
- 2 files changed, 45 insertions(+)
+ tools/perf/util/mmap.c | 12 ++++++++++++
+ tools/perf/util/mmap.h | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
-index 05dca5c203f3..477a1cae513f 100644
---- a/tools/include/linux/bitmap.h
-+++ b/tools/include/linux/bitmap.h
-@@ -15,6 +15,8 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, int bits);
- int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 		 const unsigned long *bitmap2, unsigned int bits);
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		   const unsigned long *bitmap2, unsigned int bits);
- void bitmap_clear(unsigned long *map, unsigned int start, int len);
- 
- #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
-@@ -123,6 +125,15 @@ static inline unsigned long *bitmap_alloc(int nbits)
- 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
- }
- 
-+/*
-+ * bitmap_free - Free bitmap
-+ * @bitmap: pointer to bitmap
-+ */
-+static inline void bitmap_free(unsigned long *bitmap)
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 063d1b93c53d..2ee4faacca21 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -23,6 +23,18 @@
+ #include "mmap.h"
+ #include "../perf.h"
+ #include <internal/lib.h> /* page_size */
++#include <linux/bitmap.h>
++
++#define MASK_SIZE 1023
++void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag)
 +{
-+	free(bitmap);
-+}
++	char buf[MASK_SIZE + 1];
++	size_t len;
 +
- /*
-  * bitmap_scnprintf - print bitmap list into buffer
-  * @bitmap: bitmap
-@@ -148,4 +159,23 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
- 	return __bitmap_and(dst, src1, src2, nbits);
- }
++	len = bitmap_scnprintf(mask->bits, mask->nbits, buf, MASK_SIZE);
++	buf[len] = '\0';
++	pr_debug("%p: %s mask[%zd]: %s\n", mask, tag, mask->nbits, buf);
++}
  
-+#ifdef __LITTLE_ENDIAN
-+#define BITMAP_MEM_ALIGNMENT 8
-+#else
-+#define BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
-+#endif
-+#define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
-+#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+ size_t mmap__mmap_len(struct mmap *map)
+ {
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index bee4e83f7109..ef51667fabcb 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -15,6 +15,15 @@
+ #include "event.h"
+ 
+ struct aiocb;
 +
-+static inline int bitmap_equal(const unsigned long *src1,
-+			const unsigned long *src2, unsigned int nbits)
-+{
-+	if (small_const_nbits(nbits))
-+		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
-+	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
-+	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
-+		return !memcmp(src1, src2, nbits / 8);
-+	return __bitmap_equal(src1, src2, nbits);
-+}
++struct mmap_cpu_mask {
++	unsigned long *bits;
++	size_t nbits;
++};
 +
- #endif /* _PERF_BITOPS_H */
-diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-index 38494782be06..5043747ef6c5 100644
---- a/tools/lib/bitmap.c
-+++ b/tools/lib/bitmap.c
-@@ -71,3 +71,18 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 			   BITMAP_LAST_WORD_MASK(bits));
- 	return result != 0;
- }
++#define MMAP_CPU_MASK_BYTES(m) \
++	(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned long))
 +
-+int __bitmap_equal(const unsigned long *bitmap1,
-+		const unsigned long *bitmap2, unsigned int bits)
-+{
-+	unsigned int k, lim = bits/BITS_PER_LONG;
-+	for (k = 0; k < lim; ++k)
-+		if (bitmap1[k] != bitmap2[k])
-+			return 0;
+ /**
+  * struct mmap - perf's ring buffer mmap details
+  *
+@@ -52,4 +61,6 @@ int perf_mmap__push(struct mmap *md, void *to,
+ 
+ size_t mmap__mmap_len(struct mmap *map);
+ 
++void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag);
 +
-+	if (bits % BITS_PER_LONG)
-+		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
-+			return 0;
-+
-+	return 1;
-+}
+ #endif /*__PERF_MMAP_H */
 -- 
 2.21.1
 
