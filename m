@@ -2,142 +2,103 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ECFC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACE5C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A89D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB62207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:54:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uzx/5OMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgAFWwU (ORCPT
+        id S1727158AbgAFWyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:52:20 -0500
-Received: from www62.your-server.de ([213.133.104.62]:45328 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFWwU (ORCPT
+        Mon, 6 Jan 2020 17:54:19 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44802 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgAFWyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:52:20 -0500
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iobEQ-0004FY-5m; Mon, 06 Jan 2020 23:52:18 +0100
-Received: from [178.197.249.51] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iobEP-000Cny-Q7; Mon, 06 Jan 2020 23:52:17 +0100
-Subject: Re: [PATCH bpf-next 1/2] libbpf: Add probe for large INSN limit
-To:     Michal Rostecki <mrostecki@suse.de>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191227110605.1757-1-mrostecki@suse.de>
- <20191227110605.1757-2-mrostecki@suse.de>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <aa996612-7ba5-ef76-6f22-112fe1d7b278@iogearbox.net>
-Date:   Mon, 6 Jan 2020 23:52:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191227110605.1757-2-mrostecki@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25686/Mon Jan  6 10:55:07 2020)
+        Mon, 6 Jan 2020 17:54:18 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so27521905pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:54:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BpAxESMCcXCSAxL59rFdWBZ2hjtyWfPRAq5lKk8HL34=;
+        b=Uzx/5OMDlWzTeV4JmlKm0DoIuyKCpRuLl4uAvP41bNAti42CoSDPWWPDVAkT0QQQRt
+         E1qm96M8yKI2LJNaZbc2nf0Fp0T5M8CmkV7RZ3QhEshiYysb0PlMYBlr1q+A9C2Ajb0/
+         Ba+Rmg6VahLlkeBvUE8Rpqc/K+vXpyzBA+uK2L4ohV0ffan/ixbvbs8/M8W8JuQw/qhV
+         B+2bwLvYCft+JBGlIsW0IMsHxqtCDaE7z/NrtDqfxPlpINKA+vycDTQpl3UOwuWz/30W
+         dqwRizizPfvzeDQDX+334l6VmdMOZfa8ZPRJKXpYVPJtryye9f4xp/jk9HNeYf48K901
+         7u7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BpAxESMCcXCSAxL59rFdWBZ2hjtyWfPRAq5lKk8HL34=;
+        b=bGRAo4duse3wY/47MMzE3SRlE+JezsaGNGw47RXs+n9e+jtgpVQEBaejZ7/pYWOE5i
+         l6PYO2gqwcz9Gg3EcCMmPiEA2XplJAakrT82ZOmNxJXkCQ15FWtMgBOgg9G+WJPifcCg
+         i8UoEc4ljBVGDjogXGoqbLXW/5ErmMVW87eFT4LypJ1xEe6mQe8IOB0jijqkDPotIoK1
+         nU36/tH89yfg66tuH0g6huZqiw6rA8Pb6pF/KRU0OicOQZVDvvOIIBwYfLsdOlWZhjPt
+         F7Nd0z4nKvKL0kcyYheTr5TqeEC+e7r3wepnMaNBGiAMaW79qA587G8inHkAYDJ2D1rx
+         dQWQ==
+X-Gm-Message-State: APjAAAWwIBDW0t3RvXBAcmMc2nxWXgmsx4Fxgb84DjL4KXaJYah2SN8G
+        w7tuoC6nO50aOXdgXZrm8/HJsDKg
+X-Google-Smtp-Source: APXvYqyxHQVIW/Xd0+lGsJuzbT/d67U8V5k93CSY58F6UFBNM0hzN0bPeyP/NBQuoTa5E2B0U4E7jQ==
+X-Received: by 2002:a63:1402:: with SMTP id u2mr112088439pgl.224.1578351258118;
+        Mon, 06 Jan 2020 14:54:18 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id r8sm24892569pjo.22.2020.01.06.14.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 14:54:17 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, opendmb@gmail.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: kpti: Add Broadcom Brahma-B53 core to the KPTI whitelist
+Date:   Mon,  6 Jan 2020 14:54:12 -0800
+Message-Id: <20200106225414.20795-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/27/19 12:06 PM, Michal Rostecki wrote:
-> Introduce a new probe which checks whether kernel has large maximum
-> program size (1M) which was increased in commit c04c0d2b968a ("bpf:
-> increase complexity limit and maximum program size").
-> 
-> Based on the similar check in Cilium[0], authored by Daniel Borkmann.
-> 
-> [0] https://github.com/cilium/cilium/commit/657d0f585afd26232cfa5d4e70b6f64d2ea91596
-> 
-> Co-authored-by: Daniel Borkmann <daniel@iogearbox.net>
-> Signed-off-by: Michal Rostecki <mrostecki@suse.de>
-> ---
->   tools/lib/bpf/libbpf.h        |  1 +
->   tools/lib/bpf/libbpf.map      |  1 +
->   tools/lib/bpf/libbpf_probes.c | 23 +++++++++++++++++++++++
->   3 files changed, 25 insertions(+)
-> 
-> diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> index fe592ef48f1b..26bf539f1b3c 100644
-> --- a/tools/lib/bpf/libbpf.h
-> +++ b/tools/lib/bpf/libbpf.h
-> @@ -521,6 +521,7 @@ LIBBPF_API bool bpf_probe_prog_type(enum bpf_prog_type prog_type,
->   LIBBPF_API bool bpf_probe_map_type(enum bpf_map_type map_type, __u32 ifindex);
->   LIBBPF_API bool bpf_probe_helper(enum bpf_func_id id,
->   				 enum bpf_prog_type prog_type, __u32 ifindex);
-> +LIBBPF_API bool bpf_probe_large_insn_limit(__u32 ifindex);
->   
->   /*
->    * Get bpf_prog_info in continuous memory
-> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-> index e9713a574243..b300d74c921a 100644
-> --- a/tools/lib/bpf/libbpf.map
-> +++ b/tools/lib/bpf/libbpf.map
-> @@ -219,6 +219,7 @@ LIBBPF_0.0.7 {
->   		bpf_object__detach_skeleton;
->   		bpf_object__load_skeleton;
->   		bpf_object__open_skeleton;
-> +		bpf_probe_large_insn_limit;
->   		bpf_prog_attach_xattr;
->   		bpf_program__attach;
->   		bpf_program__name;
-> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-> index a9eb8b322671..925f95106a52 100644
-> --- a/tools/lib/bpf/libbpf_probes.c
-> +++ b/tools/lib/bpf/libbpf_probes.c
-> @@ -17,6 +17,8 @@
->   #include "libbpf.h"
->   #include "libbpf_internal.h"
->   
-> +#define INSN_REPEAT 4128
-> +
->   static bool grep(const char *buffer, const char *pattern)
->   {
->   	return !!strstr(buffer, pattern);
-> @@ -321,3 +323,24 @@ bool bpf_probe_helper(enum bpf_func_id id, enum bpf_prog_type prog_type,
->   
->   	return res;
->   }
-> +
-> +/*
-> + * Probe for availability of kernel commit (5.3):
-> + *
-> + * c04c0d2b968a ("bpf: increase complexity limit and maximum program size")
-> + */
-> +bool bpf_probe_large_insn_limit(__u32 ifindex)
-> +{
-> +	struct bpf_insn insns[INSN_REPEAT + 1];
-> +	int i;
+Broadcom Brahma-B53 CPUs do not implement ID_AA64PFR0_EL1.CSV3 but are
+not susceptible to Meltdown, so add all Brahma-B53 part numbers to
+kpti_safe_list[].
 
-Looks good, but lets test for 'BPF_MAXINSNS + 1' number of total insns, less
-arbitrary than 4128.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm64/kernel/cpufeature.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	for (i = 0; i < INSN_REPEAT; i++)
-> +		insns[i] = BPF_MOV64_IMM(BPF_REG_0, 1);
-> +	insns[INSN_REPEAT] = BPF_EXIT_INSN();
-> +
-> +	errno = 0;
-> +	probe_load(BPF_PROG_TYPE_SCHED_CLS, insns, ARRAY_SIZE(insns), NULL, 0,
-> +		   ifindex);
-> +
-> +	return errno != E2BIG && errno != EINVAL;
-> +}
-> 
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 04cf64e9f0c9..0427b72c960b 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -975,6 +975,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 	static const struct midr_range kpti_safe_list[] = {
+ 		MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
+ 		MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
++		MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+ 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+ 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+-- 
+2.17.1
 
