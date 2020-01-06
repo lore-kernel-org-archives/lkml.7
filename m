@@ -2,114 +2,70 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A29C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD7AC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18CA2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEAC2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 23:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578354308;
+	bh=wK/w/9w+E9BDyO3+eeTNnQY7G4egWMouThmIgQ10f2s=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=wMyfDgR42BmGlEAWp2Oog+0W6kemco6c7G8x7w4bWKWAoApKIW9DD/MFa3Z/8ujO7
+	 Xz5FAQHQhzt7zvp+hhBKH0UPrKWAT8R2ScMUud7rffJnPjrcEJnLjo9yFrKRZXSM23
+	 meblBMKQGsjlo/lmPtZfP42ChwU/aMnCnIQyiv0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgAFXir (ORCPT
+        id S1727228AbgAFXpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:38:47 -0500
-Received: from mga06.intel.com ([134.134.136.31]:29283 "EHLO mga06.intel.com"
+        Mon, 6 Jan 2020 18:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbgAFXiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 18:38:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 15:38:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
-   d="scan'208";a="395171038"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jan 2020 15:38:46 -0800
-Date:   Mon, 6 Jan 2020 15:38:46 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-Message-ID: <20200106233846.GC12879@linux.intel.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726599AbgAFXpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 18:45:07 -0500
+Subject: Re: [GIT PULL] tracing: Fixes for 5.5-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578354306;
+        bh=wK/w/9w+E9BDyO3+eeTNnQY7G4egWMouThmIgQ10f2s=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=FGHOC+RjeOOyiZmJcdu8rRfWrBKiQBi407SALdBjhuqOJ/vWfWlkurOOTo4kR8eX0
+         1jOwYrfu5G9nsVr2QRDm+mbpVQnpvtRKpuWJEF2qe7B/RggS67+iHIUh/9tAi3w+Ah
+         tAZT3tFBXq3bWNixk7OjKyIaNvINPXbRr77H0BUg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200106162528.56814293@gandalf.local.home>
+References: <20200106162528.56814293@gandalf.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200106162528.56814293@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.5-rc5
+X-PR-Tracked-Commit-Id: 72879ee0c53e2fc17f443f7b1adcc0d5130cd934
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ae6088216ce4b99b3a4aaaccd2eb2dd40d473d42
+Message-Id: <157835430644.4029.3991291842174369618.pr-tracker-bot@kernel.org>
+Date:   Mon, 06 Jan 2020 23:45:06 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
-> On 1/6/20 4:49 PM, Sean Christopherson wrote:
-> > This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
-> > on a future processor, i.e. x86_phys_bits==52.
-> 
-> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
-> always be a reduction in physical addressing (so I'm told).
+The pull request you sent on Mon, 6 Jan 2020 16:25:28 -0500:
 
-Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
-that reducing the PA space is optional.  Section 7.10.2 is especially
-clear on this:
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.5-rc5
 
-  In implementations where the physical address size of the processor is
-  reduced when memory encryption features are enabled, software must
-  ensure it is executing from addresses where these upper physical address
-  bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ae6088216ce4b99b3a4aaaccd2eb2dd40d473d42
 
-But, hopefully the other approach I have in mind actually works, as it's
-significantly less special-case code and would naturally handle either
-case, i.e. make this a moot point.
+Thank you!
 
-
-Entry on SYSCFG:
-
-  3.2.1 System Configuration Register (SYSCFG)
-
-  ...
-
-  MemEncryptionMode. Bit 23.  Setting this bit to 1 enables the SME and
-  SEV memory encryption features.
-
-The SME entry the above links to says:
-
-  7.10.1 Determining Support for Secure Memory Encryption
-
-  ...
-
-  Additionally, in some implementations, the physical address size of the
-  processor may be reduced when memory encryption features are enabled, for
-  example from 48 to 43 bits. In this case the upper physical address bits are
-  treated as reserved when the feature is enabled except where otherwise
-  indicated. When memory encryption is supported in an implementation, CPUID
-  Fn8000_001F[EBX] reports any physical address size reduction present. Bits
-  reserved in this mode are treated the same as other page table reserved bits,
-  and will generate a page fault if found to be non-zero when used for address
-  translation.
-
-  ...
-
-  7.10.2 Enabling Memory Encryption Extensions
-
-  Prior to using SME, memory encryption features must be enabled by setting
-  SYSCFG MSR bit 23 (MemEncryptionModEn) to 1. In implementations where the
-  physical address size of the processor is reduced when memory encryption
-  features are enabled, software must ensure it is executing from addresses where
-  these upper physical address bits are 0 prior to setting
-  SYSCFG[MemEncryptionModEn]. Memory encryption is then further controlled via
-  the page tables.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
