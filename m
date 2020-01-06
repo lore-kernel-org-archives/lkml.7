@@ -2,131 +2,149 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13436C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EB5C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05B2207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C91C2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScZ+BLpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgAFQS1 (ORCPT
+        id S1726687AbgAFQSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:18:27 -0500
-Received: from mga06.intel.com ([134.134.136.31]:1506 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgAFQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:18:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 08:18:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
-   d="scan'208";a="222875855"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 06 Jan 2020 08:18:26 -0800
-Received: from [10.251.17.71] (kliang2-mobl.ccr.corp.intel.com [10.251.17.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3294858033E;
-        Mon,  6 Jan 2020 08:18:25 -0800 (PST)
-Subject: Re: [RFC PATCH V2 2/7] perf: Init/fini PMU specific data
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, linux-kernel@vger.kernel.org, eranian@google.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com
-References: <1578080364-5928-1-git-send-email-kan.liang@linux.intel.com>
- <1578080364-5928-2-git-send-email-kan.liang@linux.intel.com>
- <20200106103832.GO2810@hirez.programming.kicks-ass.net>
- <20200106142343.GK15478@tassilo.jf.intel.com>
- <20200106143138.GN2844@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <e12e347e-505e-2703-537f-c4394bebce89@linux.intel.com>
-Date:   Mon, 6 Jan 2020 11:18:24 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 6 Jan 2020 11:18:46 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39528 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgAFQSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:18:45 -0500
+Received: by mail-io1-f66.google.com with SMTP id c16so19316370ioh.6;
+        Mon, 06 Jan 2020 08:18:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1iBF+C1NHazjfiJGahas8jIgSGj241V/MA8/jj2HpLE=;
+        b=ScZ+BLpeYEmcBri4/E40jt+m15BKdbAIG7h7sy3ejJj/Dtb+nL8mk9HYuTan58Ac5v
+         1jtRC/XgW9iWes1rejXCb5Nkiv5JXH6T9ZGxBYCL+6tKO6G18SbfNq01Hee7NCjGU29q
+         sPkjPpV3m1fQxCSNdaOmoqXu4lvyH7Q5dXDZKFCvLTwrQW1XaQf0NumtQUoDu2227ya2
+         DfJoLQvdnFKa7/6WrrmLuPVLOmX1NyFUKfWqUg8DzsYodq7qhN3ILwABQCrq9awbO9fu
+         r430448Ffc4Qp7BbEPtygBu1l6bcwp97AvALV4Cn3puvjnJCSlDYaTHUm59DJXzKmGPX
+         vWyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1iBF+C1NHazjfiJGahas8jIgSGj241V/MA8/jj2HpLE=;
+        b=GZQ1w8XmTm9Ht6miyey856EK2nPlhFQIf3FUC2xQQPWkacn/ZKYmxn8zvotIMzwXHg
+         CyiSuKUI2pBrtMb2hLxsgAFJYUeB+v0RknYNHpJ5UAWjqNnppiY4ozJmlYady6HR91Kx
+         4b647hUP+GzPNKyg9BaqLI1ltbrVntjSVtTW+hk+983ew6NLLRn0SssFYt0IStSOdvt2
+         dtL5Tbrex8sNC26FA3pMWeZTHoL/jfrgSu/W2DI0V09tr6+LYH3ftbOOXm2KkRgGi5VF
+         rLULkJkefmHkZavXnzj+d1h31xvRyk5KHHvNn0wA0SspNXQ5oflAoGGb3IhwSKPG5+zw
+         gwQw==
+X-Gm-Message-State: APjAAAXwzN7EZdWQB2LuHJvLAaGfjP7kZqAdnk5Up6uwn/djq5s24NUw
+        DTNzRJ91Dxzddgff5ojxJmuiBVb7h1JLYf6sGAi4oO/8v5A=
+X-Google-Smtp-Source: APXvYqzuPLiJ4vUg0YkwQhUHnUnwKKB/CsT/pr8SpYnnKWoouOidOXCDH2ImDMv0T/GGKjlvg+D0xcL+eVRS4FkS4C8=
+X-Received: by 2002:a5d:80d9:: with SMTP id h25mr63343225ior.97.1578327524845;
+ Mon, 06 Jan 2020 08:18:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200106143138.GN2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+In-Reply-To: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 6 Jan 2020 08:18:34 -0800
+Message-ID: <CAKgT0Uf+EP8yGf93=R3XK0Y=0To0KQDys0O1BkG-Odej3Rwj5A@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        cgroups@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 3, 2020 at 6:34 AM Wei Yang <richardw.yang@linux.intel.com> wrote:
+>
+> As all the other places, we grab the lock before manipulate the defer list.
+> Current implementation may face a race condition.
+>
+> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+>
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>
+> ---
+> I notice the difference during code reading and just confused about the
+> difference. No specific test is done since limited knowledge about cgroup.
+>
+> Maybe I miss something important?
+> ---
+>  mm/memcontrol.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index bc01423277c5..62b7ec34ef1a 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5368,12 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
+>         }
+>
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +       spin_lock(&from->deferred_split_queue.split_queue_lock);
+>         if (compound && !list_empty(page_deferred_list(page))) {
+> -               spin_lock(&from->deferred_split_queue.split_queue_lock);
+>                 list_del_init(page_deferred_list(page));
+>                 from->deferred_split_queue.split_queue_len--;
+> -               spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>         }
+> +       spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  #endif
+>         /*
+>          * It is safe to change page->mem_cgroup here because the page
 
+So I suspect the lock placement has to do with the compound boolean
+value passed to the function.
 
-On 1/6/2020 9:31 AM, Peter Zijlstra wrote:
-> On Mon, Jan 06, 2020 at 06:23:43AM -0800, Andi Kleen wrote:
->>>> +	rcu_read_lock();
->>>> +	for_each_process_thread(g, p) {
->>>> +		mutex_lock(&p->perf_event_mutex);
->>>> +		if (p->perf_ctx_data) {
->>>> +			/*
->>>> +			 * The perf_ctx_data for this thread may has been
->>>> +			 * allocated by per-task event.
->>>> +			 * Only update refcount for the case.
->>>> +			 */
->>>> +			refcount_inc(&p->perf_ctx_data->refcount);
->>>> +			mutex_unlock(&p->perf_event_mutex);
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		if (pos < num_thread) {
->>>> +			refcount_set(&data[pos]->refcount, 1);
->>>> +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
->>>> +		} else {
->>>> +			/*
->>>> +			 * There may be some new threads created,
->>>> +			 * when we allocate space.
->>>> +			 * Track the number in nr_new_tasks.
->>>> +			 */
->>>> +			nr_new_tasks++;
->>>> +		}
->>>> +		mutex_unlock(&p->perf_event_mutex);
->>>> +	}
->>>> +	rcu_read_unlock();
->>>> +
->>>> +	raw_spin_unlock_irqrestore(&task_data_sys_wide_events_lock, flags);
->>>
->>> Still NAK. That's some mightly broken code there.
->>
->> Yes, Kan you cannot use a mutex (sleeping) inside rcu_read_lock().
->> Can perf_event_mutex be a spin lock?
-> 
-> Or insize that raw_spin_lock.
+One thing you might want to do is pull the "if (compound)" check out
+and place it outside of the spinlock check. It would then simplify
+this signficantly so it is something like
+if (compound) {
+  spin_lock();
+  list = page_deferred_list(page);
+  if (!list_empty(list)) {
+    list_del_init(list);
+    from->..split_queue_len--;
+  }
+  spin_unlock();
+}
 
-The task_data_sys_wide_events_lock is a global lock. I think we just 
-need per-task lock here.
+Same for the block below. I would pull the check for compound outside
+of the spinlock call since it is a value that shouldn't change and
+would eliminate an unnecessary lock in the non-compound case.
 
-I think I will add a new dedicate per-task raw_spin_lock for 
-perf_ctx_data here.
-
-
-> And last time I expressly said to not do
-> what whole tasklist iteration under a spinlock.
-> 
-
-We need an indicator to tell if the assignment for all existing tasks 
-has been finished. Because we have to wait before processing the cases 
-as below.
-- Allocate the space for new threads. If we don't wait the assignments 
-finished, we cannot tell if the perf_ctx_data is allocated by previous 
-per-task event, or this system-wide event. The refcount may double count.
-- There may be two or more system-wide events at the same time. When we 
-are allocating the space for the first event, the second one may start 
-profiling if we don't wait. The LBR shorten issue still exists.
-- We have to serialize assignment and free.
-
-If we cannot use spinlock to serialize the cases here, can we set a 
-state when the assignment is finished, and use wait_var_event() in the 
-cases as above?
-
-
-Thanks,
-Kan
+> @@ -5385,13 +5385,13 @@ static int mem_cgroup_move_account(struct page *page,
+>         page->mem_cgroup = to;
+>
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +       spin_lock(&to->deferred_split_queue.split_queue_lock);
+>         if (compound && list_empty(page_deferred_list(page))) {
+> -               spin_lock(&to->deferred_split_queue.split_queue_lock);
+>                 list_add_tail(page_deferred_list(page),
+>                               &to->deferred_split_queue.split_queue);
+>                 to->deferred_split_queue.split_queue_len++;
+> -               spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>         }
+> +       spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>  #endif
+>
+>         spin_unlock_irqrestore(&from->move_lock, flags);
+> --
