@@ -2,181 +2,172 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B85C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB1CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ADB2071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9602071A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/3kQwdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgAFLii (ORCPT
+        id S1726383AbgAFLka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:38:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33425 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAFLih (ORCPT
+        Mon, 6 Jan 2020 06:40:30 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40501 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFLk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:38:37 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1ioQiL-0004uf-AZ; Mon, 06 Jan 2020 12:38:29 +0100
-Message-ID: <fd6e6d92fdc15552bb60481fec6f5622a1575e43.camel@pengutronix.de>
-Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
- i.MX8M Mini
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Jacky Bai <ping.bai@nxp.com>, Adam Ford <aford173@gmail.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Date:   Mon, 06 Jan 2020 12:38:25 +0100
-In-Reply-To: <DB7PR04MB5178EA739587B2DB084570B9872F0@DB7PR04MB5178.eurprd04.prod.outlook.com>
-References: <20191213160542.15757-1-aford173@gmail.com>
-         <CAHCN7xKuVCGqgRpixa9UPkWq92Gg=dm4XxAczBKAZCoMzcBVJg@mail.gmail.com>
-         <DB7PR04MB5178EA739587B2DB084570B9872F0@DB7PR04MB5178.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 6 Jan 2020 06:40:29 -0500
+Received: by mail-ua1-f68.google.com with SMTP id z24so11585782uam.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 03:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sQQaQG+AfXGj+Me2z6DyEv2JkQjyKmIl3bRQbolFe1o=;
+        b=p/3kQwdYgtdlg1Os6Dci9lDS2z6w0R6zDWSmBg6T5FzjjaAEGbtILr2ByFyBtXlu2X
+         y1ZPwJgJZPcy8SS3iwlNTITYTOoYCk9KgIPsW/ZxexHYLQxyQYbX8CzMsCY4JmFWvsjl
+         wr2stfKPxV+k+JXteIJ+iVb3/JcICbol7ToO+0ZSMRuQImeLHX+i+/lpVLeSBwPv7auj
+         Hk4WdSrOD5Yk0bXiytAgx/zpUwqOocgksGqpPr9DQXKWDtO6H1R06z2Tc5Y5q/6C/rZw
+         WRuL+A2cY/lPMhGNjeHdGUG/GgaWynnKuOnRXcKHKGkR/6iMld/AQMsHAn+cpB6bSiZr
+         WczA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQQaQG+AfXGj+Me2z6DyEv2JkQjyKmIl3bRQbolFe1o=;
+        b=j8EWa9m6r/O1KAVzBX4vQQRNX2GIMr3fnBrRczELKSaw/TstCMakH6rj1bZmy0DmqG
+         rpNQonaPBbfjHHJ/IqyKBd2NsI3nrwcgJAWg45WJ9RnmbPQ/S/DZ6mWPsxcD1PL2uuBT
+         qrnLkIAZfUNoVjul1ZfrD6v4nJx3lVXdLWPwUzkGou8PM4L7+LoKCu0Xy8PwF1+nNxKP
+         mLU2i6nuagmE7PUNa0FG7pt67ObiB8nabZ9a4Yu5IdMsLSV4nSKFJeIlqvUcm52E7n5C
+         NY6S07QveBe7M1IKCkCfgPaNsly155TJKyMMijwcSVmEslfL2PMf/+zJ9wpQVhua39U3
+         R8tA==
+X-Gm-Message-State: APjAAAVRwNfDOAuz8ulLm2dLkGgIvK9mb2jxHVOvxYa1UCpudVbetySW
+        a6nThQknN35Tm8CPgtEce1nq+AfLYE5XrIojFR4=
+X-Google-Smtp-Source: APXvYqyARdYJ0Kv1+Q19Ys5V5NIUzl/nDmV8rlIGXvTTdimxNf06lz1HDqT5HBc5YnWk46mVryIwSq7M5NQ1lRFYgao=
+X-Received: by 2002:ab0:74ce:: with SMTP id f14mr58376764uaq.118.1578310828234;
+ Mon, 06 Jan 2020 03:40:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200102100230.420009-1-christian.gmeiner@gmail.com>
+ <20200102100230.420009-3-christian.gmeiner@gmail.com> <5cd1dc11df43d86d9db0dc2520de9b2e839ea7cc.camel@pengutronix.de>
+ <CAH9NwWddNNc+2rRsntm+_eYF0S9uwC0kTszpPysbzmkc4dNuNA@mail.gmail.com> <191213c32908a217cf78590464c9b9519865f3e0.camel@pengutronix.de>
+In-Reply-To: <191213c32908a217cf78590464c9b9519865f3e0.camel@pengutronix.de>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Mon, 6 Jan 2020 12:40:18 +0100
+Message-ID: <CAH9NwWc-M2TvPGnDY5d_aWxrtrb+SZZOObd9KSAAzN+K7WMpOg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] drm/etnaviv: determine product, customer and eco id
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacky,
+Hi Lucas
 
-On So, 2019-12-22 at 08:33 +0000, Jacky Bai wrote:
-> > -----Original Message-----
-> > From: Adam Ford <aford173@gmail.com>
-> > Sent: Saturday, December 21, 2019 11:07 PM
-> > To: arm-soc <linux-arm-kernel@lists.infradead.org>
-> > Cc: Peng Fan <peng.fan@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Rob
-> > Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Shawn Guo <shawnguo@kernel.org>; Sascha Hauer
-> > <s.hauer@pengutronix.de>; Pengutronix Kernel Team
-> > <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>;
-> > dl-linux-imx <linux-imx@nxp.com>; devicetree <devicetree@vger.kernel.org>;
-> > Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Leonard Crestez
-> > <leonard.crestez@nxp.com>
-> > Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
-> > i.MX8M Mini
-> > 
-> > On Fri, Dec 13, 2019 at 10:05 AM Adam Ford <aford173@gmail.com> wrote:
-> > > The GPCv2 controller on the i.MX8M Mini is compatible with the driver
-> > > used for the i.MX8MQ except for the register locations and names.
-> > > The GPCv2 controller is used to enable additional periperals currently
-> > > unavailable on the i.MX8M Mini.  In order to make them function, the
-> > > GPCv2 needs to be adapted so the drivers can associate their power
-> > > domain to the GPCv2 to enable them.
-> > > 
-> > > This series makes one include file slightly more generic, adds the
-> > > iMX8M Mini entries, updates the bindings, adds them to the device
-> > > tree, then associates the new power domain to both the OTG and PCIe
-> > > controllers.
-> > > 
-> > > Some peripherals may need additional power domain drivers in the
-> > > future due to limitations of the GPC driver, but the drivers for VPU
-> > > and others are not available yet.
-> > 
-> > Before I do a V3 to address Rob's comments, I am thinking I'll drop the items
-> > on the GPC that Jacky suggested would not work, and we don't have drivers
-> > for those other peripherals (GPU, VPU, etc.) anyway.  My main goal here was
-> > to try and get the USB OTG ports working, so I'd like to enabled enough of the
-> > items on the GPC that are similar to the i.MX8MQ and leave the more
-> > challenging items until we have either a better driver available and/or actual
-> > peripheral support coming.  I haven't seen LCDIF or DSI drivers pushed
-> > upstream yet, so I doubt we'll see GPU or VPU yet until those are done.
-> > 
-> > Does anyone from the NXP team have any other comments/concerns?
-> > 
-> 
-> If you look into NXP's release code, you will find that it is not easy to handle the
-> power domain more generically in GPCv2 driver for imx8mm. That's the reason why we use
-> SIP service to handle all the power domain in TF-A. we tried to upstream the SIP version
-> power domain that can be reused for all i.MX8M, but rejected by ARM guys. they think
-> we need to use SCMI to implement it. as there is no SCMI over SMC available, upstream is
-> on the way, so the power domain for i.MX8MM/MN is pending.
+Am Mo., 6. Jan. 2020 um 12:22 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
+>
+> On Mo, 2020-01-06 at 11:57 +0100, Christian Gmeiner wrote:
+> > Hi Lucas
+> >
+> > Am Mo., 6. Jan. 2020 um 11:03 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
+> > > On Do, 2020-01-02 at 11:02 +0100, Christian Gmeiner wrote:
+> > > > They will be used for extended HWDB support. The eco id logic was taken
+> > > > from galcore kernel driver sources.
+> > > >
+> > > > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 17 +++++++++++++++++
+> > > >  drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  6 +++---
+> > > >  2 files changed, 20 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > > index d47d1a8e0219..253301be9e95 100644
+> > > > --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > > +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> > > > @@ -321,6 +321,18 @@ static void etnaviv_hw_specs(struct etnaviv_gpu *gpu)
+> > > >               gpu->identity.varyings_count -= 1;
+> > > >  }
+> > > >
+> > > > +static void etnaviv_hw_eco_id(struct etnaviv_gpu *gpu)
+> > > > +{
+> > > > +     const u32 chipDate = gpu_read(gpu, VIVS_HI_CHIP_DATE);
+> > > > +     gpu->identity.eco_id = gpu_read(gpu, VIVS_HI_CHIP_ECO_ID);
+> > > > +
+> > > > +     if (etnaviv_is_model_rev(gpu, GC1000, 0x5037) && (chipDate == 0x20120617))
+> > > > +             gpu->identity.eco_id = 1;
+> > > > +
+> > > > +     if (etnaviv_is_model_rev(gpu, GC320, 0x5303) && (chipDate == 0x20140511))
+> > > > +             gpu->identity.eco_id = 1;
+> > >
+> > > I'm not sure if those two checks warrant a separate function. Maybe
+> > > just place them besides the other ID fixups?
+> > >
+> >
+> > This is almost a 1:1 copy of _GetEcoID(..) but will try to move the fixups.
+> >
+> >
+> > > > +}
+> > > > +
+> > > >  static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > > >  {
+> > > >       u32 chipIdentity;
+> > > > @@ -362,6 +374,8 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > > >                       }
+> > > >               }
+> > > >
+> > > > +             gpu->identity.product_id = gpu_read(gpu, VIVS_HI_CHIP_PRODUCT_ID);
+> > > > +
+> > > >               /*
+> > > >                * NXP likes to call the GPU on the i.MX6QP GC2000+, but in
+> > > >                * reality it's just a re-branded GC3000. We can identify this
+> > > > @@ -375,6 +389,9 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
+> > > >               }
+> > > >       }
+> > > >
+> > > > +     etnaviv_hw_eco_id(gpu);
+> > > > +     gpu->identity.customer_id = gpu_read(gpu, VIVS_HI_CHIP_CUSTOMER_ID);
+> > >
+> > > I don't like this scattering of identity register reads. Please move
+> > > all of those reads to the else clause where we currently read
+> > > model/rev. I doubt that the customer ID register is available on the
+> > > really early cores, that only have the VIVS_HI_CHIP_IDENTITY register.
+> > >
+> >
+> > There is feature bit for it: chipMinorFeatures5_HAS_PRODUCTID
+> > Will change the code to make use of it. Shall I still put it in the
+> > else clause then?
+>
+> If there's a feature bit we need to move the read toward the end of the
+> function, as we currently read the features as the last step in the
+> hw_identify.
+>
+> But then I'm not sure if the HAS_PRODUCTID feature bit is correct. At
+> least wumpus' gpus_comparison says that none of the known <= GC3000
+> cores has it set, which seems... suspicious.
+>
 
-Adding power domain support for i.MX8MM/MN to the GPCv2 driver does not
-prevent a SCMI solution to be used when available. I don't see why we
-should block this.
+Hmm... what if I just mimic what is done here?
+https://github.com/etnaviv/vivante_kernel_drivers/blob/master/imx8_v6.2.3.129602/hal/kernel/arch/gc_hal_kernel_hardware.c#L220
 
-> Actually, I am confused why we can't use SIP service, even if the SCMI over SMC is ready in
-> the future, It seems the SMCC function ID still need to choose from SIP service function id bank.
-> 
-> Another concern for adding power domain support in GPCv2 is that, each time a new
-> SOC is added, we need to add hundred lines of code in GPCv2 driver. it is not a best way
-> to keep driver reuse.
+Unconditionally read the product id at the end of the else clause. The
+same is done in the stm32 galcore kernel driver.
 
-This is how all hardware specific stuff is handled in the driver. I see
-your use-case of having a single TF-A based driver for applications
-where you have more than on OS running on the system. For the very
-common case of only a single rich OS running on the system the code
-reuse doesn't really matter and in fact it's easier to fix any bugs by
-just updating the Linux kernel.
+-- 
+greets
+--
+Christian Gmeiner, MSc
 
->  The GPCv2 driver is originally used for i.MX7D, then reused by i.MX8MQ,
-> as i.MX8MQ has very simple power domain design as i.MX7D. But for i.MX8MM, it is not the
-> case.
-
-I would be very interested in the details here. What is the big
-difference in the i.MX8MM that would make it hard to support it in the
-GPCv2 driver in the same way as we did with i.MX8MQ?
-> 
-> There is another concern, we don't want to export GPC module to rich OS side, it is not a must.
-
-You are still free to remove the GPC DT node, as soon as the SCMI
-replacement is ready.
-
-But if you decide to handle the GPC stuff in TF-A, are you also going
-to handle the external supplies to the GPC domains in the TF-A? What
-about synchronous reset clocks that need to be running while the domain
-is powered up? Are you going to add a SCMI based replacement for the
-clock controller, which is currently also handled in the rich OS?
-
-Regards,
-Lucas
-
-> 
-> BR
-> Jacky Bai
-> 
-> > adam
-> > > Adam Ford (7):
-> > >   soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
-> > >   soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
-> > >   soc: imx: gpcv2: add support for i.MX8M Mini SoC
-> > >   dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
-> > >   arm64: dts: imx8mm: add GPC power domains
-> > >   ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
-> > >   arm64: dts: imx8mm: Add PCIe support
-> > > 
-> > >  .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
-> > >  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 127 ++++++++-
-> > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
-> > >  drivers/soc/imx/gpcv2.c                       | 246
-> > +++++++++++++++++-
-> > >  .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
-> > >  5 files changed, 387 insertions(+), 8 deletions(-)  rename
-> > > include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
-> > > 
-> > > --
-> > > 2.20.1
-> > > 
-
+https://christian-gmeiner.info/privacypolicy
