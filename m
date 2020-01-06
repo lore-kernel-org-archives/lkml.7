@@ -2,128 +2,117 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF6CC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EBC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9522072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C272072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 00:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LYPwCLxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgAFAnB (ORCPT
+        id S1727218AbgAFAqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 19:43:01 -0500
-Received: from mga11.intel.com ([192.55.52.93]:51826 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgAFAnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 19:43:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jan 2020 16:43:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,400,1571727600"; 
-   d="scan'208";a="394866806"
-Received: from unknown (HELO [10.239.196.123]) ([10.239.196.123])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jan 2020 16:42:58 -0800
-Subject: Re: 4.9.208 regression in perf building
-To:     Jiri Olsa <jolsa@redhat.com>, Akemi Yagi <toracat@elrepo.org>
-Cc:     Gordan Bobic <gordan@redsleeve.org>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ElRepo <contact@elrepo.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <CAMx4oe38RytiyqWfYb=So8iC6N=8nebqy3DsekiT7A5DGjpe+w@mail.gmail.com>
- <CAMx4oe2JKTsOKg3P324PYRH=0ajOVDaXTLa7p=16Fo9fGiQSpQ@mail.gmail.com>
- <CABA31DrtCwUj-wzPP+dwUP+=jTOHnt8eoS+d+N2yfAn22W19vA@mail.gmail.com>
- <20200105193550.GA177781@krava>
- <CABA31DoxzzoOgQXfLmaF2+msqi9F_sFRBN2thxe7W6+1QmWWgA@mail.gmail.com>
- <20200105222502.GA207350@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <47d14944-e93f-e392-7d03-acf09bc1a414@linux.intel.com>
-Date:   Mon, 6 Jan 2020 08:42:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200105222502.GA207350@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sun, 5 Jan 2020 19:46:44 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:13184 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgAFAqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 19:46:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1578271604; x=1609807604;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Nm1HPLZ/VpXMl1rLxnlZl6cpUugevRClIBZqy2h1HHY=;
+  b=LYPwCLxgV0ljFa8Yn0MvyccWhtE7RoKMbaZabLpmh7nkXXDHBcwvxLC+
+   N1cxg86wlGBy4VzatBVrc0rw3n4ftyhA7c/D42Xrp7yAwRw379CQcafKM
+   H2byuKHBHXvQCwcvMFNvmtSmJx0UKRWAUXknrNOFUKZoqnSY4V6jKXBOS
+   Q=;
+IronPort-SDR: mP9tPbE7gNPbslPChUuDQUv3q5kWneKRt1xJ5Ul5rKiNjptAkUCHBrrVMXtgfjYNLC0ld1s6Tr
+ yS6oCCP0FIXg==
+X-IronPort-AV: E=Sophos;i="5.69,400,1571702400"; 
+   d="scan'208";a="16874826"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Jan 2020 00:46:32 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 000F72497BB;
+        Mon,  6 Jan 2020 00:46:27 +0000 (UTC)
+Received: from EX13D11UWB001.ant.amazon.com (10.43.161.53) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 6 Jan 2020 00:46:27 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13D11UWB001.ant.amazon.com (10.43.161.53) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 6 Jan 2020 00:46:27 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
+ Mon, 6 Jan 2020 00:46:26 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Sangaraju, Someswarudu" <ssomesh@amazon.com>
+Subject: Re: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
+ disk_set_capacity
+Thread-Topic: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
+ disk_set_capacity
+Thread-Index: AQHVwUG1iZmE8Pm/G0CenFe4gZ349afc0u0A
+Date:   Mon, 6 Jan 2020 00:46:26 +0000
+Message-ID: <1b88bedc6d5435fa7154f3356fa3f1a3e6888ded.camel@amazon.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+         <20200102075315.22652-5-sblbir@amazon.com>
+         <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
+In-Reply-To: <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.101]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <50ECDC6CF5780E44B2534B78D9303263@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/6/2020 6:25 AM, Jiri Olsa wrote:
-> On Sun, Jan 05, 2020 at 12:06:07PM -0800, Akemi Yagi wrote:
->> On Sun, Jan 5, 2020 at 11:36 AM Jiri Olsa <jolsa@redhat.com> wrote:
->>>
->>> On Sun, Jan 05, 2020 at 10:21:25AM -0800, Akemi Yagi wrote:
->>>> Adding Arnaldo and Jiri to the CC list.
->>>>
->>>> On Sun, Jan 5, 2020 at 9:01 AM Gordan Bobic <gordan@redsleeve.org> wrote:
->>>>>
->>>>> It looks like 4.9.208 introduces a build regression for perf:
->>>>>
->>>>> make -f /builddir/build/BUILD/kernel-4.9.208/linux-4.9.208-1.el7.x86_64/tools/build/Makefile.build
->>>>> dir=. obj=perf
->>>>
->>>>>   -c -o builtin-report.o builtin-report.c
->>>>> builtin-report.c: In function ‘report__setup_sample_type’:
->>>>> builtin-report.c:296:6: error: ‘dwarf_callchain_users’ undeclared
->>>>> (first use in this function)
->>>>>    if (dwarf_callchain_users) {
->>>>>        ^
->>>>> builtin-report.c:296:6: note: each undeclared identifier is reported
->>>>> only once for each function it appears in
->>>>> mv: cannot stat ‘./.builtin-report.o.tmp’: No such file or directory
->>>>> make[3]: *** [builtin-report.o] Error 1
->>>>> make[2]: *** [perf-in.o] Error 2
->>>>> make[1]: *** [sub-make] Error 2
->>>>> make: *** [all] Error 2
->>>>>
->>>>> 4,9.207 works fine.
->>>>
->>>> The regression was caused by the following patch:
->>>>
->>>> https://lore.kernel.org/lkml/20191021133834.25998-7-acme@kernel.org/
->>>>
->>>> To fix this, 'dwarf_callchain_users' needs to be declared.
->>>
->>> hum, I see it's declared in callchain.h which is included in builtin-report.c
->>> also I can't see that same stuff like you have on line 296.. what sources are you on?
->>>
->>> could you please check with latest Arnaldo's perf/core?
->>>    git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
->>>
->>> thanks,
->>> jirka
->>
->> This is kernel 4.4.208 that was released today.
->> 'dwarf_callchain_users' is not declared in this kernel. I'm afraid it
->> was missed when the aforementioned patch was backported.
-> 
-> so 'dwarf_callchain_users' was introduced with:
->    eabad8c6856f perf unwind: Do not look just at the global callchain_param.record_mode
-> 
-> which wasn't backported to 4.4.y and it seems it will need more
-> dependencies to be applied properly
-> 
-> however if I revert aforementioned patch:
->    faece3af8072 perf report: Add warning when libunwind not compiled in
-> 
-> it compiles for me.. actualy I'm not sure why it went to stable,
-> it's just user info/warning
-> 
-> jirka
-> 
-
-Yes, agree with Jiri, this patch is only warning for user, but not for 
-fixing some issues.
-
-Thanks
-Jin Yao
+T24gU2F0LCAyMDIwLTAxLTA0IGF0IDIyOjI3ICswMDAwLCBDaGFpdGFueWEgS3Vsa2Fybmkgd3Jv
+dGU6DQo+IFF1aWNrIHF1ZXN0aW9uIGhlcmUgaWYgdXNlciBleGVjdXRlcyBudm1lIG5zLXJlc2Nh
+biAvZGV2L252bWUxDQo+IHdpbGwgZm9sbG93aW5nIGNvZGUgcmVzdWx0IGluIHRyaWdnZXJpbmcg
+dWV2ZW50KHMpIGZvcg0KPiB0aGUgbmFtZXNwYWNlKHMoIGZvciB3aGljaCB0aGVyZSBpcyBubyBj
+aGFuZ2UgaW4gdGhlIHNpemUgPw0KPiANCj4gSWYgc28gaXMgdGhhdCBhbiBleHBlY3RlZCBiZWhh
+dmlvciA/DQo+IA0KDQpNeSBvbGQgY29kZSBoYWQgYSBjaGVjayB0byBzZWUgaWYgb2xkX2NhcGFj
+aXR5ICE9IG5ld19jYXBhY2l0eSBhcyB3ZWxsLg0KSSBjYW4gcmVkbyB0aG9zZSBiaXRzIGlmIG5l
+ZWRlZC4NCg0KVGhlIGV4cGVjdGVkIGJlaGF2aW91ciBpcyBub3QgY2xlYXIsIGJ1dCB0aGUgZnVu
+Y3Rpb25hbGl0eSBpcyBub3QgYnJva2VuLCB1c2VyDQpzcGFjZSBzaG91bGQgYmUgYWJsZSB0byBk
+ZWFsIHdpdGggYSByZXNpemUgZXZlbnQgd2hlcmUgdGhlIHByZXZpb3VzIGNhcGFjaXR5DQo9PSBu
+ZXcgY2FwYWNpdHkgSU1ITy4NCg0KQmFsYmlyIFNpbmdoLg0KDQoNCj4gT24gMDEvMDEvMjAyMCAx
+MTo1NCBQTSwgQmFsYmlyIFNpbmdoIHdyb3RlOg0KPiA+IGJsb2NrL2dlbmhkIHByb3ZpZGVzIGRp
+c2tfc2V0X2NhcGFjaXR5KCkgZm9yIHNlbmRpbmcNCj4gPiBSRVNJWkUgbm90aWZpY2F0aW9ucyB2
+aWEgdWV2ZW50cy4gVGhpcyBub3RpZmljYXRpb24gaXMNCj4gPiBuZXdseSBhZGRlZCB0byBOVk1F
+IGRldmljZXMNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBCYWxiaXIgU2luZ2ggPHNibGJpckBh
+bWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9udm1lL2hvc3QvY29yZS5jIHwgMiAr
+LQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZS9ob3N0L2NvcmUuYyBiL2RyaXZlcnMv
+bnZtZS9ob3N0L2NvcmUuYw0KPiA+IGluZGV4IDY2N2YxOGY0NjViZS4uY2IyMTRlOTE0ZmMyIDEw
+MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbnZtZS9ob3N0L2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvbnZtZS9ob3N0L2NvcmUuYw0KPiA+IEBAIC0xODA4LDcgKzE4MDgsNyBAQCBzdGF0aWMgdm9p
+ZCBudm1lX3VwZGF0ZV9kaXNrX2luZm8oc3RydWN0IGdlbmRpc2sNCj4gPiAqZGlzaywNCj4gPiAg
+IAkgICAgbnMtPmxiYV9zaGlmdCA+IFBBR0VfU0hJRlQpDQo+ID4gICAJCWNhcGFjaXR5ID0gMDsN
+Cj4gPiANCj4gPiAtCXNldF9jYXBhY2l0eShkaXNrLCBjYXBhY2l0eSk7DQo+ID4gKwlkaXNrX3Nl
+dF9jYXBhY2l0eShkaXNrLCBjYXBhY2l0eSk7DQoNCg0KPiA+IA0KPiA+ICAgCW52bWVfY29uZmln
+X2Rpc2NhcmQoZGlzaywgbnMpOw0KPiA+ICAgCW52bWVfY29uZmlnX3dyaXRlX3plcm9lcyhkaXNr
+LCBucyk7DQo+ID4gDQo+IA0KPiANCg==
