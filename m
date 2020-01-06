@@ -2,221 +2,491 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EF6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B245C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD582072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5332072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WIZaFCAm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kZTX3v4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgAFV67 (ORCPT
+        id S1727080AbgAFV7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:58:59 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:33102 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgAFV67 (ORCPT
+        Mon, 6 Jan 2020 16:59:30 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28138 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726695AbgAFV73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:58:59 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 006Lsjgh033841;
-        Mon, 6 Jan 2020 21:58:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=qM6wDfOkpgB7R0VuEaV7sFgdpP9cmoitLkOl/e+H2qw=;
- b=WIZaFCAmwjeN2Chz2OXd1c+jrijhCdH1j9VsZP43N2Xm1sydoV3oTcrWjbL5TfMPok3O
- z/SuNfPP1FdWtuA1+9YXUReVgrXBLJMCFQ2Hp/hVS+F/kTr7XdhmVkX2TfrFQq+6TEjI
- qIoQ250oEzuGpj9WpB0PENcgJukh4oNND6ci/h/QHTnctnH0mv2yzOjjjuMns5giYXoy
- YHRkU7BPodA/EZqmLBof//YhNgDjBeQrC65LqPexGDNW27H/jS/Gueh2cSphVnHQPRy+
- l6jcBTU6FA2g1Vb7y9u8qVU3z1d0sRMM1ry8QrZ2LKLhEBeQLlaOmhcptUl+XQ1cVcMy PA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xaj4tt17t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Jan 2020 21:58:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 006LwfA6029081;
-        Mon, 6 Jan 2020 21:58:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2xb47fuuta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Jan 2020 21:58:42 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 006LvvI4014934;
-        Mon, 6 Jan 2020 21:57:57 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Jan 2020 13:57:57 -0800
-Date:   Mon, 6 Jan 2020 13:57:55 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     bfoster@redhat.com, dchinner@redhat.com, sandeen@sandeen.net,
-        cmaiolino@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com, houtao1@huawei.com
-Subject: Re: [PATCH 2/2] xfs: fix stale data exposure problem when punch
- hole, collapse range or zero range across a delalloc extent
-Message-ID: <20200106215755.GB472651@magnolia>
-References: <20191226134721.43797-1-yukuai3@huawei.com>
- <20191226134721.43797-3-yukuai3@huawei.com>
+        Mon, 6 Jan 2020 16:59:29 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578347968; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=HsoYzjx0yR+InjrIWJUImkkZr0gTiuqGAFHtBnKjCBo=; b=kZTX3v4BQxPH3N6AJwU8y/tU/ALH1meuDTky2lE37tbpO7OmJGYEYCkCkY6FtwCxgUwCCErh
+ oNMFEgl8v4xG56mTkZfsqhg0lLcoFGa75wjQJJDiYU2CqwvhLbVB9EjlzPWk+OUOVNZW8xH3
+ QbW01US+6XSESo0ocfYVL+btOc4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e13adbf.7f34256a9420-smtp-out-n02;
+ Mon, 06 Jan 2020 21:59:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A9B97C4479C; Mon,  6 Jan 2020 21:59:26 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5048AC433CB;
+        Mon,  6 Jan 2020 21:59:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5048AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 6 Jan 2020 14:59:19 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Brian Masney <masneyb@onstation.org>,
+        freedreno@lists.freedesktop.org,
+        Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sean Paul <sean@poorly.run>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>, robin.murphy@arm.com,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [Freedreno] [PATCH v3 4/5] drm/msm: Refactor address space
+ initialization
+Message-ID: <20200106215919.GB4341@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: iommu@lists.linux-foundation.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Brian Masney <masneyb@onstation.org>,
+        freedreno@lists.freedesktop.org, Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sean Paul <sean@poorly.run>, Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        zhengbin <zhengbin13@huawei.com>, Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>, robin.murphy@arm.com,
+        Georgi Djakov <georgi.djakov@linaro.org>
+References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
+ <1576514271-15687-5-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191226134721.43797-3-yukuai3@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001060184
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001060183
+In-Reply-To: <1576514271-15687-5-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 09:47:21PM +0800, yu kuai wrote:
-> In xfs_file_fallocate, when punch hole, zero range or collapse range is
-> performed, xfs_fulsh_unmap_range() need to be called first. However,
-> xfs_map_blocks will convert the whole extent to real, even if there are
-> some blocks not related. Furthermore, the unrelated blocks will hold stale
-> data since xfs_fulsh_unmap_range didn't flush the correspond dirty pages
-> to disk.
+On Mon, Dec 16, 2019 at 09:37:50AM -0700, Jordan Crouse wrote:
+> Refactor how address space initialization works. Instead of having the
+> address space function create the MMU object (and thus require separate but
+> equal functions for gpummu and iommu) use a single function and pass the
+> MMU struct. Make the generic code cleaner by using target specific
+> functions to create the address space so a2xx can do its own thing in its
+> own space.  For all the other targets use a generic helper to initialize
+> IOMMU but leave the door open for newer targets to use customization
+> if they need it.
 > 
-> In this case, if user shutdown file system through xfsioctl with cmd
-> 'XFS_IOC_GOINGDOWN' and arg 'XFS_FSOP_GOING_FLAGS_LOGFLUSH'. All the
-> completed transactions will be flushed to disk, while dirty pages will
-> never be flushed to disk. And after remount, the file will hold stale
-> data.
-
-Waitaminute, what problem are you trying to solve?
-
-You have a file with a huge delalloc extent because we just wrote a
-bunch of 'X' characters to part of a file:
-
----dddddddddddddddd
-
-Then you want to fallocate or something in the middle of that:
-
----dddddddddddddddd
-           ^^^^------ collapse range these blocks
-
-So we xfs_flush_unmap_range to kill the pagecache on that range:
-
----dddddddddddddddd
-           ^^^^------ xfs_flush_unmap_range()
-
-This triggers writeback, which can convert the entire delalloc range to
-a single extent:
-
----rrrrrrrrrrrrrrrr
-           ^^^^^^^^-- This is the range we are writing back
-   ^^^^^^^^---------- This range doesn't undergo writeback, but we wrote
-                      the extent tree anyway
-
-After committing that update to the log, the fs goes down, which leaves
-us with the following after we reboot, mount, and recover the fs:
-
----rrrrrrrrrrrrrrrr
-           ^^^^^^^^-- This part contains 'X'
-   ^^^^^^^^---------- This range never underwent writeback, so it's full
-		      of junk from the previous owner of the space
-
-So your solution is to split the delalloc reservation to constrain the
-allocation to the range that's being operated on?
-
-If so, I think a better solution (at least from the perspective of
-reducing fragmentation) would be to map the extent unwritten and force a
-post-writeback conversion[1] but I got shot down for performance reasons
-the last time I suggested that.
-
---D
-
-[1] https://lore.kernel.org/linux-xfs/155259894630.30230.10064390935593758177.stgit@magnolia/
-
-> Fix the problem by spliting delalloc extent before xfs_flush_unmap_range
-> is called.
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  fs/xfs/xfs_file.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
 > 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index c93250108952..5398102feec9 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -786,6 +786,50 @@ xfs_break_layouts(
->  
->  	return error;
+>  drivers/gpu/drm/msm/adreno/a2xx_gpu.c    | 16 ++++++++++
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c  | 23 ++++++++++----
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h  |  8 +++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 10 +++---
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 14 +++++----
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c |  4 ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 11 +++++--
+>  drivers/gpu/drm/msm/msm_drv.h            |  8 ++---
+>  drivers/gpu/drm/msm/msm_gem_vma.c        | 52 +++++---------------------------
+>  drivers/gpu/drm/msm/msm_gpu.c            | 40 ++----------------------
+>  drivers/gpu/drm/msm/msm_gpu.h            |  4 +--
+>  drivers/gpu/drm/msm/msm_iommu.c          |  3 ++
+>  16 files changed, 83 insertions(+), 114 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
+> index 1f83bc1..60f6472 100644
+> --- a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
+> @@ -401,6 +401,21 @@ static struct msm_gpu_state *a2xx_gpu_state_get(struct msm_gpu *gpu)
+>  	return state;
 >  }
-> +int
-> +try_split_da_extent(
-> +	struct xfs_inode	*ip,
-> +	loff_t			offset,
-> +	loff_t			len)
-> +{
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	xfs_fileoff_t		start = XFS_B_TO_FSBT(mp, offset);
-> +	xfs_fileoff_t		end = XFS_B_TO_FSBT(mp, offset + len - 1);
-> +	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
-> +	struct xfs_iext_cursor	cur;
-> +	struct xfs_bmbt_irec	imap;
-> +	int error;
-> +
-> +	/*
-> +	 * if start belong to a delalloc extent and it's not the first block,
-> +	 * split the extent at start.
-> +	 */
-> +	if (xfs_iext_lookup_extent(ip, ifp, start, &cur, &imap) &&
-> +	    imap.br_startblock != HOLESTARTBLOCK &&
-> +	    isnullstartblock(imap.br_startblock) &&
-> +	    start > imap.br_startoff) {
-> +		error = xfs_bmap_split_da_extent(ip, start);
-> +		if (error)
-> +			return error;
-> +		ip->i_d.di_nextents--;
-> +	}
-> +
-> +	/*
-> +	 * if end + 1 belong to a delalloc extent and it's not the first block,
-> +	 * split the extent at end + 1.
-> +	 */
-> +	if (xfs_iext_lookup_extent(ip, ifp, end + 1, &cur, &imap) &&
-> +	    imap.br_startblock != HOLESTARTBLOCK &&
-> +	    isnullstartblock(imap.br_startblock) &&
-> +	    end + 1 > imap.br_startoff) {
-> +		error = xfs_bmap_split_da_extent(ip, end + 1);
-> +		if (error)
-> +			return error;
-> +		ip->i_d.di_nextents--;
-> +	}
-> +
-> +	return 0;
-> +}
 >  
->  #define	XFS_FALLOC_FL_SUPPORTED						\
->  		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
-> @@ -842,6 +886,9 @@ xfs_file_fallocate(
->  	 */
->  	if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE |
->  		    FALLOC_FL_COLLAPSE_RANGE)) {
-> +		error = try_split_da_extent(ip, offset, len);
-> +		if (error)
-> +			goto out_unlock;
->  		error = xfs_flush_unmap_range(ip, offset, len);
->  		if (error)
->  			goto out_unlock;
-> -- 
-> 2.17.2
-> 
+> +static struct msm_gem_address_space *
+> +a2xx_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev)
+> +{
+> +	struct msm_mmu *mmu = msm_gpummu_new(&pdev->dev, gpu);
+> +	struct msm_gem_address_space *aspace;
+> +
+> +	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+> +		SZ_16M + 0xfff * SZ_64K);
+> +
+> +	if (IS_ERR(aspace) && !IS_ERR(mmu))
+> +		mmu->funcs->destroy(mmu);
+> +
+> +	return aspace;
+> +}
+> +
+>  /* Register offset defines for A2XX - copy of A3XX */
+>  static const unsigned int a2xx_register_offsets[REG_ADRENO_REGISTER_MAX] = {
+>  	REG_ADRENO_DEFINE(REG_ADRENO_CP_RB_BASE, REG_AXXX_CP_RB_BASE),
+> @@ -429,6 +444,7 @@ static const struct adreno_gpu_funcs funcs = {
+>  #endif
+>  		.gpu_state_get = a2xx_gpu_state_get,
+>  		.gpu_state_put = adreno_gpu_state_put,
+> +		.create_address_space = a2xx_create_address_space,
+>  	},
+>  };
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> index 7ad1493..41e51e0 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> @@ -441,6 +441,7 @@ static const struct adreno_gpu_funcs funcs = {
+>  #endif
+>  		.gpu_state_get = a3xx_gpu_state_get,
+>  		.gpu_state_put = adreno_gpu_state_put,
+> +		.create_address_space = adreno_iommu_create_address_space,
+>  	},
+>  };
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> index b01388a..3655440 100644
+> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> @@ -532,6 +532,7 @@ static const struct adreno_gpu_funcs funcs = {
+>  #endif
+>  		.gpu_state_get = a4xx_gpu_state_get,
+>  		.gpu_state_put = adreno_gpu_state_put,
+> +		.create_address_space = adreno_iommu_create_address_space,
+>  	},
+>  	.get_timestamp = a4xx_get_timestamp,
+>  };
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> index b02e204..0f5db72 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> @@ -1432,6 +1432,7 @@ static const struct adreno_gpu_funcs funcs = {
+>  		.gpu_busy = a5xx_gpu_busy,
+>  		.gpu_state_get = a5xx_gpu_state_get,
+>  		.gpu_state_put = a5xx_gpu_state_put,
+> +		.create_address_space = adreno_iommu_create_address_space,
+>  	},
+>  	.get_timestamp = a5xx_get_timestamp,
+>  };
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index dc8ec2c..5dc0b2c 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -832,6 +832,7 @@ static const struct adreno_gpu_funcs funcs = {
+>  #if defined(CONFIG_DRM_MSM_GPU_STATE)
+>  		.gpu_state_get = a6xx_gpu_state_get,
+>  		.gpu_state_put = a6xx_gpu_state_put,
+> +		.create_address_space = adreno_iommu_create_address_space,
+>  #endif
+>  	},
+>  	.get_timestamp = a6xx_get_timestamp,
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 0783e4b..09c57891 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -157,6 +157,23 @@ int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
+>  	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
+>  }
+>  
+> +struct msm_gem_address_space *
+> +adreno_iommu_create_address_space(struct msm_gpu *gpu,
+> +		struct platform_device *pdev)
+> +{
+> +	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
+> +	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
+> +	struct msm_gem_address_space *aspace;
+> +
+> +	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+> +		0xfffffff);
+> +
+> +	if (IS_ERR(aspace) && !IS_ERR(mmu))
+> +		mmu->funcs->destroy(mmu);
+> +
+> +	return aspace;
+> +}
+> +
+>  int adreno_get_param(struct msm_gpu *gpu, uint32_t param, uint64_t *value)
+>  {
+>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> @@ -949,12 +966,6 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  
+>  	adreno_gpu_config.ioname = "kgsl_3d0_reg_memory";
+>  
+> -	adreno_gpu_config.va_start = SZ_16M;
+> -	adreno_gpu_config.va_end = 0xffffffff;
+> -	/* maximum range of a2xx mmu */
+> -	if (adreno_is_a2xx(adreno_gpu))
+> -		adreno_gpu_config.va_end = SZ_16M + 0xfff * SZ_64K;
+> -
+>  	adreno_gpu_config.nr_rings = nr_rings;
+>  
+>  	adreno_get_pwrlevels(&pdev->dev, gpu);
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> index e71a757..5c1aa12 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -263,6 +263,14 @@ int adreno_gpu_state_get(struct msm_gpu *gpu, struct msm_gpu_state *state);
+>  int adreno_gpu_state_put(struct msm_gpu_state *state);
+>  
+>  /*
+> + * Common helper function to initialize the default address space for arm-smmu
+> + * attached targets
+> + */
+> +struct msm_gem_address_space *
+> +adreno_iommu_create_address_space(struct msm_gpu *gpu,
+> +		struct platform_device *pdev);
+> +
+> +/*
+>   * For a5xx and a6xx targets load the zap shader that is used to pull the GPU
+>   * out of secure mode
+>   */
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index b082b23..4e6ebbd 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -704,18 +704,18 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
+>  {
+>  	struct iommu_domain *domain;
+>  	struct msm_gem_address_space *aspace;
+> +	struct msm_mmu *mmu;
+>  
+>  	domain = iommu_domain_alloc(&platform_bus_type);
+>  	if (!domain)
+>  		return 0;
+>  
+> -	domain->geometry.aperture_start = 0x1000;
+> -	domain->geometry.aperture_end = 0xffffffff;
+> +	mmu = msm_iommu_new(dpu_kms->dev->dev, domain);
+> +	aspace = msm_gem_address_space_create(mmu, "dpu1",
+> +		0x1000, 0xfffffff);
+>  
+> -	aspace = msm_gem_address_space_create(dpu_kms->dev->dev,
+> -			domain, "dpu1");
+>  	if (IS_ERR(aspace)) {
+> -		iommu_domain_free(domain);
+> +		mmu->funcs->destroy(mmu);
+>  		return PTR_ERR(aspace);
+>  	}
+>  
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> index 9dba37c..0889718 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> @@ -510,9 +510,15 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
+>  	mdelay(16);
+>  
+>  	if (config->iommu) {
+> -		aspace = msm_gem_address_space_create(&pdev->dev,
+> -				config->iommu, "mdp4");
+> +		struct msm_mmu *mmu = msm_iommu_new(&pdev->dev,
+> +			config->iommu);
+> +
+> +		aspace  = msm_gem_address_space_create(mmu,
+> +			"mdp4", 0x1000, 0xffffffff);
+> +
+>  		if (IS_ERR(aspace)) {
+> +			if (!IS_ERR(mmu))
+> +				mmu->funcs->destroy(mmu);
+>  			ret = PTR_ERR(aspace);
+>  			goto fail;
+>  		}
+> @@ -565,10 +571,6 @@ static struct mdp4_platform_config *mdp4_get_config(struct platform_device *dev)
+>  	/* TODO: Chips that aren't apq8064 have a 200 Mhz max_clk */
+>  	config.max_clk = 266667000;
+>  	config.iommu = iommu_domain_alloc(&platform_bus_type);
+> -	if (config.iommu) {
+> -		config.iommu->geometry.aperture_start = 0x1000;
+> -		config.iommu->geometry.aperture_end = 0xffffffff;
+> -	}
+>  
+>  	return &config;
+>  }
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> index 1f48f64..ebd651a 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+> @@ -941,10 +941,6 @@ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+>  	static struct mdp5_cfg_platform config = {};
+>  
+>  	config.iommu = iommu_domain_alloc(&platform_bus_type);
+> -	if (config.iommu) {
+> -		config.iommu->geometry.aperture_start = 0x1000;
+> -		config.iommu->geometry.aperture_end = 0xffffffff;
+> -	}
+>  
+>  	return &config;
+>  }
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 653dab2..20bdff9 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -724,13 +724,20 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>  	mdelay(16);
+>  
+>  	if (config->platform.iommu) {
+> +		struct msm_mmu *mmu;
+> +
+>  		iommu_dev = &pdev->dev;
+>  		if (!iommu_dev->iommu_fwspec)
+>  			iommu_dev = iommu_dev->parent;
+>  
+> -		aspace = msm_gem_address_space_create(iommu_dev,
+> -				config->platform.iommu, "mdp5");
+> +		mmu = msm_iommu_new(iommu_dev, config->platform.iommu);
+> +
+> +		aspace = msm_gem_address_space_create(mmu, "mdp5",
+> +			0x1000, 0xffffffff);
+> +
+>  		if (IS_ERR(aspace)) {
+> +			if (!IS_ERR(mmu))
+> +				mmu->funcs->destroy(mmu);
+>  			ret = PTR_ERR(aspace);
+>  			goto fail;
+>  		}
+> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+> index 71547e7..2203729 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.h
+> +++ b/drivers/gpu/drm/msm/msm_drv.h
+> @@ -247,12 +247,8 @@ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+>  void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+>  
+>  struct msm_gem_address_space *
+> -msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+> -		const char *name);
+> -
+> -struct msm_gem_address_space *
+> -msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+> -		const char *name, uint64_t va_start, uint64_t va_end);
+> +msm_gem_address_space_create(struct msm_mmu *mmu, const char *name,
+> +		u64 va_start, u64 va_end);
+>  
+>  int msm_register_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+>  void msm_unregister_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+> index 91d993a..075ce52 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+> @@ -125,63 +125,25 @@ int msm_gem_init_vma(struct msm_gem_address_space *aspace,
+>  	return 0;
+>  }
+>  
+> -
+>  struct msm_gem_address_space *
+> -msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+> -		const char *name)
+> -{
+> -	struct msm_gem_address_space *aspace;
+> -	u64 start = domain->geometry.aperture_start;
+> -	u64 size = domain->geometry.aperture_end - start;
+> -
+> -	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+> -	if (!aspace)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	spin_lock_init(&aspace->lock);
+> -	aspace->name = name;
+> -	aspace->mmu = msm_iommu_new(dev, domain);
+> -	if (IS_ERR(aspace->mmu)) {
+> -		int ret = PTR_ERR(aspace->mmu);
+> -
+> -		kfree(aspace);
+> -		return ERR_PTR(ret);
+> -	}
+> -
+> -	/*
+> -	 * Attaching the IOMMU device changes the aperture values so use the
+> -	 * cached values instead
+> -	 */
+> -	drm_mm_init(&aspace->mm, start >> PAGE_SHIFT, size >> PAGE_SHIFT);
+> -
+> -	kref_init(&aspace->kref);
+> -
+> -	return aspace;
+> -}
+> -
+> -struct msm_gem_address_space *
+> -msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+> -		const char *name, uint64_t va_start, uint64_t va_end)
+> +msm_gem_address_space_create(struct msm_mmu *mmu, const char *name,
+> +		u64 va_start, u64 va_end)
+
+The last parameter should be size.
+
+>  {
+>  	struct msm_gem_address_space *aspace;
+>  	u64 size = va_end - va_start;
+
+And this line should go poof.
+
+>  
+> +	if (IS_ERR(mmu))
+> +		return ERR_CAST(mmu);
+> +
+>  	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+>  	if (!aspace)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	spin_lock_init(&aspace->lock);
+>  	aspace->name = name;
+> -	aspace->mmu = msm_gpummu_new(dev, gpu);
+> -	if (IS_ERR(aspace->mmu)) {
+> -		int ret = PTR_ERR(aspace->mmu);
+> -
+> -		kfree(aspace);
+> -		return ERR_PTR(ret);
+> -	}
+> +	aspace->mmu = mmu;
+>  
+> -	drm_mm_init(&aspace->mm, (va_start >> PAGE_SHIFT),
+> -		size >> PAGE_SHIFT);
+> +	drm_mm_init(&aspace->mm, va_start >> PAGE_SHIFT, size >> PAGE_SHIFT);
+>  
+>  	kref_init(&aspace->kref);
+
+Jordan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
