@@ -2,154 +2,181 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B655C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B85C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4921D2072E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzOYmSZ6"
+	by mail.kernel.org (Postfix) with ESMTP id C3ADB2071A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 11:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgAFLgW (ORCPT
+        id S1726427AbgAFLii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:36:22 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39914 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726212AbgAFLgW (ORCPT
+        Mon, 6 Jan 2020 06:38:38 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33425 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAFLih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 06:36:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578310581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GNo9mQh01lbVS+94XbO5w3EBq7R26jK17HZQxPAGRck=;
-        b=FzOYmSZ6Oj2ruUPC67FodJuH3wZDYAV1u8SWGJdfIS7ujON9uOJXlj5f93Vk7DxBYg7xHU
-        uJSx3zmnsKr1n6Gp0sq3V3sMfEEBj/SGO50sRvXASABJWJiB/QzsrvTs9RpQGMfiZE3TST
-        T/Egnbqn4R1RYOnEyXUa4rVfhRBazMU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-0iscrV-INuqnGQoY1lxQPA-1; Mon, 06 Jan 2020 06:36:18 -0500
-X-MC-Unique: 0iscrV-INuqnGQoY1lxQPA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AF0D801E6C;
-        Mon,  6 Jan 2020 11:36:16 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 692D45D9CA;
-        Mon,  6 Jan 2020 11:36:13 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 12:36:10 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf parse: Copy string to perf_evsel_config_term
-Message-ID: <20200106113610.GB207350@krava>
-References: <20200102151326.31342-1-leo.yan@linaro.org>
+        Mon, 6 Jan 2020 06:38:37 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ioQiL-0004uf-AZ; Mon, 06 Jan 2020 12:38:29 +0100
+Message-ID: <fd6e6d92fdc15552bb60481fec6f5622a1575e43.camel@pengutronix.de>
+Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
+ i.MX8M Mini
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Jacky Bai <ping.bai@nxp.com>, Adam Ford <aford173@gmail.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Date:   Mon, 06 Jan 2020 12:38:25 +0100
+In-Reply-To: <DB7PR04MB5178EA739587B2DB084570B9872F0@DB7PR04MB5178.eurprd04.prod.outlook.com>
+References: <20191213160542.15757-1-aford173@gmail.com>
+         <CAHCN7xKuVCGqgRpixa9UPkWq92Gg=dm4XxAczBKAZCoMzcBVJg@mail.gmail.com>
+         <DB7PR04MB5178EA739587B2DB084570B9872F0@DB7PR04MB5178.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102151326.31342-1-leo.yan@linaro.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 11:13:26PM +0800, Leo Yan wrote:
-> perf with CoreSight fails to record trace data with command:
-> 
->   perf record -e cs_etm/@tmc_etr0/u --per-thread ls
->   failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
->   directory)/perf/
-> 
-> This failure is root caused with the commit 1dc925568f01 ("perf
-> parse: Add a deep delete for parse event terms").
-> 
-> The log shows, cs_etm fails to parse the sink attribution; cs_etm event
-> relies on the event configuration to pass sink name, but the event
-> specific configuration data cannot be passed properly with flow:
-> 
->   get_config_terms()
->     ADD_CONFIG_TERM(DRV_CFG, drv_cfg, term->val.str);
->       __t->val.drv_cfg = term->val.str;
->         `> __t->val.drv_cfg is assigned to term->val.str;
-> 
->   parse_events_terms__purge()
->     parse_events_term__delete()
->       zfree(&term->val.str);
->         `> term->val.str is freed and assigned to NULL pointer;
-> 
->   cs_etm_set_sink_attr()
->     sink = __t->val.drv_cfg;
->       `> sink string has been freed.
+Hi Jacky,
 
-so your problem is that the data is freed before you use it?
+On So, 2019-12-22 at 08:33 +0000, Jacky Bai wrote:
+> > -----Original Message-----
+> > From: Adam Ford <aford173@gmail.com>
+> > Sent: Saturday, December 21, 2019 11:07 PM
+> > To: arm-soc <linux-arm-kernel@lists.infradead.org>
+> > Cc: Peng Fan <peng.fan@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Rob
+> > Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> > Shawn Guo <shawnguo@kernel.org>; Sascha Hauer
+> > <s.hauer@pengutronix.de>; Pengutronix Kernel Team
+> > <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>;
+> > dl-linux-imx <linux-imx@nxp.com>; devicetree <devicetree@vger.kernel.org>;
+> > Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Leonard Crestez
+> > <leonard.crestez@nxp.com>
+> > Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
+> > i.MX8M Mini
+> > 
+> > On Fri, Dec 13, 2019 at 10:05 AM Adam Ford <aford173@gmail.com> wrote:
+> > > The GPCv2 controller on the i.MX8M Mini is compatible with the driver
+> > > used for the i.MX8MQ except for the register locations and names.
+> > > The GPCv2 controller is used to enable additional periperals currently
+> > > unavailable on the i.MX8M Mini.  In order to make them function, the
+> > > GPCv2 needs to be adapted so the drivers can associate their power
+> > > domain to the GPCv2 to enable them.
+> > > 
+> > > This series makes one include file slightly more generic, adds the
+> > > iMX8M Mini entries, updates the bindings, adds them to the device
+> > > tree, then associates the new power domain to both the OTG and PCIe
+> > > controllers.
+> > > 
+> > > Some peripherals may need additional power domain drivers in the
+> > > future due to limitations of the GPC driver, but the drivers for VPU
+> > > and others are not available yet.
+> > 
+> > Before I do a V3 to address Rob's comments, I am thinking I'll drop the items
+> > on the GPC that Jacky suggested would not work, and we don't have drivers
+> > for those other peripherals (GPU, VPU, etc.) anyway.  My main goal here was
+> > to try and get the USB OTG ports working, so I'd like to enabled enough of the
+> > items on the GPC that are similar to the i.MX8MQ and leave the more
+> > challenging items until we have either a better driver available and/or actual
+> > peripheral support coming.  I haven't seen LCDIF or DSI drivers pushed
+> > upstream yet, so I doubt we'll see GPU or VPU yet until those are done.
+> > 
+> > Does anyone from the NXP team have any other comments/concerns?
+> > 
+> 
+> If you look into NXP's release code, you will find that it is not easy to handle the
+> power domain more generically in GPCv2 driver for imx8mm. That's the reason why we use
+> SIP service to handle all the power domain in TF-A. we tried to upstream the SIP version
+> power domain that can be reused for all i.MX8M, but rejected by ARM guys. they think
+> we need to use SCMI to implement it. as there is no SCMI over SMC available, upstream is
+> on the way, so the power domain for i.MX8MM/MN is pending.
+
+Adding power domain support for i.MX8MM/MN to the GPCv2 driver does not
+prevent a SCMI solution to be used when available. I don't see why we
+should block this.
+
+> Actually, I am confused why we can't use SIP service, even if the SCMI over SMC is ready in
+> the future, It seems the SMCC function ID still need to choose from SIP service function id bank.
+> 
+> Another concern for adding power domain support in GPCv2 is that, each time a new
+> SOC is added, we need to add hundred lines of code in GPCv2 driver. it is not a best way
+> to keep driver reuse.
+
+This is how all hardware specific stuff is handled in the driver. I see
+your use-case of having a single TF-A based driver for applications
+where you have more than on OS running on the system. For the very
+common case of only a single rich OS running on the system the code
+reuse doesn't really matter and in fact it's easier to fix any bugs by
+just updating the Linux kernel.
+
+>  The GPCv2 driver is originally used for i.MX7D, then reused by i.MX8MQ,
+> as i.MX8MQ has very simple power domain design as i.MX7D. But for i.MX8MM, it is not the
+> case.
+
+I would be very interested in the details here. What is the big
+difference in the i.MX8MM that would make it hard to support it in the
+GPCv2 driver in the same way as we did with i.MX8MQ?
+> 
+> There is another concern, we don't want to export GPC module to rich OS side, it is not a must.
+
+You are still free to remove the GPC DT node, as soon as the SCMI
+replacement is ready.
+
+But if you decide to handle the GPC stuff in TF-A, are you also going
+to handle the external supplies to the GPC domains in the TF-A? What
+about synchronous reset clocks that need to be running while the domain
+is powered up? Are you going to add a SCMI based replacement for the
+clock controller, which is currently also handled in the rich OS?
+
+Regards,
+Lucas
 
 > 
-> To fix this issue, in the function get_config_terms(), this patch
-> changes from directly assignment pointer value for the strings to
-> use strdup() for allocation a new duplicate string for the cases:
+> BR
+> Jacky Bai
 > 
->   perf_evsel_config_term::val.callgraph
->   perf_evsel_config_term::val.branch
->   perf_evsel_config_term::val.drv_cfg.
-> 
-> Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/parse-events.c | 49 ++++++++++++++++++++--------------
->  1 file changed, 29 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index ed7c008b9c8b..5972acdd40d6 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1220,7 +1220,6 @@ static int get_config_terms(struct list_head *head_config,
->  			    struct list_head *head_terms __maybe_unused)
->  {
->  #define ADD_CONFIG_TERM(__type, __name, __val)			\
-> -do {								\
->  	struct perf_evsel_config_term *__t;			\
->  								\
->  	__t = zalloc(sizeof(*__t));				\
-> @@ -1229,9 +1228,19 @@ do {								\
->  								\
->  	INIT_LIST_HEAD(&__t->list);				\
->  	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
-> -	__t->val.__name = __val;				\
->  	__t->weak	= term->weak;				\
-> -	list_add_tail(&__t->list, head_terms);			\
-> +	list_add_tail(&__t->list, head_terms)
-> +
-> +#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
-> +do {								\
-> +	ADD_CONFIG_TERM(__type, __name, __val);			\
-> +	__t->val.__name = __val;				\
-> +} while (0)
-> +
-> +#define ADD_CONFIG_TERM_STR(__type, __name, __val)		\
-> +do {								\
-> +	ADD_CONFIG_TERM(__type, __name, __val);			\
-> +	__t->val.__name = strdup(__val);			\
->  } while (0)
-
-the term->val.str is supposed to be already strdup-ed,
-so this seems wrong and leaking mem
-
-jirka
+> > adam
+> > > Adam Ford (7):
+> > >   soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
+> > >   soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
+> > >   soc: imx: gpcv2: add support for i.MX8M Mini SoC
+> > >   dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
+> > >   arm64: dts: imx8mm: add GPC power domains
+> > >   ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
+> > >   arm64: dts: imx8mm: Add PCIe support
+> > > 
+> > >  .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
+> > >  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 127 ++++++++-
+> > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
+> > >  drivers/soc/imx/gpcv2.c                       | 246
+> > +++++++++++++++++-
+> > >  .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
+> > >  5 files changed, 387 insertions(+), 8 deletions(-)  rename
+> > > include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
+> > > 
+> > > --
+> > > 2.20.1
+> > > 
 
