@@ -2,108 +2,126 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1ABC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D311C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9531120731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF1020731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 17:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3cwtQO+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HlJEyMb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgAFR3O (ORCPT
+        id S1726710AbgAFR3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:29:14 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46372 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFR3N (ORCPT
+        Mon, 6 Jan 2020 12:29:17 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34223 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFR3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:29:13 -0500
-Received: by mail-qk1-f194.google.com with SMTP id r14so40082512qke.13;
-        Mon, 06 Jan 2020 09:29:12 -0800 (PST)
+        Mon, 6 Jan 2020 12:29:16 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l8so48086118edw.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 09:29:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NxZmBvBguF1JcQOjsls5F30x6tlo9ctviEfiJvkYBfs=;
-        b=J3cwtQO+u6RU4bfiCikVMB7Fvel/CoINo9oGSTbye/Gz0zWBDvkBkc6C6gmykLkmM6
-         JolbSRBFZU94D5vJ3a5toJ/T7sHV+rsuSHvKkqRlFupT4yJ78XKiFP+5d5QfOTEzfH2Q
-         MkJInwxDkUjsPhFCEGjgwGZMjHISfUCmKtiQlu7RtgRHoU7eaCP8JANW92zT2HAu5jam
-         idoOXB+SzZwp9Kp7VAesfSmgtvlo9Aq1lpIStOwv8wTSiJLOLovH6gkMIXKoe21pGL/W
-         4xDNsapUPCoyQIbUDU4+4Hxr/o06UlgyyjD4B2dHK/1JuupEDhrbGrTM00ppNuc02WII
-         df/A==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=xILTpET5HvTSzruyix3vfVm6CvfCGp/jihwvwllbC3w=;
+        b=HlJEyMb8VUi7sQRbOTe70KWZFvO4offX7v6+PJlsTms05KH/5Zk2AcWBD9QwLXKqGT
+         ieSHoimZJohktzModRyY8OAzatcq9yauRfiGnkz32G9Ipx/4A49q5YqcD5aPva03h2Gw
+         iG/yDXnl2eWu9nK2nKVrfDj721JJZDwkforMU2Jn8MknDcBd+czSHnh1eS8CymkNkqAV
+         r9k3nOJs2+i89oIxZFd9w2Yqh4Va+CZT2PGBQCWYuAyQmw47boYD9S7MyfCSZNt3wfn9
+         tcKDGcFrzCrm9o/daxrbRT35fhFe4Ez0ffBC1AeUnDlIeJp8mZKfYprbwwzxEAAyBLh/
+         A8Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NxZmBvBguF1JcQOjsls5F30x6tlo9ctviEfiJvkYBfs=;
-        b=M2UKvrANDFrlO9DRIEadjSs3dCTjhUADama8aMP0b5uhsZabHyEMFqjHeECFXr4ZRo
-         bs9ickA39IN9r8K9IDctx9b4Wyv8PSJCaGb+0oJB4jg1YisGDYsibbpXXnnoFVxzy4UF
-         WH/uOxOZWDlGwWsDoXhX1V6fsT2NrttPToE2SQWn0AScoGsQGA4mOiRGwADAh80snOK6
-         l3YtPsWC/E5dr55r4IbuR39d7nioWzRdDmiLTLxZbHqRYVBvdUNJsBUesm9TelrxjPs9
-         P7z7EbcbETaJX9L0+sgOMKmG/4D4U5TWwpHAEkoKFswNMH9sn8KDxS/BqZZbXd293CrH
-         g2Aw==
-X-Gm-Message-State: APjAAAUsve2vgayS2EDdkg+XADvaadphn2+4xFpj6x+zGR7xtgm7GcrV
-        SkgafU9iFnC6lSJLaOvkyILkPPbWO4ymNephF0U=
-X-Google-Smtp-Source: APXvYqzcdm+2thl8HHqrCf9rsaN4i4OXg2U/csojMViUWqozVnMmtx0KDP6ARuGZL/t+re1lAMRRufOeZ8f7BmmPlgs=
-X-Received: by 2002:a05:620a:918:: with SMTP id v24mr84077158qkv.22.1578331752458;
- Mon, 06 Jan 2020 09:29:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200106172254.20271-1-tiny.windzz@gmail.com>
-In-Reply-To: <20200106172254.20271-1-tiny.windzz@gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 6 Jan 2020 09:28:46 -0800
-Message-ID: <CA+E=qVciDPXrHCGsHR7mjFuaGrv_K21ZAdWW28_fnSV3CvEDCg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] thermal: sun8i: fix r40 ths number
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xILTpET5HvTSzruyix3vfVm6CvfCGp/jihwvwllbC3w=;
+        b=otPz21Hp6gLbM2W8f0i6jzYah6lgvzY6nBGBBbziiJ+bCoqBtwQhx+hf8hq4VxggRP
+         20+55EDQpMK6mRfEVR2X8lWBo/lkAZarjvHRpXCTlHDbFk71lPU3SQXxceRpGP35m2qf
+         gfuzQS+WnHMyTkg/Bss8cJY+btwzLn8hD2XNND7Va4WUzAo50Bw1+TWIZ1340QKS6+/H
+         eugSDWHxMgWvKIgpTweHjdMYBaikjb1PD2eMOWxcmcvVf/An3jxyQhovZaSnHAz2UM7c
+         SeNAc+FOFIGO+tx1vpsQNjzRDMwh+qAszhMKZLJYAJFM0YZ+Z45Nqg7KFkJPHJ0keEjm
+         QO4A==
+X-Gm-Message-State: APjAAAV8gy0bwVHFsSXprcT1+G4W2bIdFKeUbUfwRulucy23DFkPBMxT
+        lXIirYU7pysIphfYNGWKmBBQjg==
+X-Google-Smtp-Source: APXvYqxEzJZM06OUQohBMr1QHRp1MDY9Ku71gw8Iw1kMg/pbAp8k7JloMdp2qZLjR6txq6yNFFdkFQ==
+X-Received: by 2002:a17:906:b301:: with SMTP id n1mr108850634ejz.285.1578331754162;
+        Mon, 06 Jan 2020 09:29:14 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id e24sm7403328edy.93.2020.01.06.09.29.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 09:29:13 -0800 (PST)
+Subject: Re: [V2, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
+To:     Odelu Kukatla <okukatla@codeaurora.org>, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-pm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
+ <1577782737-32068-4-git-send-email-okukatla@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Message-ID: <f144cc82-d4d9-b841-0cdf-41202e11b979@linaro.org>
+Date:   Mon, 6 Jan 2020 19:29:11 +0200
+MIME-Version: 1.0
+In-Reply-To: <1577782737-32068-4-git-send-email-okukatla@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 9:23 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> According to the spec, r40 has 2 thermal sensors.
-> Sensor0 located in the CPU, another in the GPU.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-
-You should also add "Fixes" tag here.
-
-> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Tested-on: sun8i-r40-bananapi-m2-ultra
+On 31.12.19 г. 10:58 ч., Odelu Kukatla wrote:
+> Add the DT nodes for the network-on-chip interconnect buses found
+> on sc7180-based platforms.
 > ---
->  drivers/thermal/sun8i_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index 23a5f4aa4be4..c5661d7c3e20 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -565,7 +565,7 @@ static const struct ths_thermal_chip sun8i_h3_ths = {
->  };
->
->  static const struct ths_thermal_chip sun8i_r40_ths = {
-> -       .sensor_num = 3,
-> +       .sensor_num = 2,
->         .offset = 251086,
->         .scale = 1130,
->         .has_mod_clk = true,
-> --
-> 2.17.1
->
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 96 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 96 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3676bfd..077b1e5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -8,6 +8,7 @@
+>   #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>   #include <dt-bindings/clock/qcom,rpmh.h>
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/interconnect/qcom,sc7180.h>
+
+This should be moved one line up if we want to keep the headers sorted.
+
+>   #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>   
+> @@ -1286,6 +1287,10 @@
+>   				clock-names = "xo";
+>   				#clock-cells = <1>;
+>   			};
+> +
+> +			apps_bcm_voter: bcm_voter {
+> +				compatible = "qcom,sc7180-bcm-voter";
+> +			};
+>   		};
+>   
+>   		cpufreq_hw: cpufreq@18323000 {
+> @@ -1298,6 +1303,97 @@
+>   
+>   			#freq-domain-cells = <1>;
+>   		};
+> + > +		config_noc: interconnect@1500000 {
+
+All DT nodes in this file are ordered by their address. Please move these up
+to keep it consistent.
+
+Thanks,
+Georgi
