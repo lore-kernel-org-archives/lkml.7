@@ -2,118 +2,112 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7AC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2607FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9ED2081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578326035;
-	bh=q26J3QlY/73GTjSeqGt5ILPslc/aboevqBOVHLOibYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hhqf2+85b+hqj3r0WD+5jqMcb7urdvjBXAC+68UopfLOM+gmTN6fuoER5yw6/cGRS
-	 aFpRrl8qxjQCc8y4qvEigcTUOwoTsvC5/t7iSvP9nI037oeuSG7R/kFL+4TUWvAtuk
-	 l8cPzH2exSLzVFM5sI72nTDnQPy2TnUnijqDZdqw=
+	by mail.kernel.org (Postfix) with ESMTP id E8AD020707
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 15:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNyPwTex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgAFPxy (ORCPT
+        id S1726657AbgAFPyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:53:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgAFPxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:53:54 -0500
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 6 Jan 2020 10:54:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26885 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726437AbgAFPyb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 10:54:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578326070;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HB4F5E1mhEQnhENa8mtuGlwFRB8KZ+1clG/PrYxTKyU=;
+        b=YNyPwTexqBUrAp1t0F8dZmSHdg8uaVIxEsszAIo2/2g4BFuJ964Btfixk5bf0xvWpYJIpM
+        b2fi5HvwEC7s7Gk/Pxn2D+fkmbt1D6IsO0UCgikeO+fCOlQJsnkQne17rlfU6TJTPjkWsA
+        Dwzt9YXoT+ZSfW1Vb12HjjYp+1G5HCY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-MIwYmISvNpeEeb4fZFp1kg-1; Mon, 06 Jan 2020 10:54:27 -0500
+X-MC-Unique: MIwYmISvNpeEeb4fZFp1kg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C6420731;
-        Mon,  6 Jan 2020 15:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578326033;
-        bh=q26J3QlY/73GTjSeqGt5ILPslc/aboevqBOVHLOibYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=14tfk//wuGRjLmzbUK3Hwb4vnfxssFK6IMlPhrZvwrfZa/e8FiN7S/acqsUY0hF+x
-         Hx+SVgoCjRuqc+tVTRLm1B3LpUc9tjfX4W5oMre9X9a7u14+1WLQCMPlh85/FaRtg6
-         vzGMXX4sNqVfiCaxiwv3K3wwpFBNy8r+CJIrK/vo=
-Date:   Mon, 6 Jan 2020 16:53:51 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Wanpeng Li <wanpeng.li@hotmail.com>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] sched/cputime: code cleanup in
- irqtime_account_process_tick
-Message-ID: <20200106155350.GB26097@lenoir>
-References: <1577959674-255537-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577959674-255537-2-git-send-email-alex.shi@linux.alibaba.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9AD88E26ED;
+        Mon,  6 Jan 2020 15:54:25 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 163B45C1B0;
+        Mon,  6 Jan 2020 15:54:25 +0000 (UTC)
+Subject: Re: [PATCH v2 0/6] locking/lockdep: Reuse zapped chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191216151517.7060-1-longman@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dfcfc267-1a2f-8070-c08b-662e9fe4798c@redhat.com>
+Date:   Mon, 6 Jan 2020 10:54:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577959674-255537-2-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191216151517.7060-1-longman@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 06:07:53PM +0800, Alex Shi wrote:
-> In this func, since account_system_time() considers guest time account
-> and other system time.  we could fold the account_guest_time into
-> account_system_time() to simply the code.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Frederic Weisbecker <fweisbec@gmail.com>
-> Cc: Wanpeng Li <wanpeng.li@hotmail.com>
-> Cc: Anna-Maria Gleixner <anna-maria@linutronix.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/sched/cputime.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> index cff3e656566d..46b837e94fce 100644
-> --- a/kernel/sched/cputime.c
-> +++ b/kernel/sched/cputime.c
-> @@ -381,13 +381,10 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
->  		account_system_index_time(p, cputime, CPUTIME_SOFTIRQ);
->  	} else if (user_tick) {
->  		account_user_time(p, cputime);
-> -	} else if (p == this_rq()->idle) {
-> +	} else if ((p != this_rq()->idle) || (irq_count() != HARDIRQ_OFFSET))
-> +		account_system_time(p, HARDIRQ_OFFSET, cputime);
-> +	else
+On 12/16/19 10:15 AM, Waiman Long wrote:
+>  v2:
+>   - Revamp the chain_hlocks reuse patch to store the freed chain_hlocks
+>     information in the chain_hlocks entries themselves avoiding the
+>     need of a separate set of tracking structures. This, however,
+>     requires a minimum allocation size of at least 2. Thanks to PeterZ
+>     for his review and inspiring this change.
+>   - Remove the leakage counter as it is no longer applicable.
+>   - Add patch 6 to make the output of /proc/lockdep_chains more readable.
+>
+> It was found that when running a workload that kept on adding lock
+> classes and then zapping them repetitively, the system will eventually
+> run out of chain_hlocks[] entries even though there were still plenty
+> of other lockdep data buffers available.
+>
+>   [ 4318.443670] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+>   [ 4318.444809] turning off the locking correctness validator.
+>
+> In order to fix this problem, we have to make chain_hlocks[] entries
+> reusable just like other lockdep arrays. Besides that, the patchset
+> also adds some zapped class and chain_hlocks counters to be tracked by
+> /proc/lockdep_stats. It also fixes leakage in the irq context counters
+> and makes the output of /proc/lockdep_chains more readable.
+>
+> Waiman Long (6):
+>   locking/lockdep: Track number of zapped classes
+>   locking/lockdep: Throw away all lock chains with zapped class
+>   locking/lockdep: Track number of zapped lock chains
+>   locking/lockdep: Reuse freed chain_hlocks entries
+>   locking/lockdep: Decrement irq context counters when removing lock
+>     chain
+>   locking/lockdep: Display irq_context names in /proc/lockdep_chains
+>
+>  kernel/locking/lockdep.c           | 307 +++++++++++++++++++++++------
+>  kernel/locking/lockdep_internals.h |  14 +-
+>  kernel/locking/lockdep_proc.c      |  26 ++-
+>  3 files changed, 282 insertions(+), 65 deletions(-)
+>
+Ping! Any comments or suggestion for further improvement?
 
-I fear we can't really play the exact same game as account_process_tick() here.
-Since this is irqtime precise accounting, we have already computed the
-irqtime delta in account_other_time() (or we will at some point in the future)
-and substracted it from the ticks to account. This means that the remaining cputime
-to account has to be either utime/stime/gtime/idle-time but not interrupt time, or
-we may account interrupt time twice. And account_system_time() tries to account
-irq time, for example if we interrupt a softirq.
+Cheers,
+Longman
 
-Thanks.
-
-
->  		account_idle_time(cputime);
-> -	} else if (p->flags & PF_VCPU) { /* System time or guest time */
-> -		account_guest_time(p, cputime);
-> -	} else {
-> -		account_system_index_time(p, cputime, CPUTIME_SYSTEM);
-> -	}
->  }
->  
->  static void irqtime_account_idle_ticks(int ticks)
-> -- 
-> 1.8.3.1
-> 
