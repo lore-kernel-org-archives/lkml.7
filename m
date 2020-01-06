@@ -2,142 +2,108 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87031C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30736C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634DB20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D3420731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 13:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgAFM66 (ORCPT
+        id S1726463AbgAFNBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 07:58:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:43694 "EHLO foss.arm.com"
+        Mon, 6 Jan 2020 08:01:15 -0500
+Received: from sauhun.de ([88.99.104.3]:38608 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgAFM66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:58:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49810328;
-        Mon,  6 Jan 2020 04:58:57 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 598B73F534;
-        Mon,  6 Jan 2020 04:58:56 -0800 (PST)
-Subject: Re: Orange Pi 4 (RK3399) fails to bring up ethernet on boot
-To:     Joseph Kogut <joseph.kogut@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <CAMWSM7ha5XcoknM1qrNTMM+A5Re2yQPNWvu_ZVKAWBUx-FmasA@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <eeace85d-c007-a1ad-054c-21b129c35179@arm.com>
-Date:   Mon, 6 Jan 2020 12:58:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726080AbgAFNBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 08:01:14 -0500
+Received: from localhost (p54B338AC.dip0.t-ipconnect.de [84.179.56.172])
+        by pokefinder.org (Postfix) with ESMTPSA id BB7592C0686;
+        Mon,  6 Jan 2020 14:01:12 +0100 (CET)
+Date:   Mon, 6 Jan 2020 14:01:09 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Jean Delvare <jdelvare@suse.de>,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Lei YU <mine260309@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs: i2c: Fix return value of i2c_smbus_xxx functions
+Message-ID: <20200106130056.GA1290@ninjato>
+References: <1574162632-65848-1-git-send-email-mine260309@gmail.com>
+ <20191125144857.GA2412@kunai>
+ <20191126115243.673fc164@endymion>
 MIME-Version: 1.0
-In-Reply-To: <CAMWSM7ha5XcoknM1qrNTMM+A5Re2yQPNWvu_ZVKAWBUx-FmasA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Content-Disposition: inline
+In-Reply-To: <20191126115243.673fc164@endymion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01/2020 1:04 am, Joseph Kogut wrote:
-> Hello,
-> 
-> I'm working on getting the newly released Orange Pi 4 up and running
-> with the mainline kernel. Using the rk3399-orangepi device tree gets
-> the device to start booting, but the kernel has an oops when starting
-> networking, and the boot process fails to continue.
-> 
-> [  153.325306] Internal error: Oops: 96000004 [#1] SMP
-> [  153.325733] Modules linked in: rockchipdrm btsdio(+) brcmfmac
-> analogix_dp rockchip_rga dw_mipi_dsi brcmutil dw_hdmi hci_uart cec
-> videobuf2_dma_sg cfg80211 v4l2_mem2mem btqca rc_core videobuf2_memops
-> btbcm videobuf2_v4l2 btintel videobuf2_common drm_kms_helper bluetooth
-> dwmac_rk syscopyarea stmmac_platform videodev panfrost sysfillrect
-> stmmac snd_soc_simple_card sysimgblt fb_sys_fops gpu_sched
-> snd_soc_simple_card_utils ecdh_generic st_lsm6dsx_spi phylink mc
-> st_lsm6dsx_i2c ecc inv_mpu6050_i2c drm rfkill st_lsm6dsx inv_mpu6050
-> adc_keys rockchip_saradc gpio_keys ak8975 cm32181 dw_wdt
-> rockchip_thermal rtc_rk808
-> [  153.330457] CPU: 1 PID: 493 Comm: systemd-network Tainted: G
->       L    5.5.0-rc4-1-ARCH #1
-> [  153.331230] Hardware name: Orange Pi RK3399 Board (DT)
-> [  153.331681] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [  153.332108] pc : mdiobus_get_phy+0xc/0x28
-> [  153.332487] lr : stmmac_open+0x288/0xa50 [stmmac]
-> [  153.332899] sp : ffff800011f2b5e0
-> [  153.333190] x29: ffff800011f2b5e0 x28: 0000000000000000
-> [  153.333656] x27: ffff0000eb6448c0 x26: ffff0000eb7e7e10
-> [  153.334122] x25: 0000000000000001 x24: 0000000000000000
-> [  153.334587] x23: ffff800011829000 x22: ffff0000eb644000
-> [  153.335053] x21: ffff800011f2bbd0 x20: ffff0000ea0e6280
-> [  153.335519] x19: 00000000ffffffff x18: 0000000000000000
-> [  153.335984] x17: 0000000000000000 x16: 0000000000000000
-> [  153.336449] x15: 0000000000000000 x14: 0000000000000000
-> [  153.336915] x13: 0000000000000000 x12: 0000000000000000
-> [  153.337380] x11: 0000000000000003 x10: 0101010101010101
-> [  153.337845] x9 : ffff8000090becb0 x8 : 7f7f7f7f7f7f7f7f
-> [  153.338310] x7 : fefefeff646c606d x6 : 1e091448e4e5f6e9
-> [  153.338776] x5 : 697665644814091e x4 : 8080808000000000
-> [  153.339241] x3 : 8343c96b232bb348 x2 : ffff0000ea0b8880
-> [  153.339707] x1 : 00000000ffffffff x0 : fffffffffffffff8
-> [  153.340172] Call trace:
-> [  153.340392]  mdiobus_get_phy+0xc/0x28
-> [  153.340717]  __dev_open+0x104/0x198
-> [  153.341025]  __dev_change_flags+0x1a0/0x208
-> [  153.341393]  dev_change_flags+0x28/0x68
-> [  153.341731]  do_setlink+0x2cc/0xcc0
-> [  153.342040]  rtnl_setlink+0xf0/0x188
-> [  153.342355]  rtnetlink_rcv_msg+0x2b0/0x358
-> [  153.342719]  netlink_rcv_skb+0x60/0x120
-> [  153.343056]  rtnetlink_rcv+0x1c/0x28
-> [  153.343371]  netlink_unicast+0x1a0/0x248
-> [  153.343716]  netlink_sendmsg+0x1c0/0x3c0
-> [  153.344061]  sock_sendmsg+0x4c/0x58
-> [  153.344368]  __sys_sendto+0xd4/0x138
-> [  153.344683]  __arm64_sys_sendto+0x2c/0x38
-> [  153.345039]  el0_svc_handler+0xa4/0x188
-> [  153.345377]  el0_sync_handler+0x1c8/0x260
-> [  153.345730]  el0_sync+0x140/0x180
-> [  153.346025] Code: d65f03c0 aa1e03e9 d503201f 8b21cc00 (f941d000)
-> [  153.346560] ---[ end trace 0d82e8dab5e0c74f ]---
-> 
-> It's worth noting that the rk3399-orangepi device tree isn't
-> necessarily compatible with this board, though after perusing the
-> schematics for both the Orange Pi 4 and Orange Pi RK3399, I found no
-> differences as far as the networking hardware goes. However, this is
-> not an area in which I am well experienced.
-> 
-> I was able to work around this issue by reading a few other RK3399
-> based device trees, and adding a phy-handle property to the gmac node,
-> as well as an mdio child node. I have a patch [0] that works with my
-> board, but I'm unsure if it's correct for both Orange Pis, and even if
-> it is, I'm not sure what the original problem was, or how to word the
-> commit message to actually send the patch.
-> 
-> Could you please advise on how I should proceed?
 
-FWIW this appears to be down to a recent driver change breaking MDIO 
-auto-probing in the case where there is neither a fixed link nor an 
-explicitly-described phy - see the discussion on the thread here: 
-https://lore.kernel.org/netdev/1599392.7x4dJXGyiB@diego/
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Robin.
 
-> 
-> Best,
-> Joseph
-> 
-> [0] https://gist.github.com/jakogut/bc21de0535b640f2374c1d07a710e8ab
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+> > > -All these transactions return -1 on failure; you can read errno to s=
+ee
+> > > -what happened. The 'write' transactions return 0 on success; the
+> > > -'read' transactions return the read value, except for read_block, wh=
+ich
+> > > -returns the number of values read. The block buffers need not be lon=
+ger
+> > > -than 32 bytes.
+> > > +All these transactions return a negative error number on failure.
+> > > +The 'write' transactions return 0 on success; the 'read' transactions
+> > > +return the read value, except for read_block, which returns the numb=
+er
+> > > +of values read. The block buffers need not be longer than 32 bytes. =
+=20
+> >=20
+> > I think the correct solution is to remove this paragraph entirely.
+> > Because the returned value does not depend on the kernel but on the
+> > libi2c version. Check this commit from 2012 in the i2c-tools repo:
+> >=20
+> > 330bba2 ("libi2c: Properly propagate real error codes on read errors")
+> >=20
+> > So, I think we should document it there. Jean, what do you think?
+>=20
+> I would go further and move half of the document to i2c-tools. i2c-dev
+> itself only provides the ioctls. Everything on top of that is in libi2c
+> now, so the kernel documentation should point to libi2c and the
+> detailed documentation should come with libi2c.
+>=20
+> So I guess I should review the whole document now to see what needs to
+> be updated, what should stay, and what should move.
+
+Maybe you can collaborate with Luca on this who just revamped a lot of
+the docs? Putting him on CC and marking this patch as 'Deferred'.
+
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4TL5UACgkQFA3kzBSg
+KbaiNg//cY5iFBrA2+43SMBoEDIkgtFwG+ro0IKYEDqL9pYlSZVkhaFhDpK0J7U7
+tmsZzHlfrSAOr7Biq/QuMXRHvDp6kDTKCCIlUdXXT+GhquYIPDyCkwwt4Oa8nT1O
+666gN0OCI4ZahsEqNm22RD0E5sDLTZlAUz4DNQY94g95hG36sAeJRj2M+tC9pzaa
+4rZp06P+IJ8kqNEFZX13e3z3xsRwAG4wrBWzYrlNWsHkyCblz0svqTHxoAiSN+lX
+Byv569JFAOkPqEgNSPTeI0j4I7A3o1BIM/kAnqgfkfFHGEKW0nPScZtqQMqe+G4w
+zJ9tF3oNfBkpBX+4sfDrpIsPEmzEL2MUHDIQhyfwagf1DWVhcKF4OvM5kXDRf6By
+NBmTkf8eZIwoXTYOqgfBASmsx3cInCcam3aqczp1OxMQdixVqV1Xftdo6p7YCZJV
+v/+cCc1rZu/SODaWz6uh/wWBKceDmL2RJwft2oe8meYAJrtTRS63XHlJALrTF1vJ
+jHrKTjtReKUH36fNxNPn4w/0DMcySWlayk3G6R4vAs1eZte27eeyo0bl9z8uEAHi
+nutigACt9hQpP15kv4gz9ikp8c0sPnlBQ5lLzTvNMBMaJ806kuTQ0dp0UJlR/OR4
+KA5hXOBuvhyNXgoDlW3sehBEKEpOIKoabGBG5V2Meg5CzPFoyeA=
+=Wc1M
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
