@@ -2,76 +2,104 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F350FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8293BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E262071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556AF2081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578313673;
+	bh=clouiNKPozJbzl+cLuzS/XRHq+Lyf1dDHc3esJcePWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TB4Gr97t9D3AkvvAMr26w43GyIJtYCzcRzKhBe40z49nGJrk/AcvCXsih7kVwxmB3
+	 HyjgtS8j5OJyVCNdQIbTLDKaGQaco6Hg5cbZ4fLMcXHJ2kj1Xkktsd9h9kEHjM4Onm
+	 /hoWqJ6MVtoGjtHVOiSZlgwJna8UKfAFs4AAi0ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgAFMXb (ORCPT
+        id S1726436AbgAFM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 07:23:31 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43791 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgAFMXb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:23:31 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ioRPp-0001Cb-Jd; Mon, 06 Jan 2020 12:23:25 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] dmaengine: ti: omap-dma: don't allow a null od->plat pointer to be dereferenced
-Date:   Mon,  6 Jan 2020 12:23:25 +0000
-Message-Id: <20200106122325.39121-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 6 Jan 2020 07:27:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgAFM1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:27:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F7342071A;
+        Mon,  6 Jan 2020 12:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578313670;
+        bh=clouiNKPozJbzl+cLuzS/XRHq+Lyf1dDHc3esJcePWI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RnaB8GukECekcfPfugsEAULLMDowkyQmsRQjiTuw7PtYMarp/ZmhtU/0fGb4wqRfQ
+         ZIGH6uM3XEsPvZfBhXkiJbAzP/eLb09L82IanFJ7pCAHh9B9gzq3bKvmq6RIZh3MVU
+         RUYluJ/YnmHkAfq5azZm10zajZGP7+9HHGQnVwdM=
+Date:   Mon, 6 Jan 2020 13:27:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lucas Stach <dev@lynxeye.de>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: tegra: fix SDR50 tuning override
+Message-ID: <20200106122745.GA3414443@kroah.com>
+References: <245d569e4c258063dbd78bd30c7027638b30f059.1577960737.git.mirq-linux@rere.qmqm.pl>
+ <20200106120718.GA1955714@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200106120718.GA1955714@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Jan 06, 2020 at 01:07:18PM +0100, Thierry Reding wrote:
+> On Thu, Jan 02, 2020 at 11:30:50AM +0100, Michał Mirosław wrote:
+> > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+> > broke SDR50 tuning override. Use correct NVQUIRK_ name.
+> > 
+> > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+> > Depends-on: 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is present")
+> > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > ---
+> >  drivers/mmc/host/sdhci-tegra.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Oh my... good catch!
+> 
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> 
+> I also ran this through our internal test system and all tests pass, so
+> also:
+> 
+> Tested-by: Thierry Reding <treding@nvidia.com>
+> 
+> I'm not sure if that "Depends-on:" tag is anything that's recognized
+> anywhere. It might be better to turn that into an additional "Fixes:"
+> line. Adding Greg to see if he has a standard way of dealing with this
+> kind of dependency.
+> 
+> Greg, what's your preferred way to handle these situations? I think the
+> intention here was to describe that the original error was introduced by
+> commit 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes"), but then commit
+> 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is
+> present") moved that code around, so this patch here will only be back-
+> portable until the latter commit, but should be backported until the
+> former.
 
-Currently when the call to dev_get_platdata returns null the driver issues
-a warning and then later dereferences the null pointer.  Avoid this issue
-by returning -EPROBE_DEFER errror rather when the platform data is null.
+The stable kernel rules document says how to handle this, but the
+"depends on" commit id in the comment to the right of the stable@k.o cc:
+line in the changelog area.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/dma/ti/omap-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index fc8f7b2fc7b3..335c3fa7a3b1 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
- 	if (conf) {
- 		od->cfg = conf;
- 		od->plat = dev_get_platdata(&pdev->dev);
--		if (!od->plat)
-+		if (!od->plat) {
- 			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
-+			return -EPROBE_DEFER;
-+		}
- 	} else {
- 		od->cfg = &default_cfg;
- 
--- 
-2.24.0
-
+greg k-h
