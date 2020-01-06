@@ -2,121 +2,97 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6133CC33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4688AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378CB2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1927A2072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gR+oYRZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgAFWtc (ORCPT
+        id S1727219AbgAFWvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:49:32 -0500
-Received: from mga12.intel.com ([192.55.52.136]:51362 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgAFWtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:49:32 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 14:49:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
-   d="scan'208";a="216958946"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jan 2020 14:49:31 -0800
-Date:   Mon, 6 Jan 2020 14:49:31 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-Message-ID: <20200106224931.GB12879@linux.intel.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
+        Mon, 6 Jan 2020 17:51:17 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:33929 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgAFWvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:51:17 -0500
+Received: by mail-qv1-f67.google.com with SMTP id o18so19770029qvf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pd6XIV7OgADHPUC0a4p/Mb4IhnpWoH1UAexZuXJ1p3s=;
+        b=gR+oYRZ4onpW0u9eAxj2ULlDOyWb/ugEKFPgUuK2O9X4B/ADTb1dAA1I8WaavTN82y
+         TKTIz5wUd/O9vHnYgWUUQewQh5/ZQhyv/kzfmjfxmbqrKoLZ8iwhZ4k1SccdXyF2UtbP
+         lyWZ0Yw6bvfq+QSjMpFD5XKceAOGyIPdBuN0s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pd6XIV7OgADHPUC0a4p/Mb4IhnpWoH1UAexZuXJ1p3s=;
+        b=ryJ4OLlhmcpI4hw3ndUo3wUQ2yNqUzy3BYwj/aH7pN4vBgflyxKFgjVtU/hhrSQu2w
+         m1iMGk9XkhVeEKV/iidmriS+7aNYZQNbNbvHsjJog0j9vsAtp0SY5YkKJl7uWf0TRdMR
+         +hl9pwcJm3EspN7N0GX1Sr+xakT5pBbymIDfiwLyK57OLHf0y2BcyqIegspmJhtc7jRV
+         iFHkhgsvbDjrYD9LyReo4ZiFlxhwDYUowK79MCgOvzcctf7RD4SdJculYss+Jwc76iMO
+         ID5nikvBSqNN460GRtHeqdv6NU2DccVxA5grhCSptXMMTqIPdQEN2WFOPEGRG0+DS1MW
+         hlpQ==
+X-Gm-Message-State: APjAAAUblFUSTrvwEFDNZsl46VMp9ef53r/qAS6Mz5tFSE+Kkp7qgv/0
+        ztSC5ZnvxacOOogIZlCEzxOYaBXVtMI=
+X-Google-Smtp-Source: APXvYqy4dp1jl4z8hsYnRGymN0DG/QHr2tw9SOAIH8SWzo09ssF0q0JxNo8+8XfZV9ATRdQaMWElKA==
+X-Received: by 2002:a0c:ea45:: with SMTP id u5mr79287669qvp.171.1578351075330;
+        Mon, 06 Jan 2020 14:51:15 -0800 (PST)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
+        by smtp.gmail.com with ESMTPSA id c18sm2229828qtn.71.2020.01.06.14.51.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 14:51:14 -0800 (PST)
+Received: by mail-qk1-f175.google.com with SMTP id w127so40994695qkb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:51:14 -0800 (PST)
+X-Received: by 2002:a05:620a:2043:: with SMTP id d3mr85418653qka.279.1578351073659;
+ Mon, 06 Jan 2020 14:51:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200106224212.189763-1-briannorris@chromium.org>
+In-Reply-To: <20200106224212.189763-1-briannorris@chromium.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 6 Jan 2020 14:51:02 -0800
+X-Gmail-Original-Message-ID: <CA+ASDXNN5=97nhN99rPneLGSQAmQ4ULS6Kim1oxCzKWNtPkWFw@mail.gmail.com>
+Message-ID: <CA+ASDXNN5=97nhN99rPneLGSQAmQ4ULS6Kim1oxCzKWNtPkWFw@mail.gmail.com>
+Subject: Re: [PATCH] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
+To:     linux-wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        stable <stable@vger.kernel.org>, huangwen <huangwenabc@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 09:58:00AM -0600, Tom Lendacky wrote:
-> The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
-> faults when a guest performs MMIO. The AMD memory encryption support uses
-> a CPUID function to define the encryption bit position. Given this, it is
-> possible that these bits can conflict.
-> 
-> Use svm_hardware_setup() to override the MMIO mask if memory encryption
-> support is enabled. When memory encryption support is enabled the physical
-> address width is reduced and the first bit after the last valid reduced
-> physical address bit will always be reserved. Use this bit as the MMIO
-> mask.
-> 
-> Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/x86/kvm/svm.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 122d4ce3b1ab..2cb834b5982a 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1361,6 +1361,32 @@ static __init int svm_hardware_setup(void)
->  		}
->  	}
->  
-> +	/*
-> +	 * The default MMIO mask is a single bit (excluding the present bit),
-> +	 * which could conflict with the memory encryption bit. Check for
-> +	 * memory encryption support and override the default MMIO masks if
-> +	 * it is enabled.
-> +	 */
-> +	if (cpuid_eax(0x80000000) >= 0x8000001f) {
-> +		u64 msr, mask;
-> +
-> +		rdmsrl(MSR_K8_SYSCFG, msr);
-> +		if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT)  {
-> +			/*
-> +			 * The physical addressing width is reduced. The first
-> +			 * bit above the new physical addressing limit will
-> +			 * always be reserved. Use this bit and the present bit
-> +			 * to generate a page fault with PFER.RSV = 1.
-> +			 */
-> +			mask = BIT_ULL(boot_cpu_data.x86_phys_bits);
+On Mon, Jan 6, 2020 at 2:43 PM Brian Norris <briannorris@chromium.org> wrote:
+>
+> We called rcu_read_lock(), so we need to call rcu_read_unlock() before
+> we return.
+>
+> Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
+> Cc: stable@vger.kernel.org
+> Cc: huangwen <huangwenabc@gmail.com>
+> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
-on a future processor, i.e. x86_phys_bits==52.
+I probably should have mentioned somewhere here: the bug is currently
+in 5.5-rc and is being ported to -stable already (I'll try to head
+that off). So this probably should have said [PATCH 5.5]. Sorry about
+that.
 
-After staring at things for a while, I think we can handle this issue with
-minimal fuss by special casing MKTME in kvm_set_mmio_spte_mask().  I'll
-send a patch, I have a related bug fix for kvm_set_mmio_spte_mask() that
-touches the same code.
-
-> +			mask |= BIT_ULL(0);
-> +
-> +			kvm_mmu_set_mmio_spte_mask(mask, mask,
-> +						   PT_WRITABLE_MASK |
-> +						   PT_USER_MASK);
-> +		}
-> +	}
-> +
->  	for_each_possible_cpu(cpu) {
->  		r = svm_cpu_init(cpu);
->  		if (r)
-> -- 
-> 2.17.1
-> 
+Brian
