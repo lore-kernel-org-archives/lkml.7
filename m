@@ -2,129 +2,166 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D28BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3282AC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4403920656
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578300190;
-	bh=eVqvnMTAH9P1OLuUyEiot4QmZkLk+LF/E69QJEZ/PAU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6JFhWPna0TKmCGPTnISLY73TaB5jsf3TJFOGuEA47gk2VZSS7AQqMxFG1++rbSzW
-	 OiRzZ2RAUB2YXKuJhrqkgd8pOJLjCpyWTxws5iXgE5Ti741eghlVgBoq5prfBPXSNG
-	 tBC2GTsyFmsVaMQAwFDrp4dL+CQZbE2vUEQJo2X0=
+	by mail.kernel.org (Postfix) with ESMTP id 05D1220656
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6EoJUPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgAFInJ (ORCPT
+        id S1726264AbgAFIph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgAFImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:42:44 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71EDE21775;
-        Mon,  6 Jan 2020 08:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578300163;
-        bh=eVqvnMTAH9P1OLuUyEiot4QmZkLk+LF/E69QJEZ/PAU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyGL9dEOfWJ1ZMV5t/c4+E0O/mQoXPWyshR1ZzH70DS1HxKy2PKcvmoVmSD9dhedZ
-         y/YpPkrj91Sd1UlO9I6XaVUjOxm+DgKNi31oW9xml8bJ5jKRXzfEsuq7S59MxE4qv+
-         h6MiVGAvf+gbqj5D1cgSJZASimQylhxufVLvYmkA=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 4E7645FA6A; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/7] ARM: dts: sun4i: Add CSI1 controller and pinmux options
-Date:   Mon,  6 Jan 2020 16:42:34 +0800
-Message-Id: <20200106084240.1076-2-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200106084240.1076-1-wens@kernel.org>
-References: <20200106084240.1076-1-wens@kernel.org>
+        Mon, 6 Jan 2020 03:45:37 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38301 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFIph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 03:45:37 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so48744311wrh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 00:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=E+ZsR7Z6Or+Q9BNSYlv8m9k1i0fDEt4sNmLSr2qVLrE=;
+        b=b6EoJUPx4omgCfCytDHI5M/8GKVGW1pS/Q0ukuUb7HkffVkKyEWFhHUwnA4PXQB1m5
+         qAUBj9pMGqUSqG4+z/oaABcxhRaKjqTHoqlJkl1X/pWm++WDEUh6zRHoz2qPVNU28txW
+         kyvLH3wU019LV43vRa1wHHGDYaMIpm0Xt2B1Z2u7WT0FnwzkeDDFea6m2Az5EuZ73VaY
+         iHoRWNHfEGFXf3eWklrzVDg4SX4+I2OI74ZuTK4H7grXGv0dj19Pds60dYhLIqIQme9E
+         zaIZfiYyscy0y1Y3a5N8RLfshXOorElBxVojEvb9ruo0GAXpDWGysJDhxOx6hInEaopG
+         ZPnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=E+ZsR7Z6Or+Q9BNSYlv8m9k1i0fDEt4sNmLSr2qVLrE=;
+        b=c/mjVZmZjGJnbGUr4kwTK+xky21hZWQhQmrti44YJcFsL3mWByJYFNi15S05bHlSG+
+         arZu6yqD93n7XpqxHsqNnQaX0DP3M7t6TJ0k7RN+9/QLkgqiFubKvaRHoKLM6S2HsIJF
+         ZLNZCohrEzBIitg22hYAH4mc7jG1HF69MMl1jGIyRdBtPUcZPOb3gCEdfeqZ7ZMf5lVt
+         OHYh8er9z01NeT5pLk7d1ODdC8SW9X5LEeHNR+cThc+x7RZQ0b2XZohjZFQNNLvWfvUX
+         iFkXEc6g8gOspD4VivmiiEF0NiQBMtKARIbz23Vm7RxboOCbwjnz2K/Fs/BYlXMJSX32
+         8Ndw==
+X-Gm-Message-State: APjAAAVmdQxGsE0wSohvtYcxeQ2u8Z9fxmCe/wwLnGTV7mhX2MLPFuW7
+        eprEUTaTiSdh8908WjSpZEuYNw==
+X-Google-Smtp-Source: APXvYqwxcQQlcWtECdQoOFeMi0PnZaRKIl/UK7OQlM3noxtNGd+dNEVLfF5LUtq5jrb7KMBL2hK+Yg==
+X-Received: by 2002:a05:6000:118e:: with SMTP id g14mr100885486wrx.39.1578300334744;
+        Mon, 06 Jan 2020 00:45:34 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id q6sm76176240wrx.72.2020.01.06.00.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 00:45:34 -0800 (PST)
+Date:   Mon, 6 Jan 2020 08:45:49 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz, agx@sigxcpu.org,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: LED backlight on Droid 4 and others
+Message-ID: <20200106084549.GA14821@dell>
+References: <20200105183202.GA17784@duo.ucw.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200105183202.GA17784@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Sun, 05 Jan 2020, Pavel Machek wrote:
 
-The CSI controller driver now supports the second CSI controller, CSI1.
+> Hi!
+> 
+> It would be good to get LED backlight to work in clean way for 5.6
+> kernel.
+> 
+> As far as I can see, these are neccessary (but not enough; it does not
+> work for me): lm3532 changes to register LED with of node, plus device
+> tree changes for droid 4, and these generic changes:
+> 
+> commit d457d0c97d6d55fe3e62633791ac05d289a37d2e
+> Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Date:   Thu Oct 3 10:28:12 2019 +0200
+> 
+>     backlight: add led-backlight driver
+>     
+>     This patch adds a led-backlight driver (led_bl), which is similar to
+>     pwm_bl except the driver uses a LED class driver to adjust the
+>     brightness in the HW. Multiple LEDs can be used for a single backlight.
+>     
+>     Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>     Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>     Acked-by: Pavel Machek <pavel@ucw.cz>
+>     Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> 
+> commit 44b7adbf0b07904e4198ae1d0a763917d1c68a23
+> Author: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Date:   Thu Oct 3 10:28:10 2019 +0200
+> 
+>     leds: Add managed API to get a LED from a device driver
+>     
+>     If the LED is acquired by a consumer device with devm_led_get(), it is
+>     automatically released when the device is detached.
+>     
+>     Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>     Acked-by: Pavel Machek <pavel@ucw.cz>
+>     Signed-off-by: Pavel <pavel@ucw.cz>
+> 
+> commit 93b98c570d7f898063ab6204e1b3950a3335dd12
+> Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Date:   Thu Oct 3 10:28:09 2019 +0200
+> 
+>     leds: Add of_led_get() and led_put()
+>     
+>     This patch adds basic support for a kernel driver to get a LED device.
+>     This will be used by the led-backlight driver.
+>     
+>     Only OF version is implemented for now, and the behavior is similar to
+>     PWM's of_pwm_get() and pwm_put().
+>     
+>     Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>     Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>     Acked-by: Pavel Machek <pavel@ucw.cz>
+>     Signed-off-by: Pavel <pavel@ucw.cz>
+> 
+> [If you have an idea what else is needed, it would be welcome; it
+> works for me in development tree but not in tree I'd like to
+> upstream.]
+> 
+> Lee, would you be willing to take "backlight: add led-backlight
+> driver"? Would it help if I got "leds: Add managed API to get a LED
+> from a device driver" and "leds: Add of_led_get() and led_put()" into
+> for_next tree of the LED subsystem?
 
-Add a device node for it. Pinmuxing options for the MCLK output, the
-standard 8-bit interface, and a secondary 24-bit interface are included.
+It looks like you have an open question from Tony on v10.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 35 ++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Is that patch orthogonal, or are there depend{ants,encies}?
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 4c268b70b735..bf531efc0610 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -624,6 +624,16 @@ ohci1: usb@1c1c400 {
- 			status = "disabled";
- 		};
- 
-+		csi1: csi@1c1d000 {
-+			compatible = "allwinner,sun4i-a10-csi1";
-+			reg = <0x01c1d000 0x1000>;
-+			interrupts = <43>;
-+			clocks = <&ccu CLK_AHB_CSI1>, <&ccu CLK_DRAM_CSI1>;
-+			clock-names = "bus", "ram";
-+			resets = <&ccu RST_CSI1>;
-+			status = "disabled";
-+		};
-+
- 		spi3: spi@1c1f000 {
- 			compatible = "allwinner,sun4i-a10-spi";
- 			reg = <0x01c1f000 0x1000>;
-@@ -670,6 +680,31 @@ can0_ph_pins: can0-ph-pins {
- 				function = "can";
- 			};
- 
-+			/omit-if-no-ref/
-+			csi1_8bits_pg_pins: csi1-8bits-pg-pins {
-+				pins = "PG0", "PG2", "PG3", "PG4", "PG5",
-+				       "PG6", "PG7", "PG8", "PG9", "PG10",
-+				       "PG11";
-+				function = "csi1";
-+			};
-+
-+			/omit-if-no-ref/
-+			csi1_24bits_ph_pins: csi1-24bits-ph-pins {
-+				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-+				       "PH5", "PH6", "PH7", "PH8", "PH9",
-+				       "PH10", "PH11", "PH12", "PH13", "PH14",
-+				       "PH15", "PH16", "PH17", "PH18", "PH19",
-+				       "PH20", "PH21", "PH22", "PH23", "PH24",
-+				       "PH25", "PH26", "PH27";
-+				function = "csi1";
-+			};
-+
-+			/omit-if-no-ref/
-+			csi1_clk_pg_pin: csi1-clk-pg-pin {
-+				pins = "PG1";
-+				function = "csi1";
-+			};
-+
- 			emac_pins: emac0-pins {
- 				pins = "PA0", "PA1", "PA2",
- 				       "PA3", "PA4", "PA5", "PA6",
+> It is kind of important as, well, phone without screen looks pretty
+> much dead, and same issue hits Droid 4 and Librem 5 phones at least...
+> 
+> Best regards,
+> 									Pavel
+
+
+
 -- 
-2.24.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
