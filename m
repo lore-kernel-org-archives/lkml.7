@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B1DC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9077BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8382081E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A56C2081E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pj5xEWC2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i1+dxrn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgAFUTE (ORCPT
+        id S1727140AbgAFUTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:19:04 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44077 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgAFUTD (ORCPT
+        Mon, 6 Jan 2020 15:19:24 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41081 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgAFUTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:19:03 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so7175395iln.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 12:19:03 -0800 (PST)
+        Mon, 6 Jan 2020 15:19:24 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so46391194ioo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 12:19:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=On8S/jqcqhWm1gA75kni93hxDaFgmyxXA8OYLeg6pRw=;
-        b=pj5xEWC2k1f0PDOEDl4ycNhV9/3mEeqCFoZlQ6jKJtbe77lzXp8pzFq26ztwSG9V+V
-         Kq/A6Em27Lt9MrhZKAC3Nw+qJogSJDU9M+w73gCuds+KJEOjYORSWyCbiG2QNVIx8nAX
-         MZk0LhnqI+m2EvlcOCUkv20bX9qw8Cv39Bbtnby/EMmb+Sz8+HwI13s1a8U7X01f3Hq1
-         Dxc9ndFQw4DlH2N3jG1H/6eSOiNhnSd90uRIh8ZzcvSAmwqHzqDwPOL5T3ZPKWp5y7bf
-         QZqCDDlB3FxjzOcqPePxq8ksuPYFPL0YS0AO41kD+eoBlTCpPDcnrZYkyCnkzbl5sgLy
-         OJKA==
+        bh=ZB6+nZpdQdrQFOUezOO+7mxpT7FzTcRrUIFGcgCSmbk=;
+        b=i1+dxrn9BwWzBAeJV6afkXOmypBNmAdOB+MN0+uPEwO4tqMBko7kiVkXUabAiq/ryY
+         scWsv83FexYHtha29B/rSOy2G6vr01E7gtVoQV9iKwaqofCJYPXWTm0elmL6mtpLgTho
+         lRpgbEn8HhvfNgnScOhVlIVNFFnXdJsfyixF2JNW4I9eRGti+9UHcwY0+2nLtiZFBhZq
+         NCRVgS4qd+LFAYtEBLVQRHVqJFQP6kgf5nU4jQ5icMM0keUykv268+d69Qtb+UgpH4ur
+         fY/YrpuXoruqx1aEjWp30pWNrcxTpzDDu6MMwnEm860W41k4TzD4Wc+e46dLoHWdcj9x
+         vn5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=On8S/jqcqhWm1gA75kni93hxDaFgmyxXA8OYLeg6pRw=;
-        b=EUo3kEERnAlJQ+criiZIt7FV4fHjU47Yb07+tnlQSSBbvNz+vwrnQJkrfTWzQAz35j
-         cGrEPFXgqLqf/Qsfg6FhkGWPIwd9xdbtOa/GVqoz07GwONTm7aSU9wMDRgpxRr6kewCN
-         O47GgJLAE+avdhRS4L4EkK0VD9B+YJxWiN5bGMmSuND/qBOSGIxPYZqqt1+VpffwxsOQ
-         HC68WBeTbko14wIsJCdxgfB1RfL874XyiVJVTea5jLtFxpXTHD1BA2HjA2ZRMSFGaL3w
-         TZsnZ9/teiVsyIUI70OpZqsabgY+WMNa6yzN9U8+VXBpjl3Jh0Hfar3uarmZO/TOXdRK
-         sJNQ==
-X-Gm-Message-State: APjAAAXuTIJrWmEHwznEzbD+wo57iaX2COeA4uXBYmh4LSxtpGnKCeuo
-        mY5KGxa2hlpCXELUT8V+R2grcuDbR+m3yB+MJtaj0A==
-X-Google-Smtp-Source: APXvYqw/uA456NSw77dxi0HDBubRLZXT5catRpIZeEV7h/AuDPtK8k5E+UuB/HK9diCwlWzkyenxKNoQyTYwehnh+ls=
-X-Received: by 2002:a92:3b98:: with SMTP id n24mr67439328ilh.108.1578341942677;
- Mon, 06 Jan 2020 12:19:02 -0800 (PST)
+        bh=ZB6+nZpdQdrQFOUezOO+7mxpT7FzTcRrUIFGcgCSmbk=;
+        b=mKTI+bAobKJUKB1LoyCWkOwS16jCiRH4XhNGSWNmVZotinLM4UFD0dbZthROwpvqfj
+         jW6k00avS2HZL7V8x7Rzk/vAO933VNCKly0v3xraFlavJhdf7aebOzWRI744TALys/eU
+         hQns8JETi22uC7GDOxGlERqVd8nZFgwIKya7YgZx+saQXbj0eIa/Z37/x+cYMABe6zYr
+         OP1Oeacr2Lqrvwuxz2Z3hZU9ZBPlE4/CD65TQNCvMCsPfGtYQFhNh+XDGKoREF9pwlnJ
+         /L7Rkh86n/Slb/hk2bdVh5uMEuJjFLPd3gTrkE07qPH8tiNWkAWCPXxIIywFbsTAqvIT
+         SAWw==
+X-Gm-Message-State: APjAAAWn5lEEfu+DQ1TrF9KvDCciKUjhaCVOVGOlb8a6Z0d4/CwqMdY9
+        HXEzwa9Z+S10rajVFWqmZI8FpQpsGkb8OB1tf1LScQ==
+X-Google-Smtp-Source: APXvYqz1ADI5pUttsTRFE4tG04m0tcxRUNOV6z/qiW+UMBRbGaQW2wU9EW1eJF1Qghs9D9XaNiAgZu7XxW6hZ4ZQb9Y=
+X-Received: by 2002:a02:cd3b:: with SMTP id h27mr80920656jaq.18.1578341963368;
+ Mon, 06 Jan 2020 12:19:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211204753.242298-1-pomonis@google.com> <20191211204753.242298-10-pomonis@google.com>
-In-Reply-To: <20191211204753.242298-10-pomonis@google.com>
+References: <20191211204753.242298-1-pomonis@google.com> <20191211204753.242298-11-pomonis@google.com>
+In-Reply-To: <20191211204753.242298-11-pomonis@google.com>
 From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 6 Jan 2020 12:18:51 -0800
-Message-ID: <CALMp9eRTLMM17nVvGD9P38uP=886hgck1YabpnPXqyuFb1n0Jg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/13] KVM: x86: Protect MSR-based index computations
- from Spectre-v1/L1TF attacks in x86.c
+Date:   Mon, 6 Jan 2020 12:19:12 -0800
+Message-ID: <CALMp9eT5HVhtCKOKaBxkaVUVs+uQ908Z2coM3n6j9aMU33=HGw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/13] KVM: x86: Protect memory accesses from
+ Spectre-v1/L1TF attacks in x86.c
 To:     Marios Pomonis <pomonis@google.com>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
@@ -83,12 +83,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Dec 11, 2019 at 12:49 PM Marios Pomonis <pomonis@google.com> wrote:
 >
-> This fixes a Spectre-v1/L1TF vulnerability in set_msr_mce() and
-> get_msr_mce().
-> Both functions contain index computations based on the
-> (attacker-controlled) MSR number.
+> This fixes Spectre-v1/L1TF vulnerabilities in
+> vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+> vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().
+> These functions contain index computations based on the
+> (attacker-influenced) segment value.
 >
-> Fixes: commit 890ca9aefa78 ("KVM: Add MCE support")
+> Fixes: commit 2fb92db1ec08 ("KVM: VMX: Cache vmcs segment fields")
 >
 > Signed-off-by: Nick Finco <nifi@google.com>
 > Signed-off-by: Marios Pomonis <pomonis@google.com>
