@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B303C00523
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCFEC00523
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A5621734
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88ABC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 03:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578280177;
-	bh=xHb/l1cvNs4OtUnPX8KlTG+ZY0RxRjIS8lEPUdRsFp4=;
+	s=default; t=1578280189;
+	bh=bUleWiSui0OeFOKynscfUZWPrYZMG7BHsBIGW0ViyGI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ku7PZcsYJu+R8Gj2ZJQc5qhbDJK9J+cuFIvARuDPJZ8XAU+n6+Pp1djGmka2hRInA
-	 jcAoNdOWjW/m3DL8TJcftx53jgi2humHkLyXONXEt4u+ZQZIA22wCtvUsqbQfTEtmt
-	 jWFj04RmSURdSmIm98ZajHrbHED7d51DC/GGk7AU=
+	b=ferHTEhpFMG6GJtIvwvfM++GJMV/xd7dTpvmSRQ4w1hA0HhQyeTA0o4+NP15he6Hl
+	 XIH+RjU9MVoos8ZwsKgR+axVKKj3QWBr48h3zrelWO/GSFB0h+Tkx9X/08N4a+yyR3
+	 hJdsZmPyM1Rv28eviMTbeGw6w6Mh5b9PHrz9yViI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgAFDJf (ORCPT
+        id S1727458AbgAFDJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 22:09:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33758 "EHLO mail.kernel.org"
+        Sun, 5 Jan 2020 22:09:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbgAFDJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 22:09:34 -0500
+        id S1727307AbgAFDJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 22:09:48 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECE121582;
-        Mon,  6 Jan 2020 03:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 572D321582;
+        Mon,  6 Jan 2020 03:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578280174;
-        bh=xHb/l1cvNs4OtUnPX8KlTG+ZY0RxRjIS8lEPUdRsFp4=;
+        s=default; t=1578280187;
+        bh=bUleWiSui0OeFOKynscfUZWPrYZMG7BHsBIGW0ViyGI=;
         h=From:To:Cc:Subject:Date:From;
-        b=ioZ57txjBXqosSU9+Ua4EgHyFFQfvl4lq5y80vmH/+c9SxRuX1WgaS/CW2TXJt5NL
-         prb5JK5IJD55HfssQNZ54rTSF5XrkpnkfdaJjyAuHeEd8rxtG/HcM6hJbsqUxrwGS3
-         Vgk0yz4WaQlt0kYEXbE6rwxdNmV5MUYe5p7Bh6pc=
+        b=OlmUl5r/Uqc8ayGPJj9filxnOVwlb0Sk0xcEdvgck8Zi/ONUlE+KjbRDDyygis0N8
+         Ts+Fr1oCrb78cPPGrHPTdoJRA4A5FZgYPYy3Th7WO+CCcZlPwctxoPe3lg9vp3baXj
+         8GMytWb9Z6I23+QwRK3ZMpbTr3voAI8yn3pZktwI=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 34AEB5FCEC; Mon,  6 Jan 2020 11:09:32 +0800 (CST)
+        id E92845FCEC; Mon,  6 Jan 2020 11:09:45 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -49,9 +49,9 @@ To:     "David S. Miller" <davem@davemloft.net>,
         Maxime Ripard <mripard@kernel.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH netdev] net: stmmac: dwmac-sunxi: Allow all RGMII modes
-Date:   Mon,  6 Jan 2020 11:09:22 +0800
-Message-Id: <20200106030922.19721-1-wens@kernel.org>
+Subject: [PATCH netdev] net: stmmac: dwmac-sun8i: Allow all RGMII modes
+Date:   Mon,  6 Jan 2020 11:09:45 +0800
+Message-Id: <20200106030945.19774-1-wens@kernel.org>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -66,28 +66,29 @@ Allow all the RGMII modes to be used. This would allow us to represent
 the hardware better in the device tree with RGMII_ID where in most
 cases the PHY's internal delay for both RX and TX are used.
 
-Fixes: af0bd4e9ba80 ("net: stmmac: sunxi platform extensions for GMAC in Allwinner A20 SoC's")
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
 
 Maybe CC stable so future device trees can be used with stable kernels?
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index 26353ef616b8..7d40760e9ba8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -44,7 +44,7 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 	 * rate, which then uses the auto-reparenting feature of the
- 	 * clock driver, and enabling/disabling the clock.
- 	 */
--	if (gmac->interface == PHY_INTERFACE_MODE_RGMII) {
-+	if (phy_interface_mode_is_rgmii(gmac->interface)) {
- 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_GMII_RGMII_RATE);
- 		clk_prepare_enable(gmac->tx_clk);
- 		gmac->clk_enabled = 1;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 1c8d84ed8410..01b484cb177e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -957,6 +957,9 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		/* default */
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		reg |= SYSCON_EPIT | SYSCON_ETCS_INT_GMII;
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
 -- 
 2.24.1
 
