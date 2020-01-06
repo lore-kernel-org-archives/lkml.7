@@ -2,211 +2,106 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4036AC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EF2C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15782075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDdqcPXV"
+	by mail.kernel.org (Postfix) with ESMTP id CF4D62072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 10:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgAFKOy (ORCPT
+        id S1726436AbgAFKPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:14:54 -0500
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:44796 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgAFKOx (ORCPT
+        Mon, 6 Jan 2020 05:15:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42287 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgAFKPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:14:53 -0500
-Received: by mail-vk1-f202.google.com with SMTP id k16so7014761vko.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 02:14:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=at/6LW2CyTT3AHJ4DEYijPCx/QdUy/o9K531OsH9S78=;
-        b=bDdqcPXVe98eZZsa1W/fgJGsjHgmbnuAHsdVZRxB/3KvothFJUQUfQ0onHWQZ8cfpX
-         nT4tXkR1hx5QKJ0kqcm+i6hbjFiePhLwRTnnLJECG/i4KiwAfG9k7E6aYHg+osoPighR
-         XXXc5btco0/w1GOLEiK4WqSzvlCx/j9nz6X+8fZqp1uvhV7PRUaXbDN25u71AmYpWLyG
-         fxGkkeRTD0kfFO+jyrVOand0ROEnj5QBZn7670exqa2lPa0stOycRFTxWkSvuO/LOtdZ
-         pYS7sDIxeCDkp8cvSom/ZlQ7HLcbWDA13yy8M1tvGIWYO5o2xdI4JQFmv8Z7mjlYurwT
-         4nrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=at/6LW2CyTT3AHJ4DEYijPCx/QdUy/o9K531OsH9S78=;
-        b=bc82Lj/n0nZu+L2i2q8a7DkHHZutRsY8aeOFGdrHVYLXcUAsHbSvTSjAtxwkkLpVoQ
-         mH9XE62M5q5yS89Cdv0cXixILklr65Yp5hxZnl2qafNUO8vWmZAM2X1bwrrkbwgIiF+F
-         2ULOvhdV3EtubDK3z7peSiJoGhPNQJ9u8/yqOzJjY+XiWA+1iyCim2Igka12s/PZgIZy
-         fE5xTq0/TbKavghX4GRUB4L7iCxLyZtSlB1V9wnJOzq5TT+jBsG8AK0Q1Mjs/7FXTjbH
-         CxXkZDV04mBX3/ADMMbEaeiapONNCTzFWtlGi67OFv/BbRjN/ovSyI5CL4Ua/A768V8M
-         u7wQ==
-X-Gm-Message-State: APjAAAXzIJtC9arBHp8JXWV0siRzO9ivQYLH4Sxx9IGUjvMOGZFrPaOd
-        vPfLg/x1XVExFpVGoAHnHhizoSBGDNIXnCodBQ==
-X-Google-Smtp-Source: APXvYqxeiBsH+6mjRgu/QkCHpQHygOljrWjBgnQ6a4QtftT9FqtqwKY/jlH3egqEL8AIPfxpN+ZzS6YmKEMlPYvLDw==
-X-Received: by 2002:ab0:714c:: with SMTP id k12mr58239995uao.124.1578305691993;
- Mon, 06 Jan 2020 02:14:51 -0800 (PST)
-Date:   Mon,  6 Jan 2020 18:14:37 +0800
-Message-Id: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump attack
-From:   "howardchung@google.com" <howardchung@google.com>
-To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        howardchung <howardchung@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+        Mon, 6 Jan 2020 05:15:33 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ioPQ4-0002KV-M8; Mon, 06 Jan 2020 11:15:32 +0100
+Message-ID: <82299ef95e44190d9bcea29bacb5651f3dc75b64.camel@pengutronix.de>
+Subject: Re: [PATCH 5/6] drm/etnaviv: update hwdb selection logic
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Date:   Mon, 06 Jan 2020 11:15:32 +0100
+In-Reply-To: <20200102100230.420009-6-christian.gmeiner@gmail.com>
+References: <20200102100230.420009-1-christian.gmeiner@gmail.com>
+         <20200102100230.420009-6-christian.gmeiner@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: howardchung <howardchung@google.com>
+On Do, 2020-01-02 at 11:02 +0100, Christian Gmeiner wrote:
+> Take product id, customer id and eco id into account. If that
+> delivers no match try a search for model and revision.
+> 
+> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_hwdb.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
+> index eb0f3eb87ced..d1744f1b44b1 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_hwdb.c
+> @@ -44,9 +44,26 @@ bool etnaviv_fill_identity_from_hwdb(struct etnaviv_gpu *gpu)
+>  	struct etnaviv_chip_identity *ident = &gpu->identity;
+>  	int i;
+>  
+> +	/* accurate match */
+>  	for (i = 0; i < ARRAY_SIZE(etnaviv_chip_identities); i++) {
+>  		if (etnaviv_chip_identities[i].model == ident->model &&
+> -		    etnaviv_chip_identities[i].revision == ident->revision) {
+> +		    etnaviv_chip_identities[i].revision == ident->revision &&
+> +		    etnaviv_chip_identities[i].product_id == ident->product_id &&
 
-Attack scenario:
-1. A Chromebook (let's call this device A) is paired to a legitimate
-   Bluetooth classic device (e.g. a speaker) (let's call this device
-   B).
-2. A malicious device (let's call this device C) pretends to be the
-   Bluetooth speaker by using the same BT address.
-3. If device A is not currently connected to device B, device A will
-   be ready to accept connection from device B in the background
-   (technically, doing Page Scan).
-4. Therefore, device C can initiate connection to device A
-   (because device A is doing Page Scan) and device A will accept the
-   connection because device A trusts device C's address which is the
-   same as device B's address.
-5. Device C won't be able to communicate at any high level Bluetooth
-   profile with device A because device A enforces that device C is
-   encrypted with their common Link Key, which device C doesn't have.
-   But device C can initiate pairing with device A with just-works
-   model without requiring user interaction (there is only pairing
-   notification). After pairing, device A now trusts device C with a
-   new different link key, common between device A and C.
-6. From now on, device A trusts device C, so device C can at anytime
-   connect to device A to do any kind of high-level hijacking, e.g.
-   speaker hijack or mouse/keyboard hijack.
+Why not simply make this:
+(etnaviv_chip_identities[i].product_id == ident->product_id ||
+etnaviv_chip_identities[i].product_id == ~0U)
+and similar for customer and eco ID?
 
-To fix this, reject the pairing if all the conditions below are met.
-- the pairing is initialized by peer
-- the authorization method is just-work
-- host already had the link key to the peer
+With this we don't need two different walks through the HWDB, as long
+as the more specific entries in the DB are ordered to the front of the
+array.
 
-Also create a debugfs option to permit the pairing even the
-conditions above are met.
+Regards,
+Lucas
 
-Signed-off-by: howardchung <howardchung@google.com>
----
-
- include/net/bluetooth/hci.h |  1 +
- net/bluetooth/hci_core.c    | 47 +++++++++++++++++++++++++++++++++++++
- net/bluetooth/hci_event.c   | 12 ++++++++++
- 3 files changed, 60 insertions(+)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 07b6ecedc6ce..4918b79baa41 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -283,6 +283,7 @@ enum {
- 	HCI_FORCE_STATIC_ADDR,
- 	HCI_LL_RPA_RESOLUTION,
- 	HCI_CMD_PENDING,
-+	HCI_PERMIT_JUST_WORK_REPAIR,
- 
- 	__HCI_NUM_FLAGS,
- };
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 9e19d5a3aac8..9014aa567e7b 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -172,10 +172,57 @@ static const struct file_operations vendor_diag_fops = {
- 	.llseek		= default_llseek,
- };
- 
-+static ssize_t permit_just_work_repair_read(struct file *file,
-+					    char __user *user_buf,
-+					    size_t count, loff_t *ppos)
-+{
-+	struct hci_dev *hdev = file->private_data;
-+	char buf[3];
-+
-+	buf[0] = hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) ? 'Y'
-+								      : 'N';
-+	buf[1] = '\n';
-+	buf[2] = '\0';
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+}
-+
-+static ssize_t permit_just_work_repair_write(struct file *file,
-+					     const char __user *user_buf,
-+					     size_t count, loff_t *ppos)
-+{
-+	struct hci_dev *hdev = file->private_data;
-+	char buf[32];
-+	size_t buf_size = min(count, (sizeof(buf) - 1));
-+	bool enable;
-+
-+	if (copy_from_user(buf, user_buf, buf_size))
-+		return -EFAULT;
-+
-+	buf[buf_size] = '\0';
-+	if (strtobool(buf, &enable))
-+		return -EINVAL;
-+
-+	if (enable)
-+		hci_dev_set_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-+	else
-+		hci_dev_clear_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-+
-+	return count;
-+}
-+
-+static const struct file_operations permit_just_work_repair_fops = {
-+	.open		= simple_open,
-+	.read		= permit_just_work_repair_read,
-+	.write		= permit_just_work_repair_write,
-+	.llseek		= default_llseek,
-+};
-+
- static void hci_debugfs_create_basic(struct hci_dev *hdev)
- {
- 	debugfs_create_file("dut_mode", 0644, hdev->debugfs, hdev,
- 			    &dut_mode_fops);
-+	debugfs_create_file("permit_just_work_repair", 0644, hdev->debugfs,
-+			    hdev, &permit_just_work_repair_fops);
- 
- 	if (hdev->set_diag)
- 		debugfs_create_file("vendor_diag", 0644, hdev->debugfs, hdev,
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 6ddc4a74a5e4..898e347e19e0 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4539,6 +4539,18 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
- 		goto unlock;
- 	}
- 
-+	/* If there already exists link key in local host, terminate the
-+	 * connection by default since the remote device could be malicious.
-+	 * Permit the connection if permit_just_work_repair is enabled.
-+	 */
-+	if (!hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) &&
-+	    hci_find_link_key(hdev, &ev->bdaddr)) {
-+		BT_DBG("Rejecting request: local host already have link key");
-+		hci_send_cmd(hdev, HCI_OP_USER_CONFIRM_NEG_REPLY,
-+			     sizeof(ev->bdaddr), &ev->bdaddr);
-+		goto unlock;
-+	}
-+
- 	/* If no side requires MITM protection; auto-accept */
- 	if ((!loc_mitm || conn->remote_cap == HCI_IO_NO_INPUT_OUTPUT) &&
- 	    (!rem_mitm || conn->io_capability == HCI_IO_NO_INPUT_OUTPUT)) {
--- 
-2.24.1.735.g03f4e72817-goog
+> +		    etnaviv_chip_identities[i].customer_id == ident->customer_id &&
+> +		    etnaviv_chip_identities[i].eco_id == ident->eco_id) {
+> +			memcpy(ident, &etnaviv_chip_identities[i],
+> +			       sizeof(*ident));
+> +			return true;
+> +		}
+> +	}
+> +
+> +	/* match based only on model and revision */
+> +	for (i = 0; i < ARRAY_SIZE(etnaviv_chip_identities); i++) {
+> +		if (etnaviv_chip_identities[i].model == ident->model &&
+> +		    etnaviv_chip_identities[i].revision == ident->revision &&
+> +		    etnaviv_chip_identities[i].product_id == ~0U &&
+> +		    etnaviv_chip_identities[i].customer_id == ~0U &&
+> +		    etnaviv_chip_identities[i].eco_id == ~0U) {
+>  			memcpy(ident, &etnaviv_chip_identities[i],
+>  			       sizeof(*ident));
+>  			return true;
 
