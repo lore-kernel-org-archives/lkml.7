@@ -2,70 +2,94 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3911C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C77C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7524520731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MuUK2RK0"
+	by mail.kernel.org (Postfix) with ESMTP id 10A3320848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 16:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgAFQuK (ORCPT
+        id S1726659AbgAFQv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 11:50:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39524 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFQuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 11:50:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DA/PEhn/bC49HDh5jCDSJA4tw5UwFNX46Z1N0nzIQNU=; b=MuUK2RK0jwRPbv1ghUu9FMtiA
-        BflcHohuyp1tJjLG8A7v5CwhOXsNQVtdgxLmJkVmxoobIXFINZFEs0YIIFVUKYG/mMqdSpJrupHxR
-        VwS3VrtSnl3LHfbnkiDz4XewDCUXSHqTY3V1xeYi261KEP+TSCwhQTsXciUk7CTn32qks6qksrrIM
-        o1qZeNsZVJiBlIgOgSxvEA/hs7LT9QecrxzuBtB8yZD7ueQymSji7161BsBtGfh3wRaqoXqDJ+389
-        eA/XHF1+6k9KJ6Klc+9whtb1OfrOMW+tJAIJ0XAAlSNyxQVN6f7QcWNxWtREst9/WRJUW86WHqocd
-        aJRYs26Uw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ioVZs-0005VB-0u; Mon, 06 Jan 2020 16:50:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A3E573006E0;
-        Mon,  6 Jan 2020 17:48:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C17D72B2844FC; Mon,  6 Jan 2020 17:50:01 +0100 (CET)
-Date:   Mon, 6 Jan 2020 17:50:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v2 0/6] locking/lockdep: Reuse zapped chain_hlocks entries
-Message-ID: <20200106165001.GO2844@hirez.programming.kicks-ass.net>
-References: <20191216151517.7060-1-longman@redhat.com>
- <dfcfc267-1a2f-8070-c08b-662e9fe4798c@redhat.com>
+        Mon, 6 Jan 2020 11:51:56 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:52638 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgAFQv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 11:51:56 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1ioVbd-0002qj-Sl; Mon, 06 Jan 2020 09:51:54 -0700
+To:     Deepa Dinamani <deepa.kernel@gmail.com>, bhelgaas@google.com
+Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200104225149.27342-1-deepa.kernel@gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <724d80ee-3a81-23bc-74b0-4b786b3ace53@deltatee.com>
+Date:   Mon, 6 Jan 2020 09:51:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfcfc267-1a2f-8070-c08b-662e9fe4798c@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200104225149.27342-1-deepa.kernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, alex.williamson@redhat.com, mika.westerberg@linux.intel.com, bhelgaas@google.com, deepa.kernel@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 10:54:24AM -0500, Waiman Long wrote:
+On 2020-01-04 3:51 p.m., Deepa Dinamani wrote:
+> ACS bits remain sticky through kexec reset. This is not really a
+> problem for Linux because turning IOMMU on assumes ACS on. But,
+> this becomes a problem if we kexec into something other than
+> Linux and that does not turn ACS on always.
+> 
+> Reset the ACS bits to default before kexec or device remove.
 
-> Ping! Any comments or suggestion for further improvement?
+Hmm, I'm slightly hesitant about disabling ACS on a device's unbind...
+Not sure if that's going to open up a hole on us.
 
-You got stuck in the xmas pile -- I haven't looked at email in 2 weeks.
-I'll try and get to it soon-ish :-)
+> +
+> +/* Standard PCI ACS capailities
+> + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
+> + */
+> +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
+> +
+>  /**
+> - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+> + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
+> + * ACS capabilities
+>   * @dev: the PCI device
+>   */
+> -static void pci_std_enable_acs(struct pci_dev *dev)
+> +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
+>  {
+>  	int pos;
+>  	u16 cap;
+>  	u16 ctrl;
+> +	u16 val = 0;
+>  
+>  	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
+>  	if (!pos)
+> @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+>  	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+>  	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+>  
+> -	/* Source Validation */
+> -	ctrl |= (cap & PCI_ACS_SV);
+> +	val = (cap & PCI_STD_ACS_CAP);
+
+Can we open code PCI_STD_ACS_CAP? I don't see any value in it being
+defined above the function, it just makes the code harder to read.
+
+Logan
