@@ -2,79 +2,141 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B889C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B274CC33C9B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260972072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8549B2072C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 19:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHcLdxDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgAFTqi convert rfc822-to-8bit (ORCPT
+        id S1726797AbgAFTrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:46:38 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36250 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgAFTqi (ORCPT
+        Mon, 6 Jan 2020 14:47:16 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39837 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgAFTrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 14:46:38 -0500
-Received: from localhost (unknown [IPv6:2610:98:8005::147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: krisman)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C2936291A19;
-        Mon,  6 Jan 2020 19:46:36 +0000 (GMT)
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, tytso@mit.edu
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Organization: Collabora
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
-        <20200102082036.29643-11-namjae.jeon@samsung.com>
-        <20200105165115.37dyrcwtgf6zgc6r@pali>
-Date:   Mon, 06 Jan 2020 14:46:33 -0500
-In-Reply-To: <20200105165115.37dyrcwtgf6zgc6r@pali> ("Pali =?utf-8?Q?Roh?=
- =?utf-8?Q?=C3=A1r=22's?= message of
-        "Sun, 5 Jan 2020 17:51:15 +0100")
-Message-ID: <85woa4jrl2.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 6 Jan 2020 14:47:16 -0500
+Received: by mail-qk1-f195.google.com with SMTP id c16so40527278qko.6;
+        Mon, 06 Jan 2020 11:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dV+tao1iGX1mVBAanGJdAvJjv0EvzRJtTvvpb1gqTZE=;
+        b=dHcLdxDME0DK0EJHlUlA/hYOEIkmsvx8ooLR+jgEUSb5nM4ScEyebE5UrBn0kXK0hZ
+         hEWP3Sof6PCmfzOpWmu66dOlKFvywuLjnwfbQUX8rd6bAu7WPkMXwEm3fiBK1wuBq7nU
+         ZmXqdIsZx5AN8t6tDCVcQY6JkgiUzsnGpeLDB9x1fTpFDLgRn0sLQEtRtuyO1eck4wUi
+         R0Y9Dy3Oqhd17cA40szggCIkOzQFApXOmaDyl9xW4yd00d5tsoGgKmMETDMTVEkg5uQG
+         9p4ZdjUgEYXka0zEG1qiNyZz2uZa3BtcoBOZwe8PQZao73Zj+YOedJidwjGXsow+iFBi
+         3Mrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dV+tao1iGX1mVBAanGJdAvJjv0EvzRJtTvvpb1gqTZE=;
+        b=PQOVNd8WxChVFNNanTNj4FIdZ1916oFN1NYBAUt2pm66cEj9NmEc3OCGhRnlW1V5fr
+         HSC+mbyv/S/2cMO4UVOY5QyJOSbiuRqVnKWEW9+sGoZwMGK8PjDY0brFebLofp0CUVR8
+         /BrVf60giYDr0PZwj3KE+JpS0ZJKddGtfzZhyEu95ET/l01cULaeSk9w9eCFtFeJJ+Ce
+         UOW3JdkHyx+yd7WJv+4A2LguNm7XGB7P2QMxY02Luy0A/2+VRUQKLyH56OLhbq9J5D/b
+         ULe0CHfgfA8gvF1bijUH+KKLqslJIurFmm4mcRNbi4rojEtNpQsxXxEo4j2RWfCthdDm
+         eaiQ==
+X-Gm-Message-State: APjAAAUFRSEgjD3EJLcOUVs90ULExqf9HNEqqDHJCATxOPxnE9j5dDqh
+        cMFHIPvgHmoib8pfH89nRZE=
+X-Google-Smtp-Source: APXvYqzlzdlUQlzpxdcrE/X9tFRW5pJCYXTKWH0TzmgMniDlp5LO1PELPhuiUef23X4MebvBMpdtLQ==
+X-Received: by 2002:a37:4905:: with SMTP id w5mr84040751qka.267.1578340035153;
+        Mon, 06 Jan 2020 11:47:15 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id e2sm21012192qkb.112.2020.01.06.11.47.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 11:47:14 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9901340DFD; Mon,  6 Jan 2020 16:47:11 -0300 (-03)
+Date:   Mon, 6 Jan 2020 16:47:11 -0300
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        users@linux.kernel.org
+Subject: Re: [RFC] tools lib traceevent: How to do library versioning being
+ in the Linux kernel source?
+Message-ID: <20200106194711.GC11285@kernel.org>
+References: <20200102122004.216c85da@gandalf.local.home>
+ <20200102234950.GA14768@krava>
+ <20200102185853.0ed433e4@gandalf.local.home>
+ <20200103133640.GD9715@krava>
+ <20200103181614.7aa37f6d@gandalf.local.home>
+ <20200106151902.GB236146@krava>
+ <20200106162623.GA11285@kernel.org>
+ <20200106113615.4545e3c5@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106113615.4545e3c5@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali.rohar@gmail.com> writes:
+Em Mon, Jan 06, 2020 at 11:36:15AM -0500, Steven Rostedt escreveu:
+> On Mon, 6 Jan 2020 13:26:23 -0300
+> Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+ 
+> > So, we have:
 
-> What do you think what should kernel's exfat driver do in this case?
->
-> To prevent such thing we need to use some kind of Unicode normalization
-> form here.
->
-> CCing Gabriel as he was implementing some Unicode normalization for ext4
-> driver and maybe should bring some light to new exfat driver too.
+> > https://www.kernel.org/pub/linux/kernel/tools/perf/
 
-We have an in-kernel implementation of the canonical decomposition
-normalization (NFD) in fs/unicode, which is what we use for f2fs and
-ext4.  It is heated argument what is the best form for filesystem usage,
-and from what I researched, every proprietary filesystem does a
-different (and crazy in their unique way) thing.
+> > trying to mimic the kernel sources tree structure, so perhaps we could
+> > have:
 
-For exfat, even though the specification is quite liberal, I think the
-reasonable answer is to follow closely whatever behavior the Windows
-implementation has, whether it does normalization at all or not. Even if
-it is just an in-memory format used internally for lookups, assuming a
-different format or treating differently invalid file names can result
-in awkward results in a filesystem created on another operating system,
-like filename collisions or false misses in lookups.
+> > https://www.kernel.org/pub/linux/kernel/tools/lib/{perf,traceevent}/
 
--- 
-Gabriel Krisman Bertazi
+> > To continue that directory tree mirror?
+ 
+> Wouldn't that become a bit of manual work. Unlike perf, the versions
+> will not correspond to the Linux kernel versions. They would need to
+> follow library versioning.
+
+It doesn't have to correspond, the versions you use there are entirely
+up to libtraceevent developers, no?  I.e. when you decide to cut some
+version, tag it in the linux kernel git repo, create a tarball,
+something like:
+
+make help | grep perf
+
+but using whatever versioning you decide to use, which would be the same
+regardless of where you develop it, and make it available via
+https://www.kernel.org/pub/linux/kernel/tools/lib/traceevent/
+ 
+> It would at a minimum require new scripting to get this right.
+
+Sure, regardless of where you do source code control you will need to
+tag, create a tarball, signatures (which kup helps with) for kernel.org,
+for instance I use:
+
+  kup put perf-${VER}.tar.xz perf-${VER}.tar.sign /pub/linux/kernel/tools/perf/v${VER}/perf-${VER}.tar.xz
+
+What is in ${VER} is entirely up to me, its just that perf has a very
+active development process with lots of patches each release and we
+try to stop getting features when the kernel closes the window, have a
+-next for new features, etc, so we end up with perf-ver == kernel-ver,
+but that never was a requirement, its just convenient and we got used to
+it.
+
+- Arnaldo
