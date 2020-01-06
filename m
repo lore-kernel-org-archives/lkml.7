@@ -2,111 +2,95 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF42C32767
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD80C32767
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACCF2071A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E105215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 04:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgAFEcJ (ORCPT
+        id S1727507AbgAFEhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Jan 2020 23:32:09 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45334 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgAFEcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Jan 2020 23:32:08 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v28so46352212edw.12;
-        Sun, 05 Jan 2020 20:32:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XMDutFxXoe3ZkyaegKexXIdDhONjUtjuJvY6xSY/yc8=;
-        b=WL5GzdehY53YY3faQhGnYSEkmL4ADln3WlFgnvNwSXkshB4an+9R5batUjOXKWUSSQ
-         exBDaJsGop3jVLWxSZ8oBLgS4BPLVL+2kyWV+7nC4CjznCruCJ08X7lhMX9Ne1j2agrC
-         ZHZbHpakWy0WYD7hKmnNslYEJl2yPZvLfGGEhGUbphDAWRJyGoijgZdkuoPwuohm2pGz
-         /H6e25ub+m8KAdxtFaDsi950Bb9wpL8O5xOKtZtqhKrLnyycLCGMwNT2PWx2qNr5rWj4
-         SydJ5IjETKHtD+KZursDU7auIsXHgL2JlWHJCPoWzj6RDenCnbsXmzCHTZdBlXW1hfnX
-         FFjQ==
-X-Gm-Message-State: APjAAAW7pfcxK9RIaBAaMVpYLPoSNAWYycOx2PqF3URc+g+Pyd0EQv9i
-        euIJAoaqHIMwa5sQF4C04VxhG0cBmKI=
-X-Google-Smtp-Source: APXvYqyFc9hrz1FKSCTolUkHf/GfC+DQ2v30cgKvp73ML+AV6cxgMbki+X4tp3pQS36uSkonnEYDtw==
-X-Received: by 2002:a17:906:cc8b:: with SMTP id oq11mr107808909ejb.193.1578285125946;
-        Sun, 05 Jan 2020 20:32:05 -0800 (PST)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id u2sm7334173edx.35.2020.01.05.20.32.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 20:32:05 -0800 (PST)
-Received: by mail-wr1-f48.google.com with SMTP id z7so48164626wrl.13;
-        Sun, 05 Jan 2020 20:32:05 -0800 (PST)
-X-Received: by 2002:adf:ef4e:: with SMTP id c14mr102285473wrp.142.1578285125179;
- Sun, 05 Jan 2020 20:32:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191228171904.24618-1-tiny.windzz@gmail.com>
-In-Reply-To: <20191228171904.24618-1-tiny.windzz@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 6 Jan 2020 12:31:55 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
-Message-ID: <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
-Subject: Re: [PATCH] thermal: sun8i: Add hwmon support
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jan 2020 23:37:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:40368 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727446AbgAFEhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Jan 2020 23:37:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F72731B;
+        Sun,  5 Jan 2020 20:37:44 -0800 (PST)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.41.131])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F1943F534;
+        Sun,  5 Jan 2020 20:37:41 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] memblock: Use __func__ in remaining memblock_dbg() call sites
+Date:   Mon,  6 Jan 2020 10:08:30 +0530
+Message-Id: <1578285510-28261-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 1:19 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> Expose sun8i thermal as a HWMON device.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/thermal/sun8i_thermal.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> index 23a5f4aa4be4..619e75cb41b0 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -20,6 +20,8 @@
->  #include <linux/slab.h>
->  #include <linux/thermal.h>
->
-> +#include "thermal_hwmon.h"
-> +
->  #define MAX_SENSOR_NUM 4
->
->  #define FT_TEMP_MASK                           GENMASK(11, 0)
-> @@ -477,6 +479,10 @@ static int sun8i_ths_register(struct ths_device *tmdev)
->                                                              &ths_ops);
->                 if (IS_ERR(tmdev->sensor[i].tzd))
->                         return PTR_ERR(tmdev->sensor[i].tzd);
-> +
-> +               if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
-> +                       dev_warn(tmdev->dev,
-> +                                "Failed to add hwmon sysfs attributes\n");
+Replace open function name strings with %s (__func__) in all remaining
+memblock_dbg() call sites.
 
-Maybe you want a hard failure instead?
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ mm/memblock.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-ChenYu
+diff --git a/mm/memblock.c b/mm/memblock.c
+index fc0d4db1d646..eba94ee3de0b 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -694,7 +694,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_add: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+@@ -795,7 +795,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_remove: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_remove_range(&memblock.memory, base, size);
+@@ -813,7 +813,7 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("   memblock_free: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	kmemleak_free_part_phys(base, size);
+@@ -824,7 +824,7 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_reserve: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+-- 
+2.20.1
 
->         }
->
->         return 0;
-> --
-> 2.17.1
->
