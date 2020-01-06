@@ -2,141 +2,77 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D72C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A3AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46AD207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6636C20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 12:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgAFMDn (ORCPT
+        id S1726477AbgAFMGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 07:03:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:43360 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAFMDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 07:03:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ABCC328;
-        Mon,  6 Jan 2020 04:03:42 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 515583F534;
-        Mon,  6 Jan 2020 04:03:41 -0800 (PST)
-Date:   Mon, 6 Jan 2020 12:03:39 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH] perf: correctly handle failed perf_get_aux_event() (was: Re:
- [perf] perf_event_open() sometimes returning 0)
-Message-ID: <20200106120338.GC9630@lakrids.cambridge.arm.com>
-References: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
- <alpine.DEB.2.21.2001021418590.11372@macbook-air>
+        Mon, 6 Jan 2020 07:06:06 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43311 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgAFMGG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 07:06:06 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ioR8w-0008Es-8J; Mon, 06 Jan 2020 12:05:58 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] power: avs: fix uninitialized error return on failed cpr_read_fuse_uV call
+Date:   Mon,  6 Jan 2020 12:05:58 +0000
+Message-Id: <20200106120558.37758-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001021418590.11372@macbook-air>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:22:47PM -0500, Vince Weaver wrote:
-> On Thu, 2 Jan 2020, Vince Weaver wrote:
-> 
-> > so I was tracking down some odd behavior in the perf_fuzzer which turns 
-> > out to be because perf_even_open() sometimes returns 0 (indicating a file 
-> > descriptor of 0) even though as far as I can tell stdin is still open.
+From: Colin Ian King <colin.king@canonical.com>
 
-Yikes.
+Currently when the call cpr_read_fuse_uV returns an error the value in the
+uninitialized variable ret is returned. Fix this by instread returning the
+error value in the variable uV.
 
-> error is triggered if aux_sample_size has non-zero value.
->
-> seems to be this line in kernel/events/core.c:
-> 
-> 
->  if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
->                 goto err_locked;
-> 
-> 
-> (note, err is never set)
-
-Looks like that was introduced in commit:
-
-  ab43762ef010967e ("perf: Allow normal events to output AUX data")
-  
-I guess we should return -EINVAL in this case.
-
-Vince, does the below (untested) patch work for you?
-
-Thanks,
-Mark.
-
----->8----
-From c79f31b42aaf85f3a924af9218794b3bc8b79892 Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Mon, 6 Jan 2020 11:51:06 +0000
-Subject: [PATCH] perf: correctly handle failed perf_get_aux_event()
-
-Vince reports a worrying issue:
-
-| so I was tracking down some odd behavior in the perf_fuzzer which turns
-| out to be because perf_even_open() sometimes returns 0 (indicating a file
-| descriptor of 0) even though as far as I can tell stdin is still open.
-
-... and further the cause:
-
-| error is triggered if aux_sample_size has non-zero value.
-|
-| seems to be this line in kernel/events/core.c:
-|
-| if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
-|                goto err_locked;
-|
-| (note, err is never set)
-
-This seems to be a thinko in commit:
-
-  ab43762ef010967e ("perf: Allow normal events to output AUX data")
-
-... and we should probably return -EINVAL here, as this should only
-happen when the new event is mis-configured or does not have a
-compatible aux_event group leader.
-
-Fixes: ab43762ef010967e ("perf: Allow normal events to output AUX data")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: bf6910abf548 ("power: avs: Add support for CPR (Core Power Reduction)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- kernel/events/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/power/avs/qcom-cpr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a1f8bde19b56..2173c23c25b4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11465,8 +11465,10 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
+diff --git a/drivers/power/avs/qcom-cpr.c b/drivers/power/avs/qcom-cpr.c
+index 9247f53550b3..0321729431a5 100644
+--- a/drivers/power/avs/qcom-cpr.c
++++ b/drivers/power/avs/qcom-cpr.c
+@@ -922,7 +922,7 @@ static int cpr_fuse_corner_init(struct cpr_drv *drv)
+ 		uV = cpr_read_fuse_uV(desc, fdata, fuses->init_voltage,
+ 				      step_volt, drv);
+ 		if (uV < 0)
+-			return ret;
++			return uV;
  
--	if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
-+	if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader)) {
-+		err = -EINVAL;
- 		goto err_locked;
-+	}
- 
- 	/*
- 	 * Must be under the same ctx::mutex as perf_install_in_context(),
+ 		fuse->min_uV = fdata->min_uV;
+ 		fuse->max_uV = fdata->max_uV;
 -- 
-2.11.0
+2.24.0
 
