@@ -2,126 +2,112 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B62EC33C9B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD37C33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C47F2072C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC2D2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 22:25:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nyopb1Gg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgAFWZb (ORCPT
+        id S1727200AbgAFWZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:25:31 -0500
-Received: from mga18.intel.com ([134.134.136.126]:46983 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgAFWZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:25:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 14:25:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,403,1571727600"; 
-   d="scan'208";a="253509785"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Jan 2020 14:25:29 -0800
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 6 Jan 2020 14:25:28 -0800
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.41]) by
- ORSMSX116.amr.corp.intel.com ([169.254.7.30]) with mapi id 14.03.0439.000;
- Mon, 6 Jan 2020 14:25:28 -0800
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "luto@amacapital.net" <luto@amacapital.net>
-CC:     "songliubraving@fb.com" <songliubraving@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "jannh@google.com" <jannh@google.com>,
-        "mjg59@google.com" <mjg59@google.com>,
-        "thgarnie@chromium.org" <thgarnie@chromium.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "revest@chromium.org" <revest@chromium.org>,
-        "jackmanb@chromium.org" <jackmanb@chromium.org>,
-        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "mhalcrow@google.com" <mhalcrow@google.com>,
-        "andriin@fb.com" <andriin@fb.com>
-Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
-Thread-Topic: [PATCH bpf-next] bpf: Make trampolines W^X
-Thread-Index: AQHVwpjLpCzVLdPZ5Em9CS0HIZ/iOKfewVwA
-Date:   Mon, 6 Jan 2020 22:25:27 +0000
-Message-ID: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
-References: <20200103234725.22846-1-kpsingh@chromium.org>
-         <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
-In-Reply-To: <F25C9071-A7A7-4221-BC49-A769E1677EE1@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.54.75.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C1D761781F8B5E4EBBB83ABF3CB2AE9E@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 6 Jan 2020 17:25:52 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:33032 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgAFWZv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:25:51 -0500
+Received: by mail-vk1-f195.google.com with SMTP id i78so12909365vke.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eV/1akoxP7P3ABmGBw2S16HDMJ8eaLjqFUo1f5/sSLU=;
+        b=Nyopb1GgYHuYm4R4qPjbmQiRz9pqSDRwa0NMCNwzi97cVj5VOB0eC1RQIKPkLo7RAY
+         3Yfg8Sb5Xzxc2VGfuD3QSRolbSggv0XZfau1AluQ0W6H97XjPI2HXUl3iqL/kDoH8Uf3
+         zHQkdzZ2Dg3uxiLBFDyXjtSHyOlzhm3/QNAgk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eV/1akoxP7P3ABmGBw2S16HDMJ8eaLjqFUo1f5/sSLU=;
+        b=XPJworXJnVlzqCGSO96zo6jgBojnRPp91YgKOpNdic3fLF4iCH6a3Slla/9+Y51FJx
+         r7fbLwj+OvWgkazK7FLRC9eYWjgsLqkBinJM62Jjm+1nPB3uCZTFeDGYNqcciDllvUTL
+         fXnbl4uDCOKjAhG+Qld0lfavLd6UVAZiGVFQcFLgKlq4bi0sRQBPxDWFuXRQlgaP3VWT
+         UP+580IwfJCmwmtAqNKq5uzoNNf8M+kvvb+IvOT9GvTfNOeiBzQQbULqoJzldnQaInEf
+         zmc3763xPR+gX1EZ/fuxVVxB7xQBfMgZidMbKYhc1MLXIvPMOxYo8b+6Fdvnmy/BqLR0
+         Ibmw==
+X-Gm-Message-State: APjAAAWLNhqn2Iz/xN4FpVq216jxAlkMF1IM+84OnpBPMX4TEwzE0ejE
+        CM3vsfKy8olsKZQ9SPp4wPjXZ3NQYUs=
+X-Google-Smtp-Source: APXvYqyv8A+f20/WLireLiLyJG8ZIGlmkiG4VYBoh6SQRysE4BtpREf++1pdky9K29JNFq28buw8vA==
+X-Received: by 2002:a1f:e784:: with SMTP id e126mr61611505vkh.102.1578349550438;
+        Mon, 06 Jan 2020 14:25:50 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id n204sm18656240vkn.7.2020.01.06.14.25.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 14:25:49 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id x123so32642843vsc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 14:25:49 -0800 (PST)
+X-Received: by 2002:a67:8704:: with SMTP id j4mr55143272vsd.106.1578349548941;
+ Mon, 06 Jan 2020 14:25:48 -0800 (PST)
 MIME-Version: 1.0
+References: <HE1PR06MB40118544456FC5461F49DDE8AC2E0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+In-Reply-To: <HE1PR06MB40118544456FC5461F49DDE8AC2E0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 6 Jan 2020 14:25:37 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XbmwC1H446Og9juqYBR66ozjNVw9SDa2WWz=sKQg_imw@mail.gmail.com>
+Message-ID: <CAD=FV=XbmwC1H446Og9juqYBR66ozjNVw9SDa2WWz=sKQg_imw@mail.gmail.com>
+Subject: Re: [PATCH for 5.5] phy/rockchip: inno-hdmi: round clock rate down to
+ closest 1000 Hz
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAxLTA0IGF0IDA5OjQ5ICswOTAwLCBBbmR5IEx1dG9taXJza2kgd3JvdGU6
-DQo+ID4gT24gSmFuIDQsIDIwMjAsIGF0IDg6NDcgQU0sIEtQIFNpbmdoIDxrcHNpbmdoQGNocm9t
-aXVtLm9yZz4gd3JvdGU6DQo+ID4gDQo+ID4g77u/RnJvbTogS1AgU2luZ2ggPGtwc2luZ2hAZ29v
-Z2xlLmNvbT4NCj4gPiANCj4gPiBUaGUgaW1hZ2UgZm9yIHRoZSBCUEYgdHJhbXBvbGluZXMgaXMg
-YWxsb2NhdGVkIHdpdGgNCj4gPiBicGZfaml0X2FsbG9jX2V4ZV9wYWdlIHdoaWNoIG1hcmtzIHRo
-aXMgYWxsb2NhdGVkIHBhZ2UgZXhlY3V0YWJsZS4gVGhpcw0KPiA+IG1lYW5zIHRoYXQgdGhlIGFs
-bG9jYXRlZCBtZW1vcnkgaXMgVyBhbmQgWCBhdCB0aGUgc2FtZSB0aW1lIG1ha2luZyBpdA0KPiA+
-IHN1c2NlcHRpYmxlIHRvIFdYIGJhc2VkIGF0dGFja3MuDQo+ID4gDQo+ID4gU2luY2UgdGhlIGFs
-bG9jYXRlZCBtZW1vcnkgaXMgc2hhcmVkIGJldHdlZW4gdHdvIHRyYW1wb2xpbmVzICh0aGUNCj4g
-PiBjdXJyZW50IGFuZCB0aGUgbmV4dCksIDIgcGFnZXMgbXVzdCBiZSBhbGxvY2F0ZWQgdG8gYWRo
-ZXJlIHRvIFdeWCBhbmQNCj4gPiB0aGUgZm9sbG93aW5nIHNlcXVlbmNlIGlzIG9iZXllZCB3aGVy
-ZSB0cmFtcG9saW5lcyBhcmUgbW9kaWZpZWQ6DQo+IA0KPiBDYW4gd2UgcGxlYXNlIGRvIGJldHRl
-ciByYXRoZXIgdGhhbiBwaWxpbmcgZ2FyYmFnZSBvbiB0b3Agb2YgZ2FyYmFnZT8NCj4gDQo+ID4g
-DQo+ID4gLSBNYXJrIG1lbW9yeSBhcyBub24gZXhlY3V0YWJsZSAoc2V0X21lbW9yeV9ueCkuIFdo
-aWxlIG1vZHVsZV9hbGxvYyBmb3INCj4gPiB4ODYgYWxsb2NhdGVzIHRoZSBtZW1vcnkgYXMgUEFH
-RV9LRVJORUwgYW5kIG5vdCBQQUdFX0tFUk5FTF9FWEVDLCBub3QNCj4gPiBhbGwgaW1wbGVtZW50
-YXRpb25zIG9mIG1vZHVsZV9hbGxvYyBkbyBzbw0KPiANCj4gSG93IGFib3V0IGZpeGluZyB0aGlz
-IGluc3RlYWQ/DQo+IA0KPiA+IC0gTWFyayB0aGUgbWVtb3J5IGFzIHJlYWQvd3JpdGUgKHNldF9t
-ZW1vcnlfcncpDQo+IA0KPiBQcm9iYWJseSBoYXJtbGVzcywgYnV0IHNlZSBhYm92ZSBhYm91dCBm
-aXhpbmcgaXQuDQo+IA0KPiA+IC0gTW9kaWZ5IHRoZSB0cmFtcG9saW5lDQo+IA0KPiBTZWVtcyBy
-ZWFzb25hYmxlLiBJdOKAmXMgd29ydGggbm90aW5nIHRoYXQgdGhpcyB3aG9sZSBhcHByb2FjaCBp
-cyBzdWJvcHRpbWFsOg0KPiB0aGUg4oCcbW9kdWxl4oCdIGFsbG9jYXRvciBzaG91bGQgcmVhbGx5
-IGJlIHJldHVybmluZyBhIGxpc3Qgb2YgcGFnZXMgdG8gYmUNCj4gd3JpdHRlbiAobm90IGF0IHRo
-ZSBmaW5hbCBhZGRyZXNzISkgd2l0aCB0aGUgYWN0dWFsIGV4ZWN1dGFibGUgbWFwcGluZyB0byBi
-ZQ0KPiBtYXRlcmlhbGl6ZWQgbGF0ZXIsIGJ1dCB0aGF04oCZcyBhIGJpZ2dlciBwcm9qZWN0IHRo
-YXQgeW914oCZcmUgd2VsY29tZSB0byBpZ25vcmUNCj4gZm9yIG5vdy4gIChDb25jcmV0ZWx5LCBp
-dCBzaG91bGQgcHJvZHVjZSBhIHZtYXAgYWRkcmVzcyB3aXRoIGJhY2tpbmcgcGFnZXMgYnV0DQo+
-IHdpdGggdGhlIHZtYXAgYWxpYXMgZWl0aGVyIGVudGlyZWx5IHVubWFwcGVkIG9yIHJlYWQtb25s
-eS4gQSBzdWJzZXF1ZW50IGhlYWxlcg0KPiB3b3VsZCwgYWxsIGF0IG9uY2UsIG1ha2UgdGhlIGRp
-cmVjdCBtYXAgcGFnZXMgUk8gb3Igbm90LXByZXNlbnQgYW5kIG1ha2UgdGhlDQo+IHZtYXAgYWxp
-YXMgUlguKQ0KPiA+IC0gTWFyayB0aGUgbWVtb3J5IGFzIHJlYWQtb25seSAoc2V0X21lbW9yeV9y
-bykNCj4gPiAtIE1hcmsgdGhlIG1lbW9yeSBhcyBleGVjdXRhYmxlIChzZXRfbWVtb3J5X3gpDQo+
-IA0KPiBObywgdGhhbmtzLiBUaGVyZeKAmXMgdmVyeSBsaXR0bGUgZXhjdXNlIGZvciBkb2luZyB0
-d28gSVBJIGZsdXNoZXMgd2hlbiBvbmUNCj4gd291bGQgc3VmZmljZS4NCj4gDQo+IEFzIGZhciBh
-cyBJIGtub3csIGFsbCBhcmNoaXRlY3R1cmVzIGNhbiBkbyB0aGlzIHdpdGggYSBzaW5nbGUgZmx1
-c2ggd2l0aG91dA0KPiByYWNlcyAgeDg2IGNlcnRhaW5seSBjYW4uIFRoZSBtb2R1bGUgZnJlZWlu
-ZyBjb2RlIGdldHMgdGhpcyBzZXF1ZW5jZSByaWdodC4NCj4gUGxlYXNlIHJldXNlIGl0cyBtZWNo
-YW5pc20gb3IsIGlmIG5lZWRlZCwgZXhwb3J0IHRoZSByZWxldmFudCBpbnRlcmZhY2VzLg0KDQpT
-byBpZiBJIHVuZGVyc3RhbmQgdGhpcyByaWdodCwgc29tZSB0cmFtcG9saW5lcyBoYXZlIGJlZW4g
-YWRkZWQgdGhhdCBhcmUNCmN1cnJlbnRseSBzZXQgYXMgUldYIGF0IG1vZGlmaWNhdGlvbiB0aW1l
-IEFORCBsZWZ0IHRoYXQgd2F5IGR1cmluZyBydW50aW1lPyBUaGUNCmRpc2N1c3Npb24gb24gdGhl
-IG9yZGVyIG9mIHNldF9tZW1vcnlfKCkgY2FsbHMgaW4gdGhlIGNvbW1pdCBtZXNzYWdlIG1hZGUg
-bWUNCnRoaW5rIHRoYXQgdGhpcyB3YXMganVzdCBhIG1vZGlmaWNhdGlvbiB0aW1lIHRoaW5nIGF0
-IGZpcnN0Lg0KDQpBbHNvLCBpcyB0aGVyZSBhIHJlYXNvbiB5b3UgY291bGRuJ3QgdXNlIHRleHRf
-cG9rZSgpIHRvIG1vZGlmeSB0aGUgdHJhbXBvbGluZQ0Kd2l0aCBhIHNpbmdsZSBmbHVzaD8NCg0K
-DQo=
+Hi,
+
+On Mon, Dec 23, 2019 at 12:49 AM Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> Commit 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
+> changed what rate clk_round_rate() is called with, an additional 999 Hz
+> added to the requsted mode clock. This has caused a regression on RK3328
+> and presumably also on RK3228 because the inno-hdmi-phy clock requires an
+> exact match of the requested rate in the pre pll config table.
+>
+> When an exact match is not found the parent clock rate (24MHz) is returned
+> to the clk_round_rate() caller. This cause wrong pixel clock to be used and
+> result in no-signal when configuring a mode on RK3328.
+>
+> Fix this by rounding the rate down to closest 1000 Hz in round_rate func,
+> this allows an exact match to be found in pre pll config table.
+>
+> Fixes: 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+
+Sorry for the regression and thanks for the fix.  It seems sane to me
+since you're just matching against your own table and all the rates
+there are all in kHz.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
