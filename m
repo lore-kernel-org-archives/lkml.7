@@ -2,160 +2,89 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858F0C33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBEBC32771
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6076520848
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E728720848
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 08:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZUDeLbmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgAFIHG (ORCPT
+        id S1726180AbgAFIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:07:06 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38285 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgAFIHG (ORCPT
+        Mon, 6 Jan 2020 03:10:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57478 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFIKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 03:07:06 -0500
-Received: by mail-ot1-f67.google.com with SMTP id d7so66167981otf.5;
-        Mon, 06 Jan 2020 00:07:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DW1SIti7NHYB1AbqgFvyF14dNMwa3qPTzBW09JetqYs=;
-        b=fLBvsDRjAp27Ry4z3ybY4TWK2AC39HDKg34iIBO0JHpK4ZW8DIG1X0FLVIcoaFKQPl
-         FcnASseG3YV7gK9AzPCfrox2rjHnRyOSipoEyNKXwGcFFAr30aIEn5KWFdaHrUWaP8sg
-         n8YLlfwpGwRBi7DndS5zY0CSnLwdZeUvyur4u+IrJr/GjJFnn5e0SV8PwOgD5QxajggX
-         GpPTfAuE8jxPWVJ5ZdfdCOhDlZckyYGQmpZ4jNGMQGaOXu2yFjnpx6aV04qnhqKXsmJ+
-         ssGU5M8L6v9M9e3oOx/tIo3A+JENrzYd/59yzbk/ZCZ9GS10i08SoBX1FERJnR3L3Qs6
-         25mA==
-X-Gm-Message-State: APjAAAVOtT996oCGUCAki2uSbSzYITPnZYYhM2djUur4DzuhvbVL9rQn
-        M4Mz7A9vSrpKvjWYnukfm26QXsOikh8nIZxQS6s=
-X-Google-Smtp-Source: APXvYqxAKJhctUL3mn7UzaLw+sqHKf++PDfXB8dUrOnMMXR6h0t2N8/KpR/0X7vcb8CRnhjsdWQ+ZW4+Y5nwyAvTH3w=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr15235457ots.250.1578298025342;
- Mon, 06 Jan 2020 00:07:05 -0800 (PST)
+        Mon, 6 Jan 2020 03:10:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4jQT2MzQnGVbRqu0zEK79SsXrd8bqafhR3CZKOJDJAI=; b=ZUDeLbmSrGs+4SbT7pm8/4nX8
+        tDqFDyrJfAWLbNTFH8krQ/jD9CmZo00y/8QCaZP/ZD0ZF0J74oLl6njQxiLOSuXqbifp2mteZIGXj
+        Kv48FYjP11u/tXXxudiu2rB3gBeZb24sS/qIjcM0/Hm6r+qSKpGnI+ABWjvnUJSoElxkky5fLM35H
+        pQGJvDdOd6JNvrZhY/d9wRPC5LwSeEfREX3urIJGZlAVhpTzX2OTUqKnYwEZJ66FhsWaexuXiaK1a
+        kTzHNM5qH4k0+kw6bvh+llV0aCM3NNITchFIeu4CsP76UfMNAxMRZC2Uexhda+koZZrKFhNq/l46d
+        A4PJKUhpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ioNSx-0008Gk-9a; Mon, 06 Jan 2020 08:10:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8799304124;
+        Mon,  6 Jan 2020 09:08:48 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5F1612B508237; Mon,  6 Jan 2020 09:10:20 +0100 (CET)
+Date:   Mon, 6 Jan 2020 09:10:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC PATCH 0/7] sched: Streamline select_task_rq() &
+ select_task_rq_fair()
+Message-ID: <20200106081020.GL2844@hirez.programming.kicks-ass.net>
+References: <20191211164401.5013-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
- <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com> <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Jan 2020 09:06:53 +0100
-Message-ID: <CAMuHMdWZ7Wh9rq7SGt7edgCXL1e5UwtSUfxLc0exHa-TEB=W5w@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211164401.5013-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 11, 2019 at 04:43:54PM +0000, Valentin Schneider wrote:
+> Discussion points
+> =================
+> 
+> The use of SD_LOAD_BALANCE forced me to do a few ugly things.
+> 
+> Patch 5 is only required because the domain walk in select_task_rq_fair()
+> is ceiled by the presence of SD_LOAD_BALANCE. Thing is (I also ramble about
+> this in the changelog of patch 7) AFAIK this flag is set unconditionally in
+> sd_init() and the only way to clear it is via the sched_domain sysctl,
+> which is a SCHED_DEBUG interface. I haven't found anything with cpusets
+> that would clear it; AFAICT cpusets can end up attaching the NULL domain to
+> some CPUs (with sched_load_balance=0) but that's as far as this goes:
 
-On Sat, Jan 4, 2020 at 1:21 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Dec 12, 2019 at 3:48 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > > On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-> > > <geert+renesas@glider.be> wrote:
-> > > > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-> > > > +them into a new gpio_chip, which can be assigned to a group or user using
-> > > > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> > > > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> > > > +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> > > > +which not, reducing the attack surface.
-> > > > +
-> > > > +Aggregated GPIO controllers are instantiated and destroyed by writing to
-> > > > +write-only attribute files in sysfs.
-> > >
-> > > I suppose virtual machines will have a lengthy config file where
-> > > they specify which GPIO lines to pick and use for their GPIO
-> > > aggregator, and that will all be fine, the VM starts and the aggregator
-> > > is there and we can start executing.
-> > >
-> > > I would perhaps point out a weakness as with all sysfs and with the current
-> > > gpio sysfs: if a process creates an aggregator device, and then that
-> > > process crashes, what happens when you try to restart the process and
-> > > run e.g. your VM again?
-> > >
-> > > Time for a hard reboot? Or should we add some design guidelines for
-> > > these machines so that they can cleanly tear down aggregators
-> > > previously created by the crashed VM?
-> >
-> > No, the VM does not create the aggregator.
-> >
-> > The idea is for the user to create one or more aggregators, set up
-> > permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
-> > /dev/gpiochipX as parameters.
-> > If the VM crashes, just launch it again.
-> >
-> > Destroying the aggregators is a manual and independent process, after
-> > the VM has exited.
->
-> I'm thinking about someone making some industrial application for some
-> control of a machinery say a robotic arm.
->
-> And do make sure this VM is only controlling these GPIOs related to
-> this robotic arm, they create a GPIO aggregator. And we care about
-> cases like that since we provide this security argument.
->
-> Surely that machine will be rebooted.
->
-> Surely they don't have a printed paper with all the commands lying
-> at the console, and asking whoever powers it back on to manually
-> type it all in again. That feels a bit 1981.
->
-> So they will have a script for this I suppose. Possibly in some
-> initscript so it is set up on boot. And this script echos stuff
-> all over the place to set up the aggregator.
->
-> Is this the use case you're thinking of?
+I can't find it in a hurry, but cpusets should really be able to build
+stuff without LOAD_BALANCe on, otherwise it is broken.
 
-Exactly.
+/me digs a little into the code and finds that. no, you're right. What
+cpusets does is create non-overlapping domain trees for each parition.
+Which avoids the need to clear that flag.
 
-And they can configure that by echoing the GPIO specifiers to
-/sys/bus/platform/drivers/gpio-aggregator/new_device.
-
-If their system has DT, another option is to describe the device in DT,
-and add its compatible value to gpio_aggregator_dt_ids[], cfr. the
-frobnicator example.
-
-> I just like to have the whole picture here.
-
-Sure. If anything is still unclear, please let me know!
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hmmm.. if we double check all that, I don't suppose there is anything
+against simply removing that flag. Less is more etc..
