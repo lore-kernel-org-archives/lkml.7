@@ -2,76 +2,109 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0995C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB71C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78D1207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90421207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 21:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Jcsh8ybJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgAFVIn (ORCPT
+        id S1726967AbgAFVIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:08:43 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50658 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgAFVIn (ORCPT
+        Mon, 6 Jan 2020 16:08:49 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39143 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbgAFVIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:08:43 -0500
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 006L8RQM081233;
-        Tue, 7 Jan 2020 06:08:27 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
- Tue, 07 Jan 2020 06:08:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 006L8Q7m081229
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 7 Jan 2020 06:08:26 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: INFO: rcu detected stall in new_sync_read
-To:     Dmitry Vyukov <dvyukov@google.com>
-References: <0000000000009aa09b059b7edc96@google.com>
-Cc:     syzbot <syzbot+8a95855c8a4649d98244@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <e455c0b6-2d3e-37c3-bb40-dcd96d1ed124@I-love.SAKURA.ne.jp>
-Date:   Tue, 7 Jan 2020 06:08:23 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jan 2020 16:08:49 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so20261166ioh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 13:08:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+eDaek1Ee2kg6Q/8/vv1VdmBerDSTO12+og01hxQgik=;
+        b=Jcsh8ybJzR/aCasR9itoZGejP1nwOseFFdufy4+4p0LptMZz5JfxbDs3ROrT3Vd7YE
+         lLJyXvyBjGlYLh1Fh3lfvUhLMe326DdxOC5y5Z3slArusvo/HIsq+XEM3J6FtRL2+0O+
+         9qylXim4vo6cWM7cI5iwZWdRJkDYma3erAQXiPhu6P0ZW3wFK2fGc5K9wp6KrUygonDO
+         VsZzfS1jFubkEATjEFAVIbrAkCrtrcka/QbgwmSdW6R6Jc3gl4UwVayTFnx6PHrePkpR
+         q82mrzaSFtFR4eTmwLpoQ2Ea9uP3y+ieYWos79WVthxudoKtk+bSFYOfa49GoSv5XktD
+         6JZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+eDaek1Ee2kg6Q/8/vv1VdmBerDSTO12+og01hxQgik=;
+        b=qwnkc/BF1Q5xxKKWAYGWMV8+X5+ezMYlL1gJLKUq6t9WVdWsKesAYiNyMQOZey+QDN
+         9C3OSfedrZQxJaa/bw2/FNxYVvNlkaKB0fZmPjstKlDyYtQ4Eal22LH/yzMpKdOVPY/B
+         iPTTOO9MLSWsDcs3BsIEvEW+Q7ZGHBKeFm5es07QCwn86u4vG4diuFZhwuBbFVABmcza
+         uyvlc4hi2Q0bwWLLcWIpFf78Id+E2W3sFAt6wKZWJG6LhNAczs5r1vx48NYyIP7qq78h
+         nTL9kZE+WYsNXWumnWMWKKNRc7DM6L/LU3vCXyfW/gvNOYkHT8UinaPTdCrrakC6Hm1J
+         qiUA==
+X-Gm-Message-State: APjAAAUF9PcMG2zNQN48FaavmxTGsH/5aBzv36BZNSk/H+2oJV0+QK61
+        dhck233oVDJu/+5Ts8HTAyVAWoWy3G2uejQRsBruNg==
+X-Google-Smtp-Source: APXvYqxbh2lqXLU6Um5AJwW6TpNl2yNRIlMcGFgaeFa3N4xZyVae2eOduhaeZDcZIFaGUdyQH4RtgQzfDUFCF6RsTZo=
+X-Received: by 2002:a5e:9907:: with SMTP id t7mr70465866ioj.72.1578344928641;
+ Mon, 06 Jan 2020 13:08:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0000000000009aa09b059b7edc96@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191212160622.021517d3@canb.auug.org.au> <CAOesGMiabP7nAPYKrmP=j_8bSj-UfUSFoiD0W+kqzaBp-6J2hQ@mail.gmail.com>
+ <20200106181006.GL13449@paulmck-ThinkPad-P72>
+In-Reply-To: <20200106181006.GL13449@paulmck-ThinkPad-P72>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 6 Jan 2020 13:08:37 -0800
+Message-ID: <CAOesGMjTbrtVTU6ootOrOifKLqY_D0bstgqBKGriE9pVkNcPOQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the rcu tree
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/01/07 5:54, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    bed72351 Merge tag 'kbuild-fixes-v5.5-2' of git://git.kern..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1747aec6e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=874bac2ff63646fa
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8a95855c8a4649d98244
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c26859e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1307e6b9e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8a95855c8a4649d98244@syzkaller.appspotmail.com
-> 
+On Mon, Jan 6, 2020 at 10:10 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Mon, Jan 06, 2020 at 09:51:47AM -0800, Olof Johansson wrote:
+> > Hi,
+> >
+> > On Wed, Dec 11, 2019 at 9:06 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > >
+> > > Hi all,
+> > >
+> > > After merging the rcu (I think) tree, today's linux-next build (x86_64
+> > > allnoconfig) produced this warning:
+> > >
+> > > kernel/time/timer.c: In function 'schedule_timeout':
+> > > kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > >   969 |   long diff = timer->expires - expires;
+> > >       |               ~~~~~^~~~~~~~~
+> > >
+> > > Introduced by (bisected to) commit
+> > >
+> > >   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
+> > >
+> > > x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
+> >
+> > This is still there as of last night's -next. Any update on getting a
+> > fix queued together with the offending patch?
+>
+> Hello, Olof,
+>
+> Thank you, I had indeed lost track of this one.  :-/
+>
+> Does Eric's patch fix things for you?
+>
+> https://lore.kernel.org/lkml/CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com/
 
-Dmitry, this looks like yet another stall report doing sched_setattr(SCHED_RR)
-followed by sendfile()/fallocate() etc...
+It does, but it's not a proper patch (whitespace damage, no S-o-b, etc).
+
+
+-Olof
