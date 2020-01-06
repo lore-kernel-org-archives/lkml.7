@@ -2,146 +2,129 @@ Return-Path: <SRS0=pFUE=23=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE13C33C8C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626FBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3FF24694
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1AF24676
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Jan 2020 20:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgAFUrs convert rfc822-to-8bit (ORCPT
+        id S1727132AbgAFUrv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 15:47:48 -0500
-Received: from mail-oln040092068015.outbound.protection.outlook.com ([40.92.68.15]:37238
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726912AbgAFUrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 15:47:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bnueme5f0ngvz4IVyl2TE7QgQ5v8d+wYm6J6Ij6OGsEIbCOC40n7/VwEaw+h4ynDn/FbdGSOa3Zr7erWB46FKK7BPMLJH5r9O2L+DWAxAObIvOrWUPCre+KPh1EAq/O1BfM3FfQSNIL0cbOa1X+F+yAJ9ODqDaS4o0uh540WnBa64AIRp8gArpqDxpbudu41gHurhjZ4dw1B4oL2Om6eAXMIzAsapP7ep5pjCQBlHQGdcCI53Srdhqc96yK75AZsBu0XAjaOkmzXs6uMecGH+Rn3KXvbmC1+rphW4TD2HjwmnIR2q+SgwO+VQ2fd6mz//Tlo++jg7VBEWNc9CEd1bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FKJN8uIVQTNEywmsJYrT+i/CU1Fm3YtLuI0/Y+yPfSM=;
- b=jiAwTD9C1zhT/OAQbLUK+QBu/37NoIhN0IRPcbyw5eNDg9YWQYuXts/dRn/FdLU0O7Bf8Hkxb7qLQpyi3wMeOWctwpdKkr6Lw9Bz+o2axp4N8TuPwC4nt2tHO8EhQxO+26ex1CCwydbPm+0wek2C7CP4yF0N8qDCil80VPXnnJqtip1w/4F6PSMxjgtPjlrAEbeIYzVXZHBSK0sdk0RxgeqH2Jb2J+SNa4owwJ/txUkQBbGtDpbn8ZKfzKuTszlFSGCs2FaQQQbRoR/09NO2C3W6V3iSOgtanAX5KA3iGh8dzqrkrTPB6TLgu34NS3x7wRsczvPGeWRa52Xfdv3A9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from VE1EUR02FT060.eop-EUR02.prod.protection.outlook.com
- (10.152.12.57) by VE1EUR02HT159.eop-EUR02.prod.protection.outlook.com
- (10.152.13.46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Mon, 6 Jan
- 2020 20:47:41 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.12.60) by
- VE1EUR02FT060.mail.protection.outlook.com (10.152.13.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Mon, 6 Jan 2020 20:47:41 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b957:6908:9f62:c28b%5]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
- 20:47:41 +0000
-Received: from bionic.localdomain (98.128.173.80) by AM6P195CA0080.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:86::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Mon, 6 Jan 2020 20:47:40 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>
-CC:     Zheng Yang <zhengyang@rock-chips.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mon, 6 Jan 2020 15:47:51 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39670 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgAFUrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 15:47:49 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so20199230ioh.6;
+        Mon, 06 Jan 2020 12:47:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dr6kqP9sFPas/i5LLhbsBNpYIgNstL4ct56nJvUTBqY=;
+        b=LlHjE/t4pNa3eB0hB4+Vvn70h6BPVtzqnMfQ9gMejRxCggIjC9qfCwC2+mwrTbeUUj
+         NYyfLZdKSYv1ygmoaSaJZkzK+9rySV0PhGdya+j8OHtwb2MMPSHJliz2rP/gDhONjwVa
+         4vR3UCBAghX5rbEdTzsFZy0KXqpcChdmV761PCUohyypBJSoG2eSoTWdpgJmmSODv//P
+         jG1x+7FjFxz/vJqrGevFZ0vEyyyUEmHGZiJgTPXSrcE/gC7IZsziLi9zyQk1tHST8ZSX
+         285XkjpKB7qKIDmS7wG89yjL2FlMDJSIj97R49QeshEEpNY7i1uDyGXU7m4RDYt/nlWb
+         VlpQ==
+X-Gm-Message-State: APjAAAWPR4/ZWnMY5PbhlW5qcsGLo0/qQCVVW4jDtUr96wqKt47pyF+Z
+        l2v9daYtZbnKIV8KkeeUYZwzOCaKbb0TeGyJDi6W9eB1gVM=
+X-Google-Smtp-Source: APXvYqwxQxN3/+hLZQ2HNRsDO/bFehGpBCG7UCI9gPnzHAuSJsadM2vu209w+V2pesB+ikDM791KnLee4uZVH9ZSLX4=
+X-Received: by 2002:a6b:730c:: with SMTP id e12mr69128756ioh.4.1578343667897;
+ Mon, 06 Jan 2020 12:47:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20200106130909.7697-1-matwey@sai.msu.ru> <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
+In-Reply-To: <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
+From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
+Date:   Mon, 6 Jan 2020 23:47:36 +0300
+Message-ID: <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
+To:     Robert Nelson <robertcnelson@gmail.com>
+Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 02/15] phy/rockchip: inno-hdmi: round fractal pixclock in
- rk3328 recalc_rate
-Thread-Topic: [PATCH 02/15] phy/rockchip: inno-hdmi: round fractal pixclock in
- rk3328 recalc_rate
-Thread-Index: AQHVxNKJGsLSKAwUL0mZqpV7XUgnkw==
-Date:   Mon, 6 Jan 2020 20:47:40 +0000
-Message-ID: <HE1PR06MB40115385474B15A5CD757F76AC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB4011254424EDB4485617513CAC3C0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20200106204723.5889-1-jonas@kwiboo.se>
-In-Reply-To: <20200106204723.5889-1-jonas@kwiboo.se>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P195CA0080.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:209:86::21) To HE1PR06MB4011.eurprd06.prod.outlook.com
- (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:7D05201E926B7A807AED86CE7DA3E177E4B1ED108D4B7F117BE4957957770AAA;UpperCasedChecksum:3201996FAD9EF958497F043F6DCF75580F62E2D9200FE7544ABF630FA5A40EC7;SizeAsReceived:8211;Count:51
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [xZ2gScxf/Ay8kw9Y13kM8YRG7DQFkV+B]
-x-microsoft-original-message-id: <20200106204723.5889-2-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 51
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: a1724c0e-3e20-4865-5d1f-08d792e9ac00
-x-ms-traffictypediagnostic: VE1EUR02HT159:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: F+pxF7eabRGcIqCoN1ruaOYqirxVvmGCRlcixY+ZG8U+HGC7Cr3fSFUjgKP6M+XdOIX73V1Ok8iet1ByISVdttWXd68q6SV0OIZSTDPPSqvG8gLVsBoC0JmYzhuOU0EB9J8cWVrYnKsdjU/hIpWumtXwfnDEHcjFpYY/8caQZl1jKhpMfReZWczIo422XO+a
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1724c0e-3e20-4865-5d1f-08d792e9ac00
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 20:47:41.0112
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Yang <zhengyang@rock-chips.com>
+пн, 6 янв. 2020 г. в 23:44, Robert Nelson <robertcnelson@gmail.com>:
+>
+> On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
+> >
+> > BeagleBone Black series is equipped with 512MB RAM
+> > whereas only 256MB is included from am335x-bone-common.dtsi
+>
+> FYI: While all versions from the factory are 512MB, some 3rd parties
+> offered 1GB reballing upgrades..
+>
+> and the SanCloud variant which uses this file, was built with 1GB:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+>
+> >
+> > This leads to an issue with unusual setups when devicetree
+> > is loaded by GRUB2 directly.
+>
+> It's a miracle, since when did GRUB2 gain this ability?
+>
 
-inno_hdmi_phy_rk3328_clk_recalc_rate() is returning a rate not found
-in the pre pll config table when the fractal divider is used.
-This can prevent proper power_on because a tmdsclock for the new rate
-is not found in the pre pll config table.
+I am not sure about when. But Grub 2.02 has devicetree command, which
+can be used as the following:
 
-Fix this by saving and returning a rounded pixel rate that exist
-in the pre pll config table.
+        echo "Loading device tree blob ..."
+        devicetree (tftp)/dtb/am335x-boneblack.dtb
 
-Fixes: 53706a116863 ("phy: add Rockchip Innosilicon hdmi phy")
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+And you know, you can run Grub itself as EFI application on to of u-boot.
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-index b0ac1d3ee390..093d2334e8cd 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-@@ -745,10 +745,12 @@ unsigned long inno_hdmi_phy_rk3328_clk_recalc_rate(struct clk_hw *hw,
- 		do_div(vco, (nd * (no_a == 1 ? no_b : no_a) * no_d * 2));
- 	}
- 
--	inno->pixclock = vco;
--	dev_dbg(inno->dev, "%s rate %lu\n", __func__, inno->pixclock);
-+	inno->pixclock = DIV_ROUND_CLOSEST((unsigned long)vco, 1000) * 1000;
- 
--	return vco;
-+	dev_dbg(inno->dev, "%s rate %lu vco %llu\n",
-+		__func__, inno->pixclock, vco);
-+
-+	return inno->pixclock;
- }
- 
- static long inno_hdmi_phy_rk3328_clk_round_rate(struct clk_hw *hw,
+> >
+> > Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+> > ---
+> >  arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> > index 7ad079861efd..91f93bc89716 100644
+> > --- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> > +++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
+> > @@ -131,6 +131,11 @@
+> >  };
+> >
+> >  / {
+> > +       memory@80000000 {
+> > +               device_type = "memory";
+> > +               reg = <0x80000000 0x20000000>; /* 512 MB */
+> > +       };
+> > +
+> >         clk_mcasp0_fixed: clk_mcasp0_fixed {
+> >                 #clock-cells = <0>;
+> >                 compatible = "fixed-clock";
+> > --
+> > 2.16.4
+> >
+>
+>
+> --
+> Robert Nelson
+> https://rcn-ee.com/
+
+
+
 -- 
-2.17.1
-
+With best regards,
+Matwey V. Kornilov.
+Sternberg Astronomical Institute, Lomonosov Moscow State University, Russia
+119234, Moscow, Universitetsky pr-k 13, +7 (495) 9392382
