@@ -2,206 +2,89 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B52C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5846CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B872073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207982073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgAGWEI (ORCPT
+        id S1727451AbgAGWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:04:08 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49178 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbgAGWEI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:04:08 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id E9BE52927FC
-Message-ID: <4d5a896ee0f40908365800dcd0554eb39c5d68c1.camel@collabora.com>
-Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip
- MIPI RX D-PHY yaml bindings
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
-Date:   Tue, 07 Jan 2020 19:03:54 -0300
-In-Reply-To: <2299954.gvZHxIxoM0@diego>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
-         <2549505.MsbA2le1sL@diego>
-         <657de953782be2514849bc8bd12a3fbcb6794427.camel@collabora.com>
-         <2299954.gvZHxIxoM0@diego>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 7 Jan 2020 17:04:41 -0500
+Received: from mga11.intel.com ([192.55.52.93]:40523 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727080AbgAGWEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:04:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 14:04:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
+   d="scan'208";a="217317989"
+Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Jan 2020 14:04:39 -0800
+Subject: [PATCH] tpm: handle negative priv->response_len in tpm_common_read
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     keescook@chromium.org, tadeusz.struk@intel.com,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-integrity@vger.kernel.org, labbott@redhat.com
+Date:   Tue, 07 Jan 2020 14:04:48 -0800
+Message-ID: <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
+In-Reply-To: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
+References: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-07 at 22:30 +0100, Heiko Stübner wrote:
-> Hi Ezequiel,
-> 
-> Am Dienstag, 7. Januar 2020, 14:20:10 CET schrieb Ezequiel Garcia:
-> > Hi Heiko, Laurent,
-> > 
-> > On Tue, 2020-01-07 at 10:28 +0100, Heiko Stübner wrote:
-> > > Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
-> > > > On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
-> > > > > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
-> > > > > > Hi Helen,
-> > > > > > 
-> > > > > > Thank you for the patch.
-> > > > > > 
-> > > > > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
-> > > > > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
-> > > > > > > 
-> > > > > > > This was tested and verified with:
-> > > > > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-
-> > > > > > > dphy.yaml  Documentation/devicetree/bindings/phy/
-> > > > > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > 
-> > > > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > > > > > 
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > Changes in v12:
-> > > > > > > - The commit replaces the following commit in previous series named
-> > > > > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-> > > > > > > This new patch adds yaml binding and was verified with
-> > > > > > > make dtbs_check and make dt_binding_check
-> > > > > > > 
-> > > > > > > Changes in v11: None
-> > > > > > > Changes in v10:
-> > > > > > > - unsquash
-> > > > > > > 
-> > > > > > > Changes in v9:
-> > > > > > > - fix title division style
-> > > > > > > - squash
-> > > > > > > - move to staging
-> > > > > > > 
-> > > > > > > Changes in v8: None
-> > > > > > > Changes in v7:
-> > > > > > > - updated doc with new design and tested example
-> > > > > > > 
-> > > > > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
-> > > > > > >  1 file changed, 75 insertions(+)
-> > > > > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > 
-> > > > > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > b/drivers/staging/media/phy-
-> > > > > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..af97f1b3e005
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > > > @@ -0,0 +1,75 @@
-> > > > > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > > > > +%YAML 1.2
-> > > > > > > +---
-> > > > > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
-> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > +
-> > > > > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
-> > > > > > 
-> > > > > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
-> > > > > 
-> > > > > The driver currently only supports RX0, but I think you are right,
-> > > > > it should say RX here. This binding could be extended for RX1.
-> > > > > 
-> > > > > > Looking at the PHY driver, it seems to handle all PHYs with a single
-> > > > > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
-> > > > > 
-> > > > > I am not following this. The driver handles just one PHY. Each PHY
-> > > > > should have its own node.
-> > > > 
-> > > > Looking at the registers, it seems that the different PHYs are
-> > > > intertwined and we would could have trouble handling the different PHYs
-> > > > with different DT nodes and thus struct device instances.
-> > > 
-> > > I have to confess to not following _ALL_ of the threads, so may say
-> > > something stupid, but I don't think the PHYs are intertwined so much.
-> > > 
-> > > Where RX0 is controlled from the "General Register Files" alone
-> > > [register dumping ground for soc designers], the TX1RX1-phy
-> > > actually gets controlled from inside the dsi1 register area it seems.
-> > > 
-> > > So in my previous (still unsucessful) tests, I was rolling with something like
-> > > https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
-> > > 
-> > > With the actual "logic" picked from the vendor kernel, that just double-
-> > > maps the dsi1-registers in both dsi and dphy driver, which was strange.
-> > > 
-> > > 
-> > 
-> > Describing each PHY in its own device node (as we currently do)
-> > results in:
-> > 
-> >         mipi_dphy_tx1rx1: mipi-dphy-tx1rx1@ff968000 {
-> >                 compatible = "rockchip,rk3399-mipi-dphy";
-> >                 reg = <0x0 0xff968000 0x0 0x8000>;
-> >                 rockchip,grf = <&grf>;
-> >         };
-> 
-> 0xff968000 actually really is the dsi1 controller, so we'll already
-> have a node for that area. That is the reason I went that way to make
-> the rockchip-dsi optionally also behave as phy-provider.
-> 
-> So when it's used in combination with drm and a panel or so it will
-> behave as dsi controller, but when requested via the phy-framework
-> it will expose the dphy functionality.
-> 
+The priv->responce_length can hold the size of an response or
+an negative error code, and the tpm_common_read() needs to handle
+both cases correctly. Changed the type of responce_length to
+signed and accounted for negative value in tpm_common_read()
 
-Hm, and will this driver also support RX1?
+Cc: stable@vger.kernel.org
+Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
+Reported-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+---
+ drivers/char/tpm/tpm-dev-common.c |    2 +-
+ drivers/char/tpm/tpm-dev.h        |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> >         grf: syscon@ff770000 {
-> >                 mipi_dphy_rx0: mipi-dphy-rx0 {
-> >                         compatible = "rockchip,rk3399-mipi-dphy";
-> >                 };
-> >         };
-> > 
-> > Which is mildly ugly, as it uses two mechanism to describe
-> > the GRF resource. In addition, the driver will then _infer_
-> > which device node is RX0 and which is TX1RX1, from this.
-> > 
-> > Perhaps Laurent's proposal, describing each PHY explicitly,
-> > would be cleaner?
-> 
-> so I really think we shouldn't merge these two things together,
-> especially to not break the dsi1 controller part.
-> 
-
-I don't think it would necesarily break the dsi1 controller part.
-
-You can declare both device nodes as sharing the address region,
-and then the driver can request the I/O resource only when it needs to,
-i.e. in the PHY .init hook.
-
-It's not super nice, but there's no real reason two devices
-can't share an I/O memory resource.
-
-I like this approach because it exposes the different PHYs
-explicitly, instead of implicitly.
-
-Thanks,
-Ezequiel
-
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index b23b0b999232..87f449340202 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -130,7 +130,7 @@ ssize_t tpm_common_read(struct file *file, char __user *buf,
+ 		priv->response_read = true;
+ 
+ 		ret_size = min_t(ssize_t, size, priv->response_length);
+-		if (!ret_size) {
++		if (ret_size <= 0) {
+ 			priv->response_length = 0;
+ 			goto out;
+ 		}
+diff --git a/drivers/char/tpm/tpm-dev.h b/drivers/char/tpm/tpm-dev.h
+index 1089fc0bb290..f3742bcc73e3 100644
+--- a/drivers/char/tpm/tpm-dev.h
++++ b/drivers/char/tpm/tpm-dev.h
+@@ -14,7 +14,7 @@ struct file_priv {
+ 	struct work_struct timeout_work;
+ 	struct work_struct async_work;
+ 	wait_queue_head_t async_wait;
+-	size_t response_length;
++	ssize_t response_length;
+ 	bool response_read;
+ 	bool command_enqueued;
+ 
 
