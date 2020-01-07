@@ -2,112 +2,109 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1EDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D458EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EDF2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dJP4nyfS";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dJP4nyfS"
+	by mail.kernel.org (Postfix) with ESMTP id 9C4372081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432220;
+	bh=ghJPWWuvqI+2W+7yB5CB5Xw2G0Ec0DSRSw0S2VlnfGc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GsS0YGrmzzUzI3epcQ21nkU2jtZAlvi+CVdeVZJ3U92TqSuoEHOXdnWqSJH/V4gat
+	 HgWXpS1MAfgUirNIij5FqIVwQ+JAH0+kZaKRJPwJQDjrYd2GUQL62z4NOvszKRmmkX
+	 x+JlKmbbjbbgeGW9wE3gd1/pvn4psWIIKgNHyIhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgAGVXg (ORCPT
+        id S1728513AbgAGVBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:23:36 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51488 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728521AbgAGVBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5F18A8EE105;
-        Tue,  7 Jan 2020 13:01:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1578430876;
-        bh=5nkpePHUcSUhoPkX858UIhz0z07V7G0lUgNBG3ZeUKE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dJP4nyfSqEMdbel5HbM1+ys5w61xBuazOrWII0ss4Jjqy5OHi5dsbTf88scjxZ1MW
-         ++vUvHuuRwZZMdW999ecyDAebpSRrrSbWjbHL/C6wEhZTuWt2Y0YOJuqaut0CUiotI
-         xXf9zLynZpT4Y/NdswGb79UiN7KJBPXG6W8SBLf0=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vgHvvARI9W0c; Tue,  7 Jan 2020 13:01:16 -0800 (PST)
-Received: from jarvis.lan (unknown [50.35.76.230])
+        Tue, 7 Jan 2020 16:01:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728477AbgAGVBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7EE488EE0F8;
-        Tue,  7 Jan 2020 13:01:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1578430876;
-        bh=5nkpePHUcSUhoPkX858UIhz0z07V7G0lUgNBG3ZeUKE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dJP4nyfSqEMdbel5HbM1+ys5w61xBuazOrWII0ss4Jjqy5OHi5dsbTf88scjxZ1MW
-         ++vUvHuuRwZZMdW999ecyDAebpSRrrSbWjbHL/C6wEhZTuWt2Y0YOJuqaut0CUiotI
-         xXf9zLynZpT4Y/NdswGb79UiN7KJBPXG6W8SBLf0=
-Message-ID: <1578430874.4288.2.camel@HansenPartnership.com>
-Subject: Re: [PATCH] ima: make ASYMMETRIC_PUBLIC_KEY_SUBTYPE 'bool'
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Arnd Bergmann <arnd@arndb.de>, David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 07 Jan 2020 13:01:14 -0800
-In-Reply-To: <20200107203041.843060-1-arnd@arndb.de>
-References: <20200107203041.843060-1-arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id B06D021744;
+        Tue,  7 Jan 2020 21:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578430860;
+        bh=ghJPWWuvqI+2W+7yB5CB5Xw2G0Ec0DSRSw0S2VlnfGc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X3a71wNqP4FKYb30vhBZ5xFe05xen1sQDC2TyFBGX4RzXD8ejyn3X9OoHqjbgqk5N
+         6ShPbOxNouJgv7RYu3tEvKI1jkUemHQKvrFk9MxrDCalluP/56mQALZ4GgICY/+UT7
+         Nz5Tl3t1piIjS01evoz4/vV6dOwdzE05WEV+7eoA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
+        Nikolay Merinov <n.merinov@inango-systems.com>,
+        Ariel Gilman <a.gilman@inango-systems.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 089/191] pstore/ram: Write new dumps to start of recycled zones
+Date:   Tue,  7 Jan 2020 21:53:29 +0100
+Message-Id: <20200107205337.761682618@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+References: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-07 at 21:30 +0100, Arnd Bergmann wrote:
-> The asymmetric key subtype is only used by the key subsystem that
-> cannot itself be a loadable module, so when
-> ASYMMETRIC_PUBLIC_KEY_SUBTYPE is set to =m, it just does not get
-> used. It also produces a compile-time
-> warning:
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in
-> security/integrity/ima/ima_asymmetric_keys.o
-> 
-> Make this a 'bool' symbol to avoid both problems.
-> 
-> Fixes: 88e70da170e8 ("IMA: Define an IMA hook to measure keys")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  crypto/asymmetric_keys/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/crypto/asymmetric_keys/Kconfig
-> b/crypto/asymmetric_keys/Kconfig
-> index 1f1f004dc757..f2846293e4d5 100644
-> --- a/crypto/asymmetric_keys/Kconfig
-> +++ b/crypto/asymmetric_keys/Kconfig
-> @@ -11,7 +11,7 @@ menuconfig ASYMMETRIC_KEY_TYPE
->  if ASYMMETRIC_KEY_TYPE
->  
->  config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> -	tristate "Asymmetric public-key crypto algorithm subtype"
-> +	bool "Asymmetric public-key crypto algorithm subtype"
+From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
 
-I believe the crypto guys do like stuff to be modular.
+commit 9e5f1c19800b808a37fb9815a26d382132c26c3d upstream.
 
-However, we've already implemented this solution:
+The ram_core.c routines treat przs as circular buffers. When writing a
+new crash dump, the old buffer needs to be cleared so that the new dump
+doesn't end up in the wrong place (i.e. at the end).
 
-https://lore.kernel.org/linux-integrity/20200107194350.3782-2-nramas@linux.microsoft.com/
+The solution to this problem is to reset the circular buffer state before
+writing a new Oops dump.
 
-To solve the problem via an intermediate boolean config variable.
+Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
+Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
+Link: https://lore.kernel.org/r/20191223133816.28155-1-n.merinov@inango-systems.com
+Fixes: 896fc1f0c4c6 ("pstore/ram: Switch to persistent_ram routines")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-James
+---
+ fs/pstore/ram.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -407,6 +407,17 @@ static int notrace ramoops_pstore_write(
+ 
+ 	prz = cxt->dprzs[cxt->dump_write_cnt];
+ 
++	/*
++	 * Since this is a new crash dump, we need to reset the buffer in
++	 * case it still has an old dump present. Without this, the new dump
++	 * will get appended, which would seriously confuse anything trying
++	 * to check dump file contents. Specifically, ramoops_read_kmsg_hdr()
++	 * expects to find a dump header in the beginning of buffer data, so
++	 * we must to reset the buffer values, in order to ensure that the
++	 * header will be written to the beginning of the buffer.
++	 */
++	persistent_ram_zap(prz);
++
+ 	/* Build header and append record contents. */
+ 	hlen = ramoops_write_kmsg_hdr(prz, record);
+ 	if (!hlen)
+
 
