@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F4BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F663C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB36222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600FF222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgAGRsW (ORCPT
+        id S1728628AbgAGRsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:48:22 -0500
-Received: from sauhun.de ([88.99.104.3]:53340 "EHLO pokefinder.org"
+        Tue, 7 Jan 2020 12:48:25 -0500
+Received: from sauhun.de ([88.99.104.3]:53380 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgAGRsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:48:19 -0500
+        id S1728562AbgAGRsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:48:21 -0500
 Received: from localhost (p5486CF8B.dip0.t-ipconnect.de [84.134.207.139])
-        by pokefinder.org (Postfix) with ESMTPSA id A55262C3949;
-        Tue,  7 Jan 2020 18:48:17 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id E5A752C3946;
+        Tue,  7 Jan 2020 18:48:19 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
-Date:   Tue,  7 Jan 2020 18:47:38 +0100
-Message-Id: <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 08/12] i2c: i2c-core-acpi: convert to use i2c_new_client_device()
+Date:   Tue,  7 Jan 2020 18:47:42 +0100
+Message-Id: <20200107174748.9616-9-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
 References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
@@ -47,22 +48,53 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
 Build tested only.
 
- drivers/i2c/busses/i2c-ocores.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/i2c-core-acpi.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index ca8b3ecfa93d..f5fc75b65a19 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -731,7 +731,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- 	/* add in known devices to the bus */
- 	if (pdata) {
- 		for (i = 0; i < pdata->num_devices; i++)
--			i2c_new_device(&i2c->adap, pdata->devices + i);
-+			i2c_new_client_device(&i2c->adap, pdata->devices + i);
- 	}
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 62a1c92ab803..8f3dbc97a057 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -225,7 +225,7 @@ static void i2c_acpi_register_device(struct i2c_adapter *adapter,
+ 	adev->power.flags.ignore_parent = true;
+ 	acpi_device_set_enumerated(adev);
  
- 	return 0;
+-	if (!i2c_new_device(adapter, info)) {
++	if (IS_ERR(i2c_new_client_device(adapter, info))) {
+ 		adev->power.flags.ignore_parent = false;
+ 		dev_err(&adapter->dev,
+ 			"failed to add I2C device %s from ACPI\n",
+@@ -451,7 +451,8 @@ struct notifier_block i2c_acpi_notifier = {
+  * resources, in that case this function can be used to create an i2c-client
+  * for other I2cSerialBus resources in the Current Resource Settings table.
+  *
+- * Also see i2c_new_device, which this function calls to create the i2c-client.
++ * Also see i2c_new_client_device, which this function calls to create the
++ * i2c-client.
+  *
+  * Returns a pointer to the new i2c-client, or error pointer in case of failure.
+  * Specifically, -EPROBE_DEFER is returned if the adapter is not found.
+@@ -461,7 +462,6 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+ {
+ 	struct i2c_acpi_lookup lookup;
+ 	struct i2c_adapter *adapter;
+-	struct i2c_client *client;
+ 	struct acpi_device *adev;
+ 	LIST_HEAD(resource_list);
+ 	int ret;
+@@ -489,11 +489,7 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
+ 	if (!adapter)
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 
+-	client = i2c_new_device(adapter, info);
+-	if (!client)
+-		return ERR_PTR(-ENODEV);
+-
+-	return client;
++	return i2c_new_client_device(adapter, info);
+ }
+ EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
+ 
 -- 
 2.20.1
 
