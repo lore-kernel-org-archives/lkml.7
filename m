@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D896FC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A3CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFFE2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB66C2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431639;
-	bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
+	s=default; t=1578431640;
+	bh=vcovTOHbKP78JFWf13jdL/gXq0Zxg4qPHG5JDYfThhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LjAmFK7Z0iKYz4W5lui+LL70qlSlacJSHWMjmf+PIha9GU0IqKX1FQ9c0onwID+7c
-	 u9jiXXIjWJvBOlDGTYUZ9j2fvUVMXoiPpbHY9pCOZ7oi4JKWnNQI5jFmp5bN9wcLq5
-	 w5EQzQLtFJPaWlbaJH/uji0lqj56/dJTzLnnYvgQ=
+	b=xT0Zw0QKqIwQzmd0JNj++dcHrbpvwN7I4s87/jPxTU0KzAKIxOwBk1ayE6V4iIM6Z
+	 VlaC6xHZ28gXxs8mQVhYoBSyWqBH1HFkKcjqPttfWhBfjiGoaQOaokOJS6E5fXgBvR
+	 I9MKP4zNOYuO2isbIt9VDn9H36WNKwctkbIBu8po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgAGVJx (ORCPT
+        id S1729873AbgAGVJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgAGVJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:44 -0500
+        id S1729557AbgAGVJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D172077B;
-        Tue,  7 Jan 2020 21:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA812087F;
+        Tue,  7 Jan 2020 21:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431383;
-        bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
+        s=default; t=1578431386;
+        bh=vcovTOHbKP78JFWf13jdL/gXq0Zxg4qPHG5JDYfThhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/XiDxOAy5JvIU76f4+QLcwdDoFZPs2H5niP1hZ3ov8s/bwsLs4ErkoqJFn7XEKm3
-         g50J3whQPORGjglxLN5UagJDmrLKIcH7DrBLxWuKL+YJa+WUN8O4/uObDy7oZQL4df
-         JWLxSMAc/JYRxW0Q78pTJrYf3LUrr37q2Bw6pCuk=
+        b=tQRVmluml1UvUCs2DjNUllA3+SmQekbY/g5kQmLntO3l94535fSj36g7g9uu36kLx
+         Dp+gq/5mccUeClCed4G8f6/ACFGxkZd+ztK4RPnr3YGg1uyVXhDWiWhcuDc8rF+4Un
+         qsqE96ciKixNO6dviWgfXo3pSJwqEqpf6TXImtOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 35/74] compat_ioctl: block: handle BLKREPORTZONE/BLKRESETZONE
-Date:   Tue,  7 Jan 2020 21:55:00 +0100
-Message-Id: <20200107205205.266079507@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 36/74] ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+Date:   Tue,  7 Jan 2020 21:55:01 +0100
+Message-Id: <20200107205206.461044849@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,34 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 673bdf8ce0a387ef585c13b69a2676096c6edfe9 upstream.
+commit 84b032dbfdf1c139cd2b864e43959510646975f8 upstream.
 
-These were added to blkdev_ioctl() but not blkdev_compat_ioctl,
-so add them now.
+This reverts commit 6bb86fefa086faba7b60bb452300b76a47cde1a5
+("libahci_platform: Staticize ahci_platform_<en/dis>able_phys()") we are
+going to need ahci_platform_{enable,disable}_phys() in a subsequent
+commit for ahci_brcm.c in order to properly control the PHY
+initialization order.
 
-Cc: <stable@vger.kernel.org> # v4.10+
-Fixes: 3ed05a987e0f ("blk-zoned: implement ioctls")
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Also make sure the function prototypes are declared in
+include/linux/ahci_platform.h as a result.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/compat_ioctl.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ata/libahci_platform.c |    6 ++++--
+ include/linux/ahci_platform.h  |    2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
---- a/block/compat_ioctl.c
-+++ b/block/compat_ioctl.c
-@@ -355,6 +355,8 @@ long compat_blkdev_ioctl(struct file *fi
- 	 * but we call blkdev_ioctl, which gets the lock for us
- 	 */
- 	case BLKRRPART:
-+	case BLKREPORTZONE:
-+	case BLKRESETZONE:
- 		return blkdev_ioctl(bdev, mode, cmd,
- 				(unsigned long)compat_ptr(arg));
- 	case BLKBSZSET_32:
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -46,7 +46,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_ops);
+  * RETURNS:
+  * 0 on success otherwise a negative error code
+  */
+-static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
++int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
+ {
+ 	int rc, i;
+ 
+@@ -71,6 +71,7 @@ disable_phys:
+ 	}
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
+ 
+ /**
+  * ahci_platform_disable_phys - Disable PHYs
+@@ -78,7 +79,7 @@ disable_phys:
+  *
+  * This function disables all PHYs found in hpriv->phys.
+  */
+-static void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
++void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
+ {
+ 	int i;
+ 
+@@ -87,6 +88,7 @@ static void ahci_platform_disable_phys(s
+ 		phy_exit(hpriv->phys[i]);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
+ 
+ /**
+  * ahci_platform_enable_clks - Enable platform clocks
+--- a/include/linux/ahci_platform.h
++++ b/include/linux/ahci_platform.h
+@@ -23,6 +23,8 @@ struct ahci_host_priv;
+ struct platform_device;
+ struct scsi_host_template;
+ 
++int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
++void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
+ int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
+ void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
+ int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
 
 
