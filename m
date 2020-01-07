@@ -2,120 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03773C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEAAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9248206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W7Lwbh+2"
+	by mail.kernel.org (Postfix) with ESMTP id 20BEB2051A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578386758;
+	bh=W7fCVfEcsVq7YjfVrP/tRdV5yKG9ABz6dqFXtySmrFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HQC8sj3c5bqnXjQP5TnxfCa0BatEQWYkkAYPYHZdUsjPwFeVt4blC0PVsK3T/63E2
+	 Ox47zEdcFh+eDzksKrF3VQw94S9gN0g73hWYAKDn824YOuzEj67O77tSoumID1sPY9
+	 LrIZJGiJmI8e2fazL5SGpJqL89DSat/4RvkrCdjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgAGIpp (ORCPT
+        id S1727642AbgAGIp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:45:45 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43046 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgAGIpo (ORCPT
+        Tue, 7 Jan 2020 03:45:57 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46343 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgAGIp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:45:44 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0078jH0n008916;
-        Tue, 7 Jan 2020 02:45:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578386717;
-        bh=8o27iEx4YNIvAK4xZuCbnoQRTobEbGheT+LgGTmiM+Q=;
-        h=From:To:CC:Subject:Date;
-        b=W7Lwbh+2iPu0Tdg4jKRSbG7Unncn2/S/BIzYV6HtNGgYLuZZgQkpksdETman36mPv
-         JiB6Ulpzw8k+jMCtGi22tHXVLHBkz1FotfEybSP+lLfqOHAVYlrJ9XUfqxuU5DXrjb
-         U2jO6zmuRPdcb0FYQbDtLOUZvDmBXFAsB1LxnA9Q=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0078jHOM063657
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 02:45:17 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 02:45:16 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 02:45:16 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0078jEfT059940;
-        Tue, 7 Jan 2020 02:45:14 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <kyungmin.park@samsung.com>, <miquel.raynal@bootlin.com>,
-        <aaro.koskinen@iki.fi>, <vigneshr@ti.com>, <hns@goldelico.com>
-CC:     <tony@atomide.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-Subject: [PATCH v2] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
-Date:   Tue, 7 Jan 2020 10:45:44 +0200
-Message-ID: <20200107084544.18547-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Jan 2020 03:45:56 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m8so49671699edi.13;
+        Tue, 07 Jan 2020 00:45:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8plItG8DbNYbwBcAqdDSAMoRYlALr96HuHXReZfE9QI=;
+        b=n3Gs/llNIVwR+K7PkS9NAsGd5qf4FieL6qXh/bofrqKbv4fBFFhhroa5tUgtoJ9Oyn
+         0zUR0cwuH0zjmxcFE8pxXrlSBloYLHzfAUQ7ycgo19rkIXNgNxb5UkoRws7MGcujJ+cs
+         /nEK7/9km8crzvCiYFqbuxCRZR5iGyWrXYVRQlHNFciMuD6JEnGrrEgDIEJNgKBS8YwS
+         o5yIITPAhwWyiXBETTGmS6pXGMz0Uz2ohy2ARSCEvuHQdRvuQX82waV/nGUdwoV0g2oG
+         5jtxkm3ksxylcMc9DHon0dTh4NbcGzrKkrnKkCIYmJpTXOwhvgL5lrM7T0R2xs6z8sv1
+         jIMA==
+X-Gm-Message-State: APjAAAUPHGx0qgj5egw/2QUfT8kGiMWBEp6JiW0w2RoiUul5ratVWdAI
+        FaZLZ7xxMAb3iBSVil4ID8PXoQ4v
+X-Google-Smtp-Source: APXvYqzbFY7PNYNI0ARSqYBPkHcoX6e4/UrD7HFurJucJLwHzP2dKHYzhk5s1vaVLtajDWHetj7/bg==
+X-Received: by 2002:a50:d5c9:: with SMTP id g9mr110412544edj.131.1578386754616;
+        Tue, 07 Jan 2020 00:45:54 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id c24sm7406894eds.40.2020.01.07.00.45.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 00:45:53 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:45:51 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: tiny4412: add fimd node
+Message-ID: <20200107084551.GB31906@pi3>
+References: <20200106191003.21584-1-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200106191003.21584-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit converting the driver to DMAengine was missing the flags for
-the memcpy prepare call.
-It went unnoticed since the omap-dma driver was ignoring them.
+On Mon, Jan 06, 2020 at 07:10:02PM +0000, Yangtao Li wrote:
+> The patch adds fimd node for tiny4412 device.
 
-Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine for memcp")
-Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
----
 Hi,
 
-Changes since v1:
-- Typo fixed in the commit message
-- Added the Tested-by from Aaro and Nikolaus
+Thanks for the patch.
 
-Aaro reported [1] a failure on omap2-onenand pointing to
-4689d35c765c696bdf0535486a990038b242a26b. It looks like the root cause is the
-conversion of omap2-onenand to DMAengine which missed the flags.
+Do not use "This patch ..." sentences but simple, imperative mode:
+https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst#L151
 
-Basically the client is waiting for a callback without asking for it. This
-certainly causes timeout.
+Here you do not add FIMD node, because the FIMD is already there
+(defined in exynos4.dtsi).  You however enable it.
 
-I have not tested the patch, but it should fix the issue.
+Enabling it without panel does not really make sense - does it work?
+I guess not, so this should be squashed with second patch.
 
-[1] https://lore.kernel.org/lkml/20200103081726.GD15023@darkstar.musicnaut.iki.fi/
+Best regards,
+Krzysztof
 
-Regards,
-Peter
-
- drivers/mtd/nand/onenand/omap2.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/nand/onenand/omap2.c b/drivers/mtd/nand/onenand/omap2.c
-index edf94ee54ec7..71a632b815aa 100644
---- a/drivers/mtd/nand/onenand/omap2.c
-+++ b/drivers/mtd/nand/onenand/omap2.c
-@@ -328,7 +328,8 @@ static inline int omap2_onenand_dma_transfer(struct omap2_onenand *c,
- 	struct dma_async_tx_descriptor *tx;
- 	dma_cookie_t cookie;
- 
--	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count, 0);
-+	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count,
-+				       DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
- 	if (!tx) {
- 		dev_err(&c->pdev->dev, "Failed to prepare DMA memcpy\n");
- 		return -EIO;
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-tiny4412.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> index 01f37b5ac9c4..2b62cb27420c 100644
+> --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> @@ -68,6 +68,14 @@
+>  	};
+>  };
+>  
+> +&fimd {
+> +	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +};
+> +
+>  &rtc {
+>  	status = "okay";
+>  };
+> -- 
+> 2.17.1
+> 
