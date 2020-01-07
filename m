@@ -2,193 +2,172 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE05C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39F4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C555207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0206207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ix7q3VoW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J+vEfqs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgAGMlQ (ORCPT
+        id S1727923AbgAGMm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:41:16 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40363 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAGMlO (ORCPT
+        Tue, 7 Jan 2020 07:42:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58490 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbgAGMm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:41:14 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so53746596wrn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
-        b=Ix7q3VoWX7RQy4IAIFvZnnhHrgIlYKKRROKOYAnNZ7BmaaaAs6jHQ61Lxw6GWYosc9
-         js3xOlPWY3Q5glXRYBlLsJy6HptsLcAlxLGYCX5GHoAzT1qratDLllAjeejrq4hB7AG3
-         xclbiyCAqcpiX6ql5hcsvKpZlQMb+kpvEcQEDqtz16NHo0TYR68+ZeN/Mm2pPWK6czSU
-         naCoCQZM/fCLwV2Ea7sZj7L9QcXiu2mYvkjJm3royTbxjzhTcA+uMJWvxw+zzgtrgGRD
-         KUow505mmVSANNrmqo07vaWfAbesYmYiyYN247IZipCnnBntZBu8utEIBaWfQ+VB+Uj5
-         q3DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
-        b=bE6o2YU1ItRldu7WbNny33hcHm03mCI3qNobNFtdGhDutH7NzQptHNILvWS/1UQSr7
-         +PN9CtVZaLaUoSbRjUdEKfueskIaqlV3KeaBmWNtO4sXKEOIxm937cBwYXhP6uz7VGed
-         Q7KVGeQymhIZOtCaVHW5kFllMQUohrvAsZRV+w6nNUJJfyhRFuehGRzazsZqhSX72yVc
-         vM6GqLong2uqs42GTaXjlplXXPx4K0iWjPfmV3q0xPFhgUkghJRxVYnldobfd3wBX54j
-         Zue9FZ0trxNLydfVoPMvMcLe0Pr4zQemLr+NcUmnQTTicEg0rbR6VGG5ObpAuCFx94Ff
-         30Ug==
-X-Gm-Message-State: APjAAAWjhqNEqD0cGwKcBHnvcEwNQhrrk1UNDQ++Z0jZgeBOx0aY2dmB
-        mKfcuwfntOfBxX/rLwp4bjoebQ==
-X-Google-Smtp-Source: APXvYqzbZqg0vGgagk5eTcBKjSPx4R7BBZCx64xNuANabxrxXTmsIcFLkSO0bRPr4frccQzcW69BPg==
-X-Received: by 2002:adf:ee45:: with SMTP id w5mr105522947wro.352.1578400871598;
-        Tue, 07 Jan 2020 04:41:11 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id i16sm27397404wmb.36.2020.01.07.04.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:41:10 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:41:24 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200107124124.GI14821@dell>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 7 Jan 2020 07:42:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tNvA/ZnFUeVceHdwNAa5eO3T/shQN6WOfvB6s2kw0ec=; b=J+vEfqs3glC86B45f7JjTnfV2
+        MYUYbTjyL2e6zVQnX2fuCZJl23TO6XY4X1Dof0LrLicZ6ECfwAvmTiQB/hjMTVFakIYDqtMyKJLdK
+        AHD8x7Uu0T3YSBNVL6sZfaPiMbLygFOiseMKkOVmMdaErxGdqJRgqrXKuWs1T4opHZ8Uil55fdRjE
+        WFXyHPpk8FYN/LfoOArBMyYruBIN3q7Cz5F6Hhj/RL8NDkeE5NO3JMjZ7WuWHuMJHbKjpNPUGC8Zj
+        DOSdui/eeOTeaGtJgNJ39kvAocwqS0JBWEA7bnoU5jq7q4GQ6wQVsnxk1e+9fQeD490beYQRGtbi3
+        v1qGCAo7g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iooC7-0002Zn-1u; Tue, 07 Jan 2020 12:42:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 68F0730025A;
+        Tue,  7 Jan 2020 13:41:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C9C4C2B26EAAF; Tue,  7 Jan 2020 13:42:44 +0100 (CET)
+Date:   Tue, 7 Jan 2020 13:42:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Load balance aggressively for SCHED_IDLE CPUs
+Message-ID: <20200107124244.GY2844@hirez.programming.kicks-ass.net>
+References: <885b1be9af68d124f44a863f54e337f8eb6c4917.1577090998.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <885b1be9af68d124f44a863f54e337f8eb6c4917.1577090998.git.viresh.kumar@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019, Matti Vaittinen wrote:
-
-> Few ROHM PMICs allow setting the voltage states for different system states
-> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-> mechanisms. bd718x7 driver implemented device-tree parsing functions for
-> these state specific voltages. The parsing functions can be re-used by
-> other ROHM chip drivers like bd71828. Split the generic functions from
-> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-> to use.
+On Tue, Dec 24, 2019 at 10:43:30AM +0530, Viresh Kumar wrote:
+> The fair scheduler performs periodic load balance on every CPU to check
+> if it can pull some tasks from other busy CPUs. The duration of this
+> periodic load balance is set to sd->balance_interval for the idle CPUs
+> and is calculated by multiplying the sd->balance_interval with the
+> sd->busy_factor (set to 32 by default) for the busy CPUs. The
+> multiplication is done for busy CPUs to avoid doing load balance too
+> often and rather spend more time executing actual task. While that is
+> the right thing to do for the CPUs busy with SCHED_OTHER or SCHED_BATCH
+> tasks, it may not be the optimal thing for CPUs running only SCHED_IDLE
+> tasks.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
+> With the recent enhancements in the fair scheduler around SCHED_IDLE
+> CPUs, we now prefer to enqueue a newly-woken task to a SCHED_IDLE
+> CPU instead of other busy or idle CPUs. The same reasoning should be
+> applied to the load balancer as well to make it migrate tasks more
+> aggressively to a SCHED_IDLE CPU, as that will reduce the scheduling
+> latency of the migrated (SCHED_OTHER) tasks.
 > 
-> Changes from v7 - no changes
+> This patch makes minimal changes to the fair scheduler to do the next
+> load balance soon after the last non SCHED_IDLE task is dequeued from a
+> runqueue, i.e. making the CPU SCHED_IDLE. Also the sd->busy_factor is
+> ignored while calculating the balance_interval for such CPUs. This is
+> done to avoid delaying the periodic load balance by few hundred
+> milliseconds for SCHED_IDLE CPUs.
 > 
->  drivers/regulator/Kconfig             |   4 +
->  drivers/regulator/Makefile            |   1 +
->  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
->  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
->  include/linux/mfd/rohm-generic.h      |  44 +++++++
->  5 files changed, 199 insertions(+), 128 deletions(-)
->  create mode 100644 drivers/regulator/rohm-regulator.c
+> This is tested on ARM64 Hikey620 platform (octa-core) with the help of
+> rt-app and it is verified, using kernel traces, that the newly
+> SCHED_IDLE CPU does load balancing shortly after it becomes SCHED_IDLE
+> and pulls tasks from other busy CPUs.
 
-[...]
+Nothing seems really objectionable here; I have a few comments below.
 
-> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-> index ff3dd7578fd3..8037421cc6a1 100644
-> --- a/include/linux/mfd/rohm-generic.h
-> +++ b/include/linux/mfd/rohm-generic.h
-> @@ -4,6 +4,9 @@
->  #ifndef __LINUX_MFD_ROHM_H__
->  #define __LINUX_MFD_ROHM_H__
+Vincent?
+
+
+> @@ -5324,6 +5336,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  	struct sched_entity *se = &p->se;
+>  	int task_sleep = flags & DEQUEUE_SLEEP;
+>  	int idle_h_nr_running = task_has_idle_policy(p);
+> +	bool was_sched_idle = sched_idle_rq(rq);
 >  
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +
->  enum rohm_chip_type {
->  	ROHM_CHIP_TYPE_BD71837 = 0,
->  	ROHM_CHIP_TYPE_BD71847,
-> @@ -17,4 +20,45 @@ struct rohm_regmap_dev {
->  	struct regmap *regmap;
->  };
+>  	for_each_sched_entity(se) {
+>  		cfs_rq = cfs_rq_of(se);
+> @@ -5370,6 +5383,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  	if (!se)
+>  		sub_nr_running(rq, 1);
 >  
-> +enum {
-> +	ROHM_DVS_LEVEL_UNKNOWN,
-> +	ROHM_DVS_LEVEL_RUN,
-> +	ROHM_DVS_LEVEL_IDLE,
-> +	ROHM_DVS_LEVEL_SUSPEND,
-> +	ROHM_DVS_LEVEL_LPSR,
-> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-> +};
+> +	/* balance early to pull high priority tasks */
+> +	if (unlikely(!was_sched_idle && sched_idle_rq(rq)))
+> +		rq->next_balance = jiffies;
 > +
-> +struct rohm_dvs_config {
-> +	uint64_t level_map;
-> +	unsigned int run_reg;
-> +	unsigned int run_mask;
-> +	unsigned int run_on_mask;
-> +	unsigned int idle_reg;
-> +	unsigned int idle_mask;
-> +	unsigned int idle_on_mask;
-> +	unsigned int suspend_reg;
-> +	unsigned int suspend_mask;
-> +	unsigned int suspend_on_mask;
-> +	unsigned int lpsr_reg;
-> +	unsigned int lpsr_mask;
-> +	unsigned int lpsr_on_mask;
-> +};
+>  	util_est_dequeue(&rq->cfs, p, task_sleep);
+>  	hrtick_update(rq);
+>  }
 
-I think this deserves a kernel-doc header.
+This can effectively set ->next_balance in the past, but given we only
+tickle the balancer on every jiffy edge, that is of no concern. It just
+made me stumble when reading this.
 
-> +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
-> +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-> +				  struct device_node *np,
-> +				  const struct regulator_desc *desc,
-> +				  struct regmap *regmap);
+Not sure it even deserves a comment or not..
 
-Does these really need to live in the parent's header file?
+> @@ -9531,6 +9539,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+>  {
+>  	int continue_balancing = 1;
+>  	int cpu = rq->cpu;
+> +	int busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
+>  	unsigned long interval;
+>  	struct sched_domain *sd;
+>  	/* Earliest time when we have to do rebalance again */
+> @@ -9567,7 +9576,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+>  			break;
+>  		}
+>  
+> -		interval = get_sd_balance_interval(sd, idle != CPU_IDLE);
+> +		interval = get_sd_balance_interval(sd, busy);
+>  
+>  		need_serialize = sd->flags & SD_SERIALIZE;
+>  		if (need_serialize) {
+> @@ -9582,10 +9591,16 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+>  				 * env->dst_cpu, so we can't know our idle
+>  				 * state even if we migrated tasks. Update it.
+>  				 */
+> -				idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+> +				if (idle_cpu(cpu)) {
+> +					idle = CPU_IDLE;
+> +					busy = 0;
+> +				} else {
+> +					idle = CPU_NOT_IDLE;
+> +					busy = !sched_idle_cpu(cpu);
+> +				}
 
-What other call-sites are there?
+This is inconsistent vs the earlier code. That is, why not write it
+like:
 
-> +#else
-> +static inline int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-> +						struct device_node *np,
-> +						const struct regulator_desc *desc,
-> +						struct regmap *regmap)
-> +{
-> +	return 0;
-> +}
-> +#endif //IS_ENABLED(CONFIG_REGULATOR_ROHM)
+				idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+				busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
 
-a) This comment is not really required
-b) You shouldn't be using C++ comments
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>  			}
+>  			sd->last_balance = jiffies;
+> -			interval = get_sd_balance_interval(sd, idle != CPU_IDLE);
+> +			interval = get_sd_balance_interval(sd, busy);
+>  		}
+>  		if (need_serialize)
+>  			spin_unlock(&balancing);
