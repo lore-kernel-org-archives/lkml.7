@@ -2,142 +2,155 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCB1C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B42EC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC832077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DOgrVJ1j"
+	by mail.kernel.org (Postfix) with ESMTP id 3E1502077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578396420;
+	bh=f+L3V7bY9EKikC4cLbWBKG6jlO3klVjPDV8I+Ry7ba4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hQ7KIDSAiD9gsTmIrtsqAnL8j/zvBr/o6VtpRcfcI7EP4Ro49gCsK5qImRnjx/LtL
+	 GFfCIZHg7BPLd6QJcd4mSeijyYQEC9M1IT9j/Y65kqRoHdj2dbrbZW07VgslSfSSJz
+	 tXU1xS3Scaviqiom2OH78kRFwNxhJ5h53avenGJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgAGLXY (ORCPT
+        id S1727948AbgAGL07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:23:24 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:49492 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGLXX (ORCPT
+        Tue, 7 Jan 2020 06:26:59 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43998 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgAGL07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:23:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pr1OIIiYcGvrLhEd9QEUxm5iIVn4xs+eIhcYzlh+uwg=; b=DOgrVJ1jMcrYC/1BsrDiGjUNj
-        3B69F5bffHaKO700mFz0SFBtaFiGyRFTZ86WMxsUUUyPJdNHK5q8/tZvstimdnSYirWtveRhV5xXa
-        Y84FWAlbgyi3cWIixYZ5xqv7xu/RCrG5fJUTp8O4ahV20Ioc6h469fgs5+BoMyM8bDMTkaPHa1sSi
-        iDc7I5Ra7uDZpiCHID1TjjGRJGWYt9S+7uqNyzmdFJ55+xxDSTygF12P8z1mOROu06XuBXJngAUIC
-        pCMfXpsgOBP/ua9PkC52FTHpwYg2ToSZTk1pMfADbPJ0htywnGRlMAtskB3helRE+fbg6ZByV1dwZ
-        Yx2OZ8c1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iomws-0005td-IK; Tue, 07 Jan 2020 11:22:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ADCF13012C3;
-        Tue,  7 Jan 2020 12:21:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 368FD20D3D422; Tue,  7 Jan 2020 12:22:55 +0100 (CET)
-Date:   Tue, 7 Jan 2020 12:22:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains v2
-Message-ID: <20200107112255.GV2827@hirez.programming.kicks-ass.net>
-References: <20191220084252.GL3178@techsingularity.net>
- <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
- <20200103143051.GA3027@techsingularity.net>
- <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
- <20200106145225.GB3466@techsingularity.net>
- <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
- <20200107095655.GF3466@techsingularity.net>
+        Tue, 7 Jan 2020 06:26:59 -0500
+Received: by mail-ot1-f65.google.com with SMTP id p8so39585360oth.10;
+        Tue, 07 Jan 2020 03:26:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cAUfx1aIe7RBiFOSHapSzF1uJyIPOjyTww0Bo3Kja2A=;
+        b=Dzn8kRWi+QCwAGZmH/a12zusfnG1WrbLKdjnmvsURBUSsOpJyWmA1/Olzfhhdi0Tkl
+         T7URqc9FYpN9QIa4P3EWaIJlJ/x7hqeX0t7ee71usEJTD04Rg3o6OihEWGNcPPw5IyID
+         2u3JhUR5jKSJRyG5eKxBoFYHZ0E6uK6aaGTmuygG/4LmsEJhWKRkX9mSkOF0z8HV0s7p
+         nGPKJTqKplHw6Ra5vDE0ZQ7ZAO2ioJhlpUt8Ll6AuD+D/rK5ex4s03y891Z4gPTdk4Xd
+         73hTkj4IH+i77MC5D4OQN4tFWwv2tqJUIclNGrtl5fQpyhGLBcCtawk0G2kMnin1mO8g
+         xK2A==
+X-Gm-Message-State: APjAAAXKsH9FUEhaOae6WzGf7vgVVshg8z1c6byyLDDM/1ov3O0/k0Ko
+        lBBIyDV2NYG/yl11ELgPQgnY7dKf16a+YCtWLBrtmw+u
+X-Google-Smtp-Source: APXvYqwJPQ2cz2D0sSUp6x7JKo3CcWa0Xq6ze3e+llEbh893asmCDMik+vyO7p3DkSbtzw4GddrWgTAagpmZmTM5hIo=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr123636942otd.266.1578396418166;
+ Tue, 07 Jan 2020 03:26:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107095655.GF3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191230223645.1.I79ea8bb1c5a70c04c810d8305f5f7dee4ebed577@changeid>
+In-Reply-To: <20191230223645.1.I79ea8bb1c5a70c04c810d8305f5f7dee4ebed577@changeid>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jan 2020 12:26:47 +0100
+Message-ID: <CAJZ5v0h+i0xXPnkbu4NPwxMAZVO9S3exF66+J6SFEb-M6y=0FA@mail.gmail.com>
+Subject: Re: [PATCH] powercap/intel_rapl: refine RAPL error handling to
+ respect initial CPU matching
+To:     Harry Pan <harry.pan@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Harry Pan <gs0622@gmail.com>,
+        Stable <stable@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:56:55AM +0000, Mel Gorman wrote:
+On Mon, Dec 30, 2019 at 3:37 PM Harry Pan <harry.pan@intel.com> wrote:
+>
+> RAPL MMIO support depends on RAPL common driver, in case a new generation
+> of CPU is booting but not in the RAPL support list, the processor_thermal
+> driver invokes CPU hotplug API to enforce RAPL common driver adding new
+> RAPL domain which would cause kernel crash by null pointer dereference
+> because the internal RAPL domain resource mapping is not initialized after
+> the common init.
+>
+> Add error handling to detect non initialized RAPL domain resource mapping
+> and return error code to the caller; such that, it avoids early crash for
+> new CPU and leave error messages through processor_thermal driver.
+>
+> Before:
+> [    4.188566] BUG: kernel NULL pointer dereference, address: 0000000000000020
+> ...snip...
+> [    4.189555] RIP: 0010:rapl_add_package+0x223/0x574
+> [    4.189555] Code: b5 a0 31 c0 49 8b 4d 78 48 01 d9 48 8b 0c c1 49 89 4c c6 10 48 ff c0 48 83 f8 05 75 e7 49 83 ff 03 75 15 48 8b 05 09 bc 18 01 <8b> 70 20 41 89 b6 0c 05 00 00 85 f6 75 1a 49 81 c6 18 9
+> [    4.189555] RSP: 0000:ffffb3adc00b3d90 EFLAGS: 00010246
+> [    4.189555] RAX: 0000000000000000 RBX: 0000000000000098 RCX: 0000000000000000
+> [    4.267161] usb 1-1: New USB device found, idVendor=2109, idProduct=2812, bcdDevice= b.e0
+> [    4.189555] RDX: 0000000000001000 RSI: 0000000000000000 RDI: ffff9340caafd000
+> [    4.189555] RBP: ffffb3adc00b3df8 R08: ffffffffa0246e28 R09: ffff9340caafc000
+> [    4.189555] R10: 000000000000024a R11: ffffffff9ff1f6f2 R12: 00000000ffffffed
+> [    4.189555] R13: ffff9340caa94800 R14: ffff9340caafc518 R15: 0000000000000003
+> [    4.189555] FS:  0000000000000000(0000) GS:ffff9340ce200000(0000) knlGS:0000000000000000
+> [    4.189555] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    4.189555] CR2: 0000000000000020 CR3: 0000000302c14001 CR4: 00000000003606f0
+> [    4.189555] Call Trace:
+> [    4.189555]  ? __switch_to_asm+0x40/0x70
+> [    4.189555]  rapl_mmio_cpu_online+0x47/0x64
+> [    4.189555]  ? rapl_mmio_write_raw+0x33/0x33
+> [    4.281059] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+> [    4.189555]  cpuhp_invoke_callback+0x29f/0x66f
+> [    4.189555]  ? __schedule+0x46d/0x6a0
+> [    4.189555]  cpuhp_thread_fun+0xb9/0x11c
+> [    4.189555]  smpboot_thread_fn+0x17d/0x22f
+> [    4.297006] usb 1-1: Product: USB2.0 Hub
+> [    4.189555]  ? cpu_report_death+0x43/0x43
+> [    4.189555]  kthread+0x137/0x13f
+> [    4.189555]  ? cpu_report_death+0x43/0x43
+> [    4.189555]  ? kthread_blkcg+0x2e/0x2e
+> [    4.312951] usb 1-1: Manufacturer: VIA Labs, Inc.
+> [    4.189555]  ret_from_fork+0x1f/0x40
+> [    4.189555] Modules linked in:
+> [    4.189555] CR2: 0000000000000020
+> [    4.189555] ---[ end trace 01bb812aabc791f4 ]---
+>
+> After:
+> [    0.787125] intel_rapl_common: driver does not support CPU family 6 model 166
+> ...snip...
+> [    4.245273] proc_thermal 0000:00:04.0: failed to add RAPL MMIO interface
+>
+> Note:
+> This example above is on a v5.4 branch without below two CML commits yet:
+> commit f84fdcbc8ec0 ("powercap/intel_rapl: add support for Cometlake desktop")
+> commit cae478114fbe ("powercap/intel_rapl: add support for CometLake Mobile")
+>
+> Fixes: 555c45fe0d04 ("int340X/processor_thermal_device: add support for MMIO RAPL")
+>
+> Cc: <stable@vger.kernel.org> # v5.3+
+> Signed-off-by: Harry Pan <harry.pan@intel.com>
 
-> Much more importantly, doing what you suggest allows an imbalance
-> of more CPUs than are backed by a single LLC. On high-end AMD EPYC 2
-> machines, busiest->group_weight scaled by imbalance_pct spans multiple L3
-> caches. That is going to have side-effects. While I also do not account
-> for the LLC group_weight, it's unlikely the cut-off I used would be
-> smaller than an LLC cache on a large machine as the cache.
-> 
-> These two points are why I didn't take the group weight into account.
-> 
-> Now if you want, I can do what you suggest anyway as long as you are happy
-> that the child domain weight is also taken into account and to bound the
-> largest possible allowed imbalance to deal with the case of a node having
-> multiple small LLC caches. That means that some machines will be using the
-> size of the node and some machines will use the size of an LLC. It's less
-> predictable overall as some machines will be "special" relative to others
-> making it harder to reproduce certain problems locally but it would take
-> imbalance_pct into account in a way that you're happy with.
-> 
-> Also bear in mind that whether LLC is accounted for or not, the final
-> result should be halved similar to the other imbalance calculations to
-> avoid over or under load balancing.
+Applied as a fix for 5.5-rc with rewritten subject and changelog (new
+subject: "powercap: intel_rapl: add NULL pointer check to
+rapl_mmio_cpu_online()").
 
-> +		/* Consider allowing a small imbalance between NUMA groups */
-> +		if (env->sd->flags & SD_NUMA) {
-> +			struct sched_domain *child = env->sd->child;
-
-This assumes sd-child exists, which should be true for NUMA domains I
-suppose.
-
-> +			unsigned int imbalance_adj;
+> ---
+>
+>  drivers/powercap/intel_rapl_common.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+> index 318d023a6a11..aa0a8de413b1 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -1294,6 +1294,9 @@ struct rapl_package *rapl_add_package(int cpu, struct rapl_if_priv *priv)
+>         struct cpuinfo_x86 *c = &cpu_data(cpu);
+>         int ret;
+>
+> +       if (!rapl_defaults)
+> +               return ERR_PTR(-ENODEV);
 > +
-> +			/*
-> +			 * Calculate an acceptable degree of imbalance based
-> +			 * on imbalance_adj. However, do not allow a greater
-> +			 * imbalance than the child domains weight to avoid
-> +			 * a case where the allowed imbalance spans multiple
-> +			 * LLCs.
-> +			 */
-
-That comment is a wee misleading, @child is not an LLC per se. This
-could be the NUMA distance 2 domain, in which case @child is the NUMA
-distance 1 group.
-
-That said, even then it probably makes sense to ensure you don't idle a
-whole smaller distance group.
-
-> +			imbalance_adj = busiest->group_weight * (env->sd->imbalance_pct - 100) / 100;
-> +			imbalance_adj = min(imbalance_adj, child->span_weight);
-> +			imbalance_adj >>= 1;
-> +
-> +			/*
-> +			 * Ignore small imbalances when the busiest group has
-> +			 * low utilisation.
-> +			 */
-> +			if (busiest->sum_nr_running < imbalance_adj)
-> +				env->imbalance = 0;
-> +		}
-> +
->  		return;
->  	}
->  
+>         rp = kzalloc(sizeof(struct rapl_package), GFP_KERNEL);
+>         if (!rp)
+>                 return ERR_PTR(-ENOMEM);
+> --
+> 2.24.1
+>
