@@ -2,70 +2,173 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA2C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81512072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9582072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZKTM2S5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgAGUoB (ORCPT
+        id S1727095AbgAGUoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:44:01 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:60931 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726142AbgAGUoA (ORCPT
+        Tue, 7 Jan 2020 15:44:03 -0500
+Received: from mail.efficios.com ([167.114.142.138]:42154 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgAGUoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:44:00 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007KgodT017056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 15:42:51 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 530E94207DF; Tue,  7 Jan 2020 15:42:50 -0500 (EST)
-Date:   Tue, 7 Jan 2020 15:42:50 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v3 1/8] random: Don't wake crng_init_wait when crng_init
- == 1
-Message-ID: <20200107204250.GF3619@mit.edu>
-References: <cover.1577088521.git.luto@kernel.org>
- <6fbc0bfcbfc1fa2c76fd574f5b6f552b11be7fde.1577088521.git.luto@kernel.org>
+        Tue, 7 Jan 2020 15:44:02 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 2E119695809;
+        Tue,  7 Jan 2020 15:44:01 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id fexXKIeQGx-B; Tue,  7 Jan 2020 15:44:00 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B5CC9695804;
+        Tue,  7 Jan 2020 15:44:00 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B5CC9695804
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578429840;
+        bh=a7PhLxRLqwPOptIFbATUjStQXS7bfiLqgNZX9c8LwXs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ZKTM2S5itDu6Awve+O/mF1Z1DX5vlX2ILroe6oGF/dB6a5uk77biDynUJCbg6DwKw
+         CcG9GRdAJUbcjRJxAZKIn1w4voCXUki4k9prXYFNO7xBzlWj0DjkgeKNVfLeMFgqsr
+         MEXM27U+M6YgEKGvnyTsKrRS6f5Owl95uKOkmXLnioDJl4/VxFJqEi+brVtOJMNZdA
+         S8wqlt1Brlo5Sic/hy1ZdLrh0mcLN+u+JC5PnWX0VhmDJwkPXfKvHp1oxr4es6KZFc
+         2f9+s0YbRXUa0tF+ZQtdeut9RLk2EK8e6NYmAiq/XqrKYVHRBWxICRsgcyJX8C0gCs
+         F87vrxZxFjXaA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 9XfQYqq71AKO; Tue,  7 Jan 2020 15:44:00 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 9A43A6957F9;
+        Tue,  7 Jan 2020 15:44:00 -0500 (EST)
+Date:   Tue, 7 Jan 2020 15:44:00 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1968185366.4418.1578429840460.JavaMail.zimbra@efficios.com>
+In-Reply-To: <871rsbv4io.fsf@oldenburg2.str.redhat.com>
+References: <20200106155713.397-1-mathieu.desnoyers@efficios.com> <20200106155713.397-10-mathieu.desnoyers@efficios.com> <871rsbv4io.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH glibc 09/13] glibc: Perform rseq(2) registration at
+ C startup and thread creation (v13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fbc0bfcbfc1fa2c76fd574f5b6f552b11be7fde.1577088521.git.luto@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3894 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v13)
+Thread-Index: 64OzZkIvDax4zK6QCleAiCxTyBhzYA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:20:44AM -0800, Andy Lutomirski wrote:
-> crng_init_wait is only used to wayt for crng_init to be set to 2, so
-> there's no point to waking it when crng_init is set to 1.  Remove the
-> unnecessary wake_up_interruptible() call.
+
+
+----- On Jan 7, 2020, at 7:23 AM, Florian Weimer fweimer@redhat.com wrote:
+
+> * Mathieu Desnoyers:
 > 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> Register rseq(2) TLS for each thread (including main), and unregister
+>> for each thread (excluding main). "rseq" stands for Restartable
+>> Sequences.
+>>
+>> See the rseq(2) man page proposed here:
+>>   https://lkml.org/lkml/2018/9/19/647
+>>
+>> This patch is based on glibc-2.30. The rseq(2) system call was merged
+>> into Linux 4.18.
+> 
+> This patch needs to be updated for some be/le abilist splits.
+> Big-endian ABI lists for arm, microblaze, sh, appear to be missing.
 
-Applied with a spelling fix ("wayt->wait").
+done.
 
-					- Ted
+> This is something that can be checked with build-many-glibcs.py.
+
+OK.
+
+> 
+>> diff --git a/manual/threads.texi b/manual/threads.texi
+>> index 0858ef8f92..059f781120 100644
+>> --- a/manual/threads.texi
+>> +++ b/manual/threads.texi
+>> @@ -881,3 +881,20 @@ Behaves like @code{pthread_timedjoin_np} except that the
+>> absolute time in
+>>  @c pthread_spin_unlock
+>>  @c pthread_testcancel
+>>  @c pthread_yield
+>> +
+>> +@node Restartable Sequences
+>> +@section Restartable Sequences
+>> +@cindex rseq
+>> +
+>> +This section describes the @glibcadj{} Restartable Sequences integration.
+>> +
+>> +The @glibcadj{} implements a __rseq_abi TLS symbol to interact with the
+>   @Theglibc{}                  @code{__rseq_abi}
+> 
+> 
+>> +Restartable Sequences system call (Linux-specific). The layout of this
+>> +structure is defined by the Linux kernel rseq.h UAPI. Registration of each
+>> +thread's __rseq_abi is performed by @glibcadj{} at libc initialization and
+>                                       @theglibc{}
+>           @code{__rseq_abi}
+>> +pthread creation.
+> 
+>> +Each supported architecture provide a RSEQ_SIG signature in sys/rseq.h. That
+>                                         @code{RSEQ_SIG}       @file{sys/rseq.h}
+> 
+>> +signature is expected to be present in the code before each Restartable
+>> +Sequences abort handler. Failure to provide the expected signature may
+>> +terminate the process with a Segmentation fault.
+> 
+> 
+> Two spaces at the end of setences, please.
+
+All above done.
+
+> 
+> The manual should use @deftypevar to create an index entry etc. for
+> __rseq_abi.  See argp_program_version for an example of how to do this.
+
+OK. I've added __rseq_abi as a variable and RSEQ_SIG as a macro.
+
+> 
+> I think current policy is to have documentation for at least the minimum
+> functionality in the manual.  I understand that it makes it a lot of
+> work to write patches which add system call wrappers.
+
+Makes sense.
+
+Thanks!
+
+Mathieu
+
+> 
+> Thanks,
+> Florian
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
