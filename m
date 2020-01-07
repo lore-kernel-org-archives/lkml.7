@@ -2,89 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA234C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF49BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD000206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE341206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgAGUEC (ORCPT
+        id S1728736AbgAGUEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:04:02 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:42257 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGUEB (ORCPT
+        Tue, 7 Jan 2020 15:04:50 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54363 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728358AbgAGUEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:04:01 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MJnnV-1j8w0N2oEj-00K6Dy; Tue, 07 Jan 2020 21:03:50 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Taehee Yoo <ap420073@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Murali Karicheri <m-karicheri2@ti.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] hsr: fix dummy hsr_debugfs_rename() declaration
-Date:   Tue,  7 Jan 2020 21:03:39 +0100
-Message-Id: <20200107200347.3374445-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 15:04:49 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007K31WJ002663
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 7 Jan 2020 15:03:02 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id B2F684207DF; Tue,  7 Jan 2020 15:03:01 -0500 (EST)
+Date:   Tue, 7 Jan 2020 15:03:01 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-cifs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Sterba <dsterba@suse.com>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Jan Kara <jack@suse.com>, Eric Sandeen <sandeen@redhat.com>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: Unification of filesystem encoding options
+Message-ID: <20200107200301.GE3619@mit.edu>
+References: <20200102211855.gg62r7jshp742d6i@pali>
+ <20200107133233.GC25547@quack2.suse.cz>
+ <20200107173842.ciskn4ahuhiklycm@pali>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CUXJi1Tq3W0V+VbCAFGkPpkT/YOTIHx0LzCaN38WI+u8M7LI2id
- E+5NfhgOFFX8KSoOSK2y6xcv34UdanrEXES5kNgmtPJqrT4Ou41rjH/lzar+4MYVwj+cEz6
- fLnp636IrOKuWkOebAaigXFCe6IH6YX+Bqi0u5+dcfbP18Q6Aw9JwHSe1l0B2E6sIG8/YgQ
- +2Fq8uXferZs6dLQvnQaw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZVUXRmvyAaI=:2nn+y6XsGq2+TZSOwWUUL1
- M9QiP8eppGTbZoaFZXpIQdg8LGjAnLoZEVgjqaPkmma+zaVCFr8PqlPJZH3Aiclx5dM+xDVQT
- cokm4Mw/reJNstn0TyJHvOzUUlZlVu0UjwoNlQjqqYPSs5igeWjU9iBMS/BkAlWEvlNTTdhc1
- B0lgJcneaqkxYDXt1n03ICR82x3/YToB51nUgNEs+e4PDCuV5wR6wlkqfd2BaEiQybojz1Za9
- DsX4hU9p1qLHjz1Gbm//VDiKd8cE4PgnVDi/JeFWqTLDCSglfX18lYSkxAHsZD6Pe00PvAQzI
- aNJRsiwOHMyNPfwEnF6h28qGs968zuhvXFFtbmiZzh8ZOCjymzdn0TIhifR6Ml1sQ6IyR3VYp
- s8F9RtnN4/krMuWYGTkdEy2Y1cbaQ6hSBwQE0rmu+ZJ2UQWiquC+gktrTJjX3EVk8y1KFx6p/
- H2GRKvwMdoOz5pyROd+JDvRW4FGVK+i73x/Nz4e0jv/xFqoHFeZxraHRkfu0l2sAOIlY8Hd3o
- 6onhvVzTIWOz2/PmbGzpcub4p3tm7L7q7hsTpwLG97ObD44KEBIhIw4WnpehVQteUhZEFM6NB
- MYXCvwYntoNVlOve+NP+ceN8oQpyknXT+kwNtc2KN1OEIi6oQsDFJC+4Vt7/tiMQhTlN1SBzc
- 8maiQLyI9Jl2NHlEcwaIL0YGBILps5apSUnYYqbBdWlKR61aGne0MAYgIyGnxMQHuzDa3hFMU
- Izh4U7aimhiIr0D7713RlwM/zQy+njhIj2mg8O9wbGWpBNpZiGOzUblu2tSr6CB+Jw0bkQzDA
- pK4jGeipuVy4fb/0kTNtzwuBldInlXG8Ib85RlcNJvjyxdfaT62qNNpu+cp6zSOv98Ia0xBeB
- uLIJCU5X36PwyYi/uP9g==
+In-Reply-To: <20200107173842.ciskn4ahuhiklycm@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hsr_debugfs_rename prototype got an extra 'void' that needs to
-be removed again:
+On Tue, Jan 07, 2020 at 06:38:42PM +0100, Pali Rohár wrote:
+> Adding support for case-insensitivity into UTF-8 NLS encoding would mean
+> to create completely new kernel NLS API (which would support variable
+> length encodings) and rewrite all NLS filesystems to use this new API.
+> Also all existing NLS encodings would be needed to port into this new
+> API.
+> 
+> It is really something which have a value? Just because of UTF-8?
+> 
+> For me it looks like better option would be to remove UTF-8 NLS encoding
+> as it is broken. Some filesystems already do not use NLS API for their
+> UTF-8 support (e.g. vfat, udf or newly prepared exfat). And others could
+> be modified/extended/fixed in similar way.
 
-In file included from /git/arm-soc/net/hsr/hsr_main.c:12:
-net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
- static inline void void hsr_debugfs_rename(struct net_device *dev)
+You didn't mention ext4 and f2fs, which is using the Unicode code in
+fs/unicode for its case-folding and normalization support.  Ext4 and
+f2fs only supports utf-8, so using the NLS API would have added no
+value --- and it as you pointed out, the NLS API doesn't support
+variable length encoding anyway.  In contrast the fs/unicode functions
+have support for full Unicode case folding and normalization, and
+currently has the latest Unicode 12.1 tables (released May 2019).
 
-Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/hsr/hsr_main.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What I'd suggest is to create a new API, enhancing the functions in
+fs/unicode, to support those file systems that need to deal with
+UTF-16 and UTF-32 for their on-disk directory format, and that we
+assume that for the most part, userspace *will* be using a UTF-8
+encoding for the user<->kernel interface.  We can keep the existing
+NLS interface and mount options for legacy support, but in my opinion
+it's not worth the effort to try to do anything else.
 
-diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
-index d40de84a637f..754d84b217f0 100644
---- a/net/hsr/hsr_main.h
-+++ b/net/hsr/hsr_main.h
-@@ -191,7 +191,7 @@ void hsr_debugfs_term(struct hsr_priv *priv);
- void hsr_debugfs_create_root(void);
- void hsr_debugfs_remove_root(void);
- #else
--static inline void void hsr_debugfs_rename(struct net_device *dev)
-+static inline void hsr_debugfs_rename(struct net_device *dev)
- {
- }
- static inline void hsr_debugfs_init(struct hsr_priv *priv,
--- 
-2.20.0
-
+					- Ted
