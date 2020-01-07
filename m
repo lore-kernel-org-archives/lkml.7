@@ -2,118 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AADAC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D666FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC0C206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BAE206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHyPQo+y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISwI41kP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgAGT52 (ORCPT
+        id S1728678AbgAGT6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:57:28 -0500
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:45475 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgAGT51 (ORCPT
+        Tue, 7 Jan 2020 14:58:08 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39709 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbgAGT6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:57:27 -0500
-Received: by mail-pf1-f169.google.com with SMTP id 2so366225pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:57:26 -0800 (PST)
+        Tue, 7 Jan 2020 14:58:07 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 20so78002wmj.4;
+        Tue, 07 Jan 2020 11:58:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
          :user-agent:mime-version;
-        bh=Yxkh8StDu3vfVeGtFseg/gks40WP5yhSnsk2dLl/57E=;
-        b=PHyPQo+yCzPgAyKjg4UI6suHI+/ilkeRBuy3mWhSA7DVXVKUcuiIVjWuDG0hXVodbp
-         mcEUZ8yoRDIY3DPtWAuhFQ88QZR7soYmQyLQTqZEszF+yPWu2wMSk1CpA4LR0pAbrVDd
-         q4LBK2ljorr++qqoPelhCd8t1EggBBdeX0WFOtKW4VJUvq6lJa/RNpWb1Q+6eNYfCjNr
-         T9NWKpNAY1pnkoHSYx9wgQ+JL6d2py3WTMFS5HkJExIw+lWTzuUQDmzDKTyKEcA43Sv9
-         oa3NoHBG3bOurQC3DwKeSF7NSDYXgga0LPUAg3n7pfsZ+UJCxf0vDwgnCF7ayUcKrSKK
-         GNLA==
+        bh=qWHIdGhD+EJuvy5rVg/Q3JciPO3S68IDp+JUWwtxNmM=;
+        b=ISwI41kPCzgOhZigcVVBkpceXXSaPu8gw/c59H5cWPm4RsWfxi/xCuDg2ly2Ri6erz
+         j7jG1PE9t2n+wUUa8//feEO6ooyU0B+H1Hgpm+nbTHxpG20eQ0G7gk2AJRu5Wb7PrlBw
+         Z3FU+jHY2tp993D5cbQuO2v3Dhqfn0nWzPC0MN8bTLEcHJGBPSvmHZeVoO8izZig5o7R
+         2Yvc8vg+7hXVc0lf/2oXVmW95tESkqADJ1dmOndy19Xib1/R6Wadz2fYN4Aw80VZaR8A
+         TP3fPOlGtA8FFZzI7eXZrbwP6HlJ2YvL2MZDsl4LgcyyNJ+wuJnoZ5Fg6G9yNU+UFDzo
+         TVKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Yxkh8StDu3vfVeGtFseg/gks40WP5yhSnsk2dLl/57E=;
-        b=tFgzXW4TSn0zttr0wm91/E9hpaCOsYt/J6JZEkkNLIGI7sP1vj1aMKNkCpqTCF9gwd
-         UllXJXp3ijoYO9kqyH8OJ2RpAmjaSPNjHA56NxBE8SiojDW2EmDTKco2aytXmHobzml7
-         07Z4ahFJOEgMA3sZEfkG/tbmgkVRXG+1Bd/uBnZZ3VuChlloTBI0n9j5tMB/8pZc4Q8A
-         wymUJMqZDiLY0nzigSbBdW5Tzm2thlnZDeCt+zy+qwPwvZDwoEHSZvutLOXBT47JIFN5
-         ktXKO2nT00fuIQ8Ly712zFJs3J3WhEo2fSivKEElC4R3pI9lonG92jpmsL05kVTd15JU
-         kR+A==
-X-Gm-Message-State: APjAAAXMHazPm8ns29RORg2rx+PS7KvfpX13145drROJmg1rUwveFTy6
-        uFzeGhL6ach1VFm6mN8JYFO0/A==
-X-Google-Smtp-Source: APXvYqxGdQcWNlWl+zmmQVooo+EnW/Y+CbADoGAw4kD88ujWmMJ3/b6XJYMmHmJAn2JPkQWEtaw04g==
-X-Received: by 2002:a65:538b:: with SMTP id x11mr1139153pgq.395.1578427045338;
-        Tue, 07 Jan 2020 11:57:25 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 2sm373729pjh.19.2020.01.07.11.57.24
+        h=x-gm-message-state:sender:from:to:cc:subject:references:date
+         :in-reply-to:message-id:user-agent:mime-version;
+        bh=qWHIdGhD+EJuvy5rVg/Q3JciPO3S68IDp+JUWwtxNmM=;
+        b=cNn2znEXKXyKQQv8WMSEGpDNsJAKxgKfxr+HaP/RMjg91a+YpC9b56/le9oMTUnlIo
+         ssxJbkituXHqIZo7e99GYx667nu0pUhz3uMXJ/ic13cjhy6YIJKVc5t+/h3U74p9GAu6
+         eZ6MqpkjqyBCoLRJNviB0TFxDPQFVxG8tZQ+20/EO7L+9b5soymN0/cdVxNiBKRlGPdF
+         H25VN7jNl9utDQNMHwvDjRwm6v1EvaXbGU/qqxRG8mTRouQWo6pxA20RmyuMEzbkkMhl
+         1b6zxCwy85CEvM2ylwD0eUWrDwMVTwfCRXkSR8Fs4JyDWrof1wH2FynyCbqrW7R3PvyR
+         i9Vg==
+X-Gm-Message-State: APjAAAUpw7Vk9wqZSrY1JthI0DQYd6o3JsJzh9vdKZ3aj2fhgZUpNvX3
+        QFAv8i03b1aid/TCVj7i8dI=
+X-Google-Smtp-Source: APXvYqzxhBclv4EvKHOkAs2D8bUcFMaBo0tGJ+96epd1UbfU2gqJRvtQFqGiz4YfXD07A1DkOjKsPg==
+X-Received: by 2002:a1c:541b:: with SMTP id i27mr56202wmb.137.1578427085197;
+        Tue, 07 Jan 2020 11:58:05 -0800 (PST)
+Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
+        by smtp.gmail.com with ESMTPSA id r15sm801978wmh.21.2020.01.07.11.58.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 11:57:24 -0800 (PST)
-Date:   Tue, 7 Jan 2020 11:57:24 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Robin Murphy <robin.murphy@arm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "Grimm, Jon" <jon.grimm@amd.com>, baekhw@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc] dma-mapping: preallocate unencrypted DMA atomic pool
-In-Reply-To: <20200107105458.GA3139@lst.de>
-Message-ID: <alpine.DEB.2.21.2001071152020.183706@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <3213a6ac-5aad-62bc-bf95-fae8ba088b9e@arm.com> <20200107105458.GA3139@lst.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 07 Jan 2020 11:58:04 -0800 (PST)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
+        (envelope-from <peter@korsgaard.com>)
+        id 1iouzL-0004oj-Kh; Tue, 07 Jan 2020 20:58:03 +0100
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
+References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+        <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
+        <87muazjewd.fsf@dell.be.48ers.dk> <20200107193125.GA10117@ninjato>
+Date:   Tue, 07 Jan 2020 20:58:03 +0100
+In-Reply-To: <20200107193125.GA10117@ninjato> (Wolfram Sang's message of "Tue,
+        7 Jan 2020 20:31:25 +0100")
+Message-ID: <87imlnjayc.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020, Christoph Hellwig wrote:
+>>>>> "Wolfram" == Wolfram Sang <wsa@the-dreams.de> writes:
 
-> > On 01/01/2020 1:54 am, David Rientjes via iommu wrote:
-> >> Christoph, Thomas, is something like this (without the diagnosic
-> >> information included in this patch) acceptable for these allocations?
-> >> Adding expansion support when the pool is half depleted wouldn't be *that*
-> >> hard.
-> >>
-> >> Or are there alternatives we should consider?  Thanks!
-> >
-> > Are there any platforms which require both non-cacheable remapping *and* 
-> > unencrypted remapping for distinct subsets of devices?
-> >
-> > If not (and I'm assuming there aren't, because otherwise this patch is 
-> > incomplete in covering only 2 of the 3 possible combinations), then 
-> > couldn't we keep things simpler by just attributing both properties to the 
-> > single "atomic pool" on the basis that one or the other will always be a 
-> > no-op? In other words, basically just tweaking the existing "!coherent" 
-> > tests to "!coherent || force_dma_unencrypted()" and doing 
-> > set_dma_unencrypted() unconditionally in atomic_pool_init().
-> 
-> I think that would make most sense.
-> 
+ > Hi Peter,
+ > a happy new year to you!
 
-I'll rely on Thomas to chime in if this doesn't make sense for the SEV 
-usecase.
+thanks, You too!
 
-I think the sizing of the single atomic pool needs to be determined.  Our 
-peak usage that we have measured from NVMe is ~1.4MB and atomic_pool is 
-currently sized to 256KB by default.  I'm unsure at this time if we need 
-to be able to dynamically expand this pool with a kworker.
+ >> > Move away from the deprecated API and return the shiny new ERRPTR where
+ >> > useful.
+ >> 
+ >> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+ >> 
+ >> I didn't follow the discussion, but I don't see any returns anywhere?
 
-Maybe when CONFIG_AMD_MEM_ENCRYPT is enabled this atomic pool should be 
-sized to 2MB or so and then when it reaches half capacity we schedule some 
-background work to dynamically increase it?  That wouldn't be hard unless 
-the pool can be rapidly depleted.
+ > Yeah, an ERRPTR is not "useful" here. However, the old API is going to
+ > be removed, so your driver is converted, too.
 
-Do we want to increase the atomic pool size by default and then do 
-background dynamic expansion?
+Ok, great.
+
+Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+
+-- 
+Bye, Peter Korsgaard
