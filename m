@@ -2,51 +2,56 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6781AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D055AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3B0206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50CC2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432409;
-	bh=WDWhd5zGGRJLISsdlOzwEI0kY03uCFpBBDHuR6FeEX4=;
+	s=default; t=1578432416;
+	bh=0YOi9vHYnseL1AT4Pr6i58HzAA3uX582XqMpHJnmEIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnPScwiFhDZolCXjfiSF+QfH8YEaXlt4KKshHGldw8mBr5bSDrRLhJHfCIF+JCv0d
-	 vOtOQgN0mPzvXObmmbG5EhvBXejYm8NF/uAryfGwBxJhVgZIcchetdJI4Z1N4lt19r
-	 mu4/wnm+5mf6Ze2xwGY3zCQfUiSeuckaUF02Xw+Q=
+	b=VYm2+8QhxaDVq3/m4yCS5MZs+QQstTtHLyeOZDSSBAK+ksRKGeKDe0xh51PJ1Twz9
+	 cLjwvDcMn/BugulM6AL6v2hK3EewIZROs6P3hgGF0KaWtCN4Fp+n7182IkhsOAFL1D
+	 dOG5ffXzdt4a5SRGVkqbXMS3OhbobdbFfTFzKlnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgAGU6k (ORCPT
+        id S1727857AbgAGU6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58198 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbgAGU6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:35 -0500
+        id S1727825AbgAGU6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C53CD24679;
-        Tue,  7 Jan 2020 20:58:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E772087F;
+        Tue,  7 Jan 2020 20:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430715;
-        bh=WDWhd5zGGRJLISsdlOzwEI0kY03uCFpBBDHuR6FeEX4=;
+        s=default; t=1578430700;
+        bh=0YOi9vHYnseL1AT4Pr6i58HzAA3uX582XqMpHJnmEIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fw0K15+MEn8AyoTdQUP7i4tiA47MSzcvMfRuJGqWsCZ+lfpE85xRYaXqFne5aSlsS
-         R9gC4cKjqPOwMzZs9NRIcO4/3WLbDQ5IId+OJRK5C4IDnARZ+TUlTH+zo79Hp7Nu2r
-         SFTrMLbkymCSQI/11KXt0Gk/NkpXyNTT1EWvsjA4=
+        b=guCKb7/h4HUukI/bdQRvzbFx1eQLdU87nycq2cwVsbZNxPgR92kNegcKmWUNI2o0l
+         rNL5VLtFZ5QuARm1TCI4obWw7cnS1PdMpqdf3b6TqUxF5T3k4eJcvKSv862lIOSj84
+         LsNaKmrMsMf9qdot40aw2s56FjQo7C02pV7JDdHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 066/191] ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
-Date:   Tue,  7 Jan 2020 21:53:06 +0100
-Message-Id: <20200107205336.523680567@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/191] taskstats: fix data-race
+Date:   Tue,  7 Jan 2020 21:53:01 +0100
+Message-Id: <20200107205336.260207514@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,64 +64,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit 0aec96f5897ac16ad9945f531b4bef9a2edd2ebd upstream.
+[ Upstream commit 0b8d616fb5a8ffa307b1d3af37f55c15dae14f28 ]
 
-Jia-Ju Bai reported a possible sleep-in-atomic scenario in the ice1724
-driver with Infrasonic Quartet support code: namely, ice->set_rate
-callback gets called inside ice->reg_lock spinlock, while the callback
-in quartet.c holds ice->gpio_mutex.
+When assiging and testing taskstats in taskstats_exit() there's a race
+when setting up and reading sig->stats when a thread-group with more
+than one thread exits:
 
-This patch fixes the invalid call: it simply moves the calls of
-ice->set_rate and ice->set_mclk callbacks outside the spinlock.
+write to 0xffff8881157bbe10 of 8 bytes by task 7951 on cpu 0:
+ taskstats_tgid_alloc kernel/taskstats.c:567 [inline]
+ taskstats_exit+0x6b7/0x717 kernel/taskstats.c:596
+ do_exit+0x2c2/0x18e0 kernel/exit.c:864
+ do_group_exit+0xb4/0x1c0 kernel/exit.c:983
+ get_signal+0x2a2/0x1320 kernel/signal.c:2734
+ do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
+ exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
+ prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+ do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/5d43135e-73b9-a46a-2155-9e91d0dcdf83@gmail.com
-Link: https://lore.kernel.org/r/20191218192606.12866-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+read to 0xffff8881157bbe10 of 8 bytes by task 7949 on cpu 1:
+ taskstats_tgid_alloc kernel/taskstats.c:559 [inline]
+ taskstats_exit+0xb2/0x717 kernel/taskstats.c:596
+ do_exit+0x2c2/0x18e0 kernel/exit.c:864
+ do_group_exit+0xb4/0x1c0 kernel/exit.c:983
+ __do_sys_exit_group kernel/exit.c:994 [inline]
+ __se_sys_exit_group kernel/exit.c:992 [inline]
+ __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
+ do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+Fix this by using smp_load_acquire() and smp_store_release().
+
+Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Marco Elver <elver@google.com>
+Reviewed-by: Will Deacon <will@kernel.org>
+Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Link: https://lore.kernel.org/r/20191009114809.8643-1-christian.brauner@ubuntu.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/ice1712/ice1724.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ kernel/taskstats.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
---- a/sound/pci/ice1712/ice1724.c
-+++ b/sound/pci/ice1712/ice1724.c
-@@ -647,6 +647,7 @@ static int snd_vt1724_set_pro_rate(struc
- 	unsigned long flags;
- 	unsigned char mclk_change;
- 	unsigned int i, old_rate;
-+	bool call_set_rate = false;
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index 13a0f2e6ebc2..e2ac0e37c4ae 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -554,25 +554,33 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+ static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+ {
+ 	struct signal_struct *sig = tsk->signal;
+-	struct taskstats *stats;
++	struct taskstats *stats_new, *stats;
  
- 	if (rate > ice->hw_rates->list[ice->hw_rates->count - 1])
- 		return -EINVAL;
-@@ -670,7 +671,7 @@ static int snd_vt1724_set_pro_rate(struc
- 		 * setting clock rate for internal clock mode */
- 		old_rate = ice->get_rate(ice);
- 		if (force || (old_rate != rate))
--			ice->set_rate(ice, rate);
-+			call_set_rate = true;
- 		else if (rate == ice->cur_rate) {
- 			spin_unlock_irqrestore(&ice->reg_lock, flags);
- 			return 0;
-@@ -678,12 +679,14 @@ static int snd_vt1724_set_pro_rate(struc
+-	if (sig->stats || thread_group_empty(tsk))
+-		goto ret;
++	/* Pairs with smp_store_release() below. */
++	stats = smp_load_acquire(&sig->stats);
++	if (stats || thread_group_empty(tsk))
++		return stats;
+ 
+ 	/* No problem if kmem_cache_zalloc() fails */
+-	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
++	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+ 
+ 	spin_lock_irq(&tsk->sighand->siglock);
+-	if (!sig->stats) {
+-		sig->stats = stats;
+-		stats = NULL;
++	stats = sig->stats;
++	if (!stats) {
++		/*
++		 * Pairs with smp_store_release() above and order the
++		 * kmem_cache_zalloc().
++		 */
++		smp_store_release(&sig->stats, stats_new);
++		stats = stats_new;
++		stats_new = NULL;
  	}
+ 	spin_unlock_irq(&tsk->sighand->siglock);
  
- 	ice->cur_rate = rate;
-+	spin_unlock_irqrestore(&ice->reg_lock, flags);
+-	if (stats)
+-		kmem_cache_free(taskstats_cache, stats);
+-ret:
+-	return sig->stats;
++	if (stats_new)
++		kmem_cache_free(taskstats_cache, stats_new);
 +
-+	if (call_set_rate)
-+		ice->set_rate(ice, rate);
++	return stats;
+ }
  
- 	/* setting master clock */
- 	mclk_change = ice->set_mclk(ice, rate);
- 
--	spin_unlock_irqrestore(&ice->reg_lock, flags);
--
- 	if (mclk_change && ice->gpio.i2s_mclk_changed)
- 		ice->gpio.i2s_mclk_changed(ice);
- 	if (ice->gpio.set_pro_rate)
+ /* Send pid data out on exit */
+-- 
+2.20.1
+
 
 
