@@ -2,133 +2,74 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AC1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66E0C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0CE2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431702;
-	bh=8+CaKwhRUt1xhJwAYRCUH2PySM5nPiC2GuV92tLAg/g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zHRsL8q+txs+RyxEApRzr4VTGHaPI8T4qmPrCO1p2LijNnrxpnjAs0WwnAaOFQiF1
-	 xolb93VXSFXLKKqIR1LqcESBu3Ja3YZisY2Du9ZXCC3XFI6tqoWhMlnYIvl+f3QlOY
-	 N0DKK5FctecxddJaHwfUP28wk/dmO3VMdwRlCSwc=
+	by mail.kernel.org (Postfix) with ESMTP id BAFA82072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbgAGVIo (ORCPT
+        id S1729387AbgAGVIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729715AbgAGVIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:36 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC062077B;
-        Tue,  7 Jan 2020 21:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431316;
-        bh=8+CaKwhRUt1xhJwAYRCUH2PySM5nPiC2GuV92tLAg/g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk//+XURxK/a/bVtuZG3u6ZdS/bkLG46eY93O1l7ByqwKO7qL6GVeV+jPQYrHIpBl
-         kKtX/QMOo6pfF9ie1MkbeoctwYF370z81KZ6QT+bptwFE2/cr2+8HLJKa5HBT9KAHz
-         mme8bZdTvR1uTYiuOXyT21HJIpbW5EUaLMwdn3cM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 090/115] regulator: ab8500: Remove AB8505 USB regulator
-Date:   Tue,  7 Jan 2020 21:55:00 +0100
-Message-Id: <20200107205306.737970845@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-References: <20200107205240.283674026@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jan 2020 16:08:41 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37159 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729389AbgAGVIf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:35 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007L7OUj026037
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 7 Jan 2020 16:07:27 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id BA95E4207DF; Tue,  7 Jan 2020 16:07:24 -0500 (EST)
+Date:   Tue, 7 Jan 2020 16:07:24 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Qian Cai <cai@lca.pw>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, catalin.marinas@arm.com, will@kernel.org,
+        dan.j.williams@intel.com, peterz@infradead.org, longman@redhat.com,
+        tglx@linutronix.de, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] char/random: silence a lockdep splat with printk()
+Message-ID: <20200107210724.GN3619@mit.edu>
+References: <1573679785-21068-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573679785-21068-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+On Wed, Nov 13, 2019 at 04:16:25PM -0500, Qian Cai wrote:
+> From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> 
+> Sergey didn't like the locking order,
+> 
+> uart_port->lock  ->  tty_port->lock
+> 
+> uart_write (uart_port->lock)
+>   __uart_start
+>     pl011_start_tx
+>       pl011_tx_chars
+>         uart_write_wakeup
+>           tty_port_tty_wakeup
+>             tty_port_default
+>               tty_port_tty_get (tty_port->lock)
+> 
+> but those code is so old, and I have no clue how to de-couple it after
+> checking other locks in the splat. There is an onging effort to make all
+> printk() as deferred, so until that happens, workaround it for now as a
+> short-term fix.
 
-commit 99c4f70df3a6446c56ca817c2d0f9c12d85d4e7c upstream.
+Applied, thanks.
 
-The USB regulator was removed for AB8500 in
-commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
-It was then added for AB8505 in
-commit 547f384f33db ("regulator: ab8500: add support for ab8505").
-
-However, there was never an entry added for it in
-ab8505_regulator_match. This causes all regulators after it
-to be initialized with the wrong device tree data, eventually
-leading to an out-of-bounds array read.
-
-Given that it is not used anywhere in the kernel, it seems
-likely that similar arguments against supporting it exist for
-AB8505 (it is controlled by hardware).
-
-Therefore, simply remove it like for AB8500 instead of adding
-an entry in ab8505_regulator_match.
-
-Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191106173125.14496-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/regulator/ab8500.c       |   17 -----------------
- include/linux/regulator/ab8500.h |    1 -
- 2 files changed, 18 deletions(-)
-
---- a/drivers/regulator/ab8500.c
-+++ b/drivers/regulator/ab8500.c
-@@ -956,23 +956,6 @@ static struct ab8500_regulator_info
- 		.update_val_idle	= 0x82,
- 		.update_val_normal	= 0x02,
- 	},
--	[AB8505_LDO_USB] = {
--		.desc = {
--			.name           = "LDO-USB",
--			.ops            = &ab8500_regulator_mode_ops,
--			.type           = REGULATOR_VOLTAGE,
--			.id             = AB8505_LDO_USB,
--			.owner          = THIS_MODULE,
--			.n_voltages     = 1,
--			.volt_table	= fixed_3300000_voltage,
--		},
--		.update_bank            = 0x03,
--		.update_reg             = 0x82,
--		.update_mask            = 0x03,
--		.update_val		= 0x01,
--		.update_val_idle	= 0x03,
--		.update_val_normal	= 0x01,
--	},
- 	[AB8505_LDO_AUDIO] = {
- 		.desc = {
- 			.name		= "LDO-AUDIO",
---- a/include/linux/regulator/ab8500.h
-+++ b/include/linux/regulator/ab8500.h
-@@ -38,7 +38,6 @@ enum ab8505_regulator_id {
- 	AB8505_LDO_AUX6,
- 	AB8505_LDO_INTCORE,
- 	AB8505_LDO_ADC,
--	AB8505_LDO_USB,
- 	AB8505_LDO_AUDIO,
- 	AB8505_LDO_ANAMIC1,
- 	AB8505_LDO_ANAMIC2,
-
-
+					- Ted
