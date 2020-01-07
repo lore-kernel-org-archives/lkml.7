@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D465AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57650C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB922081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB6320678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430983;
-	bh=mqpU8JT3smNn9fDlIOPfcrdFwTi5L4D/Db3iUIcyXuY=;
+	s=default; t=1578430985;
+	bh=xCyZaWVQZrlbGkrwOH3saOi6HZRKJT6k+mOczyMTkUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IAMVLSDsJ2m4PoKFcoR1qkAD+6pXDns+nYhHbqXmC5Au6Nb+WFD5jBtAgoCGUA4D
-	 OtStemFde5RrNeOKd0m6Z3hARiT2ZX4eeOYCOx5a66DsgnzPzjCsIJeeh697Q8Dyqg
-	 zahjMRIDyO/gIOD6ebHvBNXa9f8ATwyetkusGgyw=
+	b=1IyNS1JuzQpo2YYay11rWbDXI8lgrgnrKtpWPjL3LMExpnuOUmmUcT2fKVHj4+CzG
+	 V39PxZzZL22YOsMUX4lxwejBT/zS+q/ryR5S+HUrgLy00qjz6TCfwZVf0fVYqXR7TF
+	 Ih85fNA50JwlkHWebOjjnX1ER/ZRDJDb7Oq/6pjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgAGVDC (ORCPT
+        id S1728863AbgAGVDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:03:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbgAGVC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:57 -0500
+        id S1728848AbgAGVC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A98220678;
-        Tue,  7 Jan 2020 21:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC1A2077B;
+        Tue,  7 Jan 2020 21:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430976;
-        bh=mqpU8JT3smNn9fDlIOPfcrdFwTi5L4D/Db3iUIcyXuY=;
+        s=default; t=1578430979;
+        bh=xCyZaWVQZrlbGkrwOH3saOi6HZRKJT6k+mOczyMTkUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CngEy072WpQIcj9L007f13Yn0/+dRgoMCr3vLwVczvEzT8CriBTQcsfkMNElJLBPC
-         KhEPNssvTPb2dIFNrXsTRvgSghYi85Se55YUQHv5sn1dhm28yPc+oOYqFIWfq93EMj
-         ozm5P4AZvIAPgjYdLZqSySmOO2pQSvNRveFG8cUw=
+        b=lkhPTGhwU8Dy96pd9Z9CyGiT3+/j8rI2bP7nl0pqeyYPDOpBzmmcmH7wWJPRrpfCs
+         ga55bFLKLoobmIR6c0ZO6O0IE01gMZJqXuNoTYdLfEoxN7AWM393VLP4mmGdV4imoM
+         wU3mrWbOry7D9SBUjzt27/LK4dOFE9kLT4/83O1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 175/191] drm/i915/execlists: Fix annotation for decoupling virtual request
-Date:   Tue,  7 Jan 2020 21:54:55 +0100
-Message-Id: <20200107205342.362904324@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 176/191] xfs: periodically yield scrub threads to the scheduler
+Date:   Tue,  7 Jan 2020 21:54:56 +0100
+Message-Id: <20200107205342.417933094@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,129 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 08ad9a3846fc72b047b110b36d162ffbcf298fa2 ]
+[ Upstream commit 5d1116d4c6af3e580f1ed0382ca5a94bd65a34cf ]
 
-As we may signal a request and take the engine->active.lock within the
-signaler, the engine submission paths have to use a nested annotation on
-their requests -- but we guarantee that we can never submit on the same
-engine as the signaling fence.
+Christoph Hellwig complained about the following soft lockup warning
+when running scrub after generic/175 when preemption is disabled and
+slub debugging is enabled:
 
-<4>[  723.763281] WARNING: possible circular locking dependency detected
-<4>[  723.763285] 5.3.0-g80fa0e042cdb-drmtip_379+ #1 Tainted: G     U
-<4>[  723.763288] ------------------------------------------------------
-<4>[  723.763291] gem_exec_await/1388 is trying to acquire lock:
-<4>[  723.763294] ffff93a7b53221d8 (&engine->active.lock){..-.}, at: execlists_submit_request+0x2b/0x1e0 [i915]
-<4>[  723.763378]
-                  but task is already holding lock:
-<4>[  723.763381] ffff93a7c25f6d20 (&i915_request_get(rq)->submit/1){-.-.}, at: __i915_sw_fence_complete+0x1b2/0x250 [i915]
-<4>[  723.763420]
-                  which lock already depends on the new lock.
+watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [xfs_scrub:161]
+Modules linked in:
+irq event stamp: 41692326
+hardirqs last  enabled at (41692325): [<ffffffff8232c3b7>] _raw_0
+hardirqs last disabled at (41692326): [<ffffffff81001c5a>] trace0
+softirqs last  enabled at (41684994): [<ffffffff8260031f>] __do_e
+softirqs last disabled at (41684987): [<ffffffff81127d8c>] irq_e0
+CPU: 3 PID: 16189 Comm: xfs_scrub Not tainted 5.4.0-rc3+ #30
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.124
+RIP: 0010:_raw_spin_unlock_irqrestore+0x39/0x40
+Code: 89 f3 be 01 00 00 00 e8 d5 3a e5 fe 48 89 ef e8 ed 87 e5 f2
+RSP: 0018:ffffc9000233f970 EFLAGS: 00000286 ORIG_RAX: ffffffffff3
+RAX: ffff88813b398040 RBX: 0000000000000286 RCX: 0000000000000006
+RDX: 0000000000000006 RSI: ffff88813b3988c0 RDI: ffff88813b398040
+RBP: ffff888137958640 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffea00042b0c00
+R13: 0000000000000001 R14: ffff88810ac32308 R15: ffff8881376fc040
+FS:  00007f6113dea700(0000) GS:ffff88813bb80000(0000) knlGS:00000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6113de8ff8 CR3: 000000012f290000 CR4: 00000000000006e0
+Call Trace:
+ free_debug_processing+0x1dd/0x240
+ __slab_free+0x231/0x410
+ kmem_cache_free+0x30e/0x360
+ xchk_ag_btcur_free+0x76/0xb0
+ xchk_ag_free+0x10/0x80
+ xchk_bmap_iextent_xref.isra.14+0xd9/0x120
+ xchk_bmap_iextent+0x187/0x210
+ xchk_bmap+0x2e0/0x3b0
+ xfs_scrub_metadata+0x2e7/0x500
+ xfs_ioc_scrub_metadata+0x4a/0xa0
+ xfs_file_ioctl+0x58a/0xcd0
+ do_vfs_ioctl+0xa0/0x6f0
+ ksys_ioctl+0x5b/0x90
+ __x64_sys_ioctl+0x11/0x20
+ do_syscall_64+0x4b/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-<4>[  723.763423]
-                  the existing dependency chain (in reverse order) is:
-<4>[  723.763427]
-                  -> #2 (&i915_request_get(rq)->submit/1){-.-.}:
-<4>[  723.763434]        _raw_spin_lock_irqsave_nested+0x39/0x50
-<4>[  723.763478]        __i915_sw_fence_complete+0x1b2/0x250 [i915]
-<4>[  723.763513]        intel_engine_breadcrumbs_irq+0x3aa/0x5e0 [i915]
-<4>[  723.763600]        cs_irq_handler+0x49/0x50 [i915]
-<4>[  723.763659]        gen11_gt_irq_handler+0x17b/0x280 [i915]
-<4>[  723.763690]        gen11_irq_handler+0x54/0xf0 [i915]
-<4>[  723.763695]        __handle_irq_event_percpu+0x41/0x2d0
-<4>[  723.763699]        handle_irq_event_percpu+0x2b/0x70
-<4>[  723.763702]        handle_irq_event+0x2f/0x50
-<4>[  723.763706]        handle_edge_irq+0xee/0x1a0
-<4>[  723.763709]        do_IRQ+0x7e/0x160
-<4>[  723.763712]        ret_from_intr+0x0/0x1d
-<4>[  723.763717]        __slab_alloc.isra.28.constprop.33+0x4f/0x70
-<4>[  723.763720]        kmem_cache_alloc+0x28d/0x2f0
-<4>[  723.763724]        vm_area_dup+0x15/0x40
-<4>[  723.763727]        dup_mm+0x2dd/0x550
-<4>[  723.763730]        copy_process+0xf21/0x1ef0
-<4>[  723.763734]        _do_fork+0x71/0x670
-<4>[  723.763737]        __se_sys_clone+0x6e/0xa0
-<4>[  723.763741]        do_syscall_64+0x4f/0x210
-<4>[  723.763744]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-<4>[  723.763747]
-                  -> #1 (&(&rq->lock)->rlock#2){-.-.}:
-<4>[  723.763752]        _raw_spin_lock+0x2a/0x40
-<4>[  723.763789]        __unwind_incomplete_requests+0x3eb/0x450 [i915]
-<4>[  723.763825]        __execlists_submission_tasklet+0x9ec/0x1d60 [i915]
-<4>[  723.763864]        execlists_submission_tasklet+0x34/0x50 [i915]
-<4>[  723.763874]        tasklet_action_common.isra.5+0x47/0xb0
-<4>[  723.763878]        __do_softirq+0xd8/0x4ae
-<4>[  723.763881]        irq_exit+0xa9/0xc0
-<4>[  723.763883]        smp_apic_timer_interrupt+0xb7/0x280
-<4>[  723.763887]        apic_timer_interrupt+0xf/0x20
-<4>[  723.763892]        cpuidle_enter_state+0xae/0x450
-<4>[  723.763895]        cpuidle_enter+0x24/0x40
-<4>[  723.763899]        do_idle+0x1e7/0x250
-<4>[  723.763902]        cpu_startup_entry+0x14/0x20
-<4>[  723.763905]        start_secondary+0x15f/0x1b0
-<4>[  723.763908]        secondary_startup_64+0xa4/0xb0
-<4>[  723.763911]
-                  -> #0 (&engine->active.lock){..-.}:
-<4>[  723.763916]        __lock_acquire+0x15d8/0x1ea0
-<4>[  723.763919]        lock_acquire+0xa6/0x1c0
-<4>[  723.763922]        _raw_spin_lock_irqsave+0x33/0x50
-<4>[  723.763956]        execlists_submit_request+0x2b/0x1e0 [i915]
-<4>[  723.764002]        submit_notify+0xa8/0x13c [i915]
-<4>[  723.764035]        __i915_sw_fence_complete+0x81/0x250 [i915]
-<4>[  723.764054]        i915_sw_fence_wake+0x51/0x64 [i915]
-<4>[  723.764054]        __i915_sw_fence_complete+0x1ee/0x250 [i915]
-<4>[  723.764054]        dma_i915_sw_fence_wake_timer+0x14/0x20 [i915]
-<4>[  723.764054]        dma_fence_signal_locked+0x9e/0x1c0
-<4>[  723.764054]        dma_fence_signal+0x1f/0x40
-<4>[  723.764054]        vgem_fence_signal_ioctl+0x67/0xc0 [vgem]
-<4>[  723.764054]        drm_ioctl_kernel+0x83/0xf0
-<4>[  723.764054]        drm_ioctl+0x2f3/0x3b0
-<4>[  723.764054]        do_vfs_ioctl+0xa0/0x6f0
-<4>[  723.764054]        ksys_ioctl+0x35/0x60
-<4>[  723.764054]        __x64_sys_ioctl+0x11/0x20
-<4>[  723.764054]        do_syscall_64+0x4f/0x210
-<4>[  723.764054]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-<4>[  723.764054]
-                  other info that might help us debug this:
+If preemption is disabled, all metadata buffers needed to perform the
+scrub are already in memory, and there are a lot of records to check,
+it's possible that the scrub thread will run for an extended period of
+time without sleeping for IO or any other reason.  Then the watchdog
+timer or the RCU stall timeout can trigger, producing the backtrace
+above.
 
-<4>[  723.764054] Chain exists of:
-                    &engine->active.lock --> &(&rq->lock)->rlock#2 --> &i915_request_get(rq)->submit/1
+To fix this problem, call cond_resched() from the scrub thread so that
+we back out to the scheduler whenever necessary.
 
-<4>[  723.764054]  Possible unsafe locking scenario:
-
-<4>[  723.764054]        CPU0                    CPU1
-<4>[  723.764054]        ----                    ----
-<4>[  723.764054]   lock(&i915_request_get(rq)->submit/1);
-<4>[  723.764054]                                lock(&(&rq->lock)->rlock#2);
-<4>[  723.764054]                                lock(&i915_request_get(rq)->submit/1);
-<4>[  723.764054]   lock(&engine->active.lock);
-<4>[  723.764054]
-                   *** DEADLOCK ***
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111862
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004194758.19679-1-chris@chris-wilson.co.uk
+Reported-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/gt/intel_lrc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/scrub/common.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
-index 06a506c29463..d564bfcab6a3 100644
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -525,7 +525,8 @@ __unwind_incomplete_requests(struct intel_engine_cs *engine)
- 			 */
- 			if (test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
- 				     &rq->fence.flags)) {
--				spin_lock(&rq->lock);
-+				spin_lock_nested(&rq->lock,
-+						 SINGLE_DEPTH_NESTING);
- 				i915_request_cancel_breadcrumb(rq);
- 				spin_unlock(&rq->lock);
- 			}
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index 003a772cd26c..2e50d146105d 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -14,8 +14,15 @@
+ static inline bool
+ xchk_should_terminate(
+ 	struct xfs_scrub	*sc,
+-	int				*error)
++	int			*error)
+ {
++	/*
++	 * If preemption is disabled, we need to yield to the scheduler every
++	 * few seconds so that we don't run afoul of the soft lockup watchdog
++	 * or RCU stall detector.
++	 */
++	cond_resched();
++
+ 	if (fatal_signal_pending(current)) {
+ 		if (*error == 0)
+ 			*error = -EAGAIN;
 -- 
 2.20.1
 
