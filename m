@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB35C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139AFC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B782187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78AC206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432358;
-	bh=25YGG4pEpfFDp5ONUl1u+Nokxny0vt3ZlgrL6GDtJyc=;
+	s=default; t=1578432363;
+	bh=mEpZI1AiW0OMmKj9mQE/MPrwrVxuZ+BRFKNfORLLlEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BP+euD/HsI+aLfrZfwm3LeLaZA4jwosXEpYavAz3rEeF3ayYty+VjOniyXoZ3Ydo6
-	 brndqi32ad6sl5KV4YzlXdjzhMxgTyWxyFDsfNrJ2cOggRCE3FTHKIpn9hqZzvrX3P
-	 M7mmarMsJwJz4GuQWoBU9JOHr7BDiPeALYiESL5E=
+	b=o2TmXXWx9BApbDI0eqyghjoz0ZqLJ5bd+oeKF/E0H0UOebTjNE8oIyaN/rvnCLDm5
+	 71NAvx/uzLWtCn+d2aj2nvVjjUNOnUOe9QF8i/ztYGNWnMum1jSIP+WOCpXDgzxU1u
+	 WLHlonNz/svGBuUVc2F4tXyDXGn0wrOhca04x2dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgAGVZ5 (ORCPT
+        id S1728972AbgAGV0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:25:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60590 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:26:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbgAGU73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:29 -0500
+        id S1727225AbgAGU7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419932081E;
-        Tue,  7 Jan 2020 20:59:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80E72087F;
+        Tue,  7 Jan 2020 20:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430768;
-        bh=25YGG4pEpfFDp5ONUl1u+Nokxny0vt3ZlgrL6GDtJyc=;
+        s=default; t=1578430761;
+        bh=mEpZI1AiW0OMmKj9mQE/MPrwrVxuZ+BRFKNfORLLlEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fP7NVOU0Q34dOMca8+Yeqj74d6bueXsq6+M2Obb8qsv7GcmtWqAz1OvOUrqXuV8qR
-         hu/MWOPoADGJydgY1xAtCnYeD7Sn27JZofrRd7ZKoVaa4B45fQ4d+3iXkWX2ECROHu
-         F6niOMRvs9ix80o+To2GAnvF4TMRd+G37hTQnS+E=
+        b=XfRjxp/zFiy+DSfIcKUtQ8Nt/tDDKm9uk5BYQk0Q1YooT0qj6MZUWzvLEiVj19p8D
+         8xBvi4AW81FvTSfHlRp8BDCscdD7DJl2BQKfcVfzYps114yhZU3OQKhOZJyL1roGv+
+         IFJArtdKrA1bYkGzEK0e+2sIyMl/D5cStIL+6BEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/191] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
-Date:   Tue,  7 Jan 2020 21:52:52 +0100
-Message-Id: <20200107205335.786051636@linuxfoundation.org>
+Subject: [PATCH 5.4 049/191] IB/mlx5: Fix steering rule of drop and count
+Date:   Tue,  7 Jan 2020 21:52:49 +0100
+Message-Id: <20200107205335.619488990@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,56 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Whitcroft <apw@canonical.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
+[ Upstream commit ed9085fed9d95d5921582e3c8474f3736c5d2782 ]
 
-When looking for a bit by number we make use of the cached result from the
-preceding lookup to speed up operation.  Firstly we check if the requested
-pfn is within the cached zone and if not lookup the new zone.  We then
-check if the offset for that pfn falls within the existing cached node.
-This happens regardless of whether the node is within the zone we are
-now scanning.  With certain memory layouts it is possible for this to
-false trigger creating a temporary alias for the pfn to a different bit.
-This leads the hibernation code to free memory which it was never allocated
-with the expected fallout.
+There are two flow rule destinations: QP and packet. While users are
+setting DROP packet rule, the QP should not be set as a destination.
 
-Ensure the zone we are scanning matches the cached zone before considering
-the cached node.
-
-Deep thanks go to Andrea for many, many, many hours of hacking and testing
-that went into cornering this bug.
-
-Reported-by: Andrea Righi <andrea.righi@canonical.com>
-Tested-by: Andrea Righi <andrea.righi@canonical.com>
-Signed-off-by: Andy Whitcroft <apw@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 3b3233fbf02e ("IB/mlx5: Add flow counters binding support")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Raed Salem <raeds@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-4-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/power/snapshot.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/main.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index 83105874f255..26b9168321e7 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -734,8 +734,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
- 	 * We have found the zone. Now walk the radix tree to find the leaf node
- 	 * for our PFN.
- 	 */
-+
-+	/*
-+	 * If the zone we wish to scan is the the current zone and the
-+	 * pfn falls into the current node then we do not need to walk
-+	 * the tree.
-+	 */
- 	node = bm->cur.node;
--	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
-+	if (zone == bm->cur.zone &&
-+	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
- 		goto node_found;
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 831539419c30..e1cfbedefcbc 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -3548,10 +3548,6 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 	}
  
- 	node      = zone->rtree;
+ 	INIT_LIST_HEAD(&handler->list);
+-	if (dst) {
+-		memcpy(&dest_arr[0], dst, sizeof(*dst));
+-		dest_num++;
+-	}
+ 
+ 	for (spec_index = 0; spec_index < flow_attr->num_of_specs; spec_index++) {
+ 		err = parse_flow_attr(dev->mdev, spec,
+@@ -3564,6 +3560,11 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 		ib_flow += ((union ib_flow_spec *)ib_flow)->size;
+ 	}
+ 
++	if (dst && !(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP)) {
++		memcpy(&dest_arr[0], dst, sizeof(*dst));
++		dest_num++;
++	}
++
+ 	if (!flow_is_multicast_only(flow_attr))
+ 		set_underlay_qp(dev, spec, underlay_qpn);
+ 
+@@ -3604,10 +3605,8 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+ 	}
+ 
+ 	if (flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP) {
+-		if (!(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_COUNT)) {
++		if (!dest_num)
+ 			rule_dst = NULL;
+-			dest_num = 0;
+-		}
+ 	} else {
+ 		if (is_egress)
+ 			flow_act.action |= MLX5_FLOW_CONTEXT_ACTION_ALLOW;
 -- 
 2.20.1
 
