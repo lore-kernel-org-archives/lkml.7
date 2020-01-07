@@ -2,95 +2,166 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7E2C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93223C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073E1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578386293;
-	bh=2/9iF/4Rm9p/MEZ+xdoF9UwLO+6u3d9J/LcRYNzjmxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OBVdUmwaYMJ10QDqMmMXB/IMlvDdASL7p1NKLZqInjHtFIjna3icUgpD7jODvCkM9
-	 n6kBn6ybVMTT95bLvTRrpiGO+TndDAoYRIpRINUbWyIFABbnvjZ4L+NeLQfaIbCobv
-	 uIpeX5WXcJ1R5sos9F6Ae+Gcbmrl2t3b5GPFZTsE=
+	by mail.kernel.org (Postfix) with ESMTP id 5EF182187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4kmK3et"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgAGIiM (ORCPT
+        id S1727655AbgAGIil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:38:12 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53885 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgAGIiM (ORCPT
+        Tue, 7 Jan 2020 03:38:41 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42644 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgAGIik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:38:12 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m24so17955766wmc.3;
-        Tue, 07 Jan 2020 00:38:10 -0800 (PST)
+        Tue, 7 Jan 2020 03:38:40 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y4so39462410ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 00:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/iaYcRM2Wb4iUR8clkvAqehaUip7geonOtWQG3p7+rA=;
+        b=B4kmK3etlJfYDiFmBaA1ZdTm8COdJVROaM9gx9bmzrfQNMO5WaWZD+sPHHqth9GW+p
+         YusBBDW99Jm4WncPCf88EOb6KCqmIRQhZ4kYkGgFB1oLKWO+P0u8/ItnRiDl7ZNBlAbx
+         hYnk4emiCNsF1sE8T5q8UrDf85yoN3UsSwye4swCXYExA8uh979mqlPFoBUK+dOUNAe7
+         BzaBhskBU2pLy6Yl+1IjcyR/D3Qq7enRHFodPAtVC6TeQEtjaF1Ki6Z402gaXHMC5KB+
+         R9pN7q3VTMcZaYuTjq1iog82Eltlc8qqEI79R0kszEsmOyxEuq11dytsp1sl0SUYTdc6
+         h2pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SGM8vCSlpFGCG/2t5WreFm3qVTUhAAZYlmJ6tgri9vo=;
-        b=TpYgjrWHZZsEgNbyHx+xRC7GQHx1H0BNGlOyCWxkPJrben0Wc1r/4mhEUmI8M1WDOY
-         DgZfmpceEExgmWU5wOtxvmbdRMooIiGDelvi218eRus2O6sCrSACT4UyrfoZiF8nDzsc
-         Jes4alkpsBeptNfJ9SqWF/OwzikL8cJiQGGebx9ZKveQLFzboQiyDXoW+X32+cumDNNW
-         fFmYf7iANSCKoJlnCKdzezyyMeDholyNddZ5xy2HPg9qu9YU45iMGhkyMkf7QgT8Tj4A
-         4QoA6BWRZltG0NVnXuSgh0QAr6027pFd5KWpShwvZWh0LuvL6j4J2h/zZR1omb9/h+4F
-         WScA==
-X-Gm-Message-State: APjAAAUE/Ck/PgkS3LcFEhHXaBfUJ9ncVI9teQLGkgQWHbXbh/0Uz4Nk
-        XJNYjUC/2PyVgkR0MJfou1g=
-X-Google-Smtp-Source: APXvYqy0l2pPimu0jmfAhj7eC6jxjBqL6qeDNUL2ENjX4Pdxdm00JiUu0Ra5iiAEjLelBdmYD4+x6w==
-X-Received: by 2002:a05:600c:141:: with SMTP id w1mr38077892wmm.61.1578386289713;
-        Tue, 07 Jan 2020 00:38:09 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id w19sm25365788wmc.22.2020.01.07.00.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 00:38:08 -0800 (PST)
-Date:   Tue, 7 Jan 2020 09:38:08 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200107083808.GC32178@dhcp22.suse.cz>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
- <20200106102345.GE12699@dhcp22.suse.cz>
- <20200107012241.GA15341@richard>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/iaYcRM2Wb4iUR8clkvAqehaUip7geonOtWQG3p7+rA=;
+        b=XKtmfeNOqKJKEzj3y69o/wu8F38HkiTqwgoqbX5oehGmKkuxEXYUPsN5/BIJRE0ZLU
+         tgEVXz35LNCXXOPs5LqoaTTTGkr2bc4Sg1LJDz2F3wiqLvlEAk6K4kvT+PknhNu0UsEo
+         QnQ4XaSr89oL9Vpnz+WsG99lrNkXgSmlRlX2oybbginhCGYYdjx3Y4G6s1S6KkSqfrtX
+         aPmQmszkYVqBIKVboOib3aPcTFIHvA1xmwaVQJq4/YaJELyfd+EL3IrpprKpNMJgLYYM
+         k/W/iuLeGsODnotq2ebThukJBGMAXY1uRr36q5R2zlZQoCjlwssr3fonChPoT8X1WvSP
+         3iuw==
+X-Gm-Message-State: APjAAAXkRc3RQhojOnlTA499NZ+MhWE9t18p5r5jNd0DgTUBrioQeFHF
+        PR2jFckzyJ0kSl+x6wNtpNNXwyKtUJ85kqBAkou+tJdxs455rw==
+X-Google-Smtp-Source: APXvYqzFnHXLSQO60fJsMW2onxvxz9I+vPj5Kxzr+DUJHwXJlBvGEiiLY87HQfxdCar/btQmTZDkrYF7+to4EmxOEJE=
+X-Received: by 2002:a2e:96c4:: with SMTP id d4mr55392718ljj.225.1578386318077;
+ Tue, 07 Jan 2020 00:38:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107012241.GA15341@richard>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191220084252.GL3178@techsingularity.net> <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
+ <20200103143051.GA3027@techsingularity.net> <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
+ <20200106145225.GB3466@techsingularity.net>
+In-Reply-To: <20200106145225.GB3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 7 Jan 2020 09:38:26 +0100
+Message-ID: <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains v2
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-01-20 09:22:41, Wei Yang wrote:
-> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
-> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
-> >> As all the other places, we grab the lock before manipulate the defer list.
-> >> Current implementation may face a race condition.
+On Mon, 6 Jan 2020 at 15:52, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> Sorry I sent out v3 before seeing this email as my mail only synchronises
+> periodically.
+>
+> On Mon, Jan 06, 2020 at 02:55:00PM +0100, Vincent Guittot wrote:
+> > > -                       return;
+> > > -               }
+> > > +               } else {
+> > >
+> > > -               /*
+> > > -                * If there is no overload, we just want to even the number of
+> > > -                * idle cpus.
+> > > -                */
+> > > -               env->migration_type = migrate_task;
+> > > -               env->imbalance = max_t(long, 0, (local->idle_cpus -
+> > > +                       /*
+> > > +                        * If there is no overload, we just want to even the number of
+> > > +                        * idle cpus.
+> > > +                        */
+> > > +                       env->migration_type = migrate_task;
+> > > +                       env->imbalance = max_t(long, 0, (local->idle_cpus -
+> > >                                                  busiest->idle_cpus) >> 1);
+> > > +               }
+> > > +
+> > > +               /* Consider allowing a small imbalance between NUMA groups */
+> > > +               if (env->sd->flags & SD_NUMA) {
+> > > +                       long imbalance_adj, imbalance_max;
+> > > +
+> > > +                       /*
+> > > +                        * imbalance_adj is the allowable degree of imbalance
+> > > +                        * to exist between two NUMA domains. imbalance_pct
+> > > +                        * is used to estimate the number of active tasks
+> > > +                        * needed before memory bandwidth may be as important
+> > > +                        * as memory locality.
+> > > +                        */
+> > > +                       imbalance_adj = (100 / (env->sd->imbalance_pct - 100)) - 1;
 > >
-> >Please always make sure to describe the effect of the change. Why a racy
-> >list_empty check matters?
+> > This looks weird to me because you use imbalance_pct, which is
+> > meaningful only compare a ratio, to define a number that will be then
+> > compared to a number of tasks without taking into account the weight
+> > of the node. So whatever the node size, 32 or 128 CPUs, the
+> > imbalance_adj will be the same: 3 with the default imbalance_pct of
+> > NUMA level which is 125 AFAICT
 > >
-> 
-> Hmm... access the list without proper lock leads to many bad behaviors.
+>
+> The intent in this version was to only cover the low utilisation case
+> regardless of the NUMA node size. There were too many corner cases
+> where the tradeoff of local memory latency versus local memory bandwidth
+> cannot be quantified. See Srikar's report as an example but it's a general
+> problem. The use of imbalance_pct was simply to find the smallest number of
+> running tasks were (imbalance_pct - 100) would be 1 running task and limit
 
-My point is that the changelog should describe that bad behavior.
+But using imbalance_pct alone doesn't mean anything. Using similar to the below
 
-> For example, if we grab the lock after checking list_empty, the page may
-> already be removed from list in split_huge_page_list. And then list_del_init
-> would trigger bug.
+    busiest->group_weight * (env->sd->imbalance_pct - 100) / 100
 
-And how does list_empty check under the lock guarantee that the page is
-on the deferred list?
--- 
-Michal Hocko
-SUSE Labs
+would be more meaningful
+
+Or you could use the util_avg so you will take into account if the
+tasks are short running ones or long running ones
+
+> the patch to address the low utilisation case only. It could be simply
+> hard-coded but that would ignore cases where an architecture overrides
+> imbalance_pct. I'm open to suggestion on how we could identify the point
+> where imbalances can be ignored without hitting other corner cases.
+>
+> > > +
+> > > +                       /*
+> > > +                        * Allow small imbalances when the busiest group has
+> > > +                        * low utilisation.
+> > > +                        */
+> > > +                       imbalance_max = imbalance_adj << 1;
+> >
+> > Why do you add this shift ?
+> >
+>
+> For very low utilisation, there is no balancing between nodes. For slightly
+> above that, there is limited balancing. After that, the load balancing
+> behaviour is unchanged as I believe we cannot determine if memory latency
+> or memory bandwidth is more important for arbitrary workloads.
+>
+> --
+> Mel Gorman
+> SUSE Labs
