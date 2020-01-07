@@ -2,123 +2,125 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D7EC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FDF2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VcnYI9Ak"
+	by mail.kernel.org (Postfix) with ESMTP id 5A5FD208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578412132;
+	bh=m8JJwNYYUN0cI55b1bIkcqX+lHoyiGdFR/bK6o9/YMk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z5fwfVw8wrhylz5IbmW9kyLvHAxR4FeZaKNhwGlg+WlpR/Fyb8c8f72Ow1kjR5RcF
+	 8GT45l86cPr9yUINJFm+TKrppDj7+9cycoIX0r/OxaMALOC1IP7g5xPxzunYmSVvki
+	 WZnTLfdguo2nlZWMN8nXUXlrkdKvbDxd/vNSBzGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgAGPsA (ORCPT
+        id S1728425AbgAGPsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:48:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38904 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbgAGPsA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:48:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so54518195wrh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 07:47:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AKH9iM1/iG8zWx2xNV+zLPV8iovcpOyyXJoSIxqdbRk=;
-        b=VcnYI9AkDcSpvZxqfakPF0VUIvVs6cdZjxpLiY4QgG7rkRNj1VtVjcVLvPw+ALUCoo
-         gzKrXcOFdzaWRY7NS4FOUS6Sk3iQfoxdSNFA/KyV+fKOHLMQUaEIUttgA/eyGEqPGN4E
-         ONMSnAN3TjRTrvBXa+e9K9twu69SAs/P43wss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=AKH9iM1/iG8zWx2xNV+zLPV8iovcpOyyXJoSIxqdbRk=;
-        b=fLP4SFAzin3OVtElRVsT/wOoLy+tzbZcQR4ZTDxfIo5jXBB0aFmEG/1HhMYNHXnt1S
-         BE13HNQ6HmmaLkdwVRtutkC6dh+vu2WB32ERvVF4yb7ZGSCLdtk2u+7QYAHoR1IV/bea
-         azI98BBCmeD2dCSlRI5mMkoM9PfEoAFD8Qz4aCiu6mYIi4OmhvLugQyMOTXs825a0VSv
-         E5dJ/C9zHAYiVse52JSen3VOkQXjyuUgd8XGTESYYZRWrDyMTjytuGYJDrNOP9qqNExa
-         266wpI9KRxP4IrSsLG3kp3LTRPdwvIwfl++c+L92u7LZSzFz74iqtfJJJ/MMvEAHc/N1
-         NIYg==
-X-Gm-Message-State: APjAAAVdMqvHuocN52QZZ0uHYPNzbKk3ytiR2/zcUYolrPPGZDS0mAEw
-        qMprMWEl7fqz3jihnkH9LeY8/A==
-X-Google-Smtp-Source: APXvYqzD68uooO7ZcoDZN1tshuC4uGYDnvSgRZJxqX3p24va63g3pm/AWE8wq12cU/IU5J8Nos3Kbw==
-X-Received: by 2002:adf:f10a:: with SMTP id r10mr109349448wro.202.1578412078158;
-        Tue, 07 Jan 2020 07:47:58 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id z187sm39236wme.16.2020.01.07.07.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 07:47:57 -0800 (PST)
-Date:   Tue, 7 Jan 2020 16:47:55 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     syzbot <syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com>
-Cc:     Rex.Zhu@amd.com, airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, b.zolnierkie@samsung.com,
-        christian.koenig@amd.com, daniel.vetter@ffwll.ch,
-        david1.zhou@amd.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in fb_release
-Message-ID: <20200107154755.GB43062@phenom.ffwll.local>
-Mail-Followup-To: syzbot <syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com>,
-        Rex.Zhu@amd.com, airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, b.zolnierkie@samsung.com,
-        christian.koenig@amd.com, david1.zhou@amd.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
-References: <00000000000082b80f059a56da1f@google.com>
- <0000000000002074ef059a5c86e2@google.com>
+        Tue, 7 Jan 2020 10:48:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbgAGPsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 10:48:51 -0500
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2808B208C4;
+        Tue,  7 Jan 2020 15:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578412130;
+        bh=m8JJwNYYUN0cI55b1bIkcqX+lHoyiGdFR/bK6o9/YMk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ELXoZKRxKo7R5r0mofZ53Y2FWh9zmTp8Em7ycLJvHJf4OqA5sB+SWyYHMx6PYHiW8
+         1SdZWYOp5ry24NfKanSDjxT+3mJwXwoHZzoLNzGatOug0DNWynZwYyxrwPvimiJC43
+         tqXQBu1Ql2Xbt7AXCx8y8V88zAKKdEfCG1CZV4Bg=
+Received: by mail-qk1-f177.google.com with SMTP id x1so42991749qkl.12;
+        Tue, 07 Jan 2020 07:48:50 -0800 (PST)
+X-Gm-Message-State: APjAAAXcYavMc5KQwjAZ1UVHcMY2HSzyFsBoRb8ipZJRgAu9RoXk8Hcu
+        frfxC9G5U8zzawvv/jur1dK9PZ8Proswwbc57Q==
+X-Google-Smtp-Source: APXvYqw42izep83otEMcE93AOoYtZ0fOAGbAAx5hxU3nM1+/TcTF1GLkofhxJo86KQeQJMXepNDVqz6q6bljFjDWx4M=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr89412395qkg.152.1578412129283;
+ Tue, 07 Jan 2020 07:48:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000002074ef059a5c86e2@google.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+References: <20200102131845.12992-2-t-kristo@ti.com> <20200102132512.13248-1-t-kristo@ti.com>
+ <20200103233855.GA19897@bogus> <358abb44-7724-4e25-6a3d-6939ec82386a@ti.com>
+In-Reply-To: <358abb44-7724-4e25-6a3d-6939ec82386a@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 Jan 2020 09:48:36 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJY8fzQ8=e=RHrtq1huucx6msqXJ+C6EcoaofBqRf9yLQ@mail.gmail.com>
+Message-ID: <CAL_JsqJY8fzQ8=e=RHrtq1huucx6msqXJ+C6EcoaofBqRf9yLQ@mail.gmail.com>
+Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 02:31:01AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit e3933f26b657c341055443103bad331f4537b113
-> Author: Rex Zhu <Rex.Zhu@amd.com>
-> Date:   Tue Jan 16 10:35:15 2018 +0000
-> 
->     drm/amd/pp: Add edit/commit/show OD clock/voltage support in sysfs
+On Tue, Jan 7, 2020 at 5:01 AM Tero Kristo <t-kristo@ti.com> wrote:
+>
+> On 04/01/2020 01:38, Rob Herring wrote:
+> > On Thu, Jan 02, 2020 at 03:25:12PM +0200, Tero Kristo wrote:
+> >> From: Suman Anna <s-anna@ti.com>
+> >>
+> >> Add the device tree bindings document for the IPU and DSP
+> >> remote processor devices on OMAP4+ SoCs.
+> >>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >> [t-kristo@ti.com: converted to schema]
+> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> >> ---
+> >> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
+> >>
+> >>   .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
+> >>   1 file changed, 329 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 
-Pretty sure you don't even have that driver loaded ... from the config:
 
-# CONFIG_DRM_AMDGPU is not set
+> >> +  reg:
+> >> +    description: |
+> >> +      Address space for any remoteproc memories present on
+> >> +      the SoC. Should contain an entry for each value in
+> >> +      'reg-names'. These are mandatory for all DSP and IPU
+> >> +      processors that have them (OMAP4/OMAP5 DSPs do not have
+> >> +      any RAMs)
+> >> +
+> >> +  reg-names:
+> >> +    description: |
+> >> +      Required names for each of the address spaces defined in
+> >> +      the 'reg' property. Should contain a string from among
+> >> +      the following names, each representing the corresponding
+> >> +      internal RAM memory region.
+> >
+> > The schema is more constrained than 'a string from among the following
+> > names'. 'l2ram' is the only valid 1st entry for example.
+>
+> Right, I wasn't able to figure out a way to make the schema more
+> flexible, so I will just modify the description above.
 
-:-)
+The goal is somewhat to not be flexible as we want the possible
+combinations defined. If it is a manageable number of combinations,
+just list them out under a 'oneOf'.
 
-Cheers, Daniel
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b5a799e00000
-> start commit:   c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11b5a799e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16b5a799e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d130c4a0890561cfac5b
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b1925e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b9623ee00000
-> 
-> Reported-by: syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com
-> Fixes: e3933f26b657 ("drm/amd/pp: Add edit/commit/show OD clock/voltage
-> support in sysfs")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Not encouraged, but it is possible to define any length and order of
+values (note 'items' is not a list here):
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+items:
+  enum: [ ... ]
+
+Rob
