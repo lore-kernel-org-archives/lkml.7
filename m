@@ -2,71 +2,106 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3841AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65F8C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7FB2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8992072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eSWXXQ1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgAGMee (ORCPT
+        id S1728003AbgAGMfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:34:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51838 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMee (ORCPT
+        Tue, 7 Jan 2020 07:35:48 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37356 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727177AbgAGMfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:34:34 -0500
-Received: from ip-109-41-1-227.web.vodafone.de ([109.41.1.227] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ioo48-0001ih-2L; Tue, 07 Jan 2020 12:34:32 +0000
-Date:   Tue, 7 Jan 2020 13:34:35 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Amanieu d'Antras <amanieu@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 0/7] Fix CLONE_SETTLS with clone3
-Message-ID: <20200107123434.vxfq57oah34plvjx@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200102172413.654385-1-amanieu@gmail.com>
-User-Agent: NeoMutt/20180716
+        Tue, 7 Jan 2020 07:35:48 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6ECAB40658;
+        Tue,  7 Jan 2020 12:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578400547; bh=qQZag1I8R5PX/PjsmWAZ3BDd3y8GbUX/piPPUPjODLw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eSWXXQ1XEyBAb94L/Tyjk35aD4jA749VPpIOlN92dbUc4+RbuSq/toh3E46/7Fgtt
+         afCiwBfzvkyRYsS22krlg1wcwCgDUx7DCwefSq9+D1bLuZd7aIrQ0HFilFAAgFGyHx
+         lZvwyRduqpK3GEZK8asUKf/SOosLZCZoRDBcWsEsKxfdpCoT921L/JOMMSl/Gpqgsv
+         ZzCleRLHHNbjVCJ44qqD9j/YaLywNlTuARm8knGOSJSdcZ76v8xU3IWCgqasxs1mJL
+         siY693svDVMEnytCYF2b3dB8XqyhQpweF3LFdIUPVf0wt6rY0zlIN4fuk2o5DaplL7
+         bbDKWilKBiVbA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id B3CDBA005C;
+        Tue,  7 Jan 2020 12:35:43 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH net] net: stmmac: Fixed link does not need MDIO Bus
+Date:   Tue,  7 Jan 2020 13:35:42 +0100
+Message-Id: <5764e60da6d3af7e76c30f63b07f1a12b4787918.1578400471.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 06:24:06PM +0100, Amanieu d'Antras wrote:
-> The clone3 syscall is currently broken when used with CLONE_SETTLS on all
-> architectures that don't have an implementation of copy_thread_tls. The old
-> copy_thread function handles CLONE_SETTLS by reading the new TLS value from
-> pt_regs containing the clone syscall parameters. Since clone3 passes the TLS
-> value in clone_args, this results in the TLS register being initialized to a
-> garbage value.
-> 
-> This patch series implements copy_thread_tls on all architectures that currently
-> define __ARCH_WANT_SYS_CLONE3 and adds a compile-time check to ensure that any
-> architecture that enables clone3 in the future also implements copy_thread_tls.
-> 
-> I have also included a minor fix for the arm64 uapi headers which caused
-> __NR_clone3 to be missing from the exported user headers.
-> 
-> I have only tested this on arm64, but the copy_thread_tls implementations for
-> the various architectures are fairly straightforward.
+When using fixed link we don't need the MDIO bus support.
 
-I've picked up this series and moved it into
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone3_tls
+Reported-by: Heiko Stuebner <heiko@sntech.de>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Fixes: d3e014ec7d5e ("net: stmmac: platform: Fix MDIO init for platforms without PHY")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-If I hear no objections I'll merge into into my fixes tree today or
-tomorrow.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: kernelci.org bot <bot@kernelci.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Sriram Dash <sriram.dash@samsung.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
-Christian
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index cc8d7e7bf9ac..4775f49d7f3b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -320,7 +320,7 @@ static int stmmac_mtl_setup(struct platform_device *pdev,
+ static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
+ 			 struct device_node *np, struct device *dev)
+ {
+-	bool mdio = false;
++	bool mdio = !of_phy_is_fixed_link(np);
+ 	static const struct of_device_id need_mdio_ids[] = {
+ 		{ .compatible = "snps,dwc-qos-ethernet-4.10" },
+ 		{},
+-- 
+2.7.4
+
