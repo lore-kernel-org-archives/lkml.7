@@ -2,240 +2,200 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB0FC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A89CC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3932077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="UTRtUrAH"
+	by mail.kernel.org (Postfix) with ESMTP id E2AA0207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgAGL4B (ORCPT
+        id S1728001AbgAGL4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:56:01 -0500
-Received: from onstation.org ([52.200.56.107]:59150 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbgAGL4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:56:00 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 980BD3EE6F;
-        Tue,  7 Jan 2020 11:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1578398159;
-        bh=Euwt/bR+bFr42ZH1bnJV55pT/0td8Fa8Q2HEAnG1r1E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UTRtUrAHC7S+4EzikO49ff3i4AF4hPXyfxYQlCmkHdTLvKpzouBAvqx3q3k0IlGzE
-         +heEyVgTdv2t88IxolrLCaQZ/bduq9jSlDaynqF4uiQ4Tbvfn6UFvpgU58U/bkgGki
-         909CB4gqG7IPH3pa24BCsu9s8Lf4N6dGYdUYl16g=
-Date:   Tue, 7 Jan 2020 06:55:59 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     robdclark@gmail.com, bjorn.andersson@linaro.org, joro@8bytes.org,
-        stephan@gerhold.net, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, j.neuschaefer@gmx.net,
-        iommu@lists.linux-foundation.org, agross@kernel.org
-Subject: Re: [PATCH v2] iommu/qcom: fix NULL pointer dereference during probe
- deferral
-Message-ID: <20200107115559.GA8083@onstation.org>
-References: <20200104002024.37335-1-masneyb@onstation.org>
- <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
+        Tue, 7 Jan 2020 06:56:50 -0500
+Received: from outbound-smtp03.blacknight.com ([81.17.249.16]:50365 "EHLO
+        outbound-smtp03.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726690AbgAGL4t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 06:56:49 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp03.blacknight.com (Postfix) with ESMTPS id A2F0B98990
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 11:56:47 +0000 (GMT)
+Received: (qmail 18044 invoked from network); 7 Jan 2020 11:56:47 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 Jan 2020 11:56:47 -0000
+Date:   Tue, 7 Jan 2020 11:56:46 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains v2
+Message-ID: <20200107115646.GI3466@techsingularity.net>
+References: <20191220084252.GL3178@techsingularity.net>
+ <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
+ <20200103143051.GA3027@techsingularity.net>
+ <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
+ <20200106145225.GB3466@techsingularity.net>
+ <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
+ <20200107095655.GF3466@techsingularity.net>
+ <CAKfTPtAtJSWGPC1t+0xj_Daid0fZaWnN+b53WQ_a1-Js5fJ6sg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com>
+In-Reply-To: <CAKfTPtAtJSWGPC1t+0xj_Daid0fZaWnN+b53WQ_a1-Js5fJ6sg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:26:58PM +0000, Robin Murphy wrote:
-> On 04/01/2020 12:20 am, Brian Masney wrote:
-> > When attempting to load the qcom-iommu driver, and an -EPROBE_DEFER
-> > error occurs, the following attempted NULL pointer deference occurs:
-> > 
-> >      Unable to handle kernel NULL pointer dereference at virtual address 00000014
-> >      pgd = (ptrval)
-> >      [00000014] *pgd=00000000
-> >      Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-> >      Modules linked in:
-> >      CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191220-00010-gfb6b8e8bced6-dirty #3
-> >      Hardware name: Generic DT based system
-> >      PC is at qcom_iommu_domain_free (include/linux/pm_runtime.h:226
-> >        drivers/iommu/qcom_iommu.c:358)
-> >      LR is at release_iommu_mapping (arch/arm/mm/dma-mapping.c:2141)
-> >      pc : lr : psr: 60000013
-> >      sp : ee89dc48  ip : 00000000  fp : c13a6684
-> >      r10: c13a661c  r9 : 00000000  r8 : c13a1240
-> >      r7 : fffffdfb  r6 : 00000000  r5 : edc32f00  r4 : edc32f1c
-> >      r3 : 00000000  r2 : 00000001  r1 : 00000004  r0 : edc32f1c
-> >      Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> >      Control: 10c5787d  Table: 0020406a  DAC: 00000051
-> >      Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> >      Stack: (0xee89dc48 to 0xee89e000)
-> >      dc40:                   edc3d010 edc37020 00000000 c0316af8 edc3d010 edc37000
-> >      dc60: 00000000 c0319684 c14341ac edc3d010 00000000 c083bd88 edc3d010 c13a1240
-> >      dc80: c083c2e8 c13a6684 c13a661c c13a6508 c13a661c c083c134 c13a1240 ee89dcec
-> >      dca0: edc3d010 00000000 ee89dcec c083c2e8 c13a6684 c13a661c c13a6508 c13a661c
-> >      dcc0: c13a6684 c083a31c c13a6684 ee82a86c edc327b8 c1304e48 edc3d010 00000001
-> >      dce0: edc3d054 c083bc08 ee82a880 edc3d010 00000001 c1304e48 edc3d010 edc3d010
-> >      dd00: c13a69e8 c083b010 edc3d010 00000000 eea1fc10 c0837aac 00000200 00000000
-> >      dd20: 00000000 00000000 00000000 c1304e48 00000000 edc3d000 eea1fc10 00000000
-> >      dd40: 00000000 eeff42f4 00000000 00000001 00000000 c09e96e0 eeff42a4 00000000
-> >      dd60: 00000000 00000000 eea1fc10 c09e98bc 00000001 eea1fc10 00000000 eea1fc10
-> >      dd80: edc32c00 c1391580 eea1fc10 00000001 eea1fc10 c0850f90 c2706dec c14368c0
-> >      dda0: 60000013 c1304e48 00000106 eeff42a4 eeff3fa0 00000000 00000000 eea1fc10
-> >      ddc0: 00000001 c1248900 00000106 c09e9bd0 00000001 c0c2ee64 eea1fc00 eea1fc10
-> >      dde0: eea1fc10 00000000 c13a5b70 00000000 c1248900 c081496c c1023d84 00000000
-> >      de00: eeff3fa0 c2706e48 c2706e48 c1304e48 00000001 00000000 eea1fc10 c13a5b70
-> >      de20: 00000000 c13a5b70 00000000 c1248900 00000106 c083dfb8 c14341ac eea1fc10
-> >      de40: 00000000 c083be58 eea1fc10 c13a5b70 c13a5b70 c13a69e8 c12003ec c123a854
-> >      de60: c1248900 c083c134 c1248900 c09e6f3c c0d8d514 eea1fc10 00000000 c13a5b70
-> >      de80: c13a69e8 c12003ec c123a854 c1248900 00000106 c083c3e0 00000000 c13a5b70
-> >      dea0: eea1fc10 c083c440 00000000 c13a5b70 c083c3e8 c083a23c 00000106 ee82a858
-> >      dec0: eea052b4 c1304e48 c13a5b70 edc32b80 00000000 c083b270 c1043084 c121d1d8
-> >      dee0: ffffe000 c13a5b70 c121d1d8 ffffe000 00000000 c083cfcc c13ece60 c121d1d8
-> >      df00: ffffe000 c0302f90 00000106 c034407c 00000000 c10e3a00 c1044dd0 c12003ec
-> >      df20: 00000000 00000006 00000006 c0fbecac c0fada88 c0fada3c 00000000 efffcbf8
-> >      df40: efffcc0d c1304e48 00000000 00000006 c13f9500 c1304e48 c123a830 00000007
-> >      df60: c13f9500 c13f9500 c123a834 c1200f64 00000006 00000006 00000000 c12003ec
-> >      df80: c0c28194 00000000 c0c28194 00000000 00000000 00000000 00000000 00000000
-> >      dfa0: 00000000 c0c2819c 00000000 c03010e8 00000000 00000000 00000000 00000000
-> >      dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> >      dfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> >      (qcom_iommu_domain_free) from release_iommu_mapping
-> >        (arch/arm/mm/dma-mapping.c:2141)
-> >      (release_iommu_mapping) from arch_teardown_dma_ops
-> >        (include/linux/dma-mapping.h:271 arch/arm/mm/dma-mapping.c:2335)
-> >      (arch_teardown_dma_ops) from really_probe (drivers/base/dd.c:607)
-> >      (really_probe) from driver_probe_device (drivers/base/dd.c:721)
-> >      (driver_probe_device) from bus_for_each_drv (drivers/base/bus.c:431)
-> >      (bus_for_each_drv) from __device_attach (drivers/base/dd.c:896)
-> >      (__device_attach) from bus_probe_device (drivers/base/bus.c:491)
-> >      (bus_probe_device) from device_add (drivers/base/core.c:2488)
-> >      (device_add) from of_platform_device_create_pdata
-> >        (drivers/of/platform.c:189)
-> >      (of_platform_device_create_pdata) from of_platform_bus_create
-> >        (drivers/of/platform.c:393 drivers/of/platform.c:346)
-> >      (of_platform_bus_create) from of_platform_populate
-> >        (drivers/of/platform.c:486)
-> >      (of_platform_populate) from msm_pdev_probe
-> >        (drivers/gpu/drm/msm/msm_drv.c:1197 drivers/gpu/drm/msm/msm_drv.c:1281)
-> >      (msm_pdev_probe) from platform_drv_probe (drivers/base/platform.c:726)
-> >      (platform_drv_probe) from really_probe (drivers/base/dd.c:553)
-> >      (really_probe) from driver_probe_device (drivers/base/dd.c:721)
-> >      (driver_probe_device) from device_driver_attach (drivers/base/dd.c:995)
-> >      (device_driver_attach) from __driver_attach (drivers/base/dd.c:1074)
-> >      (__driver_attach) from bus_for_each_dev (drivers/base/bus.c:304)
-> >      (bus_for_each_dev) from bus_add_driver (drivers/base/bus.c:623)
-> >      (bus_add_driver) from driver_register (drivers/base/driver.c:172)
-> >      (driver_register) from do_one_initcall (include/linux/compiler.h:232
-> >        include/linux/jump_label.h:254 include/linux/jump_label.h:264
-> >        include/trace/events/initcall.h:48 init/main.c:941)
-> >      (do_one_initcall) from kernel_init_freeable (init/main.c:1013
-> >        init/main.c:1022 init/main.c:1039 init/main.c:1231)
-> >      (kernel_init_freeable) from kernel_init (init/main.c:1127)
-> >      (kernel_init) from ret_from_fork (arch/arm/kernel/entry-common.S:156)
-> > 
-> > qcom_iommu_domain_free() has a WARN_ON() that checks to see if the value
-> > of iommu is NULL and returns early, so iommu->dev will always be NULL.
-> > qcom_iommu_detach_dev() is called prior to freeing the IOMMU domain and
-> > is what sets the iommu member to NULL.
-> > 
-> > Let's fix this by adding the 'struct dev' pointer to the
-> > qcom_iommu_domain struct.
+On Tue, Jan 07, 2020 at 12:17:12PM +0100, Vincent Guittot wrote:
+> On Tue, 7 Jan 2020 at 10:56, Mel Gorman <mgorman@techsingularity.net> wrote:
+> >
+> > On Tue, Jan 07, 2020 at 09:38:26AM +0100, Vincent Guittot wrote:
+> > > > > This looks weird to me because you use imbalance_pct, which is
+> > > > > meaningful only compare a ratio, to define a number that will be then
+> > > > > compared to a number of tasks without taking into account the weight
+> > > > > of the node. So whatever the node size, 32 or 128 CPUs, the
+> > > > > imbalance_adj will be the same: 3 with the default imbalance_pct of
+> > > > > NUMA level which is 125 AFAICT
+> > > > >
+> > > >
+> > > > The intent in this version was to only cover the low utilisation case
+> > > > regardless of the NUMA node size. There were too many corner cases
+> > > > where the tradeoff of local memory latency versus local memory bandwidth
+> > > > cannot be quantified. See Srikar's report as an example but it's a general
+> > > > problem. The use of imbalance_pct was simply to find the smallest number of
+> > > > running tasks were (imbalance_pct - 100) would be 1 running task and limit
+> > >
+> > > But using imbalance_pct alone doesn't mean anything.
+> >
+> > Other than figuring out "how many running tasks are required before
+> > imbalance_pct is roughly equivalent to one fully active CPU?". Even then,
 > 
-> Actually, it looks like the qcom_domain->iommu logic is fundamentally broken
-> anyway - this sequence of calls is perfectly valid, but AFAICS will make
-> qcom-iommu go horribly wrong:
+> sorry, I don't see how you deduct this from only using imbalance_pct
+> which is mainly there to say how much percent of difference is
+> significant
 > 
-> 	dom = iommu_domain_alloc(...);
-> 	iommu_attach_device(dom, dev1);
-> 	iommu_attach_device(dom, dev2);
-> 	iommu_detach_device(dom, dev2);
-> 	// dev1 still attached but dom->iommu now NULL
-> 
-> Furthermore, even this should technically be valid:
-> 
-> 	dom = iommu_domain_alloc(...);
-> 	iommu_attach_device(dom, dev);
-> 	iommu_map(dom, addr, ...);
-> 	iommu_detach_device(dom, dev);
-> 	iommu_unmap(dom, addr, ...); // oops, dereferences NULL again
-> 
-> Does something like the diff below work?
 
-Yes, that works for me.
+Because if the difference is 25% then 1 CPU out of 4 active is enough
+for imbalance_pct to potentially be a factor. Anyway, the approach seems
+almost universally disliked so even if I had reasons for not scaling
+this by the group_weight, no one appears to agree with them :P
 
-Tested-by: Brian Masney <masneyb@onstation.org>
+> > it's a bit weak as imbalance_pct makes hard-coded assumptions on what
+> > the tradeoff of cross-domain migration is without considering the hardware.
+> >
+> > > Using similar to the below
+> > >
+> > >     busiest->group_weight * (env->sd->imbalance_pct - 100) / 100
+> > >
+> > > would be more meaningful
+> > >
+> >
+> > It's meaningful to some sense from a conceptual point of view but
+> > setting the low utilisation cutoff depending on the number of CPUs on
+> > the node does not account for any local memory latency vs bandwidth.
+> > i.e. on a small or mid-range machine the cutoff will make sense. On
+> > larger machines, the cutoff could be at the point where memory bandwidth
+> > is saturated leading to a scenario whereby upgrading to a larger
+> > machine performs worse than the smaller machine.
+> >
+> > Much more importantly, doing what you suggest allows an imbalance
+> > of more CPUs than are backed by a single LLC. On high-end AMD EPYC 2
+> > machines, busiest->group_weight scaled by imbalance_pct spans multiple L3
+> > caches. That is going to have side-effects. While I also do not account
+> > for the LLC group_weight, it's unlikely the cut-off I used would be
+> > smaller than an LLC cache on a large machine as the cache.
+> >
+> > These two points are why I didn't take the group weight into account.
+> >
+> > Now if you want, I can do what you suggest anyway as long as you are happy
+> > that the child domain weight is also taken into account and to bound the
+> 
+> Taking into account child domain makes sense to me, but shouldn't we
+> take into account the number of child group instead ? This should
+> reflect the number of different LLC caches.
 
-Brian
+I guess it would but why is it inherently better? The number of domains
+would yield a similar result if we assume that all the lower domains
+have equal weight so it simply because the weight of the SD_NUMA domain
+divided by the number of child domains.
 
+Now, I could be missing something with asymmetric setups. I don't know
+if it's possible for child domains of a NUMA domain to have different
+sizes. I would be somewhat surprised if they did but I also do not work
+on such machines nor have I ever accessed one (to my knowledge).
 
+> IIUC your reasoning, we want to make sure that tasks will not start to
+> fight for using same resources which is the connection between LLC
+> cache and memory in this case
 > 
-> Robin.
+
+Yep. I don't want a case where the allowed imbalance causes the load
+balancer to have to balance between the lower domains. *Maybe* that is
+actually better in some cases but it's far from intuitive so I would
+prefer that change would be a patch on its own with a big fat comment
+explaining the reasoning behind the additional complexity.
+
+> > largest possible allowed imbalance to deal with the case of a node having
+> > multiple small LLC caches. That means that some machines will be using the
+> > size of the node and some machines will use the size of an LLC. It's less
+> > predictable overall as some machines will be "special" relative to others
+> > making it harder to reproduce certain problems locally but it would take
+> > imbalance_pct into account in a way that you're happy with.
+> >
+> > Also bear in mind that whether LLC is accounted for or not, the final
+> > result should be halved similar to the other imbalance calculations to
+> > avoid over or under load balancing.
+> >
+> > > Or you could use the util_avg so you will take into account if the
+> > > tasks are short running ones or long running ones
+> > >
+> >
+> > util_avg can be skewed if there are big outliers. Even then, it's not
+> > a great metric for the low utilisation cutoff. Large numbers of mostly
+> > idle but running tasks would be treated similarly to small numbers of
+> > fully active tasks. It's less predictable and harder to reason about how
 > 
-> ----->8-----
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index c31e7bc4ccbe..af6ee4bf1712 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -345,21 +345,20 @@ static void qcom_iommu_domain_free(struct iommu_domain
-> *domain)
->  {
->  	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+> Yes but this also have the advantage of reflecting more accurately how
+> the system is used.
+> with nr_running, we consider that mostly idle and fully active tasks
+> will have the exact same impact on the memory
 > 
-> -	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
-> -		return;
-> -
->  	iommu_put_dma_cookie(domain);
+
+Maybe, maybe not. When there is spare capacity in the domain overall and
+we are only interested in the low utilisation case, it seems to me that
+we should consider the most obvious and understandable metric. Now, if we
+were talking about a nearly fully loaded domain or an overloaded domain
+then I would fully agree with you as balancing utilisation in that case
+becomes critical.
+
+> > load balancing behaves across a variety of workloads.
+> >
+> > Based on what you suggest, the result looks like this (build tested
+> > only)
 > 
-> -	/* NOTE: unmap can be called after client device is powered off,
-> -	 * for example, with GPUs or anything involving dma-buf.  So we
-> -	 * cannot rely on the device_link.  Make sure the IOMMU is on to
-> -	 * avoid unclocked accesses in the TLB inv path:
-> -	 */
-> -	pm_runtime_get_sync(qcom_domain->iommu->dev);
-> +	if (qcom_domain->iommu) {
-> +		/* NOTE: unmap can be called after client device is powered off,
-> +		 * for example, with GPUs or anything involving dma-buf.  So we
-> +		 * cannot rely on the device_link.  Make sure the IOMMU is on to
-> +		 * avoid unclocked accesses in the TLB inv path:
-> +		 */
-> +		pm_runtime_get_sync(qcom_domain->iommu->dev);
+> I'm going to make a try of this patch
 > 
-> -	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
-> +		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
-> 
-> -	pm_runtime_put_sync(qcom_domain->iommu->dev);
-> +		pm_runtime_put_sync(qcom_domain->iommu->dev);
-> +	}
-> 
->  	kfree(qcom_domain);
->  }
-> @@ -405,7 +404,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain
-> *domain, struct device *de
->  	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
->  	unsigned i;
-> 
-> -	if (!qcom_domain->iommu)
-> +	if (WARN_ON(!qcom_domain->iommu))
->  		return;
-> 
->  	pm_runtime_get_sync(qcom_iommu->dev);
-> @@ -418,8 +417,6 @@ static void qcom_iommu_detach_dev(struct iommu_domain
-> *domain, struct device *de
->  		ctx->domain = NULL;
->  	}
->  	pm_runtime_put_sync(qcom_iommu->dev);
-> -
-> -	qcom_domain->iommu = NULL;
->  }
-> 
->  static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
+
+Thanks. I've queued the same patch on one machine to see what falls out.
+I don't want to tie up half my test grid until we get some sort of
+consensus.
+
+-- 
+Mel Gorman
+SUSE Labs
