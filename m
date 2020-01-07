@@ -2,51 +2,52 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00440C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814F3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E7C20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AED20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431267;
-	bh=J9xPkpuPgMG01x3mnwje7ZUu4h1LnCMYS2XZVEtt/Qg=;
+	s=default; t=1578431271;
+	bh=MM79NCL25bbH0nHMP9HiLQXuyGVNFpLsvMEYvLn9qm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DeOoFzanu5vDTlrk9/aI4NKj17o2aVjPpUuyglQj24SJjAfeehjjGGjp0pK2U/eoj
-	 a3JkIM3UF+AQWINMmgBCxcHBXBXg1rWUE6iiilwxiAM42+1JY+8xhZLyIcnsGUtQss
-	 IwcD5b5TdnJjILy1N2yCnSpXE5z3votmFYPTWFKQ=
+	b=QUXHyfyZyQkYl8gDoE+WLiFxKa6eXMgG3/6Uivt5mwtNZk4ENKmXrlbGke3E0K91k
+	 L/xZTBTgqcDw6BDS7xdQOappvcU4uBJesExdGmoKT5qNBxgWCOd9DUkuLHmbanE35A
+	 X9M8Qoxp5N6RNmHHsaLyRzhgHNQ4tBEWO0StQTE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgAGVHq (ORCPT
+        id S1729582AbgAGVHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59026 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729564AbgAGVHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:43 -0500
+        id S1729572AbgAGVHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D5A2087F;
-        Tue,  7 Jan 2020 21:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27462077B;
+        Tue,  7 Jan 2020 21:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431262;
-        bh=J9xPkpuPgMG01x3mnwje7ZUu4h1LnCMYS2XZVEtt/Qg=;
+        s=default; t=1578431265;
+        bh=MM79NCL25bbH0nHMP9HiLQXuyGVNFpLsvMEYvLn9qm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iJrbkAkl0cT8x+wOExSP7zHBlRJZVk/k/MTH+z86k4TZQainiQ57r6slHXbq029zR
-         Lk5YDvwfVrmcyPB5Y4NtJv8cpHbRYYTPaKGEx7fXDpRbuSBPJ0imBTPFmXwmcO1O4D
-         0BdApsJ8bMt6A+ze4ceTCvoFdCnz8q1ExVWPMnAY=
+        b=Bm+NgRDDRj4IGBFqIkAbe4ua6MHJF5YJHa9AwmqAy0RVB2aTzPoimsKQJ1K4+vocz
+         +AeNRimWgxDH0yn+Vyrp3OTYe8cJFPGA7+jys9aCyUUmYZd0QgD15JUB4lrdm3tMOx
+         LCUQda2img5Q655uMI47RAGhxNVV3Rbv2VnRnhgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 083/115] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-Date:   Tue,  7 Jan 2020 21:54:53 +0100
-Message-Id: <20200107205305.669184595@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 101/115] selftests: rtnetlink: add addresses with fixed life time
+Date:   Tue,  7 Jan 2020 21:55:11 +0100
+Message-Id: <20200107205308.139779209@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,72 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit a7583e72a5f22470d3e6fd3b6ba912892242339f upstream.
+[ Upstream commit 3cfa148826e3c666da1cc2a43fbe8689e2650636 ]
 
-The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
-parameter cover all GPEs") says:
-  "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
-   GPEs can be masked"
+This exercises kernel code path that deal with addresses that have
+a limited lifetime.
 
-But the masking of GPE 0xFF it not supported and the check condition
-"gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
-u8.
+Without previous fix, this triggers following crash on net-next:
+ BUG: KASAN: null-ptr-deref in check_lifetime+0x403/0x670
+ Read of size 8 at addr 0000000000000010 by task kworker [..]
 
-So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
-ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
-acpi_mask_gpe parameter.
-
-Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-[ rjw: Use u16 as gpe data type in acpi_gpe_apply_masked_gpes() ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |    2 +-
- drivers/acpi/sysfs.c                            |    6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/rtnetlink.sh | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -113,7 +113,7 @@
- 			the GPE dispatcher.
- 			This facility can be used to prevent such uncontrolled
- 			GPE floodings.
--			Format: <int>
-+			Format: <byte>
+diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selftests/net/rtnetlink.sh
+index e101af52d1d6..ff665de788ef 100755
+--- a/tools/testing/selftests/net/rtnetlink.sh
++++ b/tools/testing/selftests/net/rtnetlink.sh
+@@ -234,6 +234,26 @@ kci_test_route_get()
+ 	echo "PASS: route get"
+ }
  
- 	acpi_no_auto_serialize	[HW,ACPI]
- 			Disable auto-serialization of AML methods
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -816,14 +816,14 @@ end:
-  * interface:
-  *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
-  */
--#define ACPI_MASKABLE_GPE_MAX	0xFF
-+#define ACPI_MASKABLE_GPE_MAX	0x100
- static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
- 
- static int __init acpi_gpe_set_masked_gpes(char *val)
++kci_test_addrlft()
++{
++	for i in $(seq 10 100) ;do
++		lft=$(((RANDOM%3) + 1))
++		ip addr add 10.23.11.$i/32 dev "$devdummy" preferred_lft $lft valid_lft $((lft+1))
++		check_err $?
++	done
++
++	sleep 5
++
++	ip addr show dev "$devdummy" | grep "10.23.11."
++	if [ $? -eq 0 ]; then
++		echo "FAIL: preferred_lft addresses remaining"
++		check_err 1
++		return
++	fi
++
++	echo "PASS: preferred_lft addresses have expired"
++}
++
+ kci_test_addrlabel()
  {
- 	u8 gpe;
+ 	ret=0
+@@ -965,6 +985,7 @@ kci_test_rtnl()
  
--	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
-+	if (kstrtou8(val, 0, &gpe))
- 		return -EINVAL;
- 	set_bit(gpe, acpi_masked_gpes_map);
- 
-@@ -835,7 +835,7 @@ void __init acpi_gpe_apply_masked_gpes(v
- {
- 	acpi_handle handle;
- 	acpi_status status;
--	u8 gpe;
-+	u16 gpe;
- 
- 	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
- 		status = acpi_get_gpe_device(gpe, &handle);
+ 	kci_test_polrouting
+ 	kci_test_route_get
++	kci_test_addrlft
+ 	kci_test_tc
+ 	kci_test_gre
+ 	kci_test_gretap
+-- 
+2.20.1
+
 
 
