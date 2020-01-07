@@ -2,158 +2,202 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620B8C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF604C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D512077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF0A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432075;
-	bh=BDI6/WTSkk2GpBJxGXBqEQbdfqRIM0rGrvfopXGfmMc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiD2klIzdl1PtF1fDgx43KXWlZe6JOKuvQhon1/TbhC2hArwJ1WIZxJJsWiYJCyoU
-	 yEFnBgcpPsmf58Lh24VG/jUhIYtn2x1wbL9NzS9vI/BGIvsW+hMfJ71fVMm5Osfgun
-	 SmXAZ+XB1woo+9BVwHKgF38qZ9eeJRHsisdvCbw8=
+	s=default; t=1578432082;
+	bh=c2hPFgjk4CWDasmc5+iGcU3CKmonvNZ9FSncLbPT0dU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=xBz33gvLzxHV1FAZoJms+Ai+Tod4oHRWegIzXi/HZl4A79otiQYxTnT5i4r9BVV8h
+	 8oMhIv6JtaZ8o6DZUs8JVghCOktznWhBfcUPLoo7UD9ghrR9QpgHdy55iax6PEYzlO
+	 0nkAD2xkat3DsBhQObQ2jRpCobRURP3MwwF/BH00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAGVDa (ORCPT
+        id S1729074AbgAGVVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45342 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:21:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbgAGVD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727108AbgAGVVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:21:20 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126C82077B;
-        Tue,  7 Jan 2020 21:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75C532081E;
+        Tue,  7 Jan 2020 21:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431005;
-        bh=BDI6/WTSkk2GpBJxGXBqEQbdfqRIM0rGrvfopXGfmMc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kKStGFheJ//jkRIFQVpX4ISKqIM/UMlKBdnMqnFjbkF7qty8mppt0/2YQFHgYhFtq
-         MNV7E13rOQ181kvnH2rSuW785Rfb2NsyYPP2SHGF4LraHF5QbCv5wJMnytxvGA0/y8
-         gx5l0PX8EbQIR4ZLfa5NqIroqcE+Rcdrfuwg/uP4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 186/191] perf/x86/intel/bts: Fix the use of page_private()
-Date:   Tue,  7 Jan 2020 21:55:06 +0100
-Message-Id: <20200107205342.943849559@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1578432079;
+        bh=c2hPFgjk4CWDasmc5+iGcU3CKmonvNZ9FSncLbPT0dU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AuSCEO+Otv9HKtTDIVW5at4pAiMvjj5R1LSkBSXbx2WiAt5xa22UvqXISV3I/vskz
+         s8cb1JtbRqox9UMUWjGlYErt1N2HuflvEt4Iy25GSt9InHNd75DEORW9rqtjB9gncA
+         KppTkk3pLwKIZBhEm3kUn92HgJi4KmFNZT5lKxDg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4E1673522735; Tue,  7 Jan 2020 13:21:19 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:21:19 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        dvyukov@google.com, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH RESEND -rcu] kcsan: Prefer __always_inline for fast-path
+Message-ID: <20200107212119.GB13449@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200107163104.143542-1-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107163104.143542-1-elver@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+On Tue, Jan 07, 2020 at 05:31:04PM +0100, Marco Elver wrote:
+> Prefer __always_inline for fast-path functions that are called outside
+> of user_access_save, to avoid generating UACCESS warnings when
+> optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
+> surprises with compiler versions that change the inlining heuristic even
+> when optimizing for performance.
+> 
+> Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> Rebased against -rcu/dev branch.
 
-[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
+Queued and pushed, thank you, Marco!
 
-Commit
+							Thanx, Paul
 
-  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
-
-brought in a warning with the BTS buffer initialization
-that is easily tripped with (assuming KPTI is disabled):
-
-instantly throwing:
-
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
-> Modules linked in:
-> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
-> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
-> Call Trace:
->  rb_alloc_aux+0x339/0x550
->  perf_mmap+0x607/0xc70
->  mmap_region+0x76b/0xbd0
-...
-
-It appears to assume (for lost raisins) that PagePrivate() is set,
-while later it actually tests for PagePrivate() before using
-page_private().
-
-Make it consistent and always check PagePrivate() before using
-page_private().
-
-Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/bts.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 5ee3fed881d3..741540d849f3 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -63,9 +63,17 @@ struct bts_buffer {
- 
- static struct pmu bts_pmu;
- 
-+static int buf_nr_pages(struct page *page)
-+{
-+	if (!PagePrivate(page))
-+		return 1;
-+
-+	return 1 << page_private(page);
-+}
-+
- static size_t buf_size(struct page *page)
- {
--	return 1 << (PAGE_SHIFT + page_private(page));
-+	return buf_nr_pages(page) * PAGE_SIZE;
- }
- 
- static void *
-@@ -83,9 +91,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 	/* count all the high order buffers */
- 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
- 		page = virt_to_page(pages[pg]);
--		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
--			return NULL;
--		pg += 1 << page_private(page);
-+		pg += buf_nr_pages(page);
- 		nbuf++;
- 	}
- 
-@@ -109,7 +115,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 		unsigned int __nr_pages;
- 
- 		page = virt_to_page(pages[pg]);
--		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
-+		__nr_pages = buf_nr_pages(page);
- 		buf->buf[nbuf].page = page;
- 		buf->buf[nbuf].offset = offset;
- 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
--- 
-2.20.1
-
-
-
+> ---
+>  kernel/kcsan/atomic.h   |  2 +-
+>  kernel/kcsan/core.c     | 18 +++++++++---------
+>  kernel/kcsan/encoding.h | 14 +++++++-------
+>  3 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
+> index 576e03ddd6a3..a9c193053491 100644
+> --- a/kernel/kcsan/atomic.h
+> +++ b/kernel/kcsan/atomic.h
+> @@ -18,7 +18,7 @@
+>   * than cast to volatile. Eventually, we hope to be able to remove this
+>   * function.
+>   */
+> -static inline bool kcsan_is_atomic(const volatile void *ptr)
+> +static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
+>  {
+>  	/* only jiffies for now */
+>  	return ptr == &jiffies;
+> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> index 3314fc29e236..4d4ab5c5dc53 100644
+> --- a/kernel/kcsan/core.c
+> +++ b/kernel/kcsan/core.c
+> @@ -78,10 +78,10 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
+>   */
+>  static DEFINE_PER_CPU(long, kcsan_skip);
+>  
+> -static inline atomic_long_t *find_watchpoint(unsigned long addr,
+> -					     size_t size,
+> -					     bool expect_write,
+> -					     long *encoded_watchpoint)
+> +static __always_inline atomic_long_t *find_watchpoint(unsigned long addr,
+> +						      size_t size,
+> +						      bool expect_write,
+> +						      long *encoded_watchpoint)
+>  {
+>  	const int slot = watchpoint_slot(addr);
+>  	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
+> @@ -146,7 +146,7 @@ insert_watchpoint(unsigned long addr, size_t size, bool is_write)
+>   *	2. the thread that set up the watchpoint already removed it;
+>   *	3. the watchpoint was removed and then re-used.
+>   */
+> -static inline bool
+> +static __always_inline bool
+>  try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
+>  {
+>  	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
+> @@ -160,7 +160,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
+>  	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
+>  }
+>  
+> -static inline struct kcsan_ctx *get_ctx(void)
+> +static __always_inline struct kcsan_ctx *get_ctx(void)
+>  {
+>  	/*
+>  	 * In interrupts, use raw_cpu_ptr to avoid unnecessary checks, that would
+> @@ -169,7 +169,7 @@ static inline struct kcsan_ctx *get_ctx(void)
+>  	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+>  }
+>  
+> -static inline bool is_atomic(const volatile void *ptr)
+> +static __always_inline bool is_atomic(const volatile void *ptr)
+>  {
+>  	struct kcsan_ctx *ctx = get_ctx();
+>  
+> @@ -193,7 +193,7 @@ static inline bool is_atomic(const volatile void *ptr)
+>  	return kcsan_is_atomic(ptr);
+>  }
+>  
+> -static inline bool should_watch(const volatile void *ptr, int type)
+> +static __always_inline bool should_watch(const volatile void *ptr, int type)
+>  {
+>  	/*
+>  	 * Never set up watchpoints when memory operations are atomic.
+> @@ -226,7 +226,7 @@ static inline void reset_kcsan_skip(void)
+>  	this_cpu_write(kcsan_skip, skip_count);
+>  }
+>  
+> -static inline bool kcsan_is_enabled(void)
+> +static __always_inline bool kcsan_is_enabled(void)
+>  {
+>  	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+>  }
+> diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
+> index b63890e86449..f03562aaf2eb 100644
+> --- a/kernel/kcsan/encoding.h
+> +++ b/kernel/kcsan/encoding.h
+> @@ -59,10 +59,10 @@ encode_watchpoint(unsigned long addr, size_t size, bool is_write)
+>  		      (addr & WATCHPOINT_ADDR_MASK));
+>  }
+>  
+> -static inline bool decode_watchpoint(long watchpoint,
+> -				     unsigned long *addr_masked,
+> -				     size_t *size,
+> -				     bool *is_write)
+> +static __always_inline bool decode_watchpoint(long watchpoint,
+> +					      unsigned long *addr_masked,
+> +					      size_t *size,
+> +					      bool *is_write)
+>  {
+>  	if (watchpoint == INVALID_WATCHPOINT ||
+>  	    watchpoint == CONSUMED_WATCHPOINT)
+> @@ -78,13 +78,13 @@ static inline bool decode_watchpoint(long watchpoint,
+>  /*
+>   * Return watchpoint slot for an address.
+>   */
+> -static inline int watchpoint_slot(unsigned long addr)
+> +static __always_inline int watchpoint_slot(unsigned long addr)
+>  {
+>  	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
+>  }
+>  
+> -static inline bool matching_access(unsigned long addr1, size_t size1,
+> -				   unsigned long addr2, size_t size2)
+> +static __always_inline bool matching_access(unsigned long addr1, size_t size1,
+> +					    unsigned long addr2, size_t size2)
+>  {
+>  	unsigned long end_range1 = addr1 + size1 - 1;
+>  	unsigned long end_range2 = addr2 + size2 - 1;
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
