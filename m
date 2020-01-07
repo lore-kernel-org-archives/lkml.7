@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0936AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63775C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C597C2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282562080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431837;
-	bh=E9wv3i4knFMOBzVRI5UOepklAOr0a9odsIyVcQfW2aw=;
+	s=default; t=1578431841;
+	bh=E9YejP0q1JBAbBCT8XUt7j/35G/ZSQogs0nU1uMbpwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLRWJUO8mDTLLMPJYdKIrqp3KTa/n/sCPx4EpWCWCWTlg/QMZZydWkOap3zZn4Ik/
-	 HF23SOLk9G5T3oNyigVZziFFvvMnRuXhtKfp5ktsL9048paw/0NRx2nOYrKeddH5Ty
-	 2E1azP2YJ0hu5HQrmo+YmJk5zztdH3e2uYFuQAvo=
+	b=cLREpeJ1vAcmRpby6uQPYc01KN2Eqt8Tszlq8xq7eurNwrW0AgUyxSfTGGd6s5UVg
+	 XfMPEvdIHoY8fzfsW1V62RPAE60s4kMXvTkfn+2GOUJucU7EU4d5eWKSe53fIDY90y
+	 lMhBwC6E0B+lP6qvQytjGVFieu/KPMX7cqT2RbCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgAGVRQ (ORCPT
+        id S1729313AbgAGVF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:17:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbgAGVGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:06 -0500
+        id S1729111AbgAGVFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0910720678;
-        Tue,  7 Jan 2020 21:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D472077B;
+        Tue,  7 Jan 2020 21:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431165;
-        bh=E9wv3i4knFMOBzVRI5UOepklAOr0a9odsIyVcQfW2aw=;
+        s=default; t=1578431153;
+        bh=E9YejP0q1JBAbBCT8XUt7j/35G/ZSQogs0nU1uMbpwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tnm7QffuldDH2/3qrYgCXO65K14f3r7U5ilZ7kBw3ob9H3kRRMsLsN599JM9ZA1o/
-         oH+/WOWncGJPzH6+rcO5u04B/eaxvWzV+DlTJ2DygceY5uUt9i6LrFmRaybj85I2nn
-         E3fxEXa8uXQq4jiuEe6wXjraJmPrALFC6BQKPY54=
+        b=1ZIUdRR7YlmARBHSXvnUFHrweRSOWV+x8fRBAUDlr3FB5cWAg8vow7YCW+sZMEb9g
+         QXg35gMZYSDobXEPoO/TaUmP4Lh5RJ9d5kt/2Ic1FDMeRbmJMGld5EOnMb5PZj3ntj
+         fnV1WQvmYsXwlVAYfEbu28LFARrKl5XY9Ss8UGrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 061/115] ata: ahci_brcm: Fix AHCI resources management
-Date:   Tue,  7 Jan 2020 21:54:31 +0100
-Message-Id: <20200107205303.286883519@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 4.19 056/115] locks: print unsigned ino in /proc/locks
+Date:   Tue,  7 Jan 2020 21:54:26 +0100
+Message-Id: <20200107205302.905844138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,224 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit c0cdf2ac4b5bf3e5ef2451ea29fb4104278cdabc upstream.
+commit 98ca480a8f22fdbd768e3dad07024c8d4856576c upstream.
 
-The AHCI resources management within ahci_brcm.c is a little
-convoluted, largely because it historically had a dedicated clock that
-was managed within this file in the downstream tree. Once brough
-upstream though, the clock was left to be managed by libahci_platform.c
-which is entirely appropriate.
+An ino is unsigned, so display it as such in /proc/locks.
 
-This patch series ensures that the AHCI resources are fetched and
-enabled before any register access is done, thus avoiding bus errors on
-platforms which clock gate the controller by default.
-
-As a result we need to re-arrange the suspend() and resume() functions
-in order to avoid accessing registers after the clocks have been turned
-off respectively before the clocks have been turned on. Finally, we can
-refactor brcm_ahci_get_portmask() in order to fetch the number of ports
-from hpriv->mmio which is now accessible without jumping through hoops
-like we used to do.
-
-The commit pointed in the Fixes tag is both old and new enough not to
-require major headaches for backporting of this patch.
-
-Fixes: eba68f829794 ("ata: ahci_brcmstb: rename to support across Broadcom SoC's")
 Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/ahci_brcm.c |  105 ++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 76 insertions(+), 29 deletions(-)
+ fs/locks.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -220,19 +220,12 @@ static void brcm_sata_phys_disable(struc
- 			brcm_sata_phy_disable(priv, i);
- }
- 
--static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
-+static u32 brcm_ahci_get_portmask(struct ahci_host_priv *hpriv,
- 				  struct brcm_ahci_priv *priv)
- {
--	void __iomem *ahci;
--	struct resource *res;
- 	u32 impl;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
--	ahci = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(ahci))
--		return 0;
--
--	impl = readl(ahci + HOST_PORTS_IMPL);
-+	impl = readl(hpriv->mmio + HOST_PORTS_IMPL);
- 
- 	if (fls(impl) > SATA_TOP_MAX_PHYS)
- 		dev_warn(priv->dev, "warning: more ports than PHYs (%#x)\n",
-@@ -240,9 +233,6 @@ static u32 brcm_ahci_get_portmask(struct
- 	else if (!impl)
- 		dev_info(priv->dev, "no ports found\n");
- 
--	devm_iounmap(&pdev->dev, ahci);
--	devm_release_mem_region(&pdev->dev, res->start, resource_size(res));
--
- 	return impl;
- }
- 
-@@ -354,11 +344,10 @@ static int brcm_ahci_suspend(struct devi
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
--	int ret;
- 
--	ret = ahci_platform_suspend(dev);
- 	brcm_sata_phys_disable(priv);
--	return ret;
-+
-+	return ahci_platform_suspend(dev);
- }
- 
- static int brcm_ahci_resume(struct device *dev)
-@@ -366,11 +355,44 @@ static int brcm_ahci_resume(struct devic
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
-+	int ret;
-+
-+	/* Make sure clocks are turned on before re-configuration */
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		return ret;
- 
- 	brcm_sata_init(priv);
- 	brcm_sata_phys_enable(priv);
- 	brcm_sata_alpm_init(hpriv);
--	return ahci_platform_resume(dev);
-+
-+	/* Since we had to enable clocks earlier on, we cannot use
-+	 * ahci_platform_resume() as-is since a second call to
-+	 * ahci_platform_enable_resources() would bump up the resources
-+	 * (regulators, clocks, PHYs) count artificially so we copy the part
-+	 * after ahci_platform_enable_resources().
-+	 */
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
-+	ret = ahci_platform_resume_host(dev);
-+	if (ret)
-+		goto out_disable_platform_phys;
-+
-+	/* We resumed so update PM runtime state */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+	ahci_platform_disable_clks(hpriv);
-+	return ret;
- }
- #endif
- 
-@@ -417,38 +439,63 @@ static int brcm_ahci_probe(struct platfo
- 		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -2678,7 +2678,7 @@ static void lock_get_status(struct seq_f
  	}
- 
-+	hpriv = ahci_platform_get_resources(pdev, 0);
-+	if (IS_ERR(hpriv)) {
-+		ret = PTR_ERR(hpriv);
-+		goto out_reset;
-+	}
-+
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		goto out_reset;
-+
-+	/* Must be first so as to configure endianness including that
-+	 * of the standard AHCI register space.
-+	 */
- 	brcm_sata_init(priv);
- 
--	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
--	if (!priv->port_mask)
--		return -ENODEV;
-+	/* Initializes priv->port_mask which is used below */
-+	priv->port_mask = brcm_ahci_get_portmask(hpriv, priv);
-+	if (!priv->port_mask) {
-+		ret = -ENODEV;
-+		goto out_disable_clks;
-+	}
- 
-+	/* Must be done before ahci_platform_enable_phys() */
- 	brcm_sata_phys_enable(priv);
- 
--	hpriv = ahci_platform_get_resources(pdev, 0);
--	if (IS_ERR(hpriv))
--		return PTR_ERR(hpriv);
- 	hpriv->plat_data = priv;
- 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP;
- 
- 	brcm_sata_alpm_init(hpriv);
- 
--	ret = ahci_platform_enable_resources(hpriv);
--	if (ret)
--		return ret;
--
- 	if (priv->quirks & BRCM_AHCI_QUIRK_NO_NCQ)
- 		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
- 	hpriv->flags |= AHCI_HFLAG_NO_WRITE_TO_RO;
- 
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
- 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_brcm_port_info,
- 				      &ahci_platform_sht);
- 	if (ret)
--		return ret;
-+		goto out_disable_platform_phys;
- 
- 	dev_info(dev, "Broadcom AHCI SATA3 registered\n");
- 
- 	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+out_disable_clks:
-+	ahci_platform_disable_clks(hpriv);
-+out_reset:
-+	if (!IS_ERR_OR_NULL(priv->rcdev))
-+		reset_control_assert(priv->rcdev);
-+	return ret;
- }
- 
- static int brcm_ahci_remove(struct platform_device *pdev)
-@@ -458,12 +505,12 @@ static int brcm_ahci_remove(struct platf
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
- 	int ret;
- 
-+	brcm_sata_phys_disable(priv);
-+
- 	ret = ata_platform_remove_one(pdev);
- 	if (ret)
- 		return ret;
- 
--	brcm_sata_phys_disable(priv);
--
- 	return 0;
- }
- 
+ 	if (inode) {
+ 		/* userspace relies on this representation of dev_t */
+-		seq_printf(f, "%d %02x:%02x:%ld ", fl_pid,
++		seq_printf(f, "%d %02x:%02x:%lu ", fl_pid,
+ 				MAJOR(inode->i_sb->s_dev),
+ 				MINOR(inode->i_sb->s_dev), inode->i_ino);
+ 	} else {
 
 
