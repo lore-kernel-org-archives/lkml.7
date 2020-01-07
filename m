@@ -2,124 +2,107 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1499BC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF7EC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95AE20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D040E2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578389638;
+	bh=0RwFzwAEmrIP5sG0tKGrxv2D/cxDWEkx4BvAxCF7YcY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q47DbYkLSztk3ktUKNb3VhPLoPfljFChJGBmKI7PsZ8766QU6S7++lRdUcKH3qmVU
+	 Bp36sRrIulMkxU+38LUpS9jqQgFjHjWxPXWz4qcjOe0lPwDTJeWMO8JGTyr28CvwTB
+	 oRL8IZmkOmCrcwW+E3GKHeU/ZVJzj4MClK4YEhDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgAGJdX (ORCPT
+        id S1727821AbgAGJd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:33:23 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8230 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbgAGJdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:33:19 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 68A2A4D00D3646B735E1;
-        Tue,  7 Jan 2020 17:33:17 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 7 Jan 2020 17:33:07 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH next 1/2] net: ch9200: use __func__ in debug message
-Date:   Tue, 7 Jan 2020 17:28:55 +0800
-Message-ID: <20200107092856.97742-2-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200107092856.97742-1-chenzhou10@huawei.com>
-References: <20200107092856.97742-1-chenzhou10@huawei.com>
+        Tue, 7 Jan 2020 04:33:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726565AbgAGJd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:33:57 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D9B7206DB;
+        Tue,  7 Jan 2020 09:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578389637;
+        bh=0RwFzwAEmrIP5sG0tKGrxv2D/cxDWEkx4BvAxCF7YcY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H4MhWpEv9OaFCgT3pOtwNa8691FoPe9u0TYSCg/+0HvXNb3xrg8Z0UMTp3WlgCN9V
+         sZneQrxj1cZTzcdnNMP4HyRW3GUYvhQYxpSdzhrj9w+ugT+W+e09aturGqr6jVjdnQ
+         EuPegGrp4+ChfhOaNGONnb4I074kMSLOP/LCXt6g=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iolFL-000143-D1; Tue, 07 Jan 2020 09:33:55 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 07 Jan 2020 09:33:55 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jianyong Wu <Jianyong.Wu@arm.com>, netdev@vger.kernel.org,
+        yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [RFC PATCH v9 0/8] Enable ptp_kvm for arm64
+In-Reply-To: <bf333cdc-3455-7c64-89c2-014639614904@redhat.com>
+References: <20191210034026.45229-1-jianyong.wu@arm.com>
+ <HE1PR0801MB1676CFC9A06B6CE800052A99F43C0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <bf333cdc-3455-7c64-89c2-014639614904@redhat.com>
+Message-ID: <7a589be6dc0d5562caf8c8f795b31efc@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: pbonzini@redhat.com, Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use __func__ to print the function name instead of hard coded string.
+On 2020-01-07 08:15, Paolo Bonzini wrote:
+> On 06/01/20 10:38, Jianyong Wu wrote:
+>> Ping ...
+>> Any comments to this patch set?
+> 
+> Marc, Will, can you ack it?  Since the sticky point was the detection 
+> of
+> the clocksource and it was solved by Thomas's patch, I don't have any
+> more problems including it.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/usb/ch9200.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Boo. I had forgotten about this series. :-(
 
-diff --git a/drivers/net/usb/ch9200.c b/drivers/net/usb/ch9200.c
-index 9df3c1f..3c2dc74 100644
---- a/drivers/net/usb/ch9200.c
-+++ b/drivers/net/usb/ch9200.c
-@@ -111,8 +111,8 @@ static int control_read(struct usbnet *dev,
- 		request_type = (USB_DIR_IN | USB_TYPE_VENDOR |
- 				USB_RECIP_DEVICE);
- 
--	netdev_dbg(dev->net, "Control_read() index=0x%02x size=%d\n",
--		   index, size);
-+	netdev_dbg(dev->net, "%s() index=0x%02x size=%d\n",
-+		   __func__, index, size);
- 
- 	buf = kmalloc(size, GFP_KERNEL);
- 	if (!buf) {
-@@ -151,8 +151,8 @@ static int control_write(struct usbnet *dev, unsigned char request,
- 		request_type = (USB_DIR_OUT | USB_TYPE_VENDOR |
- 				USB_RECIP_DEVICE);
- 
--	netdev_dbg(dev->net, "Control_write() index=0x%02x size=%d\n",
--		   index, size);
-+	netdev_dbg(dev->net, "%s() index=0x%02x size=%d\n",
-+		   __func__, index, size);
- 
- 	if (data) {
- 		buf = kmemdup(data, size, GFP_KERNEL);
-@@ -181,8 +181,8 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
- 	struct usbnet *dev = netdev_priv(netdev);
- 	unsigned char buff[2];
- 
--	netdev_dbg(netdev, "ch9200_mdio_read phy_id:%02x loc:%02x\n",
--		   phy_id, loc);
-+	netdev_dbg(netdev, "%s phy_id:%02x loc:%02x\n",
-+		   __func__, phy_id, loc);
- 
- 	if (phy_id != 0)
- 		return -ENODEV;
-@@ -199,8 +199,8 @@ static void ch9200_mdio_write(struct net_device *netdev,
- 	struct usbnet *dev = netdev_priv(netdev);
- 	unsigned char buff[2];
- 
--	netdev_dbg(netdev, "ch9200_mdio_write() phy_id=%02x loc:%02x\n",
--		   phy_id, loc);
-+	netdev_dbg(netdev, "%s() phy_id=%02x loc:%02x\n",
-+		   __func__, phy_id, loc);
- 
- 	if (phy_id != 0)
- 		return;
-@@ -219,8 +219,8 @@ static int ch9200_link_reset(struct usbnet *dev)
- 	mii_check_media(&dev->mii, 1, 1);
- 	mii_ethtool_gset(&dev->mii, &ecmd);
- 
--	netdev_dbg(dev->net, "link_reset() speed:%d duplex:%d\n",
--		   ecmd.speed, ecmd.duplex);
-+	netdev_dbg(dev->net, "%s() speed:%d duplex:%d\n",
-+		   __func__, ecmd.speed, ecmd.duplex);
- 
- 	return 0;
- }
-@@ -309,7 +309,7 @@ static int get_mac_address(struct usbnet *dev, unsigned char *data)
- 	unsigned char mac_addr[0x06];
- 	int rd_mac_len = 0;
- 
--	netdev_dbg(dev->net, "get_mac_address:\n\tusbnet VID:%0x PID:%0x\n",
-+	netdev_dbg(dev->net, "%s:\n\tusbnet VID:%0x PID:%0x\n", __func__,
- 		   le16_to_cpu(dev->udev->descriptor.idVendor),
- 		   le16_to_cpu(dev->udev->descriptor.idProduct));
- 
+Going back to it, there is a few ugly points in the arm-specific code
+(I'm OK with the generic changes though).
+
+Another thing is that the whole series depends on three patches that 
+have
+never been posted to any list, hence never reviewed.
+
+Jianyong: Please repost this series *with* the dependencies so that they
+can be reviewed, once you've addressed my comments on two of the 
+patches.
+
+Thanks,
+
+         M.
 -- 
-2.7.4
-
+Jazz is not dead. It just smells funny...
