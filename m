@@ -2,101 +2,116 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D9BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0068AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F933206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB502073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgAGAjv (ORCPT
+        id S1727363AbgAGAnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 19:39:51 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49793 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727326AbgAGAju (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 19:39:50 -0500
-Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B1B7B3A1347;
-        Tue,  7 Jan 2020 11:39:44 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iocuO-0006tT-25; Tue, 07 Jan 2020 11:39:44 +1100
-Date:   Tue, 7 Jan 2020 11:39:44 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     linux-mm@kvack.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
-Message-ID: <20200107003944.GN23195@dread.disaster.area>
-References: <cover.1578225806.git.chris@chrisdown.name>
- <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
- <20200107001039.GM23195@dread.disaster.area>
- <20200107001643.GA485121@chrisdown.name>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107001643.GA485121@chrisdown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=CqsqYK7GuNR5ViALEa4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22 a=pHzHmUro8NiASowvMSCR:22
-        a=6VlIyEUom7LUIeUMNQJH:22
+        Mon, 6 Jan 2020 19:43:31 -0500
+Received: from mga17.intel.com ([192.55.52.151]:3981 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbgAGAnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 19:43:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 16:43:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
+   d="scan'208";a="395186614"
+Received: from cliu38-mobl3.sh.intel.com (HELO 286ab234718b.sh.intel.com) ([10.239.147.26])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jan 2020 16:43:29 -0800
+From:   Chuansheng Liu <chuansheng.liu@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tony.luck@intel.com, bp@alien8.de, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, chuansheng.liu@intel.com
+Subject: [PATCH v2] x86/mce/therm_throt: Fix the access of uninitialized therm_work
+Date:   Tue,  7 Jan 2020 00:41:16 +0000
+Message-Id: <20200107004116.59353-1-chuansheng.liu@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:16:43AM +0000, Chris Down wrote:
-> Dave Chinner writes:
-> > It took 15 years for us to be able to essentially deprecate
-> > inode32 (inode64 is the default behaviour), and we were very happy
-> > to get that albatross off our necks.  In reality, almost everything
-> > out there in the world handles 64 bit inodes correctly
-> > including 32 bit machines and 32bit binaries on 64 bit machines.
-> > And, IMNSHO, there no excuse these days for 32 bit binaries that
-> > don't using the *64() syscall variants directly and hence support
-> > 64 bit inodes correctlyi out of the box on all platforms.
-> > 
-> > I don't think we should be repeating past mistakes by trying to
-> > cater for broken 32 bit applications on 64 bit machines in this day
-> > and age.
-> 
-> I'm very glad to hear that. I strongly support moving to 64-bit inums in all
-> cases if there is precedent that it's not a compatibility issue, but from
-> the comments on my original[0] patch (especially that they strayed from the
-> original patches' change to use ino_t directly into slab reuse), I'd been
-> given the impression that it was known to be one.
-> 
-> From my perspective I have no evidence that inode32 is needed other than the
-> comment from Jeff above get_next_ino. If that turns out not to be a problem,
-> I am more than happy to just wholesale migrate 64-bit inodes per-sb in
-> tmpfs.
+In ICL platform, it is easy to hit bootup failure with panic
+in thermal interrupt handler during early bootup stage.
 
-Well, that's my comment above about 32 bit apps using non-LFS
-compliant interfaces in this day and age. It's essentially a legacy
-interface these days, and anyone trying to access a modern linux
-filesystem (btrfs, XFS, ext4, etc) ion 64 bit systems need to handle
-64 bit inodes because they all can create >32bit inode numbers
-in their default configurations.
+Such issue makes my platform almost can not boot up with
+latest kernel code.
 
-Cheers,
+The call stack is like:
+kernel BUG at kernel/timer/timer.c:1152!
 
-Dave.
+Call Trace:
+__queue_delayed_work
+queue_delayed_work_on
+therm_throt_process
+intel_thermal_interrupt
+...
+
+When one CPU is up, the irq is enabled prior to CPU UP
+notification which will then initialize therm_worker.
+Such race will cause the posssibility that interrupt
+handler therm_throt_process() accesses uninitialized
+therm_work, then system hit panic at very early bootup
+stage.
+
+In my ICL platform, it can be reproduced in several times
+of reboot stress. With this fix, the system keeps alive
+for more than 200 times of reboot stress.
+
+V2: Boris shares a good suggestion that we can moving the
+interrupt unmasking at the end of therm_work initialization.
+
+Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
+---
+ arch/x86/kernel/cpu/mce/therm_throt.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index b38010b541d6..528b85664b46 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -467,6 +467,7 @@ static int thermal_throttle_online(unsigned int cpu)
+ {
+ 	struct thermal_state *state = &per_cpu(thermal_state, cpu);
+ 	struct device *dev = get_cpu_device(cpu);
++	u32 l;
+ 
+ 	state->package_throttle.level = PACKAGE_LEVEL;
+ 	state->core_throttle.level = CORE_LEVEL;
+@@ -474,6 +475,12 @@ static int thermal_throttle_online(unsigned int cpu)
+ 	INIT_DELAYED_WORK(&state->package_throttle.therm_work, throttle_active_work);
+ 	INIT_DELAYED_WORK(&state->core_throttle.therm_work, throttle_active_work);
+ 
++	/* Unmask the thermal vector after
++	 * therm_works are initialized.
++	 */
++	l = apic_read(APIC_LVTTHMR);
++	apic_write(APIC_LVTTHMR, l & ~APIC_LVT_MASKED);
++
+ 	return thermal_throttle_add_dev(dev, cpu);
+ }
+ 
+@@ -722,10 +729,6 @@ void intel_init_thermal(struct cpuinfo_x86 *c)
+ 	rdmsr(MSR_IA32_MISC_ENABLE, l, h);
+ 	wrmsr(MSR_IA32_MISC_ENABLE, l | MSR_IA32_MISC_ENABLE_TM1, h);
+ 
+-	/* Unmask the thermal vector: */
+-	l = apic_read(APIC_LVTTHMR);
+-	apic_write(APIC_LVTTHMR, l & ~APIC_LVT_MASKED);
+-
+ 	pr_info_once("CPU0: Thermal monitoring enabled (%s)\n",
+ 		      tm2 ? "TM2" : "TM1");
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
