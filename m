@@ -2,52 +2,57 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD97C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB5DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7E12077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C1B2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431710;
-	bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
+	s=default; t=1578431716;
+	bh=scddgpvllI85i/98LWMYBVIE/Q5evmoMzZcNLa0aPZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWrN3LOLBRJYMrtsY+VJWXLrGb3EII2yKHufl8nKDkGbfWTEc1c0J1Bkq0upLegPG
-	 wVp1fXvXswXsoGYwiYVEWnYykdENh3p0AkaiWSXQ1s9sWeH8yauHtR/77hQJzs7ObB
-	 pbhMc2Ho8n0ZUGKaZeYVR1peJw4bHnTq+2YuJDL0=
+	b=0SyvLJOPKTJTo9u+PE+HwnpKycCkoJ1M8YcSGAcJ3tj8jC4yKYJtl2LfIPpA3s5OZ
+	 1rHxr9bLagJ5AZDcr31ApiUDK/b0CTW4+mQQRobxFfu3maZYLQf3jhTym81CLEElny
+	 OXeuz/xjwVks4nFk0nIPUVP9olaAYMtQC/7EnqEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbgAGVPJ (ORCPT
+        id S1729505AbgAGVIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:15:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbgAGVIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:34 -0500
+        id S1729673AbgAGVIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C1E2077B;
-        Tue,  7 Jan 2020 21:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5FE20880;
+        Tue,  7 Jan 2020 21:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431313;
-        bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
+        s=default; t=1578431301;
+        bh=scddgpvllI85i/98LWMYBVIE/Q5evmoMzZcNLa0aPZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCB4Ts3bhoBrrXBftsekZZywwAkWAvStq01OtX6XO6A0XjIiRsVzbCUUG0yveJHlx
-         Sq203F65BuuWFx5UjLjWikg17n30EexzoJwFMxsde+lFFNSwHia3btsXgrsgxsnIeI
-         FegNptjgoOeJ8p2vM44nZFf8OnZx7QkmdCy//6Bg=
+        b=qmelnMm213luoFgx4fBPKu4uQTMsKhVR1HYeVha2pe+sD74mt8HULfm3OT3HOkhJo
+         LECq9Bt9mteLRc8Pkj/FLFGzPsvb8pox3/DwUM/e4bKCt7oiuUJFPozp3yQttRb0N2
+         gwNxkk+ccGYg5vIcDmfm3qS9oQh3opeB53dsQT6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.19 089/115] media: flexcop-usb: ensure -EIO is returned on error condition
-Date:   Tue,  7 Jan 2020 21:54:59 +0100
-Message-Id: <20200107205306.668297634@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 115/115] perf/x86/intel/bts: Fix the use of page_private()
+Date:   Tue,  7 Jan 2020 21:55:25 +0100
+Message-Id: <20200107205311.271071706@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,37 +65,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
+[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
 
-An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
-even though the an -EIO was intended to be returned in the case where
-ret != buflen.  Fix this by replacing the return 0 with the return of
-ret to return the error return code.
+Commit
 
-Addresses-Coverity: ("Unused value")
+  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
 
-Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+brought in a warning with the BTS buffer initialization
+that is easily tripped with (assuming KPTI is disabled):
 
+instantly throwing:
+
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
+> Modules linked in:
+> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
+> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
+> Call Trace:
+>  rb_alloc_aux+0x339/0x550
+>  perf_mmap+0x607/0xc70
+>  mmap_region+0x76b/0xbd0
+...
+
+It appears to assume (for lost raisins) that PagePrivate() is set,
+while later it actually tests for PagePrivate() before using
+page_private().
+
+Make it consistent and always check PagePrivate() before using
+page_private().
+
+Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -294,7 +294,7 @@ static int flexcop_usb_i2c_req(struct fl
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 7139f6bf27ad..510f9461407e 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -71,9 +71,17 @@ struct bts_buffer {
  
- 	mutex_unlock(&fc_usb->data_mutex);
+ static struct pmu bts_pmu;
  
--	return 0;
-+	return ret;
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
++
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
  }
  
- /* actual bus specific access functions,
+ static void *
+@@ -91,9 +99,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -117,7 +123,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+-- 
+2.20.1
+
 
 
