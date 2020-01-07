@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65207C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E35C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A102087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890642087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431217;
-	bh=ph6v+dxkH+6pOv03d36Rmw/AD0TnMJ56W7K/cGga170=;
+	s=default; t=1578431220;
+	bh=tGMOlRlyeVwmVbqGsZsbHKXno5yn/Ml/QUpwixU1fHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbBioR0HfEpw2hTPN6RBFIGoInVEPwoj4bAc0TNMeCNGiULZIqGXIXyjeSq953Myy
-	 vbLK7cI0LajUM/IeTSW8KHjdV4cBcy1BDv/0/0Fy0w+YpKQvCGEVVqwWE9vIv3eNAQ
-	 87DjFDjpzNC/ZmCyepJWXCZv5gX5zHZx8dvt7lgI=
+	b=srhc5qxCP4K8eGZxTQvf0TlNtBqbxAK5wwc+o6R4am6LTyg4gZdRj3An0XHirvCMO
+	 vhw6zPgUhY3vq/7oG9Qdw3Py3Z1LYRK9VvkU1Y6jnkAq425jC24tTIUveR2HkEBUMh
+	 fJMElOo0boTIbcHdiH4WAuYZB2Xz1tw+8uWF7D24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgAGVG4 (ORCPT
+        id S1729452AbgAGVG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56472 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgAGVGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:45 -0500
+        id S1729422AbgAGVGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35EA3222D9;
-        Tue,  7 Jan 2020 21:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A4724679;
+        Tue,  7 Jan 2020 21:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431204;
-        bh=ph6v+dxkH+6pOv03d36Rmw/AD0TnMJ56W7K/cGga170=;
+        s=default; t=1578431207;
+        bh=tGMOlRlyeVwmVbqGsZsbHKXno5yn/Ml/QUpwixU1fHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nkMBpoTt4oEdrB4qrJxHBbz3DqZlymnrd25NS7Jb0unPtVI1l6iirDCXgn2BvPBPe
-         rt5FDiwMEQuM8v8MN4Rrf2T+iihrOtWNEByWryHMIwi1lRru88bPtpBjB4TK5XvO3y
-         qNFMJg+RoG4pzSt4RkWuL6qWVqh9XbJnA+nAs1L8=
+        b=kd3w9XA7CMx3IykY/FCHbCOKMVLG6SRMjgxTJBDq3/Bhd95L9GwUpYoJKWZO+UOcl
+         EE6LCnKO84WWNhxI9mF3em6IzrUziEry/tE3XmqVhBJX7BIMVyKP+ybimEnB2r+ViH
+         a6c7monqkuHdiUWCXIP6OIae+JLnD0yuTCIyngII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 075/115] ALSA: firewire-motu: Correct a typo in the clock proc string
-Date:   Tue,  7 Jan 2020 21:54:45 +0100
-Message-Id: <20200107205304.215091599@linuxfoundation.org>
+        stable@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH 4.19 076/115] exit: panic before exit_mm() on global init exit
+Date:   Tue,  7 Jan 2020 21:54:46 +0100
+Message-Id: <20200107205304.288944581@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,32 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-commit 0929249e3be3bb82ee6cfec0025f4dde952210b3 upstream.
+commit 43cf75d96409a20ef06b756877a2e72b10a026fc upstream.
 
-Just fix a typo of "S/PDIF" in the clock name string.
+Currently, when global init and all threads in its thread-group have exited
+we panic via:
+do_exit()
+-> exit_notify()
+   -> forget_original_parent()
+      -> find_child_reaper()
+This makes it hard to extract a useable coredump for global init from a
+kernel crashdump because by the time we panic exit_mm() will have already
+released global init's mm.
+This patch moves the panic futher up before exit_mm() is called. As was the
+case previously, we only panic when global init and all its threads in the
+thread-group have exited.
 
-Fixes: 4638ec6ede08 ("ALSA: firewire-motu: add proc node to show current statuc of clock and packet formats")
-Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191030100921.3826-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+[christian.brauner@ubuntu.com: fix typo, rewrite commit message]
+Link: https://lore.kernel.org/r/1576736993-10121-1-git-send-email-qiwuchen55@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/motu-proc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/exit.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/sound/firewire/motu/motu-proc.c
-+++ b/sound/firewire/motu/motu-proc.c
-@@ -17,7 +17,7 @@ static const char *const clock_names[] =
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT] = "S/PDIF on optical interface",
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT_A] = "S/PDIF on optical interface A",
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT_B] = "S/PDIF on optical interface B",
--	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_COAX] = "S/PCIF on coaxial interface",
-+	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_COAX] = "S/PDIF on coaxial interface",
- 	[SND_MOTU_CLOCK_SOURCE_AESEBU_ON_XLR] = "AESEBU on XLR interface",
- 	[SND_MOTU_CLOCK_SOURCE_WORD_ON_BNC] = "Word clock on BNC interface",
- };
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -578,10 +578,6 @@ static struct task_struct *find_child_re
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
+-	if (unlikely(pid_ns == &init_pid_ns)) {
+-		panic("Attempted to kill init! exitcode=0x%08x\n",
+-			father->signal->group_exit_code ?: father->exit_code);
+-	}
+ 
+ 	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+@@ -845,6 +841,14 @@ void __noreturn do_exit(long code)
+ 	acct_update_integrals(tsk);
+ 	group_dead = atomic_dec_and_test(&tsk->signal->live);
+ 	if (group_dead) {
++		/*
++		 * If the last thread of global init has exited, panic
++		 * immediately to get a useable coredump.
++		 */
++		if (unlikely(is_global_init(tsk)))
++			panic("Attempted to kill init! exitcode=0x%08x\n",
++				tsk->signal->group_exit_code ?: (int)code);
++
+ #ifdef CONFIG_POSIX_TIMERS
+ 		hrtimer_cancel(&tsk->signal->real_timer);
+ 		exit_itimers(tsk->signal);
 
 
