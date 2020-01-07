@@ -2,127 +2,304 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F32C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FDCC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDDC2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B4B20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkRRQBL2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OwxPRG+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgAGSwH (ORCPT
+        id S1728649AbgAGSw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:52:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22457 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728358AbgAGSwG (ORCPT
+        Tue, 7 Jan 2020 13:52:56 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58246 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgAGSw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:52:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578423125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=VErRlwO5Ymf/mDUAeuLrx6IdZ2Ci3A9/OC+EwB3cogU=;
-        b=AkRRQBL2eBAUXBgD1CTbPdB+Fa5bes9j61CaLYGieka5PboFBDdvZVFx6o72buHt/rvIOf
-        vUaPoclw/fjcUBXBt6uVfVJ238htgsln1g4Uue1lo1MzQN+2O0bgLdvMScUTNMjz+5kTVi
-        g8HTD6TmtYObpKGE7plJFxxG62TaXUU=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-55-k8l0-UB4PR-d58INI8c__A-1; Tue, 07 Jan 2020 13:52:02 -0500
-X-MC-Unique: k8l0-UB4PR-d58INI8c__A-1
-Received: by mail-qt1-f200.google.com with SMTP id l1so376022qtp.21
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:52:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=VErRlwO5Ymf/mDUAeuLrx6IdZ2Ci3A9/OC+EwB3cogU=;
-        b=KCCURyMS9PWrGYVPznausp/sZFQysZoXUBxk/BFcQkUwx1AS8Mnq/JdtCgIWHHymka
-         3RQtwcXnvQqwZo4KQNMCxm2G60qrdfUbRQg1xsyYQwsE8Kw34uXxyYLQxYoACvfat1E2
-         bWYDhdwEi4BABy7SrIIFyWgLlaFW/n1pbQy74+zagFXaK1meJVd4G659t/XveQVwEHPP
-         X7UgphaCPLGlzZyMChiNNs3VsNQeP2hX2sLCY4J+/MAKISC7zG2OhK1/bTDTVYCvFUPI
-         4resxph9tZMSBXD+UlhB/tpRv4rClt66CVLITE9PuammkomwuJBSsjLxyqeuVGHzMHsG
-         9Bdw==
-X-Gm-Message-State: APjAAAXXt0Yi+frwBYEeJHsjpx2z560G6RfZ1n6TF4VO9iZWU8xLUNUs
-        dAWPDn3AO3yMdSeQZUgc1+5tcUsS0JqdDtBt4GJ1BwBKfE0/QPM4Z5FuExk2EUrDPro5mmISyQj
-        5bqZiXSbY6GDZoVIlRFVPQYJC
-X-Received: by 2002:a05:620a:1467:: with SMTP id j7mr743492qkl.76.1578423122088;
-        Tue, 07 Jan 2020 10:52:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyR0JS6estJWyDeOP24MAGmqxrnl0mMWFA6iohfjOV36L4F3MNNN2VxLjUQQMYR1bbDv8jQQg==
-X-Received: by 2002:a05:620a:1467:: with SMTP id j7mr743467qkl.76.1578423121800;
-        Tue, 07 Jan 2020 10:52:01 -0800 (PST)
-Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id q25sm226420qkq.88.2020.01.07.10.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 10:52:01 -0800 (PST)
-To:     Tadeusz Struk <tadeusz.struk@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-From:   Laura Abbott <labbott@redhat.com>
-Subject: Bad usercopy from tpm after d23d12484307 ("tpm: fix invalid locking
- in NONBLOCKING mode")
-Message-ID: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
-Date:   Tue, 7 Jan 2020 13:51:59 -0500
+        Tue, 7 Jan 2020 13:52:56 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007Iqnog072734;
+        Tue, 7 Jan 2020 12:52:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578423170;
+        bh=kpJWoOjfKvX62bCcFNnlveCUkcErCADA2gOAcwUC1Uc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OwxPRG+NFyl4azew3mbKgFKZN+qX+fSVUrVgxUI97vYCyOprTnFLaoSRFTtfAl0m8
+         IvSeplblkFIOF0EMOFLe0zBbRknLefX8bneuFlpLJ9PRxpcHgE5ws1ZreHHDcRHaH1
+         WtT6vlOA90gFhUkOyhwW+JsQXGXS0Vqjpn2jvefY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007Iqn4B027555
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 12:52:49 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 12:52:49 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 12:52:49 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Iql7l097985;
+        Tue, 7 Jan 2020 12:52:47 -0600
+Subject: Re: [PATCH v3] phy: Add DisplayPort configuration options
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <kishon@ti.com>, <maxime@cerno.tech>
+CC:     <praneeth@ti.com>, <tomi.valkeinen@ti.com>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>
+References: <1578313360-18124-1-git-send-email-yamonkar@cadence.com>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9d849a10-493f-e297-f4c3-b34a341635ed@ti.com>
+Date:   Tue, 7 Jan 2020 20:52:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <1578313360-18124-1-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 06/01/2020 14:22, Yuti Amonkar wrote:
+> Allow DisplayPort PHYs to be configured through the generic
+> functions through a custom structure added to the generic union.
+> The configuration structure is used for reconfiguration of
+> DisplayPort PHYs during link training operation.
+> 
+> The parameters added here are the ones defined in the DisplayPort
+> spec v1.4 which include link rate, number of lanes, voltage swing
+> and pre-emphasis.
+> 
+> Add the DisplayPort phy mode to the generic phy_mode enum.
+> 
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
 
-Fedora got two bug reports https://bugzilla.redhat.com/show_bug.cgi?id=1788653
-https://bugzilla.redhat.com/show_bug.cgi?id=1788257 of a usercopy bug from
-tpm:
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
 
-[   67.037526] usercopy: Kernel memory exposure attempt detected from wrapped address (offset 0, size 18446634686907596985)!
-[   67.037541] ------------[ cut here ]------------
-[   67.037543] kernel BUG at mm/usercopy.c:99!
-[   67.037550] invalid opcode: 0000 [#1] SMP PTI
-[   67.037553] CPU: 1 PID: 3277 Comm: tpm2-abrmd Not tainted 5.4.7-200.fc31.x86_64 #1
-[   67.037555] Hardware name: Dell Inc. Latitude 5580/0FH6CJ, BIOS 1.16.0 07/03/2019
-[   67.037562] RIP: 0010:usercopy_abort+0x77/0x79
-[   67.037565] Code: 4c 0f 45 de 51 4c 89 d1 48 c7 c2 e3 ce 35 b0 57 48 c7 c6 30 80 34 b0 48 c7 c7 a8 cf 35 b0 48 0f 45 f2 4c 89 da e8 50 6c e4 ff <0f> 0b 4c 89 e1 49 89 d8 44 89 ea 31 f6 48 29 c1 48 c7 c7 25 cf 35
-[   67.037567] RSP: 0018:ffffae5b42eabe48 EFLAGS: 00010246
-[   67.037570] RAX: 000000000000006d RBX: ffffffffffffffff RCX: 0000000000000000
-[   67.037572] RDX: 0000000000000000 RSI: ffff9c83b6257908 RDI: ffff9c83b6257908
-[   67.037574] RBP: ffff9c836686c0b9 R08: ffff9c83b6257908 R09: 000000000000007c
-[   67.037576] R10: ffffae5b42eabcf8 R11: 0000000000000000 R12: ffff9c836686c0ba
-[   67.037578] R13: 0000000000000001 R14: ffff9c836686c010 R15: ffff9c836686c0ba
-[   67.037580] FS:  00007fb2dbfff700(0000) GS:ffff9c83b6240000(0000) knlGS:0000000000000000
-[   67.037582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   67.037584] CR2: 00007fc1137f3e00 CR3: 00000002205c4002 CR4: 00000000003606e0
-[   67.037586] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   67.037588] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   67.037589] Call Trace:
-[   67.037595]  __check_object_size.cold+0x46/0x80
-[   67.037600]  tpm_common_read+0x74/0x140
-[   67.037605]  vfs_read+0x9d/0x150
-[   67.037610]  ksys_read+0x5f/0xe0
-[   67.037615]  do_syscall_64+0x5b/0x1a0
-[   67.037620]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Kishon, can you still pick this for v5.6?
 
-I think this is related to d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
-Specifically, if tpm_try_get_ops fails I don't think we should be putting the error
-code in priv->response_length since tpm_common_read doesn't seem to account for
-negative errno values.
+Best regards,
+Jyri
 
-I don't have a reproducer since this was just what was reported to Fedora's bug
-reporter but both reports happened after that commit landed in stable.
+> ---
+> 
+> Version History:
+> v3:
+>      Add DisplayPort mode to the generic phy_mode enum.
+> 
+> v2:
+>      Update DisplayPort spec version in the commit message.
+> 
+> This patch was a part of [1] series earlier but we think that it needs
+> to have a separate attention of the reviewers. Also as both [1] & [2] are
+> dependent on this patch, our sincere request to reviewers to have a
+> faster review of this patch.
+> 
+> [1]
+> 
+> https://lkml.org/lkml/2019/12/23/392
+> 
+> [2]
+> 
+> https://lkml.org/lkml/2019/12/23/394
+> 
+>  include/linux/phy/phy-dp.h | 95 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/phy/phy.h    |  7 +++-
+>  2 files changed, 101 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/phy/phy-dp.h
+> 
+> diff --git a/include/linux/phy/phy-dp.h b/include/linux/phy/phy-dp.h
+> new file mode 100644
+> index 0000000..18cad23
+> --- /dev/null
+> +++ b/include/linux/phy/phy-dp.h
+> @@ -0,0 +1,95 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 Cadence Design Systems Inc.
+> + */
+> +
+> +#ifndef __PHY_DP_H_
+> +#define __PHY_DP_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct phy_configure_opts_dp - DisplayPort PHY configuration set
+> + *
+> + * This structure is used to represent the configuration state of a
+> + * DisplayPort phy.
+> + */
+> +struct phy_configure_opts_dp {
+> +	/**
+> +	 * @link_rate:
+> +	 *
+> +	 * Link Rate, in Mb/s, of the main link.
+> +	 *
+> +	 * Allowed values: 1620, 2160, 2430, 2700, 3240, 4320, 5400, 8100 Mb/s
+> +	 */
+> +	unsigned int link_rate;
+> +
+> +	/**
+> +	 * @lanes:
+> +	 *
+> +	 * Number of active, consecutive, data lanes, starting from
+> +	 * lane 0, used for the transmissions on main link.
+> +	 *
+> +	 * Allowed values: 1, 2, 4
+> +	 */
+> +	unsigned int lanes;
+> +
+> +	/**
+> +	 * @voltage:
+> +	 *
+> +	 * Voltage swing levels, as specified by DisplayPort specification,
+> +	 * to be used by particular lanes. One value per lane.
+> +	 * voltage[0] is for lane 0, voltage[1] is for lane 1, etc.
+> +	 *
+> +	 * Maximum value: 3
+> +	 */
+> +	unsigned int voltage[4];
+> +
+> +	/**
+> +	 * @pre:
+> +	 *
+> +	 * Pre-emphasis levels, as specified by DisplayPort specification, to be
+> +	 * used by particular lanes. One value per lane.
+> +	 *
+> +	 * Maximum value: 3
+> +	 */
+> +	unsigned int pre[4];
+> +
+> +	/**
+> +	 * @ssc:
+> +	 *
+> +	 * Flag indicating, whether or not to enable spread-spectrum clocking.
+> +	 *
+> +	 */
+> +	u8 ssc : 1;
+> +
+> +	/**
+> +	 * @set_rate:
+> +	 *
+> +	 * Flag indicating, whether or not reconfigure link rate and SSC to
+> +	 * requested values.
+> +	 *
+> +	 */
+> +	u8 set_rate : 1;
+> +
+> +	/**
+> +	 * @set_lanes:
+> +	 *
+> +	 * Flag indicating, whether or not reconfigure lane count to
+> +	 * requested value.
+> +	 *
+> +	 */
+> +	u8 set_lanes : 1;
+> +
+> +	/**
+> +	 * @set_voltages:
+> +	 *
+> +	 * Flag indicating, whether or not reconfigure voltage swing
+> +	 * and pre-emphasis to requested values. Only lanes specified
+> +	 * by "lanes" parameter will be affected.
+> +	 *
+> +	 */
+> +	u8 set_voltages : 1;
+> +};
+> +
+> +#endif /* __PHY_DP_H_ */
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index 15032f14..962a469 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -16,6 +16,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> +#include <linux/phy/phy-dp.h>
+>  #include <linux/phy/phy-mipi-dphy.h>
+>  
+>  struct phy;
+> @@ -38,7 +39,8 @@ enum phy_mode {
+>  	PHY_MODE_PCIE,
+>  	PHY_MODE_ETHERNET,
+>  	PHY_MODE_MIPI_DPHY,
+> -	PHY_MODE_SATA
+> +	PHY_MODE_SATA,
+> +	PHY_MODE_DP
+>  };
+>  
+>  /**
+> @@ -46,9 +48,12 @@ enum phy_mode {
+>   *
+>   * @mipi_dphy:	Configuration set applicable for phys supporting
+>   *		the MIPI_DPHY phy mode.
+> + * @dp:		Configuration set applicable for phys supporting
+> + *		the DisplayPort protocol.
+>   */
+>  union phy_configure_opts {
+>  	struct phy_configure_opts_mipi_dphy	mipi_dphy;
+> +	struct phy_configure_opts_dp		dp;
+>  };
+>  
+>  /**
+> 
 
-Thanks,
-Laura
 
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
