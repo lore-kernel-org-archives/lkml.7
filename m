@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64036C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6C1C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3832C20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14F520880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430942;
-	bh=2rtwEMXNd6kcYUKaal2MNGmLUidol/gOaLQgC4FGeQY=;
+	s=default; t=1578430945;
+	bh=6yADnHqZT1cSfuZWi1pSkGobfqJVOI+LJT7fOSZGzyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kW33nbKsy1QnFSaNRwWiHrGdj4X/LixxmEOcM5JBXLUKX1AbKrOy1gaUivgqgo1mx
-	 HEjC1ftv/EnkTeT6y0wImg2cqDJZ8UhRd74jC/VOa1vdrybk5ZnAzPvctGky4oWubm
-	 QEk5vOvdz3Zahentu4SWpVuFyQJ2vBzmqfDcZcJU=
+	b=sSbpeQXVJR+Gr612tJyoqbe5sedR2j8vl80Jla4lJixoESRAcpYksdUSHk684VCDx
+	 qR5p13IaS7QK0GAyw3IvVfDgnPXGqfd1S0dpccWYTVh+3fbhl5R81eEOjIoyacJaCt
+	 xp6sEAmKwZJUvgdlsccJLZ6vAv98WJTmbs4dQyXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAGVCU (ORCPT
+        id S1728741AbgAGVCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41608 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbgAGVCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:18 -0500
+        id S1728729AbgAGVCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5137620678;
-        Tue,  7 Jan 2020 21:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC73B2077B;
+        Tue,  7 Jan 2020 21:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430937;
-        bh=2rtwEMXNd6kcYUKaal2MNGmLUidol/gOaLQgC4FGeQY=;
+        s=default; t=1578430940;
+        bh=6yADnHqZT1cSfuZWi1pSkGobfqJVOI+LJT7fOSZGzyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHQS0+SNAMV69whku4zWWRZcCrr6u7VdQTM4H5IonYjTWZX894LKdUOdC6GrxoslQ
-         mMAF6tXuQmz2rqvX2PoQ9cfV6M6mbziKtfzHv9mb1Xr4gFqf3C9VGH8ThR5fsT9vos
-         3iNtG2AjZpg38uEeUGdgWGKVQII/xNSZPn1vGmqQ=
+        b=Kv6DsOjX+Jr9ytVwfcn447s//bPGyKq2Nj92k6WWFEHBL9CK9YYt0IjXnL8UGbOCC
+         10Diko1FvwfCKlbUs5wCO28M1yhpLMPs0b1EaUqHzo5vW1vt3SY2hMBiNhV5xPZZm2
+         ye8tFZz6hRJz7zQoxG9GEx23tdyRie6tAjzfDzKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 157/191] powerpc/mm: Mark get_slice_psize() & slice_addr_is_low() as notrace
-Date:   Tue,  7 Jan 2020 21:54:37 +0100
-Message-Id: <20200107205341.365216307@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.4 158/191] Bluetooth: btusb: fix PM leak in error case of setup
+Date:   Tue,  7 Jan 2020 21:54:38 +0100
+Message-Id: <20200107205341.420609715@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -58,61 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 91a063c956084fb21cf2523bce6892514e3f1799 upstream.
+commit 3d44a6fd0775e6215e836423e27f8eedf8c871ea upstream.
 
-These slice routines are called from the SLB miss handler, which can
-lead to warnings from the IRQ code, because we have not reconciled the
-IRQ state properly:
+If setup() fails a reference for runtime PM has already
+been taken. Proper use of the error handling in btusb_open()is needed.
+You cannot just return.
 
-  WARNING: CPU: 72 PID: 30150 at arch/powerpc/kernel/irq.c:258 arch_local_irq_restore.part.0+0xcc/0x100
-  Modules linked in:
-  CPU: 72 PID: 30150 Comm: ftracetest Not tainted 5.5.0-rc2-gcc9x-g7e0165b2f1a9 #1
-  NIP:  c00000000001d83c LR: c00000000029ab90 CTR: c00000000026cf90
-  REGS: c0000007eee3b960 TRAP: 0700   Not tainted  (5.5.0-rc2-gcc9x-g7e0165b2f1a9)
-  MSR:  8000000000021033 <SF,ME,IR,DR,RI,LE>  CR: 22242844  XER: 20000000
-  CFAR: c00000000001d780 IRQMASK: 0
-  ...
-  NIP arch_local_irq_restore.part.0+0xcc/0x100
-  LR  trace_graph_entry+0x270/0x340
-  Call Trace:
-    trace_graph_entry+0x254/0x340 (unreliable)
-    function_graph_enter+0xe4/0x1a0
-    prepare_ftrace_return+0xa0/0x130
-    ftrace_graph_caller+0x44/0x94	# (get_slice_psize())
-    slb_allocate_user+0x7c/0x100
-    do_slb_fault+0xf8/0x300
-    instruction_access_slb_common+0x140/0x180
-
-Fixes: 48e7b7695745 ("powerpc/64s/hash: Convert SLB miss handlers to C")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191221121337.4894-1-mpe@ellerman.id.au
+Fixes: ace31982585a3 ("Bluetooth: btusb: Add setup callback for chip init on USB")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/slice.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/mm/slice.c
-+++ b/arch/powerpc/mm/slice.c
-@@ -50,7 +50,7 @@ static void slice_print_mask(const char
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1200,7 +1200,7 @@ static int btusb_open(struct hci_dev *hd
+ 	if (data->setup_on_usb) {
+ 		err = data->setup_on_usb(hdev);
+ 		if (err < 0)
+-			return err;
++			goto setup_fail;
+ 	}
  
- #endif
+ 	data->intf->needs_remote_wakeup = 1;
+@@ -1239,6 +1239,7 @@ done:
  
--static inline bool slice_addr_is_low(unsigned long addr)
-+static inline notrace bool slice_addr_is_low(unsigned long addr)
- {
- 	u64 tmp = (u64)addr;
- 
-@@ -659,7 +659,7 @@ unsigned long arch_get_unmapped_area_top
- 				       mm_ctx_user_psize(&current->mm->context), 1);
+ failed:
+ 	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
++setup_fail:
+ 	usb_autopm_put_interface(data->intf);
+ 	return err;
  }
- 
--unsigned int get_slice_psize(struct mm_struct *mm, unsigned long addr)
-+unsigned int notrace get_slice_psize(struct mm_struct *mm, unsigned long addr)
- {
- 	unsigned char *psizes;
- 	int index, mask_index;
 
 
