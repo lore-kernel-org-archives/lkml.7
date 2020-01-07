@@ -2,242 +2,112 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D674C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90C9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57D9207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4FD207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cSt0gdJP"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YwjgCSzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgAGLJv (ORCPT
+        id S1727911AbgAGLMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:09:51 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:26590 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbgAGLJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:09:51 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47sV5S2ll1z9ty1s;
-        Tue,  7 Jan 2020 12:09:48 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=cSt0gdJP; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id S7LylmAdlYuG; Tue,  7 Jan 2020 12:09:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47sV5S1VlPz9ty1r;
-        Tue,  7 Jan 2020 12:09:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578395388; bh=wBOrEyOzbC7I14ZUJV36uJmaMEj1rxEpTn5xGKq/oZo=;
-        h=From:Subject:To:Cc:Date:From;
-        b=cSt0gdJPR4NgcZUhyuJ1YGoguHCJAkueLwkXCJh5VwNg74ZzlJNkRjHXAyyuLYZEz
-         8kZLLGDeuhd4R8Kyl6rEiR58Xtcs2kNgU+53gdjZED8jU7nlJOLzwMzk8wlqB/vlHi
-         NyMo/EaOJf9ShcssJwC7j9cnljl9NfsXur8j0Xf4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6A1FE8B7CF;
-        Tue,  7 Jan 2020 12:09:49 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id eqyqfOJfH0Qx; Tue,  7 Jan 2020 12:09:49 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1668D8B7BF;
-        Tue,  7 Jan 2020 12:09:49 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id AFD8A63808; Tue,  7 Jan 2020 11:09:48 +0000 (UTC)
-Message-Id: <7ed9041d1a52ce76674c01a98ef99f998835a207.1578395361.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32: refactor pmd_offset(pud_offset(pgd_offset...
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue,  7 Jan 2020 11:09:48 +0000 (UTC)
+        Tue, 7 Jan 2020 06:12:08 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:43938 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726937AbgAGLMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 06:12:08 -0500
+X-UUID: e9480024c608450193c56231e429a662-20200107
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WMr3UPnGITP5bTTnYXem67Bw3Z1PvUOBw2GrJkfKFx8=;
+        b=YwjgCSzJXVfLC99n7e4cqNA2MAxsJEgaIqsnetT4ZmqDb/cjlZSbLtLJhs43Ra2dI+kqo0a3iE1DAxWBN3QgL1hhf/oeZ0NEGC5lH2pcQcqrs1otIyQLNnEd6FM1Q3PnvH+pYPGDgANzAKiEfQhOTtMkenTM8Rvgj8r5FqSqwro=;
+X-UUID: e9480024c608450193c56231e429a662-20200107
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <chao.hao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 735702914; Tue, 07 Jan 2020 19:12:02 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 7 Jan 2020 19:11:33 +0800
+Received: from [10.15.20.246] (10.15.20.246) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 7 Jan 2020 19:10:53 +0800
+Message-ID: <1578395459.19217.5.camel@mbjsdccf07>
+Subject: Re: [PATCH v2 01/19] dt-bindings: mediatek: Add bindings for MT6779
+From:   chao hao <Chao.Hao@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <cui.zhang@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>
+Date:   Tue, 7 Jan 2020 19:10:59 +0800
+In-Reply-To: <20200106215716.GA31059@bogus>
+References: <20200105104523.31006-1-chao.hao@mediatek.com>
+         <20200105104523.31006-2-chao.hao@mediatek.com>
+         <20200106215716.GA31059@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At several places pmd pointer is retrieved through the same action:
-
-	pmd = pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr);
-
-or
-
-	pmd = pmd_offset(pud_offset(pgd_offset_k(addr), addr), addr);
-
-Refactor this by implementing two helpers pmd_ptr() and pmd_ptr_k()
-
-This will help when adding the p4d level.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/pgtable.h    | 12 ++++++++++++
- arch/powerpc/mm/book3s32/mmu.c        |  2 +-
- arch/powerpc/mm/book3s32/tlb.c        |  4 ++--
- arch/powerpc/mm/kasan/kasan_init_32.c |  8 ++++----
- arch/powerpc/mm/mem.c                 |  3 +--
- arch/powerpc/mm/nohash/40x.c          |  4 ++--
- arch/powerpc/mm/pgtable_32.c          |  2 +-
- 7 files changed, 23 insertions(+), 12 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-index 0e4ec8cc37b7..b5e358c0ea7e 100644
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -41,6 +41,18 @@ struct mm_struct;
- 
- #ifndef __ASSEMBLY__
- 
-+#ifdef CONFIG_PPC32
-+static inline pmd_t *pmd_ptr(struct mm_struct *mm, unsigned long va)
-+{
-+	return pmd_offset(pud_offset(pgd_offset(mm, va), va), va);
-+}
-+
-+static inline pmd_t *pmd_ptr_k(unsigned long va)
-+{
-+	return pmd_offset(pud_offset(pgd_offset_k(va), va), va);
-+}
-+#endif
-+
- #include <asm/tlbflush.h>
- 
- /* Keep these as a macros to avoid include dependency mess */
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index 69b2419accef..91553e1ff4b9 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -312,7 +312,7 @@ void hash_preload(struct mm_struct *mm, unsigned long ea)
- 
- 	if (!Hash)
- 		return;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, ea), ea), ea);
-+	pmd = pmd_ptr(mm, ea);
- 	if (!pmd_none(*pmd))
- 		add_hash_page(mm->context.id, ea, pmd_val(*pmd));
- }
-diff --git a/arch/powerpc/mm/book3s32/tlb.c b/arch/powerpc/mm/book3s32/tlb.c
-index 2fcd321040ff..b08f0ec7f409 100644
---- a/arch/powerpc/mm/book3s32/tlb.c
-+++ b/arch/powerpc/mm/book3s32/tlb.c
-@@ -87,7 +87,7 @@ static void flush_range(struct mm_struct *mm, unsigned long start,
- 	if (start >= end)
- 		return;
- 	end = (end - 1) | ~PAGE_MASK;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, start), start), start);
-+	pmd = pmd_ptr(mm, start);
- 	for (;;) {
- 		pmd_end = ((start + PGDIR_SIZE) & PGDIR_MASK) - 1;
- 		if (pmd_end > end)
-@@ -145,7 +145,7 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long vmaddr)
- 		return;
- 	}
- 	mm = (vmaddr < TASK_SIZE)? vma->vm_mm: &init_mm;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, vmaddr), vmaddr), vmaddr);
-+	pmd = pmd_ptr(mm, vmaddr);
- 	if (!pmd_none(*pmd))
- 		flush_hash_pages(mm->context.id, vmaddr, pmd_val(*pmd), 1);
- }
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eea..4b505ff0ff44 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -36,7 +36,7 @@ static int __ref kasan_init_shadow_page_tables(unsigned long k_start, unsigned l
- 	unsigned long k_cur, k_next;
- 	pgprot_t prot = slab_is_available() ? kasan_prot_ro() : PAGE_KERNEL;
- 
--	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
-+	pmd = pmd_ptr_k(k_start);
- 
- 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
- 		pte_t *new;
-@@ -94,7 +94,7 @@ static int __ref kasan_init_region(void *start, size_t size)
- 		block = memblock_alloc(k_end - k_start, PAGE_SIZE);
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
--		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		void *va = block ? block + k_cur - k_start : kasan_get_one_page();
- 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
- 
-@@ -118,7 +118,7 @@ static void __init kasan_remap_early_shadow_ro(void)
- 	kasan_populate_pte(kasan_early_shadow_pte, prot);
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
--		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
- 
- 		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-@@ -205,7 +205,7 @@ void __init kasan_early_init(void)
- 	unsigned long addr = KASAN_SHADOW_START;
- 	unsigned long end = KASAN_SHADOW_END;
- 	unsigned long next;
--	pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(addr), addr), addr);
-+	pmd_t *pmd = pmd_ptr_k(addr);
- 
- 	BUILD_BUG_ON(KASAN_SHADOW_START & ~PGDIR_MASK);
- 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index f5535eae637f..d1b361a85623 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -68,8 +68,7 @@ EXPORT_SYMBOL(kmap_prot);
- 
- static inline pte_t *virt_to_kpte(unsigned long vaddr)
- {
--	return pte_offset_kernel(pmd_offset(pud_offset(pgd_offset_k(vaddr),
--			vaddr), vaddr), vaddr);
-+	return pte_offset_kernel(pmd_ptr_k(vaddr));
- }
- #endif
- 
-diff --git a/arch/powerpc/mm/nohash/40x.c b/arch/powerpc/mm/nohash/40x.c
-index f348104eb461..82862723ab42 100644
---- a/arch/powerpc/mm/nohash/40x.c
-+++ b/arch/powerpc/mm/nohash/40x.c
-@@ -104,7 +104,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		pmd_t *pmdp;
- 		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_HWWRITE;
- 
--		pmdp = pmd_offset(pud_offset(pgd_offset_k(v), v), v);
-+		pmdp = pmd_ptr_k(v);
- 		*pmdp++ = __pmd(val);
- 		*pmdp++ = __pmd(val);
- 		*pmdp++ = __pmd(val);
-@@ -119,7 +119,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		pmd_t *pmdp;
- 		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_HWWRITE;
- 
--		pmdp = pmd_offset(pud_offset(pgd_offset_k(v), v), v);
-+		pmdp = pmd_ptr_k(v);
- 		*pmdp = __pmd(val);
- 
- 		v += LARGE_PAGE_SIZE_4M;
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 73b84166d06a..7d50cc01bbea 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -63,7 +63,7 @@ int __ref map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot)
- 	int err = -ENOMEM;
- 
- 	/* Use upper 10 bits of VA to index the first level map */
--	pd = pmd_offset(pud_offset(pgd_offset_k(va), va), va);
-+	pd = pmd_ptr_k(va);
- 	/* Use middle 10 bits of VA to index the second-level map */
- 	if (likely(slab_is_available()))
- 		pg = pte_alloc_kernel(pd, va);
--- 
-2.13.3
+T24gTW9uLCAyMDIwLTAxLTA2IGF0IDE1OjU3IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU3VuLCA1IEphbiAyMDIwIDE4OjQ1OjA1ICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gPiBU
+aGlzIHBhdGNoIGFkZHMgZGVzY3JpcHRpb24gZm9yIE1UNjc3OSBJT01NVS4NCj4gPiANCj4gPiBN
+VDY3NzkgaGFzIHR3byBpb21tdXMsIHRoZXkgYXJlIE1NX0lPTU1VIGFuZCBBUFVfSU9NTVUgd2hp
+Y2gNCj4gPiB1c2UgQVJNIFNob3J0LURlc2NyaXB0b3IgdHJhbnNsYXRpb24gZm9ybWF0Lg0KPiA+
+IA0KPiA+IFRoZSBNVDY3NzkgSU9NTVUgaGFyZHdhcmUgZGlhZ3JhbSBpcyBhcyBiZWxvdywgaXQg
+aXMgb25seSBhIGJyaWVmDQo+ID4gZGlhZ3JhbSBhYm91dCBpb21tdSwgaXQgZG9uJ3QgZm9jdXMg
+b24gdGhlIHBhcnQgb2Ygc21pX2xhcmIsIHNvDQo+ID4gSSBkb24ndCBkZXNjcmliZSB0aGUgc21p
+X2xhcmIgZGV0YWlsZWRseS4NCj4gPiANCj4gPiAJCQkgICAgIEVNSQ0KPiA+IAkJCSAgICAgIHwN
+Cj4gPiAJICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAJICAg
+fAkJCQkJfA0KPiA+ICAgICAgICAgTU1fSU9NTVUgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+QVBVX0lPTU1VDQo+ID4gCSAgIHwJCQkJCXwNCj4gPiAgICAgICAgU01JX0NPTU1PTS0tLS0tLS0t
+LS0tCQkgICAgIEFQVV9CVVMNCj4gPiAgICAgICAgICAgfAkJICAgfAkJCXwNCj4gPiAgICAgU01J
+X0xBUkIoMH4xMSkgIFNNSV9MQVJCMTIoRkFLRSkJICAgIFNNSV9MQVJCMTMoRkFLRSkNCj4gPiAJ
+ICB8CQkgICB8CQkJfA0KPiA+IAkgIHwJCSAgIHwJCSAgIC0tLS0tLS0tLS0tLS0tDQo+ID4gCSAg
+fAkJICAgfAkJICAgfAkgfAl8DQo+ID4gICAgTXVsdGltZWRpYSBlbmdpbmUJICBDQ1UJCSAgVlBV
+ICAgTURMQSAgIEVNREENCj4gPiANCj4gPiBBbGwgdGhlIGNvbm5lY3Rpb25zIGFyZSBoYXJkd2Fy
+ZSBmaXhlZCwgc29mdHdhcmUgY2FuIG5vdCBhZGp1c3QgaXQuDQo+ID4gDQo+ID4gPkZyb20gdGhl
+IGRpYWdyYW0gYWJvdmUsIE1NX0lPTU1VIHByb3ZpZGVzIG1hcHBpbmcgZm9yIG11bHRpbWVkaWEg
+ZW5naW5lLA0KPiA+IGJ1dCBDQ1UgaXMgY29ubmVjdGVkIHdpdGggc21pX2NvbW1vbiBkaXJlY3Rs
+eSwgd2UgY2FuIHRha2UgdGhlbSBhcyBsYXJiMTIuDQo+ID4gQVBVX0lPTU1VIHByb3ZpZGVzIG1h
+cHBpbmcgZm9yIEFQVSBlbmdpbmUsIHdlIGNhbiB0YWtlIHRoZW0gbGFyYjEzLg0KPiA+IExhcmIx
+MiBhbmQgTGFyYjEzIGFyZSBmYWtlIGxhcmJzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IENo
+YW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5n
+cy9pb21tdS9tZWRpYXRlayxpb21tdS50eHQgICAgICAgICB8ICAgMiArDQo+ID4gIGluY2x1ZGUv
+ZHQtYmluZGluZ3MvbWVtb3J5L210Njc3OS1sYXJiLXBvcnQuaCB8IDIxNSArKysrKysrKysrKysr
+KysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMTcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9tZW1vcnkvbXQ2Nzc5LWxhcmItcG9y
+dC5oDQo+ID4gDQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hl
+biBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJl
+cG9zdCBwYXRjaGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWlu
+dGFpbmVyIHdpbGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5
+IGFwcGx5Lg0KPiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ug
+c3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuDQoNCkhpIFJvYiwNCg0KSSBhbSBTb3JyeSwgdGhp
+cyBpcyBteSBmaXJzdCB0aW1lIHVwc3RyZWFtIGFuZCBub3QgY2xlYXIgZm9yIHNvbWUNCmRldGFp
+bHMsIHBsZWFzZSBmb3JnaXZlIG1lIGZvciB0aGlzIG1pc3Rha2UuDQpJIHB1dCB0aGUgY2hhbmdl
+ZCBleHBsYW5hdGlvbiBpbnRvIGNvdmVyIGxldHRlcihbUEFUQ0ggdjIgMDAvMTldIE1UNjc3OQ0K
+SU9NTVUgU1VQUE9SVCkgYWJvdXQgdGhpcyBwYXRjaC4gSSB3aWxsIHBheSBhdHRlbnRpb24gdG8g
+dGhpcyBwcm9ibGVtIGluDQpuZXh0IHZlcnNpb24uDQoNCkNoYW5nZSBzaW5jZSB2MSBmb3IgdGhp
+cyBwYXRjaA0KMS5EZWxldGUgTTRVX1BPUlRfVU5LTk9XTiBkZWZpbmUgYmVjYXVzZSBvZiBub3Qg
+dXNlIGl0Lg0KMi5Db3JyZWN0IGNvZGluZyBmb3JtYXQ6IGV4OiAvKmxhcmIzLVZFTkMqLyAgLS0+
+ICAvKiBsYXJiMy1WRU5DICovDQoNCg==
 
