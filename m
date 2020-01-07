@@ -2,387 +2,197 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF0AC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14776C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A152072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B022187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pw8pyR82"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SpUnAHB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgAGV4r (ORCPT
+        id S1727263AbgAGV5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:56:47 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34923 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgAGV4q (ORCPT
+        Tue, 7 Jan 2020 16:57:54 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46808 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgAGV5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:56:46 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j1so1197095lja.2;
-        Tue, 07 Jan 2020 13:56:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dj6V9kuupxbOZ0Blj1z5gjna0xB0pxqUrwbQ6EUO2oQ=;
-        b=Pw8pyR82BC8h9MsDA04dF9JuOU+bTik9DqQVPU/Udbos2dVWoPSyLyC/JEzg8GuNu4
-         1VQypU2NFsXHHazqG+vht4NUIvrYAW7uDHCKz1tNxuKQo87XraAKM5//rjVYWzfLQLOC
-         UVSiJupxSz4vbXgwLQZkVhmu7lEL9omqAbSKtQmymNaw8V32bLCLnxV93RxYQ7ioxiXe
-         kc/TDjnEVg/0z1K8uxoqZ3quScVQKrJfGpSADxNaGvFxBvLxZCnOfklXiSLsOFTHt2bK
-         XtldM5vSprdbkuIYeRtHjsOKLqPtSzdiks4pirssbEEDvSVIhl9a6xm6k93PXsV9Yw31
-         522w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dj6V9kuupxbOZ0Blj1z5gjna0xB0pxqUrwbQ6EUO2oQ=;
-        b=ZBudVEeMk+B9gOnBHs47pYX+H/hMukWJlzroUbhNv/gf7S0gQIRteUHVk9JGDDdhgT
-         5EoPwSwBMEqx21yz8hAs3yCxKhsnBkr4MTzjDhRYeNVStPN1lQHz9o33/ooPHS2Do9Za
-         lOqcpjRJyBCb4BQ6jMIHSoeiWpCeiMUo2f+1j+WTOSWeeWwtmSe4qhhbD2vyPspzz4/T
-         IDPQjLmQck9qvLcQPkugKJjMXToIvDkwJmikdscOSrTn1nmYS3NFkJTKgtv8x66ts4PY
-         nOttpr+a9iNWky07luVXaQqh5olubaGbUhoEa6x63TWpacCBxWGB76WR8NcSKXW5nJQX
-         WEyQ==
-X-Gm-Message-State: APjAAAX/uAX7khnAQ2tD93D9ESZQ7MyLukJ8m4QNwURUAI2zUGekpP1F
-        9xADwXYifM/Awul4Uv8CHCQ=
-X-Google-Smtp-Source: APXvYqwWX0tL/uB3qiI8SR3cuMKW6vccr1vW3ArnPY6hGFGa3ZANJXNEoQwQWl+b8aYfk5e4W8pfug==
-X-Received: by 2002:a2e:89ce:: with SMTP id c14mr828186ljk.13.1578434204558;
-        Tue, 07 Jan 2020 13:56:44 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w1sm395245lfe.96.2020.01.07.13.56.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 13:56:43 -0800 (PST)
-Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-References: <20200107090519.3231-1-cw00.choi@samsung.com>
- <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
- <20200107090519.3231-3-cw00.choi@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b64bf3d4-5b46-243b-495a-e1060af7a266@gmail.com>
-Date:   Wed, 8 Jan 2020 00:56:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 7 Jan 2020 16:57:53 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0643852F;
+        Tue,  7 Jan 2020 22:57:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578434271;
+        bh=P35fKrt/dB02G14EwAgMdPETX01nTBUtFrYN35CPF48=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SpUnAHB3FZa89YS6khrpYSLHAgai/HIRd3QwKnYZmKVP3ldmbLTjPNXTJTjphs2du
+         dE9aLqglcbK4VpJT76yZE3SFzoNGqgRaETFuWbz32YeQsh1PJ/xGQWFOnJXck8oVEl
+         VZkJlVea8x8GwLZSP+rmiea6Pza/TxScg23u+LUU=
+Date:   Tue, 7 Jan 2020 23:57:39 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI
+ RX D-PHY yaml bindings
+Message-ID: <20200107215739.GB7869@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <2549505.MsbA2le1sL@diego>
+ <657de953782be2514849bc8bd12a3fbcb6794427.camel@collabora.com>
+ <2299954.gvZHxIxoM0@diego>
 MIME-Version: 1.0
-In-Reply-To: <20200107090519.3231-3-cw00.choi@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2299954.gvZHxIxoM0@diego>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.01.2020 12:05, Chanwoo Choi пишет:
-> Add new devfreq_transitions debugfs file to track the frequency transitions
-> of all devfreq devices for the simple profiling as following:
-> - /sys/kernel/debug/devfreq/devfreq_transitions
+Hi Heiko,
+
+On Tue, Jan 07, 2020 at 10:30:28PM +0100, Heiko Stübner wrote:
+> Am Dienstag, 7. Januar 2020, 14:20:10 CET schrieb Ezequiel Garcia:
+> > On Tue, 2020-01-07 at 10:28 +0100, Heiko Stübner wrote:
+> > > Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
+> > > > On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> > > > > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > > > > > Hi Helen,
+> > > > > > 
+> > > > > > Thank you for the patch.
+> > > > > > 
+> > > > > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > > > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > > > > > 
+> > > > > > > This was tested and verified with:
+> > > > > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-
+> > > > > > > dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > > > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > 
+> > > > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > > > > > 
+> > > > > > > ---
+> > > > > > > 
+> > > > > > > Changes in v12:
+> > > > > > > - The commit replaces the following commit in previous series named
+> > > > > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > > > > > This new patch adds yaml binding and was verified with
+> > > > > > > make dtbs_check and make dt_binding_check
+> > > > > > > 
+> > > > > > > Changes in v11: None
+> > > > > > > Changes in v10:
+> > > > > > > - unsquash
+> > > > > > > 
+> > > > > > > Changes in v9:
+> > > > > > > - fix title division style
+> > > > > > > - squash
+> > > > > > > - move to staging
+> > > > > > > 
+> > > > > > > Changes in v8: None
+> > > > > > > Changes in v7:
+> > > > > > > - updated doc with new design and tested example
+> > > > > > > 
+> > > > > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > > > > > >  1 file changed, 75 insertions(+)
+> > > > > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > 
+> > > > > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > b/drivers/staging/media/phy-
+> > > > > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..af97f1b3e005
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > @@ -0,0 +1,75 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > > > > > 
+> > > > > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
+> > > > > 
+> > > > > The driver currently only supports RX0, but I think you are right,
+> > > > > it should say RX here. This binding could be extended for RX1.
+> > > > > 
+> > > > > > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > > > > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> > > > > 
+> > > > > I am not following this. The driver handles just one PHY. Each PHY
+> > > > > should have its own node.
+> > > > 
+> > > > Looking at the registers, it seems that the different PHYs are
+> > > > intertwined and we would could have trouble handling the different PHYs
+> > > > with different DT nodes and thus struct device instances.
+> > > 
+> > > I have to confess to not following _ALL_ of the threads, so may say
+> > > something stupid, but I don't think the PHYs are intertwined so much.
+> > > 
+> > > Where RX0 is controlled from the "General Register Files" alone
+> > > [register dumping ground for soc designers], the TX1RX1-phy
+> > > actually gets controlled from inside the dsi1 register area it seems.
+> > > 
+> > > So in my previous (still unsucessful) tests, I was rolling with something like
+> > > https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
+> > > 
+> > > With the actual "logic" picked from the vendor kernel, that just double-
+> > > maps the dsi1-registers in both dsi and dphy driver, which was strange.
+> > 
+> > Describing each PHY in its own device node (as we currently do)
+> > results in:
+> > 
+> >         mipi_dphy_tx1rx1: mipi-dphy-tx1rx1@ff968000 {
+> >                 compatible = "rockchip,rk3399-mipi-dphy";
+> >                 reg = <0x0 0xff968000 0x0 0x8000>;
+> >                 rockchip,grf = <&grf>;
+> >         };
 > 
-> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
-> in Kconfig in order to save the transition history.
+> 0xff968000 actually really is the dsi1 controller, so we'll already
+> have a node for that area. That is the reason I went that way to make
+> the rockchip-dsi optionally also behave as phy-provider.
 > 
-> [Detailed description of each field of 'devfreq_transitions' debugfs file]
-> - time_ms	: Change time of frequency transition. (unit: millisecond)
-> - dev_name	: Device name of h/w.
-> - dev		: Device name made by devfreq core.
-> - parent_dev	: If devfreq device uses the passive governor,
-> 		  show parent devfreq device name.
-> - load_%	: If devfreq device uses the simple_ondemand governor,
-> 		  load is used by governor whene deciding the new frequency.
-> 		  (unit: percentage)
-> - old_freq_hz	: Frequency before changing. (unit: hz)
-> - new_freq_hz	: Frequency after changed. (unit: hz)
+> So when it's used in combination with drm and a panel or so it will
+> behave as dsi controller, but when requested via the phy-framework
+> it will expose the dphy functionality.
+
+Doesn't RX1/TX1 also expose controls through GRF ? For instance
+GRF_SOC_CON9 has a dphy_rx1_clk_inv_sel bit.
+
+> >         grf: syscon@ff770000 {
+> >                 mipi_dphy_rx0: mipi-dphy-rx0 {
+> >                         compatible = "rockchip,rk3399-mipi-dphy";
+> >                 };
+> >         };
+> > 
+> > Which is mildly ugly, as it uses two mechanism to describe
+> > the GRF resource. In addition, the driver will then _infer_
+> > which device node is RX0 and which is TX1RX1, from this.
+> > 
+> > Perhaps Laurent's proposal, describing each PHY explicitly,
+> > would be cleaner?
 > 
-> [For example on Exynos5422-based Odroid-XU3 board]
-> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
-> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
-> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
-> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
-> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
-> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
-> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
-> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
-> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
-> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
-> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
-> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
-> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
-> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
-> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
-> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
-> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
-> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
-> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
-> [snip]
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/devfreq/Kconfig            |  13 +++
->  drivers/devfreq/devfreq.c          | 126 +++++++++++++++++++++++++++++
->  drivers/devfreq/governor.h         |   3 +
->  drivers/devfreq/governor_passive.c |   2 +
->  include/linux/devfreq.h            |   1 +
->  5 files changed, 145 insertions(+)
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 0b1df12e0f21..84936eec0ef9 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -74,6 +74,19 @@ config DEVFREQ_GOV_PASSIVE
->  	  through sysfs entries. The passive governor recommends that
->  	  devfreq device uses the OPP table to get the frequency/voltage.
->  
-> +comment "DEVFREQ Debugging"
-> +
-> +config NR_DEVFREQ_TRANSITIONS
-> +	int "Maximum storage size to save DEVFREQ Transitions (10-1000)"
-> +	depends on DEBUG_FS
-> +	range 10 1000
-> +	default "100"
-> +	help
-> +	  Show the frequency transitions of all devfreq devices via
-> +	  '/sys/kernel/debug/devfreq/devfreq_transitions' for the simple
-> +	  profiling. It needs to decide the storage size to save transition
-> +	  history of all devfreq devices.
-> +
->  comment "DEVFREQ Drivers"
->  
->  config ARM_EXYNOS_BUS_DEVFREQ
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index c7f5e4e06420..7abaae06fa65 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -268,6 +268,57 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
->  }
->  EXPORT_SYMBOL(devfreq_update_status);
->  
-> +/**
-> + * devfreq_update_transitions() - Update frequency transitions for debugfs file
-> + * @devfreq:	the devfreq instance
-> + * @old_freq:	the previous frequency before changing the frequency
-> + * @new_freq:	the new frequency after frequency is changed
-> + */
-> +struct devfreq_transitions {
-> +	struct devfreq *devfreq;
-> +	struct devfreq_freqs freqs;
-> +	unsigned long load;
-> +} debugfs_transitions[CONFIG_NR_DEVFREQ_TRANSITIONS];
-> +
-> +static spinlock_t devfreq_debugfs_lock;
-> +static int debugfs_transitions_index;
-> +
-> +void devfreq_update_transitions(struct devfreq *devfreq,
-> +			unsigned long old_freq, unsigned long new_freq,
-> +			unsigned long busy_time, unsigned long total_time)
-> +{
-> +	unsigned long load;
-> +	int i;
-> +
-> +	if (!devfreq_debugfs || !devfreq || (old_freq == new_freq))
-> +		return;
-> +
-> +	spin_lock_nested(&devfreq_debugfs_lock, SINGLE_DEPTH_NESTING);
-> +
-> +	i = debugfs_transitions_index;
-> +
-> +	/*
-> +	 * Calculate the load and if load is larger than 100,
-> +	 * initialize to 100 because the unit of load is percentage.
-> +	 */
-> +	load = (total_time == 0 ? 0 : (100 * busy_time) / total_time);
-> +	if (load > 100)
-> +		load = 100;
-> +
-> +	debugfs_transitions[i].devfreq = devfreq;
-> +	debugfs_transitions[i].freqs.time = ktime_to_ms(ktime_get());
-> +	debugfs_transitions[i].freqs.old = old_freq;
-> +	debugfs_transitions[i].freqs.new = new_freq;
-> +	debugfs_transitions[i].load = load;
-> +
-> +	if (++i == CONFIG_NR_DEVFREQ_TRANSITIONS)
-> +		i = 0;
-> +	debugfs_transitions_index = i;
-> +
-> +	spin_unlock(&devfreq_debugfs_lock);
-> +}
-> +EXPORT_SYMBOL(devfreq_update_transitions);
-> +
->  /**
->   * find_devfreq_governor() - Find devfreq governor from name
->   * @name:	name of the governor
-> @@ -401,6 +452,10 @@ static int set_target(struct devfreq *devfreq,
->  		return err;
->  	}
->  
-> +	devfreq_update_transitions(devfreq, cur_freq, new_freq,
-> +					devfreq->last_status.busy_time,
-> +					devfreq->last_status.total_time);
-> +
->  	freqs.new = new_freq;
->  	notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
->  
-> @@ -1787,6 +1842,72 @@ static int devfreq_summary_show(struct seq_file *s, void *data)
->  }
->  DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
->  
-> +/**
-> + * devfreq_transitions_show() - Show the frequency transitions of the registered
-> + *			devfreq devices via 'devfreq_transitions' debugfs file.
-> + */
-> +static int devfreq_transitions_show(struct seq_file *s, void *data)
-> +{
-> +	struct devfreq *devfreq = NULL;
-> +	struct devfreq *p_devfreq = NULL;
-> +	struct devfreq_freqs *freqs = NULL;
-> +	unsigned long load;
-> +	int i = debugfs_transitions_index;
-> +	int count;
-> +
-> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
-> +			"time_ms",
-> +			"dev_name",
-> +			"dev",
-> +			"parent_dev",
-> +			"load_%",
-> +			"old_freq_hz",
-> +			"new_freq_hz");
-> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
-> +			"----------",
-> +			"------------------------------",
-> +			"----------",
-> +			"----------",
-> +			"----------",
-> +			"------------",
-> +			"------------");
+> so I really think we shouldn't merge these two things together,
+> especially to not break the dsi1 controller part.
 
-Isn't this needed here?
+-- 
+Regards,
 
-mutex_lock(&devfreq_list_lock);
-
-> +	spin_lock(&devfreq_debugfs_lock);
-> +	for (count = 0; count < CONFIG_NR_DEVFREQ_TRANSITIONS; count++) {
-> +		devfreq = debugfs_transitions[i].devfreq;
-> +		freqs = &debugfs_transitions[i].freqs;
-> +		load = debugfs_transitions[i].load;
-> +
-> +		i = (CONFIG_NR_DEVFREQ_TRANSITIONS == ++i) ? 0 : i;
-> +		if (!devfreq)
-> +			continue;
-
-I suppose debugfs_transitions[i].devfreq should be set to NULL when
-devfreq device is removed, but I don't see it happening anywhere in this
-patch.
-
-> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
-> +		if (!strncmp(devfreq->governor_name,
-> +				DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
-
-This could be:
-
-if (IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE) &&
-    !strncmp(devfreq->governor_name,
-		  DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
-
-> +			struct devfreq_passive_data *data = devfreq->data;
-> +
-> +			if (data)
-> +				p_devfreq = data->parent;
-
-const char *devname = "";
-
-...
-
-	if (data)
-		devname = dev_name(data->parent);
-
-> +		} else {
-> +			p_devfreq = NULL;
-> +		}
-> +#endif
-> +		seq_printf(s, "%-10lld %-30s %-10s %-10s %-6ld %-12ld %-12ld\n",
-> +			freqs->time,
-> +			dev_name(devfreq->dev.parent),
-> +			dev_name(&devfreq->dev),
-> +			p_devfreq ? dev_name(&p_devfreq->dev) : "",
-> +			load,
-> +			freqs->old,
-> +			freqs->new);
-> +	}
-> +	spin_unlock(&devfreq_debugfs_lock);
-> +
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(devfreq_transitions);
-> +
->  static int __init devfreq_init(void)
->  {
->  	devfreq_class = class_create(THIS_MODULE, "devfreq");
-> @@ -1808,9 +1929,14 @@ static int __init devfreq_init(void)
->  		devfreq_debugfs = NULL;
->  		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
->  	} else {
-> +		spin_lock_init(&devfreq_debugfs_lock);
-> +
->  		debugfs_create_file("devfreq_summary", 0444,
->  				devfreq_debugfs, NULL,
->  				&devfreq_summary_fops);
-> +		debugfs_create_file("devfreq_transitions", 0444,
-> +				devfreq_debugfs, NULL,
-> +				&devfreq_transitions_fops);
->  	}
->  
->  	return 0;
-> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
-> index dc7533ccc3db..01eecfdaf2d6 100644
-> --- a/drivers/devfreq/governor.h
-> +++ b/drivers/devfreq/governor.h
-> @@ -68,6 +68,9 @@ extern int devfreq_add_governor(struct devfreq_governor *governor);
->  extern int devfreq_remove_governor(struct devfreq_governor *governor);
->  
->  extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
-> +extern void devfreq_update_transitions(struct devfreq *devfreq,
-> +			unsigned long old_freq, unsigned long new_freq,
-> +			unsigned long busy_time, unsigned long total_time);
->  
->  static inline int devfreq_update_stats(struct devfreq *df)
->  {
-> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-> index be6eeab9c814..05fa654239f5 100644
-> --- a/drivers/devfreq/governor_passive.c
-> +++ b/drivers/devfreq/governor_passive.c
-> @@ -109,6 +109,8 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
->  	if (ret < 0)
->  		goto out;
->  
-> +	devfreq_update_transitions(devfreq, devfreq->previous_freq, freq, 0, 0);
-> +
->  	if (devfreq->profile->freq_table
->  		&& (devfreq_update_status(devfreq, freq)))
->  		dev_err(&devfreq->dev,
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index 49cdb2378030..933692e5d867 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -196,6 +196,7 @@ struct devfreq {
->  };
->  
->  struct devfreq_freqs {
-> +	s64 time;
->  	unsigned long old;
->  	unsigned long new;
->  };
-> 
-
+Laurent Pinchart
