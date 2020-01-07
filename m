@@ -2,92 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D92C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894B2C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341A8206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529BF206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TI1RkU0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgAGWGd (ORCPT
+        id S1727420AbgAGWHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:06:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:38017 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgAGWGd (ORCPT
+        Tue, 7 Jan 2020 17:07:23 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45147 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgAGWHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:06:33 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N6JtR-1jmL2U1O2b-016eOK; Tue, 07 Jan 2020 23:06:31 +0100
-Received: by mail-qk1-f175.google.com with SMTP id a203so909099qkc.3;
-        Tue, 07 Jan 2020 14:06:30 -0800 (PST)
-X-Gm-Message-State: APjAAAVb410bR7aDf9atZ3/Y8cBO3H+sfO9Bh0A4fyBS5QhJSXFXDzlZ
-        FPEEQm+iejWCv/j45urnGEYwjVXrR+vlMsGCN0k=
-X-Google-Smtp-Source: APXvYqzLX1vDB9bbHKm0RIfLRmhhg3Pbbkya5hKGBWX/IIiUDGpl/J0vvUx4sgrkexjEB1wHob2sa45CjmKbtRESa5M=
-X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr1531468qka.286.1578434790062;
- Tue, 07 Jan 2020 14:06:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20200107203041.843060-1-arnd@arndb.de> <1578430874.4288.2.camel@HansenPartnership.com>
-In-Reply-To: <1578430874.4288.2.camel@HansenPartnership.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Jan 2020 23:06:05 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2GbfvgWep1JGNUX7c8jrtQs40PgUfq5C3d_zYuBK5nmw@mail.gmail.com>
-Message-ID: <CAK8P3a2GbfvgWep1JGNUX7c8jrtQs40PgUfq5C3d_zYuBK5nmw@mail.gmail.com>
-Subject: Re: [PATCH] ima: make ASYMMETRIC_PUBLIC_KEY_SUBTYPE 'bool'
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:UNCZ4qhZHs2qnSxwdJ7LsP8e+/8oh0SxkGihIdlHUQ6cnEU0nWQ
- SyKEWjbvZgrzpN/ioEEhPBuxLgOJYfm9CUzbt+KRkgFUMEUMUrad6Tw1ZYApxcWIFKoVcVT
- hGrpnLs9xXVsvbf542th7RIzwOBE/3Q7oGaSaAOgUCLS0m/J6V2uiuqMKGaEFThLnq16vLX
- uYcE4Po9nPm2Ow5JoK0pw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kVSAH9wvaGI=:l20eCZV1dCjDqukeUw4Gzf
- HbALFQ+QUIxaAJT+c0fcRA7BLMFyZ1aWywgnu3XkV56rUxEml7oiWA4D1ogEbfVNLmV90YSUl
- W5iyI+h4E1TWyI4QlHxXl4vh10xEbXTFJaOw8Rxog6QGZHsBfewji1/px19BNqGh+yuUkX6CC
- WA7DQfWn7NVZh7undBoYTURzu5PBcK4Be5wmq4e1DvJf9bEpZ+cEGxPrFOIRWxMblKfQDbran
- Rzjybl9QmOokfiin3/Vi1gRPOulOU+BTt+H+GFizvB2df7WfmTyEP7/Gmt7BlFDED1Jh+O2XF
- ESD+ZUKqb22euLMYHoBIc2tcGRNwPdVjqMdp8jlYrzyjQNOdFI/h9o/jPd0XIbTNbYjK/Wmbc
- SxCleVE0xNwUU0uI5zlb475gv+4W3L4x8MS1VwnQkl9SZxw1If+p8+JrS/cpsMDpUBdN5DYP7
- SOwaFIBuQWxEtKKfOyeV1WvCKwMTruAgh4LNA86QcpcGZDOnK8jLOGBXj3YKEttnBZpE/Fnqd
- HtIpxse/e7hn96fWRtZm9bm8A+Q6C7baP9dNReMuXYHSJpMgspOXMoBvN6yDHSjcJgJHDm/B3
- YMXGHprDt+IqvQbOrpVttEkFpjVa3aVtsO+B6zyrfhIXtZo/rl4v2J2TakXMtOmdtVLPEmgPt
- OAEKOBL5YQKtBn8xn2zpxajrvo9o8LKU9hYqg9sv2IGbMD1iWW9t/Umu9v6N8DKx6xqsUWxyZ
- bmQ6c8jdIP0mZrrzXpA94t3J394bo1idNG5E3bPhrQ3QNZ7R8M+0WQWxZfsDeLEpNF5+pn1Hd
- IRv43Ru+8jhRIfyt4E4jECocSjcVNs4ULLQn0UnHnMzPf2qiVLNAriWU2TQcynDF1RQUQ1P1P
- u9/T50iWs5OuNU0pnQyg==
+        Tue, 7 Jan 2020 17:07:23 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so1215938wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 14:07:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=p+D7flg+dO8+adOesNJVsnD1CEu5UMtEMphYCC1lUTM=;
+        b=TI1RkU0qph4uUUxkuE1XcvovjBgB4Tu04BPVoYtAqNhsn3KNBQvDwB9QIRnwc//Spu
+         D9CFm+82W98868LTob7bdpUrEkd70AuDqE8/FIUbJr2hUEK1sxzJS1xL9hNwokUqDFE6
+         ErbXXul1dyBK/l543De5c1NSFCdxdHQejbdRkQ+RqvESIl1jbGxwlu17JN4sas94SmEe
+         SUbfOIwSk04+CDdY6zyU5dmeQx4dvjuJmqWfz9Dvqkc1F78OZrRitrUvNcf5dBJCclgw
+         sI3q4O0Xk1nN09Z6nUiJhOhvOjrm6dasGKTn0RL4Zwso/DL2/q8wKq22L9547Dt0FYe1
+         3V4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=p+D7flg+dO8+adOesNJVsnD1CEu5UMtEMphYCC1lUTM=;
+        b=J5UwTUzrnJbWvc5xNerQVSxyQcj3MrSd6KHUPUlTkiDgxnMLVEFt4SsRuQ2u4ODqZt
+         llF+/NIDvd30/emj0tbAZ4/xHmDIMGQeDPHoI+npHaN/E+0WdnifjOqbT3b1qI00dSG+
+         wj0wnfMalvMotWGvNqJrC+CRoVAsrWVEcSJNWHAkNchVeVJyST5JozyLB7A4kS750+lL
+         e2J7o9nbdvddDsIruI0eVfMm8JvpfTsfth/PWQiIhTpZITPqOahLIuegH4thGTC3ujNM
+         veS6NfXoy/sHNzf41jFFdd0DN5geKmNwleWF5KbLd2mgEVnqlLZdfosQf9bApCuXr37G
+         kxoQ==
+X-Gm-Message-State: APjAAAUgDeKtcyprQjconSoo6b+JdYsTw6SpBjDvi8b2MJKW3IJkVm9x
+        PCmOre6Sq2qpvqXLNJsKG5JC7lavSiI=
+X-Google-Smtp-Source: APXvYqx6/fkpnq/EoBTM9LVGPuI23pFQGq9ctGh/ISywZH8CPo3D1/Tx3myOGdTjV6E+pCB19RIXSg==
+X-Received: by 2002:adf:f6c8:: with SMTP id y8mr1146474wrp.167.1578434840557;
+        Tue, 07 Jan 2020 14:07:20 -0800 (PST)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id e12sm1632482wrn.56.2020.01.07.14.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 14:07:19 -0800 (PST)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: removing extra ;
+Date:   Wed,  8 Jan 2020 00:07:17 +0200
+Message-Id: <20200107220717.31447-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 10:01 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Tue, 2020-01-07 at 21:30 +0100, Arnd Bergmann wrote:
+There is an extra ; after the end of a function, which needs to be removed
 
-> >  config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> > -     tristate "Asymmetric public-key crypto algorithm subtype"
-> > +     bool "Asymmetric public-key crypto algorithm subtype"
->
-> I believe the crypto guys do like stuff to be modular.
->
-> However, we've already implemented this solution:
->
-> https://lore.kernel.org/linux-integrity/20200107194350.3782-2-nramas@linux.microsoft.com/
->
-> To solve the problem via an intermediate boolean config variable.
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ok, that looks good to me.
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index b680b0caa69b..aef4de36b7aa 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -36,7 +36,7 @@ enum hl_device_status hl_device_status(struct hl_device *hdev)
+ 		status = HL_DEVICE_STATUS_OPERATIONAL;
+ 
+ 	return status;
+-};
++}
+ 
+ static void hpriv_release(struct kref *ref)
+ {
+-- 
+2.17.1
 
-    Arnd
