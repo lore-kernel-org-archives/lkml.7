@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44377C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD94C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1818B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3124120880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431491;
-	bh=HmTJcV/LNXiGU623gIedHC6UxR/iLTGeYne+j8wPRhc=;
+	s=default; t=1578431493;
+	bh=6AS0WOoyKC2AFN1ET1DbxoL1BCw6QCRH0QGjzb1u8J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E1fYLIkvYg4xef5W4Fjn2pi7c1J9ARdX/NvGe52DxHw17i/Q9mwr1RdStmwGk/f8X
-	 NxMoUmISc9oIjZJcyCaz5MjBzJUpgeB3DxZZYpGfLTM6fYA84Z1FksREK3NcRddal0
-	 PrLMKoVrQvetWE2NFpJPhxD5CtL/YJHbl6FIh+qA=
+	b=dggO/sXH86pduDXjiGgp51BfqZowVRojPNkvDfaUjDJRResOESjzs9rxql0o+rQ9X
+	 nCVQJXrnL/LpNmS0vhERhJ4kb0QZ3IMAtayyD5InfOH/dyd6ox+sPvqPScjuriuGfi
+	 6wIRmLciERnkbOQxSIvgo9zMwjOBeolrOKD7w9YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgAGVLa (ORCPT
+        id S1729934AbgAGVLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39728 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:11:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730094AbgAGVLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:11:24 -0500
+        id S1730100AbgAGVL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E79D42072A;
-        Tue,  7 Jan 2020 21:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED24F2077B;
+        Tue,  7 Jan 2020 21:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431483;
-        bh=HmTJcV/LNXiGU623gIedHC6UxR/iLTGeYne+j8wPRhc=;
+        s=default; t=1578431488;
+        bh=6AS0WOoyKC2AFN1ET1DbxoL1BCw6QCRH0QGjzb1u8J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hqe7ivqYE7lzvYDSJzRynCvhTVs1dSXLoKMeCK/YlxYiLh1f8Rxb/pd6p62rYcBIQ
-         tIyl18fdrDKFJ1zsVQ8rXspayMFsXIftI2c2KxCqZrgDjuXfRv+HBy11H4NDvRTixH
-         4ll8sJpSuMyfL4Mk084TEbur29RQgkJnUH5zfFYU=
+        b=b7x85VJfBIqfb9y+Mk1r2JIdzOnJlEsfdoNoNLdUN0esFcoL3xpoOwuy3RLkbiU62
+         //wBP74XVV5tLsQFB9LHYlpb+7S/FDU36rfS5q8pYQ6Y4zzt1gyi+LfdBe6s+Yzgbj
+         IVOCkjAwTi/3NJYCdn2xUC+IMrhXPYgCI3x7AWsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 67/74] rxrpc: Fix possible NULL pointer access in ICMP handling
-Date:   Tue,  7 Jan 2020 21:55:32 +0100
-Message-Id: <20200107205232.200362165@linuxfoundation.org>
+Subject: [PATCH 4.14 69/74] ath9k_htc: Discard undersized packets
+Date:   Tue,  7 Jan 2020 21:55:34 +0100
+Message-Id: <20200107205233.738113157@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -62,66 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-[ Upstream commit f0308fb0708078d6c1d8a4d533941a7a191af634 ]
+[ Upstream commit cd486e627e67ee9ab66914d36d3127ef057cc010 ]
 
-If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
-the UDP socket is being shut down, rxrpc_error_report() may get called to
-deal with it after sk_user_data on the UDP socket has been cleared, leading
-to a NULL pointer access when this local endpoint record gets accessed.
+Sometimes the hardware will push small packets that trigger a WARN_ON
+in mac80211. Discard them early to avoid this issue.
 
-Fix this by just returning immediately if sk_user_data was NULL.
+This patch ports 2 patches from ath9k to ath9k_htc.
+commit 3c0efb745a172bfe96459e20cbd37b0c945d5f8d "ath9k: discard
+undersized packets".
+commit df5c4150501ee7e86383be88f6490d970adcf157 "ath9k: correctly
+handle short radar pulses".
 
-The oops looks like the following:
+[  112.835889] ------------[ cut here ]------------
+[  112.835971] WARNING: CPU: 5 PID: 0 at net/mac80211/rx.c:804 ieee80211_rx_napi+0xaac/0xb40 [mac80211]
+[  112.835973] Modules linked in: ath9k_htc ath9k_common ath9k_hw ath mac80211 cfg80211 libarc4 nouveau snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec video snd_hda_core ttm snd_hwdep drm_kms_helper snd_pcm crct10dif_pclmul snd_seq_midi drm snd_seq_midi_event crc32_pclmul snd_rawmidi ghash_clmulni_intel snd_seq aesni_intel aes_x86_64 crypto_simd cryptd snd_seq_device glue_helper snd_timer sch_fq_codel i2c_algo_bit fb_sys_fops snd input_leds syscopyarea sysfillrect sysimgblt intel_cstate mei_me intel_rapl_perf soundcore mxm_wmi lpc_ich mei kvm_intel kvm mac_hid irqbypass parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear e1000e ahci libahci wmi
+[  112.836022] CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.3.0-wt #1
+[  112.836023] Hardware name: MouseComputer Co.,Ltd. X99-S01/X99-S01, BIOS 1.0C-W7 04/01/2015
+[  112.836056] RIP: 0010:ieee80211_rx_napi+0xaac/0xb40 [mac80211]
+[  112.836059] Code: 00 00 66 41 89 86 b0 00 00 00 e9 c8 fa ff ff 4c 89 b5 40 ff ff ff 49 89 c6 e9 c9 fa ff ff 48 c7 c7 e0 a2 a5 c0 e8 47 41 b0 e9 <0f> 0b 48 89 df e8 5a 94 2d ea e9 02 f9 ff ff 41 39 c1 44 89 85 60
+[  112.836060] RSP: 0018:ffffaa6180220da8 EFLAGS: 00010286
+[  112.836062] RAX: 0000000000000024 RBX: ffff909a20eeda00 RCX: 0000000000000000
+[  112.836064] RDX: 0000000000000000 RSI: ffff909a2f957448 RDI: ffff909a2f957448
+[  112.836065] RBP: ffffaa6180220e78 R08: 00000000000006e9 R09: 0000000000000004
+[  112.836066] R10: 000000000000000a R11: 0000000000000001 R12: 0000000000000000
+[  112.836068] R13: ffff909a261a47a0 R14: 0000000000000000 R15: 0000000000000004
+[  112.836070] FS:  0000000000000000(0000) GS:ffff909a2f940000(0000) knlGS:0000000000000000
+[  112.836071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  112.836073] CR2: 00007f4e3ffffa08 CR3: 00000001afc0a006 CR4: 00000000001606e0
+[  112.836074] Call Trace:
+[  112.836076]  <IRQ>
+[  112.836083]  ? finish_td+0xb3/0xf0
+[  112.836092]  ? ath9k_rx_prepare.isra.11+0x22f/0x2a0 [ath9k_htc]
+[  112.836099]  ath9k_rx_tasklet+0x10b/0x1d0 [ath9k_htc]
+[  112.836105]  tasklet_action_common.isra.22+0x63/0x110
+[  112.836108]  tasklet_action+0x22/0x30
+[  112.836115]  __do_softirq+0xe4/0x2da
+[  112.836118]  irq_exit+0xae/0xb0
+[  112.836121]  do_IRQ+0x86/0xe0
+[  112.836125]  common_interrupt+0xf/0xf
+[  112.836126]  </IRQ>
+[  112.836130] RIP: 0010:cpuidle_enter_state+0xa9/0x440
+[  112.836133] Code: 3d bc 20 38 55 e8 f7 1d 84 ff 49 89 c7 0f 1f 44 00 00 31 ff e8 28 29 84 ff 80 7d d3 00 0f 85 e6 01 00 00 fb 66 0f 1f 44 00 00 <45> 85 ed 0f 89 ff 01 00 00 41 c7 44 24 10 00 00 00 00 48 83 c4 18
+[  112.836134] RSP: 0018:ffffaa61800e3e48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffde
+[  112.836136] RAX: ffff909a2f96b340 RBX: ffffffffabb58200 RCX: 000000000000001f
+[  112.836137] RDX: 0000001a458adc5d RSI: 0000000026c9b581 RDI: 0000000000000000
+[  112.836139] RBP: ffffaa61800e3e88 R08: 0000000000000002 R09: 000000000002abc0
+[  112.836140] R10: ffffaa61800e3e18 R11: 000000000000002d R12: ffffca617fb40b00
+[  112.836141] R13: 0000000000000002 R14: ffffffffabb582d8 R15: 0000001a458adc5d
+[  112.836145]  ? cpuidle_enter_state+0x98/0x440
+[  112.836149]  ? menu_select+0x370/0x600
+[  112.836151]  cpuidle_enter+0x2e/0x40
+[  112.836154]  call_cpuidle+0x23/0x40
+[  112.836156]  do_idle+0x204/0x280
+[  112.836159]  cpu_startup_entry+0x1d/0x20
+[  112.836164]  start_secondary+0x167/0x1c0
+[  112.836169]  secondary_startup_64+0xa4/0xb0
+[  112.836173] ---[ end trace 9f4cd18479cc5ae5 ]---
 
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-...
-RIP: 0010:rxrpc_error_report+0x1bd/0x6a9
-...
-Call Trace:
- ? sock_queue_err_skb+0xbd/0xde
- ? __udp4_lib_err+0x313/0x34d
- __udp4_lib_err+0x313/0x34d
- icmp_unreach+0x1ee/0x207
- icmp_rcv+0x25b/0x28f
- ip_protocol_deliver_rcu+0x95/0x10e
- ip_local_deliver+0xe9/0x148
- __netif_receive_skb_one_core+0x52/0x6e
- process_backlog+0xdc/0x177
- net_rx_action+0xf9/0x270
- __do_softirq+0x1b6/0x39a
- ? smpboot_register_percpu_thread+0xce/0xce
- run_ksoftirqd+0x1d/0x42
- smpboot_thread_fn+0x19e/0x1b3
- kthread+0xf1/0xf6
- ? kthread_delayed_work_timer_fn+0x83/0x83
- ret_from_fork+0x24/0x30
-
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/peer_event.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 23 +++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
-index 7f749505e699..7d73e8ce6660 100644
---- a/net/rxrpc/peer_event.c
-+++ b/net/rxrpc/peer_event.c
-@@ -150,6 +150,9 @@ void rxrpc_error_report(struct sock *sk)
- 	struct rxrpc_peer *peer;
- 	struct sk_buff *skb;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index d913b9e9bd8f..4748f557c753 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -973,6 +973,8 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	struct ath_htc_rx_status *rxstatus;
+ 	struct ath_rx_status rx_stats;
+ 	bool decrypt_error = false;
++	__be16 rs_datalen;
++	bool is_phyerr;
  
-+	if (unlikely(!local))
-+		return;
+ 	if (skb->len < HTC_RX_FRAME_HEADER_SIZE) {
+ 		ath_err(common, "Corrupted RX frame, dropping (len: %d)\n",
+@@ -982,11 +984,24 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 
+ 	rxstatus = (struct ath_htc_rx_status *)skb->data;
+ 
+-	if (be16_to_cpu(rxstatus->rs_datalen) -
+-	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
++	rs_datalen = be16_to_cpu(rxstatus->rs_datalen);
++	if (unlikely(rs_datalen -
++	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0)) {
+ 		ath_err(common,
+ 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
+-			be16_to_cpu(rxstatus->rs_datalen), skb->len);
++			rs_datalen, skb->len);
++		goto rx_next;
++	}
 +
- 	_enter("%p{%d}", sk, local->debug_id);
++	is_phyerr = rxstatus->rs_status & ATH9K_RXERR_PHY;
++	/*
++	 * Discard zero-length packets and packets smaller than an ACK
++	 * which are not PHY_ERROR (short radar pulses have a length of 3)
++	 */
++	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
++		ath_warn(common,
++			 "Short RX data len, dropping (dlen: %d)\n",
++			 rs_datalen);
+ 		goto rx_next;
+ 	}
  
- 	skb = sock_dequeue_err_skb(sk);
+@@ -1011,7 +1026,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	 * Process PHY errors and return so that the packet
+ 	 * can be dropped.
+ 	 */
+-	if (rx_stats.rs_status & ATH9K_RXERR_PHY) {
++	if (unlikely(is_phyerr)) {
+ 		/* TODO: Not using DFS processing now. */
+ 		if (ath_cmn_process_fft(&priv->spec_priv, hdr,
+ 				    &rx_stats, rx_status->mactime)) {
 -- 
 2.20.1
 
