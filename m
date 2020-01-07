@@ -2,112 +2,206 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1528FC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6623AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23E32080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FC8208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgAGNid (ORCPT
+        id S1728185AbgAGNi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:38:33 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52587 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbgAGNic (ORCPT
+        Tue, 7 Jan 2020 08:38:58 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50349 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgAGNi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:38:32 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iop3l-0007Jd-RU; Tue, 07 Jan 2020 14:38:13 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iop3j-0005N2-6B; Tue, 07 Jan 2020 14:38:11 +0100
-Date:   Tue, 7 Jan 2020 14:38:11 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
-References: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
- <20200107130911.GD4877@sirena.org.uk>
+        Tue, 7 Jan 2020 08:38:58 -0500
+X-Originating-IP: 83.155.44.161
+Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4704120009;
+        Tue,  7 Jan 2020 13:38:54 +0000 (UTC)
+Message-ID: <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
+Subject: Re: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix
+ touchscreen to json-schema
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yannick.fertre@st.com
+Date:   Tue, 07 Jan 2020 14:38:53 +0100
+In-Reply-To: <20200107130903.14421-3-benjamin.gaignard@st.com>
+References: <20200107130903.14421-1-benjamin.gaignard@st.com>
+         <20200107130903.14421-3-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107130911.GD4877@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:32:28 up 53 days,  4:51, 47 users,  load average: 0.02, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-01-07 13:09, Mark Brown wrote:
-> On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
-> > On 19-12-17 12:58, Mark Brown wrote:
-> 
-> > > This doesn't say anything about how the GPIO input is expected to be
-> > > controlled, for voltage setting any runtime control would need to be
-> > > done by the driver and it sounds like that's all that can be controlled.
-> > > The way this reads I'd expect one use of this to be for fast voltage
-> > > setting for example (you could even combine that with suspend sequencing
-> > > using the internal sequencer if you mux back to the sequencer during
-> > > suspend).
-> 
-> > The input signal is routed trough the da9062 gpio block to the
-> > regualtors. You can't set any voltage value using a gpio instead you
-> > decide which voltage setting is applied. The voltage values for
-> > runtime/suspend comes from the dt-data. No it's not just a fast
-> > switching option imagine the system suspend case where the cpu and soc
-> > voltage can be reduced to a very low value. Older soc's like the imx6
-> > signaling this state by a hard wired gpio line because the soc and
-> > cpu cores don't work properly on such low voltage values. This is
-> > my use case and I can't use the sequencer.
-> 
-> My point is that I can't tell any of this from the description.
+On Tue, 2020-01-07 at 14:09 +0100, Benjamin Gaignard wrote:
+> Convert the Goodix binding to DT schema format using json-schema
 
-Therefore I want to discuss the dt-binding documentation with you and
-the others to get this done. Is the above description better to
-understand the dt-binding?
+I don't have an opinion on the migration itself, but this really should
+not lose any of the descriptions that were in the old text file.
 
-Regards,
-  Marco
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../bindings/input/touchscreen/goodix.txt          | 50 ------------
+> ----
+>  .../bindings/input/touchscreen/goodix.yaml         | 69
+> ++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 50 deletions(-)
+>  delete mode 100644
+> Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> deleted file mode 100644
+> index fc03ea4cf5ab..000000000000
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -Device tree bindings for Goodix GT9xx series touchscreen controller
+> -
+> -Required properties:
+> -
+> - - compatible		: Should be "goodix,gt1151"
+> -				 or "goodix,gt5663"
+> -				 or "goodix,gt5688"
+> -				 or "goodix,gt911"
+> -				 or "goodix,gt9110"
+> -				 or "goodix,gt912"
+> -				 or "goodix,gt927"
+> -				 or "goodix,gt9271"
+> -				 or "goodix,gt928"
+> -				 or "goodix,gt967"
+> - - reg			: I2C address of the chip. Should be
+> 0x5d or 0x14
+> - - interrupts		: Interrupt to which the chip is
+> connected
+> -
+> -Optional properties:
+> -
+> - - irq-gpios		: GPIO pin used for IRQ. The driver uses the
+> -			  interrupt gpio pin as output to reset the
+> device.
+> - - reset-gpios		: GPIO pin used for reset
+> - - AVDD28-supply	: Analog power supply regulator on AVDD28 pin
+> - - VDDIO-supply		: GPIO power supply regulator on VDDIO
+> pin
+> - - touchscreen-inverted-x
+> - - touchscreen-inverted-y
+> - - touchscreen-size-x
+> - - touchscreen-size-y
+> - - touchscreen-swapped-x-y
+> -
+> -The touchscreen-* properties are documented in touchscreen.txt in
+> this
+> -directory.
+> -
+> -Example:
+> -
+> -	i2c@00000000 {
+> -		/* ... */
+> -
+> -		gt928@5d {
+> -			compatible = "goodix,gt928";
+> -			reg = <0x5d>;
+> -			interrupt-parent = <&gpio>;
+> -			interrupts = <0 0>;
+> -
+> -			irq-gpios = <&gpio1 0 0>;
+> -			reset-gpios = <&gpio1 1 0>;
+> -		};
+> -
+> -		/* ... */
+> -	};
+> diff --git
+> a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+> new file mode 100644
+> index 000000000000..05b52d359ac5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/touchscreen/goodix.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Goodix GT9xx series touchscreen controller Bindings
+> +
+> +maintainers:
+> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> +
+> +allOf:
+> +  - $ref: touchscreen.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - goodix,gt1151
+> +      - goodix,gt5663
+> +      - goodix,gt5688
+> +      - goodix,gt911
+> +      - goodix,gt9110
+> +      - goodix,gt912
+> +      - goodix,gt927
+> +      - goodix,gt9271
+> +      - goodix,gt928
+> +      - goodix,gt967
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  irq-gpios:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  AVDD28-supply:
+> +    description: Analog power supply regulator on AVDD28 pin
+> +
+> +  VDDIO-supply:
+> +    description: GPIO power supply regulator on VDDIO pin
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +- |
+> +    i2c@00000000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      gt928@5d {
+> +        compatible = "goodix,gt928";
+> +        reg = <0x5d>;
+> +        interrupt-parent = <&gpio>;
+> +        interrupts = <0 0>;
+> +        irq-gpios = <&gpio1 0 0>;
+> +        reset-gpios = <&gpio1 1 0>;
+> +      };
+> +    };
+> +
+> +...
+
