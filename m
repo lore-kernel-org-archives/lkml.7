@@ -2,113 +2,97 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E1DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A074C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69602081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432491;
-	bh=aBwBqSzxGxhNrT1YnWU+12cijlj0os4qRgHbt6kJyqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZhhpKwU6P5N24eh1idbMcvTwgPlkIQm995aqmG61jtUrZUH4MFwfMV55/I50lr+h
-	 pChbo0MdUTa57IIPGBQjwj8EiBIjM5TlW21B/AJsB7IiiqTgeiSqJURoXvXjbR2GmA
-	 51+j7deyWyUA/TePaN20Fq1/rZ2b8NmkanJwh7Mk=
+	by mail.kernel.org (Postfix) with ESMTP id 57AA22080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgAGU5G (ORCPT
+        id S1729085AbgAGV2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbgAGU47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20722214D8;
-        Tue,  7 Jan 2020 20:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430618;
-        bh=aBwBqSzxGxhNrT1YnWU+12cijlj0os4qRgHbt6kJyqg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzlyffdf5f5e4UZccIikFl/UDcNE7swkd9VGpngYffO+oP4PY7XIGZOXfldEmeh+c
-         kOkTnikgXMwBGvDgmbiUXxiKwoXls0r0vFnu95PbrArYyt2GN/oqWNkuo6qXOR3tKP
-         UeFvzbak/WO46wRr46bV1h9rzvNuTpHNHyjxE4YQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/191] scsi: qla2xxx: Fix PLOGI payload and ELS IOCB dump length
-Date:   Tue,  7 Jan 2020 21:52:27 +0100
-Message-Id: <20200107205334.454832749@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jan 2020 16:28:14 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:43877 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbgAGV2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:28:07 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MGhi0-1itpwb2ZJS-00Dn1Q; Tue, 07 Jan 2020 22:27:51 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: panel: fix excessive stack usage in td028ttec1_prepare
+Date:   Tue,  7 Jan 2020 22:27:33 +0100
+Message-Id: <20200107212747.4182515-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:oXNXLfN/VIsDQFv/SJwQtBS570cMqOiIoOPgTiSj3Dsp8Mast6V
+ a6nIAwxIdJ7QG8kqaKHVXD9UMVwHTrPE3j3Y3Y83ybDD2FhmplbMZohwEB70kjxFVxHmGZS
+ pyNK70KcneApCD8axx8ajqRUB3eSiIPdg/sGcqYEA5Rl6QBHXZ6yOtpQvGO21SI63N0Rvrq
+ 2nsYRN5jI3BB6x6CtxvLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wybcYGCqFeU=:v6JPZuxuKq6KdDpZhERSQB
+ IDxwXvZZ3iIThfYussrtVEboFQsYXSC7qEaAUE2XWaYfMkZWryLaflyAWfWUsATwXMg6kkTS4
+ 2fkNkoMGkNpx4MCKQifZ0nsPoKH47LK3qlyhSzjot+pm7dGqrUBzd3iRu8R5fefc2RZIZREic
+ QWSvAKtAQWM4Ojyk1h0Cv/8n+0At0t7Wag+VUislcxZY83IZULPztI7gUxC9ZGxMgNMBZzerm
+ C1FjL3xOW2Nxg609m+EefeTYjxDmVlKyYPjQgyfmSc2AJgMYU68YS05MCx13u5OZXBNWakZjl
+ /KgJ+JOuDhchGWb7s+vpjoki5rPqogRFfpHTOzCH+e3z3DlaTrUMmhBWgYv4j8qnZ0dIAjChs
+ 4I/vpmANC2amo+pw4P/G/yZzXZS3X3vd/umZZfYB5e+bV2zPMLRhZKmYQiiaKFAbPNNpHrpKi
+ gdKXp1DNdRwtC+mYFMVC9JPVQgmI8nSS6EjHfUbOFOaVjHwtkP79fOsjFMvY2ZL6aotERGia5
+ qJJl0KLotFNKZuev7SN06GiCBcyLIHv04A8yRtwa5ZX1/EnLjygKqHOMtpZjmSH+RVCLfMu8F
+ Qcj29MPNM33tUkq7Xj/XcC/l6vgOfoe7g11HPeEmG0uOuA4G+9PCOgjZgcoYfhdabasgvEtvG
+ imdpeO5Eh/+GrUr9uEn4xRcNebjiNxHFMQtiFCb8D5OP2Vp3CdiGY4qYvlMszQWLo5vk/Mgby
+ DATbiwe4fFXaHGDfofaqzQudl4XduR+bPZFgTm+Ggp36Sc1O3ogVU69gSKhZ89G4deJiSt+i5
+ X+8wsPqcTE9MHwxukKoezId5n8vFNAxzQx+tEcRaHTBRmfj1FiOVfaxLtGvlOlJIvvLEGeQAk
+ 3guOx3RvjSFld8FR+sHQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+With gcc -O3, the compiler can inline very aggressively,
+leading to rather large stack usage:
 
-[ Upstream commit 0334cdea1fba36fad8bdf9516f267ce01de625f7 ]
+drivers/gpu/drm/panel/panel-tpo-td028ttec1.c: In function 'td028ttec1_prepare':
+drivers/gpu/drm/panel/panel-tpo-td028ttec1.c:233:1: error: the frame size of 2768 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+ }
 
-The size of the buffer is hardcoded as 0x70 or 112 bytes, while the size of
-ELS IOCB is 0x40 and the size of PLOGI payload returned by Get Parameters
-command is 0x74.
+Marking jbt_reg_write_1() as noinline avoids the case where
+multiple instances of this function get inlined into the same
+stack frame and each one adds a copy of 'tx_buf'.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-9-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/qla2xxx/qla_iocb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/panel/panel-tpo-td028ttec1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 44dc97cebb06..bdf1994251b9 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -2684,7 +2684,8 @@ qla24xx_els_logo_iocb(srb_t *sp, struct els_entry_24xx *els_iocb)
- 		ql_dbg(ql_dbg_io + ql_dbg_buffer, vha, 0x3073,
- 		    "PLOGI ELS IOCB:\n");
- 		ql_dump_buffer(ql_log_info, vha, 0x0109,
--		    (uint8_t *)els_iocb, 0x70);
-+		    (uint8_t *)els_iocb,
-+		    sizeof(*els_iocb));
- 	} else {
- 		els_iocb->control_flags = 1 << 13;
- 		els_iocb->tx_byte_count =
-@@ -2850,7 +2851,8 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
+diff --git a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+index cf29405a2dbe..17ee5e87141f 100644
+--- a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
++++ b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+@@ -105,7 +105,7 @@ static int jbt_ret_write_0(struct td028ttec1_panel *lcd, u8 reg, int *err)
+ 	return ret;
+ }
  
- 	ql_dbg(ql_dbg_disc + ql_dbg_buffer, vha, 0x3073, "PLOGI buffer:\n");
- 	ql_dump_buffer(ql_dbg_disc + ql_dbg_buffer, vha, 0x0109,
--	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld, 0x70);
-+	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
-+	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
- 
- 	rval = qla2x00_start_sp(sp);
- 	if (rval != QLA_SUCCESS) {
+-static int jbt_reg_write_1(struct td028ttec1_panel *lcd,
++static int noinline_for_stack jbt_reg_write_1(struct td028ttec1_panel *lcd,
+ 			   u8 reg, u8 data, int *err)
+ {
+ 	struct spi_device *spi = lcd->spi;
 -- 
-2.20.1
-
-
+2.20.0
 
