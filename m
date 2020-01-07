@@ -2,109 +2,104 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40079C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7686C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169D3208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:03:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRdc/pEt"
+	by mail.kernel.org (Postfix) with ESMTP id 8442124656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578409589;
+	bh=+y+aWqsEqk2+D9Baxc1ravTEaKC6Hg6OrUKouQASJFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=juL6/tJguOM8tKPpAqi4+O1FbZ5sTDeE9hL2gTpFgG/rxtV1yj6XXj3qt+z0Dh0Jw
+	 GkqX4hd4TLq55IVGohb3RfqJ/IcGEr2/GNjMiFAjmW4CHILoumPz9Ue9lG631/RpDH
+	 5bXQH24wJNKKD0o1Dui/PNPFKHhc/wGdzmD8u2pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgAGPDO (ORCPT
+        id S1728173AbgAGPG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:03:14 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50337 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgAGPDN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:03:13 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so9134289pjb.0;
-        Tue, 07 Jan 2020 07:03:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7Vp5Vy5j9yM6zzEKiWqAsDsmN6F0gjsulGDFzYzW5ms=;
-        b=FRdc/pEtLxybKATPi0gWX2OnrpPVH/gGawy/tcqojjMjvopFGGM068hu4YFt3qmt8A
-         6R5y0yJvntjkO8rsWhyzfx23MOZxhzl/6e8Z+UKVVBc1Gihd/WO9l45YcNrgpYi9rKXD
-         tWIIDANUvg28Kn7rZ9lTElzHP9SNKUJwcKPS6+aZR3KuKyMWVSR3aJ2aGRsUgKXN+aRD
-         hUqAoVldM0Wyh88gr372bKNGydSXKln+wJOHPMUw8udR26H1B/JSx3TpR0H+RTBJJfYV
-         huQgd0dDZJWNtdUEMbumFGCV7R864/LXirQdWi2VM5u/CpZOL4tJmLKL4i+gsWM2v2qk
-         /wlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7Vp5Vy5j9yM6zzEKiWqAsDsmN6F0gjsulGDFzYzW5ms=;
-        b=BQgaBnYb372ibzhYZNO5JT0EmwzYVAMBxKhLMHnQBEUNwSsyGw4895KNoXPu3kTkUP
-         +OH5T+6Jk/sZ5YeNpQDrdSp1ZUJ9OxB9FoM6yY+8RrnHkYiSH4b/0Xwv0Vr9uFS7nxe8
-         KKam3q10BxwV6QFS4A+JryiWb+2GLzizpwjClLTGUw/Yhzj9fPspGdXfS/0RsY5kMTMo
-         zxVUmC0qxfUHs2Gt5tgf/SgH1r1aN2T251PpFO45LXMdwDdHa/L6KQNOceLyvaL4znDq
-         jsSSaLMOhivGx4M0TFmPZ0/FP9avpC1GhjvWv+kO2mBdEh2XqAbgW8C5ffYc4+K3dSmC
-         nhew==
-X-Gm-Message-State: APjAAAVPTiN5m2ZWBR/sAAbii41lgjJgqnUz4jOlaJziZwmUlEBbqC0N
-        H4u5543H1sStMj+0JThIHNw=
-X-Google-Smtp-Source: APXvYqzftM+e7fYt4IHv4fHcbdCZwaijynpYGwn5PKAuo5WlUzUl87fCknMZfMefV1A2363vPvEgwQ==
-X-Received: by 2002:a17:902:654d:: with SMTP id d13mr33352pln.187.1578409392867;
-        Tue, 07 Jan 2020 07:03:12 -0800 (PST)
-Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
-        by smtp.gmail.com with ESMTPSA id h3sm35881215pfo.132.2020.01.07.07.03.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 07:03:12 -0800 (PST)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     davem@davemloft.net, corbet@lwn.net, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linus.walleij@linaro.org
-Cc:     netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+        Tue, 7 Jan 2020 10:06:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727880AbgAGPG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 10:06:28 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D012087F;
+        Tue,  7 Jan 2020 15:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578409588;
+        bh=+y+aWqsEqk2+D9Baxc1ravTEaKC6Hg6OrUKouQASJFI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aGcPyhZnC7+FqmaURKzkdbH8gwRkbCGrcv15/QY0sFaTSSpSdUJzt3yF0mMK/Qg3E
+         EwdVYzY5dcdj451Mrzm/4tIYZK4MZvAqdm2+nCKxgG7wJSry8pui+CAxbpdkd4mW2v
+         T28gft04vtvzuNXQCXdxGba1rPmhNJy7/DbrV5YY=
+Date:   Tue, 7 Jan 2020 16:06:25 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH] Documentation: networking: device drivers: sync stmmac_mdio_bus_data info
-Date:   Tue,  7 Jan 2020 23:02:54 +0800
-Message-Id: <20200107150254.28604-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        stable@vger.kernel.org
+Subject: Re: [PATCH] drm/sun4i: tcon: Set RGB DCLK min. divider based on
+ hardware model
+Message-ID: <20200107150625.sj6x4u67diac3v5p@gilmour>
+References: <20200107070113.28951-1-wens@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xezwhxxbc3anpsth"
+Content-Disposition: inline
+In-Reply-To: <20200107070113.28951-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent changes in the stmmac driver, it removes the phy_reset hook
-from struct stmmac_mdio_bus_data by commit <fead5b1b5838ba2>, and
-add the member of needs_reset to struct stmmac_mdio_bus_data by
-commit <1a981c0586c0387>.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- Documentation/networking/device_drivers/stmicro/stmmac.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--xezwhxxbc3anpsth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/networking/device_drivers/stmicro/stmmac.txt b/Documentation/networking/device_drivers/stmicro/stmmac.txt
-index 1ae979fd90d2..3d8a83158309 100644
---- a/Documentation/networking/device_drivers/stmicro/stmmac.txt
-+++ b/Documentation/networking/device_drivers/stmicro/stmmac.txt
-@@ -190,17 +190,17 @@ Where:
- For MDIO bus The we have:
- 
-  struct stmmac_mdio_bus_data {
--	int (*phy_reset)(void *priv);
- 	unsigned int phy_mask;
- 	int *irqs;
- 	int probed_phy_irq;
-+	bool needs_reset;
-  };
- 
- Where:
-- o phy_reset: hook to reset the phy device attached to the bus.
-  o phy_mask: phy mask passed when register the MDIO bus within the driver.
-  o irqs: list of IRQs, one per PHY.
-  o probed_phy_irq: if irqs is NULL, use this for probed PHY.
-+ o needs_reset: make MDIO bus reset optional.
- 
- For DMA engine we have the following internal fields that should be
- tuned according to the HW capabilities.
--- 
-2.17.1
+On Tue, Jan 07, 2020 at 03:01:13PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> In commit 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK
+> to 1.") it was assumed that all TCON variants support a minimum divider
+> of 1 if only DCLK was used.
+>
+> However, the oldest generation of hardware only supports minimum divider
+> of 4 if only DCLK is used. If a divider of 1 was used on this old
+> hardware, some scrolling artifact would appear. A divider of 2 seemed
+> OK, but a divider of 3 had artifacts as well.
+>
+> Set the minimum divider when outputing to parallel RGB based on the
+> hardware model, with a minimum of 4 for the oldest (A10/A10s/A13/A20)
+> hardware, and a minimum of 1 for the rest. A value is not set for the
+> TCON variants lacking channel 0.
+>
+> This fixes the scrolling artifacts seen on my A13 tablet.
+>
+> Fixes: 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.")
+> Cc: <stable@vger.kernel.org> # 5.4.x
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
+Applied, thanks
+
+Maxime
+
+--xezwhxxbc3anpsth
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhSecQAKCRDj7w1vZxhR
+xQFaAP9wLF9udsuevqjGAE3LAn6TCRsCdWejtoRRsX5mYATyzgEA6SE+BSoFd/Ct
+dU/RYO3cR8I6jmK7T2SuD3yh1MdfgAE=
+=Ruky
+-----END PGP SIGNATURE-----
+
+--xezwhxxbc3anpsth--
