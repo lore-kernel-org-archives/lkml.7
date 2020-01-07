@@ -6,101 +6,229 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306EBC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6B0C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DC42087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBB42087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgAGPIV (ORCPT
+        id S1728229AbgAGPNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:08:21 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:51537 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727880AbgAGPIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:08:20 -0500
-Received: from [109.168.11.45] (port=53390 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ioqSv-00EzCX-CP; Tue, 07 Jan 2020 16:08:17 +0100
-Subject: Re: [PATCH 3/5] i2c: highlander: Use proper printk format for iomem
- pointer
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191230172751.17985-1-krzk@kernel.org>
- <20191230172751.17985-3-krzk@kernel.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <dcfa47af-9c7f-4c57-b178-62611c8c21bc@lucaceresoli.net>
-Date:   Tue, 7 Jan 2020 16:08:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 10:13:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:58934 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbgAGPNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 10:13:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05127328;
+        Tue,  7 Jan 2020 07:13:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C0F93F703;
+        Tue,  7 Jan 2020 07:13:31 -0800 (PST)
+Date:   Tue, 7 Jan 2020 15:13:29 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Sudeep Holla <Sudeep.Holla@arm.com>, kvm@vger.kernel.org,
+        kvmarm <kvmarm@lists.cs.columbia.edu>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore
+ full SPE profiling buffer controls
+Message-ID: <20200107151328.GW42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-10-andrew.murray@arm.com>
+ <20191221141325.5a177343@why>
 MIME-Version: 1.0
-In-Reply-To: <20191230172751.17985-3-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191221141325.5a177343@why>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 30/12/19 18:27, Krzysztof Kozlowski wrote:
-> iomem pointers should be printed with pointer format to hide the
-
-s/iomem/size_t/ (in the subject too)
-
-The whole commit message needs rewording accordingly.
-
-> actual value and fix warnings when compiling on 64-bit platform (e.g. with
-> COMPILE_TEST):
+On Sat, Dec 21, 2019 at 02:13:25PM +0000, Marc Zyngier wrote:
+> On Fri, 20 Dec 2019 14:30:16 +0000
+> Andrew Murray <andrew.murray@arm.com> wrote:
 > 
->     drivers/i2c/busses/i2c-highlander.c: In function ‘highlander_i2c_smbus_xfer’:
->     drivers/i2c/busses/i2c-highlander.c:325:22: warning:
->         format ‘%d’ expects argument of type ‘int’,
->         but argument 3 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+> [somehow managed not to do a reply all, re-sending]
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/i2c/busses/i2c-highlander.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > From: Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> > Now that we can save/restore the full SPE controls, we can enable it
+> > if SPE is setup and ready to use in KVM. It's supported in KVM only if
+> > all the CPUs in the system supports SPE.
+> > 
+> > However to support heterogenous systems, we need to move the check if
+> > host supports SPE and do a partial save/restore.
 > 
-> diff --git a/drivers/i2c/busses/i2c-highlander.c b/drivers/i2c/busses/i2c-highlander.c
-> index abfe3094c047..803dad70e2a7 100644
-> --- a/drivers/i2c/busses/i2c-highlander.c
-> +++ b/drivers/i2c/busses/i2c-highlander.c
-> @@ -322,7 +322,7 @@ static int highlander_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
->  		tmp |= (SMMR_MODE0 | SMMR_MODE1);
->  		break;
->  	default:
-> -		dev_err(dev->dev, "unsupported xfer size %d\n", dev->buf_len);
-> +		dev_err(dev->dev, "unsupported xfer size %zu\n", dev->buf_len);
->  		return -EINVAL;
->  	}
->  
-> 
+> No. Let's just not go down that path. For now, KVM on heterogeneous
+> systems do not get SPE.
 
--- 
-Luca
+At present these patches only offer the SPE feature to VCPU's where the
+sanitised AA64DFR0 register indicates that all CPUs have this support
+(kvm_arm_support_spe_v1) at the time of setting the attribute
+(KVM_SET_DEVICE_ATTR).
+
+Therefore if a new CPU comes online without SPE support, and an
+existing VCPU is scheduled onto it, then bad things happen - which I guess
+must have been the intention behind this patch.
+
+
+> If SPE has been enabled on a guest and a CPU
+> comes up without SPE, this CPU should fail to boot (same as exposing a
+> feature to userspace).
+
+I'm unclear as how to prevent this. We can set the FTR_STRICT flag on
+the sanitised register - thus tainting the kernel if such a non-SPE CPU
+comes online - thought that doesn't prevent KVM from blowing up. Though
+I don't believe we can prevent a CPU coming up. At the moment this is
+my preferred approach.
+
+Looking at the vcpu_load and related code, I don't see a way of saying
+'don't schedule this VCPU on this CPU' or bailing in any way.
+
+One solution could be to allow scheduling onto non-SPE VCPUs but wrap the
+SPE save/restore code in a macro (much like kvm_arm_spe_v1_ready) that
+reads the non-sanitised feature register. Therefore we don't go bang, but
+we also increase the size of any black-holes in SPE capturing. Though this
+feels like something that will cause grief down the line.
+
+Is there something else that can be done?
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > 
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > ---
+> >  arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
+> >  include/kvm/arm_spe.h         |  6 ++++++
+> >  2 files changed, 22 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+> > index 12429b212a3a..d8d857067e6d 100644
+> > --- a/arch/arm64/kvm/hyp/debug-sr.c
+> > +++ b/arch/arm64/kvm/hyp/debug-sr.c
+> > @@ -86,18 +86,13 @@
+> >  	}
+> >  
+> >  static void __hyp_text
+> > -__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> > +__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  {
+> >  	u64 reg;
+> >  
+> >  	/* Clear pmscr in case of early return */
+> >  	ctxt->sys_regs[PMSCR_EL1] = 0;
+> >  
+> > -	/* SPE present on this CPU? */
+> > -	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+> > -						  ID_AA64DFR0_PMSVER_SHIFT))
+> > -		return;
+> > -
+> >  	/* Yes; is it owned by higher EL? */
+> >  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
+> >  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+> > @@ -142,7 +137,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  }
+> >  
+> >  static void __hyp_text
+> > -__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> > +__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  {
+> >  	if (!ctxt->sys_regs[PMSCR_EL1])
+> >  		return;
+> > @@ -210,11 +205,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
+> >  	struct kvm_guest_debug_arch *host_dbg;
+> >  	struct kvm_guest_debug_arch *guest_dbg;
+> >  
+> > +	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > +	guest_ctxt = &vcpu->arch.ctxt;
+> > +
+> > +	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> > +
+> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+> >  		return;
+> >  
+> > -	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > -	guest_ctxt = &vcpu->arch.ctxt;
+> >  	host_dbg = &vcpu->arch.host_debug_state.regs;
+> >  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
+> >  
+> > @@ -232,8 +230,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> >  	guest_ctxt = &vcpu->arch.ctxt;
+> >  
+> > -	if (!has_vhe())
+> > -		__debug_restore_spe_nvhe(host_ctxt, false);
+> > +	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> 
+> So you now do an unconditional save/restore on the exit path for VHE as
+> well? Even if the host isn't using the SPE HW? That's not acceptable
+> as, in most cases, only the host /or/ the guest will use SPE. Here, you
+> put a measurable overhead on each exit.
+> 
+> If the host is not using SPE, then the restore/save should happen in
+> vcpu_load/vcpu_put. Only if the host is using SPE should you do
+> something in the run loop. Of course, this only applies to VHE and
+> non-VHE must switch eagerly.
+> 
+> >  
+> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+> >  		return;
+> > @@ -249,19 +246,21 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+> >  
+> >  void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+> >  {
+> > -	/*
+> > -	 * Non-VHE: Disable and flush SPE data generation
+> > -	 * VHE: The vcpu can run, but it can't hide.
+> > -	 */
+> >  	struct kvm_cpu_context *host_ctxt;
+> >  
+> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > -	if (!has_vhe())
+> > -		__debug_save_spe_nvhe(host_ctxt, false);
+> > +	if (cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+> > +						 ID_AA64DFR0_PMSVER_SHIFT))
+> > +		__debug_save_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> >  }
+> >  
+> >  void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
+> >  {
+> > +	bool kvm_spe_ready = kvm_arm_spe_v1_ready(vcpu);
+> > +
+> > +	/* SPE present on this vCPU? */
+> > +	if (kvm_spe_ready)
+> > +		__debug_save_spe_context(&vcpu->arch.ctxt, kvm_spe_ready);
+> >  }
+> >  
+> >  u32 __hyp_text __kvm_get_mdcr_el2(void)
+> > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+> > index 48d118fdb174..30c40b1bc385 100644
+> > --- a/include/kvm/arm_spe.h
+> > +++ b/include/kvm/arm_spe.h
+> > @@ -16,4 +16,10 @@ struct kvm_spe {
+> >  	bool irq_level;
+> >  };
+> >  
+> > +#ifdef CONFIG_KVM_ARM_SPE
+> > +#define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
+> > +#else
+> > +#define kvm_arm_spe_v1_ready(v)		(false)
+> > +#endif /* CONFIG_KVM_ARM_SPE */
+> > +
+> >  #endif /* __ASM_ARM_KVM_SPE_H */
+> 
+> Thanks,
+> 
+> 	M.
+> -- 
+> Jazz is not dead. It just smells funny...
