@@ -2,263 +2,83 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607ABC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A11C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C602214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8712072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jceohFpL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y9TuhSxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgAGNKp (ORCPT
+        id S1728160AbgAGNMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:10:45 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42064 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgAGNKm (ORCPT
+        Tue, 7 Jan 2020 08:12:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35738 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGNMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:10:42 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so28581030pfz.9;
-        Tue, 07 Jan 2020 05:10:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=L00YIbrKDzzkZYycDncaqE3HMvA9FpbAU5f9CoxFhR0=;
-        b=jceohFpLZAZPCOx6KvKGnu2DAE6P8vLSBL8Z2cStDnXewyreGHxk+gpXb1H5xKGRLh
-         XDp4YrcZ8eCb/VuSrvsHQNRj4TzgluFvj9rgxvINqpVcn5Mq8s79NoAbXRYoCJGPtARq
-         3fbxmOY26howLc2is3L8SRN4OhjdG7TlYhCoQAlwc5hEAkUB6cjyEg9gR/lY6MFGWaFo
-         XY1QnoI5/fYCBx+6zPNQicgXyoX7+P5go56RDwUxM6shwfCJKKLzg7K5qujdE5rMcTEh
-         TAhI65Cm8j79oYCRr0kSkIa0XYgfN7LLgZaw0DnHvf5MP8+UFuvrd2KEfN9k3ym7aGLp
-         ZzUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=L00YIbrKDzzkZYycDncaqE3HMvA9FpbAU5f9CoxFhR0=;
-        b=PoyWRaphd6TolzH9h8oCYt933xY8iWZeepa2KrhqKYvHAJ7UxMI5/FVQfZJHBTgGgf
-         XZzJQsKhm1XFvmc6hc6Ese/LMscwp10+lLfYn8sMwoDfxkwvRcw/v96onEcvtiuWO/lF
-         xB5u70LlPsvXG3xIES2hm7rpap6vckD2vhJ4EFfJjrdJO6xZKHUnwlKWHFjFzZvUHThh
-         S1szhOBV1kwNkX15KFM5i32bf0feiW8nvMKeWJ12f7NjeRD45ThQ27jFoq9bsKgYvpWK
-         qgDpMUaIPw/wZeA7U/5SqdjFoOXXVH1WGEf4mClO/HIHRRY47ZF+7UKqzt10ooymgBV2
-         xRAA==
-X-Gm-Message-State: APjAAAUmBHTdeERBHTKKgD/RrM7tVbG57a4Cc54dh3za5WginAmxgjUk
-        bLZmS/q0HMT/IIoAJYpVIe8=
-X-Google-Smtp-Source: APXvYqznCxw+fPXVlwbUtB8atvLbOitIBeaUAoe7B44PC0EWWUMijzt2AEJiF6mwzQ7BviMdOaLZnw==
-X-Received: by 2002:a63:447:: with SMTP id 68mr119756577pge.364.1578402641194;
-        Tue, 07 Jan 2020 05:10:41 -0800 (PST)
-Received: from localhost.corp.microsoft.com ([167.220.255.5])
-        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.10.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 05:10:40 -0800 (PST)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, michael.h.kelley@microsoft.com, david@redhat.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, eric.devolder@oracle.com
-Subject: [RFC PATCH V2 10/10] x86/Hyper-V: Workaround Hyper-V unballoon msg bug
-Date:   Tue,  7 Jan 2020 21:09:50 +0800
-Message-Id: <20200107130950.2983-11-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
-References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+        Tue, 7 Jan 2020 08:12:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3roxz6guEJ/YxIFLVeBH//5xGM64ZcJTUKnaWntqOek=; b=Y9TuhSxtHADNgC+2XWQQAGths
+        ovny7OuepH+xVuWPmyn4B+ua4SVqEtowwCDWlINRJv0VJ2VP0ymXprj00rnSN8JT5OVwQFETUW6qO
+        BbpldV8TlVGvgWQlTA0oLWB51Oa07YC1RCBnL9uGQlvFSWiF60KfIFA8nlsHJ/q83J26Shk4eWW5M
+        0UOXVUP4U5BpVHf+OD346c8iMFtjIwtAOK3GoKe5xPnZ9KMLWhnuGzQ8Swi8DF+lkAlzF/wa+ej8n
+        0LPFr0wJS9UE0hwrkWNWNlKhqrbYPONIglqfj4iMRRpSFxcfYFIhDo6qHDOawg4JyrXqKDYk4lZFy
+        QVjRRrheg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iooeC-0004hQ-Gg; Tue, 07 Jan 2020 13:11:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 817633012C3;
+        Tue,  7 Jan 2020 14:10:13 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 19BEE20D3D423; Tue,  7 Jan 2020 14:11:46 +0100 (CET)
+Date:   Tue, 7 Jan 2020 14:11:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+bcad772bbc241b4c6147@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: INFO: rcu detected stall in sys_sendfile64
+Message-ID: <20200107131146.GX2827@hirez.programming.kicks-ass.net>
+References: <000000000000e728ec057d5c9d90@google.com>
+ <a5478450-f975-228f-1ca6-886a45b654a1@I-love.SAKURA.ne.jp>
+ <CACT4Y+YqWgZZFXdX2A2jVYEdHfY9ywGMgRRP5W4Uqdu__rA63g@mail.gmail.com>
+ <bc53fe0b-2c17-4d4f-1c40-f290997d0521@i-love.sakura.ne.jp>
+ <CACT4Y+bEi9ZsJn0Jm2Lwt-1cijQq=wc5MqYh0qf6R6+wpZVD2Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+bEi9ZsJn0Jm2Lwt-1cijQq=wc5MqYh0qf6R6+wpZVD2Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Tue, Jan 07, 2020 at 02:02:47PM +0100, Dmitry Vyukov wrote:
+> > >> This is not a LSM problem, for the reproducer is calling
+> > >> sched_setattr(SCHED_DEADLINE) with very large values.
+> > >>
+> > >>   sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_??? */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=2251799813724439, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
+> > >>
+> > >> I think that this problem is nothing but an insane sched_setattr() parameter.
 
-Hyper-V sends unballoon msg instead of mem hot add msg in some
-case. System doesn't receive balloon msg before unballoon msg
-and this will cause balloon_down() to produce warning of
-free non-exist memory. Workaround the issue via treating
-unballoon msg as mem hot-add msg when mem hot-add is
-enabled.
-
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- drivers/hv/hv_balloon.c | 116 +++++++++++++++++++++++++++---------------------
- 1 file changed, 66 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 5aaae62955bf..7f3e7ab22d5d 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -486,6 +486,9 @@ union dm_msg_info {
- 	struct {
- 		__u32 num_pages;
- 	} balloon_state;
-+	struct {
-+		struct dm_unballoon_request *request;
-+	} unballoon_state;
- 	struct {
- 		union dm_mem_page_range ha_page_range;
- 		union dm_mem_page_range ha_region_range;
-@@ -1155,6 +1158,21 @@ static unsigned long process_hot_add(unsigned long pg_start,
- 		return pfn_cnt;
- 	}
- 
-+	if ((rg_start == 0) && (!dm_device.host_specified_ha_region)) {
-+		/*
-+		 * The host has not specified the hot-add region.
-+		 * Based on the hot-add page range being specified,
-+		 * compute a hot-add region that can cover the pages
-+		 * that need to be hot-added while ensuring the alignment
-+		 * and size requirements of Linux as it relates to hot-add.
-+		 */
-+		rg_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
-+		if (pfn_cnt % HA_CHUNK)
-+			rg_size += HA_CHUNK;
-+
-+		rg_start = (pg_start / HA_CHUNK) * HA_CHUNK;
-+	}
-+
- 	if (!dm_device.host_specified_ha_region) {
- 		covered = pfn_covered(pg_start, pfn_cnt);
- 		if (covered < 0)
-@@ -1488,28 +1506,6 @@ static void hot_add_req(union dm_msg_info *msg_info)
- 	rg_start = msg_info->hot_add.ha_region_range.finfo.start_page;
- 	rg_sz = msg_info->hot_add.ha_region_range.finfo.page_cnt;
- 
--	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
--		unsigned long region_size;
--		unsigned long region_start;
--
--		/*
--		 * The host has not specified the hot-add region.
--		 * Based on the hot-add page range being specified,
--		 * compute a hot-add region that can cover the pages
--		 * that need to be hot-added while ensuring the alignment
--		 * and size requirements of Linux as it relates to hot-add.
--		 */
--		region_start = pg_start;
--		region_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
--		if (pfn_cnt % HA_CHUNK)
--			region_size += HA_CHUNK;
--
--		region_start = (pg_start / HA_CHUNK) * HA_CHUNK;
--
--		rg_start = region_start;
--		rg_sz = region_size;
--	}
--
- 	if (do_hot_add)
- 		resp.page_count = process_hot_add(pg_start, pfn_cnt,
- 						rg_start, rg_sz);
-@@ -1823,41 +1819,37 @@ static void balloon_up(union dm_msg_info *msg_info)
- 
- }
- 
--static void dm_msg_work(struct work_struct *dummy)
--{
--	union dm_msg_info *msg_info = &dm_device.dm_wrk.dm_msg;
--
--	switch (dm_device.dm_wrk.msg_type) {
--	case DM_BALLOON_REQUEST:
--		balloon_up(msg_info);
--		break;
--	case DM_MEM_HOT_ADD_REQUEST:
--		hot_add_req(msg_info);
--		break;
--	case DM_MEM_HOT_REMOVE_REQUEST:
--		hot_remove_req(msg_info);
--		break;
--	default:
--		return;
--	}
--}
--
--static void balloon_down(struct hv_dynmem_device *dm,
--			struct dm_unballoon_request *req)
-+static void balloon_down(union dm_msg_info *msg_info)
- {
-+	struct dm_unballoon_request *req = msg_info->unballoon_state.request;
- 	union dm_mem_page_range *range_array = req->range_array;
-+	struct hv_dynmem_device *dm = &dm_device;
-+	unsigned int prev_pages_ballooned = dm->num_pages_ballooned;
- 	int range_count = req->range_count;
- 	struct dm_unballoon_response resp;
- 	int i;
--	unsigned int prev_pages_ballooned = dm->num_pages_ballooned;
- 
- 	for (i = 0; i < range_count; i++) {
--		free_balloon_pages(dm, &range_array[i]);
--		complete(&dm_device.config_event);
-+		/*
-+		 * Hyper-V has a bug that send unballoon msg instead
-+		 * of hot add msg even if there is no balloon msg sent
-+		 * before. Treat all unballoon msgs as hot add msgs
-+		 * if hot add capability is enabled.
-+		 */
-+		if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG) && do_hot_add) {
-+			dm->host_specified_ha_region = false;
-+			dm->num_pages_added +=
-+				process_hot_add(range_array[i].finfo.start_page,
-+				range_array[i].finfo.page_cnt, 0, 0);
-+		} else {
-+			free_balloon_pages(dm, &range_array[i]);
-+			complete(&dm_device.config_event);
-+		}
- 	}
- 
--	pr_debug("Freed %u ballooned pages.\n",
--		prev_pages_ballooned - dm->num_pages_ballooned);
-+	if (!do_hot_add)
-+		pr_debug("Freed %u ballooned pages.\n",
-+			prev_pages_ballooned - dm->num_pages_ballooned);
- 
- 	if (req->more_pages == 1)
- 		return;
-@@ -1875,6 +1867,28 @@ static void balloon_down(struct hv_dynmem_device *dm,
- 	dm->state = DM_INITIALIZED;
- }
- 
-+static void dm_msg_work(struct work_struct *dummy)
-+{
-+	union dm_msg_info *msg_info = &dm_device.dm_wrk.dm_msg;
-+
-+	switch (dm_device.dm_wrk.msg_type) {
-+	case DM_BALLOON_REQUEST:
-+		balloon_up(msg_info);
-+		break;
-+	case DM_UNBALLOON_REQUEST:
-+		balloon_down(msg_info);
-+		break;
-+	case DM_MEM_HOT_ADD_REQUEST:
-+		hot_add_req(msg_info);
-+		break;
-+	case DM_MEM_HOT_REMOVE_REQUEST:
-+		hot_remove_req(msg_info);
-+		break;
-+	default:
-+		return;
-+	}
-+}
-+
- static void balloon_onchannelcallback(void *context);
- 
- static int dm_thread_func(void *dm_dev)
-@@ -2024,8 +2038,10 @@ static void balloon_onchannelcallback(void *context)
- 			}
- 
- 			dm->state = DM_BALLOON_DOWN;
--			balloon_down(dm,
--				 (struct dm_unballoon_request *)recv_buffer);
-+			dm_wrk->msg_type = DM_UNBALLOON_REQUEST;
-+			msg_info->unballoon_state.request
-+				= (struct dm_unballoon_request *)recv_buffer;
-+			schedule_work(&dm_wrk->wrk);
- 			break;
- 
- 		case DM_MEM_HOT_ADD_REQUEST:
--- 
-2.14.5
-
+Argh, I had a patch for that somewhere. Let me go dig that out.
