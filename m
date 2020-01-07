@@ -2,109 +2,114 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02067C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0458CC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13E420678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EbbmHQQ4"
+	by mail.kernel.org (Postfix) with ESMTP id BE261208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578417831;
+	bh=6ejjEbhZVVTCrBIGpJiOJTr5rrP5vJ9tZ4mKHdvPvbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0ye+ra6IKaRjn87qWdvxKxzPMVI0Si7oLrIjZNLhkc8Btj7AH1uAVjrCtV3El8neY
+	 HQNeo/oylepe83GnRvx2whw+oDcUpwX9EwWT7VA4/idIrRvTMntIYpom7t/bunA9Af
+	 KLLwlyblJHdamelDx4U377ONTRU0DcigUSC1ZOPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgAGRXg (ORCPT
+        id S1728448AbgAGRXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:23:36 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35206 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgAGRXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:23:35 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k4so178931oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:23:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PhbKXDsZRakhZSRRK1aI18rLOfc33MtTwpsaXmjInuw=;
-        b=EbbmHQQ4NFvrnDJ/svaJN+YrbNc3VOZfPcMkWS15V7rtm9mrlJaKvGXq7P77JLqRIk
-         qpOig7knyFuxj3paE/RmThGUJyGqTciXaJ7+eJtPjl5lJ4V6E/Mxzukb64MOubhpLgY4
-         sIcCUixqubZJ/jASNlxozT1K8sPsRyMCQTdEvl0S5bnHpXlTnn4meY+D+zAYmasE7Atv
-         ZX4zEM6U5Q/eScg3I4tPCga0TyadDKd8h6Ix+nUiBPy1G0EicxUs5dcgNpAvelKpQ7bH
-         KkwWBIVs9jitnHW7gdVyxntgUWpGz3erJtiT0mjvf4GWegftjXIfGru6uKgMGXPy96Iq
-         2www==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PhbKXDsZRakhZSRRK1aI18rLOfc33MtTwpsaXmjInuw=;
-        b=HJ3D/fCBk0Cl3xT9TJNZYGnLvHiiDRUXBYsldDAkk8mec/UZuA7JMYfdxAxyS0F9oG
-         xPRz9YWxhnVJnQtAW/Ferh3cgUtmpiEXaVTrVrWw1u3zWTkiffXfuEecyAnIJWNw0wzt
-         xIp835H3X1eGXT7fPnX3E/wM60skcB91QCGTpAp7F9Rpywyrfs1JPEKf3FfWK9e/7igv
-         pfmU8O+u7RBXzICbixsUKdR01aUDcBwfZib6s+BCIQ94MIuuCVn8hE6dWMDkY9nkpAOk
-         fe8wNJHeXgAj0ybfbZygJiEhrF0uMA0duw3Yj6rnUH4zNG9uq0CyvY4+KAeqHje2krcG
-         fVcg==
-X-Gm-Message-State: APjAAAXYFJoBfqOgeQeLUNfWsUcqK1JruVNnmE1XaYS/POsRH0B7Ptd9
-        TEFu7xrYWq/6/0z1/W8V2jtPbNiSElZS/zyEyKrdYw==
-X-Google-Smtp-Source: APXvYqz6rMGmaMVQDiSCZZAtpdpF7l7/5wCJHHz4aURiMLR4ym0pxXAeUP8cHumFFyHeZvVwCzurTkgYPEEDx8qz4TI=
-X-Received: by 2002:aca:c551:: with SMTP id v78mr478240oif.161.1578417814776;
- Tue, 07 Jan 2020 09:23:34 -0800 (PST)
+        Tue, 7 Jan 2020 12:23:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728211AbgAGRXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:23:50 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D78832087F;
+        Tue,  7 Jan 2020 17:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578417830;
+        bh=6ejjEbhZVVTCrBIGpJiOJTr5rrP5vJ9tZ4mKHdvPvbM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wn1VsF5Rx3mQIDQVw5s/nm1MAp29PvSvvRX5jDldxMkYn4wy53D0c/smVmVylH8w4
+         9PidrFa7C4ASqZ9vcaMSJan/zpxM3xXoMIXBZf47TZ6/Nu1mIJvoQAkcRy0vumrQCO
+         xPtcQ2Sf3o/ruUQf8pvU3jIaKTn8bfR0dEXktSLg=
+Date:   Tue, 7 Jan 2020 17:23:45 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] locking/qspinlock: Fix inaccessible URL of MCS lock paper
+Message-ID: <20200107172343.GA32009@willie-the-truck>
+References: <20191223022532.14864-1-longman@redhat.com>
+ <20200107125824.GA2844@hirez.programming.kicks-ass.net>
+ <20200107130939.GV2871@hirez.programming.kicks-ass.net>
+ <64bac471-11c6-41b7-c647-fa2c70b1bc32@redhat.com>
 MIME-Version: 1.0
-References: <20200107010350.58657-1-john.stultz@linaro.org> <bb0651eb7b1c81755ec43fe9d85f27a5fd83af88.camel@pengutronix.de>
-In-Reply-To: <bb0651eb7b1c81755ec43fe9d85f27a5fd83af88.camel@pengutronix.de>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 7 Jan 2020 09:23:24 -0800
-Message-ID: <CALAqxLW-pLkeDodqNWg-TtsKTi6Rak_z9Gki3FJSLReqO+arPg@mail.gmail.com>
-Subject: Re: [PATCH] reset: Kconfig: Set CONFIG_RESET_QCOM_AOSS as tristate
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64bac471-11c6-41b7-c647-fa2c70b1bc32@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:32 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Tue, 2020-01-07 at 01:03 +0000, John Stultz wrote:
-> > Allow CONFIG_RESET_QCOM_AOSS to be set as as =m
-> > to allow for the driver to be loaded from a modules.
+On Tue, Jan 07, 2020 at 09:14:20AM -0500, Waiman Long wrote:
+> On 1/7/20 8:09 AM, Peter Zijlstra wrote:
+> > On Tue, Jan 07, 2020 at 01:58:24PM +0100, Peter Zijlstra wrote:
+> >> On Sun, Dec 22, 2019 at 09:25:32PM -0500, Waiman Long wrote:
+> >>> It turns out that the URL of the MCS lock paper listed in the source
+> >>> code is no longer accessible. I did got question about where the paper
+> >>> was. This patch updates the URL to one that is still accessible.
+> >>>
+> >>> Signed-off-by: Waiman Long <longman@redhat.com>
+> >>> ---
+> >>>  kernel/locking/qspinlock.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> >>> index 2473f10c6956..1d008d2333c0 100644
+> >>> --- a/kernel/locking/qspinlock.c
+> >>> +++ b/kernel/locking/qspinlock.c
+> >>> @@ -34,7 +34,7 @@
+> >>>   * MCS lock. The paper below provides a good description for this kind
+> >>>   * of lock.
+> >>>   *
+> >>> - * http://www.cise.ufl.edu/tr/DOC/REP-1992-71.pdf
+> >>> + * https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
+> >> Do we want to stick a copy of the paper in our bugzilla and link that
+> >> instead? ISTR we do something similar elsewhere, but I'm having trouble
+> >> finding it.
+> >>
+> >> Thomas, Konstantin?
+> > Boris provided an example from commit:
 > >
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Alistair Delva <adelva@google.com>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Amit Pundir <amit.pundir@linaro.org>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/reset/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >   018ebca8bd70 ("x86/cpufeatures: Enable a new AVX512 CPU feature")
 > >
-> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> > index 3ad7817ce1f0..45e70524af36 100644
-> > --- a/drivers/reset/Kconfig
-> > +++ b/drivers/reset/Kconfig
-> > @@ -99,7 +99,7 @@ config RESET_PISTACHIO
-> >         This enables the reset driver for ImgTec Pistachio SoCs.
+> > That puts a copy of the relevant Intel document here:
 > >
-> >  config RESET_QCOM_AOSS
-> > -     bool "Qcom AOSS Reset Driver"
-> > +     tristate "Qcom AOSS Reset Driver"
->
-> This doesn't seem right on its own, the driver still uses
-> builtin_platform_driver().
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=204215
+> >
+> OK, that sounds good. I will put a copy of the paper in the BZ and
+> linked it there.
 
-Huh. Thanks for pointing that out!
-It seems like it was working fine as a module with just the kconfig
-change, but let me double check this and I'll revise with a follow-on
-patch to address this bit.
+Thanks. When you update the link in the comment, please can you also include
+the title of the paper. i.e.
 
-Very much appreciate the review!
+  The paper below ("Algorithms for Scalable Synchronization on Shared-Memory
+  Multiprocessors by Mellor-Crummey and Scott") ...
 
-thanks
--john
+That makes the thing a lot more searchable in case bugzilla is getting DoS'd
+or whatnot.
+
+Will
