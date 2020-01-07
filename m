@@ -2,98 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739E8C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF319C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350322080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD162087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gDNtSJKQ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RI1VjAZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgAGJr1 (ORCPT
+        id S1727799AbgAGJrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:47:27 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26777 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726565AbgAGJr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:47:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578390445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KVqwQQQJaGP1HIeftCzj/1sPI5qZbhYLk6cQcNLcxhU=;
-        b=gDNtSJKQKw7v/HeS1wz/e0zr2/MGCOUfFDlAoY0nrltvvC4IOmh2d+oV3YD61pVFjj/3A9
-        /ifllQWp0l01PjeE2kN8l/tvqhCoChpZGvOlXQK6mMm2WMUqhDrTE6Tk3eTSfmJT20d5sL
-        ZhSmqTekHkakuJ0I/cjFmlMoL8hOiq8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-KkK0JwdNOtifoF9kz5DWIQ-1; Tue, 07 Jan 2020 04:47:24 -0500
-X-MC-Unique: KkK0JwdNOtifoF9kz5DWIQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B93310054E3;
-        Tue,  7 Jan 2020 09:47:22 +0000 (UTC)
-Received: from gondolin (ovpn-117-222.ams2.redhat.com [10.36.117.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A179A7DB56;
-        Tue,  7 Jan 2020 09:47:19 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:47:17 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio-ccw: Use the correct style for SPDX License
- Identifier
-Message-ID: <20200107104717.5447e24c.cohuck@redhat.com>
-In-Reply-To: <20191225122054.GA4598@nishad>
-References: <20191225122054.GA4598@nishad>
-Organization: Red Hat GmbH
+        Tue, 7 Jan 2020 04:47:39 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:40353 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726565AbgAGJri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:47:38 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47sSGb5vpxz39;
+        Tue,  7 Jan 2020 10:47:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1578390456; bh=mQhGMrMqAWw47NECxXln208dkF/GHmMTdjSqLfREAeI=;
+        h=Date:From:Subject:To:Cc:From;
+        b=RI1VjAZW/5oEzniE4siJGYElmPhb/QAKViy2c/5A3PX8nhSyhy7A8+Sb2t0XGri1N
+         9v5jifgL5K8Wt0RTqNsfbg8yZ72vpVMh0Mkb0lv8NVb2DE2QnGXH+0FmaOSmna2Fcx
+         8JQDtdvAfZjqq32gexokiMkdQzk1/syjk3Ux6gc+tHzdAW23vIvodkVo7DIvfnQ95A
+         tXLLGFJMZzuHbJd5TDroP0Rglg0d21lB51WrPzggSqM08QpqiiUWEdc3kca1aWloyI
+         rIjssdpdfZegcd9adbJ6kv1yl2GutIHps2DUj3dyDRtbtHDD2PPoq9qfKJf5azJiX/
+         aEPZ7iPtMQecA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Tue, 07 Jan 2020 10:47:34 +0100
+Message-Id: <9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v3] mmc: tegra: fix SDR50 tuning override
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lucas Stach <dev@lynxeye.de>
+Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Dec 2019 17:50:58 +0530
-Nishad Kamdar <nishadkamdar@gmail.com> wrote:
+Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+broke SDR50 tuning override. Use correct NVQUIRK_ name.
 
-> This patch corrects the SPDX License Identifier style in
-> header file related to S/390 common i/o drivers.
-> It assigns explicit block comment to the SPDX License
-> Identifier.
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
->
+Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
+Cc: <stable@vger.kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Fixes: 3cd90214b70f ("vfio: ccw: add tracepoints for interesting error paths")
+---
+ v3: added Thierry's signs that were missing in v2
+ v2: converted 'Depends-On' tag to proper 'Cc: stable' lines
+
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/mmc/host/sdhci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 7bc950520fd9..403ac44a7378 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -386,7 +386,7 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+ 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+ 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+-		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
++		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+ 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+ 	}
  
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> ---
->  drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Thanks, applied.
+-- 
+2.20.1
 
