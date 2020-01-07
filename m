@@ -2,196 +2,140 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80289C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FFBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58621222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC76222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUa53n35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgAGRdl (ORCPT
+        id S1728511AbgAGReb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:33:41 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12573 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgAGRdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:33:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 09:33:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="233279357"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jan 2020 09:33:13 -0800
-Subject: Re: [PATCH 2/3] media: aspeed: Use runtime configuration
-To:     Joel Stanley <joel@jms.id.au>, Eddie James <eajames@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200107034324.38073-1-joel@jms.id.au>
- <20200107034324.38073-3-joel@jms.id.au>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <c18ec7d5-023a-f0cd-40fd-32eab1d089fb@linux.intel.com>
-Date:   Tue, 7 Jan 2020 09:33:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 12:34:31 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45339 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgAGReb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:34:31 -0500
+Received: by mail-qv1-f68.google.com with SMTP id l14so182771qvu.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:34:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tQeEMT7Uz6T1uHjZZ7wDlx6MfkTw1Gqq50Vkv5c5Vi4=;
+        b=RUa53n35Z9RAxRw9OT1anZmKVoVf0jBhXe8lwPDD3haYO4fFnvHnRdLMQrfeNjFMxZ
+         XzrcVFGJF/YwbgmDVF5ezKa0wmekFrb/mCF8WVCoBmpZ8MftnQDm6JzCwy+NIujp878y
+         CPyjCONQuSqCSFJXblxABSVYiAJWKoSPPSQ40=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tQeEMT7Uz6T1uHjZZ7wDlx6MfkTw1Gqq50Vkv5c5Vi4=;
+        b=CIKKRTgQYkViEPf9pl5tYfi/pp00apaBjXEv3WirMzYw2IbrLXb4RLWMPLZ9qAEw3N
+         6MNIz84NXTnJxOeGjvzMEdZjuVqJHlGk1WYG8BDvas4oG033clZCbJR01tvr0Awc7h4D
+         x95tAx2GV5ZeIeBgcD5sQf15UKN0eAr5MfhPfqOMPF85oyZ1TUqr1g6VKVyNpp8e00r6
+         3n51CIEe1DYmfY2NpzieSraICSA1ke9OqE3KbO7LJNc7o92zn+ZVvI73g+nysBhdeO94
+         zVne2PQZQbK1bJZnNssv4bfqZuXRJgrPtgO5PxYGxMke4GKFIMdQVsO0F/Eu8F4TKERH
+         a9/w==
+X-Gm-Message-State: APjAAAXAR+zIkUonCvfzt9DKYjbw0ZPZcCoZoPKf1fHla0OnNtpHjbSH
+        EsN+3vssfQtTYE2+E3Mozb2EbHAnv71UfdGVIViZvPjj
+X-Google-Smtp-Source: APXvYqyDW/dUDmhEHj2/dPMxxsL95cfFYwqp441uPJd0ajaReD7DFo/Ee01NZikbU/snqc7YXa0vxbxX2lm2h/7uTjo=
+X-Received: by 2002:a05:6214:192f:: with SMTP id es15mr470828qvb.219.1578418470131;
+ Tue, 07 Jan 2020 09:34:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200107034324.38073-3-joel@jms.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191220193843.47182-1-pmalani@chromium.org> <20191220193843.47182-2-pmalani@chromium.org>
+ <7eecafb2-4686-b448-2837-4181188365b1@collabora.com> <CACeCKadFKWUNHHT-vs686Sz2-CcD0kNeUgqkJT5Q2ATji4L58w@mail.gmail.com>
+ <CACeCKadAJE-ayisXOib4ZV9_BDORp-dpoT_KSMnJj3Y30dF_6A@mail.gmail.com> <d825c0ec-8fbd-b23b-2125-bdfccb623dd7@collabora.com>
+In-Reply-To: <d825c0ec-8fbd-b23b-2125-bdfccb623dd7@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Tue, 7 Jan 2020 09:34:19 -0800
+Message-ID: <CACeCKaft-DHxjXf4JiEqi1Ptn5ctcV0f=zxWqWgYj7V59NGCNw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mfd: cros_ec: Add cros-usbpd-notify subdevice
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+Hi Enric,
 
-On 1/6/2020 7:43 PM, Joel Stanley wrote:
-> The aspeed video IP has some differences between SoC families. Currently
-> the driver decides which registers to use at compile time, which means
-> a single kernel can not be used between platforms.
-> 
-> Switch to using runtime configuration of the registers that vary between
-> SoC families. This is in preparation for upcoming ast2600 support.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->   drivers/media/platform/aspeed-video.c | 53 ++++++++++++++++++++-------
->   1 file changed, 39 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-> index 8f849d9866af..d70b893fd4cf 100644
-> --- a/drivers/media/platform/aspeed-video.c
-> +++ b/drivers/media/platform/aspeed-video.c
-> @@ -72,11 +72,8 @@
->   #define  VE_SEQ_CTRL_CAP_BUSY		BIT(16)
->   #define  VE_SEQ_CTRL_COMP_BUSY		BIT(18)
->   
-> -#ifdef CONFIG_MACH_ASPEED_G5
-> -#define  VE_SEQ_CTRL_JPEG_MODE		BIT(13)	/* AST2500 */
-> -#else
-> -#define  VE_SEQ_CTRL_JPEG_MODE		BIT(8)	/* AST2400 */
-> -#endif /* CONFIG_MACH_ASPEED_G5 */
-> +#define AST2500_VE_SEQ_CTRL_JPEG_MODE	BIT(13)
-> +#define AST2400_VE_SEQ_CTRL_JPEG_MODE	BIT(8)
->   
->   #define VE_CTRL				0x008
->   #define  VE_CTRL_HSYNC_POL		BIT(0)
-> @@ -220,6 +217,9 @@ struct aspeed_video {
->   	struct video_device vdev;
->   	struct mutex video_lock;	/* v4l2 and videobuf2 lock */
->   
-> +	u32 jpeg_mode;
-> +	u32 comp_size_read;
-
-How do you think about of adding
-'const struct aspeed_video_config *config' instead so that we can
-use them like 'video->config->jpeg_mode' in this module. Also, we could
-simply add any SoC specific variations in the future if we add the
-'config' member instead of above.
-
-Overall it looks good to me. I'll rebase my change on top of it.
-
-Thanks a lot!
-
-Jae
-
-> +
->   	wait_queue_head_t wait;
->   	spinlock_t lock;		/* buffer list lock */
->   	struct delayed_work res_work;
-> @@ -243,6 +243,21 @@ struct aspeed_video {
->   
->   #define to_aspeed_video(x) container_of((x), struct aspeed_video, v4l2_dev)
->   
-> +struct aspeed_video_config {
-> +	u32 jpeg_mode;
-> +	u32 comp_size_read;
-> +};
-> +
-> +static const struct aspeed_video_config ast2400_config = {
-> +	.jpeg_mode = AST2400_VE_SEQ_CTRL_JPEG_MODE,
-> +	.comp_size_read = VE_OFFSET_COMP_STREAM,
-> +};
-> +
-> +static const struct aspeed_video_config ast2500_config = {
-> +	.jpeg_mode = AST2500_VE_SEQ_CTRL_JPEG_MODE,
-> +	.comp_size_read = VE_OFFSET_COMP_STREAM,
-> +};
-> +
->   static const u32 aspeed_video_jpeg_header[ASPEED_VIDEO_JPEG_HEADER_SIZE] = {
->   	0xe0ffd8ff, 0x464a1000, 0x01004649, 0x60000101, 0x00006000, 0x0f00feff,
->   	0x00002d05, 0x00000000, 0x00000000, 0x00dbff00
-> @@ -572,7 +587,7 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
->   	if (sts & VE_INTERRUPT_COMP_COMPLETE) {
->   		struct aspeed_video_buffer *buf;
->   		u32 frame_size = aspeed_video_read(video,
-> -						   VE_OFFSET_COMP_STREAM);
-> +						   video->comp_size_read);
->   
->   		spin_lock(&video->lock);
->   		clear_bit(VIDEO_FRAME_INPRG, &video->flags);
-> @@ -907,7 +922,7 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
->   		FIELD_PREP(VE_COMP_CTRL_DCT_LUM, video->jpeg_quality) |
->   		FIELD_PREP(VE_COMP_CTRL_DCT_CHR, video->jpeg_quality | 0x10);
->   	u32 ctrl = VE_CTRL_AUTO_OR_CURSOR;
-> -	u32 seq_ctrl = VE_SEQ_CTRL_JPEG_MODE;
-> +	u32 seq_ctrl = video->jpeg_mode;;
->   
->   	if (video->frame_rate)
->   		ctrl |= FIELD_PREP(VE_CTRL_FRC, video->frame_rate);
-> @@ -1653,8 +1668,17 @@ static int aspeed_video_init(struct aspeed_video *video)
->   	return rc;
->   }
->   
-> +static const struct of_device_id aspeed_video_of_match[] = {
-> +	{ .compatible = "aspeed,ast2400-video-engine", .data = &ast2400_config },
-> +	{ .compatible = "aspeed,ast2500-video-engine", .data = &ast2500_config },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
-> +
->   static int aspeed_video_probe(struct platform_device *pdev)
->   {
-> +	const struct aspeed_video_config *config;
-> +	const struct of_device_id *match;
->   	struct aspeed_video *video;
->   	int rc;
->   
-> @@ -1666,6 +1690,14 @@ static int aspeed_video_probe(struct platform_device *pdev)
->   	if (IS_ERR(video->base))
->   		return PTR_ERR(video->base);
->   
-> +	match = of_match_node(aspeed_video_of_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	config = match->data;
-> +	video->jpeg_mode = config->jpeg_mode;
-> +	video->comp_size_read = config->comp_size_read;
-> +
->   	video->frame_rate = 30;
->   	video->dev = &pdev->dev;
->   	spin_lock_init(&video->lock);
-> @@ -1712,13 +1744,6 @@ static int aspeed_video_remove(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> -static const struct of_device_id aspeed_video_of_match[] = {
-> -	{ .compatible = "aspeed,ast2400-video-engine" },
-> -	{ .compatible = "aspeed,ast2500-video-engine" },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
-> -
->   static struct platform_driver aspeed_video_driver = {
->   	.driver = {
->   		.name = DEVICE_NAME,
-> 
+On Tue, Jan 7, 2020 at 8:51 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Prashant,
+>
+> On 3/1/20 0:52, Prashant Malani wrote:
+> > Hi Enric,
+> >
+> >>> Sorry to not catch this before, but a worry arose. Is non-ACPI platforms or
+> >>> non-X86 platforms or on OF platforms?
+> >>>
+> >>> ARM64 for example has the CONFIG_ACPI symbol set to yes, with the below
+> >>> condition condition will not work on Kevin for example and IIUC this is not what
+> >>> we want, I think we want IS_ENABLED(CONFIG_OF)?
+> >> Thanks for noting this. I will check with a kevin, and with the
+> >> internal build flags to verify whether there are ARM64 which have the
+> >> GOOG0003 PD notification device.
+> >> I'll update this thread with my findings.
+> > AFAICT from the Chrome OS kernel build step .config output, kevin
+> > doesn't have CONFIG_ACPI enabled (it is marked as "# CONFIG_ACPI is
+> > not set"), and it doesn't look like there are Chrome OS ARM devices
+> > that use ACPI (I believe it's only used on Chrome OS x86-based
+> > devices). So perhaps it is not a concern?
+> >
+>
+> The problem is, although it is not used in your configs, it can be selected, and
+> fwiw some defconfigs in mainline have it enabled, i.e the arm64 defconfig.
+>
+> I think you're testing the patch on x86 but I suspect we want also the notifier
+> on some arm64 platforms (like kevin) right? In such case I won't get the
+> notifier because CONFIG_OF and CONFIG_ACPI is enabled on my defconfig.
+I tested the patchset on an arm64 platform and confirmed that
+CONFIG_ACPI is enabled, but I suppose that is not a sufficient test
+given that, as you mentioned, upstream configs like arm64 defconfig
+have it enabled.
+>
+> My guess is that the logic should be if IS_ENABLED(CONFIG_OF) call
+> cros_ec_check_features, otherwise ACPI will do the magic instead of
+> (!IS_ENABLED(CONFIG_ACPI))
+Noted. Thanks! I have a pending query on Patch 1/2. Once that is
+resolved, I will update both patches.
+>
+> Best,
+>  Enric
+>
+> >>
+> >> Best,
+> >>
+> >>>
+> >>> Thanks,
+> >>>  Enric
+> >>>
+> >>>> +      */
+> >>>> +     if (!IS_ENABLED(CONFIG_ACPI)) {
+> >>>> +             if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+> >>>> +                     retval = mfd_add_hotplug_devices(ec->dev,
+> >>>> +                                     cros_usbpd_notify_cells,
+> >>>> +                                     ARRAY_SIZE(cros_usbpd_notify_cells));
+> >>>> +                     if (retval)
+> >>>> +                             dev_err(ec->dev,
+> >>>> +                                     "failed to add PD notify devices: %d\n",
+> >>>> +                                     retval);
+> >>>> +             }
+> >>>> +     }
+> >>>> +
+> >>>>       /*
+> >>>>        * The following subdevices cannot be detected by sending the
+> >>>>        * EC_FEATURE_GET_CMD to the Embedded Controller device.
+> >>>>
