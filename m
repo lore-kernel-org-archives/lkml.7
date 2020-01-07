@@ -2,120 +2,88 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C738C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632A22075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704882075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSTuzj7r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efXqnL53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgAGGjW (ORCPT
+        id S1727327AbgAGGlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:39:22 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43994 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAGGjW (ORCPT
+        Tue, 7 Jan 2020 01:41:32 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40667 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGGlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:39:22 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so38060326lfq.10;
-        Mon, 06 Jan 2020 22:39:20 -0800 (PST)
+        Tue, 7 Jan 2020 01:41:32 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so28103433pfh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 22:41:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SB8O/5JIMzYKiSuEZZhJIz1BTBaOY4SFu2N4rg13oQw=;
-        b=rSTuzj7r+Cfs1/Wvl40AY39m7ODXOwes5dphdCGuNtzSMVxkCIjozPNhi+QtLMja4F
-         Svcmc86MaR0XOjVCWWgYHlXzkUKj+FqslOPiM0q0Op3aOM1QbrIL/E8LKlzcxaNoBBFH
-         nk+HOAP82/ETwqNc/RHhxeRrs8oeEjkRPhwsNSqobliN8IbXPenAvwHkA7IkbqEKpn9W
-         FYva/rgdcIZuWtn0b5DcUJXueOyp9vYqoFJQXGh+uBf1dBiu76prSgQv41zVcakrV0IT
-         asghGM+Bw6KRNOZnifh37TMyJd1japsgTddWLZ/4PY4Bm2ibcQ5aWe9qAdFn9tyZe359
-         oa+g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=XstUhmY/YkSGwKvN4vcBunQP4Q1xbCGHu5HvS0GQt7M=;
+        b=efXqnL53H3PkXbS1e1wybpPxBF6yN8o6MuSnaNRd1bmiokFeNCZjVN/EeIYnWpJ5AP
+         oaIlRMN+K8ee5tDPeOEJX+Ddx0Rv8QOh+qZDOFp4cxcWDjm9Ju6qMrdi5KyCnRiNy2f5
+         q/OjwwYhyvGZpWidiEk8t0mMUIGchRjpEGqLeBvbp4JviixSfpsS30mT0tBytVCpTUFK
+         AVhBbAZVglzC0/v0KzdfeXPqDmASCzJNSp4lQBHWeLzAdkmG1Z9ZWeJyQQdQrtQHRIi1
+         3+sZN/I04mvPAMEWptKZB2d+EBc93vFQNkhs4EVoRBeet2NPo89XTRJeEwjbj+Yqi4uG
+         r0Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SB8O/5JIMzYKiSuEZZhJIz1BTBaOY4SFu2N4rg13oQw=;
-        b=cfxcy0sPxDqXJKATBn+xxV6agi+VVmjIRYLKJ8GOFCUWtvjJOyaA3qj1TTNxLjV25s
-         e/SaSmaeSAcmIGmu/A6183z3eM/uj5G1b1To2VW8zPhddCFcvpkv5yv2s6J+7Po8K3G9
-         X7mPhNxs0yjAhybgaN4YViP7DhCNYR36FJmwFO79BycxrQUd2Vvl+oem8BiPjRdRQ7K/
-         r13XPvVfxxGNwCAfNg5HfffhmKg85U7/XvFw/d4l7PBzg8f6/3XMO6VhrHd4p478V/rb
-         mim9aZ/no4sgo0ldZ3ydyftL0Wq568mPlLeCMSIniysEvrWDWCDCBCXmVt1vdshvpyBV
-         yZFw==
-X-Gm-Message-State: APjAAAUmL0Thr4q5BUW/sWh0ch9O+d854o6M1oHIF5dhdRFWF87ALVNA
-        qXoBACIH9UzCHHqJcenXX1LCBDvhnSoOSQwCxJw=
-X-Google-Smtp-Source: APXvYqy0lJXQV/MFyNa8/f6IaFQpoBMXBPmOnZmlJZ17/dmbIJbjTf10vbzRwRN3lBuqRkZpk7hYfpS2Vsy0oLYUrgI=
-X-Received: by 2002:ac2:51a4:: with SMTP id f4mr62079590lfk.76.1578379159255;
- Mon, 06 Jan 2020 22:39:19 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=XstUhmY/YkSGwKvN4vcBunQP4Q1xbCGHu5HvS0GQt7M=;
+        b=JOsZVCgvhfDjLf+n+lUHW33hMwj9NGFMNnEvrSzuO6rwX/Yw3veUSo5ZSp1K+VlJcG
+         80wczdCYg6ZuHptSaBRVmFVZOOWqKHIrhh4boiW95uT0J2mJKutgQvRQG5JNp8Cw/Uww
+         sd0AmLCAmeJ95E1uRUnF3GDJbTsPAi33UB9nH51NUA8B1m4V+Gc54H1ZOyRS4cQawYBk
+         TJJp/KU8x5KN1ANIM2YJ2PSgEo0bhVyhNfkf7r23pz3K4mYqC2MVHtOLekfRIm4fr4hN
+         lZ5Gea7cPQ0JI0OySwgKPGJzcsr66eJebP7yGMIIllwScu8z8Kz5/ttbg8cLwNNSqPs4
+         5C8A==
+X-Gm-Message-State: APjAAAWOa1iJZ9JQhwinaGKLVPTUFZYepRhP1PpGwNbDbttJiR+3sZR8
+        HQgsYGuwu45ya0+zTWRJIbQ8cA==
+X-Google-Smtp-Source: APXvYqy+6YwckmrUe/l4OGtN1B7r1kkzFWLgWuImOvJI/fI7MvMdDKhTFGUOIE/R67rUjlk+YLmW5A==
+X-Received: by 2002:a63:6ac1:: with SMTP id f184mr2154205pgc.133.1578379291561;
+        Mon, 06 Jan 2020 22:41:31 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id l186sm75585493pge.31.2020.01.06.22.41.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 22:41:30 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:11:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] opp: quiet down WARN when no valid OPPs remain
+Message-ID: <20200107064128.gkeq2ejtvx4bmyhj@vireshk-i7>
+References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
+ <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-6-brianvv@google.com>
- <ba15746b-2cd8-5a04-08fa-3c85b94db15b@fb.com>
-In-Reply-To: <ba15746b-2cd8-5a04-08fa-3c85b94db15b@fb.com>
-From:   Brian Vazquez <brianvv.kernel@gmail.com>
-Date:   Tue, 7 Jan 2020 00:39:07 -0600
-Message-ID: <CABCgpaUHEWg6nwEEy47rF=aeK0AtNpAp3+pJVnObZU87FuUMgw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 05/11] bpf: add generic_batch_ops to lpm_trie map
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yonghong, thanks for reviewing it and sorry for the late reply I
-had been traveling.
+On 03-01-20, 20:36, Michał Mirosław wrote:
+> Per CPU screenful of backtraces is not really that useful. Replace
+> WARN with a diagnostic discriminating common causes of empty OPP table.
 
-On Fri, Dec 13, 2019 at 11:46 AM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 12/11/19 2:33 PM, Brian Vazquez wrote:
-> > This adds the generic batch ops functionality to bpf lpm_trie.
-> >
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > ---
-> >   kernel/bpf/lpm_trie.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >
-> > diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-> > index 56e6c75d354d9..92c47b4f03337 100644
-> > --- a/kernel/bpf/lpm_trie.c
-> > +++ b/kernel/bpf/lpm_trie.c
-> > @@ -743,4 +743,8 @@ const struct bpf_map_ops trie_map_ops = {
-> >       .map_update_elem = trie_update_elem,
-> >       .map_delete_elem = trie_delete_elem,
-> >       .map_check_btf = trie_check_btf,
-> > +     .map_lookup_batch = generic_map_lookup_batch,
-> > +     .map_lookup_and_delete_batch = generic_map_lookup_and_delete_batch,
->
-> Not 100% sure whether trie should use generic map
-> lookup/lookup_and_delete or not. If the key is not available,
-> the get_next_key will return the 'leftmost' node which roughly
-> corresponding to the first node in the hash table.
->
+But why should a platform have an OPP table in DT where none of them works for
+it ? I added the warn intentionally here just for that case.
 
-I think you're right, we shouldn't use generic
-lookup/lookup_and_delete for lpm_trie. That being said, would you be
-ok, if we don't add lpm_trie support in this patch series? Also we can
-drop the generic_map_lookup_and_delete implementation in this patch
-series and add it in the future, if needed. What do you think?
-
-> > +     .map_delete_batch = generic_map_delete_batch,
-> > +     .map_update_batch = generic_map_update_batch,with efault
-> >   };
-> >
+-- 
+viresh
