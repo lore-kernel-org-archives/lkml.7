@@ -2,82 +2,137 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77155C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8457C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4398220848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAB72077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n7E50cMJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MxVGehv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgAGKpU (ORCPT
+        id S1727898AbgAGKpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:45:20 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40023 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbgAGKpU (ORCPT
+        Tue, 7 Jan 2020 05:45:43 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:27905 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727177AbgAGKpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:45:20 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u1so54177752ljk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:45:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C9S9o2rObb9NcqGJD/gxTAUBsVVzEmnZ0vQA6P9vvWw=;
-        b=n7E50cMJgd8ZK+yZ/PZ0NrJg9YxH73/VHIkmsyonXLf3Cso0z9KB2VFwWTOt9Xzf4B
-         /zyNRQIA7ik+lq84fT/CQn5Pnv7PhEP8Hmsv3PNtGobLUkgNOhSYL/43dAMhUMA3LhHz
-         HHTDjFubRwbxkD8SEXOm9Sqe9mdcAGeDLth39DRwfDqNDZZJdwoqKTKGlzsevGn2lQPN
-         q/itCfr6qxQHTm92z1Sk5+eidwdUG6DhbY+aRn7rco7AKG6deXKKkgACqlgVjutT5NEG
-         xO1Sgaf7yUSKLEsDHrQ0WeZKXr88aQnlH/kboi0n6fEmWtJq5n+Oo6+Q1VO8HG75H8W/
-         vaBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C9S9o2rObb9NcqGJD/gxTAUBsVVzEmnZ0vQA6P9vvWw=;
-        b=WfkMHMEKY9FAPp5v/Y/Cn7CzX2K4JTw/rwFH4YowkUsbCVpXxTFTZDtVqO0bHFitKR
-         OiqH64ni6uQGDonl0Cj0PtWX/u/wt4ODNejCqB+Jb5Ur9CEAn6Tp8YtRn9WJrrjn3GQa
-         07L1SQcmENSk+9tjFF+8lbFG1Y6S7coALPba8D3rLlTVWFCY9AQoI8gxshrS8/E+yYUd
-         bFfVPm77TpcrDHoFZe9LF7sw3wf5m4Y2Fwmj0afXVtz107zhhuGjvCGe9svdFmxNUuAK
-         PAd8LY+HLNZrrDH2BWnT285UdVTlI3UFJJQri+/r1hk+lqpIT8A2izqCGD2VGcO2Tk4t
-         9tRQ==
-X-Gm-Message-State: APjAAAUdOJEdJ0V3W1uEP+gtGR3J8THGasVFTn1bkYg9KhWiza8WbOfL
-        RW52bcd5pnRgY1BJK4gwp5D376Kd5eIqvggyBlGD3Q==
-X-Google-Smtp-Source: APXvYqwKhnJxUXNI6n4/K0m61QsBl8AZobfZ5X8p7GpweLe3H/vUr4fwKKptKn3Pmh8UUgxfJ2f+IKh6o3+WhaNxMvk=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61274799ljj.191.1578393918200;
- Tue, 07 Jan 2020 02:45:18 -0800 (PST)
-MIME-Version: 1.0
-References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr> <1577864614-5543-17-git-send-email-Julia.Lawall@inria.fr>
-In-Reply-To: <1577864614-5543-17-git-send-email-Julia.Lawall@inria.fr>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:45:07 +0100
-Message-ID: <CACRpkdZxQCfyWgWfFtnxo9wvV7z2d7jCLV5fBKW9wD2ZnQUp6A@mail.gmail.com>
-Subject: Re: [PATCH 16/16] pinctrl: nuvoton: npcm7xx: constify copied structure
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jan 2020 05:45:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578393942; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=RDAGoBZcP+IIvjulgGM/+lhH6lXI8yZD4vDaBN2zJto=; b=MxVGehv5CacKJ5jmiXyghRsvnVOiGetxd0gYwapHRFo2ocEnU+nxGASXf+2pJNloR8rj93ty
+ tTTP9F+J/4doAkRayODHQVpu0IxOX2dnHwRRQCrZub/etyGCIWYMXUitHxvHLeVTRTiiCai0
+ rOFsmPb9ux41SCECJR5PP9kaX8E=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e146155.7f34257a41b8-smtp-out-n02;
+ Tue, 07 Jan 2020 10:45:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8D5A0C447A4; Tue,  7 Jan 2020 10:45:41 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8889C4479F;
+        Tue,  7 Jan 2020 10:45:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8889C4479F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 1/3] arm64: dts: qcom: sc7180: Add dynamic CPU power coefficients
+Date:   Tue,  7 Jan 2020 16:15:24 +0530
+Message-Id: <1578393926-5052-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 1, 2020 at 9:20 AM Julia Lawall <Julia.Lawall@inria.fr> wrote:
+Add dynamic power coefficients for Silver and Gold CPUs on
+SC7180 SoC.
 
-> The npcmgpio_irqchip structure is only copied into another
-> structure, so make it const.
->
-> The opportunity for this change was found using Coccinelle.
->
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Patch applied.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8011c5f..fb78bb8 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -86,6 +86,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_0>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -103,6 +104,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_100>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -117,6 +119,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_200>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -131,6 +134,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_300>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -145,6 +149,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_400>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -159,6 +164,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_500>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -173,6 +179,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_600>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+@@ -187,6 +194,7 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
++			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_700>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
