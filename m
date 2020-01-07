@@ -2,168 +2,126 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405EEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47ECC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150652087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C3P65o55"
+	by mail.kernel.org (Postfix) with ESMTP id 87BA52073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgAGRti (ORCPT
+        id S1728292AbgAGRvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:49:38 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39949 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgAGRth (ORCPT
+        Tue, 7 Jan 2020 12:51:36 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47554 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728211AbgAGRvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:49:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so388824wrn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:49:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uyvuS2G9MB9Tvq9pni2gKNsuJduIchYAcY94iemGDHk=;
-        b=C3P65o55D+SQxxN6mGKZo2HFJ4tjidCXpgNJDyVr+teyCUgHLA/oplEcHIvlFBb7Se
-         GJYJOEPFDLCZpCThR12FScKuecIuQ5bHwfgVDwdIZsF2pB/TLPpqFCH3gm1hJ+Dt3u4Z
-         rNOH1aRZvB+2wrLM/4TuQzAS8xfGkkRDqWOQ305+FYFU8ckBrQt5jRV8s+var7Bh6e+n
-         0LCwOZYmzj7QNEJw7wyGJSeyXrz7sh0qABAGVmyFDUjkuPkJOocS78vu+NVHD32dRRbO
-         kiVYDdRYm68fFOAehcFimn9Ia23jgmYcV51F7qCCdVuW99cjr3OQd0hEyc5WdRpmw1/r
-         /L8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uyvuS2G9MB9Tvq9pni2gKNsuJduIchYAcY94iemGDHk=;
-        b=dld5zPoUZETQUocTu+IqtkUS4jEANhqpDVQqE7UL8U21PoAPLcfnc+RLeuXqyGVODC
-         HwZzNREXvtr8HmUgZLlkZe2c+CP/WfJ0MrlwSFPllh1FihLkWba4ak8f4FBs4uWnssXp
-         jPYzX9XqrO23ZMuyoT6muDKJcX1TqCxrTQBVdZDKo0aAFlcljznVuvL/xzAkiaxqfU+k
-         ZZf9rByis6SzgYRb9XWnz4DJ2A9ScXRrS2U9z0LmCnPXHbx1zSHTm90dQJoJfghN0jOi
-         vYiRRX/MlegXYSDplW2i6t2eAnEvGzR4wUVKa7tUseqqr2/F/kAqvDBuZ5XWNbWmo3iO
-         bpuw==
-X-Gm-Message-State: APjAAAWPUiaMHlikB5HXrgMZIGtaAldvZTeyBhzR6LFC0NmhXwtpnI0a
-        tWWaVtf/H5mO8gwGsXoXhltlxjm6RFfZb5QcOjw+bA==
-X-Google-Smtp-Source: APXvYqzEg4Y9DhPujMpKhGLLLqlbDKR8EPZU2K7/XBHana0VXM+EZ4387AqIUMuB3nsMMom8jmSfjK00QqU5fLyPh4w=
-X-Received: by 2002:a5d:6652:: with SMTP id f18mr275382wrw.246.1578419375184;
- Tue, 07 Jan 2020 09:49:35 -0800 (PST)
+        Tue, 7 Jan 2020 12:51:36 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007HeR1x090890
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 12:51:35 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb97d2h8a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 12:51:34 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 7 Jan 2020 17:51:33 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 Jan 2020 17:51:24 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007HpN7f58654844
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jan 2020 17:51:23 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 485AFA405C;
+        Tue,  7 Jan 2020 17:51:23 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4789EA4062;
+        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
+Received: from osiris (unknown [9.145.85.21])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
+Date:   Tue, 7 Jan 2020 18:51:20 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Robert Richter <rric@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        oprofile-list@lists.sf.net, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all
+ architectures
+References: <20200102145552.1853992-1-arnd@arndb.de>
+ <20200102145552.1853992-3-arnd@arndb.de>
 MIME-Version: 1.0
-References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157835763783.1456824.4013634516855823659.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200107035824.GA19080@dhcp-128-65.nay.redhat.com> <CAPcyv4jbf2WR2ZU55564fORxKLf8tGH1XbYBpRfTvPouGWk2mg@mail.gmail.com>
- <20200107051822.GB19080@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200107051822.GB19080@dhcp-128-65.nay.redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 7 Jan 2020 18:49:24 +0100
-Message-ID: <CAKv+Gu8hO5mTbFaqwh9OZOEm9r_e1_ob-pfq4yhH4wJG7yV8MQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] efi: Fix efi_memmap_alloc() leaks
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
+X-TM-AS-GCONF: 00
+x-cbid: 20010717-0016-0000-0000-000002DB3EDC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010717-0017-0000-0000-0000333DB70D
+Message-Id: <20200107175120.GC4684@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ suspectscore=1 mlxlogscore=416 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001070140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 at 06:18, Dave Young <dyoung@redhat.com> wrote:
->
-> On 01/06/20 at 08:24pm, Dan Williams wrote:
-> > On Mon, Jan 6, 2020 at 7:58 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > On 01/06/20 at 04:40pm, Dan Williams wrote:
-> > > > With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
-> > > > updated and replaced multiple times. When that happens a previous
-> > > > dynamically allocated efi memory map can be garbage collected. Use the
-> > > > new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
-> > > > allocated memory map is being replaced.
-> > > >
-> > > > Debug statements in efi_memmap_free() reveal:
-> > > >
-> > > >  efi: __efi_memmap_free:37: phys: 0x23ffdd580 size: 2688 flags: 0x2
-> > > >  efi: __efi_memmap_free:37: phys: 0x9db00 size: 2640 flags: 0x2
-> > > >  efi: __efi_memmap_free:37: phys: 0x9e580 size: 2640 flags: 0x2
-> > > >
-> > > > ...a savings of 7968 bytes on a qemu boot with 2 entries specified to
-> > > > efi_fake_mem=.
-> > > >
-> > > > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > ---
-> > > >  drivers/firmware/efi/memmap.c |   24 ++++++++++++++++++++++++
-> > > >  1 file changed, 24 insertions(+)
-> > > >
-> > > > diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-> > > > index 04dfa56b994b..bffa320d2f9a 100644
-> > > > --- a/drivers/firmware/efi/memmap.c
-> > > > +++ b/drivers/firmware/efi/memmap.c
-> > > > @@ -29,6 +29,28 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
-> > > >       return PFN_PHYS(page_to_pfn(p));
-> > > >  }
-> > > >
-> > > > +static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
-> > > > +{
-> > > > +     if (flags & EFI_MEMMAP_MEMBLOCK) {
-> > > > +             if (slab_is_available())
-> > > > +                     memblock_free_late(phys, size);
-> > > > +             else
-> > > > +                     memblock_free(phys, size);
-> > > > +     } else if (flags & EFI_MEMMAP_SLAB) {
-> > > > +             struct page *p = pfn_to_page(PHYS_PFN(phys));
-> > > > +             unsigned int order = get_order(size);
-> > > > +
-> > > > +             free_pages((unsigned long) page_address(p), order);
-> > > > +     }
-> > > > +}
-> > > > +
-> > > > +static void __init efi_memmap_free(void)
-> > > > +{
-> > > > +     __efi_memmap_free(efi.memmap.phys_map,
-> > > > +                     efi.memmap.desc_size * efi.memmap.nr_map,
-> > > > +                     efi.memmap.flags);
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * efi_memmap_alloc - Allocate memory for the EFI memory map
-> > > >   * @num_entries: Number of entries in the allocated map.
-> > > > @@ -100,6 +122,8 @@ static int __init __efi_memmap_init(struct efi_memory_map_data *data)
-> > > >               return -ENOMEM;
-> > > >       }
-> > > >
-> > > > +     efi_memmap_free();
-> > > > +
-> > >
-> > > This seems still not safe,  see below function:
-> > > arch/x86/platform/efi/efi.c:
-> > > static void __init efi_clean_memmap(void)
-> > > It use same memmap for both old and new, and filter out those invalid
-> > > ranges in place, if the memory is freed then ..
-> >
-> > In the efi_clean_memmap() case flags are 0, so efi_memmap_free() is a nop.
-> >
-> > Would you feel better with an explicit?
-> >
-> > WARN_ON(efi.memmap.phys_map == data->phys_map && (data->flags &
-> > (EFI_MEMMAP_SLAB | EFI_MEMMAP_MEMBLOCK))
-> >
-> > ...not sure it's worth it.
->
-> Ah, yes, sorry I did not see the flags, although it is not very obvious.
-> Maybe add some code comment for efi_mem_alloc and efi_mem_init.
->
-> Let's defer the suggestion to Ard.
->
+On Thu, Jan 02, 2020 at 03:55:20PM +0100, Arnd Bergmann wrote:
+> In order to avoid needless #ifdef CONFIG_COMPAT checks,
+> move the compat_ptr() definition to linux/compat.h
+> where it can be seen by any file regardless of the
+> architecture.
+> 
+> Only s390 needs a special definition, this can use the
+> self-#define trick we have elsewhere.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm64/include/asm/compat.h   | 17 -----------------
+>  arch/mips/include/asm/compat.h    | 18 ------------------
+>  arch/parisc/include/asm/compat.h  | 17 -----------------
+>  arch/powerpc/include/asm/compat.h | 17 -----------------
+>  arch/powerpc/oprofile/backtrace.c |  2 +-
+>  arch/s390/include/asm/compat.h    |  6 +-----
+>  arch/sparc/include/asm/compat.h   | 17 -----------------
+>  arch/x86/include/asm/compat.h     | 17 -----------------
+>  include/linux/compat.h            | 18 ++++++++++++++++++
+>  9 files changed, 20 insertions(+), 109 deletions(-)
 
-A one line comment to remind our future selves of this discussion
-would probably be helpful, but beyond that, I don't think we need to
-do much here.
+For s390:
+
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+
