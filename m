@@ -2,191 +2,162 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0DEC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129D4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C5E2051A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578404159;
-	bh=NA1SRINAE/YAWxAWacuWy+Luf/nRLxR0uO+m6U45Ots=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YovobQeHC5pRjY8+JRQttrh8O8IvVYnC50jamSU1sTylkIEyhN0Q+vqNtSypn4CHK
-	 gKdKeox5SuXKghHTeX9Ygrd3y8ixLNqn4P/+6DOXlU0oFG/E6E7Hys1OCBvEuEY3KB
-	 Fku+2yK4e74ejG5AabC8J9b5yG2UFwzVTsBCKBtA=
+	by mail.kernel.org (Postfix) with ESMTP id E78AA207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgAGNf6 (ORCPT
+        id S1728318AbgAGNgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:35:58 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38555 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbgAGNfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:35:55 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so28623001pfc.5;
-        Tue, 07 Jan 2020 05:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4wTOIHrS76ztlN3KfH9i8gs4zRLMioZUYiN9KHxWPxk=;
-        b=DK1RRGZ6+F0r13BqGpMCz6Pu98WI7dNO5BNklZ3n/ef9iloc10egRlswnm05l8MD35
-         QEIwr/Dys/BMPlt1KgsaRS0zrDsJ087JSA47NgMZtKnZumWlF2xR3HvKSI7LJ4WDAv/e
-         SA/GauV9G767x7KOB11J47fOfVsG1Ge21oyg3GOwlL3gjDmTHpYyDBUPowXYiyvk03iz
-         i3/US3CHYWLXe5VBMsMaU0yeoJgFMGql1Qdu3KU+4Tj9wv8ZO8S0mZBOlyZbhVRiy/eo
-         pPQsh4EgaCHWMcGxNJhhJm6lSvN+vmFpXBvfdcWBek5EKC0Je2/MxmAX8WsePzdr4F+T
-         anWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=4wTOIHrS76ztlN3KfH9i8gs4zRLMioZUYiN9KHxWPxk=;
-        b=nwD0DLLxcYuYeTaR8+dFT9aDdcsRmQj32juct48sDhp+ph4hdJK3RrXr5Sl+/RqeoL
-         +UiW6Yx4bghccYWxkkq6mnd4ARfF5iXdIlhKBlyseSb6k23zlVN22vKcAeKpQkQIYZqR
-         CKhFpNzu42DsQ3iGNMkIfb3tk0/2AmIIv0VH1qP18ra+WL5yDbz3Yt2ymN0QkG+D0uSc
-         NgZvkeQwQQIiGOJyzXHex+xXxsxx2RbKguddzFderfdDwoNmfdQWnOyYRQYHcouMfNU3
-         DtS7GT2WhROTv5+lzEnWQugX5jYMPZSx10uJwQQaQ53ifaiA2OH27Zn0Z1K83EBEpNx8
-         699A==
-X-Gm-Message-State: APjAAAVocQoJU2NOBJ4YegIgWknhmLOKwC2Fg+Eo4u7/0qaa2ZL64Lx6
-        C4wbJm4WXfMnTw/ZWRgqLgc=
-X-Google-Smtp-Source: APXvYqyb2jTFCiUMcddJ10y9QK5iHNRPF83RuLGqPIdKmroDDQ0SXO/1FWkCY7o165xA6AB8XZZ5jQ==
-X-Received: by 2002:aa7:92c2:: with SMTP id k2mr90391734pfa.93.1578404154560;
-        Tue, 07 Jan 2020 05:35:54 -0800 (PST)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id p17sm80358484pfn.31.2020.01.07.05.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 05:35:54 -0800 (PST)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 9/9] perf script: Add --show-cgroup-events option
-Date:   Tue,  7 Jan 2020 22:35:01 +0900
-Message-Id: <20200107133501.327117-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20200107133501.327117-1-namhyung@kernel.org>
-References: <20200107133501.327117-1-namhyung@kernel.org>
+        Tue, 7 Jan 2020 08:36:01 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9118 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728301AbgAGNgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:36:00 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5CFA47C50F4EC5F5ED37;
+        Tue,  7 Jan 2020 21:35:56 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 7 Jan 2020
+ 21:35:49 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <Jason@zx2c4.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: curve25519 - Fix selftests build error
+Date:   Tue, 7 Jan 2020 21:35:47 +0800
+Message-ID: <20200107133547.44000-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The --show-cgroup-events option is to print CGROUP events in the
-output like others.
+If CRYPTO_CURVE25519 is y, CRYPTO_LIB_CURVE25519_GENERIC will be
+y, but CRYPTO_LIB_CURVE25519 may be set to m, cause build errors:
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+lib/crypto/curve25519-selftest.o: In function `curve25519':
+curve25519-selftest.c:(.text.unlikely+0xc): undefined reference to `curve25519_arch'
+lib/crypto/curve25519-selftest.o: In function `curve25519_selftest':
+curve25519-selftest.c:(.init.text+0x17e): undefined reference to `curve25519_base_arch'
+
+This splits the curve25519 test code into its own source file.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: aa127963f1ca ("crypto: lib/curve25519 - re-add selftests")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- tools/perf/Documentation/perf-script.txt |  3 ++
- tools/perf/builtin-script.c              | 41 ++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ lib/crypto/Makefile              |  6 +++++-
+ lib/crypto/curve25519-selftest.c | 23 ++++++++++++++++++++++-
+ lib/crypto/curve25519.c          | 17 -----------------
+ 3 files changed, 27 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2599b057e47b..3dd297600427 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -319,6 +319,9 @@ OPTIONS
- --show-bpf-events
- 	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index f97f9b94..87c99da 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -36,5 +36,9 @@ libsha256-y					:= sha256.o
+ ifneq ($(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS),y)
+ libblake2s-y					+= blake2s-selftest.o
+ libchacha20poly1305-y				+= chacha20poly1305-selftest.o
+-libcurve25519-y					+= curve25519-selftest.o
++ifneq ($(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519),)
++obj-$(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519)	+= curve25519-selftest.o
++else
++obj-$(CONFIG_CRYPTO_LIB_CURVE25519_GENERIC)	+= curve25519-selftest.o
++endif
+ endif
+diff --git a/lib/crypto/curve25519-selftest.c b/lib/crypto/curve25519-selftest.c
+index c85e853..c4cfa26 100644
+--- a/lib/crypto/curve25519-selftest.c
++++ b/lib/crypto/curve25519-selftest.c
+@@ -4,6 +4,8 @@
+  */
  
-+--show-cgroup-events
-+	Display cgroup events i.e. events of type PERF_RECORD_CGROUP.
-+
- --demangle::
- 	Demangle symbol names to human readable form. It's enabled by default,
- 	disable with --no-demangle.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index e2406b291c1c..3db4afc29430 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1681,6 +1681,7 @@ struct perf_script {
- 	bool			show_lost_events;
- 	bool			show_round_events;
- 	bool			show_bpf_events;
-+	bool			show_cgroup_events;
- 	bool			allocated;
- 	bool			per_event_dump;
- 	struct evswitch		evswitch;
-@@ -2199,6 +2200,41 @@ static int process_namespaces_event(struct perf_tool *tool,
- 	return ret;
+ #include <crypto/curve25519.h>
++#include <linux/module.h>
++#include <linux/init.h>
+ 
+ struct curve25519_test_vector {
+ 	u8 private[CURVE25519_KEY_SIZE];
+@@ -1280,7 +1282,7 @@ static const struct curve25519_test_vector curve25519_test_vectors[] __initconst
+ 	}
+ };
+ 
+-bool __init curve25519_selftest(void)
++static bool __init curve25519_selftest(void)
+ {
+ 	bool success = true, ret, ret2;
+ 	size_t i = 0, j;
+@@ -1319,3 +1321,22 @@ bool __init curve25519_selftest(void)
+ 
+ 	return success;
  }
- 
-+static int process_cgroup_event(struct perf_tool *tool,
-+				union perf_event *event,
-+				struct perf_sample *sample,
-+				struct machine *machine)
++
++static int __init mod_init(void)
 +{
-+	struct thread *thread;
-+	struct perf_script *script = container_of(tool, struct perf_script, tool);
-+	struct perf_session *session = script->session;
-+	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-+	int ret = -1;
-+
-+	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-+	if (thread == NULL) {
-+		pr_debug("problem processing CGROUP event, skipping it.\n");
-+		return -1;
-+	}
-+
-+	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
-+		goto out;
-+
-+	if (!evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = 0;
-+	}
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_CGROUP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
-+	ret = 0;
-+out:
-+	thread__put(thread);
-+	return ret;
++	if (!IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS) &&
++	    WARN_ON(!curve25519_selftest()))
++		return -ENODEV;
++	return 0;
 +}
 +
- static int process_fork_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
-@@ -2538,6 +2574,8 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.context_switch = process_switch_event;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces = process_namespaces_event;
-+	if (script->show_cgroup_events)
-+		script->tool.cgroup = process_cgroup_event;
- 	if (script->show_lost_events)
- 		script->tool.lost = process_lost_event;
- 	if (script->show_round_events) {
-@@ -3463,6 +3501,7 @@ int cmd_script(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.attr		 = process_attr,
-@@ -3563,6 +3602,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Show context switch events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
- 		    "Show namespace events (if recorded)"),
-+	OPT_BOOLEAN('\0', "show-cgroup-events", &script.show_cgroup_events,
-+		    "Show cgroup events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-lost-events", &script.show_lost_events,
- 		    "Show lost events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
++static void __exit mod_exit(void)
++{
++}
++
++module_init(mod_init);
++module_exit(mod_exit);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Curve25519 selftest");
++MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");
+diff --git a/lib/crypto/curve25519.c b/lib/crypto/curve25519.c
+index c03ccdb..0106beb 100644
+--- a/lib/crypto/curve25519.c
++++ b/lib/crypto/curve25519.c
+@@ -13,8 +13,6 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ 
+-bool curve25519_selftest(void);
+-
+ const u8 curve25519_null_point[CURVE25519_KEY_SIZE] __aligned(32) = { 0 };
+ const u8 curve25519_base_point[CURVE25519_KEY_SIZE] __aligned(32) = { 9 };
+ 
+@@ -22,21 +20,6 @@ EXPORT_SYMBOL(curve25519_null_point);
+ EXPORT_SYMBOL(curve25519_base_point);
+ EXPORT_SYMBOL(curve25519_generic);
+ 
+-static int __init mod_init(void)
+-{
+-	if (!IS_ENABLED(CONFIG_CRYPTO_MANAGER_DISABLE_TESTS) &&
+-	    WARN_ON(!curve25519_selftest()))
+-		return -ENODEV;
+-	return 0;
+-}
+-
+-static void __exit mod_exit(void)
+-{
+-}
+-
+-module_init(mod_init);
+-module_exit(mod_exit);
+-
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Curve25519 scalar multiplication");
+ MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");
 -- 
-2.24.1.735.g03f4e72817-goog
+2.7.4
+
 
