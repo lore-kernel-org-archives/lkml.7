@@ -2,93 +2,140 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B598DC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E9EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894BD206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578389312;
-	bh=3av3o+vC/vXC6oh+TQ7c+u0WMkeu1eoqIgNTIIZ8n9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d9Ju0oARUdRAlwK2izk+p3UVfKXpbCg3355J/B8l8bnFBnanZ2eseqiSVgGVoQ6T5
-	 Yj4KFTJb0XRn/0zzJtvF/aMam79ZCTV9DEanbIvGlOBwlCW8QTzuytg/sYipEJDw9Y
-	 tPOwcBaUtf2Tl4XbKe4EbeKEeiu+uiFT37Qoy7AU=
+	by mail.kernel.org (Postfix) with ESMTP id 1D6A5206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgAGJ2b (ORCPT
+        id S1727705AbgAGJ2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:28:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 04:28:50 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:58290 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgAGJ2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:28:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116C320656;
-        Tue,  7 Jan 2020 09:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578389310;
-        bh=3av3o+vC/vXC6oh+TQ7c+u0WMkeu1eoqIgNTIIZ8n9g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JPabrsknAjdJFKlBlhOK1aD5Uj1XZ3Ir0YPv2aVh5S/poZyyQ+xBezCYhiYZqWw6p
-         PTYHGALXbN1f9H59xWVEiLyWfVUdE/vkmKFkk4o688m042XuQrnv8ulzaXYnZIsbuO
-         4UO3rr0KVmD7GQWZ+9XNJl9DW2nDwxq9GDnAKz/I=
-Date:   Tue, 7 Jan 2020 10:28:27 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Kim, David" <david.kim@ncipher.com>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Magee, Tim" <tim.magee@ncipher.com>
-Subject: Re: [PATCH v2] drivers: misc: Add support for nCipher HSM devices
-Message-ID: <20200107092827.GB1021817@kroah.com>
-References: <20191220154738.31448-1-david.kim@ncipher.com>
- <20191220213036.GA27120@kroah.com>
- <46e2f36d770c462db487d0e918ad2b0b@exukdagfar01.INTERNAL.ROOT.TES>
+        id S1726485AbgAGJ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:28:50 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iolA5-0001Tu-Jm; Tue, 07 Jan 2020 10:28:29 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
+Date:   Tue, 07 Jan 2020 10:28:28 +0100
+Message-ID: <2549505.MsbA2le1sL@diego>
+In-Reply-To: <20200107023721.GG22189@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com> <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com> <20200107023721.GG22189@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46e2f36d770c462db487d0e918ad2b0b@exukdagfar01.INTERNAL.ROOT.TES>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 08:50:50AM +0000, Kim, David wrote:
-> 
-> > >
-> > > This is the driver for nCipher’s Solo and Solo XC hardware security modules.
-> > > These modules implement a proprietary command set (the ’nCore API’) to
-> > > perform cryptographic operations - key generation, signature, and so
-> > > on. HSM commands and their replies are passed in a serialised binary
-> > > format over the PCIe bus via a shared memory region. Multiple commands
-> > > may be in-flight at any one time - command processing is
-> > > multi-threaded and asynchronous. A write operation may, therefore,
-> > > deliver multiple commands, and multiple replies may be retrieved in one
-> > read operation.
+Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
+> On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > > Hi Helen,
+> > > 
+> > > Thank you for the patch.
+> > > 
+> > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > > 
+> > > > This was tested and verified with:
+> > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > 
+> > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > > 
+> > > > ---
+> > > > 
+> > > > Changes in v12:
+> > > > - The commit replaces the following commit in previous series named
+> > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > > This new patch adds yaml binding and was verified with
+> > > > make dtbs_check and make dt_binding_check
+> > > > 
+> > > > Changes in v11: None
+> > > > Changes in v10:
+> > > > - unsquash
+> > > > 
+> > > > Changes in v9:
+> > > > - fix title division style
+> > > > - squash
+> > > > - move to staging
+> > > > 
+> > > > Changes in v8: None
+> > > > Changes in v7:
+> > > > - updated doc with new design and tested example
+> > > > 
+> > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > > >  1 file changed, 75 insertions(+)
+> > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > 
+> > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
+> > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..af97f1b3e005
+> > > > --- /dev/null
+> > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > @@ -0,0 +1,75 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > > 
+> > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
 > > 
-> > If this is "just" a crypto accelerator, why isn't this driver using the existing in-
-> > kernel hardware crypto api?  What is lacking from it that you need here?
+> > The driver currently only supports RX0, but I think you are right,
+> > it should say RX here. This binding could be extended for RX1.
+> > 
+> > > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> > 
+> > I am not following this. The driver handles just one PHY. Each PHY
+> > should have its own node.
 > 
-> Hi Greg,
-> 
-> A cryptographic accelerator uses key material which is stored on, and managed by, the host machine. Hardware security modules, such as nCipher’s Solo products, retain key material (i.e. secrets) within the secure boundary of the device, and implement various forms of access control to restrict use of that key material.
-> 
-> nCipher's product range started, in the early 1990s, as cryptographic accelerators.  The series of hardware security modules served by this driver still does do cryptography but their main function is the generation, management and use of keys within a secure boundary.
-> 
-> The driver doesn't do any cryptography. It provides the link between the userspace software and the HSM's firmware. Cryptography is done within the HSM's secure boundary.
+> Looking at the registers, it seems that the different PHYs are
+> intertwined and we would could have trouble handling the different PHYs
+> with different DT nodes and thus struct device instances.
 
-So this should tie into the correct crypto/key apis that the kernel has
-and not create a brand new user/kernel api, right?
+I have to confess to not following _ALL_ of the threads, so may say
+something stupid, but I don't think the PHYs are intertwined so much.
 
-Please work with the crypto kernel developers to get this right, I can't
-take this until they agree that this code and api is correct.
+Where RX0 is controlled from the "General Register Files" alone
+[register dumping ground for soc designers], the TX1RX1-phy
+actually gets controlled from inside the dsi1 register area it seems.
 
-thanks,
+So in my previous (still unsucessful) tests, I was rolling with something like
+https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
 
-greg k-h
+With the actual "logic" picked from the vendor kernel, that just double-
+maps the dsi1-registers in both dsi and dphy driver, which was strange.
+
+
+Heiko
+
+
