@@ -2,155 +2,109 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7B2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2DCC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01882081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSmeJOVJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE422077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAGU27 (ORCPT
+        id S1728736AbgAGU37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:28:59 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40388 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgAGU27 (ORCPT
+        Tue, 7 Jan 2020 15:29:59 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:56829 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgAGU37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:28:59 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q8so419545pfh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 12:28:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=sjJ0uVz+2aygb69iiy5pJizL3B57FBYYiTtW4flheNU=;
-        b=oSmeJOVJtz+EN6rqqOaJkUZ6gXxhmTzLCY2aUIKhBsSgNpwJVw3T17si3KBwsGUWso
-         jduwUbPhlRdH93NKbsPt3m0n5uT9BgVgz0I9O7TA33v0XLrkjAoR5QBtuvXC9Z4hGFDb
-         XIElsFMjIKYeRMLv21bbkDk6PWmurzzZhAe+C2y6v8ULniYclzNRCGr+s0RZbB69y3Ev
-         9uFAHX6S0dYygPC2dKO4JjI7jFrdOA5D0P2lJxRD9lkD7S0i9dh5rkI6sL7iel/TkGN4
-         /CpemFgsdssmvGCV+lGYsqrmVs9W5VRhC0IyWfniZztDESth4f02zvtRhsJqHNx0YhD2
-         m+RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sjJ0uVz+2aygb69iiy5pJizL3B57FBYYiTtW4flheNU=;
-        b=ZnFaTZWa7aTsjUAxn3ErAEKixUtrVsZdEwlbc6oqqq+fZQq7I9RGEVXZhvEZGgdIt4
-         LdFfASPlyqdXSOp9fGsz7ymIX5ZVudYV9Odx31UNWGEDs9rPTDISx82aMtkQd+I7iNXB
-         2UnzK/kcpIes3Y5H94r9JyTgbHqEC3jHiMzM8mZvPfLfPyDHpWDChRSDfLSibvOOxobO
-         RXMj9qpFe4qUNFmC7MvQ/5piAcoRtTZ10e4ABAV+vJNSx9CT8PUJHmogOuO20d+RiK22
-         1FhGbD22E4+g0mUQ+cDIjRE4xcZsaXVed67x2y1QEIop2uz4VVbu69RKxKk/bocLVYJ7
-         7WwA==
-X-Gm-Message-State: APjAAAXoqeRpApE396k78sFz8HyHREVvJp1WsqBH8+SRQsxdkt0OjMWP
-        /nc1pzLHiXmGeU1SvSaa6ZyV9qceUCs=
-X-Google-Smtp-Source: APXvYqwEAN+GHayhfNfvNeQhmIvj2S/s9WBDSVe1DPPR2BH02UA4TWxlx+H1YxvcBlhuAl1xBjBL/g==
-X-Received: by 2002:a62:b418:: with SMTP id h24mr1178771pfn.192.1578428938618;
-        Tue, 07 Jan 2020 12:28:58 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id x33sm578934pga.86.2020.01.07.12.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 12:28:57 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH] drm: msm: Quiet down plane errors in atomic_check
-Date:   Tue,  7 Jan 2020 20:28:52 +0000
-Message-Id: <20200107202852.55819-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jan 2020 15:29:59 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N9dkD-1jj51m2Ceb-015b7v; Tue, 07 Jan 2020 21:29:51 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     David Kershner <david.kershner@unisys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ken Cox <jkc@redhat.com>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ben Romer <sparmaintainer@unisys.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] visorbus: fix uninitialized variable access
+Date:   Tue,  7 Jan 2020 21:29:40 +0100
+Message-Id: <20200107202950.782951-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:A3vqejOyvQFg7EgPKffaWXbL66TEeJSQDnB6fJS2Cl71lvFcAg9
+ MK19iLCmfeaWBAnxw+502EVUjkfUzn8UEBKftVyS9zLMD7UzjimfIODtOlZVvvldTZW/0sD
+ ppLslFLMtIFMA+YLBL4jI/BsyOxcb33bl8NK0ihk1PiuKK4Gaw3gymQSNeWVhHnXEAJZjGu
+ 0P+08o43YYBYqWEinY3AQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Sq5Ej1NwByc=:YTbtF4Mw3YPLwIC2BrgVHl
+ 9IZsaOCLg4ITa+BDxz+5V67U+GopIYWiPUcwn5ML2+kGNOB84Q6b2Zbw9EwoR6iPMqcLyC/+9
+ dd6ehQOlSLW7Tk1D3zLLnYF+7ANlopW5jBpMpOhCrMau/4Nqhr/jFmMS9Sf/8l6umJM2q9xQY
+ Y4bysTo1NRJ5Xdh7N5uxu4T6G9322PfgyPwuIxJXmUFFto3Mc7Iw/sLMHDuBVfubVjUauiSrj
+ t4ExIIx+VUFSMMQHvGNMeXOurYfmmdSynyJMZSKVu8SDdltOR5R1KzgRNT857QllUBzTDTknu
+ gZICsCEYALzKtKRgs1rcP/SUDg4+YY4uJUDsGg+JtU1W+xn9OqavNgcc6AtA3Kj2it49aBL6/
+ BRiFShuTVrxTfPm7bKTI5rnuyQvVW3R9tgKRuJ+5gZ73D0jva9XzVZpc5GheP8c00bRnC9ZEL
+ UZ1ZwoJFd0G7qM7xFcyO2FZAED9aw4jfkoY78wiJWVmFJ/NJo8N8AOcAMaNYDopnWcnJOIELy
+ fiaW4ZYTvFuF4926ItvKIdo7YrhnPDurI/hQtIOw9uSd/OK/J7TypW3I1Jteg5F+VfDMuYTqp
+ QEOMf70cKx7KiAZ4BT87PFNcGPooHGV+VeKEcSPzd70kBN0Eo+LghwDE4R+YvOgRH9LDOxl+F
+ SH7qL9ZVHm4nb/7Z9uOD5zaFfv0YvrS7RHttMzF+5w2ByTbCs20TyU1qf6Ch2T6YtnYrN5yA6
+ wxOJ13labI2Ys1zF/x43N2AkSJd5jsImGvWCQlNcw5VY0s509wISYW53QFOn8QcBFWvso3jGw
+ m8D2zM7YgE0v91KHpVCrIjMeK7NOH5UtfKtFaDIVeoQfu+iWQNJfhHScOvfFZfDUx18zZ5TWu
+ mjiBE2hmblWYjX9A8UlQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the db845c running AOSP, I see the following error on every
-frame on the home screen:
-  [drm:dpu_plane_atomic_check:915] [dpu error]plane33 invalid src 2880x1620+0+470 line:2560
+The setup_crash_devices_work_queue function only partially initializes
+the message it sends to chipset_init, leading to undefined behavior:
 
-This is due to the error paths in atomic_check using
-DPU_ERROR_PLANE(), and the drm_hwcomposer using atomic_check
-to decide how to composite the frame (thus it expects to see
-atomic_check to fail).
+drivers/visorbus/visorchipset.c: In function 'setup_crash_devices_work_queue':
+drivers/visorbus/visorchipset.c:333:6: error: '((unsigned char*)&msg.hdr.flags)[0]' is used uninitialized in this function [-Werror=uninitialized]
+  if (inmsg->hdr.flags.response_expected)
 
-In order to avoid spamming the logs, this patch converts the
-DPU_ERROR_PLANE() calls to DPU_DEBUG_PLANE() calls in
-atomic_check.
+Set up the entire structure, zero-initializing the 'response_expected'
+flag.
 
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Alistair Delva <adelva@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+This was apparently found by the patch that added the -O3 build option
+in Kconfig.
+
+Fixes: 12e364b9f08a ("staging: visorchipset driver to provide registration and other services")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/visorbus/visorchipset.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 58d5acbcfc5c..d19ae0b51d1c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -858,7 +858,7 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
- 					  pdpu->pipe_sblk->maxupscale << 16,
- 					  true, true);
- 	if (ret) {
--		DPU_ERROR_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
-+		DPU_DEBUG_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
- 		return ret;
- 	}
- 	if (!state->visible)
-@@ -884,13 +884,13 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
- 		(!(pdpu->features & DPU_SSPP_SCALER) ||
- 		 !(pdpu->features & (BIT(DPU_SSPP_CSC)
- 		 | BIT(DPU_SSPP_CSC_10BIT))))) {
--		DPU_ERROR_PLANE(pdpu,
-+		DPU_DEBUG_PLANE(pdpu,
- 				"plane doesn't have scaler/csc for yuv\n");
- 		return -EINVAL;
+diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
+index ca752b8f495f..cb1eb7e05f87 100644
+--- a/drivers/visorbus/visorchipset.c
++++ b/drivers/visorbus/visorchipset.c
+@@ -1210,14 +1210,17 @@ static void setup_crash_devices_work_queue(struct work_struct *work)
+ {
+ 	struct controlvm_message local_crash_bus_msg;
+ 	struct controlvm_message local_crash_dev_msg;
+-	struct controlvm_message msg;
++	struct controlvm_message msg = {
++		.hdr.id = CONTROLVM_CHIPSET_INIT,
++		.cmd.init_chipset = {
++			.bus_count = 23,
++			.switch_count = 0,
++		},
++	};
+ 	u32 local_crash_msg_offset;
+ 	u16 local_crash_msg_count;
  
- 	/* check src bounds */
- 	} else if (!dpu_plane_validate_src(&src, &fb_rect, min_src_size)) {
--		DPU_ERROR_PLANE(pdpu, "invalid source " DRM_RECT_FMT "\n",
-+		DPU_DEBUG_PLANE(pdpu, "invalid source " DRM_RECT_FMT "\n",
- 				DRM_RECT_ARG(&src));
- 		return -E2BIG;
- 
-@@ -899,19 +899,19 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
- 		   (src.x1 & 0x1 || src.y1 & 0x1 ||
- 		    drm_rect_width(&src) & 0x1 ||
- 		    drm_rect_height(&src) & 0x1)) {
--		DPU_ERROR_PLANE(pdpu, "invalid yuv source " DRM_RECT_FMT "\n",
-+		DPU_DEBUG_PLANE(pdpu, "invalid yuv source " DRM_RECT_FMT "\n",
- 				DRM_RECT_ARG(&src));
- 		return -EINVAL;
- 
- 	/* min dst support */
- 	} else if (drm_rect_width(&dst) < 0x1 || drm_rect_height(&dst) < 0x1) {
--		DPU_ERROR_PLANE(pdpu, "invalid dest rect " DRM_RECT_FMT "\n",
-+		DPU_DEBUG_PLANE(pdpu, "invalid dest rect " DRM_RECT_FMT "\n",
- 				DRM_RECT_ARG(&dst));
- 		return -EINVAL;
- 
- 	/* check decimated source width */
- 	} else if (drm_rect_width(&src) > max_linewidth) {
--		DPU_ERROR_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
-+		DPU_DEBUG_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
- 				DRM_RECT_ARG(&src), max_linewidth);
- 		return -E2BIG;
- 	}
+ 	/* send init chipset msg */
+-	msg.hdr.id = CONTROLVM_CHIPSET_INIT;
+-	msg.cmd.init_chipset.bus_count = 23;
+-	msg.cmd.init_chipset.switch_count = 0;
+ 	chipset_init(&msg);
+ 	/* get saved message count */
+ 	if (visorchannel_read(chipset_dev->controlvm_channel,
 -- 
-2.17.1
+2.20.0
 
