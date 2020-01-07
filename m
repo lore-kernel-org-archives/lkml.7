@@ -2,51 +2,55 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE42C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF43C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF5D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F18621744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430758;
-	bh=+TKr1AGg60wAl/rfC0raSUEYB/My//ET9SMahqLI2Ps=;
+	s=default; t=1578430761;
+	bh=7h6wTwiJ2begePAr4ik0cVNuBQz3xLHltNZ7KwOMq7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTsj/7buKUMRYTaTFyyrYDuYuFBGNm3LoWhdhv3Se+XB8AZQ0/nvGr0zyXfl6iozZ
-	 UPD0X5xH/dWyJWbbxctqyrhBy4cZXP0cxYFYFkp8m+j944Syl4qvDqXLIxFOw//pp2
-	 sdLyPRwZCKyLC9OJis9iscfQnZ8qD5XOdW2WzzT8=
+	b=b6DYLrk7Ee1tyaNhcE4Z274z06bxbADoTrz66RG5I4lPWRCvBby6mKLsCSZYH8fUW
+	 jABLE3oh8SxBImz3BHDbSmem1pkebg+YtSBY1bHQhlikfgfnG3E7/YXHVf0hf0hIbZ
+	 CaBc5355cYYZP01CqaB0N02U5Ij+BacV6oBnNpfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgAGU7Q (ORCPT
+        id S1728119AbgAGU7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:59:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbgAGU7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:14 -0500
+        id S1728107AbgAGU7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D34921744;
-        Tue,  7 Jan 2020 20:59:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABB4214D8;
+        Tue,  7 Jan 2020 20:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430753;
-        bh=+TKr1AGg60wAl/rfC0raSUEYB/My//ET9SMahqLI2Ps=;
+        s=default; t=1578430756;
+        bh=7h6wTwiJ2begePAr4ik0cVNuBQz3xLHltNZ7KwOMq7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lF06d9ddKCdkUg06EMO2CztvzYYRDn4NpGY+8Lfk6onQ54jX+jAHFAWt39lNeUaha
-         bE8+gDpYcBovwbf8ba+DpFFrQjFFJT2hibeNHQ2V1yCxk3UvjwZesfCcSgb7e8Xs8L
-         /iManxCK8CFqnUyvqmMx6Nm/98I0jN3j5+LAH4Rw=
+        b=HBBGQO5g7VabpPSj9qwHhRkCzXdcShWYXKDxZJAk88UvsPtWmZvYJJ6CBo49JdR3c
+         WkVrTqQjNG/gmjeE7bh9UoJgi3JYwJDpJCaPwhqOJ1/Dt1FXQm6/1CGgr1gXF4JXli
+         DReUF09noRZyzsjvHMoR7lVuB4wW1QG79ZcvIRso=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 081/191] media: cec: avoid decrementing transmit_queue_sz if it is 0
-Date:   Tue,  7 Jan 2020 21:53:21 +0100
-Message-Id: <20200107205337.317281298@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Ido Kalir <idok@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 047/191] RDMA/counter: Prevent auto-binding a QP which are not tracked with res
+Date:   Tue,  7 Jan 2020 21:52:47 +0100
+Message-Id: <20200107205335.511134640@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,63 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Mark Zhang <markz@mellanox.com>
 
-commit 95c29d46ab2a517e4c26d0a07300edca6768db17 upstream.
+[ Upstream commit 33df2f1929df4a1cb13303e344fbf8a75f0dc41f ]
 
-WARN if transmit_queue_sz is 0 but do not decrement it.
-The CEC adapter will become unresponsive if it goes below
-0 since then it thinks there are 4 billion messages in the
-queue.
+Some QPs (e.g. XRC QP) are not tracked in kernel, in this case they have
+an invalid res and should not be bound to any dynamically-allocated
+counter in auto mode.
 
-Obviously this should not happen, but a driver bug could
-cause this.
+This fixes below call trace:
+BUG: kernel NULL pointer dereference, address: 0000000000000390
+PGD 80000001a7233067 P4D 80000001a7233067 PUD 1a7215067 PMD 0
+Oops: 0000 [#1] SMP PTI
+CPU: 2 PID: 24822 Comm: ibv_xsrq_pingpo Not tainted 5.4.0-rc5+ #21
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+RIP: 0010:rdma_counter_bind_qp_auto+0x142/0x270 [ib_core]
+Code: e1 48 85 c0 48 89 c2 0f 84 bc 00 00 00 49 8b 06 48 39 42 48 75 d6 40 3a aa 90 00 00 00 75 cd 49 8b 86 00 01 00 00 48 8b 4a 28 <8b> 80 90 03 00 00 39 81 90 03 00 00 75 b4 85 c0 74 b0 48 8b 04 24
+RSP: 0018:ffffc900003f39c0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: ffff88820020ec00 RSI: 0000000000000004 RDI: ffffffffffffffc0
+RBP: 0000000000000001 R08: ffff888224149ff0 R09: ffffc900003f3968
+R10: ffffffffffffffff R11: ffff8882249c5848 R12: ffffffffffffffff
+R13: ffff88821d5aca50 R14: ffff8881f7690800 R15: ffff8881ff890000
+FS:  00007fe53a3e1740(0000) GS:ffff888237b00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000390 CR3: 00000001a7292006 CR4: 00000000003606a0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ _ib_modify_qp+0x3a4/0x3f0 [ib_core]
+ ? lookup_get_idr_uobject.part.8+0x23/0x40 [ib_uverbs]
+ modify_qp+0x322/0x3e0 [ib_uverbs]
+ ib_uverbs_modify_qp+0x43/0x70 [ib_uverbs]
+ ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb1/0xf0 [ib_uverbs]
+ ib_uverbs_run_method+0x6be/0x760 [ib_uverbs]
+ ? uverbs_disassociate_api+0xd0/0xd0 [ib_uverbs]
+ ib_uverbs_cmd_verbs+0x18d/0x3a0 [ib_uverbs]
+ ? get_acl+0x1a/0x120
+ ? __alloc_pages_nodemask+0x15d/0x2c0
+ ib_uverbs_ioctl+0xa7/0x110 [ib_uverbs]
+ do_vfs_ioctl+0xa5/0x610
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x48/0x110
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.12 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 99fa331dc862 ("RDMA/counter: Add "auto" configuration mode support")
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Ido Kalir <idok@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-2-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-adap.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/counters.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -378,7 +378,8 @@ static void cec_data_cancel(struct cec_d
- 	} else {
- 		list_del_init(&data->list);
- 		if (!(data->msg.tx_status & CEC_TX_STATUS_OK))
--			data->adap->transmit_queue_sz--;
-+			if (!WARN_ON(!data->adap->transmit_queue_sz))
-+				data->adap->transmit_queue_sz--;
- 	}
+diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
+index 680ad27f497d..023478107f0e 100644
+--- a/drivers/infiniband/core/counters.c
++++ b/drivers/infiniband/core/counters.c
+@@ -282,6 +282,9 @@ int rdma_counter_bind_qp_auto(struct ib_qp *qp, u8 port)
+ 	struct rdma_counter *counter;
+ 	int ret;
  
- 	if (data->msg.tx_status & CEC_TX_STATUS_OK) {
-@@ -430,6 +431,14 @@ static void cec_flush(struct cec_adapter
- 		 * need to do anything special in that case.
- 		 */
- 	}
-+	/*
-+	 * If something went wrong and this counter isn't what it should
-+	 * be, then this will reset it back to 0. Warn if it is not 0,
-+	 * since it indicates a bug, either in this framework or in a
-+	 * CEC driver.
-+	 */
-+	if (WARN_ON(adap->transmit_queue_sz))
-+		adap->transmit_queue_sz = 0;
- }
++	if (!qp->res.valid)
++		return 0;
++
+ 	if (!rdma_is_port_valid(dev, port))
+ 		return -EINVAL;
  
- /*
-@@ -520,7 +529,8 @@ int cec_thread_func(void *_adap)
- 		data = list_first_entry(&adap->transmit_queue,
- 					struct cec_data, list);
- 		list_del_init(&data->list);
--		adap->transmit_queue_sz--;
-+		if (!WARN_ON(!data->adap->transmit_queue_sz))
-+			adap->transmit_queue_sz--;
- 
- 		/* Make this the current transmitting message */
- 		adap->transmitting = data;
+-- 
+2.20.1
+
 
 
