@@ -2,100 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13208C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCE1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E437820880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE8E2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578431527;
+	bh=w/uo7xm0FYtpS1znRXovlVRky4CHZnLlYY4X2n0Jnz8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dq7Urs5mvDrCsU+hjKA5eATFwEu1TrJjEqCTbL/jd9PQsp7+laLD/0ryHLMOymK4g
+	 B3NrMG1eEtGVNAZM0UAYKM56GxXLZyY0/w6XZa+RvHIyhvCgbmLaS9BEER6Nut8kNm
+	 +7xBOXJU8vEc2lyKVA+643+P9ePYjIpjWpNMe1v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgAGVMD convert rfc822-to-8bit (ORCPT
+        id S1730021AbgAGVMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:12:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47030 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730123AbgAGVLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:11:36 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iow8U-0000TK-GS; Tue, 07 Jan 2020 22:11:34 +0100
-Date:   Tue, 7 Jan 2020 22:11:34 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
-Subject: Re: [tip: x86/fpu] x86/fpu: Deactivate FPU state after failure
- during state load
-Message-ID: <20200107211134.tckhc5knkthmjsj6@linutronix.de>
-References: <157840155965.30329.313988118654552721.tip-bot2@tip-bot2>
- <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
+        Tue, 7 Jan 2020 16:12:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730101AbgAGVL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66FE42072A;
+        Tue,  7 Jan 2020 21:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431485;
+        bh=w/uo7xm0FYtpS1znRXovlVRky4CHZnLlYY4X2n0Jnz8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H3jN/wjeSnjDYaoAA48Bi8gb8CQpIGPGIJmHy0fUIZlUw+A5+rbIsBpHER6ModtAD
+         Om8ShMop/D+lEWplXVZnzhBzmNOhY/QPPM2BBgRAtDW6s2Lumqe3MdjlvCBGbrINEv
+         /i5uKB3euc87Mq72+ciy6JXiOpNa8+6B3a3xDOXs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 68/74] ath9k_htc: Modify byte order for an error message
+Date:   Tue,  7 Jan 2020 21:55:33 +0100
+Message-Id: <20200107205232.465628273@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+References: <20200107205135.369001641@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-07 10:41:52 [-1000], Andy Lutomirski wrote:
-> Wow, __fpu__restore_sig is a mess. We have __copy_from... that is
-> Obviously Incorrect (tm) even though it’s not obviously exploitable.
-> (It’s wrong because the *wrong pointer* is checked with access_ok().).
-> We have a fast path that will execute just enough of the time to make
-> debugging the slow path really annoying. (We should probably delete
-> the fast path.)  There are pagefault_disable() call in there mostly to
-> confuse people. (So we take a fault and sleep — big deal.  We have
-> temporarily corrupt state, but no one will ever read it.  The retry
-> after sleeping will clobber xstate, but lazy save is long gone and
-> this should be fine now.  The real issue is that, if we’re preempted
-> after a successful a successful restore, then the new state will get
-> lost.)
+From: Masashi Honma <masashi.honma@gmail.com>
 
-There is preempt_disable() as part of FPU locking since we can't change
-the content of the FPU registers (CPU's or within task's state) and get
-interrupted by task preemption. With disabled preemption we can't take a
-page fault.
+[ Upstream commit e01fddc19d215f6ad397894ec2a851d99bf154e2 ]
 
-We need to load the page from userland which may fault. The context
-switch saves _current_ FPU state only if TIF_NEED_FPU_LOAD is cleared.
-This needs to happen atomic.
+rs_datalen is be16 so we need to convert it before printing.
 
-The fast path may fail if stack is not faulted-in (custom stack,
-madvise(,, MADV_DONTNEED))
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> So either we should delete the fast path or we should make it work
-> reliably and delete the slow path.  And we should get rid of the
-> __copy. And we should have some test cases.
-
-without the fastpath the average case is too slow.
-People-complained-about-this-slow. That is why we ended up with the
-fastpath in the last revision of the series.
-
-The go people contirbuted a testcase. Maybe I should hack up it up so
-that we trigger each path and post since it obviously did not happen.
-Boris, do you remember why we did not include their testcase yet?
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index b38a586ea59a..d913b9e9bd8f 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -986,7 +986,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
+ 		ath_err(common,
+ 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
+-			rxstatus->rs_datalen, skb->len);
++			be16_to_cpu(rxstatus->rs_datalen), skb->len);
+ 		goto rx_next;
+ 	}
  
-> BTW, how was the bug in here discovered?  It looks like it only
-> affects signal restore failure, which is usually not survivable unless
-> the user program is really trying.
+-- 
+2.20.1
 
-The glibc test suite.
 
-Sebastian
+
