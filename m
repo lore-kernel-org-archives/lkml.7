@@ -2,151 +2,124 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84188C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6088AC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552A32087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368842081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUlABEir"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="gbdz0rmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgAGPtZ (ORCPT
+        id S1728436AbgAGPuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:49:25 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41547 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbgAGPtZ (ORCPT
+        Tue, 7 Jan 2020 10:50:05 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38566 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbgAGPuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:49:25 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so50715505eds.8;
-        Tue, 07 Jan 2020 07:49:24 -0800 (PST)
+        Tue, 7 Jan 2020 10:50:05 -0500
+Received: by mail-il1-f193.google.com with SMTP id f5so46081719ilq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 07:50:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=cloud.ionos.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q2dBMzJh1iqJhUE2UWcOEtoI19XwUDJebl5Ro3YyPJU=;
-        b=KUlABEirfWRnzjtocFxdIdVHqfMySuShVFGI6CrCqeviroT2bWoz7jMJ+ue0nO09Gs
-         jx5GKl0ptt9RV17YIu2BLBI8Nbh5cj+teqlXm/Fe2pDPGOS/QuTTcF2hi6SXIUdCI9oH
-         TzfVyBkXNDrvLIg13dWjGGkHmyU0L9pUmhk658bcVFejA9PVvmrAt5oYHsvO6FpUKZZ/
-         m4CA+ZAxNRKigoTM2l1u71Y/lv+AmIH1QUVsSmZIWIlCdFIPaZ9TUArWn6okwCTsO4pI
-         st1kdE6bEziDEJqxbjh1rtvS0ytNjfdgh81Mt47Js3oB2xKcLjcVefpmQ7tT9tRPPzGv
-         ojDA==
+         :cc;
+        bh=dM+tQu6OkciIx8Fh2z8Ykuqej0TW6fLMjStC1bJEE7I=;
+        b=gbdz0rmofSp363r0EzVMTy17sWDBslvGlYGctVZO81OyGq0IouxgVn5Lxh2+ABsLEa
+         oMNNo9vvXeQQzj2xGg+AYuafuEFMsYmgC0VVs2vsNwV0cz1ufdlfWe+GWfH84y041Dye
+         E+3sZLggrsV5Yw8+ORjIr0f1e9pZAlrbbNcmdRo/BsDUR+mYCBxcyzcgbtQGuJ5moBi5
+         4SfxzVUvkftqvavqluEo9nRnNNV+19rqxUHZDi9/1Xc2nweL+7H1UKoMhiA/ribVYlwj
+         7K+zgyxbPeWczDKOixusCrBfBB2N+g9rtSjakbAxi9CL1U40tj5L3azFw1XnyocmtKNq
+         7gpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q2dBMzJh1iqJhUE2UWcOEtoI19XwUDJebl5Ro3YyPJU=;
-        b=aaeZdhKeCIJdnoLsEPYWPdboGhkyAArigdFWgqi9/ilejom6uYm7FoseKOpjP+pcoJ
-         PmFk5kyasTe8fVvcFSSQeYZfRfH18FnF54mICLvCV/y2oH7Ki72tkO6Wc9bjWoti35/h
-         rwHg3suFPFnh4+qfF4ac8scx+ozTfvR3cujkg+NKxqauuK8LkEPWz5sLBR7G6kfK0ZXg
-         /4KoHATmtlc8WWv6yNKtFkiBgoPPoBAzpmJifH3gdQ0wIKBph6KuRRPjh9RyazSR6W/2
-         nm6Aein5E2S/Govewm1a1JPeQZsATXEUkACNIBaBBHjT8TTrjJ4ykqjFf40klqwrKzGO
-         iChw==
-X-Gm-Message-State: APjAAAUiGMCJQOq+AU4a+SjMx+XFcMekWg9Vh1RrXDuObuDkCtTYqDSs
-        PBwowgS3gFy8eH8Ny8s69nWKkmpTjpLQU1nGAjKbog==
-X-Google-Smtp-Source: APXvYqzhf3gjK3FTDjFr5iw2WqmK9Jg7BY+62kmOfi7P7wa+NKewrDAuHRr/r5Q1CtrRCIy2HzoxKaKKII4JfC5I9mI=
-X-Received: by 2002:a50:fb96:: with SMTP id e22mr515499edq.18.1578412163371;
- Tue, 07 Jan 2020 07:49:23 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=dM+tQu6OkciIx8Fh2z8Ykuqej0TW6fLMjStC1bJEE7I=;
+        b=hL4BMqz1whh3TK/aITcN515phXCwU5ixsg9imKZP0//dqIdRasm/h+INC5tUNRCoLJ
+         6Zx+ZKFGanmN5FbStUKKj7tfU2px7Ne9+BIz2C8Pq1fYsj1s8zQULK/IiaTGq1Ql4EbD
+         xD1YMmiGpmV8YYUdwuykK7HLSaqOdxQ6YKWLmsboeiktkVx0bRWnLjiI4DkihGd4K6Ni
+         HdflQtI35CLZh/oxm/FTzrIOI3tWwK/R6txG1qDAEc/DNrVcEn7Yu1q1XWvN7+bUwVYo
+         1CYw2KtUx/1DI7SlCo7RhPh/w0unpLplBCEHP6xUy0KnlEE02pR4ozg249Rx3CIBb3wV
+         MDVg==
+X-Gm-Message-State: APjAAAU/ToPNkLgtcJh+6pQ74PFBN9ZnDVcsCbr/DJy5n2SFKImLNikF
+        ILREaEqXN2+mlCCRrbNc/rKWrZOGgQsVAzcACVKOfw==
+X-Google-Smtp-Source: APXvYqwtSiv4QVl4s0rBRLRrvIZh5ldy/c7Mu44zSQXNlW/uEb7q2Mf6MgtVf91SCmamEWosUmvRp+1ZqbmgKp8akac=
+X-Received: by 2002:a92:8d88:: with SMTP id w8mr93382387ill.71.1578412203147;
+ Tue, 07 Jan 2020 07:50:03 -0800 (PST)
 MIME-Version: 1.0
-References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
-In-Reply-To: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 7 Jan 2020 17:49:12 +0200
-Message-ID: <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com>
-Subject: Re: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
-To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zero19850401@gmail.com" <zero19850401@gmail.com>
+References: <20191230102942.18395-1-jinpuwang@gmail.com> <20191230102942.18395-15-jinpuwang@gmail.com>
+ <bb668d4e-f768-a408-c541-d862d1a2f959@acm.org>
+In-Reply-To: <bb668d4e-f768-a408-c541-d862d1a2f959@acm.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 7 Jan 2020 16:49:52 +0100
+Message-ID: <CAMGffEmrHbw8wnsTD0BZV9O38-pJ0Yv7VLkNMJwGoRyOp9Yqfg@mail.gmail.com>
+Subject: Re: [PATCH v6 14/25] rtrs: a bit of documentation
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen,
-
-On Tue, 7 Jan 2020 at 12:37, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=B3)
-<JohnsonCH.Chen@moxa.com> wrote:
+On Thu, Jan 2, 2020 at 11:21 PM Bart Van Assche <bvanassche@acm.org> wrote:
 >
-> Add dma_endian_le to solve ethernet TX/RX problems for freescale ls1021a.=
- Without this, it will result in
-> rx-busy-errors by ethtool, and transmit queue timeout in ls1021a's platfo=
-rms.
+> On 12/30/19 2:29 AM, Jack Wang wrote:
+> > diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-client b/Documentation/ABI/testing/sysfs-class-rtrs-client
+> > new file mode 100644
+> > index 000000000000..8b219cf6c5c4
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-class-rtrs-client
+> > @@ -0,0 +1,190 @@
+> > +What:                /sys/class/rtrs-client
+> > +Date:                Jan 2020
+> > +KernelVersion:       5.6
+> > +Contact:     Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
+> > +Description:
+> > +When a user of RTRS API creates a new session, a directory entry with
+> > +the name of that session is created under /sys/class/rtrs-client/<session-name>/
 >
-> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
-> ---
-
-This patch is not valid. The endianness configuration in
-eTSECx_DMACTRL is reserved and not applicable.
-What is the value of SCFG_ETSECDMAMCR bits ETSEC_BD and ETSEC_FR_DATA
-on your board? Typically this is configured by the bootloader.
-
->  drivers/net/ethernet/freescale/gianfar.c | 3 +++
->  drivers/net/ethernet/freescale/gianfar.h | 4 ++++
->  2 files changed, 7 insertions(+)
+> Thank you for having included this ABI description. This is very
+> helpful. Please follow the format documented in Documentation/ABI/README
+> and make sure that all text, including the description, start in column
+> 17 and please use tabs for indentation.
+will fix.
 >
-> diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ether=
-net/freescale/gianfar.c
-> index 72868a28b621..ab4e45199df9 100644
-> --- a/drivers/net/ethernet/freescale/gianfar.c
-> +++ b/drivers/net/ethernet/freescale/gianfar.c
-> @@ -833,6 +833,7 @@ static int gfar_of_init(struct platform_device *ofdev=
-, struct net_device **pdev)
+> > diff --git a/drivers/infiniband/ulp/rtrs/README b/drivers/infiniband/ulp/rtrs/README
+> > new file mode 100644
+> > index 000000000000..59ad60318a18
+> > --- /dev/null
+> > +++ b/drivers/infiniband/ulp/rtrs/README
+> > @@ -0,0 +1,149 @@
+> > +****************************
+> > +InfiniBand Transport (RTRS)
+> > +****************************
+> > +
+> > +RTRS (InfiniBand Transport) is a reliable high speed transport library
+> > +which provides support to establish optimal number of connections
+> > +between client and server machines using RDMA (InfiniBand, RoCE, iWarp)
+> > +transport. It is optimized to transfer (read/write) IO blocks.
 >
->         /* Find the TBI PHY.  If it's not there, we don't support SGMII *=
-/
->         priv->tbi_node =3D of_parse_phandle(np, "tbi-handle", 0);
-> +       priv->dma_endian_le =3D of_property_read_bool(np, "fsl,dma-endian=
--le");
+> Is it explained somewhere how the optimal number of connections is
+> determined and also according to which metric the number of connections
+> is optimized? Is the number of connections chosen to minimize latency,
+> maximize IOPS or perhaps to optimize yet another metric?
+RTRS creates one connection per CPU, optimize for minimizing latency
+and maximizing IOPS, I would say.
 >
->         return 0;
+> Thanks,
 >
-> @@ -1209,6 +1210,8 @@ static void gfar_start(struct gfar_private *priv)
->         /* Initialize DMACTRL to have WWR and WOP */
->         tempval =3D gfar_read(&regs->dmactrl);
->         tempval |=3D DMACTRL_INIT_SETTINGS;
-> +       if (priv->dma_endian_le)
-> +               tempval |=3D DMACTRL_LE;
->         gfar_write(&regs->dmactrl, tempval);
->
->         /* Make sure we aren't stopped */
-> diff --git a/drivers/net/ethernet/freescale/gianfar.h b/drivers/net/ether=
-net/freescale/gianfar.h
-> index 432c6a818ae5..aae07db5206b 100644
-> --- a/drivers/net/ethernet/freescale/gianfar.h
-> +++ b/drivers/net/ethernet/freescale/gianfar.h
-> @@ -215,6 +215,7 @@ extern const char gfar_driver_version[];
->  #define DMACTRL_INIT_SETTINGS   0x000000c3
->  #define DMACTRL_GRS             0x00000010
->  #define DMACTRL_GTS             0x00000008
-> +#define DMACTRL_LE             0x00008000
->
->  #define TSTAT_CLEAR_THALT_ALL  0xFF000000
->  #define TSTAT_CLEAR_THALT      0x80000000
-> @@ -1140,6 +1141,9 @@ struct gfar_private {
->                 tx_pause_en:1,
->                 rx_pause_en:1;
->
-> +       /* little endian dma buffer and descriptor host interface */
-> +       unsigned int dma_endian_le;
-> +
->         /* The total tx and rx ring size for the enabled queues */
->         unsigned int total_tx_ring_size;
->         unsigned int total_rx_ring_size;
-> --
-> 2.11.0
->
-> Best regards,
-> Johnson
-
-Regards,
--Vladimir
+> Bart.
+Thanks Bart.
