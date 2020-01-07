@@ -2,75 +2,286 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBF4C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98651C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5F520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EE420656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SNfmyYbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgAGT2C (ORCPT
+        id S1728640AbgAGT2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:28:02 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:45594 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgAGT2C (ORCPT
+        Tue, 7 Jan 2020 14:28:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:35195 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728384AbgAGT2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:28:02 -0500
-Received: by mail-il1-f200.google.com with SMTP id w6so355547ill.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:28:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=79KzdtzPC2ftmJR3OkbetmHCYKG8m61PMKxmCIe48cs=;
-        b=qo+1Mtdba5OeZmKuq9outrl+OVH1BS5Lt11JC0t1XJHahN/maIv6xbTplDUgDoA37x
-         J+Yw2oHBtxMUi8kIvwfv/NWlmP9cXBQQihV+UpW+p9qPxCcIs3+FRI8Hyaq8JF86K1H5
-         bPQyEuqX4+0RoWv2bgb0ElrN4UCKNQUHLxW1Yyfgc68DiIbJW/TIutLx0Qyhf1RZT/yI
-         8g7Nr8pHTQ47KcSctIWq/RsXBeqgJPLdahb3OG83VoTW50cSL7h3xTddIrqQVPYv4ppS
-         AmQ6YFqjwWo1FCsBtahK9ExytzlXHQmXTZhmhBCL7VE6A2bCt2SaTdg86IdmF4HiM0gF
-         7cdg==
-X-Gm-Message-State: APjAAAUEaITpdY6huZ4XGPilM2vMwWISuxpvsTrCjkVyxQw5h4H0d7dB
-        zigJSE+/VNMjBBBrZQoKSuej3by5aBMq/+vnQC5SOmbVSSQ2
-X-Google-Smtp-Source: APXvYqyyKvEVeTDh1DwxjBqTTDT9FQjHY67le+tdBbUTugoVyy+y8PIpydM0+CBLAlUYtUUAbLWWX2WDzQ5QTOuv8K/yt2mUKEf0
+        Tue, 7 Jan 2020 14:28:34 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578425314; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=RQwQB66tsLYS5Q5td7KICDIdEQhztmUN50oAmo2FSoI=;
+ b=SNfmyYbXjNN8VXOGXcLKF4fdK42WvoBhkvqRYUKefN6enFyh7+IzwJz5IpLG3Or6BG0009YE
+ A5zu9bmH+o66506bGdN5g+sr8Hl+nw9yeXHubzuQXL7o2SiT/UISyxEPh+dDNyuRt+cQ5/MM
+ dHPbMy7QF/EhRs8dum62EwBb61E=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e14dbdc.7f9b421a4a78-smtp-out-n01;
+ Tue, 07 Jan 2020 19:28:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0877C447A2; Tue,  7 Jan 2020 19:28:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B41DC433CB;
+        Tue,  7 Jan 2020 19:28:25 +0000 (UTC)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr613853ils.248.1578425281837;
- Tue, 07 Jan 2020 11:28:01 -0800 (PST)
-Date:   Tue, 07 Jan 2020 11:28:01 -0800
-In-Reply-To: <Pine.LNX.4.44L0.2001071407350.1567-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a83be059b91c6e4@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
-From:   syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jan 2020 00:58:25 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+In-Reply-To: <20191207002424.201796-3-saravanak@google.com>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-3-saravanak@google.com>
+Message-ID: <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hey Saravana,
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Spent some time testing this series while
+trying out dcvs on SDM845/SC7180. Apart from
+the few minor issues it works quite well!
 
-Reported-and-tested-by:  
-syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com
+On 2019-12-07 05:54, Saravana Kannan wrote:
+> Not all devices quantify their performance points in terms of 
+> frequency.
+> Devices like interconnects quantify their performance points in terms 
+> of
+> bandwidth. We need a way to represent these bandwidth levels in OPP. 
+> So,
+> add support for parsing bandwidth OPPs from DT.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/opp/core.c | 15 +++++++++--
+>  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+>  drivers/opp/opp.h  |  5 ++++
+>  3 files changed, 62 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index be7a7d332332..c79bbfac7289 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1282,11 +1282,21 @@ static bool
+> _opp_supported_by_regulators(struct dev_pm_opp *opp,
+>  	return true;
+>  }
+> 
+> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> +{
+> +	if (opp1->rate != opp2->rate)
+> +		return opp1->rate < opp2->rate ? -1 : 1;
+> +	if (opp1->peak_bw != opp2->peak_bw)
+> +		return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+> +	return 0;
+> +}
+> +
+>  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp 
+> *new_opp,
+>  			     struct opp_table *opp_table,
+>  			     struct list_head **head)
+>  {
+>  	struct dev_pm_opp *opp;
+> +	int opp_cmp;
+> 
+>  	/*
+>  	 * Insert new OPP in order of increasing frequency and discard if
+> @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device
+> *dev, struct dev_pm_opp *new_opp,
+>  	 * loop.
+>  	 */
+>  	list_for_each_entry(opp, &opp_table->opp_list, node) {
+> -		if (new_opp->rate > opp->rate) {
+> +		opp_cmp = opp_compare_key(new_opp, opp);
+> +		if (opp_cmp > 0) {
+>  			*head = &opp->node;
+>  			continue;
+>  		}
+> 
+> -		if (new_opp->rate < opp->rate)
+> +		if (opp_cmp < 0)
+>  			return 0;
+> 
+>  		/* Duplicate OPPs */
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 1cbb58240b80..b565da5a2b1f 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device 
+> *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> 
+> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct 
+> device_node *np,
+> +			 bool *rate_not_available)
+> +{
+> +	int ret;
+> +	u64 rate;
+> +	u32 bw;
+> +
+> +	ret = of_property_read_u64(np, "opp-hz", &rate);
+> +	if (!ret) {
+> +		/*
+> +		 * Rate is defined as an unsigned long in clk API, and so
+> +		 * casting explicitly to its type. Must be fixed once rate is 64
+> +		 * bit guaranteed in clk API.
+> +		 */
+> +		new_opp->rate = (unsigned long)rate;
+> +		goto out;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> +	if (!ret) {
+> +		new_opp->peak_bw = bw;
+> +
+> +		if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> +			new_opp->avg_bw = bw;
+> +	}
+> +
+> +out:
+> +	*rate_not_available = !!ret;
+> +	/*
+> +	 * If ret is 0 at this point, we have already found a key. If we
+> +	 * haven't found a key yet, then ret already has an error value. In
+> +	 * either case, we don't need to update ret.
+> +	 */
+> +	of_property_read_u32(np, "opp-level", &new_opp->level);
+> +
+> +	return ret;
+> +}
+> +
+>  /**
+>   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT 
+> bindings)
+>   * @opp_table:	OPP table
+> @@ -558,26 +596,12 @@ static struct dev_pm_opp
+> *_opp_add_static_v2(struct opp_table *opp_table,
+>  	if (!new_opp)
+>  		return ERR_PTR(-ENOMEM);
+> 
+> -	ret = of_property_read_u64(np, "opp-hz", &rate);
+> -	if (ret < 0) {
+> -		/* "opp-hz" is optional for devices like power domains. */
+> -		if (!opp_table->is_genpd) {
+> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
+> -			goto free_opp;
+> -		}
+> -
+> -		rate_not_available = true;
+> -	} else {
+> -		/*
+> -		 * Rate is defined as an unsigned long in clk API, and so
+> -		 * casting explicitly to its type. Must be fixed once rate is 64
+> -		 * bit guaranteed in clk API.
+> -		 */
+> -		new_opp->rate = (unsigned long)rate;
+> +	ret = _read_opp_key(new_opp, np, &rate_not_available);
+> +	if (ret) {
 
-Tested on:
+if (!opp_table->is_genpd) {
 
-commit:         ecdf2214 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
-dashboard link: https://syzkaller.appspot.com/bug?extid=10e5f68920f13587ab12
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11543656e00000
+_read_opp_key returns an error for genpd
+opps so please check if it is a genpd
+opp_table before erroring out here.
 
-Note: testing is done by a robot and is best-effort only.
+> +		dev_err(dev, "%s: opp key field not found\n", __func__);
+> +		goto free_opp;
+>  	}
+> 
+> -	of_property_read_u32(np, "opp-level", &new_opp->level);
+> -
+>  	/* Check if the OPP supports hardware's hierarchy of versions or not 
+> */
+>  	if (!_opp_is_supported(dev, opp_table, np)) {
+>  		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> @@ -616,7 +640,8 @@ static struct dev_pm_opp
+> *_opp_add_static_v2(struct opp_table *opp_table,
+>  	if (of_property_read_bool(np, "opp-suspend")) {
+>  		if (opp_table->suspend_opp) {
+>  			/* Pick the OPP with higher rate as suspend OPP */
+> -			if (new_opp->rate > opp_table->suspend_opp->rate) {
+> +			if (opp_compare_key(new_opp,
+> +					    opp_table->suspend_opp) > 1) {
+
+shouldn't the condition be > 0?
+
+>  				opp_table->suspend_opp->suspend = false;
+>  				new_opp->suspend = true;
+>  				opp_table->suspend_opp = new_opp;
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 01a500e2c40a..0def3154d07b 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -57,6 +57,8 @@ extern struct list_head opp_tables;
+>   * @suspend:	true if suspend OPP
+>   * @pstate: Device's power domain's performance state.
+>   * @rate:	Frequency in hertz
+> + * @peak_bw:	Peak bandwidth in kilobytes per second
+> + * @avg_bw:	Average bandwidth in kilobytes per second
+>   * @level:	Performance level
+>   * @supplies:	Power supplies voltage/current values
+>   * @clock_latency_ns: Latency (in nanoseconds) of switching to this 
+> OPP's
+> @@ -78,6 +80,8 @@ struct dev_pm_opp {
+>  	bool suspend;
+>  	unsigned int pstate;
+>  	unsigned long rate;
+> +	unsigned int peak_bw;
+> +	unsigned int avg_bw;
+>  	unsigned int level;
+> 
+>  	struct dev_pm_opp_supply *supplies;
+> @@ -213,6 +217,7 @@ struct opp_device *_add_opp_dev(const struct
+> device *dev, struct opp_table *opp_
+>  void _dev_pm_opp_find_and_remove_table(struct device *dev);
+>  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
+>  void _opp_free(struct dev_pm_opp *opp);
+> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2);
+>  int _opp_add(struct device *dev, struct dev_pm_opp *new_opp, struct
+> opp_table *opp_table, bool rate_not_available);
+>  int _opp_add_v1(struct opp_table *opp_table, struct device *dev,
+> unsigned long freq, long u_volt, bool dynamic);
+>  void _dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask,
+> int last_cpu);
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
