@@ -4,107 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2DCC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FFFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE422077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987282077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgAGU37 (ORCPT
+        id S1728748AbgAGUbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:29:59 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:56829 "EHLO
+        Tue, 7 Jan 2020 15:31:04 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:33591 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGU37 (ORCPT
+        with ESMTP id S1728358AbgAGUbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:29:59 -0500
+        Tue, 7 Jan 2020 15:31:03 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N9dkD-1jj51m2Ceb-015b7v; Tue, 07 Jan 2020 21:29:51 +0100
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MdNLi-1jNzGd1Hsm-00ZMDB; Tue, 07 Jan 2020 21:30:43 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     David Kershner <david.kershner@unisys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ken Cox <jkc@redhat.com>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ben Romer <sparmaintainer@unisys.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] visorbus: fix uninitialized variable access
-Date:   Tue,  7 Jan 2020 21:29:40 +0100
-Message-Id: <20200107202950.782951-1-arnd@arndb.de>
+To:     David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ima: make ASYMMETRIC_PUBLIC_KEY_SUBTYPE 'bool'
+Date:   Tue,  7 Jan 2020 21:30:30 +0100
+Message-Id: <20200107203041.843060-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:A3vqejOyvQFg7EgPKffaWXbL66TEeJSQDnB6fJS2Cl71lvFcAg9
- MK19iLCmfeaWBAnxw+502EVUjkfUzn8UEBKftVyS9zLMD7UzjimfIODtOlZVvvldTZW/0sD
- ppLslFLMtIFMA+YLBL4jI/BsyOxcb33bl8NK0ihk1PiuKK4Gaw3gymQSNeWVhHnXEAJZjGu
- 0P+08o43YYBYqWEinY3AQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Sq5Ej1NwByc=:YTbtF4Mw3YPLwIC2BrgVHl
- 9IZsaOCLg4ITa+BDxz+5V67U+GopIYWiPUcwn5ML2+kGNOB84Q6b2Zbw9EwoR6iPMqcLyC/+9
- dd6ehQOlSLW7Tk1D3zLLnYF+7ANlopW5jBpMpOhCrMau/4Nqhr/jFmMS9Sf/8l6umJM2q9xQY
- Y4bysTo1NRJ5Xdh7N5uxu4T6G9322PfgyPwuIxJXmUFFto3Mc7Iw/sLMHDuBVfubVjUauiSrj
- t4ExIIx+VUFSMMQHvGNMeXOurYfmmdSynyJMZSKVu8SDdltOR5R1KzgRNT857QllUBzTDTknu
- gZICsCEYALzKtKRgs1rcP/SUDg4+YY4uJUDsGg+JtU1W+xn9OqavNgcc6AtA3Kj2it49aBL6/
- BRiFShuTVrxTfPm7bKTI5rnuyQvVW3R9tgKRuJ+5gZ73D0jva9XzVZpc5GheP8c00bRnC9ZEL
- UZ1ZwoJFd0G7qM7xFcyO2FZAED9aw4jfkoY78wiJWVmFJ/NJo8N8AOcAMaNYDopnWcnJOIELy
- fiaW4ZYTvFuF4926ItvKIdo7YrhnPDurI/hQtIOw9uSd/OK/J7TypW3I1Jteg5F+VfDMuYTqp
- QEOMf70cKx7KiAZ4BT87PFNcGPooHGV+VeKEcSPzd70kBN0Eo+LghwDE4R+YvOgRH9LDOxl+F
- SH7qL9ZVHm4nb/7Z9uOD5zaFfv0YvrS7RHttMzF+5w2ByTbCs20TyU1qf6Ch2T6YtnYrN5yA6
- wxOJ13labI2Ys1zF/x43N2AkSJd5jsImGvWCQlNcw5VY0s509wISYW53QFOn8QcBFWvso3jGw
- m8D2zM7YgE0v91KHpVCrIjMeK7NOH5UtfKtFaDIVeoQfu+iWQNJfhHScOvfFZfDUx18zZ5TWu
- mjiBE2hmblWYjX9A8UlQ==
+X-Provags-ID: V03:K1:ZEgeThKH95YGwIPMAJtHd+2vyEnR5Gf4z4NycDvpMltoNTD3qh/
+ /aJUkacxQlY9YOSWv2ierQLql1Kc7wAqrHd0RC2QAqNMZLArRzXVIWI5Mcz0USGYKa6I/su
+ xAjMFuHWD4XBSsdDH5Z4KZBJhQBe8dPiTyJFt/m0Ou3deKidBiqVGd68ZMu0jrDbsWQXJmm
+ LLDGcZ4rhOpxk8juBwNjQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fw669OqxhOo=:5MiDxcR+OnD0flNZf4Q2Fz
+ Fvm8om7GgV8y6CdnSdv06vNV/4ifmwz2oWxYgVkkC3YVJcr8TopFmnBP7/et7yW0zzkAuckal
+ dlgSYRlIWEgzXb/3VlPTmO0EOKSrj1PZhKFja35TMeb/r9mTKjs7eTbj314A2RpoM2MVWEiN3
+ lS1UF/KLKEiXPmg6p6DPk77F271YSxIZ8+o23lqWEfN1Ec8zmrPGZIuDl/BqcCM/rW5U9a5fv
+ 2K2rOyacwDoQn75iO88h9b9xQSiFHhkfTCKPXfJOM8MasajY3EWH1vbAYa/qGr9/LeMpT90pV
+ AtgaR+ba7cXx/CkY+W5N3XJb+KfSOMeasF/00LBMFMtGj3qi281RyhJFPGw2RlqNZzFRwPea3
+ HPgiaEsNSxfOypA/ARBBA3ejOC5cQwbLvEnPwg8VlABoi4O/JQlrz3nDlFCH93PwUltgX0Y4O
+ nwHTl5bJ0vV2aPdM2l8F+XTL4fguEbTt7az/M+CuRyb93Rlh1BSBXFnvNznj5H/RjjwZwz8G/
+ sXdipv4dntau9mcvp2MlLGKaHYmqKJbk9FCgGlXdu2aCCMYMZN6zju/1/oCEh6vFhFa1q96T2
+ 5eymiSuYER6IrxwTHZDTAo7z5vYpzNgpYCKSSs6vzhnP2fRVnAk/AcgmuelpAy4uGTz5NBBxa
+ EKlcmSBdqaDLUm2F0+DbhMwbBbx5qsf66Kal3rrI8pQ0hzx7R7sJRRWlDSDBCq67X4NhwaQSR
+ 7/OC60r5khQ2AZkfDB1CE3Hu4/m7z/rPMMJKy+kRk05U4quZdG7mLf6uPisMQNywmCrLQNMU1
+ w1/XabK4jcmtTWb9fnNvC4/RBuhHugi03ZXK5nUbs3dnY1KJhWHlSQ9Gikw+M8+e9X4Tov1kc
+ Iu4TMIj/Ji8ns8cWdvSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The setup_crash_devices_work_queue function only partially initializes
-the message it sends to chipset_init, leading to undefined behavior:
+The asymmetric key subtype is only used by the key subsystem that cannot
+itself be a loadable module, so when ASYMMETRIC_PUBLIC_KEY_SUBTYPE is set
+to =m, it just does not get used. It also produces a compile-time warning:
 
-drivers/visorbus/visorchipset.c: In function 'setup_crash_devices_work_queue':
-drivers/visorbus/visorchipset.c:333:6: error: '((unsigned char*)&msg.hdr.flags)[0]' is used uninitialized in this function [-Werror=uninitialized]
-  if (inmsg->hdr.flags.response_expected)
+WARNING: modpost: missing MODULE_LICENSE() in security/integrity/ima/ima_asymmetric_keys.o
 
-Set up the entire structure, zero-initializing the 'response_expected'
-flag.
+Make this a 'bool' symbol to avoid both problems.
 
-This was apparently found by the patch that added the -O3 build option
-in Kconfig.
-
-Fixes: 12e364b9f08a ("staging: visorchipset driver to provide registration and other services")
+Fixes: 88e70da170e8 ("IMA: Define an IMA hook to measure keys")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/visorbus/visorchipset.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ crypto/asymmetric_keys/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
-index ca752b8f495f..cb1eb7e05f87 100644
---- a/drivers/visorbus/visorchipset.c
-+++ b/drivers/visorbus/visorchipset.c
-@@ -1210,14 +1210,17 @@ static void setup_crash_devices_work_queue(struct work_struct *work)
- {
- 	struct controlvm_message local_crash_bus_msg;
- 	struct controlvm_message local_crash_dev_msg;
--	struct controlvm_message msg;
-+	struct controlvm_message msg = {
-+		.hdr.id = CONTROLVM_CHIPSET_INIT,
-+		.cmd.init_chipset = {
-+			.bus_count = 23,
-+			.switch_count = 0,
-+		},
-+	};
- 	u32 local_crash_msg_offset;
- 	u16 local_crash_msg_count;
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index 1f1f004dc757..f2846293e4d5 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -11,7 +11,7 @@ menuconfig ASYMMETRIC_KEY_TYPE
+ if ASYMMETRIC_KEY_TYPE
  
- 	/* send init chipset msg */
--	msg.hdr.id = CONTROLVM_CHIPSET_INIT;
--	msg.cmd.init_chipset.bus_count = 23;
--	msg.cmd.init_chipset.switch_count = 0;
- 	chipset_init(&msg);
- 	/* get saved message count */
- 	if (visorchannel_read(chipset_dev->controlvm_channel,
+ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+-	tristate "Asymmetric public-key crypto algorithm subtype"
++	bool "Asymmetric public-key crypto algorithm subtype"
+ 	select MPILIB
+ 	select CRYPTO_HASH_INFO
+ 	select CRYPTO_AKCIPHER
 -- 
 2.20.0
 
