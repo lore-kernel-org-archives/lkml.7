@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5013BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E2920678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193CC2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431276;
-	bh=f/6kfKLPcBUw+uiHX1o2P2f3T3SXkYuPKKqkc7kl0c4=;
+	s=default; t=1578431282;
+	bh=ofr8e3gfatCCmd/bki2vXdSQ7vRODtS1BFvDJDueerU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INh+XyLxNayZkNo4DIsWeQDJ90CYOFOHmtEdQeZjSoiZotUfUBxx18TZbS+scg7XN
-	 o3dINFdhXs7/dRuDWAWCBa8Xj7MpyWIwp/4xrzXGUAhpVHy9dUuxyscevLtIgErDwP
-	 dI9RD4si37F8YHx1TAWQasTZK1NphVuZ1OOrY4CM=
+	b=kbwKiUilNOZliYBvsxOaUAZSbewgtnvsbaRvcDnABrWCV8VnQBGwMFkqInaKtoSEr
+	 1xxMuiFIA3L1t1+oTCtZaqOAQJmcdjKpy7ciPn20olK8McDhatFUKQQz+M/tu91uEJ
+	 CwR9h1audWwEM0e6KOT1u5IoDmJ/E27PbRpq2YiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgAGVHy (ORCPT
+        id S1729614AbgAGVH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgAGVHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:48 -0500
+        id S1729305AbgAGVHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35BE22087F;
-        Tue,  7 Jan 2020 21:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 762482087F;
+        Tue,  7 Jan 2020 21:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431267;
-        bh=f/6kfKLPcBUw+uiHX1o2P2f3T3SXkYuPKKqkc7kl0c4=;
+        s=default; t=1578431274;
+        bh=ofr8e3gfatCCmd/bki2vXdSQ7vRODtS1BFvDJDueerU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0QF7qTQwv1XmHTtePx84VXyrM7h7aLiq7hHH1ApIrogwlV1A00uO2iVLnsTASPmL
-         n0Q2QP27fOWvfV2yJb5ICSckIEKaHDSkUgiwszBN2ewJnroRxZMaUXh1pGWuf0r246
-         jVtIidXtNltrc/LNvXZILpmncXTVg32lLUMppvYw=
+        b=p1IZtWRXqJqgbP56wMzVK9ZGiiD9KPAWJb4Y7MdVxBr6ElUgza/nBeRhMkWSS/AHq
+         MCrZ//UlnKqUCRHudYcO93ZM99EgQdr46N7W7ApG+hLUbm+KRMqPcX5xOpS+b4XIRU
+         X7/l+k7w3yXNU3EOpMNsKLzWW4qFKahcXt8pZ31I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/115] coresight: tmc-etf: Do not call smp_processor_id from preemptible
-Date:   Tue,  7 Jan 2020 21:55:12 +0100
-Message-Id: <20200107205308.269793829@linuxfoundation.org>
+Subject: [PATCH 4.19 105/115] rxrpc: Fix possible NULL pointer access in ICMP handling
+Date:   Tue,  7 Jan 2020 21:55:15 +0100
+Message-Id: <20200107205308.781757705@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,66 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
+[ Upstream commit f0308fb0708078d6c1d8a4d533941a7a191af634 ]
 
-During a perf session we try to allocate buffers on the "node" associated
-with the CPU the event is bound to. If it is not bound to a CPU, we
-use the current CPU node, using smp_processor_id(). However this is unsafe
-in a pre-emptible context and could generate the splats as below :
+If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
+the UDP socket is being shut down, rxrpc_error_report() may get called to
+deal with it after sk_user_data on the UDP socket has been cleared, leading
+to a NULL pointer access when this local endpoint record gets accessed.
 
- BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
- caller is tmc_alloc_etf_buffer+0x5c/0x60
- CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
- Call trace:
-  dump_backtrace+0x0/0x150
-  show_stack+0x14/0x20
-  dump_stack+0x9c/0xc4
-  debug_smp_processor_id+0x10c/0x110
-  tmc_alloc_etf_buffer+0x5c/0x60
-  etm_setup_aux+0x1c4/0x230
-  rb_alloc_aux+0x1b8/0x2b8
-  perf_mmap+0x35c/0x478
-  mmap_region+0x34c/0x4f0
-  do_mmap+0x2d8/0x418
-  vm_mmap_pgoff+0xd0/0xf8
-  ksys_mmap_pgoff+0x88/0xf8
-  __arm64_sys_mmap+0x28/0x38
-  el0_svc_handler+0xd8/0x138
-  el0_svc+0x8/0xc
+Fix this by just returning immediately if sk_user_data was NULL.
 
-Use NUMA_NO_NODE hint instead of using the current node for events
-not bound to CPUs.
+The oops looks like the following:
 
-Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org> # 4.7+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+...
+RIP: 0010:rxrpc_error_report+0x1bd/0x6a9
+...
+Call Trace:
+ ? sock_queue_err_skb+0xbd/0xde
+ ? __udp4_lib_err+0x313/0x34d
+ __udp4_lib_err+0x313/0x34d
+ icmp_unreach+0x1ee/0x207
+ icmp_rcv+0x25b/0x28f
+ ip_protocol_deliver_rcu+0x95/0x10e
+ ip_local_deliver+0xe9/0x148
+ __netif_receive_skb_one_core+0x52/0x6e
+ process_backlog+0xdc/0x177
+ net_rx_action+0xf9/0x270
+ __do_softirq+0x1b6/0x39a
+ ? smpboot_register_percpu_thread+0xce/0xce
+ run_ksoftirqd+0x1d/0x42
+ smpboot_thread_fn+0x19e/0x1b3
+ kthread+0xf1/0xf6
+ ? kthread_delayed_work_timer_fn+0x83/0x83
+ ret_from_fork+0x24/0x30
+
+Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
+Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/rxrpc/peer_event.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index e31061308e19..4644ac5582cf 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -304,9 +304,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
- 	int node;
- 	struct cs_buffers *buf;
+diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+index dc7fdaf20445..42582a9ff81d 100644
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -153,6 +153,9 @@ void rxrpc_error_report(struct sock *sk)
+ 	struct rxrpc_peer *peer;
+ 	struct sk_buff *skb;
  
--	if (cpu == -1)
--		cpu = smp_processor_id();
--	node = cpu_to_node(cpu);
-+	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
++	if (unlikely(!local))
++		return;
++
+ 	_enter("%p{%d}", sk, local->debug_id);
  
- 	/* Allocate memory structure for interaction with Perf */
- 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+ 	skb = sock_dequeue_err_skb(sk);
 -- 
 2.20.1
 
