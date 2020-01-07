@@ -2,118 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14E9C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68582C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9411F20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430629;
-	bh=EEWf92paQeWatAARwqxwbuW4tXFAiCDjh9sBkB1fywg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mY4o8phaKMdIvL87sQxHY+YjItltfI6aRTmvPWihFTenAl8d3e3pK7/25C4zkZY2I
-	 cibGFK+puyz5O7U+wambSLsNmBXZNlZBOaoR0FKt7ysMY+xzELy+ONhypi8bL23qkb
-	 0zv56yxCJKfCcHi8qev/37YKQ1GesIVg6sYDROts=
+	by mail.kernel.org (Postfix) with ESMTP id 487EC20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgAGU5I (ORCPT
+        id S1727462AbgAGU5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:10 -0500
+Received: from mga04.intel.com ([192.55.52.120]:4554 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbgAGU5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B0621744;
-        Tue,  7 Jan 2020 20:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430621;
-        bh=EEWf92paQeWatAARwqxwbuW4tXFAiCDjh9sBkB1fywg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ioMARYD+XbHMiOKXaKBwa0mREHn2pl6yNoWHELM1NHea7NxMv29/iRXw1v6lZpgN
-         w1C93slDf/XbbOUfYpaLKC8Eh9//0mtbdpRh20lLtl538NF4wvoXLd55Em6C8XwBop
-         HAn/WlfSIIEbPzPleIEv762XWFRVdLmyG56ia7Sw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/191] scsi: qla2xxx: Configure local loop for N2N target
-Date:   Tue,  7 Jan 2020 21:52:28 +0100
-Message-Id: <20200107205334.507262764@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727408AbgAGU5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 12:57:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
+   d="scan'208";a="211306070"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.51])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jan 2020 12:57:03 -0800
+Message-ID: <9f3c7f106963ce7f8a74fc084f6de5ad2d4380ed.camel@intel.com>
+Subject: Re: [tip: x86/fpu] x86/fpu: Deactivate FPU state after failure
+ during state load
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>, linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
+Date:   Tue, 07 Jan 2020 12:38:20 -0800
+In-Reply-To: <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
+References: <157840155965.30329.313988118654552721.tip-bot2@tip-bot2>
+         <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+On Tue, 2020-01-07 at 10:41 -1000, Andy Lutomirski wrote:
+> > On Jan 7, 2020, at 2:52 AM, tip-bot2 for Sebastian Andrzej Siewior <tip-bot2@linutronix.de> wrote:
+> > 
+> > ﻿The following commit has been merged into the x86/fpu branch of tip:
+> > 
+> > Commit-ID:     bbc55341b9c67645d1a5471506370caf7dd4a203
+> > Gitweb:        https://git.kernel.org/tip/bbc55341b9c67645d1a5471506370caf7dd4a203
+> > Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > AuthorDate:    Fri, 20 Dec 2019 20:59:06 +01:00
+> > Committer:     Borislav Petkov <bp@suse.de>
+> > CommitterDate: Tue, 07 Jan 2020 13:44:42 +01:00
+> > 
+> > x86/fpu: Deactivate FPU state after failure during state load
+> > 
+> > In __fpu__restore_sig(), fpu_fpregs_owner_ctx needs to be reset if the
+> > FPU state was not fully restored. Otherwise the following may happen (on
+> > the same CPU):
+> > 
+> >  Task A                     Task B               fpu_fpregs_owner_ctx
+> >  *active*                                        A.fpu
+> >  __fpu__restore_sig()
+> >                             ctx switch           load B.fpu
+> >                             *active*             B.fpu
+> >  fpregs_lock()
+> >  copy_user_to_fpregs_zeroing()
+> >    copy_kernel_to_xregs() *modify*
+> >    copy_user_to_xregs() *fails*
+> >  fpregs_unlock()
+> >                            ctx switch            skip loading B.fpu,
+> >                            *active*              B.fpu
+> > 
+> > In the success case, fpu_fpregs_owner_ctx is set to the current task.
+> > 
+> > In the failure case, the FPU state might have been modified by loading
+> > the init state.
+> > 
+> > In this case, fpu_fpregs_owner_ctx needs to be reset in order to ensure
+> > that the FPU state of the following task is loaded from saved state (and
+> > not skipped because it was the previous state).
+> > 
+> > Reset fpu_fpregs_owner_ctx after a failure during restore occurred, to
+> > ensure that the FPU state for the next task is always loaded.
+> > 
+> > The problem was debugged-by Yu-cheng Yu <yu-cheng.yu@intel.com>.
+> 
+> Wow, __fpu__restore_sig is a mess. We have __copy_from... that is Obviously Incorrect (tm) even though it’s not obviously exploitable. (It’s wrong because the *wrong pointer* is checked with access_ok().). We have a fast path that will execute just enough of the time to make debugging the slow path really annoying. (We should probably delete the fast path.)  There are pagefault_disable() call in there mostly to confuse people. (So we take a fault and sleep — big deal.  We have temporarily corrupt state, but no one will ever read it.  The retry after sleeping will clobber xstate, but lazy save is long gone and this should be fine now.  The real issue is that, if we’re preempted after a successful a successful restore, then the new state will get lost.)
+> 
+> So either we should delete the fast path or we should make it work reliably and delete the slow path.  And we should get rid of the __copy. And we should have some test cases.
+> 
+> BTW, how was the bug in here discovered?  It looks like it only affects signal restore failure, which is usually not survivable unless the user program is really trying.
 
-[ Upstream commit fd1de5830a5abaf444cc4312871e02c41e24fdc1 ]
+It causes corruption in other tasks, e.g. a non-CET task gets a control-protection fault.
 
-qla2x00_configure_local_loop initializes PLOGI payload for PLOGI ELS using
-Get Parameters mailbox command.
-
-In the case when the driver is running in target mode, the topology is N2N
-and the target port has higher WWPN, LOCAL_LOOP_UPDATE bit is cleared too
-early and PLOGI payload is not initialized by the Get Parameters
-command. That causes a failure of ELS IOCB carrying the PLOGI with 0x15 aka
-Data Underrun error.
-
-LOCAL_LOOP_UPDATE has to be set to initialize PLOGI payload.
-
-Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
-Link: https://lore.kernel.org/r/20191125165702.1013-10-r.bolshakov@yadro.com
-Acked-by: Quinn Tran <qutran@marvell.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/qla2xxx/qla_init.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 5d31e3d52b6b..4e424f1ce5de 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4927,14 +4927,8 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
- 		set_bit(RSCN_UPDATE, &flags);
- 		clear_bit(LOCAL_LOOP_UPDATE, &flags);
- 
--	} else if (ha->current_topology == ISP_CFG_N) {
--		clear_bit(RSCN_UPDATE, &flags);
--		if (qla_tgt_mode_enabled(vha)) {
--			/* allow the other side to start the login */
--			clear_bit(LOCAL_LOOP_UPDATE, &flags);
--			set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
--		}
--	} else if (ha->current_topology == ISP_CFG_NL) {
-+	} else if (ha->current_topology == ISP_CFG_NL ||
-+		   ha->current_topology == ISP_CFG_N) {
- 		clear_bit(RSCN_UPDATE, &flags);
- 		set_bit(LOCAL_LOOP_UPDATE, &flags);
- 	} else if (!vha->flags.online ||
--- 
-2.20.1
-
-
+Yu-cheng
 
