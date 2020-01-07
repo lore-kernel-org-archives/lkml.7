@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D88C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98534C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DDB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611562072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431579;
-	bh=y4u0GGqzvmPD1hulz4bMt4c5qg6Q6An5RCpTRMXvP6A=;
+	s=default; t=1578431582;
+	bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zapbT4GUwvFrjNsNaXHXQve2LgaE6OtIz+kcgNH41jjx+hpjo/TaxJdWe1OcWlaXN
-	 riXlhmHl3zDMj4FdTGvyqCfQMuXpzXbSCsBSxm0rbZnilbOxwwE3gxXdgfjahTUcMc
-	 9DRLgVRKSUH9AnfW+4Z74TY0q+juYZdhA2qJyUHQ=
+	b=llcE3BE4BvHFudz/aK5F81ADzq0TrQJZAU+Zt7q6IWuiYcOR/3Svaz1IL5FrPX2KS
+	 jO/Acvb6cU9bEhETFBsVKxsNaSnJbFCQYT58G2K0A3MkwwVNSFDaILQmsoHWp+woBN
+	 fmOaDLh1h4bELgjyS0GOm/pJi/sKb5ZCm77lgyuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgAGVKg (ORCPT
+        id S1729990AbgAGVNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:13:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbgAGVKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:30 -0500
+        id S1729994AbgAGVKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E12324677;
-        Tue,  7 Jan 2020 21:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6ED2072A;
+        Tue,  7 Jan 2020 21:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431429;
-        bh=y4u0GGqzvmPD1hulz4bMt4c5qg6Q6An5RCpTRMXvP6A=;
+        s=default; t=1578431437;
+        bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFnzPk7JmnCS3Zdedkw0kHEbLpZpe8Y+/frNXy221Vqh+yned+KTiFvXvVF0jjZaB
-         TSlHqn/rw8kw4fQ/5oANPdkJ3YeCtvHpB8ZPojw3MfJZyXwM/3kiRK6bP8KlBuA7lJ
-         FnawWSigW9b+xI5mcjJsrnE74ZV+9gW0BtB9KBkU=
+        b=J1MuTbfyiWBZw4cLoDxoESTO7aVUcBDtAKoutxY8ZyGD/hO1OpclFPSeZHR3uZAQK
+         kOgT37i4GUcqearK9rJ7/2BfQluMGGxUimcQKZLmudfND6O2te4JGDF6hHAaN7CNkT
+         PqeqIrNL6r88Y4qoyY36IKwLOLULDmGxRy2gGYz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 53/74] Bluetooth: delete a stray unlock
-Date:   Tue,  7 Jan 2020 21:55:18 +0100
-Message-Id: <20200107205219.485951844@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.14 55/74] media: flexcop-usb: ensure -EIO is returned on error condition
+Date:   Tue,  7 Jan 2020 21:55:20 +0100
+Message-Id: <20200107205220.666713677@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit df66499a1fab340c167250a5743931dc50d5f0fa upstream.
+commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
 
-We used to take a lock in amp_physical_cfm() but then we moved it to
-the caller function.  Unfortunately the unlock on this error path was
-overlooked so it leads to a double unlock.
+An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
+even though the an -EIO was intended to be returned in the case where
+ret != buflen.  Fix this by replacing the return 0 with the return of
+ret to return the error return code.
 
-Fixes: a514b17fab51 ("Bluetooth: Refactor locking in amp_physical_cfm")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Addresses-Coverity: ("Unused value")
+
+Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/l2cap_core.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -4918,10 +4918,8 @@ void __l2cap_physical_cfm(struct l2cap_c
- 	BT_DBG("chan %p, result %d, local_amp_id %d, remote_amp_id %d",
- 	       chan, result, local_amp_id, remote_amp_id);
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -294,7 +294,7 @@ static int flexcop_usb_i2c_req(struct fl
  
--	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED) {
--		l2cap_chan_unlock(chan);
-+	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED)
- 		return;
--	}
+ 	mutex_unlock(&fc_usb->data_mutex);
  
- 	if (chan->state != BT_CONNECTED) {
- 		l2cap_do_create(chan, result, local_amp_id, remote_amp_id);
+-	return 0;
++	return ret;
+ }
+ 
+ /* actual bus specific access functions,
 
 
