@@ -6,103 +6,109 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E7CC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4194C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1B22080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB6E206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578399318;
-	bh=o8GFqpNAeNG/D6xD96NlBIrZiiTTw33C8XKun044trQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FHOzhb/fro4YO3VdydLXa+Z2vm8QIRk3yt+vPFLrf7r1ZQmKB6TjKPFx0N6aRxBEV
-	 F8lKpjbLFfSKH+aUJzLAsMsG+Z8sue8H1UbysuzrBHts8EDbOVNcteKBJWDiVt9gn9
-	 3RHTR3wZntggkrxLcIvzOzd7fvojoGLh+VsJd+a0=
+	s=default; t=1578399341;
+	bh=d9XX/RSwY9aTTzmpuuE0fOOU68NQ65sLCFSqyCnApLI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=12+d6AqI3U3CiOrEtYLPUnuigDMOo6XWLI04UPVBMISrYFjffYnUKH9FrlUMidogU
+	 U4MhK8rcHtOAGrlKHB+wcsnNLOOwCOwWoBieG91HFYMUyW0QLh0m1/yFOnc0a9OHH2
+	 m0FolJLshD9c/Z0z+N9O+RShm0QWbIxJ+JdoK2zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgAGMPR convert rfc822-to-8bit (ORCPT
+        id S1728026AbgAGMPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:15:17 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46382 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:15:17 -0500
-Received: by mail-ed1-f68.google.com with SMTP id m8so50129815edi.13;
-        Tue, 07 Jan 2020 04:15:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dkoKwK15oscs3r0V8scapeKxlP48dhvoGFKEGuBFTog=;
-        b=HXISdLqOXCi/RY0dBfCTadWPxJnegmXUMqSxRGe42iY3pi8cxb8rZbpZSwvcgnrAFf
-         rwgszkKeJ18N/gITwyfHV6kEc/vLTbnfoy/TN14I6ftssHKesjXWpAsOHKKWiU7vt+9Y
-         WCzrPaEIkDsOAhv0NftJ57trlAAeTUcGoxdEXMm0AM6hGD72Go0f6JEa3x0iJaFSCbOM
-         v1sA1a7RPPko6uJ470BeueTPTGbQ9DNQ7fgmal0ow61SD9nFdOnhLtzXLg/nbW6KxWNO
-         zFQh8p+avU+PozbeYJ9Ff1qcie3dfq0XoGrsas0HbNTtGPaNwjnBi7YB8bmf/6DlaNkU
-         mdlA==
-X-Gm-Message-State: APjAAAW2qPasWz1A/X+jNNH83mzzfNkrJNS/TDMj8MdvZ2gTvZEk+7wl
-        snpUeEKEQDI0dvFtjcyoAjo=
-X-Google-Smtp-Source: APXvYqwW9wXBZpzOMfTBS/kbOe4ZNckfdL5+6WOz5BazFgA1mugpFZqXKx0VrM2wxvGj7bgEnT9msA==
-X-Received: by 2002:a17:906:eda9:: with SMTP id sa9mr109435185ejb.297.1578399315230;
-        Tue, 07 Jan 2020 04:15:15 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id f9sm7382215edr.66.2020.01.07.04.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:15:14 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:15:12 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107121512.GA319@pi3>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
- <20200107110359.GA32423@pi3>
- <20200107113354.ggq6zarewq5ip354@pengutronix.de>
- <20200107115429.GA32632@pi3>
- <20200107120926.cgrxk6b4rchf6i42@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200107120926.cgrxk6b4rchf6i42@pengutronix.de>
+        Tue, 7 Jan 2020 07:15:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727177AbgAGMPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:15:40 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A1AD206F0;
+        Tue,  7 Jan 2020 12:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578399339;
+        bh=d9XX/RSwY9aTTzmpuuE0fOOU68NQ65sLCFSqyCnApLI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BftntN493z5lsJkr9pUoYnw95G58eH7h8B8YgPKiU3bzTmRgfGoymEp0idHRomryv
+         cW7G+ryqc6XzmRdJTwVMKQTmX8QBZI1StMUiMT9sCrz0ZJHGJdEvqdP8GC4BJ+c/dj
+         4vrb3zBogmhZ5dd4Z+YGfGevNPSvYzHZrwHTgJN8=
+Date:   Tue, 7 Jan 2020 21:15:35 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip V2 0/2] kprobes: Fix RCU warning and cleanup
+Message-Id: <20200107211535.233e7ff396f867ee1348178b@kernel.org>
+In-Reply-To: <20191221035541.69fc05613351b8dabd6e1a44@kernel.org>
+References: <157535316659.16485.11817291759382261088.stgit@devnote2>
+        <20191221035541.69fc05613351b8dabd6e1a44@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:09:26PM +0100, Uwe Kleine-König wrote:
-> > > (Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
-> > > NO_DMA has three different definitions. Two of them (in
-> > > drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
-> > > unrelated.)
+Hello,
+
+Anyone have any comment on this series?
+Without this series, I still see the suspicious RCU warning for kprobe on -tip tree.
+
+Thank you,
+
+On Sat, 21 Dec 2019 03:55:41 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi Ingo,
+> 
+> Could you pick this series to fix the false-positive RCU-list warnings?
+> 
+> Thank you,
+> 
+> On Tue,  3 Dec 2019 15:06:06 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Hi,
 > > 
-> > Yes, HAS_DMA is the second missing piece for UM.
+> > Here is a couple of patches which fix suspicious RCU
+> > usage warnings in kprobes.
+> > 
+> > Anders reported the first warning in kprobe smoke test
+> > with CONFIG_PROVE_RCU_LIST=y. While fixing this issue,
+> > I found similar issues and cleanups in kprobes.
+> > 
+> > Thank you,
+> > 
+> > ---
+> > 
+> > Masami Hiramatsu (2):
+> >       kprobes: Suppress the suspicious RCU warning on kprobes
+> >       kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+> > 
+> > 
+> >  kernel/kprobes.c |   32 ++++++++++++++++++++++----------
+> >  1 file changed, 22 insertions(+), 10 deletions(-)
+> > 
+> > --
+> > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
 > 
-> So something like:
 > 
-> 	# Usermode linux doesn't provide HAS_DMA and HAS_IOMEM.  To not have to
-> 	# clutter most dependencies with these just exclude UML from compile
-> 	# testing.
-> 
-> as comment for COMPILE_TEST's depend line should be fine, right?
-> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
 
-I think yes.
 
-Best regards,
-Krzysztof
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
