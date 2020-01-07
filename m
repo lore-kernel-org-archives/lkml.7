@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA1AC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F0FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FC924656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526C4214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430709;
-	bh=5r1Q8nbDUxC71h9s7mcYWX05RWLrI6p1AJIXVWfWwFE=;
+	s=default; t=1578430713;
+	bh=X/6xvICbw8hI0o2RYXjRcQM+iteqfLO9+pizoBcrLNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YIIka3fg3YchfAiOweyMG1afTXTTRvU9sc0U1hTUvs9MJIRNPP8vUf3EhfhneHhhM
-	 TTxJCvgOF3CWH0Lh9D/nCEl0tx9Ywm6VFSlp8SL+aHyA37qH79cDyUnfrn9dwEumIY
-	 H18hsxEO4FbxN5obTZa6RjqEUZpfZdsSIC1/3tVU=
+	b=zqXucBz75KTZPyVpqwIJwDv0ZwWp+QLEhkwJwd24zR3JkvyIm/vWsyTCfuEkhrqow
+	 8TG4OB3/Kv2m+KGTDTq/WPtVm5zTBjg3XvlH3mWT+nZwIFB2ivgiwyYAsN9266uIJi
+	 ffQ9caVKCiB8TvduLWth5Jn5wMWqKv6oNOYu09Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgAGU62 (ORCPT
+        id S1727891AbgAGU6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgAGU60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:26 -0500
+        id S1727884AbgAGU62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30FF42087F;
-        Tue,  7 Jan 2020 20:58:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E1B208C4;
+        Tue,  7 Jan 2020 20:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430705;
-        bh=5r1Q8nbDUxC71h9s7mcYWX05RWLrI6p1AJIXVWfWwFE=;
+        s=default; t=1578430708;
+        bh=X/6xvICbw8hI0o2RYXjRcQM+iteqfLO9+pizoBcrLNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLCX3Csn9naHKhty5kWVDfFamLIn3BPGWsUGO25L6ZnbqBEejdoPghsTOyLbW80IP
-         6+oXVtRaXWdqc/ZmyAtVrNmasCE169sZ9FWXKAwIwDm9iVBGHpYziEu+llFTKO8saP
-         3v2fdDnShuURFa8x2PwOoCDSgUv4uuCD6I3e1OJk=
+        b=c6qF07BYK1UKf5afeqixTZ4eyQ1+CkEHTLH2md63V/eK1piUL/zGoYmhosQka03dx
+         +MmtJ6zxslm5qxeYLiV3di5dTfGMPMYOLlGcS7Gf0C8YB0WwAx3eWYc9EPOhQ6/7U+
+         nFxK6MRjKAONptj45EUWG+K3ukNc5b1axsYyaOQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        Florian Westphal <fw@strlen.de>,
+        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/191] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-Date:   Tue,  7 Jan 2020 21:52:45 +0100
-Message-Id: <20200107205335.404192099@linuxfoundation.org>
+Subject: [PATCH 5.4 063/191] netfilter: nft_tproxy: Fix port selector on Big Endian
+Date:   Tue,  7 Jan 2020 21:53:03 +0100
+Message-Id: <20200107205336.364946007@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,73 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Phil Sutter <phil@nwl.cc>
 
-[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
+[ Upstream commit 8cb4ec44de42b99b92399b4d1daf3dc430ed0186 ]
 
-Function perf_event_ever_overflow() and perf_event_account_interrupt()
-are called every time samples are processed by the interrupt handler.
-However function perf_event_account_interrupt() has checks to avoid being
-flooded with interrupts (more then 1000 samples are received per
-task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
-added to the perf data. The perf subsystem limit calculation is:
+On Big Endian architectures, u16 port value was extracted from the wrong
+parts of u32 sreg_port, just like commit 10596608c4d62 ("netfilter:
+nf_tables: fix mismatch in big-endian system") describes.
 
-    maximum sample frequency := 100000 --> 1 samples per 10 us
-    task_tick = 10ms = 10000us --> 1000 samples per task_tick
-
-The work flow is
-
-measurement_alert() uses SDBT head and each SBDT points to 511
- SDB pages, each with 126 sample entries. After processing 8 SBDs
- and for each valid sample calling:
-
-     perf_event_overflow()
-       perf_event_account_interrupts()
-
-there is a considerable amount of samples being dropped, especially when
-the sample frequency is very high and near the 100000 limit.
-
-To avoid the high amount of samples being dropped near the end of a
-task_tick time frame, increment the sampling interval in case of
-dropped events. The CPU Measurement sampling facility on the s390
-supports only intervals, specifiing how many CPU cycles have to be
-executed before a sample is generated. Increase the interval when the
-samples being generated hit the task_tick limit.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 4ed8eb6570a49 ("netfilter: nf_tables: Add native tproxy support")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Acked-by: Florian Westphal <fw@strlen.de>
+Acked-by: Máté Eckl <ecklm94@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ net/netfilter/nft_tproxy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 7511b71d2931..47515c96032e 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1325,6 +1325,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 	if (sampl_overflow)
- 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
- 						 sampl_overflow, 1 + num_sdb);
-+
-+	/* Perf_event_overflow() and perf_event_account_interrupt() limit
-+	 * the interrupt rate to an upper limit. Roughly 1000 samples per
-+	 * task tick.
-+	 * Hitting this limit results in a large number
-+	 * of throttled REF_REPORT_THROTTLE entries and the samples
-+	 * are dropped.
-+	 * Slightly increase the interval to avoid hitting this limit.
-+	 */
-+	if (event_overflow) {
-+		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
-+		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
-+				    __func__,
-+				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
-+	}
-+
- 	if (sampl_overflow || event_overflow)
- 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
- 				    "overflow stats: sample=%llu event=%llu\n",
+diff --git a/net/netfilter/nft_tproxy.c b/net/netfilter/nft_tproxy.c
+index f92a82c73880..95980154ef02 100644
+--- a/net/netfilter/nft_tproxy.c
++++ b/net/netfilter/nft_tproxy.c
+@@ -50,7 +50,7 @@ static void nft_tproxy_eval_v4(const struct nft_expr *expr,
+ 	taddr = nf_tproxy_laddr4(skb, taddr, iph->daddr);
+ 
+ 	if (priv->sreg_port)
+-		tport = regs->data[priv->sreg_port];
++		tport = nft_reg_load16(&regs->data[priv->sreg_port]);
+ 	if (!tport)
+ 		tport = hp->dest;
+ 
+@@ -117,7 +117,7 @@ static void nft_tproxy_eval_v6(const struct nft_expr *expr,
+ 	taddr = *nf_tproxy_laddr6(skb, &taddr, &iph->daddr);
+ 
+ 	if (priv->sreg_port)
+-		tport = regs->data[priv->sreg_port];
++		tport = nft_reg_load16(&regs->data[priv->sreg_port]);
+ 	if (!tport)
+ 		tport = hp->dest;
+ 
 -- 
 2.20.1
 
