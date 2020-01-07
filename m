@@ -2,107 +2,83 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB75C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4B6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308142080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431646;
-	bh=vpWXOJ4+oz3ooR0QIgwHEzbKOTpT6bLzdgkQ+M6zneY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e9WojTGiFW7YuNhFLKCiKHn6B5OwBXH6gGkkeSUUoJ9iE7O1nfwY5vCX9xthhcrSR
-	 +e022sqQft3KK6Gi26T8tXjL3v9Ubqy1UcYoLO0sqo/D9naCskUjnbMNOhrPYrvHG6
-	 GDKbWSGOR0eLGQxEYRlAFpYaPixJu8tVTQNnkoHE=
+	by mail.kernel.org (Postfix) with ESMTP id 1BA0B2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgAGVOF (ORCPT
+        id S1730100AbgAGVOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:14:10 -0500
+Received: from namei.org ([65.99.196.166]:55866 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729858AbgAGVJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEC8A20880;
-        Tue,  7 Jan 2020 21:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431381;
-        bh=vpWXOJ4+oz3ooR0QIgwHEzbKOTpT6bLzdgkQ+M6zneY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PaC46PHZfkLh25bYcah838RLwfN/D2svBlPFcKaOUxlE3HtDuU0kpcGz61Zmq1b01
-         wHTapwKCcHaKL/lpdMpE9lkfQbdR+4wuls/YXFPZIw78LLqNpHR84ELo8mnQ34SWI0
-         a6xSCCyVB/xbkG5dCBZRyXf7ChGmDkX9/0Qsz3mM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 34/74] compat_ioctl: block: handle Persistent Reservations
-Date:   Tue,  7 Jan 2020 21:54:59 +0100
-Message-Id: <20200107205204.052887080@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
-References: <20200107205135.369001641@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729688AbgAGVOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:14:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 007LDGan012550;
+        Tue, 7 Jan 2020 21:13:16 GMT
+Date:   Wed, 8 Jan 2020 08:13:16 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v1 02/13] bpf: lsm: Add a skeleton and config
+ options
+In-Reply-To: <20191220154208.15895-3-kpsingh@chromium.org>
+Message-ID: <alpine.LRH.2.21.2001080812500.9683@namei.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-3-kpsingh@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 20 Dec 2019, KP Singh wrote:
 
-commit b2c0fcd28772f99236d261509bcd242135677965 upstream.
+> From: KP Singh <kpsingh@google.com>
+> 
+> The LSM can be enabled by CONFIG_SECURITY_BPF.
+> Without CONFIG_SECURITY_BPF_ENFORCE, the LSM will run the
+> attached eBPF programs but not enforce MAC policy based
+> on the return value of the attached programs.
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-These were added to blkdev_ioctl() in linux-5.5 but not
-blkdev_compat_ioctl, so add them now.
 
-Cc: <stable@vger.kernel.org> # v4.4+
-Fixes: bbd3e064362e ("block: add an API for Persistent Reservations")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-Fold in followup patch from Arnd with missing pr.h header include.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
----
- block/compat_ioctl.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
---- a/block/compat_ioctl.c
-+++ b/block/compat_ioctl.c
-@@ -6,6 +6,7 @@
- #include <linux/compat.h>
- #include <linux/elevator.h>
- #include <linux/hdreg.h>
-+#include <linux/pr.h>
- #include <linux/slab.h>
- #include <linux/syscalls.h>
- #include <linux/types.h>
-@@ -401,6 +402,14 @@ long compat_blkdev_ioctl(struct file *fi
- 	case BLKTRACETEARDOWN: /* compatible */
- 		ret = blk_trace_ioctl(bdev, cmd, compat_ptr(arg));
- 		return ret;
-+	case IOC_PR_REGISTER:
-+	case IOC_PR_RESERVE:
-+	case IOC_PR_RELEASE:
-+	case IOC_PR_PREEMPT:
-+	case IOC_PR_PREEMPT_ABORT:
-+	case IOC_PR_CLEAR:
-+		return blkdev_ioctl(bdev, mode, cmd,
-+				(unsigned long)compat_ptr(arg));
- 	default:
- 		if (disk->fops->compat_ioctl)
- 			ret = disk->fops->compat_ioctl(bdev, mode, cmd, arg);
-
+-- 
+James Morris
+<jmorris@namei.org>
 
