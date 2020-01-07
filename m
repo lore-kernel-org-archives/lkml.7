@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6556CC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC96C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A29F214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF07208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431373;
-	bh=zOlqaQpxM1m/+KIGUD2u5e/3x76nbC70RLJUYZH/7qE=;
+	s=default; t=1578431376;
+	bh=LwV0b4UswDgokCni8DGt5dsVUmNU5hsvCheqmsG4bJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwDriToVHn+DGLFh/fwK8v4dOmYtekBzWsOPWMMMBHQ7s+6RtRCPK+EnLOHM+G+ey
-	 xXe0uAQFmH0fb2laDG6fQ5FWNZJNOGYw6tnC3dGI9tU7vvlAt1aNaSPlNsxjGxeTqQ
-	 XHY8tzz/DXVbThs5rj65ktmaG3shb70dYerCCBjw=
+	b=iRoOwC3X6ECcxTZcPvPPIx/kk8/GU+yFGgR3jRNwnWK9eMzCRoRVB2SLxjTcbemkb
+	 2Bacjzra71clej1u68c9dGJQ4Wzo4Ntl+0jv5q1N+QopgBjqrKQ22JvhNssra8Tir9
+	 YnSeMA4TmO4LmlxmloKuAkzejTCceLv8+Aj8TGuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgAGVJc (ORCPT
+        id S1729847AbgAGVJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34894 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgAGVJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:27 -0500
+        id S1729829AbgAGVJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F3020678;
-        Tue,  7 Jan 2020 21:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C37DE2072A;
+        Tue,  7 Jan 2020 21:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431366;
-        bh=zOlqaQpxM1m/+KIGUD2u5e/3x76nbC70RLJUYZH/7qE=;
+        s=default; t=1578431369;
+        bh=LwV0b4UswDgokCni8DGt5dsVUmNU5hsvCheqmsG4bJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zh6BkSTurgiFzVkB5z8w282wQrjSf8vk0P27uPvow1OEivz+6iwwVrsm4Y4y0gK5u
-         RXmNuzZTZ22zVJg3AQK6qvOBVw8b/9Jx0rdbkMAHFK+sLYMudMPfaed1ARrB+Z6AJn
-         aCKAV62Wbncg2m9hQBW1hLPBL0MAbT4elDcCNTNg=
+        b=k05EkfmCXjHwbL7J+nn9Ae6KD3qEuRBTNBtQxAnrp0tVada7QpEntxO+/7tndfcNI
+         LSeOzR63v4+e7rRcyTKcbvzMH6/o4fp3ScXHK9zkRb5cIF+t6xkHSw0VY/JRSt545d
+         x3QX01IQVM4GWRCuXBROGtpLb/32YlnXg5fnFdkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        James Smart <james.smart@broadcom.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvel.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/74] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
-Date:   Tue,  7 Jan 2020 21:54:31 +0100
-Message-Id: <20200107205139.736438450@linuxfoundation.org>
+Subject: [PATCH 4.14 07/74] scsi: qla2xxx: Dont call qlt_async_event twice
+Date:   Tue,  7 Jan 2020 21:54:32 +0100
+Message-Id: <20200107205140.483302224@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -62,66 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
+[ Upstream commit 2c2f4bed9b6299e6430a65a29b5d27b8763fdf25 ]
 
-When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
-dd_data should be freed before return SLI_CONFIG_HANDLED.
+MBA_PORT_UPDATE generates duplicate log lines in target mode because
+qlt_async_event is called twice. Drop the calls within the case as the
+function will be called right after the switch statement.
 
-When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
-job_error tag.
-
-Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: James Smart <james.smart@broadcom.com>
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-8-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvel.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-index 6dde21dc82a3..08ed27b0d4c6 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.c
-+++ b/drivers/scsi/lpfc/lpfc_bsg.c
-@@ -4419,12 +4419,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 	phba->mbox_ext_buf_ctx.seqNum++;
- 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
- 
--	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
--	if (!dd_data) {
--		rc = -ENOMEM;
--		goto job_error;
--	}
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index ebca1a470e9b..7f2da56274bd 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1046,8 +1046,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 			ql_dbg(ql_dbg_async, vha, 0x5011,
+ 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
+ 			    mb[1], mb[2], mb[3]);
 -
- 	pbuf = (uint8_t *)dmabuf->virt;
- 	size = job->request_payload.payload_len;
- 	sg_copy_to_buffer(job->request_payload.sg_list,
-@@ -4461,6 +4455,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 				"2968 SLI_CONFIG ext-buffer wr all %d "
- 				"ebuffers received\n",
- 				phba->mbox_ext_buf_ctx.numBuf);
-+
-+		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
-+		if (!dd_data) {
-+			rc = -ENOMEM;
-+			goto job_error;
-+		}
-+
- 		/* mailbox command structure for base driver */
- 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 		if (!pmboxq) {
-@@ -4509,6 +4510,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
- 	return SLI_CONFIG_HANDLED;
+-			qlt_async_event(mb[0], vha, mb);
+ 			break;
+ 		}
  
- job_error:
-+	if (pmboxq)
-+		mempool_free(pmboxq, phba->mbox_mem_pool);
- 	lpfc_bsg_dma_page_free(phba, dmabuf);
- 	kfree(dd_data);
+@@ -1065,8 +1063,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
+ 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
+ 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
+-
+-		qlt_async_event(mb[0], vha, mb);
+ 		break;
  
+ 	case MBA_RSCN_UPDATE:		/* State Change Registration */
 -- 
 2.20.1
 
