@@ -2,105 +2,123 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0528C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7EA207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70E82064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hbqhD5F2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QDSlbGup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgAGDYU (ORCPT
+        id S1727514AbgAGDYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:24:20 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55261 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbgAGDYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:24:19 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sHmJ6g0Fz9sR1;
-        Tue,  7 Jan 2020 14:24:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578367457;
-        bh=poCI2cN3Flh3Fw5GP2FaHzixm2h9ceYsCEGfZCUUo1o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hbqhD5F2l/dTcZbyO35wu+/vfZ6aXrt60JUgUp9prjedf9qEU/qPD9NjcJkyYLg7S
-         mxZeJWwCSrTDsQ28+YKhVU/+3+amPSWO+c/OfCy7wH+BOnQ5h0gV2VwxmH7+Mlhqev
-         p7AB0SkiF8XRl58ACXjw/I5fC4wZbaYHxOIqP25rOy2IHk01tzeI/OVU7NJdxsBAHs
-         SI2G76g7BpxVH5iYBDf9dbctOrRiSs3qPHiQ9GKzKrdUBBsg18mW396zlyZIA1dAFM
-         e2CqLRCot7JNmwNzKVF694kUMyG003RzfdhSu6ynnilTJ2Gk+09YQnA+NYveABi4Po
-         e0ZnWb+Fuh4Vw==
-Date:   Tue, 7 Jan 2020 14:24:15 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kishon Vijay Abraham I <kishon@ti.com>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: linux-next: manual merge of the phy-next tree with the usb tree
-Message-ID: <20200107142415.4a35fcdb@canb.auug.org.au>
+        Mon, 6 Jan 2020 22:24:54 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47188 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727377AbgAGDYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:24:54 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073EXIE025855;
+        Tue, 7 Jan 2020 03:24:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=eEDEB5cRiaDaMI401AFI3YVYzUZ8UFoQLMybywdErVQ=;
+ b=QDSlbGupGflTHfqrIDNN0pRGV03FnSpuCfigptfoFqoaA1spKKkx9D4dFkT4G4dyADdK
+ KTO58n7GOAw3kOHJ5OmGz/YSqQg9fDfUNSklRPcfXSCAqcfdiNi9SqY6ibt54v1OEe8o
+ 9PP/h4km77fvB47MLrijeXfen1XxOvm/ZX15n+BOWpB/H+l1LbMKKx86T6uoq04LxhhH
+ +rbvtc5p71h5DvFiZfvaDTlRYtzajq18gFUJdRJa1d47RvZshe2sbcrWXL8ZETcIHDyY
+ Q3PgPRP0rHuCR0C+zmXK685klXj7A+DIwARvEDZYW2EhGqLzHOLmRyOBpZWxc9UyXaoV ew== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xajnpts86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 03:24:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073EOoh192221;
+        Tue, 7 Jan 2020 03:24:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2xb4uq6njs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 03:24:22 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0073ODw1027853;
+        Tue, 7 Jan 2020 03:24:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Jan 2020 19:24:13 -0800
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE operation
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+        <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
+        <yq1woatc8zd.fsf@oracle.com>
+        <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
+        <yq1a77oc56s.fsf@oracle.com>
+        <625c9ee4-bedb-ff60-845e-2d440c4f58aa@virtuozzo.com>
+        <yq1pngh7blx.fsf@oracle.com>
+        <405b9106-0a97-0821-c41d-58ab8d0e2d09@virtuozzo.com>
+Date:   Mon, 06 Jan 2020 22:24:09 -0500
+In-Reply-To: <405b9106-0a97-0821-c41d-58ab8d0e2d09@virtuozzo.com> (Kirill
+        Tkhai's message of "Mon, 23 Dec 2019 11:51:34 +0300")
+Message-ID: <yq1o8vg2bl2.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EodVVjPqEcOteuKkAFTMeTy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070025
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EodVVjPqEcOteuKkAFTMeTy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Kirill,
 
-Today's linux-next merge of the phy-next tree got a conflict in:
+Sorry, the holiday break got in the way.
 
-  drivers/phy/mediatek/Kconfig
+> But I also worry about NOFALLBACK case. There are possible block
+> devices, which support write zeroes, but they can't allocate blocks
+> (block allocation are just not appliable for them, say, these are all
+> ordinary hdd).
 
-between commit:
+Correct. We shouldn't go down this path unless a device is thinly
+provisioned (i.e. max_discard_sectors > 0).
 
-  203b7ee14d3a ("phy: Enable compile testing for some of drivers")
+> But won't it be a good thing to return EOPNOTSUPP right from
+> __blkdev_issue_write_zeroes() in case of block device can't allocate
+> blocks (q->limits.write_zeroes_can_allocate in the patch below)? Here
+> is just a way to underline block devices, which support write zeroes,
+> but allocation of blocks is meant nothing for them (wasting of time).
 
-from the usb tree and commits:
+I don't like "write_zeroes_can_allocate" because that makes assumptions
+about WRITE ZEROES being the command of choice. I suggest we call it
+"max_allocate_sectors" to mirror "max_discard_sectors". I.e. put
+emphasis on the semantic operation and not the plumbing.
 
-  6ee054e3a2e9 ("phy: mediatek: Fix Kconfig indentation")
-  1544133d48c3 ("phy: Enable compile testing for some of drivers")
-
-from the phy-next tree.
-
-I fixed it up (I just used the latter version of the file) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EodVVjPqEcOteuKkAFTMeTy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4T+d8ACgkQAVBC80lX
-0GxBXgf+P+PBi8yS21wNVwquW4Pf2fGLdcQ7qic4NdGwaz0JPHu8O5GdPDCThP4u
-xpWC8Y+nwiOJ0j2uv79p21OIXnIQS09mGPauh9OdjFP0/3PVYqRGqqRYVk9CE3Zh
-LdxrR/XszKalvJCEkyoUFMUQBO6qc3GHX959K8750MbESLpK1yOEFTIgYS7GQjyF
-u11fx1+CUQORotQ62EXlJXFkKBEIKrrw4zvQTe4iZXpJNE4xsZjKqamZjbLCsQar
-REPT94SB/LV439TljEZLleW0omRJxYRIqUPD2OBQSDSez/Hm7EZaMYVUU75AS/bz
-P0JnxUsjQhChb2lWzzH7ljwEa8AdUw==
-=aMWr
------END PGP SIGNATURE-----
-
---Sig_/EodVVjPqEcOteuKkAFTMeTy--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
