@@ -2,121 +2,217 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1849EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF61C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31682072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578402560;
-	bh=JWgOAWwn4GHGTz+b1aG9ABeA7KGl5XxZGbF13/zr4j8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OM3x5NYrakCSvGXbWeGOij1UkrAtWJxoZd5+MOU7k+N7l1jf2XuVxjNcvwIyvI182
-	 aYX25baYqF0gaCVa/nIgArHil0gUrhG5ZeJPvthrmE5YrfqLQEdjiIleOWLYIA1Xnw
-	 oHts8QWieu0HrcpGD0Qa9A0TMP8W1EJUPAyY0FDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 862F52072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gMQSYVxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgAGNJS (ORCPT
+        id S1728142AbgAGNJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:09:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:57516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgAGNJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:09:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F226631B;
-        Tue,  7 Jan 2020 05:09:13 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571BF3F703;
-        Tue,  7 Jan 2020 05:09:13 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:09:11 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107130911.GD4877@sirena.org.uk>
-References: <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
+        Tue, 7 Jan 2020 08:09:24 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22522 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728060AbgAGNJM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:09:12 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007D3eN4013503;
+        Tue, 7 Jan 2020 14:09:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=HLx9i+/0RPKX4a7BkgUwWOWfGGEAfQSWOkgkflG2r0M=;
+ b=gMQSYVxksKZfuCBlyHU2XMPwd09renYbNWAi0ymzPCaIMToquL5BV9ENr7NriH7OPCDi
+ aOu+M3T0XNi0o/pTiS41LdHLlaX64Jq1v1z8RV/kRJojjvK4Kz6zW3HcMcebVwU9gr9G
+ 29R1mfGhkChS7P9xC1w29zrfSu+xof3b8egpF5eGLNy4og1iW7+/pj1gT3NzH4aC65bU
+ m6HHqa9W/6KnP6jia6Pobycw/O/X/Evi8X3wMroeb0PPzKLD/KGeQbWb1D65MZfSXeKO
+ zkHaemXx9tKtT19QRXtCjHQIMQebty2r5dB5hIdy2TyieHNNMJNA9qNnV/iDM44bV82o 9w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2xakkape5v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 14:09:07 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CB9E110002A;
+        Tue,  7 Jan 2020 14:09:06 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C016A2AD9ED;
+        Tue,  7 Jan 2020 14:09:06 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 7 Jan 2020 14:09:06
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yannick.fertre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen to json-schema
+Date:   Tue, 7 Jan 2020 14:09:03 +0100
+Message-ID: <20200107130903.14421-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200107130903.14421-1-benjamin.gaignard@st.com>
+References: <20200107130903.14421-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
-Content-Disposition: inline
-In-Reply-To: <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
-X-Cookie: Will Rogers never met you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the Goodix binding to DT schema format using json-schema
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ .../bindings/input/touchscreen/goodix.txt          | 50 ----------------
+ .../bindings/input/touchscreen/goodix.yaml         | 69 ++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
 
-On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
-> On 19-12-17 12:58, Mark Brown wrote:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+deleted file mode 100644
+index fc03ea4cf5ab..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Device tree bindings for Goodix GT9xx series touchscreen controller
+-
+-Required properties:
+-
+- - compatible		: Should be "goodix,gt1151"
+-				 or "goodix,gt5663"
+-				 or "goodix,gt5688"
+-				 or "goodix,gt911"
+-				 or "goodix,gt9110"
+-				 or "goodix,gt912"
+-				 or "goodix,gt927"
+-				 or "goodix,gt9271"
+-				 or "goodix,gt928"
+-				 or "goodix,gt967"
+- - reg			: I2C address of the chip. Should be 0x5d or 0x14
+- - interrupts		: Interrupt to which the chip is connected
+-
+-Optional properties:
+-
+- - irq-gpios		: GPIO pin used for IRQ. The driver uses the
+-			  interrupt gpio pin as output to reset the device.
+- - reset-gpios		: GPIO pin used for reset
+- - AVDD28-supply	: Analog power supply regulator on AVDD28 pin
+- - VDDIO-supply		: GPIO power supply regulator on VDDIO pin
+- - touchscreen-inverted-x
+- - touchscreen-inverted-y
+- - touchscreen-size-x
+- - touchscreen-size-y
+- - touchscreen-swapped-x-y
+-
+-The touchscreen-* properties are documented in touchscreen.txt in this
+-directory.
+-
+-Example:
+-
+-	i2c@00000000 {
+-		/* ... */
+-
+-		gt928@5d {
+-			compatible = "goodix,gt928";
+-			reg = <0x5d>;
+-			interrupt-parent = <&gpio>;
+-			interrupts = <0 0>;
+-
+-			irq-gpios = <&gpio1 0 0>;
+-			reset-gpios = <&gpio1 1 0>;
+-		};
+-
+-		/* ... */
+-	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+new file mode 100644
+index 000000000000..05b52d359ac5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/goodix.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Goodix GT9xx series touchscreen controller Bindings
++
++maintainers:
++  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
++
++allOf:
++  - $ref: touchscreen.yaml#
++
++properties:
++  compatible:
++    enum:
++      - goodix,gt1151
++      - goodix,gt5663
++      - goodix,gt5688
++      - goodix,gt911
++      - goodix,gt9110
++      - goodix,gt912
++      - goodix,gt927
++      - goodix,gt9271
++      - goodix,gt928
++      - goodix,gt967
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  irq-gpios:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  AVDD28-supply:
++    description: Analog power supply regulator on AVDD28 pin
++
++  VDDIO-supply:
++    description: GPIO power supply regulator on VDDIO pin
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++- |
++    i2c@00000000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      gt928@5d {
++        compatible = "goodix,gt928";
++        reg = <0x5d>;
++        interrupt-parent = <&gpio>;
++        interrupts = <0 0>;
++        irq-gpios = <&gpio1 0 0>;
++        reset-gpios = <&gpio1 1 0>;
++      };
++    };
++
++...
+-- 
+2.15.0
 
-> > This doesn't say anything about how the GPIO input is expected to be
-> > controlled, for voltage setting any runtime control would need to be
-> > done by the driver and it sounds like that's all that can be controlled.
-> > The way this reads I'd expect one use of this to be for fast voltage
-> > setting for example (you could even combine that with suspend sequencing
-> > using the internal sequencer if you mux back to the sequencer during
-> > suspend).
-
-> The input signal is routed trough the da9062 gpio block to the
-> regualtors. You can't set any voltage value using a gpio instead you
-> decide which voltage setting is applied. The voltage values for
-> runtime/suspend comes from the dt-data. No it's not just a fast
-> switching option imagine the system suspend case where the cpu and soc
-> voltage can be reduced to a very low value. Older soc's like the imx6
-> signaling this state by a hard wired gpio line because the soc and
-> cpu cores don't work properly on such low voltage values. This is
-> my use case and I can't use the sequencer.
-
-My point is that I can't tell any of this from the description.
-
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4UgvYACgkQJNaLcl1U
-h9AmOwf/dQI3hnspOymA8BdYOaCtzXhoiVJeMde8RKleUyfpqEoLvele7bnhJvxP
-66E8RM0aDJk6N+Jc5KzXO1mb1JWFhiGQM92q3NXPczpOyvgl/zl0UwKMnqHnj4nd
-/vDVfa60zDKTbUCS12us1kwgJNtHVRiFb8DX+9W3zSONqE5QIeNjmMMoL4EaPwJb
-clCtLm7jBckZinNOefKS6M2eElpRFFhtRON7EsaDqObH2xTP9aSNb9PEYCBy3nHq
-Cr6gYbC0cwgXL29ayf/aRtx3o9/DTC4LIAfAPZvGjDMN5vgYm3bznZKWmVzgR2Pd
-1fQ0J3Dh032Q/8ZTkaceklgsT1uGJg==
-=uLVS
------END PGP SIGNATURE-----
-
---mSxgbZZZvrAyzONB--
