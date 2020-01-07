@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3701C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB85C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7454721744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F5D2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430582;
-	bh=S4qaK4LSPhlFubINRDmXg3oVTW5c2uKHGKu+W2JMl1s=;
+	s=default; t=1578430588;
+	bh=QxrGssat5rHSJT7qCO9+1TxJB/KwEJlkkN/CIlbuNYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lc24aLHU6CvRP8GB+NdRxct89WWjOp0y6JAT192+6fA0dxjaY+79p0xspNVq4QA1G
-	 pz5dWY0FNZMr01V+I91rF31LdNVju+cCRJRLqgo/1vCCvLCwpcX5eu9lCDAJRMJ5tJ
-	 /7BAkYoWdgX75JWHnNZWuya3TPzoEl4TOVggJbgo=
+	b=OWocJ0awRPiKHpd8k+mdN64Fl3HAN1iptERBrBntVwxbxbFOnuDFgK24ia/7Uhy56
+	 1CYwA8MY6Mcb9vb5gmoE8ALqNV0v13lE/WGpxjy4XMabE8SJU+n7Q6T4Y2gyEuK1OR
+	 Re44QfnOIQfKUGU78po594j0ZKyLnAC1WUi19UHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgAGU4V (ORCPT
+        id S1727169AbgAGU41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51506 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgAGU4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:20 -0500
+        id S1727112AbgAGU4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF862081E;
-        Tue,  7 Jan 2020 20:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F09682081E;
+        Tue,  7 Jan 2020 20:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430579;
-        bh=S4qaK4LSPhlFubINRDmXg3oVTW5c2uKHGKu+W2JMl1s=;
+        s=default; t=1578430584;
+        bh=QxrGssat5rHSJT7qCO9+1TxJB/KwEJlkkN/CIlbuNYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qV1CjR5q2YIB0yA/RaDXL6fFlldGoqfeBf1KYO87Z4rrmUbNZCrjI1do6ItXM3Anc
-         i0ML3J1vNLFfe1DvwAc2sp3SfiO49d/ME0+0ftbRuKGjFwVjNDiX5qIr/Q82kuobTI
-         yJsSQo18FB35VKIH2OXji0SWzdXL93WexnkXlkeE=
+        b=lxXpX9lgGIPISPe7OAfASV/mJeuTuQ5QwAsuaVgUyi4Uow2RYZbMTsKj86nWp4klB
+         OvfIUEUXbRg+qVKoG8DFFQ2PJg+07sObQcr/CHorE5YQoHwyJi73S9e4aajNauk0Fy
+         tqOybQBdg/tVZokxpWIoTzXy+uauVJXWaAAbge+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Yang <Eric.Yang2@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/191] drm/amd/display: update dispclk and dppclk vco frequency
-Date:   Tue,  7 Jan 2020 21:52:11 +0100
-Message-Id: <20200107205333.613297948@linuxfoundation.org>
+Subject: [PATCH 5.4 003/191] nvme-fc: fix double-free scenarios on hw queues
+Date:   Tue,  7 Jan 2020 21:52:03 +0100
+Message-Id: <20200107205333.188778790@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,36 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Yang <Eric.Yang2@amd.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 44ce6c3dc8479bb3ed68df13b502b0901675e7d6 ]
+[ Upstream commit c869e494ef8b5846d9ba91f1e922c23cd444f0c1 ]
 
-Value obtained from DV is not allowing 8k60 CTA mode with DSC to
-pass, after checking real value being used in hw, find out that
-correct value is 3600, which will allow that mode.
+If an error occurs on one of the ios used for creating an
+association, the creating routine has error paths that are
+invoked by the command failure and the error paths will free
+up the controller resources created to that point.
 
-Signed-off-by: Eric Yang <Eric.Yang2@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+But... the io was ultimately determined by an asynchronous
+completion routine that detected the error and which
+unconditionally invokes the error_recovery path which calls
+delete_association. Delete association deletes all outstanding
+io then tears down the controller resources. So the
+create_association thread can be running in parallel with
+the error_recovery thread. What was seen was the LLDD received
+a call to delete a queue, causing the LLDD to do a free of a
+resource, then the transport called the delete queue again
+causing the driver to repeat the free call. The second free
+routine corrupted the allocator. The transport shouldn't be
+making the duplicate call, and the delete queue is just one
+of the resources being freed.
+
+To fix, it is realized that the create_association path is
+completely serialized with one command at a time. So the
+failed io completion will always be seen by the create_association
+path and as of the failure, there are no ios to terminate and there
+is no reason to be manipulating queue freeze states, etc.
+The serialized condition stays true until the controller is
+transitioned to the LIVE state. Thus the fix is to change the
+error recovery path to check the controller state and only
+invoke the teardown path if not already in the CONNECTING state.
+
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/fc.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-index de182185fe1f..b0e5e64df212 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-@@ -258,7 +258,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_1_soc = {
- 	.vmm_page_size_bytes = 4096,
- 	.dram_clock_change_latency_us = 23.84,
- 	.return_bus_width_bytes = 64,
--	.dispclk_dppclk_vco_speed_mhz = 3550,
-+	.dispclk_dppclk_vco_speed_mhz = 3600,
- 	.xfc_bus_transport_time_us = 4,
- 	.xfc_xbuf_latency_tolerance_us = 4,
- 	.use_urgent_burst_bw = 1,
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 3f102d9f39b8..59474bd0c728 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -2910,10 +2910,22 @@ nvme_fc_reconnect_or_delete(struct nvme_fc_ctrl *ctrl, int status)
+ static void
+ __nvme_fc_terminate_io(struct nvme_fc_ctrl *ctrl)
+ {
+-	nvme_stop_keep_alive(&ctrl->ctrl);
++	/*
++	 * if state is connecting - the error occurred as part of a
++	 * reconnect attempt. The create_association error paths will
++	 * clean up any outstanding io.
++	 *
++	 * if it's a different state - ensure all pending io is
++	 * terminated. Given this can delay while waiting for the
++	 * aborted io to return, we recheck adapter state below
++	 * before changing state.
++	 */
++	if (ctrl->ctrl.state != NVME_CTRL_CONNECTING) {
++		nvme_stop_keep_alive(&ctrl->ctrl);
+ 
+-	/* will block will waiting for io to terminate */
+-	nvme_fc_delete_association(ctrl);
++		/* will block will waiting for io to terminate */
++		nvme_fc_delete_association(ctrl);
++	}
+ 
+ 	if (ctrl->ctrl.state != NVME_CTRL_CONNECTING &&
+ 	    !nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_CONNECTING))
 -- 
 2.20.1
 
