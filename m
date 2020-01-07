@@ -2,104 +2,242 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1FC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BF5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039352081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085FE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WOX+/1IM"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="FbYzzw7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgAGLQm (ORCPT
+        id S1727956AbgAGLRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:16:42 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50712 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGLQl (ORCPT
+        Tue, 7 Jan 2020 06:17:19 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41096 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727273AbgAGLRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:16:41 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007BGXc2024300;
-        Tue, 7 Jan 2020 05:16:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578395793;
-        bh=HXqsa6+h9NoRNz+G1rKqdekJZz8yz8ren1fxTOBhDrY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WOX+/1IMdd097RzhC/63SuwVfRY2EPkT94tkpqLfeFiD0SSKHvc+7xIDjiCXX8Cc+
-         m5e3/iqMlvEay2LILXYfaNoWFppmMtGLIxp+OXU1uE8wZhKxUIFONSvAPlAps/1Gng
-         HKztDIn7I6qsUaeycJIICpyO2HrTwh0EczMQMw2Y=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BGX8L064520
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 05:16:33 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 05:16:33 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 05:16:33 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BGTRd027407;
-        Tue, 7 Jan 2020 05:16:30 -0600
-Subject: Re: [PATCH v4 08/11] dt-bindings: sdhci-omap: Add documentation for
- ti,needs-special-reset property
-To:     Rob Herring <robh@kernel.org>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <ulf.hansson@linaro.org>, <tony@atomide.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-9-faiz_abbas@ti.com> <20200106220313.GA6822@bogus>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <fa2866cb-485a-9eed-47c2-fb3f6f260d31@ti.com>
-Date:   Tue, 7 Jan 2020 16:48:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 7 Jan 2020 06:17:19 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007BAJWn011405;
+        Tue, 7 Jan 2020 06:17:17 -0500
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2174.outbound.protection.outlook.com [104.47.55.174])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xaneaevf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 06:17:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FyheT4uNotzQIzHhO9vcp0+fkab754MIguGgYcaYl5wcCxcrDhBF1jKLjvldp9VXG9+dLx6d4p1puRU0/sQ/OEQVJSy0KREUqrPkXdae6t84s+t230BzgC4m4SPAyTFSh5yyfF7tAJt1DXXe1YxYNioYDmkflpyJ8h2+s1Sy3Z1JQ4OF2JzhFWPgawdeVoNBjCCW91Byc4pHCcoFC8DMevnxvU3wgmXtTSVwcg30g7p7UV/+Eku4Y7MU4Ja5HC+6D2Lh7lAwBFWX4cbaNw1luM/v5L+8QK3Vfo39woL/9w/1Z8zSCg8AaMZjpayXvRHkRNefYwvqzHt7COGf+wlEWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1FGfTTWvMCy9AQ50LwoaIt83lCwxWGKPq6JWwCfl8cY=;
+ b=BwxplkLNltuUBNfkNBwd9nrI4mjYdb8zvaJDvuOWZvNp5x0TN2ltOyi++/FgoSM7wrANE6wOdXJEz3LYr7yClDRUhwar0O+tXeCLdaidUSnan2rSA9mK2KS2wpVUiXa4vojZ6MgZIRgKEh0ko+cXPFjQPXoIDPhZEcEBtsL2W4ClxJp3crkAN1uyt1CIkbC66K0ObCzWMymgHnFEzVeV6EzDkxTV51ZDhrh3ppR41pm7XUqi0cUzynEkI2JwWmJN0Eow9yv7//EUXD2t6+j7JdEgTqLDd9ty9wRuJuxhWRx9yWVTJ4W++xV64f7s64fwyriqsL0nqwly4CrfJa3IAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1FGfTTWvMCy9AQ50LwoaIt83lCwxWGKPq6JWwCfl8cY=;
+ b=FbYzzw7pSeXWI08qQLnADSU9jUfC1zLKZVOfTFxAdKKM+o6RUfT8BcbW5zJoHurJhrz/9seSPuag172pr3KbG454JkTNpR91WnKBtKyjlr/YgkeSjMnZFBIZK1JiO8Iye2hwbQmOTC0eB5ShhmLjCw6HJNbEsxTkuX+YB+XPVpc=
+Received: from DM6PR03CA0048.namprd03.prod.outlook.com (2603:10b6:5:100::25)
+ by CY4PR03MB2789.namprd03.prod.outlook.com (2603:10b6:903:6b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15; Tue, 7 Jan
+ 2020 11:17:15 +0000
+Received: from BL2NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::209) by DM6PR03CA0048.outlook.office365.com
+ (2603:10b6:5:100::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend
+ Transport; Tue, 7 Jan 2020 11:17:15 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ BL2NAM02FT035.mail.protection.outlook.com (10.152.77.157) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2602.11
+ via Frontend Transport; Tue, 7 Jan 2020 11:17:15 +0000
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id 007BHEG1015771
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 03:17:14 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Jan 2020
+ 03:17:12 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 7 Jan 2020 06:17:12 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 007BH7lx004312;
+        Tue, 7 Jan 2020 06:17:09 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 2/2] iio: adis: Remove startup_delay
+Date:   Tue, 7 Jan 2020 13:17:05 +0200
+Message-ID: <20200107111705.24138-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200107111705.24138-1-alexandru.ardelean@analog.com>
+References: <20200107111705.24138-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106220313.GA6822@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(86362001)(1076003)(5660300002)(7636002)(110136005)(54906003)(246002)(8676002)(316002)(2906002)(7696005)(6666004)(8936002)(356004)(426003)(2616005)(36756003)(186003)(44832011)(4326008)(26005)(70206006)(70586007)(336012)(478600001)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2789;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f51936f7-a04b-454a-a54a-08d793632669
+X-MS-TrafficTypeDiagnostic: CY4PR03MB2789:
+X-Microsoft-Antispam-PRVS: <CY4PR03MB2789774142ED721BEB1368F8F93F0@CY4PR03MB2789.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:206;
+X-Forefront-PRVS: 027578BB13
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dZfxOLCMOCkGrdHwUK0zF1OqayEN59E2Dr3z7TdA4GxAc3Mih2SuYhoNyEM5g8hkk7mZoaFs3k7esv05gYM5KucjszKGuJMqYM/nM8fh0Zvvj2kQGTbcJXnO14tivmYffnYFWCJ75fkzfz0/dqotjrooxFjTGSed1enoYTUf56KkwB3Nr3UCHyl2bw7Q/B0z4XANsKJu8LCLd9Xz4dHkut2OnH69QTHOmhQKaDc1CMRzH7qD0KaiuRJ28+R5WgfcUbdzMxRe7prv11d49QHotzueDIv/2ehOIs2443yR006/luxfrLsg7u+tYQ3Kl1CIPLblySndJ51Wz8YJGsk6YzM9JTqCdEJRz/sAoa/0mc/tcKYPkEGcwC2yX8xBBVCL9dXaDW2D5u03un7vf2ztvNZpxOkVSJN5dy9EXyRRH3nMr8yxEbirXEp+mTvFq4RG
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 11:17:15.1337
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f51936f7-a04b-454a-a54a-08d793632669
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2789
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Nuno Sá <nuno.sa@analog.com>
 
-On 07/01/20 3:33 am, Rob Herring wrote:
-> On Mon, Jan 06, 2020 at 04:31:30PM +0530, Faiz Abbas wrote:
->> Some controllers need a special software reset sequence. Document the
->> ti,needs-special-reset binding to indicate that a controller needs this.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> index 97efb01617dd..0f5389c72bda 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> @@ -21,6 +21,7 @@ Optional properties:
->>  - dma-names:	List of DMA request names. These strings correspond 1:1 with the
->>  		DMA specifiers listed in dmas. The string naming is to be "tx"
->>  		and "rx" for TX and RX DMA requests, respectively.
->> +- ti,needs-special-reset: Requires a special softreset sequence
-> 
-> Why can't this be implied by the compatible string?
-> 
+All timeouts are now handled by a dedicated timeout struct. This
+variable is no longer needed.
 
-You are right. We can assign the special_reset flag in the next patch
-using compatible as well. Will drop this patch in next version.
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/accel/adis16201.c         | 1 -
+ drivers/iio/accel/adis16209.c         | 1 -
+ drivers/iio/gyro/adis16136.c          | 1 -
+ drivers/iio/gyro/adis16260.c          | 1 -
+ drivers/iio/imu/adis16400.c           | 1 -
+ drivers/staging/iio/accel/adis16203.c | 1 -
+ drivers/staging/iio/accel/adis16240.c | 1 -
+ include/linux/iio/imu/adis.h          | 1 -
+ 8 files changed, 8 deletions(-)
 
-Thanks,
-Faiz
+diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+index c92d22387b01..0f0f27a8184e 100644
+--- a/drivers/iio/accel/adis16201.c
++++ b/drivers/iio/accel/adis16201.c
+@@ -247,7 +247,6 @@ static const struct adis_data adis16201_data = {
+ 
+ 	.self_test_mask = ADIS16201_MSC_CTRL_SELF_TEST_EN,
+ 	.self_test_no_autoclear = true,
+-	.startup_delay = ADIS16201_STARTUP_DELAY_MS,
+ 	.timeouts = &adis16201_timeouts,
+ 
+ 	.status_error_msgs = adis16201_status_error_msgs,
+diff --git a/drivers/iio/accel/adis16209.c b/drivers/iio/accel/adis16209.c
+index f5a78fc11919..c6dbd2424e10 100644
+--- a/drivers/iio/accel/adis16209.c
++++ b/drivers/iio/accel/adis16209.c
+@@ -257,7 +257,6 @@ static const struct adis_data adis16209_data = {
+ 
+ 	.self_test_mask = ADIS16209_MSC_CTRL_SELF_TEST_EN,
+ 	.self_test_no_autoclear = true,
+-	.startup_delay = ADIS16209_STARTUP_DELAY_MS,
+ 	.timeouts = &adis16209_timeouts,
+ 
+ 	.status_error_msgs = adis16209_status_error_msgs,
+diff --git a/drivers/iio/gyro/adis16136.c b/drivers/iio/gyro/adis16136.c
+index dc91d8df7697..d5e03a406d4a 100644
+--- a/drivers/iio/gyro/adis16136.c
++++ b/drivers/iio/gyro/adis16136.c
+@@ -472,7 +472,6 @@ static const struct adis_data adis16136_data = {
+ 	.msc_ctrl_reg = ADIS16136_REG_MSC_CTRL,
+ 
+ 	.self_test_mask = ADIS16136_MSC_CTRL_SELF_TEST,
+-	.startup_delay = 80,
+ 
+ 	.read_delay = 10,
+ 	.write_delay = 10,
+diff --git a/drivers/iio/gyro/adis16260.c b/drivers/iio/gyro/adis16260.c
+index 0e3a66a7726d..be09b3e5910c 100644
+--- a/drivers/iio/gyro/adis16260.c
++++ b/drivers/iio/gyro/adis16260.c
+@@ -346,7 +346,6 @@ static const struct adis_data adis16260_data = {
+ 	.diag_stat_reg = ADIS16260_DIAG_STAT,
+ 
+ 	.self_test_mask = ADIS16260_MSC_CTRL_MEM_TEST,
+-	.startup_delay = ADIS16260_STARTUP_DELAY,
+ 	.timeouts = &adis16260_timeouts,
+ 
+ 	.status_error_msgs = adis1620_status_error_msgs,
+diff --git a/drivers/iio/imu/adis16400.c b/drivers/iio/imu/adis16400.c
+index 51b1ec23b8ef..cfb1c19eb930 100644
+--- a/drivers/iio/imu/adis16400.c
++++ b/drivers/iio/imu/adis16400.c
+@@ -1126,7 +1126,6 @@ static const struct adis_data adis16400_data = {
+ 	.write_delay = 50,
+ 
+ 	.self_test_mask = ADIS16400_MSC_CTRL_MEM_TEST,
+-	.startup_delay = ADIS16400_STARTUP_DELAY,
+ 
+ 	.status_error_msgs = adis16400_status_error_msgs,
+ 	.status_error_mask = BIT(ADIS16400_DIAG_STAT_ZACCL_FAIL) |
+diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
+index 3d706ee02df0..39dfe3f7f254 100644
+--- a/drivers/staging/iio/accel/adis16203.c
++++ b/drivers/staging/iio/accel/adis16203.c
+@@ -251,7 +251,6 @@ static const struct adis_data adis16203_data = {
+ 
+ 	.self_test_mask = ADIS16203_MSC_CTRL_SELF_TEST_EN,
+ 	.self_test_no_autoclear = true,
+-	.startup_delay = ADIS16203_STARTUP_DELAY,
+ 	.timeouts = &adis16203_timeouts,
+ 
+ 	.status_error_msgs = adis16203_status_error_msgs,
+diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+index d4848ef78c75..39eb8364aa95 100644
+--- a/drivers/staging/iio/accel/adis16240.c
++++ b/drivers/staging/iio/accel/adis16240.c
+@@ -374,7 +374,6 @@ static const struct adis_data adis16240_data = {
+ 
+ 	.self_test_mask = ADIS16240_MSC_CTRL_SELF_TEST_EN,
+ 	.self_test_no_autoclear = true,
+-	.startup_delay = ADIS16240_STARTUP_DELAY,
+ 	.timeouts = &adis16240_timeouts,
+ 
+ 	.status_error_msgs = adis16240_status_error_msgs,
+diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+index 853dc8c8365c..d2fcf45b4cef 100644
+--- a/include/linux/iio/imu/adis.h
++++ b/include/linux/iio/imu/adis.h
+@@ -56,7 +56,6 @@ struct adis_data {
+ 
+ 	unsigned int self_test_mask;
+ 	bool self_test_no_autoclear;
+-	unsigned int startup_delay;
+ 	const struct adis_timeout *timeouts;
+ 
+ 	const char * const *status_error_msgs;
+-- 
+2.20.1
+
