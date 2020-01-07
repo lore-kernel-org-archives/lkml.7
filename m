@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F165C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA38C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024A22080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E302080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431845;
-	bh=RHOGp9HQeQyoK17jjlwbXxaBDWuYVfp1PcCIQL9KW2g=;
+	s=default; t=1578431848;
+	bh=T5q8XmvfkrOeq1v43/KZZja5ORt8vWv1s+v4WUe0hjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJKWardupjSpVzpbts+FP/KrQ24Bky1RcwVzoG1/aiEKjMYYnpzKe6fdO6K5OAkWb
-	 me1q6GR+VyMS7ImEhr+rH5S6/Qu0gBymi0MDB43O4zFSEfohHSLqkNBVK/R1XPzMy4
-	 pqSDBVG4sEZUg6c/hrwe7Yszfi1TlhfMOY+vXqjE=
+	b=dj3SO5i9h5pY6fnLlvwwA3hn3/EPB8TzeWT7dYWvikMci4k44TWtMl3q60avLzd4n
+	 FmGvjz7fPkA1V+xGXVDV/FOh07/7tvXTLglQTkSW4tZaLAA+nX3yrT8R3wf9z0BhHP
+	 c52Uo1jZ9lre3KKPwM9MJNfge1SUN+ZYB4OhgSuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgAGVFv (ORCPT
+        id S1729378AbgAGVR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbgAGVFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:46 -0500
+        id S1729302AbgAGVFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F339208C4;
-        Tue,  7 Jan 2020 21:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22C402087F;
+        Tue,  7 Jan 2020 21:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431145;
-        bh=RHOGp9HQeQyoK17jjlwbXxaBDWuYVfp1PcCIQL9KW2g=;
+        s=default; t=1578431150;
+        bh=T5q8XmvfkrOeq1v43/KZZja5ORt8vWv1s+v4WUe0hjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0vCI+9ISt0OkFf4fKU8yR4sT7yolPDtsdA6SJCdRhIJ6v4wh4/X/vrX3dazS5iOG2
-         hDC1H1vBJJK2DzSavy3U6pvBB0YNXzsocgmHqzTcNDhongjtl1jE57KuedrL9wQIXr
-         IqQ66eEqFKWIVxhNHdm8YYJAuuNc8N/KKDLgSojg=
+        b=rytqw2IjzGNyr4LkzuVMoqNRdLkuX3wPTWgY1SZzocJuFiclMPdQgazt+b727bjra
+         85R6oJtqaKm8uTAXYHLCQ/jaoKLg5eMA1kOv8QSPhzxh7f/goit/hrO5lXkYjPBp1p
+         VySOHqww4oTdZQOAjY/oilBmpXyTgRUprnmFx2Hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 053/115] memcg: account security cred as well to kmemcg
-Date:   Tue,  7 Jan 2020 21:54:23 +0100
-Message-Id: <20200107205302.692285245@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
+        Nikolay Merinov <n.merinov@inango-systems.com>,
+        Ariel Gilman <a.gilman@inango-systems.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 055/115] pstore/ram: Write new dumps to start of recycled zones
+Date:   Tue,  7 Jan 2020 21:54:25 +0100
+Message-Id: <20200107205302.839255144@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -63,66 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
 
-commit 84029fd04c201a4c7e0b07ba262664900f47c6f5 upstream.
+commit 9e5f1c19800b808a37fb9815a26d382132c26c3d upstream.
 
-The cred_jar kmem_cache is already memcg accounted in the current kernel
-but cred->security is not.  Account cred->security to kmemcg.
+The ram_core.c routines treat przs as circular buffers. When writing a
+new crash dump, the old buffer needs to be cleared so that the new dump
+doesn't end up in the wrong place (i.e. at the end).
 
-Recently we saw high root slab usage on our production and on further
-inspection, we found a buggy application leaking processes.  Though that
-buggy application was contained within its memcg but we observe much
-more system memory overhead, couple of GiBs, during that period.  This
-overhead can adversely impact the isolation on the system.
+The solution to this problem is to reset the circular buffer state before
+writing a new Oops dump.
 
-One source of high overhead we found was cred->security objects, which
-have a lifetime of at least the life of the process which allocated
-them.
-
-Link: http://lkml.kernel.org/r/20191205223721.40034-1-shakeelb@google.com
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Chris Down <chris@chrisdown.name>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
+Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
+Link: https://lore.kernel.org/r/20191223133816.28155-1-n.merinov@inango-systems.com
+Fixes: 896fc1f0c4c6 ("pstore/ram: Switch to persistent_ram routines")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cred.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/pstore/ram.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -220,7 +220,7 @@ struct cred *cred_alloc_blank(void)
- 	new->magic = CRED_MAGIC;
- #endif
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -437,6 +437,17 @@ static int notrace ramoops_pstore_write(
  
--	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
-+	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
+ 	prz = cxt->dprzs[cxt->dump_write_cnt];
  
- 	return new;
-@@ -279,7 +279,7 @@ struct cred *prepare_creds(void)
- 	new->security = NULL;
- #endif
- 
--	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-+	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
- 	validate_creds(new);
- 	return new;
-@@ -654,7 +654,7 @@ struct cred *prepare_kernel_cred(struct
- #ifdef CONFIG_SECURITY
- 	new->security = NULL;
- #endif
--	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-+	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
- 
- 	put_cred(old);
++	/*
++	 * Since this is a new crash dump, we need to reset the buffer in
++	 * case it still has an old dump present. Without this, the new dump
++	 * will get appended, which would seriously confuse anything trying
++	 * to check dump file contents. Specifically, ramoops_read_kmsg_hdr()
++	 * expects to find a dump header in the beginning of buffer data, so
++	 * we must to reset the buffer values, in order to ensure that the
++	 * header will be written to the beginning of the buffer.
++	 */
++	persistent_ram_zap(prz);
++
+ 	/* Build header and append record contents. */
+ 	hlen = ramoops_write_kmsg_hdr(prz, record);
+ 	size = record->size;
 
 
