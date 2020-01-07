@@ -2,85 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F48C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788A9206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:02:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LJrGoOQa"
+	by mail.kernel.org (Postfix) with ESMTP id 36114206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgAGUCN (ORCPT
+        id S1728703AbgAGUDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:02:13 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57262 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgAGUCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:02:13 -0500
-Received: from zn.tnic (p200300EC2F0FB400453AE1B66C2BC925.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:b400:453a:e1b6:6c2b:c925])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B0701EC0CD3;
-        Tue,  7 Jan 2020 21:02:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578427331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ysOcvAqAKnTyDEY5Saj0YcqW5rlYPZb9UU4KflK5iSs=;
-        b=LJrGoOQaZjEMccNlBstQ3nCwxvQ+RFSVIczJtEam+HYzGJ++W8NhjF62U9KL5vhcEkS4xI
-        sUhutd8vR2MkV21jR9aMhawxREor8jTEqEo9/gr9gDd3z3ZTW+YMmBEXdhqSjAb7++KNXW
-        qSZ3zJ7GRA5JK7xo4Hf87moF6gemf8E=
-Date:   Tue, 7 Jan 2020 21:02:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya.linux@gmail.com>
-Cc:     Bhaskar Upadhaya <bupadhaya@marvell.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
-Subject: Re: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in
- non-deferrable mode
-Message-ID: <20200107200208.GN29542@zn.tnic>
-References: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
- <20200102180130.GG8345@zn.tnic>
- <CAEYJA6oXTxTmJEji5_Hup2oB+GrgGnmSTiS-nNuzbNzGJ9VESA@mail.gmail.com>
- <20200106130949.GD12238@zn.tnic>
- <CAEYJA6rPiBYnM4rT5WJnvTSrk6GBHeLYxK5OF5oxmeVxVepGGQ@mail.gmail.com>
- <20200107130421.6w67frcsllkblie2@rric.localdomain>
+        Tue, 7 Jan 2020 15:03:11 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:35737 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgAGUDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:03:11 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M2wCi-1iq23L2cxw-003JkJ; Tue, 07 Jan 2020 21:02:35 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Eric Whitney <enwlinux@gmail.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: fix ext4 unused-variable warning
+Date:   Tue,  7 Jan 2020 21:02:12 +0100
+Message-Id: <20200107200233.3244877-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200107130421.6w67frcsllkblie2@rric.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nfqDsO3LApBgvoCI17Vt2kujvHVXqGUNcSRj3x/2fTZrCNeqX1M
+ F9zM+mnkHdTWrc8g19vcpdlPTdaeQMGctnjAd/ioxofcHU1qTbwnfFeP/MrcEfKmHgnbhlA
+ LITm7qBEBt3FmbD1j5qsxPgLTKoMbehLkBXEuegwnGIdKpbvcBlEk71cfB/ZsbNaguQPf2y
+ au9r1NadicA1lx67tXQvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HP6fxNg0DoQ=:mI6FjMO2CLchjmhCaimz1O
+ RvTpLvCYslXOk8SOGfIozC7UAaSd/0Fn3FwOPA6hXFie7ds6cDrUOQc4AxWD6tW2DGhcgBDK0
+ Prf7AER5VGkDDU5zBCr4ybsNdi3+p4EbqmauBQCozrgYoEO9sOO5zr4nSqREqC2HE5wB8lXla
+ Vwkx1JnVXOf83lqGdxhidkj5eQH1a3mMGpLa2hoI/R+Lr/rXtHGK9ZM6sPKQ/wunLQrIRetC1
+ uEOjyC4UP8aBwuUTTtYpRWkorXX4dwUztGThaOaOje7OuQFa9sBldp2FiuY0KFlf35EwOQnZx
+ utCFCNe8GAvk0iZA8xQRswEHHmldFrUb/valpP15os0S1ZA4bcLiL5nLhdU4QpAse4elN6Kfj
+ jLxdPq199nk/KlA5EvUumBn4WC8qXlGL9843ZFKSdJd5+WIXXn1AaDrCGZK2lkVZgsflxVT0Y
+ zn0kQueq3XYE1+QMbaWJ9FR2WoQKHc7lTQBpZq1RcppU4AYZfmY9JMcUQX4w0Hio8K/AEzr7F
+ Rls7K+DW9Avm7lvoaMFI9zDfApDHV6iJPs+DFMlPilKg+O/EfM8xzF/icbp1fHsZYJC/M0HcE
+ fBXJnBgZqBYJKpVhy7g/bU7ySnFEzh78m9gA7HxEoSqSxRW9vfYTCRBHknVvdbIrPzVF/FRf6
+ UOrnPBaZiMCzeDclWVndxSTByA1n3S6X2W+ibi6T60PTjejvbpP4e0ZCs6CPd32Jefl5wakFd
+ OB3+Ov2Ky45B709gjWM4HZ/3wO7i7/reyh/1JWo/HpvOjS1B/ur/6srUfXsDcq1/PTDcc3LwX
+ wpvFjxaxwZi5cvYONTKaACbl+37cfjD6txwLtxjUHx1patvnun/UxaKmAogwFOtK4hYLC5VHC
+ xB286Hgxy1QD2NDpi7ow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:04:29PM +0000, Robert Richter wrote:
-> > Thanks Borislav, I will edit the commit message with you comments in
-> > the next patch.
-> > Can I get your Ack in the next patch ?
+A bugfix introduce a harmless warning:
 
-Acks are being given when the new version arrives. Look at LKML archives
-for examples.
+fs/ext4/inode.c: In function 'ext4_page_mkwrite':
+fs/ext4/inode.c:5910:24: error: unused variable 'mapping' [-Werror=unused-variable]
 
-> I guess Boris will apply the patch to his tree as maintainer, so no
-> need to ack it.
+Remove the now-unused variable.
 
-Nah, apei/ghes stuff goes through Rafael. I'm just a reviewer for the
-APEI side.
+Fixes: 4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/ext4/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 9a3e8d075cd0..d0049fd0bfd4 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5907,7 +5907,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+ 	vm_fault_t ret;
+ 	struct file *file = vma->vm_file;
+ 	struct inode *inode = file_inode(file);
+-	struct address_space *mapping = inode->i_mapping;
+ 	handle_t *handle;
+ 	get_block_t *get_block;
+ 	int retries = 0;
 -- 
-Regards/Gruss,
-    Boris.
+2.20.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
