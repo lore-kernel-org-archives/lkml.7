@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96486C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6926BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6640A206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398B92070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgAGMVR (ORCPT
+        id S1728152AbgAGMV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:21:17 -0500
-Received: from mga09.intel.com ([134.134.136.24]:13877 "EHLO mga09.intel.com"
+        Tue, 7 Jan 2020 07:21:26 -0500
+Received: from mga09.intel.com ([134.134.136.24]:13883 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgAGMVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:21:16 -0500
+        id S1728132AbgAGMVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:21:25 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:21:16 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:21:24 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="422476037"
+   d="scan'208";a="422476087"
 Received: from iov2.bj.intel.com ([10.238.145.72])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jan 2020 04:21:14 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jan 2020 04:21:23 -0800
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, kwankhede@nvidia.com
 Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
         baolu.lu@linux.intel.com, Liu Yi L <yi.l.liu@intel.com>
-Subject: [PATCH v4 06/12] vfio_pci: shrink vfio_pci_common.c
-Date:   Tue,  7 Jan 2020 20:01:43 +0800
-Message-Id: <1578398509-26453-7-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v4 10/12] vfio: build vfio_pci_common.c into a kernel module
+Date:   Tue,  7 Jan 2020 20:01:47 +0800
+Message-Id: <1578398509-26453-11-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
 References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
@@ -44,294 +44,294 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the vfio-pci module specific codes in vfio_pci_common.c
-to make vfio_pci_common.c be a common source file.
+This patch makes vfio_pci_common.c to be built as a kernel module,
+which is a preparation for further share vfio_pci common codes outside
+drivers/vfio/pci/.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
- drivers/vfio/pci/vfio_pci_common.c | 235 -------------------------------------
- 1 file changed, 235 deletions(-)
+ drivers/vfio/pci/Kconfig           |  9 ++++++--
+ drivers/vfio/pci/Makefile          |  9 +++++---
+ drivers/vfio/pci/vfio_pci.c        | 14 ++-----------
+ drivers/vfio/pci/vfio_pci_common.c | 43 ++++++++++++++++++++++++++++++++++++--
+ include/linux/vfio_pci_common.h    |  2 +-
+ 5 files changed, 57 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_common.c b/drivers/vfio/pci/vfio_pci_common.c
-index 103e493..b0894dfc 100644
---- a/drivers/vfio/pci/vfio_pci_common.c
-+++ b/drivers/vfio/pci/vfio_pci_common.c
-@@ -30,30 +30,6 @@
+diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+index ac3c1dd..1a1fb3b 100644
+--- a/drivers/vfio/pci/Kconfig
++++ b/drivers/vfio/pci/Kconfig
+@@ -1,9 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-config VFIO_PCI
+-	tristate "VFIO support for PCI devices"
++
++config VFIO_PCI_COMMON
+ 	depends on VFIO && PCI && EVENTFD
+ 	select VFIO_VIRQFD
+ 	select IRQ_BYPASS_MANAGER
++	tristate
++
++config VFIO_PCI
++	tristate "VFIO support for PCI devices"
++	select VFIO_PCI_COMMON
+ 	help
+ 	  Support for the PCI VFIO bus driver.  This is required to make
+ 	  use of PCI drivers using the VFIO framework.
+diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+index d94317a..ad60cfd 100644
+--- a/drivers/vfio/pci/Makefile
++++ b/drivers/vfio/pci/Makefile
+@@ -1,8 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0-only
  
- #include "vfio_pci_private.h"
+-vfio-pci-y := vfio_pci.o vfio_pci_common.o vfio_pci_intrs.o \
++vfio-pci-common-y := vfio_pci_common.o vfio_pci_intrs.o \
+ 		vfio_pci_rdwr.o vfio_pci_config.o
+-vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+-vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
++vfio-pci-common-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
++vfio-pci-common-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
  
--#define DRIVER_VERSION  "0.2"
--#define DRIVER_AUTHOR   "Alex Williamson <alex.williamson@redhat.com>"
--#define DRIVER_DESC     "VFIO PCI - User Level meta-driver"
--
--static char ids[1024] __initdata;
--module_param_string(ids, ids, sizeof(ids), 0);
--MODULE_PARM_DESC(ids, "Initial PCI IDs to add to the vfio driver, format is \"vendor:device[:subvendor[:subdevice[:class[:class_mask]]]]\" and multiple comma separated entries can be specified");
--
--static bool nointxmask;
--module_param_named(nointxmask, nointxmask, bool, S_IRUGO | S_IWUSR);
--MODULE_PARM_DESC(nointxmask,
--		  "Disable support for PCI 2.3 style INTx masking.  If this resolves problems for specific devices, report lspci -vvvxxx to linux-pci@vger.kernel.org so the device can be fixed automatically via the broken_intx_masking flag.");
--
--#ifdef CONFIG_VFIO_PCI_VGA
--static bool disable_vga;
--module_param(disable_vga, bool, S_IRUGO);
--MODULE_PARM_DESC(disable_vga, "Disable VGA resource access through vfio-pci");
--#endif
--
--static bool disable_idle_d3;
--module_param(disable_idle_d3, bool, S_IRUGO | S_IWUSR);
--MODULE_PARM_DESC(disable_idle_d3,
--		 "Disable using the PCI D3 low power state for idle, unused devices");
--
- /*
-  * Our VGA arbiter participation is limited since we don't know anything
-  * about the device itself.  However, if the device is the only VGA device
-@@ -459,49 +435,6 @@ void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
- 	vdev->disable_idle_d3 = disable_idle_d3;
- }
- 
--static void vfio_pci_release(void *device_data)
--{
--	struct vfio_pci_device *vdev = device_data;
--
--	mutex_lock(&vdev->reflck->lock);
--
--	if (!(--vdev->refcnt)) {
--		vfio_spapr_pci_eeh_release(vdev->pdev);
--		vfio_pci_disable(vdev);
--	}
--
--	mutex_unlock(&vdev->reflck->lock);
--
--	module_put(THIS_MODULE);
--}
--
--static int vfio_pci_open(void *device_data)
--{
--	struct vfio_pci_device *vdev = device_data;
--	int ret = 0;
--
--	if (!try_module_get(THIS_MODULE))
--		return -ENODEV;
--
--	vfio_pci_refresh_config(vdev, nointxmask, disable_idle_d3);
--
--	mutex_lock(&vdev->reflck->lock);
--
--	if (!vdev->refcnt) {
--		ret = vfio_pci_enable(vdev);
--		if (ret)
--			goto error;
--
--		vfio_spapr_pci_eeh_open(vdev->pdev);
--	}
--	vdev->refcnt++;
--error:
--	mutex_unlock(&vdev->reflck->lock);
--	if (ret)
--		module_put(THIS_MODULE);
--	return ret;
--}
--
- static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
- {
- 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
-@@ -1273,129 +1206,6 @@ void vfio_pci_request(void *device_data, unsigned int count)
- 	mutex_unlock(&vdev->igate);
- }
- 
--static const struct vfio_device_ops vfio_pci_ops = {
--	.name		= "vfio-pci",
--	.open		= vfio_pci_open,
--	.release	= vfio_pci_release,
--	.ioctl		= vfio_pci_ioctl,
--	.read		= vfio_pci_read,
--	.write		= vfio_pci_write,
--	.mmap		= vfio_pci_mmap,
--	.request	= vfio_pci_request,
--};
--
--static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
--{
--	struct vfio_pci_device *vdev;
--	struct iommu_group *group;
--	int ret;
--
--	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
--		return -EINVAL;
--
--	/*
--	 * Prevent binding to PFs with VFs enabled, this too easily allows
--	 * userspace instance with VFs and PFs from the same device, which
--	 * cannot work.  Disabling SR-IOV here would initiate removing the
--	 * VFs, which would unbind the driver, which is prone to blocking
--	 * if that VF is also in use by vfio-pci.  Just reject these PFs
--	 * and let the user sort it out.
--	 */
--	if (pci_num_vf(pdev)) {
--		pci_warn(pdev, "Cannot bind to PF with SR-IOV enabled\n");
--		return -EBUSY;
--	}
--
--	group = vfio_iommu_group_get(&pdev->dev);
--	if (!group)
--		return -EINVAL;
--
--	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
--	if (!vdev) {
--		vfio_iommu_group_put(group, &pdev->dev);
--		return -ENOMEM;
--	}
--
--	vdev->pdev = pdev;
--	vdev->irq_type = VFIO_PCI_NUM_IRQS;
--	mutex_init(&vdev->igate);
--	spin_lock_init(&vdev->irqlock);
--	mutex_init(&vdev->ioeventfds_lock);
--	INIT_LIST_HEAD(&vdev->ioeventfds_list);
--	vdev->nointxmask = nointxmask;
--#ifdef CONFIG_VFIO_PCI_VGA
--	vdev->disable_vga = disable_vga;
--#endif
--	vdev->disable_idle_d3 = disable_idle_d3;
--
--	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
--	if (ret) {
--		vfio_iommu_group_put(group, &pdev->dev);
--		kfree(vdev);
--		return ret;
--	}
--
--	ret = vfio_pci_reflck_attach(vdev);
--	if (ret) {
--		vfio_del_group_dev(&pdev->dev);
--		vfio_iommu_group_put(group, &pdev->dev);
--		kfree(vdev);
--		return ret;
--	}
--
--	if (vfio_pci_is_vga(pdev)) {
--		vga_client_register(pdev, vdev, NULL, vfio_pci_set_vga_decode);
--		vga_set_legacy_decoding(pdev,
--					vfio_pci_set_vga_decode(vdev, false));
--	}
--
--	vfio_pci_probe_power_state(vdev);
--
--	if (!vdev->disable_idle_d3) {
--		/*
--		 * pci-core sets the device power state to an unknown value at
--		 * bootup and after being removed from a driver.  The only
--		 * transition it allows from this unknown state is to D0, which
--		 * typically happens when a driver calls pci_enable_device().
--		 * We're not ready to enable the device yet, but we do want to
--		 * be able to get to D3.  Therefore first do a D0 transition
--		 * before going to D3.
--		 */
--		vfio_pci_set_power_state(vdev, PCI_D0);
--		vfio_pci_set_power_state(vdev, PCI_D3hot);
--	}
--
--	return ret;
--}
--
--static void vfio_pci_remove(struct pci_dev *pdev)
--{
--	struct vfio_pci_device *vdev;
--
--	vdev = vfio_del_group_dev(&pdev->dev);
--	if (!vdev)
--		return;
--
--	vfio_pci_reflck_put(vdev->reflck);
--
--	vfio_iommu_group_put(pdev->dev.iommu_group, &pdev->dev);
--	kfree(vdev->region);
--	mutex_destroy(&vdev->ioeventfds_lock);
--
--	if (!vdev->disable_idle_d3)
--		vfio_pci_set_power_state(vdev, PCI_D0);
--
--	kfree(vdev->pm_save);
--	kfree(vdev);
--
--	if (vfio_pci_is_vga(pdev)) {
--		vga_client_register(pdev, NULL, NULL, NULL);
--		vga_set_legacy_decoding(pdev,
--				VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
--				VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM);
--	}
--}
--
- static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
- 						  pci_channel_state_t state)
- {
-@@ -1428,14 +1238,6 @@ static const struct pci_error_handlers vfio_err_handlers = {
- 	.error_detected = vfio_pci_aer_err_detected,
++vfio-pci-y := vfio_pci.o
++
++obj-$(CONFIG_VFIO_PCI_COMMON) += vfio-pci-common.o
+ obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 7e24da2..7047667 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -225,36 +225,26 @@ static struct pci_driver vfio_pci_driver = {
+ 	.id_table	= NULL, /* only dynamic ids */
+ 	.probe		= vfio_pci_probe,
+ 	.remove		= vfio_pci_remove,
+-	.err_handler	= &vfio_err_handlers,
++	.err_handler	= &vfio_pci_err_handlers,
  };
  
--static struct pci_driver vfio_pci_driver = {
--	.name		= "vfio-pci",
--	.id_table	= NULL, /* only dynamic ids */
--	.probe		= vfio_pci_probe,
--	.remove		= vfio_pci_remove,
--	.err_handler	= &vfio_err_handlers,
--};
--
- static DEFINE_MUTEX(reflck_lock);
- 
- static struct vfio_pci_reflck *vfio_pci_reflck_alloc(void)
-@@ -1629,12 +1431,6 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
- 	kfree(devs.devices);
- }
- 
--static void __exit vfio_pci_cleanup(void)
--{
--	pci_unregister_driver(&vfio_pci_driver);
--	vfio_pci_uninit_perm_bits();
--}
--
- void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
+ static void __exit vfio_pci_cleanup(void)
  {
- 	char *p, *id;
-@@ -1675,34 +1471,3 @@ void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
- 				class, class_mask);
- 	}
+ 	pci_unregister_driver(&vfio_pci_driver);
+-	vfio_pci_uninit_perm_bits();
  }
--
--static int __init vfio_pci_init(void)
--{
--	int ret;
--
+ 
+ static int __init vfio_pci_init(void)
+ {
+ 	int ret;
+ 
 -	/* Allocate shared config space permision data used by all devices */
 -	ret = vfio_pci_init_perm_bits();
 -	if (ret)
 -		return ret;
 -
--	/* Register and scan for devices */
--	ret = pci_register_driver(&vfio_pci_driver);
--	if (ret)
+ 	/* Register and scan for devices */
+ 	ret = pci_register_driver(&vfio_pci_driver);
+ 	if (ret)
 -		goto out_driver;
--
--	vfio_pci_fill_ids(ids, &vfio_pci_driver);
--
--	return 0;
++		return ret;
+ 
+ 	vfio_pci_fill_ids(ids, &vfio_pci_driver);
+ 
+ 	return 0;
 -
 -out_driver:
 -	vfio_pci_uninit_perm_bits();
 -	return ret;
--}
--
--module_init(vfio_pci_init);
--module_exit(vfio_pci_cleanup);
--
--MODULE_VERSION(DRIVER_VERSION);
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR(DRIVER_AUTHOR);
--MODULE_DESCRIPTION(DRIVER_DESC);
+ }
+ 
+ module_init(vfio_pci_init);
+diff --git a/drivers/vfio/pci/vfio_pci_common.c b/drivers/vfio/pci/vfio_pci_common.c
+index 15d8b55..edda7e4 100644
+--- a/drivers/vfio/pci/vfio_pci_common.c
++++ b/drivers/vfio/pci/vfio_pci_common.c
+@@ -27,9 +27,14 @@
+ #include <linux/vfio.h>
+ #include <linux/vgaarb.h>
+ #include <linux/nospec.h>
++#include <linux/vfio_pci_common.h>
+ 
+ #include "vfio_pci_private.h"
+ 
++#define DRIVER_VERSION  "0.2"
++#define DRIVER_AUTHOR   "Alex Williamson <alex.williamson@redhat.com>"
++#define DRIVER_DESC     "VFIO PCI Common"
++
+ /*
+  * Our VGA arbiter participation is limited since we don't know anything
+  * about the device itself.  However, if the device is the only VGA device
+@@ -69,6 +74,7 @@ unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga)
+ 
+ 	return decodes;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_set_vga_decode);
+ 
+ static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+ {
+@@ -183,6 +189,7 @@ void vfio_pci_probe_power_state(struct vfio_pci_device *vdev)
+ 
+ 	vdev->needs_pm_restore = !(pmcsr & PCI_PM_CTRL_NO_SOFT_RESET);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_probe_power_state);
+ 
+ /*
+  * pci_set_power_state() wrapper handling devices which perform a soft reset on
+@@ -221,6 +228,7 @@ int vfio_pci_set_power_state(struct vfio_pci_device *vdev, pci_power_t state)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_set_power_state);
+ 
+ int vfio_pci_enable(struct vfio_pci_device *vdev)
+ {
+@@ -328,6 +336,7 @@ int vfio_pci_enable(struct vfio_pci_device *vdev)
+ 	vfio_pci_disable(vdev);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_enable);
+ 
+ void vfio_pci_disable(struct vfio_pci_device *vdev)
+ {
+@@ -427,6 +436,7 @@ void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	if (!vdev->disable_idle_d3)
+ 		vfio_pci_set_power_state(vdev, PCI_D3hot);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_disable);
+ 
+ void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
+ 			bool nointxmask, bool disable_idle_d3)
+@@ -434,6 +444,7 @@ void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
+ 	vdev->nointxmask = nointxmask;
+ 	vdev->disable_idle_d3 = disable_idle_d3;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_refresh_config);
+ 
+ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
+ {
+@@ -618,6 +629,7 @@ int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_register_dev_region);
+ 
+ long vfio_pci_ioctl(void *device_data,
+ 		   unsigned int cmd, unsigned long arg)
+@@ -1072,6 +1084,7 @@ long vfio_pci_ioctl(void *device_data,
+ 
+ 	return -ENOTTY;
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_ioctl);
+ 
+ static ssize_t vfio_pci_rw(void *device_data, char __user *buf,
+ 			   size_t count, loff_t *ppos, bool iswrite)
+@@ -1113,6 +1126,7 @@ ssize_t vfio_pci_read(void *device_data, char __user *buf,
+ 
+ 	return vfio_pci_rw(device_data, buf, count, ppos, false);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_read);
+ 
+ ssize_t vfio_pci_write(void *device_data, const char __user *buf,
+ 			      size_t count, loff_t *ppos)
+@@ -1122,6 +1136,7 @@ ssize_t vfio_pci_write(void *device_data, const char __user *buf,
+ 
+ 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_write);
+ 
+ int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+ {
+@@ -1184,6 +1199,7 @@ int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+ 	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+ 			       req_len, vma->vm_page_prot);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_mmap);
+ 
+ void vfio_pci_request(void *device_data, unsigned int count)
+ {
+@@ -1205,6 +1221,7 @@ void vfio_pci_request(void *device_data, unsigned int count)
+ 
+ 	mutex_unlock(&vdev->igate);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_request);
+ 
+ static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
+ 						  pci_channel_state_t state)
+@@ -1234,9 +1251,10 @@ static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
+ 	return PCI_ERS_RESULT_CAN_RECOVER;
+ }
+ 
+-const struct pci_error_handlers vfio_err_handlers = {
++const struct pci_error_handlers vfio_pci_err_handlers = {
+ 	.error_detected = vfio_pci_aer_err_detected,
+ };
++EXPORT_SYMBOL_GPL(vfio_pci_err_handlers);
+ 
+ static DEFINE_MUTEX(reflck_lock);
+ 
+@@ -1303,6 +1321,7 @@ int vfio_pci_reflck_attach(struct vfio_pci_device *vdev)
+ 
+ 	return PTR_ERR_OR_ZERO(vdev->reflck);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_reflck_attach);
+ 
+ static void vfio_pci_reflck_release(struct kref *kref)
+ {
+@@ -1318,6 +1337,7 @@ void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck)
+ {
+ 	kref_put_mutex(&reflck->kref, vfio_pci_reflck_release, &reflck_lock);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_reflck_put);
+ 
+ struct vfio_devices {
+ 	struct vfio_device **devices;
+@@ -1431,7 +1451,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
+ 	kfree(devs.devices);
+ }
+ 
+-void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
++void vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
+ {
+ 	char *p, *id;
+ 	int rc;
+@@ -1471,3 +1491,22 @@ void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
+ 				class, class_mask);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_fill_ids);
++
++static int __init vfio_pci_common_init(void)
++{
++	/* Allocate shared config space permision data used by all devices */
++	return vfio_pci_init_perm_bits();
++}
++module_init(vfio_pci_common_init);
++
++static void __exit vfio_pci_common_exit(void)
++{
++	vfio_pci_uninit_perm_bits();
++}
++module_exit(vfio_pci_common_exit);
++
++MODULE_VERSION(DRIVER_VERSION);
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR(DRIVER_AUTHOR);
++MODULE_DESCRIPTION(DRIVER_DESC);
+diff --git a/include/linux/vfio_pci_common.h b/include/linux/vfio_pci_common.h
+index 862cd80..439666a 100644
+--- a/include/linux/vfio_pci_common.h
++++ b/include/linux/vfio_pci_common.h
+@@ -109,7 +109,7 @@ struct vfio_pci_device {
+ #define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
+ #define irq_is(vdev, type) (vdev->irq_type == type)
+ 
+-extern const struct pci_error_handlers vfio_err_handlers;
++extern const struct pci_error_handlers vfio_pci_err_handlers;
+ 
+ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+ {
 -- 
 2.7.4
 
