@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2370C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDE0C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18CA214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903132467F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430667;
-	bh=Au5h0Tbs2NnhpnJuhUryAGEuji9LYS1kPhAyQd/+xDE=;
+	s=default; t=1578430669;
+	bh=v9lUO9rBWKYWaXrZuC4vivBJQcMcYobzNnqaS8rQd14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OAMbue4VPPKZeKQAYhuxtLaPQGxirN54HlVIKY8DO5euyLSGfD0pFSGDXP4WFu2Vc
-	 MlmJ7rWAjNAQYYHFthFJUB4XCXY8Y3GWh7HLyzapP7WqPaaWFGiEljQGi8T4Fckyzc
-	 BZy8wSru4OJJyWwZ66KS/i0eVKzuTK6r3eGVAc8g=
+	b=Vj2PcTyCrfmqQjClRgWz2fRFvNxJQtMAH9g7q1+/jktkPem01CnyYkQvsM8R75LMl
+	 bXPgPkAVTq5u3S9nU5/S/WGg2R/AsWbghtxm36+HZkfRoHcQzYTPMv1trvHS7vARMl
+	 UO/g6tK6o5NmDf5lI+FBydeecJlJrmkKI0GIZFks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgAGU5r (ORCPT
+        id S1727701AbgAGU5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbgAGU5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:42 -0500
+        id S1726992AbgAGU5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A0A208C4;
-        Tue,  7 Jan 2020 20:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26819214D8;
+        Tue,  7 Jan 2020 20:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430662;
-        bh=Au5h0Tbs2NnhpnJuhUryAGEuji9LYS1kPhAyQd/+xDE=;
+        s=default; t=1578430664;
+        bh=v9lUO9rBWKYWaXrZuC4vivBJQcMcYobzNnqaS8rQd14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rHdigWnOyvgKUemLzCPfZFY9AKCteaIk+UDgcEN4PR/E8M8eI4BcIhX+5iyQshL6B
-         tIp/6LKVSoZ5nz417yxuj1aqgmiC7+E6jGnZJJHa21yI8r7lkDgTrMctPLi+lOlNBI
-         IR0lUnt24J1ZalvqEg+shPrdIX+aWLAMetd1C22I=
+        b=I4wPSR7wfnXWasF2ano/8KqZiRVUd0UHcbp+HHSyD0wVjy7SQQro+B1LgtBEk5x6t
+         lGsLF5QlB6ZajRXxcAdRpsoF4bN7uKA59qkD2bbeyPKrwOLcsRody7r2tlXEf2kx9R
+         Zaz/HmpV/vkSvn8vL7YifEVNwGsrJcDGgmzPvnwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/191] PM / devfreq: Fix devfreq_notifier_call returning errno
-Date:   Tue,  7 Jan 2020 21:52:16 +0100
-Message-Id: <20200107205333.875490264@linuxfoundation.org>
+Subject: [PATCH 5.4 017/191] PM / devfreq: Set scaling_max_freq to max on OPP notifier error
+Date:   Tue,  7 Jan 2020 21:52:17 +0100
+Message-Id: <20200107205333.927753109@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -63,15 +63,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit e876e710ede23f670494331e062d643928e4142a ]
+[ Upstream commit e7cc792d00049c874010b398a27c3cc7bc8fef34 ]
 
-Notifier callbacks shouldn't return negative errno but one of the
-NOTIFY_OK/DONE/BAD values.
+The devfreq_notifier_call functions will update scaling_min_freq and
+scaling_max_freq when the OPP table is updated.
 
-The OPP core will ignore return values from notifiers but returning a
-value that matches NOTIFY_STOP_MASK will stop the notification chain.
-
-Fix by always returning NOTIFY_OK.
+If fetching the maximum frequency fails then scaling_max_freq remains
+set to zero which is confusing. Set to ULONG_MAX instead so we don't
+need special handling for this case in other places.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
@@ -79,53 +78,25 @@ Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/devfreq/devfreq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 3a1484e7a3ae..e5c2afdc7b7f 100644
+index e5c2afdc7b7f..e185c8846916 100644
 --- a/drivers/devfreq/devfreq.c
 +++ b/drivers/devfreq/devfreq.c
-@@ -551,26 +551,28 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
- 				 void *devp)
- {
- 	struct devfreq *devfreq = container_of(nb, struct devfreq, nb);
--	int ret;
-+	int err = -EINVAL;
- 
- 	mutex_lock(&devfreq->lock);
- 
- 	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
--	if (!devfreq->scaling_min_freq) {
--		mutex_unlock(&devfreq->lock);
--		return -EINVAL;
--	}
-+	if (!devfreq->scaling_min_freq)
-+		goto out;
+@@ -560,8 +560,10 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ 		goto out;
  
  	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
--	if (!devfreq->scaling_max_freq) {
--		mutex_unlock(&devfreq->lock);
--		return -EINVAL;
--	}
-+	if (!devfreq->scaling_max_freq)
-+		goto out;
-+
-+	err = update_devfreq(devfreq);
+-	if (!devfreq->scaling_max_freq)
++	if (!devfreq->scaling_max_freq) {
++		devfreq->scaling_max_freq = ULONG_MAX;
+ 		goto out;
++	}
  
--	ret = update_devfreq(devfreq);
-+out:
- 	mutex_unlock(&devfreq->lock);
-+	if (err)
-+		dev_err(devfreq->dev.parent,
-+			"failed to update frequency from OPP notifier (%d)\n",
-+			err);
+ 	err = update_devfreq(devfreq);
  
--	return ret;
-+	return NOTIFY_OK;
- }
- 
- /**
 -- 
 2.20.1
 
