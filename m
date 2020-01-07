@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF1DC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D8AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BE62072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A3C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431883;
-	bh=U9lMCLFW3Qzr90gPJad9aP/+wLzkKDUNDwbbADjCt/I=;
+	s=default; t=1578431893;
+	bh=26pRNXp4y9ynyMwAZNrOVO5Yl5vRpAbkefRc+U5H31I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZNBSiDtGioelkE4KvMJb1dFEPZw2xeisr4Vl/cecXlN8HzsjqpZe7IKQTB0Dfmeu
-	 JpddnH7g53j6G27RYoZL5ejIEMxlRmkYjNZqG7POabl7T3Vhm9oYloO3+ZnwFr8RsJ
-	 etcbh7292nH4E5rFXgwhbmwdgs1nqNSmVdGEA2ZE=
+	b=rKjD6bmo8dwCh85legWpBLsuKSSyRd9dKBa3C25Uir1X3e8sajtCuWxMGx3ar2j7Z
+	 EVqyioTmy7hD+oTnWhaK/YnbAYLchWzhy+DBprydOxTp2XPMLw67sCe76pjJmQ5TaT
+	 KJ600MR9qXeFqbrpbQNSDoEOh9wPnq0CUyZl27+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgAGVSC (ORCPT
+        id S1729476AbgAGVSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:18:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgAGVFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:20 -0500
+        id S1729223AbgAGVFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37822081E;
-        Tue,  7 Jan 2020 21:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F31F2081E;
+        Tue,  7 Jan 2020 21:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431119;
-        bh=U9lMCLFW3Qzr90gPJad9aP/+wLzkKDUNDwbbADjCt/I=;
+        s=default; t=1578431114;
+        bh=26pRNXp4y9ynyMwAZNrOVO5Yl5vRpAbkefRc+U5H31I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQnenis3FGLAKoJNwKkZvO8BHvMBq/rGh/bJdzzHRm+RnZ7ZpHvTfzMA7OtJ9IzEd
-         zcfN3hsTRbOx5p2WWVOZznshwkqRr1u6pmZlB4slRvssKVcIZMwC5qq8N5s6okb3C5
-         M2dHI8Wev8Z2E2364C5v9JBG+6ucFFuSYp1Igy6E=
+        b=kHwKKzVfnlJuVWx8jSspxVZ/hjDmsLVuJFUPqKHFOilaNc+K3T7s8js+XzGb5XXXi
+         FySW3Zp/vaNATbUTr7dzPjXxf9nX/6B/TyHG292aMhATDRzymazrvT/oEvQW1IGmOo
+         Mwc3cm98VZFOGTPt0jhpgSzTXsW5l6h5Rr1vv8f4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>,
-        syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        syzbot+c732f8644185de340492@syzkaller.appspotmail.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/115] drm: limit to INT_MAX in create_blob ioctl
-Date:   Tue,  7 Jan 2020 21:54:10 +0100
-Message-Id: <20200107205301.771918206@linuxfoundation.org>
+Subject: [PATCH 4.19 038/115] xfs: fix mount failure crash on invalid iclog memory access
+Date:   Tue,  7 Jan 2020 21:54:08 +0100
+Message-Id: <20200107205301.648935842@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -65,42 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 5bf8bec3f4ce044a223c40cbce92590d938f0e9c ]
+[ Upstream commit 798a9cada4694ca8d970259f216cec47e675bfd5 ]
 
-The hardened usercpy code is too paranoid ever since commit 6a30afa8c1fb
-("uaccess: disallow > INT_MAX copy sizes")
+syzbot (via KASAN) reports a use-after-free in the error path of
+xlog_alloc_log(). Specifically, the iclog freeing loop doesn't
+handle the case of a fully initialized ->l_iclog linked list.
+Instead, it assumes that the list is partially constructed and NULL
+terminated.
 
-Code itself should have been fine as-is.
+This bug manifested because there was no possible error scenario
+after iclog list setup when the original code was added.  Subsequent
+code and associated error conditions were added some time later,
+while the original error handling code was never updated. Fix up the
+error loop to terminate either on a NULL iclog or reaching the end
+of the list.
 
-Link: http://lkml.kernel.org/r/20191106164755.31478-1-daniel.vetter@ffwll.ch
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-Fixes: 6a30afa8c1fb ("uaccess: disallow > INT_MAX copy sizes")
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_log.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
-index cdb10f885a4f..69dfed57c2f8 100644
---- a/drivers/gpu/drm/drm_property.c
-+++ b/drivers/gpu/drm/drm_property.c
-@@ -556,7 +556,7 @@ drm_property_create_blob(struct drm_device *dev, size_t length,
- 	struct drm_property_blob *blob;
- 	int ret;
- 
--	if (!length || length > ULONG_MAX - sizeof(struct drm_property_blob))
-+	if (!length || length > INT_MAX - sizeof(struct drm_property_blob))
- 		return ERR_PTR(-EINVAL);
- 
- 	blob = kvzalloc(sizeof(struct drm_property_blob)+length, GFP_KERNEL);
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index c3b610b687d1..7bba551cbf90 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1578,6 +1578,8 @@ xlog_alloc_log(
+ 		if (iclog->ic_bp)
+ 			xfs_buf_free(iclog->ic_bp);
+ 		kmem_free(iclog);
++		if (prev_iclog == log->l_iclog)
++			break;
+ 	}
+ 	spinlock_destroy(&log->l_icloglock);
+ 	xfs_buf_free(log->l_xbuf);
 -- 
 2.20.1
 
