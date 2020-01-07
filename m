@@ -2,214 +2,84 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6F4C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29C0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151552187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432513;
-	bh=qDFVOxMnh+5wotgzHq5R04eplzdOYPdbyE2FLajrPqo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=009tbi6knLjhToCzvL4K1u4NovvYpJoGYrcyPbgePWcW01ziroPfz47MN4hU0FNtB
-	 mCHhUEWUumvXXtAJVlaXpZyfvA7skv9no5yKXal0ElPj/xKIMH3yIJJtYoocTSdxVh
-	 GOeg2oEDvAa58xybAZuJlfgov6RxAJHRHiqXl5bc=
+	by mail.kernel.org (Postfix) with ESMTP id ACA082080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgAGU40 (ORCPT
+        id S1727474AbgAGV3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51614 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:29:10 -0500
+Received: from namei.org ([65.99.196.166]:55964 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgAGU4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE382087F;
-        Tue,  7 Jan 2020 20:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430582;
-        bh=qDFVOxMnh+5wotgzHq5R04eplzdOYPdbyE2FLajrPqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHDP5Qf7A5BNvfoTPoCjQEYK/ZX168MfMIIPZCJ/i/Rnqudwe0PwrxTKkTutjwZwK
-         psKUuk2uPT+MkJBxsYsqIZI56jueASOoZd5hFhYIRrBwlryS6JSL+MWOO9pAVZ3LHV
-         IXwtIAsE8WyYF+FQbkjzRkUy5tthirhFHNjzy/cM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Christoph Hellwig <hch@lst.de>,
-        James Smart <jsmart2021@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/191] nvme_fc: add module to ops template to allow module references
-Date:   Tue,  7 Jan 2020 21:52:02 +0100
-Message-Id: <20200107205333.136068132@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726820AbgAGV3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:29:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 007LS3RZ015407;
+        Tue, 7 Jan 2020 21:28:03 GMT
+Date:   Wed, 8 Jan 2020 08:28:03 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v1 08/13] bpf: lsm: Show attached program names
+ in hook read handler.
+In-Reply-To: <20191220154208.15895-9-kpsingh@chromium.org>
+Message-ID: <alpine.LRH.2.21.2001080827480.9683@namei.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-9-kpsingh@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+On Fri, 20 Dec 2019, KP Singh wrote:
 
-[ Upstream commit 863fbae929c7a5b64e96b8a3ffb34a29eefb9f8f ]
+> From: KP Singh <kpsingh@google.com>
+> 
+> For inspectability the system administrator should be able to view the
+> list of active KRSI programs:
+> 
+>    bash # cat /sys/kernel/security/bpf/bprm_check_security
+>    bpf_prog1
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-In nvme-fc: it's possible to have connected active controllers
-and as no references are taken on the LLDD, the LLDD can be
-unloaded.  The controller would enter a reconnect state and as
-long as the LLDD resumed within the reconnect timeout, the
-controller would resume.  But if a namespace on the controller
-is the root device, allowing the driver to unload can be problematic.
-To reload the driver, it may require new io to the boot device,
-and as it's no longer connected we get into a catch-22 that
-eventually fails, and the system locks up.
 
-Fix this issue by taking a module reference for every connected
-controller (which is what the core layer did to the transport
-module). Reference is cleared when the controller is removed.
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/fc.c          | 14 ++++++++++++--
- drivers/nvme/target/fcloop.c    |  1 +
- drivers/scsi/lpfc/lpfc_nvme.c   |  2 ++
- drivers/scsi/qla2xxx/qla_nvme.c |  1 +
- include/linux/nvme-fc-driver.h  |  4 ++++
- 5 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 265f89e11d8b..3f102d9f39b8 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -342,7 +342,8 @@ nvme_fc_register_localport(struct nvme_fc_port_info *pinfo,
- 	    !template->ls_req || !template->fcp_io ||
- 	    !template->ls_abort || !template->fcp_abort ||
- 	    !template->max_hw_queues || !template->max_sgl_segments ||
--	    !template->max_dif_sgl_segments || !template->dma_boundary) {
-+	    !template->max_dif_sgl_segments || !template->dma_boundary ||
-+	    !template->module) {
- 		ret = -EINVAL;
- 		goto out_reghost_failed;
- 	}
-@@ -2015,6 +2016,7 @@ nvme_fc_ctrl_free(struct kref *ref)
- {
- 	struct nvme_fc_ctrl *ctrl =
- 		container_of(ref, struct nvme_fc_ctrl, ref);
-+	struct nvme_fc_lport *lport = ctrl->lport;
- 	unsigned long flags;
- 
- 	if (ctrl->ctrl.tagset) {
-@@ -2041,6 +2043,7 @@ nvme_fc_ctrl_free(struct kref *ref)
- 	if (ctrl->ctrl.opts)
- 		nvmf_free_options(ctrl->ctrl.opts);
- 	kfree(ctrl);
-+	module_put(lport->ops->module);
- }
- 
- static void
-@@ -3056,10 +3059,15 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
- 		goto out_fail;
- 	}
- 
-+	if (!try_module_get(lport->ops->module)) {
-+		ret = -EUNATCH;
-+		goto out_free_ctrl;
-+	}
-+
- 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
- 	if (idx < 0) {
- 		ret = -ENOSPC;
--		goto out_free_ctrl;
-+		goto out_mod_put;
- 	}
- 
- 	ctrl->ctrl.opts = opts;
-@@ -3212,6 +3220,8 @@ nvme_fc_init_ctrl(struct device *dev, struct nvmf_ctrl_options *opts,
- out_free_ida:
- 	put_device(ctrl->dev);
- 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
-+out_mod_put:
-+	module_put(lport->ops->module);
- out_free_ctrl:
- 	kfree(ctrl);
- out_fail:
-diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index b50b53db3746..1c50af6219f3 100644
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -850,6 +850,7 @@ fcloop_targetport_delete(struct nvmet_fc_target_port *targetport)
- #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
- 
- static struct nvme_fc_port_template fctemplate = {
-+	.module			= THIS_MODULE,
- 	.localport_delete	= fcloop_localport_delete,
- 	.remoteport_delete	= fcloop_remoteport_delete,
- 	.create_queue		= fcloop_create_queue,
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index a227e36cbdc2..8e0f03ef346b 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1976,6 +1976,8 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local_port *pnvme_lport,
- 
- /* Declare and initialization an instance of the FC NVME template. */
- static struct nvme_fc_port_template lpfc_nvme_template = {
-+	.module	= THIS_MODULE,
-+
- 	/* initiator-based functions */
- 	.localport_delete  = lpfc_nvme_localport_delete,
- 	.remoteport_delete = lpfc_nvme_remoteport_delete,
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index 941aa53363f5..bfcd02fdf2b8 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -610,6 +610,7 @@ static void qla_nvme_remoteport_delete(struct nvme_fc_remote_port *rport)
- }
- 
- static struct nvme_fc_port_template qla_nvme_fc_transport = {
-+	.module	= THIS_MODULE,
- 	.localport_delete = qla_nvme_localport_delete,
- 	.remoteport_delete = qla_nvme_remoteport_delete,
- 	.create_queue   = qla_nvme_alloc_queue,
-diff --git a/include/linux/nvme-fc-driver.h b/include/linux/nvme-fc-driver.h
-index 10f81629b9ce..6d0d70f3219c 100644
---- a/include/linux/nvme-fc-driver.h
-+++ b/include/linux/nvme-fc-driver.h
-@@ -270,6 +270,8 @@ struct nvme_fc_remote_port {
-  *
-  * Host/Initiator Transport Entrypoints/Parameters:
-  *
-+ * @module:  The LLDD module using the interface
-+ *
-  * @localport_delete:  The LLDD initiates deletion of a localport via
-  *       nvme_fc_deregister_localport(). However, the teardown is
-  *       asynchronous. This routine is called upon the completion of the
-@@ -383,6 +385,8 @@ struct nvme_fc_remote_port {
-  *       Value is Mandatory. Allowed to be zero.
-  */
- struct nvme_fc_port_template {
-+	struct module	*module;
-+
- 	/* initiator-based functions */
- 	void	(*localport_delete)(struct nvme_fc_local_port *);
- 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
 -- 
-2.20.1
-
-
+James Morris
+<jmorris@namei.org>
 
