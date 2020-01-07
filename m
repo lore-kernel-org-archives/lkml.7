@@ -6,142 +6,173 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9612C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962A82077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA342146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgAGOtt (ORCPT
+        id S1728350AbgAGOuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:49:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:58672 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgAGOts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:49:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAA5531B;
-        Tue,  7 Jan 2020 06:49:47 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C70A73F703;
-        Tue,  7 Jan 2020 06:49:46 -0800 (PST)
-Date:   Tue, 7 Jan 2020 14:49:40 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     linuxarm@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
-Message-ID: <20200107144940.GA47473@bogus>
-References: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
+        Tue, 7 Jan 2020 09:50:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24272 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727968AbgAGOuX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:50:23 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007EmBpZ139186
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 09:50:22 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb8p0c4kf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:50:22 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 7 Jan 2020 14:50:20 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 Jan 2020 14:50:17 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007EoGv060096532
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jan 2020 14:50:16 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8C2711C064;
+        Tue,  7 Jan 2020 14:50:15 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5150F11C05C;
+        Tue,  7 Jan 2020 14:50:15 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.67.248])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jan 2020 14:50:15 +0000 (GMT)
+Subject: Re: [PATCH v3 2/6] s390/boot: Rename HEAP_SIZE due to name collision
+To:     Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
+ <20200103223334.20669-3-zaslonko@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 7 Jan 2020 15:50:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200103223334.20669-3-zaslonko@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010714-0016-0000-0000-000002DB3464
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010714-0017-0000-0000-0000333DABA7
+Message-Id: <d6a11637-600d-5435-f2c8-bb74a6dcb4e8@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-07_05:2020-01-07,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 clxscore=1015 phishscore=0 spamscore=0
+ priorityscore=1501 suspectscore=2 bulkscore=0 adultscore=0 mlxlogscore=878
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 11:24:49AM +0800, Zeng Tao wrote:
-> When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the device
-> tree, the cpu node parsing will fail. And this is not reasonable for a
-> legal device tree configs.
-> In this patch, skip such cpu nodes rather than return an error.
+
+
+On 03.01.20 23:33, Mikhail Zaslonko wrote:
+> Change the conflicting macro name in preparation for zlib_inflate
+> hardware support.
 > 
-> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
 > ---
->  drivers/base/arch_topology.c | 35 ++++++++++++++++++++++++++---------
->  1 file changed, 26 insertions(+), 9 deletions(-)
+>  arch/s390/boot/compressed/decompressor.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 5fe44b3..4cddfeb 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -250,20 +250,34 @@ core_initcall(free_raw_capacity);
->  #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
->  static int __init get_cpu_for_node(struct device_node *node)
+> diff --git a/arch/s390/boot/compressed/decompressor.c b/arch/s390/boot/compressed/decompressor.c
+> index 45046630c56a..368fd372c875 100644
+> --- a/arch/s390/boot/compressed/decompressor.c
+> +++ b/arch/s390/boot/compressed/decompressor.c
+> @@ -30,13 +30,13 @@ extern unsigned char _compressed_start[];
+>  extern unsigned char _compressed_end[];
+>  
+>  #ifdef CONFIG_HAVE_KERNEL_BZIP2
+> -#define HEAP_SIZE	0x400000
+> +#define BOOT_HEAP_SIZE	0x400000
+>  #else
+> -#define HEAP_SIZE	0x10000
+> +#define BOOT_HEAP_SIZE	0x10000
+>  #endif
+>  
+>  static unsigned long free_mem_ptr = (unsigned long) _end;
+> -static unsigned long free_mem_end_ptr = (unsigned long) _end + HEAP_SIZE;
+> +static unsigned long free_mem_end_ptr = (unsigned long) _end + BOOT_HEAP_SIZE;
+>  
+>  #ifdef CONFIG_KERNEL_GZIP
+>  #include "../../../../lib/decompress_inflate.c"
+> @@ -62,7 +62,7 @@ static unsigned long free_mem_end_ptr = (unsigned long) _end + HEAP_SIZE;
+>  #include "../../../../lib/decompress_unxz.c"
+>  #endif
+>  
+> -#define decompress_offset ALIGN((unsigned long)_end + HEAP_SIZE, PAGE_SIZE)
+> +#define decompress_offset ALIGN((unsigned long)_end + BOOT_HEAP_SIZE, PAGE_SIZE)
+>  
+>  unsigned long mem_safe_offset(void)
 >  {
-> -	struct device_node *cpu_node;
-> +	struct device_node *cpu_node, *t;
->  	int cpu;
-> +	bool found = false;
->  
->  	cpu_node = of_parse_phandle(node, "cpu", 0);
->  	if (!cpu_node)
-> -		return -1;
-> +		return -EINVAL;
-> +
-> +	for_each_of_cpu_node(t)
-> +		if (t == cpu_node) {
-> +			found = true;
-> +			break;
-> +		}
-> +
-> +	if (!found) {
-> +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-> +		return -EINVAL;
-> +	}
->
+> 
 
-The whole extra logic added above sounds redundant, details below...
-
->  	cpu = of_cpu_node_to_id(cpu_node);
->  	if (cpu >= 0)
->  		topology_parse_cpu_capacity(cpu_node, cpu);
-> -	else
-> -		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-> +	else {
-> +		pr_warn("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
-> +			cpu_node, cpumask_pr_args(cpu_possible_mask));
-> +		cpu = -ENODEV;
-
-.. of_cpu_node_to_id returns -ENODEV anyways so above assignment is also
-redundant. All you achieved is explicit error message. I think we should
-be fine combining them. Just extend existing error log with both message.
-
-> +	}
->  
-> -	of_node_put(cpu_node);
->  	return cpu;
->  }
->  
-> @@ -287,10 +301,13 @@ static int __init parse_core(struct device_node *core, int package_id,
->  				cpu_topology[cpu].core_id = core_id;
->  				cpu_topology[cpu].thread_id = i;
->  			} else {
-> -				pr_err("%pOF: Can't get CPU for thread\n",
-> -				       t);
-> +				if (cpu != -ENODEV)
-> +					pr_err("%pOF: Can't get CPU for thread\n",
-> +					       t);
-> +				else
-> +					cpu = 0;
-
-I would rather use another variable instead of reusing 'cpu'
-
->  				of_node_put(t);
-> -				return -EINVAL;
-> +				return cpu;
-
-Shouldn't we continue here if cpu == -ENODEV instead of returning 0 ?
-
->  			}
->  			of_node_put(t);
->  		}
-> @@ -307,7 +324,7 @@ static int __init parse_core(struct device_node *core, int package_id,
->  
->  		cpu_topology[cpu].package_id = package_id;
->  		cpu_topology[cpu].core_id = core_id;
-> -	} else if (leaf) {
-> +	} else if (leaf && cpu != -ENODEV) {
-
-I am still not sure on the approach, it is based on -ENODEV as valid
-error and allow to continue. It may be fine, I just need to make sure.
-
---
-Regards,
-Sudeep
