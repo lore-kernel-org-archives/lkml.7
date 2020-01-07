@@ -2,54 +2,55 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C85C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF61C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C50222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57C62077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431329;
-	bh=uVBvV2Nb/uTe5XdSsCAhOEwc3wM/BVjBR7QlHHVPaRU=;
+	s=default; t=1578431336;
+	bh=KK+5yYKzMqfExUm1Q7OA2DXas8OiqEY0Rb4BgmOYD/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNWQg6D8rv4LFW6dQ7CqsszMGKjCuQasQ87yh/Cq6C0YySAvSGIQxpdU8JvUkG6f5
-	 6JN3oKiVixSJwMo++G4b0hZmvF6iZnmGTk60jhFhIA4E9uvlSa8J2rHCbjnMWeF3SE
-	 kQEk2vVXYgdwdWZ5taPhMOYpu63jqB2b+EksbtqA=
+	b=u/3J02FlWk7fcdG9j1JEOKSiPRLaJTZYeXQIQWxGFUEtxTu/en+AWXW3gyokZKxiQ
+	 mSUyYNlJbdaB1TwdLqJn9RLnYU/DdzGmedS6w9p7la+T2hiPzH6T4FcBqDkKTVBm/s
+	 Yt1wjvgrEgxlbXKCwM6P2bOAzssDFKKYPwezJdKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbgAGVIr (ORCPT
+        id S1729753AbgAGVIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbgAGVIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:39 -0500
+        id S1728302AbgAGVIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ADE920678;
-        Tue,  7 Jan 2020 21:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E09E20678;
+        Tue,  7 Jan 2020 21:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431318;
-        bh=uVBvV2Nb/uTe5XdSsCAhOEwc3wM/BVjBR7QlHHVPaRU=;
+        s=default; t=1578431323;
+        bh=KK+5yYKzMqfExUm1Q7OA2DXas8OiqEY0Rb4BgmOYD/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkzHk+8PXiPM5S5tkNz4dMJnWfncJ0u39XmT01/qXu8p1K7Wf9w9zXQyj5sPOa99I
-         o6us/7DsMrYp2pxGd+Tjqq7WD6PPiVy+LrkmlkuwNxOfhIyhvo77qX2/TQyDW0fLH9
-         WwZQ0bzlEliYWu6IFWXdkrnj0mZdLWc1ER8ArKHU=
+        b=WRVTTXUGSOQeAtdDpXh3fnpOz9P3QrClf1xJ+sb9NOH/78vVwQxQszLX+bVnLtqcA
+         38mWM4mYOJhh+rjpZi2ddRgkRjjFZrpvhs3VNfkm1EGJBfEC1CeSV0zRcqtLDq789Y
+         Fmngf2iCORHYrPD5bpUdrukO7krryYBLNJbLO5tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 081/115] nfsd4: fix up replay_matches_cache()
-Date:   Tue,  7 Jan 2020 21:54:51 +0100
-Message-Id: <20200107205304.751841084@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 10/74] drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
+Date:   Tue,  7 Jan 2020 21:54:35 +0100
+Message-Id: <20200107205142.000555527@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-References: <20200107205240.283674026@linuxfoundation.org>
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+References: <20200107205135.369001641@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,52 +60,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 6e73e92b155c868ff7fce9d108839668caf1d9be upstream.
+[ Upstream commit 37a68eab4cd92b507c9e8afd760fdc18e4fecac6 ]
 
-When running an nfs stress test, I see quite a few cached replies that
-don't match up with the actual request.  The first comment in
-replay_matches_cache() makes sense, but the code doesn't seem to
-match... fix it.
+Place the declaration of struct nouveau_conn_atom above that of
+struct nouveau_connector. This commit makes no changes to the moved
+block what so ever, it just moves it up a bit.
 
-This isn't exactly a bugfix, as the server isn't required to catch every
-case of a false retry.  So, we may as well do this, but if this is
-fixing a problem then that suggests there's a client bug.
+This is a preparation patch to fix some issues with connector handling
+on pre nv50 displays (which do not use atomic modesetting).
 
-Fixes: 53da6a53e1d4 ("nfsd4: catch some false session retries")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.h | 110 ++++++++++----------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3072,12 +3072,17 @@ static bool replay_matches_cache(struct
- 	    (bool)seq->cachethis)
- 		return false;
- 	/*
--	 * If there's an error than the reply can have fewer ops than
--	 * the call.  But if we cached a reply with *more* ops than the
--	 * call you're sending us now, then this new call is clearly not
--	 * really a replay of the old one:
-+	 * If there's an error then the reply can have fewer ops than
-+	 * the call.
- 	 */
--	if (slot->sl_opcnt < argp->opcnt)
-+	if (slot->sl_opcnt < argp->opcnt && !slot->sl_status)
-+		return false;
-+	/*
-+	 * But if we cached a reply with *more* ops than the call you're
-+	 * sending us now, then this new call is clearly not really a
-+	 * replay of the old one:
-+	 */
-+	if (slot->sl_opcnt > argp->opcnt)
- 		return false;
- 	/* This is the only check explicitly called by spec: */
- 	if (!same_creds(&rqstp->rq_cred, &slot->sl_cred))
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
+index dc7454e7f19a..b46e99f7641e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.h
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
+@@ -29,6 +29,7 @@
+ 
+ #include <nvif/notify.h>
+ 
++#include <drm/drm_crtc.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_dp_helper.h>
+@@ -37,6 +38,60 @@
+ 
+ struct nvkm_i2c_port;
+ 
++#define nouveau_conn_atom(p)                                                   \
++	container_of((p), struct nouveau_conn_atom, state)
++
++struct nouveau_conn_atom {
++	struct drm_connector_state state;
++
++	struct {
++		/* The enum values specifically defined here match nv50/gf119
++		 * hw values, and the code relies on this.
++		 */
++		enum {
++			DITHERING_MODE_OFF = 0x00,
++			DITHERING_MODE_ON = 0x01,
++			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
++			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
++			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
++			DITHERING_MODE_AUTO
++		} mode;
++		enum {
++			DITHERING_DEPTH_6BPC = 0x00,
++			DITHERING_DEPTH_8BPC = 0x02,
++			DITHERING_DEPTH_AUTO
++		} depth;
++	} dither;
++
++	struct {
++		int mode;	/* DRM_MODE_SCALE_* */
++		struct {
++			enum {
++				UNDERSCAN_OFF,
++				UNDERSCAN_ON,
++				UNDERSCAN_AUTO,
++			} mode;
++			u32 hborder;
++			u32 vborder;
++		} underscan;
++		bool full;
++	} scaler;
++
++	struct {
++		int color_vibrance;
++		int vibrant_hue;
++	} procamp;
++
++	union {
++		struct {
++			bool dither:1;
++			bool scaler:1;
++			bool procamp:1;
++		};
++		u8 mask;
++	} set;
++};
++
+ struct nouveau_connector {
+ 	struct drm_connector base;
+ 	enum dcb_connector_type type;
+@@ -111,61 +166,6 @@ extern int nouveau_ignorelid;
+ extern int nouveau_duallink;
+ extern int nouveau_hdmimhz;
+ 
+-#include <drm/drm_crtc.h>
+-#define nouveau_conn_atom(p)                                                   \
+-	container_of((p), struct nouveau_conn_atom, state)
+-
+-struct nouveau_conn_atom {
+-	struct drm_connector_state state;
+-
+-	struct {
+-		/* The enum values specifically defined here match nv50/gf119
+-		 * hw values, and the code relies on this.
+-		 */
+-		enum {
+-			DITHERING_MODE_OFF = 0x00,
+-			DITHERING_MODE_ON = 0x01,
+-			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
+-			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
+-			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
+-			DITHERING_MODE_AUTO
+-		} mode;
+-		enum {
+-			DITHERING_DEPTH_6BPC = 0x00,
+-			DITHERING_DEPTH_8BPC = 0x02,
+-			DITHERING_DEPTH_AUTO
+-		} depth;
+-	} dither;
+-
+-	struct {
+-		int mode;	/* DRM_MODE_SCALE_* */
+-		struct {
+-			enum {
+-				UNDERSCAN_OFF,
+-				UNDERSCAN_ON,
+-				UNDERSCAN_AUTO,
+-			} mode;
+-			u32 hborder;
+-			u32 vborder;
+-		} underscan;
+-		bool full;
+-	} scaler;
+-
+-	struct {
+-		int color_vibrance;
+-		int vibrant_hue;
+-	} procamp;
+-
+-	union {
+-		struct {
+-			bool dither:1;
+-			bool scaler:1;
+-			bool procamp:1;
+-		};
+-		u8 mask;
+-	} set;
+-};
+-
+ void nouveau_conn_attach_properties(struct drm_connector *);
+ void nouveau_conn_reset(struct drm_connector *);
+ struct drm_connector_state *
+-- 
+2.20.1
+
 
 
