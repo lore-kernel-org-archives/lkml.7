@@ -2,144 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA69DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D55C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937EF206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578435671;
-	bh=NkKTf9JtMWy3QWBJ1X8z0Xyh/O2MvFDSh5L3xkxXEFA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jNQ1SEE+vsTMET2BfM3ZTtLLBznp1/vozKucMN0uzLxmTWdgO62/kEwwu3YiyJobe
-	 R7F5bFQABRpWpx3XnDszczsXN42YeV6a/2n+WMeK4gYOPH8pQjsWSoeTrLs4+NQxTj
-	 7lPhhh/iiDTMRI3DclZ+gX//Wh8FSZXxMtkf8E2M=
+	by mail.kernel.org (Postfix) with ESMTP id 34AF9206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lyFRI24B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgAGWVK (ORCPT
+        id S1727165AbgAGWX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:21:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgAGWVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:21:10 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 7 Jan 2020 17:23:26 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:34355 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgAGWX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:23:26 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFC52077B;
-        Tue,  7 Jan 2020 22:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578435668;
-        bh=NkKTf9JtMWy3QWBJ1X8z0Xyh/O2MvFDSh5L3xkxXEFA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=du3SlLusQi5E6+0/ummXqIs96p4I75CtDzKtnmeoTLT0WkCfttIcAvBM72tluulHn
-         cZDu0WfQuioUuBZnTmtGTTjczaIe3CaXULwGxi8Sz4cdFzoyF78aNpfGXb0g6egY1t
-         mS5+2+pbW/Ts4YPW9NA4j4IvYeeGhV/2YFQRyVJE=
-Received: by mail-qk1-f170.google.com with SMTP id k6so930129qki.5;
-        Tue, 07 Jan 2020 14:21:08 -0800 (PST)
-X-Gm-Message-State: APjAAAVJS+jNVkIfW1e5B6nMZ8gnHVuFq6lC+XBE+RXupIhBHabui3HN
-        EMhm95pDynVSsEKv4SOYvL7V2tKiMagonq11Fw==
-X-Google-Smtp-Source: APXvYqxaeVkPuYsl3xVEY7yZlxgOA/L3HpU+5g5utASwlUWkzj0ouG5Hvzh6bHZNzhtY1FLiuQwmORZs9a76vab4yn8=
-X-Received: by 2002:a37:a70b:: with SMTP id q11mr1500663qke.393.1578435667832;
- Tue, 07 Jan 2020 14:21:07 -0800 (PST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 400AD23E27;
+        Tue,  7 Jan 2020 23:23:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1578435804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tE4QVR46KKaoNeLKOHECIwkbvBJ+HBwW4P7gMA56dvk=;
+        b=lyFRI24BQZ7EQqj7nutS7jJVGnHR/CzRgAkauIvl5c9+Hn4aajMQ5ueaWiSndyczOIxz68
+        jmV6rke0EDhEMAQSqh/Zv5Js07X0epKUF4wTL+1UNPujF4wi2GoRCVnpLVBx5UtUzh9LJe
+        munAMO3WkZX1MMfWi+H4ec3Ul/BKC3M=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] mtd: spi-nor: fix spi_nor_lock_and_prep() usage
+Date:   Tue,  7 Jan 2020 23:23:16 +0100
+Message-Id: <20200107222317.3527-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191220065314.237624-1-lkundrak@v3.sk> <20191220065314.237624-4-lkundrak@v3.sk>
-In-Reply-To: <20191220065314.237624-4-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 16:20:56 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+LduJhf_LawZ+Ofu-70J3c1L3NuqAw3_jzYpC0Gy3x0A@mail.gmail.com>
-Message-ID: <CAL_Jsq+LduJhf_LawZ+Ofu-70J3c1L3NuqAw3_jzYpC0Gy3x0A@mail.gmail.com>
-Subject: Re: [PATCH 3/5] dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 400AD23E27
+X-Spamd-Result: default: False [4.90 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.108];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         FREEMAIL_CC(0.00)[microchip.com,bootlin.com,nod.at,ti.com,gmail.com,walle.cc]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 1:01 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> This is the PHY chip for USB HSIC on MMP3 platform.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../bindings/phy/marvell,mmp3-hsic-phy.yaml   | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+lock_and_prep() and unlock_and_unprep() are asymmetrical. The second
+argument should be the same and represents the operation. This was
+correct before commit 8cc7f33aadc8 ("mtd: spi-nor: factor out
+replace-able flash_{lock,unlock}").
 
-Seems this is already in -next, but it breaks dt_binding_check.
+Fixes: 8cc7f33aadc8 ("mtd: spi-nor: factor out replace-able flash_{lock,unlock}")
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-> new file mode 100644
-> index 0000000000000..7917a95cda78d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index b381bc0f825e..5cc4c0b331b3 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2047,7 +2047,7 @@ static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 
+ 	ret = nor->params.locking_ops->lock(nor, ofs, len);
+ 
+-	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_UNLOCK);
++	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
+ 	return ret;
+ }
+ 
+@@ -2062,7 +2062,7 @@ static int spi_nor_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 
+ 	ret = nor->params.locking_ops->unlock(nor, ofs, len);
+ 
+-	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_LOCK);
++	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_UNLOCK);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
 
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +# Copyright 2019 Lubomir Rintel <lkundrak@v3.sk>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/marvell,mmp3-hsic-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Marvell MMP3 HSIC PHY
-> +
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +properties:
-> +  compatible:
-> +    const: marvell,mmp3-hsic-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base address of the device
-
-Drop description. That's *every* 'reg' property.
-
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to reset
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - "#phy-cells"
-> +
-> +examples:
-> +  - |
-> +    hsic-phy@f0001800 {
-> +            compatible = "marvell,mmp3-hsic-phy";
-> +            reg = <0xf0001800 0x40>;
-> +            reset-gpios = <&gpio 63 GPIO_ACTIVE_HIGH>;
-
-Examples are built now and this one doesn't. You need the include for
-the define. Check with 'make dt_binding_check'.
-
-> +            #phy-cells = <0>;
-> +    };
-> --
-> 2.24.1
->
