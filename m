@@ -2,139 +2,199 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05787C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF1CC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3AC2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULcSYDYe"
+	by mail.kernel.org (Postfix) with ESMTP id 969AA208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgAGKGs (ORCPT
+        id S1727783AbgAGKHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:06:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23285 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726565AbgAGKGr (ORCPT
+        Tue, 7 Jan 2020 05:07:01 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:28978 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726565AbgAGKHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:06:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578391606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qzQU7dhwOvEyaAnJCUtjkpnmYEUK3rxKYOMsoAMpFpQ=;
-        b=ULcSYDYeEtvzpBztr1WzZNJj7X7Id6hJo7lNiKalMdooQ+aiCN2jiVKpYGfcEi5WM2T1sA
-        B2oQjRcrOuzAtdUimn8qxC99ioYtzZtii7xr2C7+DJV3nC6ay/ydrI/Wh5D4UrCxY2LO6A
-        42zVD571YX5NyOnKTRS0BCW9fO5xDoY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-P02HqLlCNmC1aBaNyVhL2g-1; Tue, 07 Jan 2020 05:06:43 -0500
-X-MC-Unique: P02HqLlCNmC1aBaNyVhL2g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81003477;
-        Tue,  7 Jan 2020 10:06:41 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7606C272A1;
-        Tue,  7 Jan 2020 10:06:39 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 11:06:37 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 2/3] perf util: Flexible to set block info output
- formats
-Message-ID: <20200107100637.GE290055@krava>
-References: <20200106194525.12228-1-yao.jin@linux.intel.com>
- <20200106194525.12228-2-yao.jin@linux.intel.com>
+        Tue, 7 Jan 2020 05:07:01 -0500
+X-IronPort-AV: E=Sophos;i="5.69,405,1571695200"; 
+   d="scan'208";a="430190722"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 11:06:56 +0100
+Date:   Tue, 7 Jan 2020 11:06:56 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: julia@hadrien
+To:     Maxime Ripard <maxime@cerno.tech>
+cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] coccinnelle: Remove ptr_ret script
+In-Reply-To: <20200107073629.325249-1-maxime@cerno.tech>
+Message-ID: <alpine.DEB.2.21.2001071106420.3004@hadrien>
+References: <20200107073629.325249-1-maxime@cerno.tech>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106194525.12228-2-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:45:24AM +0800, Jin Yao wrote:
-> Currently we use a predefined array to set the
-> block info output formats, it's fixed and inflexible.
-> 
-> This patch adds two parameters "block_hpps" and "nr_hpps"
-> in block_info__create_report and other static functions,
-> in order to let user decide which columns to report and
-> with specified report ordering. It should be more flexible.
-> 
-> Buffers will be allocated to contain the new fmts, of course,
-> we need to release them before perf exits.
-> 
->  v2:
->  ---
->  New patch created in v2.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+
+
+On Tue, 7 Jan 2020, Maxime Ripard wrote:
+
+> The ptr_ret script script addresses a number of situations where we end up
+> testing an error pointer, and if it's an error returning it, or return 0
+> otherwise to transform it into a PTR_ERR_OR_ZERO call.
+>
+> So it will convert a block like this:
+>
+> if (IS_ERR(err))
+>     return PTR_ERR(err);
+>
+> return 0;
+>
+> into
+>
+> return PTR_ERR_OR_ZERO(err);
+>
+> While this is technically correct, it has a number of drawbacks. First, it
+> merges the error and success path, which will make it harder for a reviewer
+> or reader to grasp.
+>
+> It's also more difficult to extend if we were to add some code between the
+> error check and the function return, making the author essentially revert
+> that patch before adding new lines, while it would have been a trivial
+> addition otherwise for the rewiever.
+>
+> Therefore, since that script is only about cosmetic in the first place,
+> let's remove it since it's not worth it.
+>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+Acked-by: Julia Lawall <julia.lawall@inria.fr>
+
 > ---
->  tools/perf/builtin-report.c  | 25 +++++++++++---
->  tools/perf/util/block-info.c | 64 ++++++++++++++++++++++++++----------
->  tools/perf/util/block-info.h | 12 +++++--
->  3 files changed, 76 insertions(+), 25 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index de988589d99b..81ae1f862d11 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -104,6 +104,7 @@ struct report {
->  	bool			symbol_ipc;
->  	bool			total_cycles_mode;
->  	struct block_report	*block_reports;
-> +	int			nr_block_reports;
->  };
->  
->  static int report__config(const char *var, const char *value, void *cb)
-> @@ -503,7 +504,7 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
->  		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
->  						 rep->min_percent, pos,
->  						 &rep->session->header.env,
-> -						 &rep->annotation_opts);
-> +						 &rep->annotation_opts, true);
->  		if (ret != 0)
->  			return ret;
->  	}
-> @@ -536,7 +537,7 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->  		if (rep->total_cycles_mode) {
->  			report__browse_block_hists(&rep->block_reports[i++].hist,
->  						   rep->min_percent, pos,
-> -						   NULL, NULL);
-> +						   NULL, NULL, true);
->  			continue;
->  		}
->  
-> @@ -966,8 +967,19 @@ static int __cmd_report(struct report *rep)
->  	report__output_resort(rep);
->  
->  	if (rep->total_cycles_mode) {
-> +		int block_hpps[6] = {
-> +			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
-> +			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
-> +			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
-> +			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
-> +			PERF_HPP_REPORT__BLOCK_RANGE,
-> +			PERF_HPP_REPORT__BLOCK_DSO,
-> +		};
-
-I'd understand this change if there was another place in the code using
-this, but it's not part of this patchset.. is it comming later?
-
-thanks,
-jirka
-
+>  scripts/coccinelle/api/ptr_ret.cocci | 97 ----------------------------
+>  1 file changed, 97 deletions(-)
+>  delete mode 100644 scripts/coccinelle/api/ptr_ret.cocci
+>
+> diff --git a/scripts/coccinelle/api/ptr_ret.cocci b/scripts/coccinelle/api/ptr_ret.cocci
+> deleted file mode 100644
+> index e76cd5d90a8a..000000000000
+> --- a/scripts/coccinelle/api/ptr_ret.cocci
+> +++ /dev/null
+> @@ -1,97 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -///
+> -/// Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+> -///
+> -// Confidence: High
+> -// Copyright: (C) 2012 Julia Lawall, INRIA/LIP6.
+> -// Copyright: (C) 2012 Gilles Muller, INRIA/LiP6.
+> -// URL: http://coccinelle.lip6.fr/
+> -// Options: --no-includes --include-headers
+> -//
+> -// Keywords: ERR_PTR, PTR_ERR, PTR_ERR_OR_ZERO
+> -// Version min: 2.6.39
+> -//
+> -
+> -virtual context
+> -virtual patch
+> -virtual org
+> -virtual report
+> -
+> -@depends on patch@
+> -expression ptr;
+> -@@
+> -
+> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
+> -+ return PTR_ERR_OR_ZERO(ptr);
+> -
+> -@depends on patch@
+> -expression ptr;
+> -@@
+> -
+> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
+> -+ return PTR_ERR_OR_ZERO(ptr);
+> -
+> -@depends on patch@
+> -expression ptr;
+> -@@
+> -
+> -- (IS_ERR(ptr) ? PTR_ERR(ptr) : 0)
+> -+ PTR_ERR_OR_ZERO(ptr)
+> -
+> -@r1 depends on !patch@
+> -expression ptr;
+> -position p1;
+> -@@
+> -
+> -* if@p1 (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
+> -
+> -@r2 depends on !patch@
+> -expression ptr;
+> -position p2;
+> -@@
+> -
+> -* if@p2 (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
+> -
+> -@r3 depends on !patch@
+> -expression ptr;
+> -position p3;
+> -@@
+> -
+> -* IS_ERR@p3(ptr) ? PTR_ERR(ptr) : 0
+> -
+> -@script:python depends on org@
+> -p << r1.p1;
+> -@@
+> -
+> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> -
+> -
+> -@script:python depends on org@
+> -p << r2.p2;
+> -@@
+> -
+> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> -
+> -@script:python depends on org@
+> -p << r3.p3;
+> -@@
+> -
+> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> -
+> -@script:python depends on report@
+> -p << r1.p1;
+> -@@
+> -
+> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> -
+> -@script:python depends on report@
+> -p << r2.p2;
+> -@@
+> -
+> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> -
+> -@script:python depends on report@
+> -p << r3.p3;
+> -@@
+> -
+> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
+> --
+> 2.24.1
+>
+>
