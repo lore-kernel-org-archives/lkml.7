@@ -2,145 +2,101 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2E3C32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D9BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3A22075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="IaTVRP+Z"
+	by mail.kernel.org (Postfix) with ESMTP id 5F933206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbgAGA3Y (ORCPT
+        id S1727366AbgAGAjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 19:29:24 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39074 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgAGA3Y (ORCPT
+        Mon, 6 Jan 2020 19:39:51 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49793 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727326AbgAGAju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 19:29:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1578356962; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=nDpaTHAJN6PnaV/NUe5XTLxwtko/PI3XInMzN1gqSog=;
-        b=IaTVRP+ZrStoqzsgKqnWJM4j6qwUryJ+LTPdbaYmvcUYcFtj4SnzP1wZdS7bzYGWwiDdAn
-        OoYZJoGT2Ue72mMspsDx52CUii50p5BpULeOr+s5TZmHiqsf8EEkWayk9ba0j91xuXOj4k
-        +eD9JQroJMh606esKCzzJKnk3Cn+/5k=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] usb: common: usb-conn-gpio: Register charger
-Date:   Tue,  7 Jan 2020 01:29:01 +0100
-Message-Id: <20200107002901.940297-1-paul@crapouillou.net>
+        Mon, 6 Jan 2020 19:39:50 -0500
+Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B1B7B3A1347;
+        Tue,  7 Jan 2020 11:39:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iocuO-0006tT-25; Tue, 07 Jan 2020 11:39:44 +1100
+Date:   Tue, 7 Jan 2020 11:39:44 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-mm@kvack.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+Message-ID: <20200107003944.GN23195@dread.disaster.area>
+References: <cover.1578225806.git.chris@chrisdown.name>
+ <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
+ <20200107001039.GM23195@dread.disaster.area>
+ <20200107001643.GA485121@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107001643.GA485121@chrisdown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=CqsqYK7GuNR5ViALEa4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register a power supply charger, whose online state depends on whether
-the USB role is set to device or not.
+On Tue, Jan 07, 2020 at 12:16:43AM +0000, Chris Down wrote:
+> Dave Chinner writes:
+> > It took 15 years for us to be able to essentially deprecate
+> > inode32 (inode64 is the default behaviour), and we were very happy
+> > to get that albatross off our necks.  In reality, almost everything
+> > out there in the world handles 64 bit inodes correctly
+> > including 32 bit machines and 32bit binaries on 64 bit machines.
+> > And, IMNSHO, there no excuse these days for 32 bit binaries that
+> > don't using the *64() syscall variants directly and hence support
+> > 64 bit inodes correctlyi out of the box on all platforms.
+> > 
+> > I don't think we should be repeating past mistakes by trying to
+> > cater for broken 32 bit applications on 64 bit machines in this day
+> > and age.
+> 
+> I'm very glad to hear that. I strongly support moving to 64-bit inums in all
+> cases if there is precedent that it's not a compatibility issue, but from
+> the comments on my original[0] patch (especially that they strayed from the
+> original patches' change to use ino_t directly into slab reuse), I'd been
+> given the impression that it was known to be one.
+> 
+> From my perspective I have no evidence that inode32 is needed other than the
+> comment from Jeff above get_next_ino. If that turns out not to be a problem,
+> I am more than happy to just wholesale migrate 64-bit inodes per-sb in
+> tmpfs.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/common/usb-conn-gpio.c | 45 ++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Well, that's my comment above about 32 bit apps using non-LFS
+compliant interfaces in this day and age. It's essentially a legacy
+interface these days, and anyone trying to access a modern linux
+filesystem (btrfs, XFS, ext4, etc) ion 64 bit systems need to handle
+64 bit inodes because they all can create >32bit inode numbers
+in their default configurations.
 
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-index ed204cbb63ea..08a411388d3c 100644
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
- #include <linux/regulator/consumer.h>
- #include <linux/usb/role.h>
- 
-@@ -38,6 +39,9 @@ struct usb_conn_info {
- 	struct gpio_desc *vbus_gpiod;
- 	int id_irq;
- 	int vbus_irq;
-+
-+	struct power_supply_desc desc;
-+	struct power_supply *charger;
- };
- 
- /**
-@@ -98,6 +102,8 @@ static void usb_conn_detect_cable(struct work_struct *work)
- 		ret = regulator_enable(info->vbus);
- 		if (ret)
- 			dev_err(info->dev, "enable vbus regulator failed\n");
-+	} else {
-+		power_supply_changed(info->charger);
- 	}
- 
- 	info->last_role = role;
-@@ -121,10 +127,35 @@ static irqreturn_t usb_conn_isr(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static enum power_supply_property usb_charger_properties[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int usb_charger_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct usb_conn_info *info = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = info->last_role == USB_ROLE_DEVICE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int usb_conn_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct power_supply_desc *desc;
- 	struct usb_conn_info *info;
-+	struct power_supply_config cfg = {
-+		.of_node = dev->of_node,
-+	};
- 	int ret = 0;
- 
- 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-@@ -203,6 +234,20 @@ static int usb_conn_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	desc = &info->desc;
-+	desc->name = "usb-charger";
-+	desc->properties = usb_charger_properties;
-+	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-+	desc->get_property = usb_charger_get_property;
-+	desc->type = POWER_SUPPLY_TYPE_USB;
-+	cfg.drv_data = info;
-+
-+	info->charger = devm_power_supply_register(dev, desc, &cfg);
-+	if (IS_ERR(info->charger)) {
-+		dev_err(dev, "Unable to register charger");
-+		return PTR_ERR(info->charger);
-+	}
-+
- 	platform_set_drvdata(pdev, info);
- 
- 	/* Perform initial detection */
+Cheers,
+
+Dave.
 -- 
-2.24.1
-
+Dave Chinner
+david@fromorbit.com
