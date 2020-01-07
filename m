@@ -2,179 +2,281 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB2FC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5893AC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BAF2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3FB2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ggbb1w/n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pISxBC+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbgAGWzU (ORCPT
+        id S1727518AbgAGW4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:55:20 -0500
-Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:11167
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727046AbgAGWzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:55:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HrX7zaDsvhqA+S7zJ2pXvQCVGfA7krjLQtyknCQTcxXNaVKfC2JYTpAJtp8wWpAlAQAskSnL+Gyylxp5gh/he8lu5vkFejEXdmAUhaghOAuWhVB0sM5SGbnPiaLoQFA0fMlPhEm7HhhxFIfMWQooDqLkfja3nmoHRMaBSl0DXHmnwRCrO1CJLIwYlxoG5vgqg0D47dXmLatP6gUTe/W66ilc+GXEAxBehfO3i6nheDaPzt0uOOtenw75rZAFFwCy1yIymcR590x7oSQo+EUuz1Uj5QXP39icnhKIXWlIULl5xw9Ml6gk+VJa8slkdCAXuguv52TXc2LpB0S6gqvMWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g24uyAFCQflbr82Wg4okp4yY84A+nPTuPzIaTNTKzaY=;
- b=bTyLK3zPR99aafV06reRUqST5DP8r3b938DbMXH5dhL3aPInyIXtSSJ9QX7HAb6y3McxyC+tjdmdu0M2upndUAQKs5KRw8s2nSNzlTo/O3F63cWHJBFyC8kuVmZ4elRo8IcNHyBhhKMg9tfDsUTRqNaRRAd99Vby79vG5McAkPVTqLF8tLjWR90XjdUTQb064IKE8lCC9CFFGXnX/igjU/v6o4x8tD47jwoskWuMiOCUY1WnWav5HOpHDcLm7iMD0g5gbjxe623piioRhwkX49/c+phkmDJP3+eJOPjknGQoVnIqQR9iIWXkX+kOM8mig8W26JzKCajTHR7ATPPrRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 7 Jan 2020 17:56:37 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47044 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgAGW4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:56:36 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m26so1258713ljc.13;
+        Tue, 07 Jan 2020 14:56:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g24uyAFCQflbr82Wg4okp4yY84A+nPTuPzIaTNTKzaY=;
- b=Ggbb1w/nYAT+JFbTuHtF4+3mda/10admEAGU2LjBWz4n96Fijx0KFNY2S0TqYEobrChIuPqYZsySwOtN2p35/OCnSjO3CpS7E1IMwdgBoOTgklMaI20VckA/xU7Fu4BLkdFKtBpe9qcZdCWc+JwymGiy4mo4T12UtaHvl0PcrAk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6SPR01MB0105.namprd12.prod.outlook.com (20.179.164.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.8; Tue, 7 Jan 2020 22:54:37 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
- 22:54:37 +0000
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
- <20200106233846.GC12879@linux.intel.com>
- <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
- <20200107222813.GB16987@linux.intel.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <298352c6-7670-2929-9621-1124775bfaed@amd.com>
-Date:   Tue, 7 Jan 2020 16:54:34 -0600
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SmAaNlqX7wktMzlx+PndgXg6P7/OceJAZF8e2T4rFsk=;
+        b=pISxBC+CwrFnifLFtbUDSEPoXWhewuFGjcbF7HnhNniuA5FtthlSYCpVkmpIB79m96
+         mOJA0eNkHLmAoYUo+a9ve5sncjZUjCGdJmOUwv68tNg23UR/7m4NPlnUpVDEKf6zcOBG
+         4h9zQZ7jij4MdXSOlqyoeaqurv9REuRMuBMP9vqGDmZ+1vmaBtp9Mht3S01M0rJkG+8p
+         /kje1cuZflBVR1/uiOumJYQtnhPv/gtQlv4vVboT4W2ZFKpshTwQtDsOCMMszj3p/PL1
+         ftt4CdV7Ds7XQ6EpS/xJ9gQhIwEXwdhOALi2CsUSeltofBQ9BOr2bbZz/cPWy62MmDSp
+         Kubw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SmAaNlqX7wktMzlx+PndgXg6P7/OceJAZF8e2T4rFsk=;
+        b=TJTTEoIeniTmZqP322kuD8d52IqWHzYPvZUKesrK+QLgvesuUvhRQSsAMhkyIsXtAW
+         iSWOokj0qI0axFATvnR/LFLnMHl6gOtpJRh+ujn0FRaOiIjxJY1h8oJpu9YMW3M90byZ
+         eSbvn8rYE5b6J/wjpKeslHXxcekeZh2HdYWOmsxNbEL3uK2spH3fyUMAyhPgaj0IM5GK
+         t1dWzXLLRPywzcIzcGYvJoMj6oeB7Mfp0T4eY+cT8rTOAluyIlDS8Rffkr6BFxfenMzS
+         TxybU2TBW1tqMXy2YqBurVBjANlE8JQgmtwflZUOJn8Supht20mez2auXKoTlxTzUoMh
+         2GOw==
+X-Gm-Message-State: APjAAAV+bbazqiwAwyB5AUch3lYU5KE67NNx6nVzEaunw0gPNC4P+cJe
+        pwpmWJUi6NSxMbylJ64S4eXdjUfr
+X-Google-Smtp-Source: APXvYqzpAupBmEWmIFUIVX9WoUfMIHfTyxQkbTOHJwcqkkAraTAH9ZO+tqCmm35t+5NmNLnMZJLThg==
+X-Received: by 2002:a2e:461a:: with SMTP id t26mr1069905lja.204.1578437793579;
+        Tue, 07 Jan 2020 14:56:33 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 2sm390279ljq.38.2020.01.07.14.56.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 14:56:32 -0800 (PST)
+Subject: Re: [PATCH v6 12/19] ASoC: tegra: Add audio mclk configuration
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, broonie@kernel.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, mperttunen@nvidia.com,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+ <1578370458-3686-13-git-send-email-skomatineni@nvidia.com>
+ <c23bf3f5-55d6-ab93-fd7b-13f9f2155dcc@nvidia.com>
+ <d85c8529-9970-c79c-9430-ed80c47eaf36@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <adb4c9dd-043a-ffca-7a1d-c6b30055b7a0@gmail.com>
+Date:   Wed, 8 Jan 2020 01:56:31 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20200107222813.GB16987@linux.intel.com>
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <d85c8529-9970-c79c-9430-ed80c47eaf36@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0201CA0052.namprd02.prod.outlook.com
- (2603:10b6:803:20::14) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
-MIME-Version: 1.0
-Received: from [10.236.30.74] (165.204.77.1) by SN4PR0201CA0052.namprd02.prod.outlook.com (2603:10b6:803:20::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Tue, 7 Jan 2020 22:54:36 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c19c4852-4765-45de-b1e3-08d793c49226
-X-MS-TrafficTypeDiagnostic: DM6SPR01MB0105:|DM6SPR01MB0105:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6SPR01MB0105436C788E719EC305C406EC3F0@DM6SPR01MB0105.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 027578BB13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(189003)(199004)(54906003)(316002)(66946007)(2906002)(31686004)(66556008)(16576012)(31696002)(478600001)(66476007)(4326008)(86362001)(5660300002)(956004)(53546011)(2616005)(8936002)(81166006)(26005)(52116002)(6916009)(6486002)(186003)(81156014)(16526019)(36756003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6SPR01MB0105;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xKCZ9wJL6YI5I2ZYV55ZWgcmdtxAPT8jQD1/A+6tdZzcUtL7+3xkSDMzUtcNg04GKUIvMDeltONosacKM9/gJM+9wJCiPzVXia7IYon8RFXIMmwn1XMIoFAOPlHzUYozVsrW730Z9Joci/OsgjRams5uAeDbLqIvT8F2w1AEHvHwSdmUpngT9NLqGNdix5Ok88BwcJaU7jL9Adhq+DRd3eBANATT5pp25YmNsOCGhBipXKrQ5zh2OBcDYobqKGiJHCRvhIAX8VjSzLyvqJ+dK1g3DOOt9w/7Gu0dSDoUnVBg+EzWjiLCPNq39A39pZkpOEr6sybbSOQiyC4byi1f7z6UFrePz97Qy43yUTCOU120mZLhbGr2RzbvH8KRTAiJqhEhPTwMJVSkQuo9DxHyMhsyOd7hVFoow6NuLYMiHA7YegTphSMIczZPe0wFgXuI
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c19c4852-4765-45de-b1e3-08d793c49226
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 22:54:37.3285
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SFTBXiN+rzKTCGPM5STcHqPKU/w4/e8GTeja7Pc25GJsXqNGj1LV57UDp/9GIlUS1rK/4szcx/4Ttkj14/Lglg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6SPR01MB0105
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 4:28 PM, Sean Christopherson wrote:
-> On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
->> On 1/6/20 5:38 PM, Sean Christopherson wrote:
->>> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
->>>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
->>>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
->>>>> on a future processor, i.e. x86_phys_bits==52.
->>>>
->>>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
->>>> always be a reduction in physical addressing (so I'm told).
+07.01.2020 19:56, Sowjanya Komatineni пишет:
+> 
+> On 1/7/20 3:14 AM, Sameer Pujar wrote:
+>>
+>> On 1/7/2020 9:44 AM, Sowjanya Komatineni wrote:
+>>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
+>>> through Tegra210 and currently Tegra clock driver does the initial
+>>> parent
+>>> configuration for audio mclk and keeps it enabled by default.
 >>>
->>> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
->>> that reducing the PA space is optional.  Section 7.10.2 is especially
->>> clear on this:
+>>> With the move of PMC clocks from clock driver into pmc driver,
+>>> audio clocks parent configuration can be specified through the device
+>>> tree
+>>> using assigned-clock-parents property and audio mclk control should be
+>>> taken care by the audio driver.
 >>>
->>>   In implementations where the physical address size of the processor is
->>>   reduced when memory encryption features are enabled, software must
->>>   ensure it is executing from addresses where these upper physical address
->>>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
->>
->> It's probably not likely, but given what is stated, I can modify my patch
->> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
->>
->> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
->> 	    boot_cpu_data.x86_phys_bits < 52) {
->>
+>>> This patch has implementation for parent configuration when default
+>>> parent
+>>> configuration is not specified in the device tree and controls audio
+>>> mclk
+>>> enable and disable during machine startup and shutdown.
 >>>
->>> But, hopefully the other approach I have in mind actually works, as it's
->>> significantly less special-case code and would naturally handle either
->>> case, i.e. make this a moot point.
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 >>
->> I'll hold off on the above and wait for your patch.
-> 
-> Sorry for the delay, this is a bigger mess than originally thought.  Or
-> I'm completely misunderstanding the issue, which is also a distinct
-> possibility :-)
-> 
-> Due to KVM activating its L1TF mitigation irrespective of whether the CPU
-> is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
-> to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
-> uses those first five reserved PA bits to store the MMIO GFN.  Setting
-> BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
-> a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
+>> Minor comments, otherwise LGTM.
+>>
+> Thanks Sameer. Will fix.
+>>> ---
+>>>   sound/soc/tegra/tegra_alc5632.c    | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_asoc_utils.c | 84
+>>> ++++++++++++++++++++++++--------------
+>>>   sound/soc/tegra/tegra_asoc_utils.h |  2 +
+>>>   sound/soc/tegra/tegra_max98090.c   | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_rt5640.c     | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_rt5677.c     | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_sgtl5000.c   | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_wm8753.c     | 21 ++++++++++
+>>>   sound/soc/tegra/tegra_wm8903.c     | 21 ++++++++++
+>>>   sound/soc/tegra/trimslice.c        | 21 ++++++++++
+>>>   10 files changed, 224 insertions(+), 30 deletions(-)
+>>>
+>>> diff --git a/sound/soc/tegra/tegra_alc5632.c
+>>> b/sound/soc/tegra/tegra_alc5632.c
+>>> index 50a6d2ff4442..0fd10023f7a6 100644
+>>> --- a/sound/soc/tegra/tegra_alc5632.c
+>>> +++ b/sound/soc/tegra/tegra_alc5632.c
+>>> @@ -62,8 +62,29 @@ static int tegra_alc5632_asoc_hw_params(struct
+>>> snd_pcm_substream *substream,
+>>>       return 0;
+>>>   }
+>>>   +static int tegra_alc5632_asoc_startup(struct snd_pcm_substream
+>>> *substream)
+>>> +{
+>>> +    struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>>> +    struct tegra_alc5632 *machine =
+>>> snd_soc_card_get_drvdata(rtd->card);
+>>> +    int ret;
+>>> +
+>>> +    ret = tegra_asoc_utils_clk_enable(&machine->util_data);
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static void tegra_alc5632_asoc_shutdown(struct snd_pcm_substream
+>>> *substream)
+>>> +{
+>>> +    struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>>> +    struct tegra_alc5632 *machine =
+>>> snd_soc_card_get_drvdata(rtd->card);
+>>> +
+>>> +    tegra_asoc_utils_clk_disable(&machine->util_data);
+>>> +}
+>>> +
+>>>   static const struct snd_soc_ops tegra_alc5632_asoc_ops = {
+>>> +    .startup = tegra_alc5632_asoc_startup,
+>>>       .hw_params = tegra_alc5632_asoc_hw_params,
+>>> +    .shutdown = tegra_alc5632_asoc_shutdown,
+>>>   };
+>>>     static struct snd_soc_jack tegra_alc5632_hs_jack;
+>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>> index 0d2271952555..2886ae9f5a16 100644
+>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>> @@ -60,8 +60,6 @@ int tegra_asoc_utils_set_rate(struct
+>>> tegra_asoc_utils_data *data, int srate,
+>>>       data->set_mclk = 0;
+>>>         clk_disable_unprepare(data->clk_cdev1);
+>>> -    clk_disable_unprepare(data->clk_pll_a_out0);
+>>> -    clk_disable_unprepare(data->clk_pll_a);
+>>>         err = clk_set_rate(data->clk_pll_a, new_baseclock);
+>>>       if (err) {
+>>> @@ -77,18 +75,6 @@ int tegra_asoc_utils_set_rate(struct
+>>> tegra_asoc_utils_data *data, int srate,
+>>>         /* Don't set cdev1/extern1 rate; it's locked to pll_a_out0 */
+>>>   -    err = clk_prepare_enable(data->clk_pll_a);
+>>> -    if (err) {
+>>> -        dev_err(data->dev, "Can't enable pll_a: %d\n", err);
+>>> -        return err;
+>>> -    }
+>>> -
+>>> -    err = clk_prepare_enable(data->clk_pll_a_out0);
+>>> -    if (err) {
+>>> -        dev_err(data->dev, "Can't enable pll_a_out0: %d\n", err);
+>>> -        return err;
+>>> -    }
+>>> -
+>>>       err = clk_prepare_enable(data->clk_cdev1);
+>>>       if (err) {
+>>>           dev_err(data->dev, "Can't enable cdev1: %d\n", err);
+>>> @@ -109,8 +95,6 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>> tegra_asoc_utils_data *data)
+>>>       int err;
+>>>         clk_disable_unprepare(data->clk_cdev1);
+>>> -    clk_disable_unprepare(data->clk_pll_a_out0);
+>>> -    clk_disable_unprepare(data->clk_pll_a);
+>>>         /*
+>>>        * AC97 rate is fixed at 24.576MHz and is used for both the host
+>>> @@ -130,17 +114,27 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>> tegra_asoc_utils_data *data)
+>>>         /* Don't set cdev1/extern1 rate; it's locked to pll_a_out0 */
+>>>   -    err = clk_prepare_enable(data->clk_pll_a);
+>>> +    err = clk_prepare_enable(data->clk_cdev1);
+>>>       if (err) {
+>>> -        dev_err(data->dev, "Can't enable pll_a: %d\n", err);
+>>> +        dev_err(data->dev, "Can't enable cdev1: %d\n", err);
+>>>           return err;
+>>>       }
+>>>   -    err = clk_prepare_enable(data->clk_pll_a_out0);
+>>> -    if (err) {
+>>> -        dev_err(data->dev, "Can't enable pll_a_out0: %d\n", err);
+>>> -        return err;
+>>> -    }
+>>> +    data->set_baseclock = pll_rate;
+>>> +    data->set_mclk = ac97_rate;
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(tegra_asoc_utils_set_ac97_rate);
+>>> +
+>>> +void tegra_asoc_utils_clk_disable(struct tegra_asoc_utils_data *data)
+>>> +{
+>>> +    clk_disable_unprepare(data->clk_cdev1);
+>>> +}
+>>> +
+>>> +int tegra_asoc_utils_clk_enable(struct tegra_asoc_utils_data *data)
+>>> +{
+>>> +    int err;
+>>>         err = clk_prepare_enable(data->clk_cdev1);
+>>>       if (err) {
+>>> @@ -148,16 +142,13 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>> tegra_asoc_utils_data *data)
+>>>           return err;
+>>>       }
+>>>   -    data->set_baseclock = pll_rate;
+>>> -    data->set_mclk = ac97_rate;
+>>> -
+>>>       return 0;
+>>>   }
+>>> -EXPORT_SYMBOL_GPL(tegra_asoc_utils_set_ac97_rate);
+>>>     int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+>>>                 struct device *dev)
+>>>   {
+>>> +    struct clk *clk_out_1, *clk_extern1;
+>>>       int ret;
+>>>         data->dev = dev;
+>>> @@ -193,9 +184,42 @@ int tegra_asoc_utils_init(struct
+>>> tegra_asoc_utils_data *data,
+>>>           return PTR_ERR(data->clk_cdev1);
+>>>       }
+>>>   -    ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
+>>> -    if (ret)
+>>> -        return ret;
+>>> +    /*
+>>> +     * If clock parents are not set in DT, configure here to use
+>>> clk_out_1
+>>> +     * as mclk and extern1 as parent for Tegra30 and higher.
+>>> +     */
+>>> +    if (!of_find_property(dev->of_node, "assigned-clock-parents",
+>>> NULL) &&
+>>> +        data->soc > TEGRA_ASOC_UTILS_SOC_TEGRA20) {
+>>> +        dev_err(data->dev,
+>>
+>> As this is a fallback mechanism, use dev_info or dev_dbg instead?
 
-The L1TF mitigation only gets applied when:
-  boot_cpu_data.x86_cache_bits < 52 - shadow_nonpresent_or_rsvd_mask_len
+dev_warn
 
-  and with shadow_nonpresent_or_rsvd_mask_len = 5, that means that means
-  boot_cpu_data.x86_cache_bits < 47.
+>>> +            "Configuring clocks for a legacy device-tree\n");
 
-On AMD processors that support memory encryption, the x86_cache_bits value
-is not adjusted, just the x86_phys_bits. So for AMD processors that have
-memory encryption support, this value will be at least 48 and therefore
-not activate the L1TF mitigation.
-
-> 
-> The only sane approach I can think of is to activate the L1TF mitigation
-> based on whether the CPU is vulnerable to L1TF, as opposed to activating> the mitigation purely based on the max PA of the CPU.  Since all CPUs that
-> support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
-> should never be active at the same time.
-
-There is still the issue of setting a single bit that can conflict with
-the C-bit. As it is today, if the C-bit were to be defined as bit 51, then
-KVM would not take a nested page fault and MMIO would be broken.
-
-Thanks,
-Tom
-
-> 
-> Patch should be incoming soon...
-> 
+I'd also add another message here saying "Please update your DT", for
+clarity.
