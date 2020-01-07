@@ -2,101 +2,97 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E0C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE4CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5209207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B8E207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBgA2Em6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgAGMh0 (ORCPT
+        id S1728029AbgAGMic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:37:26 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:35257 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgAGMhZ (ORCPT
+        Tue, 7 Jan 2020 07:38:32 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43520 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgAGMic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:37:25 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N7zRz-1jkqIB1dp5-0151o3 for <linux-kernel@vger.kernel.org>; Tue, 07 Jan
- 2020 13:37:24 +0100
-Received: by mail-qt1-f171.google.com with SMTP id l12so45106623qtq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:37:24 -0800 (PST)
-X-Gm-Message-State: APjAAAVCEY34XySqTBUCo6fb5D+W2vLg5EAoqOhLG7g8CjXI3I0CIi3X
-        2GFgzeXZzPFVQWqLnDbES0alWQ/wC8Ie0EGef/0=
-X-Google-Smtp-Source: APXvYqwGR+1ag/FOo5lFGNP2agZe8JgiRzCUJT/p2HcrAqJ11wxrKbu23yPKHpHtix875YAxzOB8d2DOP1xgp2mKHDU=
-X-Received: by 2002:ac8:6153:: with SMTP id d19mr78188452qtm.18.1578400643312;
- Tue, 07 Jan 2020 04:37:23 -0800 (PST)
+        Tue, 7 Jan 2020 07:38:32 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so38758734lfq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:38:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
+        b=IBgA2Em6iQG71nytT7MVKkAkSpchm34hogp9nrPDVFD2uq6bE3RLvT5EC2lmzO6J6c
+         Dbg1dYo4ATLwVPgn2RytyJdEgTF84i4p/VdfrHVBASGlIo/MAWHtdDIDJErP4DFAXMh3
+         aN4WgMRJ1rLGHzDYNjfegkvyLIlgRMuRRr2IftbxWokVUQTvks65sqQ/2lcGa1brrus0
+         50pN1du3FO+emJhqwhHyfYqrCvhVETASPAVhymc1hEnaXzq3JRmoVXDN00dq1VCT5laB
+         Q+0jWOsP1P9M4W9EabnTv4RrlSWAniEilZ7hgrBtP5rtkEooAK4qRb4b+dGg2y2mIqYi
+         dXiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
+        b=Ir0wLTNu1ZaV9BhvhX8mOBxgPBd+jhPEf9Wt+czY6VFT9gTLid9BSSpR51EDJrAZY4
+         kifs4wXp3qWvDo6T9maKiB2cqrSm7AKYn//TQ8/yttDyySLhyF8UodqtFjO8B0W8hJb1
+         bd1ZzWIrWeZa8J/SysQdaqs8NTRCz+22tmsttccGDMV38zNlHK9Q0ySn6POwipb29lIA
+         q4i+pgdbgAuI1RP8+86Lrq8TZHrSeXaLMKh0+Lh1w70nMWdBQOAEA2I9hgZj90doOzZ8
+         RXD+sF4ifeIqAgGITs2M4HZ11q39HvYLRAx4V+Y92UHWDfXxiMPpDhXFKx8211gPJNVk
+         0LkA==
+X-Gm-Message-State: APjAAAUT+c1eFgr3e6P57XosVuJrYBvEyLW2Lt9kxcDzKkI3fSDRVCjt
+        T0nNq2lgXfp8tiyPPvDIheBJIXAzMBjwZ6BjgzCMzA==
+X-Google-Smtp-Source: APXvYqyjy7HCbuFJZMBW/ujChvDuspmEEyJbLXUF8TFZisyKZFmn1M7N7wpY7pWWtfq9hM2MIuNebIt0EKDUy/5fjNI=
+X-Received: by 2002:a19:8a41:: with SMTP id m62mr59247202lfd.5.1578400710421;
+ Tue, 07 Jan 2020 04:38:30 -0800 (PST)
 MIME-Version: 1.0
-References: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab>
-In-Reply-To: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Jan 2020 13:37:07 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
-Message-ID: <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
-Subject: kunit stack usage, was: pmwg-ci report v5.5-rc4-147-gc62d43442481
-To:     PMWG CI <pmwg-ci@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Private Kernel Alias <private-kwg@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
+References: <20191215183047.9414-1-digetx@gmail.com> <CACRpkdYAKS50-CNmE0nRNQanFxKejoHrwxho3fZXROoLZUb4+Q@mail.gmail.com>
+ <CAMpxmJVi1hy6a72M7rAHP0AXW1Z4cGp8H0O6ayLMwFm9UL3WPQ@mail.gmail.com>
+ <CACRpkdaNAzpDu6uxETnuDGxnXTJTh0LhcE=9DL9-Kwi4butZLA@mail.gmail.com> <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
+In-Reply-To: <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 13:38:19 +0100
+Message-ID: <CACRpkdZZc2z9_9tjwOEYCuv1fzrqJ7Eb5UK-T9GA+6BqBYe_LQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Rbyd3mjfyh0X9/KMjlisXksFIavCsu8Lr+cr03ZAUvU6+HL5YqN
- hjWvwrTt+/FrSq1tQulDLzmwtcQHP7PfsCFHrXHiuZFB9Y9P5A2wotTCOXTJjxlqdNpvjFC
- W+lko1z7ji4Ed9svpQ+IyfsjZ7kJ2KIIeSOb8HQpLTbwXSk8kqnTxkODhFlD5C0ml5Gv/pV
- /2olj8Vb6uGRMSNFfcDJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qQZAqj7OKVo=:xgkie9o5LZfBqbCKPP8Rmh
- xYwAzMYf8vIKhL3WWX2yJ34VsGm1c+uhieNBF3Ll1hIPzLakEppOUUnlfrCBoZH7La8UhPtZH
- cJhz4RAUpSHpEKXkKkt1BTcAoMHtz1GD5yI0+0UfzOu6pobkO2oXvQMHPvzGIW86E01aKKpFF
- 0/WeUezw88c0ZVqZ1qkXAB1qHkem0P3UAoAzg62mxEc+r0fUWsL7iVOHbWkOzZGOYdfAm/12g
- DSBru8C/gGfkmZzl4S/4oWPmYc5PF6KcOEQfwKLkL2xpc+LBbZJ2DjOQmycOF3ztCIQWlgSvj
- ltyme/DLSFvov/S6a6zfNEFWRouLU7K3l/AiZ6x0bx2Uys/QTs4BYjJW0dzEPlfPxuSGdp8Cc
- T6M9XszNHKUhNDMno62qH2YolsB7ZDMvtqZ5xbamUFLUGw3THLlrYysLDDFpFdyWyh2DraeaM
- wSgALnCh6GPJuRzUeaOerIAWZuaONyXjQFLXFACSo/BOeEx2wKekWj+DxWi7UrSsRrDUMhwum
- 2OBEneqI0VwACeA46mVMIYLPNAHw9Xeypy6ekAf0hI9QP3tCutdlXiG9STd2eRx1CrwS8IVCF
- bLYevQkwB3MTSw6i781lHH+d4wLWTWFlkpiI4uHg9z1GCCliOcLN7HKX7ZkHxmY41lED1qafO
- x+i6aZ00vjeMxDHNRllNhP5wMAU8WYbd8DYe4fTKRngBmhEO6Br0V/cMzkzmWImFX7uR9X7kM
- GB8uUzPGatCPxg3WBKJfnT9ZezhQtdQMVHRh+DM0KQcoU5U9Atas7lBEd/WsJW8epa6lqAe6m
- WHJ6hHR6edL0SOr8qFuLlmnyoxZPWkJ+6QoeacxesEKWP7wH9ehb5VsTNTKQvVkeABc+YA1sD
- 95ZOr2ZgNEQGPbg/RtpQ==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 6:16 PM PMWG CI <pmwg-ci@linaro.org> wrote:
->
->
-> The error/warning: 1 drivers/base/test/property-entry-test.c:214:1: warning: the frame size of 3128 bytes is larger than 2048 bytes [-Wframe-larger-than=]
-> ... was introduced by commit:
->
-> commit c032ace71c29d513bf9df64ace1885fe5ff24981
-> Author: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Date:   Wed Dec 4 10:53:15 2019 -0800
->
->     software node: add basic tests for property entries
+On Tue, Jan 7, 2020 at 10:31 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 7 sty 2020 o 10:29 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
 
-This problem is a result of the KUNIT_ASSERTION() definition that puts
-a local struct on the stack interacting badly with the structleak_plugin
-when CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL is set in
-allmodconfig:
+> > > Ugh, I now noticed I responded to Thierry only after applying this to=
+ my tree.
+> > >
+> > > Anyway, it shouldn't be a problem. I'll take more care next time.
+> >
+> > OK shall I drop the patches from my tree then? No big deal.
+> >
+>
+> If you're fine with this, sure!
 
-pe_test_uint_arrays() contains a couple of larger variables, plus 41
-instances of KUNIT_EXPECT_*() or KUNIT_ASSERT_*(), each one
-of these adds its own copy of the structure, eventually exceeding
-the warning limit.
+OK dropped them, hadn't even pushed the branch out yet.
 
-We can work around this locally by splitting up the largest four
-functions in this file (pe_test_uints, pe_test_uint_arrays, pe_test_strings,
-and pe_test_reference) into smaller functions that stay below the
-warning limit, but it would be nice to find a way for kunit to not
-use as much stack space. Any suggestions?
+Soon reaching the top of my mailbox so I will be pushing the branches
+for the autobuilders and later tonight for-next.
 
-        Arnd
+Yours,
+Linus Walleij
