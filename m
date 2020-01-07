@@ -2,101 +2,124 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087FAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A81C32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC3D2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FB420715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgAGCIo convert rfc822-to-8bit (ORCPT
+        id S1727476AbgAGCJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 21:08:44 -0500
-Received: from mga06.intel.com ([134.134.136.31]:8223 "EHLO mga06.intel.com"
+        Mon, 6 Jan 2020 21:09:13 -0500
+Received: from mga14.intel.com ([192.55.52.115]:26869 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgAGCIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 21:08:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1727250AbgAGCJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 21:09:13 -0500
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 18:08:43 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 18:09:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
-   d="scan'208";a="217583466"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Jan 2020 18:08:42 -0800
-Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 6 Jan 2020 18:08:42 -0800
-Received: from fmsmsx123.amr.corp.intel.com ([169.254.7.87]) by
- fmsmsx158.amr.corp.intel.com ([169.254.15.85]) with mapi id 14.03.0439.000;
- Mon, 6 Jan 2020 18:08:42 -0800
-From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Xiyu Yang <xiyuyang19@fudan.edu.cn>
-CC:     "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "leon@kernel.org" <leon@kernel.org>,
-        "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "Latif, Faisal" <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Shannon Nelson <shannon.nelson@intel.com>,
-        "Singhai, Anjali" <anjali.singhai@intel.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
- dereference
-Thread-Topic: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
- dereference
-Thread-Index: AQHVvrhzchRnSKHHyEuZXScGHS/Gk6faLOQAgARUNiA=
-Date:   Tue, 7 Jan 2020 02:08:41 +0000
-Message-ID: <9DD61F30A802C4429A01CA4200E302A7C1DF97F0@fmsmsx123.amr.corp.intel.com>
-References: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200104000128.GA20711@ziepe.ca>
-In-Reply-To: <20200104000128.GA20711@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjI0MGQ1YjMtZGMxMS00MGRlLWE1ZTctNGI2ZTdlMDk2ZTkwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibDJqaU1hdDUzbzg3MGVnT2k0a1VDenZhd2FYbnRZTUNCdkFhT2xoQ1o0UkhDTTU0aDk0ZGV1eGk3WGZGOExCaSJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="asc'?scan'208";a="420896975"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Jan 2020 18:09:11 -0800
+Date:   Tue, 7 Jan 2020 10:06:37 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Zhenyu Wang <zhenyuw@linux.intel.com>, zhiyuan.lv@intel.com,
+        hang.yuan@intel.com
+Subject: Re: [PATCH 1/3] drm/i915/gvt: fix file paths in documentation
+Message-ID: <20200107020637.GA5894@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200106140622.14393-1-julian.stecklina@cyberus-technology.de>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Disposition: inline
+In-Reply-To: <20200106140622.14393-1-julian.stecklina@cyberus-technology.de>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer dereference
-> 
-> On Mon, Dec 30, 2019 at 10:24:28AM +0800, Xiyu Yang wrote:
-> > A NULL pointer can be returned by in_dev_get(). Thus add a
-> > corresponding check so that a NULL pointer dereference will be avoided
-> > at this place.
-> >
-> > Fixes: 8e06af711bf2 ("i40iw: add main, hdr, status")
-> > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-> > ---
-> > Changes in v2:
-> > - Release rtnl lock when in_dev_get return NULL Changes in v3:
-> > - Continue the next loop when in_dev_get return NULL Changes in v4:
-> > - Change commit message
-> >
-> >  drivers/infiniband/hw/i40iw/i40iw_main.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> 
-> Applied to for-next
-> 
-> And Shiraz, Leon is right, that trylock stuff is completely wrong, let's fix it.
-> 
 
-Sure.
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020.01.06 16:06:20 +0200, Julian Stecklina wrote:
+> The documentation had some stale paths to i915 graphics virtualization
+> code. Fix them to point to existing files.
+>=20
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: zhiyuan.lv@intel.com
+> Cc: hang.yuan@intel.com
+>=20
+> Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+> ---
+>  Documentation/gpu/i915.rst | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
+> index e539c42a3e78..d644683c5249 100644
+> --- a/Documentation/gpu/i915.rst
+> +++ b/Documentation/gpu/i915.rst
+> @@ -43,19 +43,19 @@ Interrupt Handling
+>  Intel GVT-g Guest Support(vGPU)
+>  -------------------------------
+> =20
+> -.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
+> +.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
+>     :doc: Intel GVT-g guest support
+> =20
+> -.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
+> +.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
+>     :internal:
+> =20
+>  Intel GVT-g Host Support(vGPU device model)
+>  -------------------------------------------
+> =20
+> -.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
+> +.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
+>     :doc: Intel GVT-g host support
+> =20
+> -.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
+> +.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
+>     :internal:
+>
+
+The i915_vgpu.c and intel_gvt.c are still there for guest
+and host part of i915 interface with gvt. We still need them
+in doc. The files in gvt/ directory are gvt device model internals.=20
+
+
+>  Workarounds
+> --=20
+> 2.24.1
+>=20
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXhPnrQAKCRCxBBozTXgY
+JyMvAJ9TsnqY3mHUvUBZ/z7Xk72MkvNYRwCeJH2j6DznfHpxHvpobBYCwKxej0k=
+=eCW/
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
