@@ -2,94 +2,94 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF4EC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CB4C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307872080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E719F207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgAGMjH (ORCPT
+        id S1728192AbgAGMjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:39:07 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51918 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgAGMjF (ORCPT
+        Tue, 7 Jan 2020 07:39:10 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:44713 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbgAGMjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:39:05 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ioo8T-0002Dm-Op; Tue, 07 Jan 2020 12:39:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V3] usb: ohci-da8xx: ensure error return on variable error is set
-Date:   Tue,  7 Jan 2020 12:39:01 +0000
-Message-Id: <20200107123901.101190-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 7 Jan 2020 07:39:09 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MYNeM-1jBEXB2e3e-00VQ1g; Tue, 07 Jan 2020 13:39:07 +0100
+Received: by mail-qk1-f179.google.com with SMTP id t129so42459063qke.10;
+        Tue, 07 Jan 2020 04:39:07 -0800 (PST)
+X-Gm-Message-State: APjAAAX/iQrxSoPerxUF0TjZBJE9YEzEfV/yb/nnrAkbToBtigb5W/u/
+        8MvE9X/WkI0R6MXosNejlvkPUG6fEk7r7jTtJqM=
+X-Google-Smtp-Source: APXvYqxj7f+t9CP5sp/36VUBLMUQTa+e3WyQMflR8nTwCW8t9pJYpNTyr+4ZiOuV0aweiM6aI/SDnWdyvZrQA34+sMU=
+X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr72172409qkj.352.1578400746409;
+ Tue, 07 Jan 2020 04:39:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20191218163701.171914-1-arnd@arndb.de> <CACRpkdbqzLUNUjx_kt3-7JLZym2RZ47edW5qp0MgXmpW4-Xf9Q@mail.gmail.com>
+ <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com> <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com>
+In-Reply-To: <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Jan 2020 13:38:50 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
+Message-ID: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: lochnagar: select GPIOLIB
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, patches@opensource.cirrus.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:egrBH3XqHZeI3+RAO3CSGSoEMjHx/sJZdt+/cLh85iheKpqunxB
+ 2uKXv+IrY0eQR2PFyA04ITiKatlefq+ofCLr+dKunGBzeHrsAV0JL4ojLJ6W0KuLmc0SCxL
+ wKqJuz3nw04PGAnSkZDH7zyHFBE9s56RZjNi0gGaQeAdORmgBnYa6bdsAPpIjyl53ITTnV2
+ wssAUfvaIaLg6GUDFycMw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mLl+FwD2Vzo=:wCVer+QXMXAeur0zS2F2Gu
+ +wFfB/h0nchAyv2kpJq/1/91K4nQgF4xCq8bJGPSZBz0HzUnjU1bPfzuG0PifAInoLMOmFvgp
+ OnGFA1X+ZsTrrCPeCOLTCdTjmyRjOvGR59fc1b75DJVSVAGlMtVuRJCa9VjyatElLamEZ3Ynu
+ DI/WS1BHlgZ14Iz34OCFZwsT7BazkdNBVKlfZxjP9CHye+oYyCFTusTP4rjfRf7bwD8RQlvs2
+ ozO/ulXgw/hmftkOAtuaYvEi7RcgTLPsUyaKm99foJZ3BEn7YvgcIRvNvcjK/AwJVBqnNa/Mv
+ +oNAh4wpn6Bx0O+MvK+/E/tX2jOze6B2N1JgGj2TmpDWu7bYNByAE/g8vkXOCxnDoWR8Syxg8
+ IiAi2aNCogJUzy/47WSTKBohAdMFDMy8dgQjTt1e8i9rELbOIb5Ml7mmb91UzkmW/d4OSuevg
+ Suhdi6x/8LpWFMqkm8vjAd95ae8YZ5FqqaUJ63Usl4+EZPXaVh7oOna95srVySxu2dn9MCubH
+ 7B8j+YThmCYu5Iltaj0finrMDdttJkOV/h4+Gakf8xEEWQpejQwmdFqu4Y0nfLJR6mIrlHj1y
+ niu56LweLbxujx1ziMhTpG5HnYsnYXYQsl7NjJ3MmxS02a1OiAP4Rsp2Qv5j57wFSM/wZarhG
+ b7qEa8Tkfi2SuORkM7+bcKHIRtsgR0A/mLWrMKy4UAHgDpe9GI5RRzFs3luEyS+RKHW/7U2cq
+ bgo6S9gZAG2B75ufPbfy9/p376f8izZVnhw2xSJBYu/9nllXiCsBG2mtI3yOB7VehjMm50PhI
+ zFfCRtEppsMn4prE0pZGvTguBSzKHIb+nw23DCfivsUqdCrpgWe0Ssdxc/VCRMtDNF7bf3Qw/
+ j1SsT77lOTKSHzMx78Jg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jan 7, 2020 at 12:58 PM Richard Fitzgerald
+<rf@opensource.cirrus.com> wrote:
+> On 07/01/2020 10:39, Arnd Bergmann wrote:
+> > On Tue, Jan 7, 2020 at 10:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >> On Wed, Dec 18, 2019 at 5:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >>> I wonder if GPIOLIB should just become mandatory when enabling the pinctrl
+> >>> subsystem, or if there are still good reasons for leaving it disabled
+> >>> on any machine that uses CONFIG_PINCTRL.
+> >>
+> >> Hm that is a tricky question, they almost always come in pair but are
+> >> technically speaking separate subsystems.
+> >
+> > I think there are a number of use cases for GPIOLIB drivers without PINCTRL, but
+> > are there any examples of the reverse?
+>
+> You could have muxable pins that aren't gpios. For example muxing
+> between i2c/spi signals. So a pinctrl driver doesn't imply gpio.
 
-Currently when an error occurs when calling devm_gpiod_get_optional or
-calling gpiod_to_irq it causes an uninitialized error return in variable
-'error' to be returned.  Fix this by ensuring the error variable is set
-from da8xx_ohci->oc_gpio and oc_irq.
+I understand that this is the case in theory, but what I was wondering about
+is whether there are any such users, or at least any that also want to
+save a few kilobytes of kernel size for gpiolib.
 
-Thanks to Dan Carpenter for spotting the uninitialized error in the
-gpiod_to_irq failure case.
-
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
-
-V2: fix typo and grammar in commit message
-V3: fix gpiod_to_irq error case, re-write commit message
-
----
- drivers/usb/host/ohci-da8xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index 38183ac438c6..1371b0c249ec 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -415,13 +415,17 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
- 	}
- 
- 	da8xx_ohci->oc_gpio = devm_gpiod_get_optional(dev, "oc", GPIOD_IN);
--	if (IS_ERR(da8xx_ohci->oc_gpio))
-+	if (IS_ERR(da8xx_ohci->oc_gpio)) {
-+		error = PTR_ERR(da8xx_ohci->oc_gpio);
- 		goto err;
-+	}
- 
- 	if (da8xx_ohci->oc_gpio) {
- 		oc_irq = gpiod_to_irq(da8xx_ohci->oc_gpio);
--		if (oc_irq < 0)
-+		if (oc_irq < 0) {
-+			error = oc_irq;
- 			goto err;
-+		}
- 
- 		error = devm_request_threaded_irq(dev, oc_irq, NULL,
- 				ohci_da8xx_oc_thread, IRQF_TRIGGER_RISING |
--- 
-2.24.0
-
+          Arnd
