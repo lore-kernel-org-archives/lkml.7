@@ -2,55 +2,142 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D0C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F31F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F3624672
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578431461;
+	bh=QgP+7EODA4++hEzdFE8hqus7Vo27nOQDCeixmhpz9rs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RuI567hfVq0unsTVT9VT+YEl4CELdht8oc4+tAcrX4qtHdYqmyXDEZFdz9IOPmvyU
+	 pqIjWQSpjRxh4B5soIsS81f2QYaE2DGjWIw7lxixIE+MdkXBE6rUUbaaOHgVRFo+me
+	 UAWCeXIzhxskE4avnpHRkzi3/nki5/z/I2YBkahk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgAGVK5 (ORCPT
+        id S1730042AbgAGVLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:57 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37514 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729566AbgAGVKy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729845AbgAGVKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 16:10:54 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007LAkXa027192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 16:10:46 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id E4F464207DF; Tue,  7 Jan 2020 16:10:45 -0500 (EST)
-Date:   Tue, 7 Jan 2020 16:10:45 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] random: remove unnecessary unlikely()
-Message-ID: <20200107211045.GO3619@mit.edu>
-References: <20190607182517.28266-1-tiny.windzz@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F62924684;
+        Tue,  7 Jan 2020 21:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431454;
+        bh=QgP+7EODA4++hEzdFE8hqus7Vo27nOQDCeixmhpz9rs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KIMqdpclxpzJOOULblzMnJPzgUMy51+IfJc4CV4EEDSNq8awUMNh4WVZb3a6jSMQw
+         KAdMgc22Iy5lTL8Kbt+oo5Wuz4t41UjEMmjaljTFPw1s3JL/oJYrQeh0B+w9U/CS0m
+         AvKTMvsGJZXQngdj1qi6K4tXYpZ/Lx6xkUp3qszY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 62/74] drm/mst: Fix MST sideband up-reply failure handling
+Date:   Tue,  7 Jan 2020 21:55:27 +0100
+Message-Id: <20200107205226.017844629@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+References: <20200107205135.369001641@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607182517.28266-1-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 02:25:13PM -0400, Yangtao Li wrote:
-> WARN_ON() already contains an unlikely(), so it's not necessary to use
-> unlikely.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+From: Imre Deak <imre.deak@intel.com>
 
-Applied, thanks.
+[ Upstream commit d8fd3722207f154b53c80eee2cf4977c3fc25a92 ]
 
-					- Ted
+Fix the breakage resulting in the stacktrace below, due to tx queue
+being full when trying to send an up-reply. txmsg->seqno is -1 in this
+case leading to a corruption of the mstb object by
+
+	txmsg->dst->tx_slots[txmsg->seqno] = NULL;
+
+in process_single_up_tx_qlock().
+
+[  +0,005162] [drm:process_single_tx_qlock [drm_kms_helper]] set_hdr_from_dst_qlock: failed to find slot
+[  +0,000015] [drm:drm_dp_send_up_ack_reply.constprop.19 [drm_kms_helper]] failed to send msg in q -11
+[  +0,000939] BUG: kernel NULL pointer dereference, address: 00000000000005a0
+[  +0,006982] #PF: supervisor write access in kernel mode
+[  +0,005223] #PF: error_code(0x0002) - not-present page
+[  +0,005135] PGD 0 P4D 0
+[  +0,002581] Oops: 0002 [#1] PREEMPT SMP NOPTI
+[  +0,004359] CPU: 1 PID: 1200 Comm: kworker/u16:3 Tainted: G     U            5.2.0-rc1+ #410
+[  +0,008433] Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3175.A00.1904261428 04/26/2019
+[  +0,013323] Workqueue: i915-dp i915_digport_work_func [i915]
+[  +0,005676] RIP: 0010:queue_work_on+0x19/0x70
+[  +0,004372] Code: ff ff ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 41 56 49 89 f6 41 55 41 89 fd 41 54 55 53 48 89 d3 9c 5d fa e8 e7 81 0c 00 <f0> 48 0f ba 2b 00 73 31 45 31 e4 f7 c5 00 02 00 00 74 13 e8 cf 7f
+[  +0,018750] RSP: 0018:ffffc900007dfc50 EFLAGS: 00010006
+[  +0,005222] RAX: 0000000000000046 RBX: 00000000000005a0 RCX: 0000000000000001
+[  +0,007133] RDX: 000000000001b608 RSI: 0000000000000000 RDI: ffffffff82121972
+[  +0,007129] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000001
+[  +0,007129] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88847bfa5096
+[  +0,007131] R13: 0000000000000010 R14: ffff88849c08f3f8 R15: 0000000000000000
+[  +0,007128] FS:  0000000000000000(0000) GS:ffff88849dc80000(0000) knlGS:0000000000000000
+[  +0,008083] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  +0,005749] CR2: 00000000000005a0 CR3: 0000000005210006 CR4: 0000000000760ee0
+[  +0,007128] PKRU: 55555554
+[  +0,002722] Call Trace:
+[  +0,002458]  drm_dp_mst_handle_up_req+0x517/0x540 [drm_kms_helper]
+[  +0,006197]  ? drm_dp_mst_hpd_irq+0x5b/0x9c0 [drm_kms_helper]
+[  +0,005764]  drm_dp_mst_hpd_irq+0x5b/0x9c0 [drm_kms_helper]
+[  +0,005623]  ? intel_dp_hpd_pulse+0x205/0x370 [i915]
+[  +0,005018]  intel_dp_hpd_pulse+0x205/0x370 [i915]
+[  +0,004836]  i915_digport_work_func+0xbb/0x140 [i915]
+[  +0,005108]  process_one_work+0x245/0x610
+[  +0,004027]  worker_thread+0x37/0x380
+[  +0,003684]  ? process_one_work+0x610/0x610
+[  +0,004184]  kthread+0x119/0x130
+[  +0,003240]  ? kthread_park+0x80/0x80
+[  +0,003668]  ret_from_fork+0x24/0x50
+
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190523212433.9058-1-imre.deak@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index bb9a9852ec22..ef86721c06f3 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -1540,7 +1540,11 @@ static void process_single_up_tx_qlock(struct drm_dp_mst_topology_mgr *mgr,
+ 	if (ret != 1)
+ 		DRM_DEBUG_KMS("failed to send msg in q %d\n", ret);
+ 
+-	txmsg->dst->tx_slots[txmsg->seqno] = NULL;
++	if (txmsg->seqno != -1) {
++		WARN_ON((unsigned int)txmsg->seqno >
++			ARRAY_SIZE(txmsg->dst->tx_slots));
++		txmsg->dst->tx_slots[txmsg->seqno] = NULL;
++	}
+ }
+ 
+ static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
+-- 
+2.20.1
+
+
+
