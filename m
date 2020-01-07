@@ -2,120 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F42C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1CAC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB1B2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qVa3ZCDU"
+	by mail.kernel.org (Postfix) with ESMTP id B87332073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgAGWgA (ORCPT
+        id S1727540AbgAGWgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:36:00 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52465 "EHLO ozlabs.org"
+        Tue, 7 Jan 2020 17:36:09 -0500
+Received: from mga18.intel.com ([134.134.136.126]:60371 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgAGWf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:35:59 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47snK63d1Nz9sPJ;
-        Wed,  8 Jan 2020 09:35:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578436555;
-        bh=5K7yUQoezMG22YaczQTjWBI2s9CqzR+7Y1yt9iqiwo8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qVa3ZCDUkwzpku+Jm6SBeOvJGF7OaTNVthlSkDdBritbwx0R/NLDJ6hCef0obL85y
-         GeliNjoJmvumvNk97Lmit1L1wMqHcgPbkwoj9xfJsr76k8Cx8OxDWLg/Y+HMI9uAas
-         ulqow6Z8YUYSVr3AhVbDHZwfNK/zrjqQSj8DKL97VyGnDTtFcgtFrP2S5jJNq0P+v/
-         iPfv3gChAcJrFsmEBwFw3R3+m/lAdxKfdINskzir5WXOeOpKYN0Q9dEMwLQeeQuXk2
-         iQjaCBw/rDXkkmhkTWgJHlqE4VGFDdM5edxaPu4kCoPrFEoTJt+Zjm7iEmC3ufrE2W
-         xp9FTVUOymdHQ==
-Date:   Wed, 8 Jan 2020 09:35:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amanieu d'Antras <amanieu@gmail.com>,
-        Nick Hu <nickhu@andestech.com>
-Subject: linux-next: manual merge of the risc-v tree with the pidfd-fixes
- tree
-Message-ID: <20200108093548.71a9db91@canb.auug.org.au>
+        id S1727077AbgAGWgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:36:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 14:36:07 -0800
+X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
+   d="scan'208";a="217894699"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 14:36:07 -0800
+Date:   Tue, 7 Jan 2020 14:36:06 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Add support for fast short rep mov
+Message-ID: <20200107223606.GA32598@agluck-desk2.amr.corp.intel.com>
+References: <20191212225210.GA22094@zn.tnic>
+ <20191216214254.26492-1-tony.luck@intel.com>
+ <20200107184003.GK29542@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1gGwnvrxr3zydp08JWaOGPj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107184003.GK29542@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1gGwnvrxr3zydp08JWaOGPj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 07, 2020 at 07:40:03PM +0100, Borislav Petkov wrote:
+> I don't mind this graph being part of the commit message - it shows
+> nicely the speedup even if with some microbenchmark. Or you're not
+> adding it just because it is a microbenchmark and not something more
+> representative?
 
-Hi all,
+I'm not sure it should be archived forever in the commit message.
+The benchmark was run on A-step silicon, so may not be representative
+of production results.
 
-Today's linux-next merge of the risc-v tree got a conflict in:
+> >  .Lmemmove_begin_forward:
+> > +	ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
+> 
+> So the enhancement is for string lengths up to two cachelines. Why
+> are you limiting this to 32 bytes?
+> 
+> I know, the function handles 32-bytes at a time but what I'd imagine
+> here is having the fastest variant upfront which does REP; MOVSB for all
+> lengths since FSRM means fast short strings and ERMS - and I'm strongly
+> assuming here FSRM *implies* ERMS - means fast "longer" strings, so to
+> speak, so FSRM would mean fast *all length* strings in the end, no?
+> 
+> Also, does the copy direction influence the FSRM's REP; MOVSB variant's
+> performance? If not, you can do something like this:
 
-  arch/riscv/Kconfig
+Yes FSRM implies ERMS
 
-between commit:
+You can't use REP MOVS for overlapping src/dst strings (not even with the fancy
+newer, faster, shinier FSRM version). So your suggestion will not work.
 
-  b57cd1cdb197 ("riscv: Implement copy_thread_tls")
+The old memmove code looked something like:
 
-from the pidfd-fixes tree and commit:
+	if (len < 32)
+		copy tail (backwards ... 8/4/2/1 bytes. works for both overlap & non-overlap case)
+		return
+	else if overlap src/dst
+		copy backwards 32-byte unrolled
+		copy tail
+		return
+	else if (ERMS)
+		REP MOVS;
+		return
+	else
+		unrolled copy 32-byte
+		copy tail
 
-  d0f057940663 ("riscv: Add KASAN support")
+The new one with my changes looks something like
 
-from the risc-v tree.
+	if (! overlap src/dst)
+		if (FSRM)
+			rep movs
+			return
+		if (len < 32)
+			copy tail
+			return
+		if (ERMS)
+			rep movs
+			return
+		unrolled copy
+	else
+		if (len < 32)
+			copy tail
+			return
+		copy backwards 32-byte unrolled
+		copy tail
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/riscv/Kconfig
-index fa7dc03459e7,82e7168a81fa..000000000000
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@@ -65,7 -65,7 +65,8 @@@ config RISC
-  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-  	select HAVE_ARCH_MMAP_RND_BITS if MMU
-  	select ARCH_HAS_GCOV_PROFILE_ALL
- +	select HAVE_COPY_THREAD_TLS
-+ 	select HAVE_ARCH_KASAN if MMU && 64BIT
- =20
-  config ARCH_MMAP_RND_BITS_MIN
-  	default 18 if 64BIT
-
---Sig_/1gGwnvrxr3zydp08JWaOGPj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VB8QACgkQAVBC80lX
-0Gx3BQf/e16rkxO4kgUKwsSRNY+3ga3hdOPEaUaHKKrTnNbMoaDye28IfhLhG3zu
-qU4O/6VyBj5hCD4xdlkKPRf5m2QxHE7c5IF/EEGt7g+8iosh8Qi4c2zgHeykGut/
-QmRvMDmVbgo++h5y8rpnKNezOTizaDuDkvMQr8owVqI4f+P7ei4us0IZsk2ZL+GK
-7HuCcAq0ERQLUv3rK19mTZl16ixlMsjdfAORSyCF0onRY72OsCWhvWGf7ej5PJ9p
-JkGpxsH+5TS00VR4Rx2gKj58P7Ws45FORGH56/JkWLFUYrRv3ckH1ACNL2FArEYC
-SFA7urs6VrCMPk2ngB1eCvuEpE7jfQ==
-=4gJF
------END PGP SIGNATURE-----
-
---Sig_/1gGwnvrxr3zydp08JWaOGPj--
+-Tony
