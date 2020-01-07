@@ -2,80 +2,114 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACFDC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC5BC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D13120678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBD92077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mE+vclw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgAGKMC (ORCPT
+        id S1727822AbgAGKMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:12:02 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:57025 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGKMC (ORCPT
+        Tue, 7 Jan 2020 05:12:13 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44804 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:12:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id i68so33481976ill.23
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:12:01 -0800 (PST)
+        Tue, 7 Jan 2020 05:12:12 -0500
+Received: by mail-io1-f68.google.com with SMTP id b10so51989466iof.11;
+        Tue, 07 Jan 2020 02:12:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PbyQyZ9o+Ro7E6bXOC6SCrk7HuZRr+h0vUWe4gZ98uQ=;
+        b=mE+vclw3cfYF8tFzCALd6ffjBbn9elwbyo2EMwffZsN59D8gkO888bX94L0BigDx7F
+         v4pyG7hhBxC13kJmfR5Yx8yFLrRgTbf53DgRK+6BNulX4LVJ88/uqtPDurJ+IbRaAmKe
+         8EWtlB5diKEI3JJzHIL8tmpDSqiLcfuZhHLn6DioccebewAhH/tDiUTWY3XPDQVBh5ZG
+         rvl714eo8s/x6NhqpZbqD0JRkjrfe02kKiYkAiEV5zMYyvV91xk04MCXKgcpnnVq4paH
+         LtkyG1gx+IMCw52HZAq5gzXbppsUW0ZEga4mS2tYjQn9/QgoxTukRxnnCE3/iT4jmU9B
+         09xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=uY0IMSD0dpLD3QQHBJ18OrMq7eBYbFB7tHn+vZdbCpU=;
-        b=WxBxaq4In8FGPz/SPJZJ114N/ClgbGCYEupK/Ti6yV8QKNd13OpcCW5nVIY9oAQOZi
-         ikx+GC7Uk7ta3gziXs03ag4fkMUYTtJo/LtrhKYD8CEH429faBQV5DYEY3tjNKG3LbJ7
-         qIEfcqmQjFMzS/Vwct0Y2lNLjqNEvz3Qgv7jBNheHCPsUDA+vmCalTEiYg9urs9sh97c
-         hkbErKW2An2OzJE6kTaTNdXuQ1YCB+XsCQEd1DeCt1P7xiHNix6u1Npdq7N1EVWWgVOl
-         bfZIGwq0x1Cvqp6pC8N5pl/mO2oXpCRtEbg5s0qqauAhvlX8sKufyAX0JlOC2YLDN0Jz
-         FLZw==
-X-Gm-Message-State: APjAAAW9I97lS2XdC0Gj2M/1grpS7A0skm2W49vYOX1EnrhqROwBGtTJ
-        rDvJYqDb6Yyf8ExVVu3ZdG/PvuZXnw8jBhER8kCwsEJqFqd9
-X-Google-Smtp-Source: APXvYqwv0/OkCF9+faxbADAvRTX3QIb9FKZF7SgcrbkDTc9kexfy5mcSiu6q64gZKoVVyGS18zybmgeFYRrHU+aAiI+B41Zqko2l
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PbyQyZ9o+Ro7E6bXOC6SCrk7HuZRr+h0vUWe4gZ98uQ=;
+        b=fNWl0PPULz+gTBaZQtSSdEY6kQW403O0mhiHGQplPgu4/CkIPagZzL6EpGywS1uXsQ
+         tnZIpkZnQFCjNWxiuH7+iMFBSsYO9UsW0mNC/nBLYz41Ksw9z8SDmDrPiWO0VP4xLdy3
+         shVqUd+98Z6FWtMdVoqLXdbn4dLmVp0nN7UHceccNE6Chfb6mEhHT5qmVn8HyJN3yvyb
+         /kwtaonwNrVu8xr/6oVqv1iLKj9HikVGe1Ku5NW5TXdIKCeZR7bdWP8AZD6F7Pevm6L+
+         7sXgt0DroheBEPCExPgkGilCSLji7gHnLCcch4195mk3CUkIe0LNAPniGxlRJ7xy/uYP
+         r3jQ==
+X-Gm-Message-State: APjAAAUfjhrMX3HbMOIzLc4sXmGuSK+SUWgbgYoHAJqKvFGJC2AlDmm0
+        A6umI48uuI8oMhFPzbmgf8/gqwLFErumDDSfle1wgw==
+X-Google-Smtp-Source: APXvYqx3r2qgxfq0fEj3TX01n99so2jqPkAzW5BeIfMPMxERNE6WNcSTMhTdDGboy4GGuyjRN9uytisFExuwcaccWaw=
+X-Received: by 2002:a02:81cc:: with SMTP id r12mr80549653jag.93.1578391931918;
+ Tue, 07 Jan 2020 02:12:11 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8cda:: with SMTP id k26mr48129317iot.26.1578391921440;
- Tue, 07 Jan 2020 02:12:01 -0800 (PST)
-Date:   Tue, 07 Jan 2020 02:12:01 -0800
-In-Reply-To: <0000000000004ceb27059b868b57@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cb3c3c059b8a01e3@google.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in cfg80211_wext_siwfrag
-From:   syzbot <syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com>
-To:     astrachan@google.com, davem@davemloft.net, ghartman@google.com,
-        johannes.berg@intel.com, johannes@sipsolutions.net,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        muntsinger@google.com, netdev@vger.kernel.org,
-        schuffelen@google.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <cover.1578225806.git.chris@chrisdown.name> <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
+ <20200107001039.GM23195@dread.disaster.area> <20200107001643.GA485121@chrisdown.name>
+ <20200107003944.GN23195@dread.disaster.area> <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com>
+ <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 7 Jan 2020 12:12:00 +0200
+Message-ID: <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Chris Down <chris@chrisdown.name>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Jan 7, 2020 at 10:36 AM Hugh Dickins <hughd@google.com> wrote:
+>
+> On Tue, 7 Jan 2020, Amir Goldstein wrote:
+> > On Tue, Jan 7, 2020 at 2:40 AM Dave Chinner <david@fromorbit.com> wrote:
+> > > On Tue, Jan 07, 2020 at 12:16:43AM +0000, Chris Down wrote:
+> > > > Dave Chinner writes:
+> > > > > It took 15 years for us to be able to essentially deprecate
+> > > > > inode32 (inode64 is the default behaviour), and we were very happy
+> > > > > to get that albatross off our necks.  In reality, almost everything
+> > > > > out there in the world handles 64 bit inodes correctly
+> > > > > including 32 bit machines and 32bit binaries on 64 bit machines.
+> > > > > And, IMNSHO, there no excuse these days for 32 bit binaries that
+> > > > > don't using the *64() syscall variants directly and hence support
+> > > > > 64 bit inodes correctlyi out of the box on all platforms.
+>
+> Interesting take on it.  I'd all along imagined we would have to resort
+> to a mount option for safety, but Dave is right that I was too focused on
+> avoiding tmpfs regressions, without properly realizing that people were
+> very unlikely to have written such tools for tmpfs in particular, but
+> written them for all filesystems, and already encountered and fixed
+> such EOVERFLOWs for other filesystems.
+>
+> Hmm, though how readily does XFS actually reach the high inos on
+> ordinary users' systems?
+>
 
-commit c7cdba31ed8b87526db978976392802d3f93110c
-Author: Cody Schuffelen <schuffelen@google.com>
-Date:   Wed Nov 21 03:14:49 2018 +0000
+Define 'ordinary'
+I my calculations are correct, with default mkfs.xfs any inode allocated
+from logical offset > 2TB on a volume has high ino bits set.
+Besides, a deployment with more than 4G inodes shouldn't be hard to find.
 
-     mac80211-next: rtnetlink wifi simulation device
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11cf6885e00000
-start commit:   d89091a4 macb: Don't unregister clks unconditionally
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13cf6885e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15cf6885e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=e8a797964a4180eb57d5
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c85915e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c02bc1e00000
-
-Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
-Fixes: c7cdba31ed8b ("mac80211-next: rtnetlink wifi simulation device")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+Amir.
