@@ -2,114 +2,118 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68769C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B80C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA6720678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E01A20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taUrxPZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgAGKQx (ORCPT
+        id S1727805AbgAGKRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:16:53 -0500
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:43278 "EHLO
-        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgAGKQx (ORCPT
+        Tue, 7 Jan 2020 05:17:09 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44984 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:16:53 -0500
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 492B19890A
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 10:16:50 +0000 (GMT)
-Received: (qmail 3988 invoked from network); 7 Jan 2020 10:16:49 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 Jan 2020 10:16:49 -0000
-Date:   Tue, 7 Jan 2020 10:16:46 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Hillf Danton <hdanton@sina.com>, Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v3
-Message-ID: <20200107101646.GG3466@techsingularity.net>
-References: <20200106144250.GA3466@techsingularity.net>
- <04033a63f11a9c59ebd2b099355915e4e889b772.camel@surriel.com>
- <20200106163303.GC3466@techsingularity.net>
- <20200107015111.4836-1-hdanton@sina.com>
- <20200107091256.GE3466@techsingularity.net>
- <CAKfTPtAMeta=jtTkTewdFN1UyqT+iyRhm9pfNDjkydfJQjaorQ@mail.gmail.com>
+        Tue, 7 Jan 2020 05:17:09 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so14300160wrm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
+        b=taUrxPZTGVzzuvL7T0lvDMjjDK8lWEumcMo06rflm+YVYxsAK4JOpHgrsuAfS9cWXI
+         G41MsZHjP/iu0AGNtOm4RB+dnO/BlbvD6PqTU2RzKIaoKHNOTimtY1JJkFNR4ViAi44p
+         bQfKDKrRFnorlrTOwWLpMu4a12R/xRFUrN6hUtUHkzTgobNonMUqEtmROPxp0Y7ldrp7
+         P8SKMT8N1cWBfXuQWuAhAXgcL+n/MeAI86J59ta9lgyoQ0GiYcuCF0pDGqp3O5kR7WKY
+         tU91FqNkCDxKwj/tG4ZzIzefo7Xul6TH6UYN1zmSjtQupZzVTC06qKPvsKuD5VykiP/Y
+         Ii6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
+        b=oUqP1+9GR2fIRlbYlvh2oHW8eVOT2IBW2EqDhJODSYrXddfG583k6syN3UkY2oIpal
+         1veknlVIURaFaNjzdQ+CpR07p3CcMmpRkQMZe9VzGQi1mVyS3ZPkLJv2KtQ1T625qGEw
+         //+k+Hwz9vnIMTKSoWD5XDIOz6m8Ew+pn1FcLNzWXhSfmd3I5wzF6x4gJlgbOfKmVd53
+         xO732edy1mOhGs4YVWbuUB8dLLBGm8T6Pnom4YswtbpiIbDEhGop2wvgJWk1tCw+KjhB
+         /Ti3SqfMFtU9DciZtTiTlwmmg6Ubh92HqN/nxpbDMxrL0u+k8EChQGfL9dYGNuM5R8aQ
+         uupw==
+X-Gm-Message-State: APjAAAVEr5MrPQNK8NzKZE4IeIOMYpzgbS09NP50BBz7kOOAo7iLl8/Z
+        pzg8GwaCaApRXKfOT2mJY86i7Q==
+X-Google-Smtp-Source: APXvYqx96FNnTE7Wcke6NICz9bHsU0YLHTjGvRQKQMsnCyEMLoYLSpwbGJRwJxjIiek++9x0xqV8nQ==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr99505691wrx.147.1578392226736;
+        Tue, 07 Jan 2020 02:17:06 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b17sm73177393wrx.15.2020.01.07.02.17.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Jan 2020 02:17:05 -0800 (PST)
+Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for
+ gpio
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
+ <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
+Date:   Tue, 7 Jan 2020 10:17:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtAMeta=jtTkTewdFN1UyqT+iyRhm9pfNDjkydfJQjaorQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:43:08AM +0100, Vincent Guittot wrote:
-> > > > > It's not directly related to the number of CPUs in the node. Are you
-> > > > > thinking of busiest->group_weight?
-> > > >
-> > > > I am, because as it is right now that if condition
-> > > > looks like it might never be true for imbalance_pct 115.
-> > > >
-> > > > Presumably you put that check there for a reason, and
-> > > > would like it to trigger when the amount by which a node
-> > > > is busy is less than 2 * (imbalance_pct - 100).
-> > >
-> > >
-> > > If three per cent can make any sense in helping determine utilisation
-> > > low then the busy load has to meet
-> > >
-> > >       busiest->sum_nr_running < max(3, cpus in the node / 32);
-> > >
-> >
-> > Why 3% and why would the low utilisation cut-off depend on the number of
+
+
+On 07/01/2020 09:47, Linus Walleij wrote:
+> On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
 > 
-> But in the same way, why only 6 tasks ? which is the value with
-> default imbalance_pct ?
-
-I laid this out in another mail sent based on timing so I would repeat
-myself other than to say it's predictable across machines.
-
-> I expect a machine with 128 CPUs to have more bandwidth than a machine
-> with only 32 CPUs and as a result to allow more imbalance
+>> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+>> gpio controller to control 5 gpios on the chip. This patch adds
+>> required device tree bindings for it.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-
-I would expect so too with the caveat that there can be more memory
-channels within a node so positioning does matter but we can't take
-everything into account without creating a convulated mess. Worse, we have
-no decent method for estimating bandwidth as it depends on the reference
-pattern and scheduler domains do not currently take memory channels into
-account. Maybe they should but that's a whole different discussion that
-we do not want to get into right now.
-
-> Maybe the number of running tasks (or idle cpus) is not the right
-> metrics to choose if we can allow a small degree of imbalance because
-> this doesn't take into account it wether the tasks are long running or
-> short running ones
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
+> Tell me if you want me to merge this patch through the GPIO tree.
+> 
+Yes that would be great!. gpio bindings and gpio driver can go via gpio 
+tree as there is no compile time dependency. Also Mark has already 
+merged the audio codec side of it.
 
-I think running tasks at least is the least bad metric. idle CPUs gets
-caught up in corner cases with bindings and util_avg can be skewed by
-outliers. Running tasks is a sensible starting point until there is a
-concrete use case that shows it is unworkable. Lets see what you think of
-the other untested patch I posted that takes the group weight and child
-domain weight into account.
+I will address the comments on the driver and send new version of these 
+2 patches.
 
--- 
-Mel Gorman
-SUSE Labs
+Thanks,
+srini
+> Yours,
+> Linus Walleij
+> 
