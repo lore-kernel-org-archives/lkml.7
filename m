@@ -2,177 +2,188 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C51C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0C3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169612187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9473024676
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="hbOsyfYA"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="YL5El9MN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgAGOgT (ORCPT
+        id S1727973AbgAGOgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:36:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35605 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgAGOgT (ORCPT
+        Tue, 7 Jan 2020 09:36:49 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:37021 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727958AbgAGOgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:36:19 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so54168726wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:36:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=73LjBmiEkGIYm4Th768t00zd9pN6SU7FcL2GNuvIly4=;
-        b=hbOsyfYA8mfDEbvNDDbXegn+/ld528lPjXtjdqGd41D4mcJ0gkwLBBw5hvfLRrhsgo
-         8ZzZWm1f+RV0eZ8M6Q2mCxJHlBC0cq6NX/3LrqHTV4FT+n34tC7O8mPhsHllnz6SdCtx
-         /Mrc7W+LTHNhr8/oEznNXCrGRfpaK2da5HTfWVFURHiPUP/vP7WOLy5LlXy6Q4JluxXK
-         6C1P53AeTBTKy33pwuREr9wbuh3n+s8WioevHzeIxkW1TzqTceTTxpiKVXASPOYXDVPo
-         wXuhR27QqTxmWTknQ04V3dMPgrOT/k//ok/pCcpyXaGpFyLMrmg6drtDba63rviX4T3Y
-         Qg0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=73LjBmiEkGIYm4Th768t00zd9pN6SU7FcL2GNuvIly4=;
-        b=ZUB2d67n8En7p1W7V+9kMg/vsWnTyyFqZQoQxC+LHzS9RkEgr93vCCBOOkTKSUmM3q
-         xreXkR59Lb3kR/ow274cTKl1S6n3+5lt/QAWQF6VebV3gF+VwJ3QfyTL9TBbHrdsPSG3
-         jseez4P0v9A+P/fZunqtLxcReJl3ADnH9P7NQHe5s7Ze9KloWj8XUEAKVmMSRsorK2id
-         7RbI1cn0t51laHAb3k+WH08CbrlSAg5qciezrSc9BVYDVjZpN7JSi70bvo1LZvRunYxT
-         CoekPq5rZMpiilxEcakTpGSnnlS1HN0GW/knO/BVizkToI1t8Ilyu/Ucx3TqKrV6q9AI
-         svgw==
-X-Gm-Message-State: APjAAAVTMKRlqxHDsadPshCCMWtiajg/JWgjUp9d+eLirYg/jVKVSLy9
-        WIxproJHnqd5lqJoxu/LPvGmCOLNwUUHYlb6K7Yo4UTwdMlzz1JyE5b30vwUEO61VrskQGK0lfl
-        oLGunZQs53FuYr7JRfR259gKTcywKuWYj7IH5UKjAfI5ZcHtVyNg0Nj8CyQSshu3PAlVolYz9BX
-        6sbS4IBkpMLA==
-X-Google-Smtp-Source: APXvYqx8EK4r2U+w5EdthGweQWs26preoOTiuOyCt7mCGziquf9Axoe9nbyDgelNKewOnUQ75OdmaQ==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr110415159wrw.289.1578407776410;
-        Tue, 07 Jan 2020 06:36:16 -0800 (PST)
-Received: from [172.20.1.104] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id a5sm27168885wmb.37.2020.01.07.06.36.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Jan 2020 06:36:15 -0800 (PST)
-To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200107130308.20242-1-mrostecki@opensuse.org>
- <20200107130308.20242-3-mrostecki@opensuse.org>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- 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
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Subject: Re: [PATCH bpf-next v2 2/2] bpftool: Add misc secion and probe for
- large INSN limit
-Message-ID: <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
-Date:   Tue, 7 Jan 2020 14:36:15 +0000
+        Tue, 7 Jan 2020 09:36:48 -0500
+Received: from [IPv6:2001:420:44c1:2577:cd88:93ae:ae73:3d6c]
+ ([IPv6:2001:420:44c1:2577:cd88:93ae:ae73:3d6c])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id opyMiLGOLN9dwopyPiVoSQ; Tue, 07 Jan 2020 15:36:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578407806; bh=0/aODu4Nr1vPvdKgRVthpJllEoY3MZ2YaTkdzm/0C6c=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=YL5El9MNH1rzorxvQFpmS+AYc/8zRWuhUK6bRYMRdEQvQbalN21pF0atjbkKCZBq0
+         VR6d6BrocFzAAA5BQlS8mNYg3W76Az+SlMMXzP5Z4z14iSuvBYFoaSZvXYC7jV9nUh
+         5EcKWc2Pqyd/SW2qcVZOiULjZTKzqdqPZTfOvzZVaEkNhcD7b1EGMhUV/Zm/nHZTnS
+         T1YDbFAxzOur2NoekYlg9ecR/9VnJm8VULbKaCuzhE2eqVkxLjsmHUIsc3Qh7bYENJ
+         bRMH05C/4b7KdbB1qS/TISqsrOGvL3/t1mhca7SXTI/AazMNfGzzvr6R+tmSDqW9Ad
+         56LGwBqex5zTg==
+Subject: Re: [PATCH v2 3/3] media: platform: meson-ao-cec-g12a: add wakeup
+ support
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        narmstrong@baylibre.com, mchehab@kernel.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191213132956.11074-1-glaroque@baylibre.com>
+ <20191213132956.11074-4-glaroque@baylibre.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <cccc0cda-7403-1378-40c8-291b11bf868a@xs4all.nl>
+Date:   Tue, 7 Jan 2020 15:36:42 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200107130308.20242-3-mrostecki@opensuse.org>
+In-Reply-To: <20191213132956.11074-4-glaroque@baylibre.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHtRrygWIAqkPjGrrrau5APrpkIVRR2JTGhrjmxiPtVc/8Px0FJuQnDfkKcecKx4a0yJnIsXM/+wjB9qqSAaleGVoC/P/P9JpYnA5wp43Dgwu9ItB4Cq
+ SvN6Urd5PiahJtP+BuCs61llsDwjD0pGD+94lU2i1bcfdS873kXqZzfeT5pAw/8qHNumXdH82q3HkbMHImOQhFgqgtNQ1kMMbYHxO8lVgCP8ZWo95vO7gZnI
+ t7kE8hOEe08vaX0JS25KsRtCiFg7ZmJMa6dngWBXy+Ujwl3kluL+tyrMQ9xusYNW47coaamWLONfm/CfMNhK/oRWhdrBoKU9VIo+LRH3ARbPdfo4KQnFWHsa
+ 8rypUE/urtP7doikUon5izSog1PFmV9P6Tb82jTlLKfrmSsRdwF3PCv/rKBROOfTF7iF2JHdSNmZhZcSjJpw485dVU76/+0s13Yg27rnRpVU+55OrObqo/MB
+ Tmp45ztmF98xuKeoD25BbnkazRNRKRrlVn9XLOFkmV0+if17t+wApyI8sh1Jjfoqh1A27yCuVFrOQeNZyvHpBAjVuhZzMRuyKwfK0LJMEoMVYVxGmI5T3DWV
+ W8VXxah2vdBpTyQ5DiIrtK92
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nit: typo in subject ("secion").
+Hi Guillaume,
 
-2020-01-07 14:03 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
-> Introduce a new probe section (misc) for probes not related to concrete
-> map types, program types, functions or kernel configuration. Introduce a
-> probe for large INSN limit as the first one in that section.
+On 12/13/19 2:29 PM, Guillaume La Roque wrote:
+> add register configuration to activate wakeup feature in bl301
 > 
-> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  tools/bpf/bpftool/feature.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  drivers/media/platform/meson/ao-cec-g12a.c | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
-> index 03bdc5b3ac49..d8ce93092c45 100644
-> --- a/tools/bpf/bpftool/feature.c
-> +++ b/tools/bpf/bpftool/feature.c
-> @@ -572,6 +572,18 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
->  		printf("\n");
->  }
+> diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
+> index 891533060d49..85850b974126 100644
+> --- a/drivers/media/platform/meson/ao-cec-g12a.c
+> +++ b/drivers/media/platform/meson/ao-cec-g12a.c
+> @@ -25,6 +25,7 @@
+>  #include <media/cec.h>
+>  #include <media/cec-notifier.h>
+>  #include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
 >  
-> +static void
-> +probe_large_insn_limit(const char *define_prefix, __u32 ifindex)
-> +{
-> +	bool res;
+>  /* CEC Registers */
+>  
+> @@ -168,6 +169,18 @@
+>  
+>  #define CECB_WAKEUPCTRL		0x31
+>  
+> +#define CECB_FUNC_CFG_REG		0xA0
+> +#define CECB_FUNC_CFG_MASK		GENMASK(6, 0)
+> +#define CECB_FUNC_CFG_CEC_ON		0x01
+> +#define CECB_FUNC_CFG_OTP_ON		0x02
+> +#define CECB_FUNC_CFG_AUTO_STANDBY	0x04
+> +#define CECB_FUNC_CFG_AUTO_POWER_ON	0x08
+> +#define CECB_FUNC_CFG_ALL		0x2f
+> +#define CECB_FUNC_CFG_NONE		0x0
 > +
-> +	res = bpf_probe_large_insn_limit(ifindex);
-> +	print_bool_feature("have_large_insn_limit",
-> +			   "Large complexity and program size limit",
+> +#define CECB_LOG_ADDR_REG	0xA4
+> +#define CECB_LOG_ADDR_MASK	GENMASK(22, 16)
+> +
+>  struct meson_ao_cec_g12a_data {
+>  	/* Setup the internal CECB_CTRL2 register */
+>  	bool				ctrl2_setup;
+> @@ -177,6 +190,7 @@ struct meson_ao_cec_g12a_device {
+>  	struct platform_device		*pdev;
+>  	struct regmap			*regmap;
+>  	struct regmap			*regmap_cec;
+> +	struct regmap			*regmap_ao_sysctrl;
+>  	spinlock_t			cec_reg_lock;
+>  	struct cec_notifier		*notify;
+>  	struct cec_adapter		*adap;
+> @@ -518,6 +532,13 @@ meson_ao_cec_g12a_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
+>  					 BIT(logical_addr - 8));
+>  	}
+>  
+> +	if (ao_cec->regmap_ao_sysctrl)
+> +		ret |= regmap_update_bits(ao_cec->regmap_ao_sysctrl,
+> +					 CECB_LOG_ADDR_REG,
+> +					 CECB_LOG_ADDR_MASK,
+> +					 FIELD_PREP(CECB_LOG_ADDR_MASK,
+> +						    logical_addr));
+> +
+>  	/* Always set Broadcast/Unregistered 15 address */
+>  	ret |= regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_HIGH,
+>  				  BIT(CEC_LOG_ADDR_UNREGISTERED - 8),
+> @@ -618,6 +639,13 @@ static int meson_ao_cec_g12a_adap_enable(struct cec_adapter *adap, bool enable)
+>  		regmap_write(ao_cec->regmap_cec, CECB_CTRL2,
+>  			     FIELD_PREP(CECB_CTRL2_RISE_DEL_MAX, 2));
+>  
+> +	if (ao_cec->regmap_ao_sysctrl) {
+> +		regmap_update_bits(ao_cec->regmap_ao_sysctrl,
+> +				   CECB_FUNC_CFG_REG,
+> +				   CECB_FUNC_CFG_MASK,
+> +				   CECB_FUNC_CFG_ALL);
 
-I am not sure we should mention "complexity" here. Although it is
-related to program size in the kernel commit you describe, the probe
-that is run is only on instruction number. This can make a difference
-for offloaded programs: When you probe a device, if kernel has commit
-c04c0d2b968a and supports up to 1M instructions, but hardware supports
-no more than 4k instructions, you may still benefit from the new value
-for BPF_COMPLEXITY_LIMIT_INSNS for complexity, but not for the total
-number of available instructions. In that case the probe will fail, and
-the message on complexity would not be accurate.
+What exactly is enabled here? Looking at CECB_FUNC_CFG_ALL it seems to
+enable automatic standby (I presume when the STANDBY message is received?)
+and power on (I presume when SET_STREAM_PATH is received?).
 
-Looks good otherwise, thanks Michal!
+Do you really want to automatically handle STANDBY that way? What does this
+do on the hardware level anyway? Isn't this something that should be
+controlled in userspace?
 
-Quentin
+Similar questions for power on: you may not always want to enable this feature
+since it depends very much on the precise use-case.
+
+And which messages it reacts to in order to do a power-on needs to be
+documented since this differs depending on whether the CEC adapter is
+used for a TV or for a playback device. This feature may be hardwired for
+a playback device only, in which case it should probably be disabled if
+the CEC adapter is configured as a TV.
+
+In any case I would like to see some more details about how this works,
+especially since this is the first implementation of such a feature.
+
+I suspect that some userspace API might be needed to get the right level
+of control of such a feature.
+
+Regards,
+
+	Hans
+
+> +	}
+> +
+>  	meson_ao_cec_g12a_irq_setup(ao_cec, true);
+>  
+>  	return 0;
+> @@ -685,6 +713,11 @@ static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
+>  		goto out_probe_adapter;
+>  	}
+>  
+> +	ao_cec->regmap_ao_sysctrl = syscon_regmap_lookup_by_phandle
+> +		(pdev->dev.of_node, "amlogic,ao-sysctrl");
+> +	if (IS_ERR(ao_cec->regmap_ao_sysctrl))
+> +		dev_warn(&pdev->dev, "ao-sysctrl syscon regmap lookup failed.\n");
+> +
+>  	irq = platform_get_irq(pdev, 0);
+>  	ret = devm_request_threaded_irq(&pdev->dev, irq,
+>  					meson_ao_cec_g12a_irq,
+> 
+
