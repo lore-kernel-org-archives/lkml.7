@@ -2,54 +2,51 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139AFC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78AC206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCE2206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432363;
-	bh=mEpZI1AiW0OMmKj9mQE/MPrwrVxuZ+BRFKNfORLLlEA=;
+	s=default; t=1578432368;
+	bh=E30sFues24HlCjY1fOZNux+zdrKpYpbad432urrigyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2TmXXWx9BApbDI0eqyghjoz0ZqLJ5bd+oeKF/E0H0UOebTjNE8oIyaN/rvnCLDm5
-	 71NAvx/uzLWtCn+d2aj2nvVjjUNOnUOe9QF8i/ztYGNWnMum1jSIP+WOCpXDgzxU1u
-	 WLHlonNz/svGBuUVc2F4tXyDXGn0wrOhca04x2dQ=
+	b=qIKhNZERlB/kT3o2bcUre63l+Rl2D9qHLuR/qkIMb4CJSi0fH93SG2lUzGuTlySRi
+	 na8WrnQ5eJytsGvkAJHpbP4dGnqFBSp9gEqblcEk1I96hrPSfyoHDbj/4pCgiaPA6y
+	 SI8jrYjLyqywqZH0NukjerfzuqpFCYnjEvBoZdxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgAGV0D (ORCPT
+        id S1728099AbgAGU7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:26:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbgAGU7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:21 -0500
+        id S1728085AbgAGU7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80E72087F;
-        Tue,  7 Jan 2020 20:59:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F02DB214D8;
+        Tue,  7 Jan 2020 20:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430761;
-        bh=mEpZI1AiW0OMmKj9mQE/MPrwrVxuZ+BRFKNfORLLlEA=;
+        s=default; t=1578430751;
+        bh=E30sFues24HlCjY1fOZNux+zdrKpYpbad432urrigyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XfRjxp/zFiy+DSfIcKUtQ8Nt/tDDKm9uk5BYQk0Q1YooT0qj6MZUWzvLEiVj19p8D
-         8xBvi4AW81FvTSfHlRp8BDCscdD7DJl2BQKfcVfzYps114yhZU3OQKhOZJyL1roGv+
-         IFJArtdKrA1bYkGzEK0e+2sIyMl/D5cStIL+6BEo=
+        b=X0L3LptXFjBlPUvgYtBpMv1LwT+rhA/NrmG0H/ScOx2DXdZKnAyN4JxQx9QOAhDHr
+         zQNlSkfpUrYTyH4mU/WP+L3hhEiZ0R/F9SkuurIRRL3glSW0SBhik2VIiCkUtx4pZ6
+         aZlzxIrj+Fblqtx3L2R0t0YnK0/KvBxw3bxAcsFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/191] IB/mlx5: Fix steering rule of drop and count
-Date:   Tue,  7 Jan 2020 21:52:49 +0100
-Message-Id: <20200107205335.619488990@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 080/191] media: cec: CEC 2.0-only bcast messages were ignored
+Date:   Tue,  7 Jan 2020 21:53:20 +0100
+Message-Id: <20200107205337.264248888@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,65 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit ed9085fed9d95d5921582e3c8474f3736c5d2782 ]
+commit cec935ce69fc386f13959578deb40963ebbb85c3 upstream.
 
-There are two flow rule destinations: QP and packet. While users are
-setting DROP packet rule, the QP should not be set as a destination.
+Some messages are allowed to be a broadcast message in CEC 2.0
+only, and should be ignored by CEC 1.4 devices.
 
-Fixes: 3b3233fbf02e ("IB/mlx5: Add flow counters binding support")
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Reviewed-by: Raed Salem <raeds@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-4-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Unfortunately, the check was wrong, causing such messages to be
+marked as invalid under CEC 2.0.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: <stable@vger.kernel.org>      # for v4.10 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/mlx5/main.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/media/cec/cec-adap.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index 831539419c30..e1cfbedefcbc 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -3548,10 +3548,6 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1083,11 +1083,11 @@ void cec_received_msg_ts(struct cec_adap
+ 			valid_la = false;
+ 		else if (!cec_msg_is_broadcast(msg) && !(dir_fl & DIRECTED))
+ 			valid_la = false;
+-		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST1_4))
++		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST))
+ 			valid_la = false;
+ 		else if (cec_msg_is_broadcast(msg) &&
+-			 adap->log_addrs.cec_version >= CEC_OP_CEC_VERSION_2_0 &&
+-			 !(dir_fl & BCAST2_0))
++			 adap->log_addrs.cec_version < CEC_OP_CEC_VERSION_2_0 &&
++			 !(dir_fl & BCAST1_4))
+ 			valid_la = false;
  	}
- 
- 	INIT_LIST_HEAD(&handler->list);
--	if (dst) {
--		memcpy(&dest_arr[0], dst, sizeof(*dst));
--		dest_num++;
--	}
- 
- 	for (spec_index = 0; spec_index < flow_attr->num_of_specs; spec_index++) {
- 		err = parse_flow_attr(dev->mdev, spec,
-@@ -3564,6 +3560,11 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
- 		ib_flow += ((union ib_flow_spec *)ib_flow)->size;
- 	}
- 
-+	if (dst && !(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP)) {
-+		memcpy(&dest_arr[0], dst, sizeof(*dst));
-+		dest_num++;
-+	}
-+
- 	if (!flow_is_multicast_only(flow_attr))
- 		set_underlay_qp(dev, spec, underlay_qpn);
- 
-@@ -3604,10 +3605,8 @@ static struct mlx5_ib_flow_handler *_create_flow_rule(struct mlx5_ib_dev *dev,
- 	}
- 
- 	if (flow_act.action & MLX5_FLOW_CONTEXT_ACTION_DROP) {
--		if (!(flow_act.action & MLX5_FLOW_CONTEXT_ACTION_COUNT)) {
-+		if (!dest_num)
- 			rule_dst = NULL;
--			dest_num = 0;
--		}
- 	} else {
- 		if (is_egress)
- 			flow_act.action |= MLX5_FLOW_CONTEXT_ACTION_ALLOW;
--- 
-2.20.1
-
+ 	if (valid_la && min_len) {
 
 
