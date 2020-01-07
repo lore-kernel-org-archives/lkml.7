@@ -2,151 +2,153 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43113C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8D4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109D92077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WUm+TZCI"
+	by mail.kernel.org (Postfix) with ESMTP id 5D3812077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578398076;
+	bh=LG9GWn1UIGQLR+qKemGWAcOKJ9HdvHweCAvo8fplpts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pwKvJywkzhuHWqS+0Ftg68yIWUvqF3JItiEVkLOiesSTJ2pGlR6/SShkh46bu6iUs
+	 rV6Q7+NlTkf7POo+6Y85s8DoeCvEUHj1iZ7UCCgZhW1Xvwm5662cBDCPnsVH7ts4yQ
+	 PYOjODqOe/+CGEz16NY/ezKBnQG6FWAF91972FtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgAGLwp (ORCPT
+        id S1728005AbgAGLyf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:52:45 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:8834 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgAGLwo (ORCPT
+        Tue, 7 Jan 2020 06:54:35 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44991 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgAGLye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:52:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578397965; x=1609933965;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=M87RnN37XgwXCD+GEsg/u8hPt4iEW8Ew/QPEy5zhFjc=;
-  b=WUm+TZCIN8JyIo+4P1Wg/Q8pD46hMvNdHThqLY0Na62VWJVy2aR+hBTR
-   tCnA4/lRCWSNH+B1gtO0yNUm7V9CkF8ZwozQeaqTpjqzCHCBitQ1s8QWP
-   6AjaRbZu4SDYGYlXRzyevVKOkbMTsHpc0IcMROeEuB+FI/5oZlfgJTbRS
-   c=;
-IronPort-SDR: 9QW/w+s9Ty8UIMq8ZXzz9RtmmatTtG46bWiI0BW3qfPCmLMb8lsJBYJTfSKsyz+Ts+Ge3lJETh
- vKyf0SJ9FXSw==
-X-IronPort-AV: E=Sophos;i="5.69,406,1571702400"; 
-   d="scan'208";a="10389039"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 07 Jan 2020 11:52:43 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 0609FA1F9C;
-        Tue,  7 Jan 2020 11:52:41 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 7 Jan 2020 11:52:41 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.119) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 7 Jan 2020 11:52:37 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-CC:     SeongJae Park <sjpark@amazon.com>, <brendanhiggins@google.com>,
-        <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>, SeongJae Park <sj38.park@gmail.com>
-Subject: Re: Re: What is the best way to compare an unsigned and a constant?
-Date:   Tue, 7 Jan 2020 12:52:20 +0100
-Message-ID: <20200107115220.25574-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jan 2020 06:54:34 -0500
+Received: by mail-ed1-f67.google.com with SMTP id bx28so50083392edb.11;
+        Tue, 07 Jan 2020 03:54:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/Gn0sKgSVl88I9a03JnH76quh+NEJOSZxLuBtN1E4nM=;
+        b=hjmrMruxWKayIIiKpd6opxDDDTRSn6ZzPPS0R1eflAMdqPfKJh6hdHokzvSks5n6RN
+         2fOx38+VMKrauHVc1pfL8NcwzAFjKR3pA4dOMqZE5IiTCBx1Df1BSsyE5w+28VOBL/uv
+         de+TVd71tExYz4GlYIpSYoEHJmdq2FcCMHxIe+45VxW1Yq6Qy+Bp4/UL9ziWIwIDZR1H
+         q8lSPJzJ0/fqtLMVX25yc2SU8NU3JXFDHVGb45utfpaUqLnJmtSqfkNUj/j8dzngQzVb
+         Z0+fDLz0rZS2tUeBklswCtVSs1v3bdlfSOffLt7PhFq1jmOC1HX7iQ5HmH0tZTAU9Eoz
+         p8ZA==
+X-Gm-Message-State: APjAAAUv1hNxNGQBG4mBWia4pGMD935zUR4o09RjDXFjDdh4Pjj058aL
+        w/egO9pAabpKazrtXbxugpA=
+X-Google-Smtp-Source: APXvYqx1yeqLv4KsAcheDnbCECVEgnRO87Tbb4/fx7f3mlExaDwzc4evn6w18FnCcsfNgAflvXHFmw==
+X-Received: by 2002:aa7:cf81:: with SMTP id z1mr114422714edx.157.1578398072576;
+        Tue, 07 Jan 2020 03:54:32 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id cw15sm7677487edb.44.2020.01.07.03.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 03:54:31 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:54:29 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
+        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Message-ID: <20200107115429.GA32632@pi3>
+References: <20191230172113.17222-1-krzk@kernel.org>
+ <20191230172113.17222-2-krzk@kernel.org>
+ <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
+ <20200107082539.GA31827@pi3>
+ <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+ <20200107110359.GA32423@pi3>
+ <20200107113354.ggq6zarewq5ip354@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <688d8f4b-266f-2c47-d4e9-d0336316a0a9@petrovitsch.priv.at>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.162.119]
-X-ClientProxiedBy: EX13D33UWB004.ant.amazon.com (10.43.161.225) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200107113354.ggq6zarewq5ip354@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On   Fri, 27 Dec 2019 13:52:27 +0100   Bernd Petrovitsch <bernd@petrovitsch.priv.at> wrote:
-
-> This is a multi-part message in MIME format.
-> --------------D98A0A31D62B0BC2939BAEE9
-> Content-Type: text/plain; charset=utf-8
-> Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 07, 2020 at 12:33:54PM +0100, Uwe Kleine-König wrote:
+> On Tue, Jan 07, 2020 at 12:03:59PM +0100, Krzysztof Kozlowski wrote:
+> > On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-König wrote:
+> > > > I guess other solution would be to add stubs for few clk functions...
+> > > > 
+> > > > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
+> > > > > config (which does't have HAS_IOMEM) and they all compile fine.
+> > > > 
+> > > > Because of !HAS_IOMEM, since some time ARCH=um does not support
+> > > > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
+> > > > testing (and for regular build it is selected by ARCH).
+> > > 
+> > > Hehe, I didn't notice because for testing I just dropped the "depends on
+> > > ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
+> > > compile fine on UML.
+> > > 
+> > > Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
+> > > !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
+> > > later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
+> > > == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
+> > > revert bc083a64b6c0 today? (And if not, a comment about why near the
+> > > "depends on !UML" in init/Kconfig would be great.)
+> > > 
+> > > Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
+> > > though the compile testers won't notice it missing. Or should HAS_IOMEM
+> > > be dropped?
+> > 
+> > I think yes, it can be dropped, but this would require:
+> > 1. Fixing any dependencies on HAS_IOMEM, e.g.:
+> >     WARNING: unmet direct dependencies detected for MFD_SYSCON
+> >       Depends on [n]: HAS_IOMEM [=n]
+> >       Selected by [y]:
+> >       - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
 > 
-> Hi all!
-> 
-> On 27/12/2019 13:39, SeongJae Park wrote:
-> [...]
-> > I have a function returning 'unsigned long', and would like to write a =
-> kunit
-> > test for the function, as below.
-> >=20
-> >     unsigned long foo(void)
-> >     {
-> >     	return 42;
-> >     }
-> >=20
-> >     static void foo_test(struct kunit *test)
-> >     {
-> >         KUNIT_EXPECT_EQ(test, 42, foo());
-> >     }
-> 
-> For this case: shouldn't=20
-> ----  snip  ----
-> static void foo_test(struct kunit *test)
-> {
->      KUNIT_EXPECT_EQ(test, 42ul, foo());
-> }
-> ----  snip  ----
-> do the trick?
+> I don't understand that warning. What did you modify to trigger that?
+> Probably related to the big "if HAS_IOMEM" in drivers/mfd/Kconfig?!
 
-Unfortunately, it doesn't works.
+OK, that's actually from my other patch to illustrate the problem:
+https://lore.kernel.org/linux-arm-kernel/20200103164710.4829-2-krzk@kernel.org/
 
-    [13:04:58] Building KUnit Kernel ...
-    In file included from /.../linux/include/linux/list.h:9:0,
-                     from /.../linux/include/linux/wait.h:7,
-                     from /.../linux/include/linux/wait_bit.h:8,
-                     from /.../linux/include/linux/fs.h:6,
-                     from /.../linux/include/linux/debugfs.h:15,
-                     from /.../linux/mm/damon.c:12:
-    /.../linux/mm/damon-test.h: In function ‘damon_test_foo’:
-    /.../linux/include/linux/kernel.h:842:29: warning: comparison of distinct pointer types lacks a cast
-       (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-                                 ^
-    /.../linux/include/kunit/test.h:493:9: note: in expansion of macro ‘__typecheck’
-      ((void)__typecheck(__left, __right));           \
-             ^~~~~~~~~~~
-    /.../linux/include/kunit/test.h:517:2: note: in expansion of macro ‘KUNIT_BASE_BINARY_ASSERTION’
-      KUNIT_BASE_BINARY_ASSERTION(test,           \
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    /.../linux/include/kunit/test.h:606:2: note: in expansion of macro ‘KUNIT_BASE_EQ_MSG_ASSERTION’
-      KUNIT_BASE_EQ_MSG_ASSERTION(test,           \
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-    /.../linux/include/kunit/test.h:616:2: note: in expansion of macro ‘KUNIT_BINARY_EQ_MSG_ASSERTION’
-      KUNIT_BINARY_EQ_MSG_ASSERTION(test,           \
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    /.../linux/include/kunit/test.h:979:2: note: in expansion of macro ‘KUNIT_BINARY_EQ_ASSERTION’
-      KUNIT_BINARY_EQ_ASSERTION(test, KUNIT_EXPECTATION, left, right)
-      ^~~~~~~~~~~~~~~~~~~~~~~~~
-    /.../linux/mm/damon-test.h:565:2: note: in expansion of macro ‘KUNIT_EXPECT_EQ’
-      KUNIT_EXPECT_EQ(test, 42ul, (int)foo());
-      ^~~~~~~~~~~~~~~
-
-Some other thoughts?
-
-
-Thanks,
-SeongJae Park
-
+After reverting of bc083a64b6c0, every driver that selects MFD_SYSCON
+(or some other parts) has to depend on HAS_IOMEM.
 
 > 
-> MfG,
-> 	Bernd
-> --=20
-> "I dislike type abstraction if it has no real reason. And saving
-> on typing is not a good reason - if your typing speed is the main
-> issue when you're coding, you're doing something seriously wrong."
->     - Linus Torvalds
+> > 2. Checking if all of stubs are implemented (not only IOMEM but maybe
+> >    DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
+> >    need devm_ioremap_resource() and others.
+> 
+> A problem is that it's unclear (to me at least) what the presence of
+> HAS_IOMEM actually implies. I thought it's about ioremap + readl +
+> writel (including their respective variants). Does it really include dma
+> stuff, too?
+> 
+> > Quick test shows mentioned "unmet direct dependencies" and:
+> >     phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
+> >     dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
+> 
+> dma_pgprot seems to depend on HAS_DMA though, not HAS_IOMEM.
+> 
+> (Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
+> NO_DMA has three different definitions. Two of them (in
+> drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
+> unrelated.)
+
+Yes, HAS_DMA is the second missing piece for UM.
+
+Best regards,
+Krzysztof
+
