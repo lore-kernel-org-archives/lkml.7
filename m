@@ -2,112 +2,105 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FCDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ECC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A88920656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CDA20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7PiWz1d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szuMX3AM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgAGScy (ORCPT
+        id S1728570AbgAGSc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:32:54 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36484 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgAGScy (ORCPT
+        Tue, 7 Jan 2020 13:32:59 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36054 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727925AbgAGSc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:32:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so585775wru.3;
-        Tue, 07 Jan 2020 10:32:52 -0800 (PST)
+        Tue, 7 Jan 2020 13:32:58 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so624912ljg.3;
+        Tue, 07 Jan 2020 10:32:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=9rUb//wruX/PB3VMyS1Pm9EFxT4vC3jruLB5BaMw4AA=;
-        b=U7PiWz1dhOity7JtewGh+kA6b171KSeF+f4TsOl/3aGPyTrcklmpup9Mjb1QYAkXyE
-         9NmZjBrof9L/C8Fee0ak6XXBT7eC30C2k8LT6Spvpcd12gwaSMgkkIKBy9K4r7yLarDK
-         HF0CS2ZJF27yzhZ4NMP3gEirELZ5sptnvhYDZno5E5GHG5qD9Cq+bc2Fprt+zrAMtuzi
-         mpUZP3/7ZQ1q5SzFxdEdJC/lN0jzBQpZnoXT0uC/0pLeOzZLHsfHO+jRdeAB9aDcIl0J
-         5QSJyQeB4ef1tiV8ctw3Z6llBjPNUpqDguRf3J4cM72I3SiX1GTtVLo3o/7RMJcoe/K9
-         1CPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
+        b=szuMX3AMHYI0gSMY6RihsVSowNacVcfSjmGJO7Syk9LEwBnI+H7cvhmHchoj6oPnpf
+         CQgUt6FfdHpM9YDs9NRCCuvW2lMoxK8IfABvzZg2oAiIVrSeo8yp1de76qAwMtpnd3jo
+         KaAhWqFzKl8W65Ih9gTzURdlbNYLjD6YZvZ+odOSnsTzz9MURnl4L9DPAZrV+U8nTs7Z
+         HlH6YSQMlCDQEVt6lbIkSHxSiUHBI4PTZKt0jROYhjeLpny38tsMc1JVRvxWWWhx8oiF
+         oE8UUJnja9w5sFmrmhZ/FtRNuGJMcWzOu8XvHG4zqrRNZCDoFTDshhJ4CZwndmt6lgZz
+         7sNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=9rUb//wruX/PB3VMyS1Pm9EFxT4vC3jruLB5BaMw4AA=;
-        b=A3vbsyoYBsTlLEeFWx9ezVo1iIiBQJ675GChex/Yw0WvoQbHFBPWo/t4j91d8J1mWW
-         xtM7gR2W1ML8XuwGc1XxiWq/j7+LdDk82WADTVr6uwzQx69vPJJj08IqSzxkhMF3woA8
-         v+i2DQsUA8+G2SeHOXVRL2IvobUbLWqADN4xMb7gcU4hTOKzthvnAg2J4w3UcRrfjpGq
-         6BStENIQXLqWJ7YbEYa2xsmmCYrif5Rk7HLdLoqcHVQoaM0239Vyh11H/xeZCi/Jn5fU
-         fNs6Y4muNw6ltKHRX7YzV0UxGm+3hpd+Xd7VNLBRVHZIdayp7TKmliPa36pFqwYxwYbj
-         l+NA==
-X-Gm-Message-State: APjAAAUlNVg1PdrytCTl4iS+C30IBlO4A1dyKSD9l/9VQCN6xJgigIsp
-        quEnHnNCR4AlZgpCAdZPWAh0hLQI
-X-Google-Smtp-Source: APXvYqyyGK9YIuqCIQZXVWfTT0UHxgqa4A6ZbpvORQgkIz5E4dv6EIaXr340vnSbordut5Y5FhEXSg==
-X-Received: by 2002:a5d:4651:: with SMTP id j17mr420989wrs.237.1578421971891;
-        Tue, 07 Jan 2020 10:32:51 -0800 (PST)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id i5sm532246wml.31.2020.01.07.10.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 10:32:51 -0800 (PST)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1iotes-0003GA-Gq; Tue, 07 Jan 2020 19:32:50 +0100
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
-References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
-        <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
-Date:   Tue, 07 Jan 2020 19:32:50 +0100
-In-Reply-To: <20200107174748.9616-5-wsa+renesas@sang-engineering.com> (Wolfram
-        Sang's message of "Tue, 7 Jan 2020 18:47:38 +0100")
-Message-ID: <87muazjewd.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
+        b=IfkHpe5d4tivewWodnZ+xSK4bd0I39XfEI/iu2xlGtXiVGR8BeLir77ymdfKzlFjH9
+         kaYzarWvHYnkPxCGHUuCFA7lX/NhrpSwvcw9uu2SPpCYOnpIuwklCwNARuCURgwoImcm
+         ru/sYYHXsmPgsCPDnhl4LM2sOLlIgxdwX6WZNfu5aIvf/V6spkI2xKRrmSjVbcM9cBD3
+         fBhRjHc1uWMuoKF6v1wMU3fpe2JdPvgzO/7kMzSBzeOFCrOeMALwuwB8oynMSdEfMri3
+         8R7CKybDMA/DdJR03t0Bmi6jbbwH2wJauznhAi2/g8F0QUbsgM4mowZx5RhxL6zXHtMe
+         El4w==
+X-Gm-Message-State: APjAAAXK8YE3SV1weHjp2obpxUY8tNDHuSgH0YgwR4RjV4t87AITZP+I
+        TYoddXNKdSbxZ5rLpbyk0/b4iZB58NEtNQb1FVk=
+X-Google-Smtp-Source: APXvYqymzxa0E0fR2E3OuAmc/FP9tlpw0cmDmDeoe9mooWQr78VIdEE1uYFCuSRmYe08wrAPc9giPkKWA8L17KRVvGg=
+X-Received: by 2002:a05:651c:1b0:: with SMTP id c16mr510355ljn.236.1578421976485;
+ Tue, 07 Jan 2020 10:32:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200106130909.7697-1-matwey@sai.msu.ru> <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
+ <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com> <20200106210509.GF5885@atomide.com>
+In-Reply-To: <20200106210509.GF5885@atomide.com>
+From:   Robert Nelson <robertcnelson@gmail.com>
+Date:   Tue, 7 Jan 2020 12:32:30 -0600
+Message-ID: <CAOCHtYhKUyUwunnWDT1CuRTpzS78d7xKq3qB3Phys7RgUZnM3w@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Wolfram" == Wolfram Sang <wsa+renesas@sang-engineering.com> writes:
+On Mon, Jan 6, 2020 at 3:05 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Matwey V. Kornilov <matwey@sai.msu.ru> [200106 20:48]:
+> > =D0=BF=D0=BD, 6 =D1=8F=D0=BD=D0=B2. 2020 =D0=B3. =D0=B2 23:44, Robert N=
+elson <robertcnelson@gmail.com>:
+> > >
+> > > On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru>=
+ wrote:
+> > > >
+> > > > BeagleBone Black series is equipped with 512MB RAM
+> > > > whereas only 256MB is included from am335x-bone-common.dtsi
+> > >
+> > > FYI: While all versions from the factory are 512MB, some 3rd parties
+> > > offered 1GB reballing upgrades..
+>
+> So what's the conclusion, is it safe to bump the default size to
+> 512MB then?
+>
+> The custom ones could use their own dts file if bootloader is not
+> setting the RAM.
 
- > Move away from the deprecated API and return the shiny new ERRPTR where
- > useful.
+Yeah this is safe for factory devices. Classic u-boot will update
+these for modified boards.
 
- > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Regards,
 
-I didn't follow the discussion, but I don't see any returns anywhere?
-
- > ---
- > Build tested only.
-
- >  drivers/i2c/busses/i2c-ocores.c | 2 +-
- >  1 file changed, 1 insertion(+), 1 deletion(-)
-
- > diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
- > index ca8b3ecfa93d..f5fc75b65a19 100644
- > --- a/drivers/i2c/busses/i2c-ocores.c
- > +++ b/drivers/i2c/busses/i2c-ocores.c
- > @@ -731,7 +731,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- >  	/* add in known devices to the bus */
- >  	if (pdata) {
- >  		for (i = 0; i < pdata->num_devices; i++)
- > -			i2c_new_device(&i2c->adap, pdata->devices + i);
- > +			i2c_new_client_device(&i2c->adap, pdata->devices + i);
- >  	}
- 
- >  	return 0;
- > -- 
- > 2.20.1
-
-
--- 
-Bye, Peter Korsgaard
+--=20
+Robert Nelson
+https://rcn-ee.com/
