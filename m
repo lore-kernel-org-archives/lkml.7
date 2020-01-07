@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C1BC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D201C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAA82081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D5324687
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430973;
-	bh=1a5Am+0DuicoHd6cT3vikU7FMTorCVrELcOBdwMCiF4=;
+	s=default; t=1578430977;
+	bh=luUGalveanDCV/qbatlB0rGynxQA+f3mN+O9TS4UBIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WsywTW9bGI6K0wbbUk3wwVqB+LMPpFFYICFalB8uxib3EZ20eZDsMyR8GXQVQ818k
-	 klQIhP2b9MOsaCpNDhtUkgRCexPzVdxxir+aP7Cv5jM56hx9xRMZS4OKAoI2UIWghx
-	 YYKMiFQG8gHHkcTXPPuq/yfZtvJaGKf3zmyyd/UI=
+	b=1FbP7K2+CFKFnE1zpHWG+/KBZSzg4BKHt9ALsII2sBYgyiR828/18b0RlPaRAzrOW
+	 dwifXUA6eIfuFVqgpfB9EDRuA39nF9xV+E72HJCLmEBaJtueHHUO5CJxIcOIaTahWP
+	 Ra1hcUhVmPVItFxL36P1MYYZK2/6vvgcx80gEKP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAGVCx (ORCPT
+        id S1728836AbgAGVCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43086 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbgAGVCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:45 -0500
+        id S1728818AbgAGVCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18B5220880;
-        Tue,  7 Jan 2020 21:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB25524656;
+        Tue,  7 Jan 2020 21:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430964;
-        bh=1a5Am+0DuicoHd6cT3vikU7FMTorCVrELcOBdwMCiF4=;
+        s=default; t=1578430969;
+        bh=luUGalveanDCV/qbatlB0rGynxQA+f3mN+O9TS4UBIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMl3TScxeykOvTHRymdMqywpncsxmVo3XP4DN3CTJ3jU/KhJYGOhOQxVKhQiNggVw
-         4i5HJKZWUpVN5Fmu0av/fy5fQIyyXXo4Mq1vy8W5mPZzz1m4laFqht3OOfI282i2NR
-         QWm6qK2KzY9QDn9zWPoXHxUvXlUYXKRsu+EoiyQA=
+        b=ecv8jBvoKPNAEc2HAOhIw0fme6hoSzwT+ZaoXwLSHCycWcQwb2J/S0fh94e6rYXzf
+         IhtO/wJB5oWe+AQByXZkYa7cYKYyjY24isMbET8r7kRcIlLj2GlHGW/QrdPdrf5cO1
+         eGlzFwoorMLUIsnVUK/TA5nV/J5lHIShLYGOCGfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 5.4 122/191] apparmor: fix aa_xattrs_match() may sleep while holding a RCU lock
-Date:   Tue,  7 Jan 2020 21:54:02 +0100
-Message-Id: <20200107205339.510023622@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 172/191] fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
+Date:   Tue,  7 Jan 2020 21:54:52 +0100
+Message-Id: <20200107205342.206023405@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,207 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Johansen <john.johansen@canonical.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 8c62ed27a12c00e3db1c9f04bc0f272bdbb06734 upstream.
+commit 6b2daec19094a90435abe67d16fb43b1a5527254 upstream.
 
-aa_xattrs_match() is unfortunately calling vfs_getxattr_alloc() from a
-context protected by an rcu_read_lock. This can not be done as
-vfs_getxattr_alloc() may sleep regardles of the gfp_t value being
-passed to it.
+Unlike FICLONE, all of those take a pointer argument; they do need
+compat_ptr() applied to arg.
 
-Fix this by breaking the rcu_read_lock on the policy search when the
-xattr match feature is requested and restarting the search if a policy
-changes occur.
-
-Fixes: 8e51f9087f40 ("apparmor: Add support for attaching profiles via xattr, presence and value")
-Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Fixes: d79bdd52d8be ("vfs: wire up compat ioctl for CLONE/CLONE_RANGE")
+Fixes: 54dbc1517237 ("vfs: hoist the btrfs deduplication ioctl to the vfs")
+Fixes: ceac204e1da9 ("fs: make fiemap work from compat_ioctl")
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/apparmor/apparmorfs.c |    2 -
- security/apparmor/domain.c     |   80 +++++++++++++++++++++--------------------
- security/apparmor/policy.c     |    4 +-
- 3 files changed, 45 insertions(+), 41 deletions(-)
+ fs/compat_ioctl.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -593,7 +593,7 @@ static __poll_t ns_revision_poll(struct
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -1032,10 +1032,11 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned i
+ #endif
  
- void __aa_bump_ns_revision(struct aa_ns *ns)
- {
--	ns->revision++;
-+	WRITE_ONCE(ns->revision, ns->revision + 1);
- 	wake_up_interruptible(&ns->wait);
- }
+ 	case FICLONE:
++		goto do_ioctl;
+ 	case FICLONERANGE:
+ 	case FIDEDUPERANGE:
+ 	case FS_IOC_FIEMAP:
+-		goto do_ioctl;
++		goto found_handler;
  
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -317,6 +317,7 @@ static int aa_xattrs_match(const struct
- 
- 	if (!bprm || !profile->xattr_count)
- 		return 0;
-+	might_sleep();
- 
- 	/* transition from exec match to xattr set */
- 	state = aa_dfa_null_transition(profile->xmatch, state);
-@@ -361,10 +362,11 @@ out:
- }
- 
- /**
-- * __attach_match_ - find an attachment match
-+ * find_attach - do attachment search for unconfined processes
-  * @bprm - binprm structure of transitioning task
-- * @name - to match against  (NOT NULL)
-+ * @ns: the current namespace  (NOT NULL)
-  * @head - profile list to walk  (NOT NULL)
-+ * @name - to match against  (NOT NULL)
-  * @info - info message if there was an error (NOT NULL)
-  *
-  * Do a linear search on the profiles in the list.  There is a matching
-@@ -374,12 +376,11 @@ out:
-  *
-  * Requires: @head not be shared or have appropriate locks held
-  *
-- * Returns: profile or NULL if no match found
-+ * Returns: label or NULL if no match found
-  */
--static struct aa_profile *__attach_match(const struct linux_binprm *bprm,
--					 const char *name,
--					 struct list_head *head,
--					 const char **info)
-+static struct aa_label *find_attach(const struct linux_binprm *bprm,
-+				    struct aa_ns *ns, struct list_head *head,
-+				    const char *name, const char **info)
- {
- 	int candidate_len = 0, candidate_xattrs = 0;
- 	bool conflict = false;
-@@ -388,6 +389,8 @@ static struct aa_profile *__attach_match
- 	AA_BUG(!name);
- 	AA_BUG(!head);
- 
-+	rcu_read_lock();
-+restart:
- 	list_for_each_entry_rcu(profile, head, base.list) {
- 		if (profile->label.flags & FLAG_NULL &&
- 		    &profile->label == ns_unconfined(profile->ns))
-@@ -413,16 +416,32 @@ static struct aa_profile *__attach_match
- 			perm = dfa_user_allow(profile->xmatch, state);
- 			/* any accepting state means a valid match. */
- 			if (perm & MAY_EXEC) {
--				int ret;
-+				int ret = 0;
- 
- 				if (count < candidate_len)
- 					continue;
- 
--				ret = aa_xattrs_match(bprm, profile, state);
--				/* Fail matching if the xattrs don't match */
--				if (ret < 0)
--					continue;
-+				if (bprm && profile->xattr_count) {
-+					long rev = READ_ONCE(ns->revision);
- 
-+					if (!aa_get_profile_not0(profile))
-+						goto restart;
-+					rcu_read_unlock();
-+					ret = aa_xattrs_match(bprm, profile,
-+							      state);
-+					rcu_read_lock();
-+					aa_put_profile(profile);
-+					if (rev !=
-+					    READ_ONCE(ns->revision))
-+						/* policy changed */
-+						goto restart;
-+					/*
-+					 * Fail matching if the xattrs don't
-+					 * match
-+					 */
-+					if (ret < 0)
-+						continue;
-+				}
- 				/*
- 				 * TODO: allow for more flexible best match
- 				 *
-@@ -445,43 +464,28 @@ static struct aa_profile *__attach_match
- 				candidate_xattrs = ret;
- 				conflict = false;
- 			}
--		} else if (!strcmp(profile->base.name, name))
-+		} else if (!strcmp(profile->base.name, name)) {
- 			/*
- 			 * old exact non-re match, without conditionals such
- 			 * as xattrs. no more searching required
- 			 */
--			return profile;
-+			candidate = profile;
-+			goto out;
-+		}
- 	}
- 
--	if (conflict) {
--		*info = "conflicting profile attachments";
-+	if (!candidate || conflict) {
-+		if (conflict)
-+			*info = "conflicting profile attachments";
-+		rcu_read_unlock();
- 		return NULL;
- 	}
- 
--	return candidate;
--}
--
--/**
-- * find_attach - do attachment search for unconfined processes
-- * @bprm - binprm structure of transitioning task
-- * @ns: the current namespace  (NOT NULL)
-- * @list: list to search  (NOT NULL)
-- * @name: the executable name to match against  (NOT NULL)
-- * @info: info message if there was an error
-- *
-- * Returns: label or NULL if no match found
-- */
--static struct aa_label *find_attach(const struct linux_binprm *bprm,
--				    struct aa_ns *ns, struct list_head *list,
--				    const char *name, const char **info)
--{
--	struct aa_profile *profile;
--
--	rcu_read_lock();
--	profile = aa_get_profile(__attach_match(bprm, name, list, info));
-+out:
-+	candidate = aa_get_newest_profile(candidate);
- 	rcu_read_unlock();
- 
--	return profile ? &profile->label : NULL;
-+	return &candidate->label;
- }
- 
- static const char *next_name(int xtype, const char *name)
---- a/security/apparmor/policy.c
-+++ b/security/apparmor/policy.c
-@@ -1124,8 +1124,8 @@ ssize_t aa_remove_profiles(struct aa_ns
- 	if (!name) {
- 		/* remove namespace - can only happen if fqname[0] == ':' */
- 		mutex_lock_nested(&ns->parent->lock, ns->level);
--		__aa_remove_ns(ns);
- 		__aa_bump_ns_revision(ns);
-+		__aa_remove_ns(ns);
- 		mutex_unlock(&ns->parent->lock);
- 	} else {
- 		/* remove profile */
-@@ -1137,9 +1137,9 @@ ssize_t aa_remove_profiles(struct aa_ns
- 			goto fail_ns_lock;
- 		}
- 		name = profile->base.hname;
-+		__aa_bump_ns_revision(ns);
- 		__remove_profile(profile);
- 		__aa_labelset_update_subtree(ns);
--		__aa_bump_ns_revision(ns);
- 		mutex_unlock(&ns->lock);
- 	}
- 
+ 	case FIBMAP:
+ 	case FIGETBSZ:
 
 
