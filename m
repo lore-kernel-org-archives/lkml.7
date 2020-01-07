@@ -2,102 +2,168 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C23C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405EEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039A72087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150652087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UTt5Y2pK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C3P65o55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgAGRte (ORCPT
+        id S1728605AbgAGRti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:49:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25570 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728391AbgAGRtd (ORCPT
+        Tue, 7 Jan 2020 12:49:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39949 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgAGRth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:49:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578419372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=X+zqo0NbHh5cbkQHmKFsPVtgZKvFsxqLBaaKTc1KGTI=;
-        b=UTt5Y2pKK5G8ShW6amUmHulXjbU8/Rg1nloKe9kJbkrcLzDCGM5rNpeBSX+BHquwhjxGYY
-        r8odEF4PU317VnEX5FNj2rf4UsQDppDEWWjqGxO9MuIVwaE7Ni5ncMP+Pd2c7bOkbNbkXt
-        bI/79LlsNn2y8lq1uioVrN5VGk7q/Wg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-KEbdmgX_N8WQZT4ApkC5rA-1; Tue, 07 Jan 2020 12:49:28 -0500
-X-MC-Unique: KEbdmgX_N8WQZT4ApkC5rA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59FD18024E9;
-        Tue,  7 Jan 2020 17:49:27 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5C367DB5D;
-        Tue,  7 Jan 2020 17:49:23 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 7 Jan 2020 12:49:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so388824wrn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uyvuS2G9MB9Tvq9pni2gKNsuJduIchYAcY94iemGDHk=;
+        b=C3P65o55D+SQxxN6mGKZo2HFJ4tjidCXpgNJDyVr+teyCUgHLA/oplEcHIvlFBb7Se
+         GJYJOEPFDLCZpCThR12FScKuecIuQ5bHwfgVDwdIZsF2pB/TLPpqFCH3gm1hJ+Dt3u4Z
+         rNOH1aRZvB+2wrLM/4TuQzAS8xfGkkRDqWOQ305+FYFU8ckBrQt5jRV8s+var7Bh6e+n
+         0LCwOZYmzj7QNEJw7wyGJSeyXrz7sh0qABAGVmyFDUjkuPkJOocS78vu+NVHD32dRRbO
+         kiVYDdRYm68fFOAehcFimn9Ia23jgmYcV51F7qCCdVuW99cjr3OQd0hEyc5WdRpmw1/r
+         /L8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uyvuS2G9MB9Tvq9pni2gKNsuJduIchYAcY94iemGDHk=;
+        b=dld5zPoUZETQUocTu+IqtkUS4jEANhqpDVQqE7UL8U21PoAPLcfnc+RLeuXqyGVODC
+         HwZzNREXvtr8HmUgZLlkZe2c+CP/WfJ0MrlwSFPllh1FihLkWba4ak8f4FBs4uWnssXp
+         jPYzX9XqrO23ZMuyoT6muDKJcX1TqCxrTQBVdZDKo0aAFlcljznVuvL/xzAkiaxqfU+k
+         ZZf9rByis6SzgYRb9XWnz4DJ2A9ScXRrS2U9z0LmCnPXHbx1zSHTm90dQJoJfghN0jOi
+         vYiRRX/MlegXYSDplW2i6t2eAnEvGzR4wUVKa7tUseqqr2/F/kAqvDBuZ5XWNbWmo3iO
+         bpuw==
+X-Gm-Message-State: APjAAAWPUiaMHlikB5HXrgMZIGtaAldvZTeyBhzR6LFC0NmhXwtpnI0a
+        tWWaVtf/H5mO8gwGsXoXhltlxjm6RFfZb5QcOjw+bA==
+X-Google-Smtp-Source: APXvYqzEg4Y9DhPujMpKhGLLLqlbDKR8EPZU2K7/XBHana0VXM+EZ4387AqIUMuB3nsMMom8jmSfjK00QqU5fLyPh4w=
+X-Received: by 2002:a5d:6652:: with SMTP id f18mr275382wrw.246.1578419375184;
+ Tue, 07 Jan 2020 09:49:35 -0800 (PST)
+MIME-Version: 1.0
+References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157835763783.1456824.4013634516855823659.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200107035824.GA19080@dhcp-128-65.nay.redhat.com> <CAPcyv4jbf2WR2ZU55564fORxKLf8tGH1XbYBpRfTvPouGWk2mg@mail.gmail.com>
+ <20200107051822.GB19080@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200107051822.GB19080@dhcp-128-65.nay.redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 7 Jan 2020 18:49:24 +0100
+Message-ID: <CAKv+Gu8hO5mTbFaqwh9OZOEm9r_e1_ob-pfq4yhH4wJG7yV8MQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] efi: Fix efi_memmap_alloc() leaks
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v3] locking/qspinlock: Fix inaccessible URL of MCS lock paper
-Date:   Tue,  7 Jan 2020 12:49:14 -0500
-Message-Id: <20200107174914.4187-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that the URL of the MCS lock paper listed in the source
-code is no longer accessible. I did got question about where the paper
-was. This patch updates the URL to BZ 206115 which contains a copy of
-the paper from
+On Tue, 7 Jan 2020 at 06:18, Dave Young <dyoung@redhat.com> wrote:
+>
+> On 01/06/20 at 08:24pm, Dan Williams wrote:
+> > On Mon, Jan 6, 2020 at 7:58 PM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > On 01/06/20 at 04:40pm, Dan Williams wrote:
+> > > > With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
+> > > > updated and replaced multiple times. When that happens a previous
+> > > > dynamically allocated efi memory map can be garbage collected. Use the
+> > > > new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
+> > > > allocated memory map is being replaced.
+> > > >
+> > > > Debug statements in efi_memmap_free() reveal:
+> > > >
+> > > >  efi: __efi_memmap_free:37: phys: 0x23ffdd580 size: 2688 flags: 0x2
+> > > >  efi: __efi_memmap_free:37: phys: 0x9db00 size: 2640 flags: 0x2
+> > > >  efi: __efi_memmap_free:37: phys: 0x9e580 size: 2640 flags: 0x2
+> > > >
+> > > > ...a savings of 7968 bytes on a qemu boot with 2 entries specified to
+> > > > efi_fake_mem=.
+> > > >
+> > > > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > ---
+> > > >  drivers/firmware/efi/memmap.c |   24 ++++++++++++++++++++++++
+> > > >  1 file changed, 24 insertions(+)
+> > > >
+> > > > diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+> > > > index 04dfa56b994b..bffa320d2f9a 100644
+> > > > --- a/drivers/firmware/efi/memmap.c
+> > > > +++ b/drivers/firmware/efi/memmap.c
+> > > > @@ -29,6 +29,28 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+> > > >       return PFN_PHYS(page_to_pfn(p));
+> > > >  }
+> > > >
+> > > > +static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
+> > > > +{
+> > > > +     if (flags & EFI_MEMMAP_MEMBLOCK) {
+> > > > +             if (slab_is_available())
+> > > > +                     memblock_free_late(phys, size);
+> > > > +             else
+> > > > +                     memblock_free(phys, size);
+> > > > +     } else if (flags & EFI_MEMMAP_SLAB) {
+> > > > +             struct page *p = pfn_to_page(PHYS_PFN(phys));
+> > > > +             unsigned int order = get_order(size);
+> > > > +
+> > > > +             free_pages((unsigned long) page_address(p), order);
+> > > > +     }
+> > > > +}
+> > > > +
+> > > > +static void __init efi_memmap_free(void)
+> > > > +{
+> > > > +     __efi_memmap_free(efi.memmap.phys_map,
+> > > > +                     efi.memmap.desc_size * efi.memmap.nr_map,
+> > > > +                     efi.memmap.flags);
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * efi_memmap_alloc - Allocate memory for the EFI memory map
+> > > >   * @num_entries: Number of entries in the allocated map.
+> > > > @@ -100,6 +122,8 @@ static int __init __efi_memmap_init(struct efi_memory_map_data *data)
+> > > >               return -ENOMEM;
+> > > >       }
+> > > >
+> > > > +     efi_memmap_free();
+> > > > +
+> > >
+> > > This seems still not safe,  see below function:
+> > > arch/x86/platform/efi/efi.c:
+> > > static void __init efi_clean_memmap(void)
+> > > It use same memmap for both old and new, and filter out those invalid
+> > > ranges in place, if the memory is freed then ..
+> >
+> > In the efi_clean_memmap() case flags are 0, so efi_memmap_free() is a nop.
+> >
+> > Would you feel better with an explicit?
+> >
+> > WARN_ON(efi.memmap.phys_map == data->phys_map && (data->flags &
+> > (EFI_MEMMAP_SLAB | EFI_MEMMAP_MEMBLOCK))
+> >
+> > ...not sure it's worth it.
+>
+> Ah, yes, sorry I did not see the flags, although it is not very obvious.
+> Maybe add some code comment for efi_mem_alloc and efi_mem_init.
+>
+> Let's defer the suggestion to Ard.
+>
 
-  https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/qspinlock.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10c6956..b9515fcc9b29 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -31,14 +31,15 @@
- /*
-  * The basic principle of a queue-based spinlock can best be understood
-  * by studying a classic queue-based spinlock implementation called the
-- * MCS lock. The paper below provides a good description for this kind
-- * of lock.
-+ * MCS lock. A copy of the original MCS lock paper ("Algorithms for Scalable
-+ * Synchronization on Shared-Memory Multiprocessors by Mellor-Crummey and
-+ * Scott") is available at
-  *
-- * http://www.cise.ufl.edu/tr/DOC/REP-1992-71.pdf
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=206115
-  *
-- * This queued spinlock implementation is based on the MCS lock, however to make
-- * it fit the 4 bytes we assume spinlock_t to be, and preserve its existing
-- * API, we must modify it somehow.
-+ * This queued spinlock implementation is based on the MCS lock, however to
-+ * make it fit the 4 bytes we assume spinlock_t to be, and preserve its
-+ * existing API, we must modify it somehow.
-  *
-  * In particular; where the traditional MCS lock consists of a tail pointer
-  * (8 bytes) and needs the next pointer (another 8 bytes) of its own node to
--- 
-2.18.1
-
+A one line comment to remind our future selves of this discussion
+would probably be helpful, but beyond that, I don't think we need to
+do much here.
