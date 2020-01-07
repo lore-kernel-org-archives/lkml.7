@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598FDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D465AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208062087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB922081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430980;
-	bh=3duC+50xosOhh86u4la+Fe/usjRSVW+ZS0O7szyOrg0=;
+	s=default; t=1578430983;
+	bh=mqpU8JT3smNn9fDlIOPfcrdFwTi5L4D/Db3iUIcyXuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TU69vNpoB7ueYHWAZiC4NKF4PiuKLOjL+9AfqLx97esLRt9re91z3tcHnXACTtQ99
-	 Y1V3B7CeYuPjCn1aD6d4P4EElTVSnf3lZqOmekD5/gfWpdJovcD2j5k7xilSFdeyol
-	 gn8t8bBqn8TzK8hl2TVLocR/Pf4w05LKtITNzsHA=
+	b=1IAMVLSDsJ2m4PoKFcoR1qkAD+6pXDns+nYhHbqXmC5Au6Nb+WFD5jBtAgoCGUA4D
+	 OtStemFde5RrNeOKd0m6Z3hARiT2ZX4eeOYCOx5a66DsgnzPzjCsIJeeh697Q8Dyqg
+	 zahjMRIDyO/gIOD6ebHvBNXa9f8ATwyetkusGgyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgAGVC7 (ORCPT
+        id S1728854AbgAGVDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:03:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbgAGVCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:55 -0500
+        id S1728839AbgAGVC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCD02087F;
-        Tue,  7 Jan 2020 21:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A98220678;
+        Tue,  7 Jan 2020 21:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430974;
-        bh=3duC+50xosOhh86u4la+Fe/usjRSVW+ZS0O7szyOrg0=;
+        s=default; t=1578430976;
+        bh=mqpU8JT3smNn9fDlIOPfcrdFwTi5L4D/Db3iUIcyXuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwQlSKiXZDRFbYpTVD3sVh0FOb8idPlK8bYNSQxncys9DemkWspZjnBvnnxT9iE13
-         RosNARUMtX2Zfqoeyi/QsDWMKx+jNpBl7mKWzn5W+t/LYxmtzeB5aYvn0o4h2x29q0
-         SmPMoQPa2KKJhiYS0u1GcQVYc7wZRxf0mqURMis8=
+        b=CngEy072WpQIcj9L007f13Yn0/+dRgoMCr3vLwVczvEzT8CriBTQcsfkMNElJLBPC
+         KhEPNssvTPb2dIFNrXsTRvgSghYi85Se55YUQHv5sn1dhm28yPc+oOYqFIWfq93EMj
+         ozm5P4AZvIAPgjYdLZqSySmOO2pQSvNRveFG8cUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 174/191] ath9k_htc: Discard undersized packets
-Date:   Tue,  7 Jan 2020 21:54:54 +0100
-Message-Id: <20200107205342.310574861@linuxfoundation.org>
+Subject: [PATCH 5.4 175/191] drm/i915/execlists: Fix annotation for decoupling virtual request
+Date:   Tue,  7 Jan 2020 21:54:55 +0100
+Message-Id: <20200107205342.362904324@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,122 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit cd486e627e67ee9ab66914d36d3127ef057cc010 ]
+[ Upstream commit 08ad9a3846fc72b047b110b36d162ffbcf298fa2 ]
 
-Sometimes the hardware will push small packets that trigger a WARN_ON
-in mac80211. Discard them early to avoid this issue.
+As we may signal a request and take the engine->active.lock within the
+signaler, the engine submission paths have to use a nested annotation on
+their requests -- but we guarantee that we can never submit on the same
+engine as the signaling fence.
 
-This patch ports 2 patches from ath9k to ath9k_htc.
-commit 3c0efb745a172bfe96459e20cbd37b0c945d5f8d "ath9k: discard
-undersized packets".
-commit df5c4150501ee7e86383be88f6490d970adcf157 "ath9k: correctly
-handle short radar pulses".
+<4>[  723.763281] WARNING: possible circular locking dependency detected
+<4>[  723.763285] 5.3.0-g80fa0e042cdb-drmtip_379+ #1 Tainted: G     U
+<4>[  723.763288] ------------------------------------------------------
+<4>[  723.763291] gem_exec_await/1388 is trying to acquire lock:
+<4>[  723.763294] ffff93a7b53221d8 (&engine->active.lock){..-.}, at: execlists_submit_request+0x2b/0x1e0 [i915]
+<4>[  723.763378]
+                  but task is already holding lock:
+<4>[  723.763381] ffff93a7c25f6d20 (&i915_request_get(rq)->submit/1){-.-.}, at: __i915_sw_fence_complete+0x1b2/0x250 [i915]
+<4>[  723.763420]
+                  which lock already depends on the new lock.
 
-[  112.835889] ------------[ cut here ]------------
-[  112.835971] WARNING: CPU: 5 PID: 0 at net/mac80211/rx.c:804 ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.835973] Modules linked in: ath9k_htc ath9k_common ath9k_hw ath mac80211 cfg80211 libarc4 nouveau snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec video snd_hda_core ttm snd_hwdep drm_kms_helper snd_pcm crct10dif_pclmul snd_seq_midi drm snd_seq_midi_event crc32_pclmul snd_rawmidi ghash_clmulni_intel snd_seq aesni_intel aes_x86_64 crypto_simd cryptd snd_seq_device glue_helper snd_timer sch_fq_codel i2c_algo_bit fb_sys_fops snd input_leds syscopyarea sysfillrect sysimgblt intel_cstate mei_me intel_rapl_perf soundcore mxm_wmi lpc_ich mei kvm_intel kvm mac_hid irqbypass parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear e1000e ahci libahci wmi
-[  112.836022] CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.3.0-wt #1
-[  112.836023] Hardware name: MouseComputer Co.,Ltd. X99-S01/X99-S01, BIOS 1.0C-W7 04/01/2015
-[  112.836056] RIP: 0010:ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.836059] Code: 00 00 66 41 89 86 b0 00 00 00 e9 c8 fa ff ff 4c 89 b5 40 ff ff ff 49 89 c6 e9 c9 fa ff ff 48 c7 c7 e0 a2 a5 c0 e8 47 41 b0 e9 <0f> 0b 48 89 df e8 5a 94 2d ea e9 02 f9 ff ff 41 39 c1 44 89 85 60
-[  112.836060] RSP: 0018:ffffaa6180220da8 EFLAGS: 00010286
-[  112.836062] RAX: 0000000000000024 RBX: ffff909a20eeda00 RCX: 0000000000000000
-[  112.836064] RDX: 0000000000000000 RSI: ffff909a2f957448 RDI: ffff909a2f957448
-[  112.836065] RBP: ffffaa6180220e78 R08: 00000000000006e9 R09: 0000000000000004
-[  112.836066] R10: 000000000000000a R11: 0000000000000001 R12: 0000000000000000
-[  112.836068] R13: ffff909a261a47a0 R14: 0000000000000000 R15: 0000000000000004
-[  112.836070] FS:  0000000000000000(0000) GS:ffff909a2f940000(0000) knlGS:0000000000000000
-[  112.836071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  112.836073] CR2: 00007f4e3ffffa08 CR3: 00000001afc0a006 CR4: 00000000001606e0
-[  112.836074] Call Trace:
-[  112.836076]  <IRQ>
-[  112.836083]  ? finish_td+0xb3/0xf0
-[  112.836092]  ? ath9k_rx_prepare.isra.11+0x22f/0x2a0 [ath9k_htc]
-[  112.836099]  ath9k_rx_tasklet+0x10b/0x1d0 [ath9k_htc]
-[  112.836105]  tasklet_action_common.isra.22+0x63/0x110
-[  112.836108]  tasklet_action+0x22/0x30
-[  112.836115]  __do_softirq+0xe4/0x2da
-[  112.836118]  irq_exit+0xae/0xb0
-[  112.836121]  do_IRQ+0x86/0xe0
-[  112.836125]  common_interrupt+0xf/0xf
-[  112.836126]  </IRQ>
-[  112.836130] RIP: 0010:cpuidle_enter_state+0xa9/0x440
-[  112.836133] Code: 3d bc 20 38 55 e8 f7 1d 84 ff 49 89 c7 0f 1f 44 00 00 31 ff e8 28 29 84 ff 80 7d d3 00 0f 85 e6 01 00 00 fb 66 0f 1f 44 00 00 <45> 85 ed 0f 89 ff 01 00 00 41 c7 44 24 10 00 00 00 00 48 83 c4 18
-[  112.836134] RSP: 0018:ffffaa61800e3e48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffde
-[  112.836136] RAX: ffff909a2f96b340 RBX: ffffffffabb58200 RCX: 000000000000001f
-[  112.836137] RDX: 0000001a458adc5d RSI: 0000000026c9b581 RDI: 0000000000000000
-[  112.836139] RBP: ffffaa61800e3e88 R08: 0000000000000002 R09: 000000000002abc0
-[  112.836140] R10: ffffaa61800e3e18 R11: 000000000000002d R12: ffffca617fb40b00
-[  112.836141] R13: 0000000000000002 R14: ffffffffabb582d8 R15: 0000001a458adc5d
-[  112.836145]  ? cpuidle_enter_state+0x98/0x440
-[  112.836149]  ? menu_select+0x370/0x600
-[  112.836151]  cpuidle_enter+0x2e/0x40
-[  112.836154]  call_cpuidle+0x23/0x40
-[  112.836156]  do_idle+0x204/0x280
-[  112.836159]  cpu_startup_entry+0x1d/0x20
-[  112.836164]  start_secondary+0x167/0x1c0
-[  112.836169]  secondary_startup_64+0xa4/0xb0
-[  112.836173] ---[ end trace 9f4cd18479cc5ae5 ]---
+<4>[  723.763423]
+                  the existing dependency chain (in reverse order) is:
+<4>[  723.763427]
+                  -> #2 (&i915_request_get(rq)->submit/1){-.-.}:
+<4>[  723.763434]        _raw_spin_lock_irqsave_nested+0x39/0x50
+<4>[  723.763478]        __i915_sw_fence_complete+0x1b2/0x250 [i915]
+<4>[  723.763513]        intel_engine_breadcrumbs_irq+0x3aa/0x5e0 [i915]
+<4>[  723.763600]        cs_irq_handler+0x49/0x50 [i915]
+<4>[  723.763659]        gen11_gt_irq_handler+0x17b/0x280 [i915]
+<4>[  723.763690]        gen11_irq_handler+0x54/0xf0 [i915]
+<4>[  723.763695]        __handle_irq_event_percpu+0x41/0x2d0
+<4>[  723.763699]        handle_irq_event_percpu+0x2b/0x70
+<4>[  723.763702]        handle_irq_event+0x2f/0x50
+<4>[  723.763706]        handle_edge_irq+0xee/0x1a0
+<4>[  723.763709]        do_IRQ+0x7e/0x160
+<4>[  723.763712]        ret_from_intr+0x0/0x1d
+<4>[  723.763717]        __slab_alloc.isra.28.constprop.33+0x4f/0x70
+<4>[  723.763720]        kmem_cache_alloc+0x28d/0x2f0
+<4>[  723.763724]        vm_area_dup+0x15/0x40
+<4>[  723.763727]        dup_mm+0x2dd/0x550
+<4>[  723.763730]        copy_process+0xf21/0x1ef0
+<4>[  723.763734]        _do_fork+0x71/0x670
+<4>[  723.763737]        __se_sys_clone+0x6e/0xa0
+<4>[  723.763741]        do_syscall_64+0x4f/0x210
+<4>[  723.763744]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+<4>[  723.763747]
+                  -> #1 (&(&rq->lock)->rlock#2){-.-.}:
+<4>[  723.763752]        _raw_spin_lock+0x2a/0x40
+<4>[  723.763789]        __unwind_incomplete_requests+0x3eb/0x450 [i915]
+<4>[  723.763825]        __execlists_submission_tasklet+0x9ec/0x1d60 [i915]
+<4>[  723.763864]        execlists_submission_tasklet+0x34/0x50 [i915]
+<4>[  723.763874]        tasklet_action_common.isra.5+0x47/0xb0
+<4>[  723.763878]        __do_softirq+0xd8/0x4ae
+<4>[  723.763881]        irq_exit+0xa9/0xc0
+<4>[  723.763883]        smp_apic_timer_interrupt+0xb7/0x280
+<4>[  723.763887]        apic_timer_interrupt+0xf/0x20
+<4>[  723.763892]        cpuidle_enter_state+0xae/0x450
+<4>[  723.763895]        cpuidle_enter+0x24/0x40
+<4>[  723.763899]        do_idle+0x1e7/0x250
+<4>[  723.763902]        cpu_startup_entry+0x14/0x20
+<4>[  723.763905]        start_secondary+0x15f/0x1b0
+<4>[  723.763908]        secondary_startup_64+0xa4/0xb0
+<4>[  723.763911]
+                  -> #0 (&engine->active.lock){..-.}:
+<4>[  723.763916]        __lock_acquire+0x15d8/0x1ea0
+<4>[  723.763919]        lock_acquire+0xa6/0x1c0
+<4>[  723.763922]        _raw_spin_lock_irqsave+0x33/0x50
+<4>[  723.763956]        execlists_submit_request+0x2b/0x1e0 [i915]
+<4>[  723.764002]        submit_notify+0xa8/0x13c [i915]
+<4>[  723.764035]        __i915_sw_fence_complete+0x81/0x250 [i915]
+<4>[  723.764054]        i915_sw_fence_wake+0x51/0x64 [i915]
+<4>[  723.764054]        __i915_sw_fence_complete+0x1ee/0x250 [i915]
+<4>[  723.764054]        dma_i915_sw_fence_wake_timer+0x14/0x20 [i915]
+<4>[  723.764054]        dma_fence_signal_locked+0x9e/0x1c0
+<4>[  723.764054]        dma_fence_signal+0x1f/0x40
+<4>[  723.764054]        vgem_fence_signal_ioctl+0x67/0xc0 [vgem]
+<4>[  723.764054]        drm_ioctl_kernel+0x83/0xf0
+<4>[  723.764054]        drm_ioctl+0x2f3/0x3b0
+<4>[  723.764054]        do_vfs_ioctl+0xa0/0x6f0
+<4>[  723.764054]        ksys_ioctl+0x35/0x60
+<4>[  723.764054]        __x64_sys_ioctl+0x11/0x20
+<4>[  723.764054]        do_syscall_64+0x4f/0x210
+<4>[  723.764054]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+<4>[  723.764054]
+                  other info that might help us debug this:
 
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+<4>[  723.764054] Chain exists of:
+                    &engine->active.lock --> &(&rq->lock)->rlock#2 --> &i915_request_get(rq)->submit/1
+
+<4>[  723.764054]  Possible unsafe locking scenario:
+
+<4>[  723.764054]        CPU0                    CPU1
+<4>[  723.764054]        ----                    ----
+<4>[  723.764054]   lock(&i915_request_get(rq)->submit/1);
+<4>[  723.764054]                                lock(&(&rq->lock)->rlock#2);
+<4>[  723.764054]                                lock(&i915_request_get(rq)->submit/1);
+<4>[  723.764054]   lock(&engine->active.lock);
+<4>[  723.764054]
+                   *** DEADLOCK ***
+
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111862
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191004194758.19679-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index aba0d454c381..9cec5c216e1f 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -973,6 +973,8 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	struct ath_htc_rx_status *rxstatus;
- 	struct ath_rx_status rx_stats;
- 	bool decrypt_error = false;
-+	__be16 rs_datalen;
-+	bool is_phyerr;
- 
- 	if (skb->len < HTC_RX_FRAME_HEADER_SIZE) {
- 		ath_err(common, "Corrupted RX frame, dropping (len: %d)\n",
-@@ -982,11 +984,24 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 
- 	rxstatus = (struct ath_htc_rx_status *)skb->data;
- 
--	if (be16_to_cpu(rxstatus->rs_datalen) -
--	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
-+	rs_datalen = be16_to_cpu(rxstatus->rs_datalen);
-+	if (unlikely(rs_datalen -
-+	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0)) {
- 		ath_err(common,
- 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
--			be16_to_cpu(rxstatus->rs_datalen), skb->len);
-+			rs_datalen, skb->len);
-+		goto rx_next;
-+	}
-+
-+	is_phyerr = rxstatus->rs_status & ATH9K_RXERR_PHY;
-+	/*
-+	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
-+	 */
-+	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
-+		ath_warn(common,
-+			 "Short RX data len, dropping (dlen: %d)\n",
-+			 rs_datalen);
- 		goto rx_next;
- 	}
- 
-@@ -1011,7 +1026,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	 * Process PHY errors and return so that the packet
- 	 * can be dropped.
- 	 */
--	if (rx_stats.rs_status & ATH9K_RXERR_PHY) {
-+	if (unlikely(is_phyerr)) {
- 		/* TODO: Not using DFS processing now. */
- 		if (ath_cmn_process_fft(&priv->spec_priv, hdr,
- 				    &rx_stats, rx_status->mactime)) {
+diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
+index 06a506c29463..d564bfcab6a3 100644
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -525,7 +525,8 @@ __unwind_incomplete_requests(struct intel_engine_cs *engine)
+ 			 */
+ 			if (test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
+ 				     &rq->fence.flags)) {
+-				spin_lock(&rq->lock);
++				spin_lock_nested(&rq->lock,
++						 SINGLE_DEPTH_NESTING);
+ 				i915_request_cancel_breadcrumb(rq);
+ 				spin_unlock(&rq->lock);
+ 			}
 -- 
 2.20.1
 
