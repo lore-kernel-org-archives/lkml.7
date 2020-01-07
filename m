@@ -2,111 +2,175 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F04C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C4C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC07720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E3821744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JpEHXUhw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TNLezjsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgAGSio (ORCPT
+        id S1728532AbgAGSkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:38:44 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15962 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgAGSin (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:38:43 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e14d0030001>; Tue, 07 Jan 2020 10:37:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 10:38:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 10:38:42 -0800
-Received: from [10.26.11.139] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 18:38:40 +0000
-Subject: Re: [PATCH v3 09/13] dmaengine: tegra-apb: Remove runtime PM usage
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200106011708.7463-1-digetx@gmail.com>
- <20200106011708.7463-10-digetx@gmail.com>
- <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
- <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
-Date:   Tue, 7 Jan 2020 18:38:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 13:40:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:44566 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728235AbgAGSkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:40:13 -0500
+Received: from zn.tnic (p200300EC2F0FB4001C0F6E794847FFF7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:b400:1c0f:6e79:4847:fff7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F21A1EC0419;
+        Tue,  7 Jan 2020 19:40:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578422412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=m8nzMYNUc+LnSFW6W6VJz0TrnXhyQeeRbXeTyBKJzL8=;
+        b=TNLezjsFNVHLyReGBHm6KTCs9jJ+quUPOC0VK4LisFf+PJTbbMHi1d3g2FyJ9wWkIyA0dN
+        /QxBzNsKGmqebkBxDwDyfUpm6d5RwLqGpVdU9KumrN3cxnd4fWe1Olo+Nzdj9z4A/kfOH6
+        SeCW1MDKBB54OUuIx6MoxxmtdPOQg5s=
+Date:   Tue, 7 Jan 2020 19:40:03 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Add support for fast short rep mov
+Message-ID: <20200107184003.GK29542@zn.tnic>
+References: <20191212225210.GA22094@zn.tnic>
+ <20191216214254.26492-1-tony.luck@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578422275; bh=1vkKMIjMhiXQH/0LKlvaioSuV7wR0KaWYwmiXi110ng=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JpEHXUhwxDD57ebL8Vk3Fj6LL/ZZeLR8kkPdEbWH3mCnB2Qct+tiBOy5Hc29R4+6A
-         UDdkbrs8GpnvjqHdr7QjBUWZJz0ZZhfL3Bo4FTgw2BlxRuoBW1bML6YjtYMyZVTebd
-         oVz3uNg5LnikzYQNaV+u30O2HtwKRJw4F7HiUL10gv10Iwbxmk81bfsJprnlN/TZ0c
-         2zx+7X02oXd7CGaJ0bg/G0h4vwdwlwKAUFxNTbNWnw1eS0cqrvWtV70MmO4hD2sxP2
-         BpMVnSwD9T9Q9dc1g0Yibi+cc0EjJle6gVznV3x0RfZ/USMWyDa1sCd891QqWs+pjM
-         GibEYhE7xVfmQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191216214254.26492-1-tony.luck@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 01:42:54PM -0800, Tony Luck wrote:
+> From the Intel Optimization Reference Manual:
+> 
+> 3.7.6.1 Fast Short REP MOVSB
+> Beginning with processors based on Ice Lake Client microarchitecture,
+> REP MOVSB performance of short operations is enhanced. The enhancement
+> applies to string lengths between 1 and 128 bytes long.  Support for
+> fast-short REP MOVSB is enumerated by the CPUID feature flag: CPUID
+> [EAX=7H, ECX=0H).EDX.FAST_SHORT_REP_MOVSB[bit 4] = 1. There is no change
+> in the REP STOS performance.
+> 
+> Add an X86_FEATURE_FSRM flag for this.
+> 
+> memmove() avoids REP MOVSB for short (< 32 byte) copies. Fix it
+> to check FSRM and use REP MOVSB for short copies on systems that
+> support it.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> 
+> ---
+> 
+> Time (cycles) for memmove() sizes 1..31 with neither source nor
+> destination in cache.
+> 
+>   1800 +-+-------+--------+---------+---------+---------+--------+-------+-+
+>        +         +        +         +         +         +        +         +
+>   1600 +-+                                          'memmove-fsrm' *******-+
+>        |   ######                                   'memmove-orig' ####### |
+>   1400 +-+ #     #####################                                   +-+
+>        |   #                          ############                         |
+>   1200 +-+#                                       ##################     +-+
+>        |  #                                                                |
+>   1000 +-+#                                                              +-+
+>        |  #                                                                |
+>        | #                                                                 |
+>    800 +-#                                                               +-+
+>        | #                                                                 |
+>    600 +-***********************                                         +-+
+>        |                        *****************************              |
+>    400 +-+                                                   *******     +-+
+>        |                                                                   |
+>    200 +-+                                                               +-+
+>        +         +        +         +         +         +        +         +
+>      0 +-+-------+--------+---------+---------+---------+--------+-------+-+
+>        0         5        10        15        20        25       30        35
 
-On 07/01/2020 17:12, Dmitry Osipenko wrote:
-> 07.01.2020 18:13, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 06/01/2020 01:17, Dmitry Osipenko wrote:
->>> There is no benefit from runtime PM usage for the APB DMA driver becaus=
-e
->>> it enables clock at the time of channel's allocation and thus clock sta=
-ys
->>> enabled all the time in practice, secondly there is benefit from manual=
-ly
->>> disabled clock because hardware auto-gates it during idle by itself.
->>
->> This assumes that the channel is allocated during a driver
->> initialisation. That may not always be the case. I believe audio is one
->> case where channels are requested at the start of audio playback.
->=20
-> At least serial, I2C, SPI and T20 FUSE are permanently keeping channels
-> allocated, thus audio is an exception here. I don't think that it's
-> practical to assume that there is a real-world use-case where audio
-> driver is the only active DMA client.
->=20
-> The benefits of gating the DMA clock are also dim, do you have any
-> power-consumption numbers that show that it's really worth to care about
-> the clock-gating?
+I don't mind this graph being part of the commit message - it shows
+nicely the speedup even if with some microbenchmark. Or you're not
+adding it just because it is a microbenchmark and not something more
+representative?
 
-No, but at the same time, I really don't see the point in this. In fact,
-I think it is a step backwards. If we wanted to only enable clocks while
-DMA channels are active we could. So I request you drop this.
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  arch/x86/lib/memmove_64.S          | 6 +++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index e9b62498fe75..98c60fa31ced 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -357,6 +357,7 @@
+>  /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+>  #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+>  #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
+> +#define X86_FEATURE_FSRM		(18*32+ 4) /* Fast Short Rep Mov */
+>  #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
+>  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+>  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+> diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
+> index 337830d7a59c..4a23086806e6 100644
+> --- a/arch/x86/lib/memmove_64.S
+> +++ b/arch/x86/lib/memmove_64.S
+> @@ -29,10 +29,7 @@
+>  SYM_FUNC_START_ALIAS(memmove)
+>  SYM_FUNC_START(__memmove)
+>  
+> -	/* Handle more 32 bytes in loop */
+>  	mov %rdi, %rax
+> -	cmp $0x20, %rdx
+> -	jb	1f
+>  
+>  	/* Decide forward/backward copy mode */
+>  	cmp %rdi, %rsi
+> @@ -43,6 +40,7 @@ SYM_FUNC_START(__memmove)
+>  	jg 2f
+>  
+>  .Lmemmove_begin_forward:
+> +	ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
 
-Jon
+So the enhancement is for string lengths up to two cachelines. Why
+are you limiting this to 32 bytes?
 
---=20
-nvpublic
+I know, the function handles 32-bytes at a time but what I'd imagine
+here is having the fastest variant upfront which does REP; MOVSB for all
+lengths since FSRM means fast short strings and ERMS - and I'm strongly
+assuming here FSRM *implies* ERMS - means fast "longer" strings, so to
+speak, so FSRM would mean fast *all length* strings in the end, no?
+
+Also, does the copy direction influence the FSRM's REP; MOVSB variant's
+performance? If not, you can do something like this:
+
+ SYM_FUNC_START_ALIAS(memmove)
+ SYM_FUNC_START(__memmove)
+
+	mov %rdi, %rax
+
+	/* FSRM handles all possible string lengths and directions optimally. */
+	ALTERNATIVE "", "movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_FSRM
+
+	cmp $0x20, %rdx
+	jb 1f
+	...
+
+Or?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
