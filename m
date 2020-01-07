@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9835EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846C7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B2B2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593E02081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430840;
-	bh=B+rIfLlp5nYJGhKLBRlNihaDw5B3p2Wcr3bepgTOkg8=;
+	s=default; t=1578430843;
+	bh=fJU2AaaiNHWTUyQlnJtXoLh8qVbNdgfozRG6zEmj3jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4pDU8Um47xlEyukO2yI80X4rakRi4KivH7XXO1XD4yLHzNbquoMMgVvhMOQUEiKa
-	 4uVdMZDXN+0+hmFdYd9ot8nwY0cEvfYJg3KrbTUgawdJ9ZMOtOE7PAzdYh17xKp5dd
-	 bsyqkLhvrbFH5fxzCtaVjHMZGn/yteEcrp7Rf/dc=
+	b=Ol8MVgzqLyqsrWrPJHhu+bheZkBM34qBr+wmCyTyE3hWte9nr4p01uBaMa0m/+oBK
+	 aiD2ExpVOaSYfZKfgA+Gz6uFKVP+zNUDayzQj7DVkkT1ntf/lvadnRA20ZkVVf7eqy
+	 LUW/FJF5huq8CtfB7ZX6Vp1qkEtVbO+e3Hhf+0O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgAGVAj (ORCPT
+        id S1728423AbgAGVAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbgAGVAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:22 -0500
+        id S1727913AbgAGVA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9387D24676;
-        Tue,  7 Jan 2020 21:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 727E32187F;
+        Tue,  7 Jan 2020 21:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430822;
-        bh=B+rIfLlp5nYJGhKLBRlNihaDw5B3p2Wcr3bepgTOkg8=;
+        s=default; t=1578430826;
+        bh=fJU2AaaiNHWTUyQlnJtXoLh8qVbNdgfozRG6zEmj3jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWeqtCyauPas3aTw4cYiOhFnFThxaM1YPZ/cSeo3l4JdpGMe54j98/5fMHig84kFF
-         FAMpdqjJJL5rPlI0Pw0U9F8mHgfw2Qgo0DTpyraQM7pyLTME9uGq16KC4O48aV9bnF
-         ogwzzqS+LGlqJsaUSkEaGo0ho7DBMWK45D8kMuxE=
+        b=zI+AFSTgQWA77OeOQeuMedN81sdvEBHbf405qTcDwhNq8s3qGZyY6OFhCQ75LTLyR
+         lGP2jfvhIeAjaHo8OfUNtWHeOKcoUHKL6dwO9HkXCCZuSKYW1EqFi7emCwxJgoycZY
+         ho2KQj20Udygv8ze5gvAAecM363hIZQeLJwKVasM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.4 110/191] gpio: xtensa: fix driver build
-Date:   Tue,  7 Jan 2020 21:53:50 +0100
-Message-Id: <20200107205338.872655905@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 085/191] memcg: account security cred as well to kmemcg
+Date:   Tue,  7 Jan 2020 21:53:25 +0100
+Message-Id: <20200107205337.548140723@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,45 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit 634f0348fe336fce8f6cab1933139115e983ed2f upstream.
+commit 84029fd04c201a4c7e0b07ba262664900f47c6f5 upstream.
 
-Commit cad6fade6e78 ("xtensa: clean up WSR*/RSR*/get_sr/set_sr") removed
-{RSR,WSR}_CPENABLE from xtensa code, but did not fix up all users,
-breaking gpio-xtensa driver build. Update gpio-xtensa to use
-new xtensa_{get,set}_sr API.
+The cred_jar kmem_cache is already memcg accounted in the current kernel
+but cred->security is not.  Account cred->security to kmemcg.
 
-Cc: stable@vger.kernel.org # v5.0+
-Fixes: cad6fade6e78 ("xtensa: clean up WSR*/RSR*/get_sr/set_sr")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Recently we saw high root slab usage on our production and on further
+inspection, we found a buggy application leaking processes.  Though that
+buggy application was contained within its memcg but we observe much
+more system memory overhead, couple of GiBs, during that period.  This
+overhead can adversely impact the isolation on the system.
+
+One source of high overhead we found was cred->security objects, which
+have a lifetime of at least the life of the process which allocated
+them.
+
+Link: http://lkml.kernel.org/r/20191205223721.40034-1-shakeelb@google.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Chris Down <chris@chrisdown.name>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-xtensa.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/cred.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpio/gpio-xtensa.c
-+++ b/drivers/gpio/gpio-xtensa.c
-@@ -44,15 +44,14 @@ static inline unsigned long enable_cp(un
- 	unsigned long flags;
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -223,7 +223,7 @@ struct cred *cred_alloc_blank(void)
+ 	new->magic = CRED_MAGIC;
+ #endif
  
- 	local_irq_save(flags);
--	RSR_CPENABLE(*cpenable);
--	WSR_CPENABLE(*cpenable | BIT(XCHAL_CP_ID_XTIOP));
--
-+	*cpenable = xtensa_get_sr(cpenable);
-+	xtensa_set_sr(*cpenable | BIT(XCHAL_CP_ID_XTIOP), cpenable);
- 	return flags;
- }
+-	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
++	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
  
- static inline void disable_cp(unsigned long flags, unsigned long cpenable)
- {
--	WSR_CPENABLE(cpenable);
-+	xtensa_set_sr(cpenable, cpenable);
- 	local_irq_restore(flags);
- }
+ 	return new;
+@@ -282,7 +282,7 @@ struct cred *prepare_creds(void)
+ 	new->security = NULL;
+ #endif
  
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 	validate_creds(new);
+ 	return new;
+@@ -715,7 +715,7 @@ struct cred *prepare_kernel_cred(struct
+ #ifdef CONFIG_SECURITY
+ 	new->security = NULL;
+ #endif
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 
+ 	put_cred(old);
 
 
