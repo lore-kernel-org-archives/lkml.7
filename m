@@ -2,288 +2,149 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B6CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40778C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506D32077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173EA2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPe0A3TC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qz4Fvb9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgAGPXw (ORCPT
+        id S1728355AbgAGPX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:23:52 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51772 "EHLO
+        Tue, 7 Jan 2020 10:23:56 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38756 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727944AbgAGPXv (ORCPT
+        by vger.kernel.org with ESMTP id S1727908AbgAGPXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:23:51 -0500
+        Tue, 7 Jan 2020 10:23:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578410630;
+        s=mimecast20190719; t=1578410633;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ObryUJ+YHFjoiVoshbRcx17aC5SBcb7cBxKyuAtSgQI=;
-        b=RPe0A3TCWHW5myWM5WZVrKAzSWxhMkyu5k9PAJLDcHdOXGWEQN8lB6w1gIWWVLaejfyS2N
-        QArE+kLjyKq4DsgD4jXvk6mN3pGwY9VnZd/iYJYS7TeV1gfpU2C9KiIX3bemy38AbcxQxI
-        jGXrWd8CU71muNb2z82eYpvNY0ikaMs=
+        bh=0uNiCTiEHFgNN9K+lpJkW469fllh6SCfCoNUo1eAVpg=;
+        b=Qz4Fvb9BcjnqsbMcKCXvLw55s95WZJ7EGVFOmt2FnXz8Nvfghi4hy3C/B9PzTVQRFPRCH/
+        TcRdBYpewr/Qx9StuQUI5NMuFscZz94LifeRbH629L93saThC0fsXIJrN4j2K7ePfCMdra
+        +zYPbyKNLi4MQax2I9To+uxZdK//vU4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-9xeyJXvfOJKQ-eof7EmcSg-1; Tue, 07 Jan 2020 10:23:49 -0500
-X-MC-Unique: 9xeyJXvfOJKQ-eof7EmcSg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-230-YZmiAk9SPXu1Dk_Vw51d_w-1; Tue, 07 Jan 2020 10:23:50 -0500
+X-MC-Unique: YZmiAk9SPXu1Dk_Vw51d_w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC560477;
-        Tue,  7 Jan 2020 15:23:47 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEC9B5D9E1;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF6BA1005514;
+        Tue,  7 Jan 2020 15:23:48 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9026E10018FF;
         Tue,  7 Jan 2020 15:23:43 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 16:23:41 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Ben Gardon <bgardon@google.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v3 5/8] KVM: selftests: Pass args to vCPU instead of
- using globals
-Message-ID: <20200107152341.rtfmciob5ly6nnjj@kamzik.brq.redhat.com>
-References: <20191216213901.106941-1-bgardon@google.com>
- <20191216213901.106941-6-bgardon@google.com>
+Date:   Tue, 7 Jan 2020 23:23:39 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>
+Subject: Re: [PATCH] block: fix splitting segments
+Message-ID: <20200107152339.GA23622@ming.t460p>
+References: <20191229023230.28940-1-ming.lei@redhat.com>
+ <20200107124708.GA20285@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216213901.106941-6-bgardon@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200107124708.GA20285@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 01:38:58PM -0800, Ben Gardon wrote:
-> In preparation for supporting multiple vCPUs in the demand paging test,
-> pass arguments to the vCPU instead of syncing globals to it.
-
-This will only work if we don't spill parameters onto the stack and all
-data we want to pass fit in registers. I've used multiple VCPUs in tests
-before and stuck with the global syncing. I simply used arrays like this
-
- static my_type_t my_data[NR_VCPUS];
-
- static void guest_code(void)
- {
-     int cpu = arch_get_cpu_id();
-     
-     // do something with my_data[cpu]
- }
-
- int main(void)
- {
-     for (i = 0; i < NR_VCPUS; ++i) {
-         // prepare my_data[i]
-         sync_global_to_guest(vm, my_data[i]);
-     }
-
-     // run vcpus
-
-    for (i = 0; i < NR_VCPUS; ++i) {
-         sync_global_from_guest(vm, my_data[i]);
-         // do something with my_data[i]
-    }
- }
-
+On Tue, Jan 07, 2020 at 04:47:08AM -0800, Guenter Roeck wrote:
+> Hi,
 > 
-> Signed-off-by: Ben Gardon <bgardon@google.com>
+> On Sun, Dec 29, 2019 at 10:32:30AM +0800, Ming Lei wrote:
+> > There are two issues in get_max_segment_size():
+> > 
+> > 1) the default segment boudary mask is bypassed, and some devices still
+> > require segment to not cross the default 4G boundary
+> > 
+> > 2) the segment start address isn't taken into account when checking
+> > segment boundary limit
+> > 
+> > Fixes the two issues.
+> > 
+> > Fixes: dcebd755926b ("block: use bio_for_each_bvec() to compute multi-page bvec count")
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> 
+> This patch, pushed into mainline as "block: fix splitting segments on
+> boundary masks", results in the following crash when booting 'versatilepb'
+> in qemu from disk. Bisect log is attached. Detailed log is at
+> https://kerneltests.org/builders/qemu-arm-master/builds/1410/steps/qemubuildcommand/logs/stdio
+> 
+> Guenter
+> 
 > ---
->  .../selftests/kvm/demand_paging_test.c        | 61 +++++++++++--------
->  1 file changed, 37 insertions(+), 24 deletions(-)
+> Crash:
 > 
-> diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
-> index 4aa90a3fce99c..8ede26e088ab6 100644
-> --- a/tools/testing/selftests/kvm/demand_paging_test.c
-> +++ b/tools/testing/selftests/kvm/demand_paging_test.c
-> @@ -42,7 +42,6 @@
->   */
->  static uint64_t host_page_size;
->  static uint64_t guest_page_size;
-> -static uint64_t guest_num_pages;
->  
->  static char *guest_data_prototype;
->  
-> @@ -63,14 +62,13 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
->   * Continuously write to the first 8 bytes of each page in the demand paging
->   * memory region.
->   */
-> -static void guest_code(void)
-> +static void guest_code(uint64_t gva, uint64_t pages)
->  {
->  	int i;
->  
-> -	for (i = 0; i < guest_num_pages; i++) {
-> -		uint64_t addr = guest_test_virt_mem;
-> +	for (i = 0; i < pages; i++) {
-> +		uint64_t addr = gva + (i * guest_page_size);
->  
-> -		addr += i * guest_page_size;
->  		addr &= ~(host_page_size - 1);
->  		*(uint64_t *)addr = 0x0123456789ABCDEF;
->  	}
-> @@ -82,18 +80,31 @@ static void guest_code(void)
->  static void *host_test_mem;
->  static uint64_t host_num_pages;
->  
-> +struct vcpu_thread_args {
-> +	uint64_t gva;
-> +	uint64_t pages;
-> +	struct kvm_vm *vm;
-> +	int vcpu_id;
-> +};
-> +
->  static void *vcpu_worker(void *data)
->  {
->  	int ret;
-> -	struct kvm_vm *vm = data;
-> +	struct vcpu_thread_args *args = (struct vcpu_thread_args *)data;
-> +	struct kvm_vm *vm = args->vm;
-> +	int vcpu_id = args->vcpu_id;
-> +	uint64_t gva = args->gva;
-> +	uint64_t pages = args->pages;
->  	struct kvm_run *run;
->  
-> -	run = vcpu_state(vm, VCPU_ID);
-> +	vcpu_args_set(vm, vcpu_id, 2, gva, pages);
+> kernel BUG at block/bio.c:1885!
+> Internal error: Oops - BUG: 0 [#1] ARM
 
-vcpu_args_set() is currently only implemented by x86, so that's a good
-reason for this to be an x86-only test for now. Well, unless this is
-switched back to using global sync.
+Please apply the following debug patch, and post the log.
 
-> +
-> +	run = vcpu_state(vm, vcpu_id);
->  
->  	/* Let the guest access its memory */
-> -	ret = _vcpu_run(vm, VCPU_ID);
-> +	ret = _vcpu_run(vm, vcpu_id);
->  	TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
-> -	if (get_ucall(vm, VCPU_ID, NULL) != UCALL_SYNC) {
-> +	if (get_ucall(vm, vcpu_id, NULL) != UCALL_SYNC) {
->  		TEST_ASSERT(false,
->  			    "Invalid guest sync status: exit_reason=%s\n",
->  			    exit_reason_str(run->exit_reason));
-> @@ -269,11 +280,13 @@ static int setup_demand_paging(struct kvm_vm *vm,
->  #define PAGE_SHIFT_4K  12
->  
->  static void run_test(enum vm_guest_mode mode, bool use_uffd,
-> -		     useconds_t uffd_delay, uint64_t guest_memory_bytes)
-> +		     useconds_t uffd_delay, uint64_t vcpu_wss)
-
-Not sure why guest_memory_bytes was renamed to vcpu_wss. What is wss?
-Working set size?
-
->  {
->  	pthread_t vcpu_thread;
->  	pthread_t uffd_handler_thread;
->  	struct kvm_vm *vm;
-> +	struct vcpu_thread_args vcpu_args;
-> +	uint64_t guest_num_pages;
->  	int r;
->  
->  	/*
-> @@ -283,16 +296,15 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
->  	 * number will be enough for all archs. (e.g., 64K page size guest
->  	 * will need even less memory for page tables).
->  	 */
-> -	vm = create_vm(mode, VCPU_ID,
-> -		       (2 * guest_memory_bytes) >> PAGE_SHIFT_4K,
-> +	vm = create_vm(mode, VCPU_ID, (2 * vcpu_wss) >> PAGE_SHIFT_4K,
->  		       guest_code);
->  
->  	guest_page_size = vm_get_page_size(vm);
->  
-> -	TEST_ASSERT(guest_memory_bytes % guest_page_size == 0,
-> +	TEST_ASSERT(vcpu_wss % guest_page_size == 0,
->  		    "Guest memory size is not guest page size aligned.");
->  
-> -	guest_num_pages = guest_memory_bytes / guest_page_size;
-> +	guest_num_pages = vcpu_wss / guest_page_size;
->  
->  #ifdef __s390x__
->  	/* Round up to multiple of 1M (segment size) */
-> @@ -308,9 +320,9 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
->  		    guest_num_pages, vm_get_max_gfn(vm));
->  
->  	host_page_size = getpagesize();
-> -	TEST_ASSERT(guest_memory_bytes % host_page_size == 0,
-> +	TEST_ASSERT(vcpu_wss % host_page_size == 0,
->  		    "Guest memory size is not host page size aligned.");
-> -	host_num_pages = guest_memory_bytes / host_page_size;
-> +	host_num_pages = vcpu_wss / host_page_size;
->  
->  	guest_test_phys_mem = (vm_get_max_gfn(vm) - guest_num_pages) *
->  			      guest_page_size;
-> @@ -354,10 +366,12 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
->  	/* Export the shared variables to the guest */
->  	sync_global_to_guest(vm, host_page_size);
->  	sync_global_to_guest(vm, guest_page_size);
-> -	sync_global_to_guest(vm, guest_test_virt_mem);
-> -	sync_global_to_guest(vm, guest_num_pages);
->  
-> -	pthread_create(&vcpu_thread, NULL, vcpu_worker, vm);
-> +	vcpu_args.vm = vm;
-> +	vcpu_args.vcpu_id = VCPU_ID;
-> +	vcpu_args.gva = guest_test_virt_mem;
-> +	vcpu_args.pages = guest_num_pages;
-> +	pthread_create(&vcpu_thread, NULL, vcpu_worker, &vcpu_args);
->  
->  	/* Wait for the vcpu thread to quit */
->  	pthread_join(vcpu_thread, NULL);
-> @@ -404,8 +418,7 @@ static void help(char *name)
->  	printf(" -d: add a delay in usec to the User Fault\n"
->  	       "     FD handler to simulate demand paging\n"
->  	       "     overheads. Ignored without -u.\n");
-> -	printf(" -b: specify the number of bytes of memory which should be\n"
-> -	       "     allocated to the guest.\n");
-> +	printf(" -b: specify the working set size, in bytes for each vCPU.\n");
->  	puts("");
->  	exit(0);
->  }
-> @@ -413,7 +426,7 @@ static void help(char *name)
->  int main(int argc, char *argv[])
->  {
->  	bool mode_selected = false;
-> -	uint64_t guest_memory_bytes = DEFAULT_GUEST_TEST_MEM_SIZE;
-> +	uint64_t vcpu_wss = DEFAULT_GUEST_TEST_MEM_SIZE;
->  	unsigned int mode;
->  	int opt, i;
->  	bool use_uffd = false;
-> @@ -448,7 +461,7 @@ int main(int argc, char *argv[])
->  				    "A negative UFFD delay is not supported.");
->  			break;
->  		case 'b':
-> -			guest_memory_bytes = strtoull(optarg, NULL, 0);
-> +			vcpu_wss = strtoull(optarg, NULL, 0);
->  		case 'h':
->  		default:
->  			help(argv[0]);
-> @@ -462,7 +475,7 @@ int main(int argc, char *argv[])
->  		TEST_ASSERT(vm_guest_mode_params[i].supported,
->  			    "Guest mode ID %d (%s) not supported.",
->  			    i, vm_guest_mode_string(i));
-> -		run_test(i, use_uffd, uffd_delay, guest_memory_bytes);
-> +		run_test(i, use_uffd, uffd_delay, vcpu_wss);
->  	}
->  
->  	return 0;
-> -- 
-> 2.24.1.735.g03f4e72817-goog
->
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 347782a24a35..c4aa683a1c20 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -217,6 +217,33 @@ static bool bvec_split_segs(const struct request_queue *q,
+ 	return len > 0 || bv->bv_len > max_len;
+ }
+ 
++static void blk_dump_bio(struct request_queue *q, struct bio *bio,
++		unsigned secs)
++{
++	struct bvec_iter iter;
++	struct bio_vec bvec;
++	int i = 0;
++	unsigned sectors = 0;
++
++	printk("max_sectors %u max_segs %u max_seg_size %u mask %lx\n",
++			get_max_io_size(q, bio), queue_max_segments(q),
++			queue_max_segment_size(q), queue_segment_boundary(q));
++	printk("%p: %hx/%hx %llu %u, %u\n",
++                       bio,
++                       bio->bi_flags, bio->bi_opf,
++                       (unsigned long long)bio->bi_iter.bi_sector,
++                       bio->bi_iter.bi_size, secs);
++	bio_for_each_bvec(bvec, bio, iter) {
++		sectors += bvec.bv_len >> 9;
++		trace_printk("\t %d: %lu %u %u(%u)\n", i++,
++				(unsigned long)page_to_pfn(bvec.bv_page),
++				bvec.bv_offset,
++				bvec.bv_len, bvec.bv_len >> 12);
++	}
++	printk("\t total sectors %u\n", sectors);
++}
++
++
+ /**
+  * blk_bio_segment_split - split a bio in two bios
+  * @q:    [in] request queue pointer
+@@ -273,6 +300,9 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
+ 	return NULL;
+ split:
+ 	*segs = nsegs;
++
++	if (sectors <= 0 || sectors >= bio_sectors(bio))
++		blk_dump_bio(q, bio, sectors);
+ 	return bio_split(bio, sectors, GFP_NOIO, bs);
+ }
+ 
 
 Thanks,
-drew
+Ming
 
