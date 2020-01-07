@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A7AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DFEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C538214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CB7208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430622;
-	bh=QestFWGVHbe/Gb8feuUz8X8ErqxKLaYAg4icAmx07Rk=;
+	s=default; t=1578430624;
+	bh=UK7zvFuwT4nHkVVu7h+EziwchvrSTVowkisJx0hoD5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSyUdnZ5uwAeALZH6EiO8cGNVLsZqX0KSXiIDK4s+ypZTkFiX90nVMbQFMJ7wfi2g
-	 IoIRvZtZIfYZ2CUD3YCYbWz4syI4fqsJhSUZZjm/cqAj8OMv82pF5UUkxkDiu4cS9k
-	 aOqyHl7xX6JdphR5fCrEdtQ67gb1EnE0XNFn0UWQ=
+	b=bWUrfS/ye2u8vPFthoYD64gPjD9eV4v6gTWCSQofSfiLxWyX0+iFc7Rpb/LDOWrHq
+	 fL42gmEu81efdBxT7VkFx/eTq6vL8DLlcg4PkJZYyKUY2Zdmo5XSNGwm8VUd5YQ8Bc
+	 MmuWcosSOzZqBUUAdDQpKlNhY3vLAqqaMG3tw+Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgAGU5B (ORCPT
+        id S1727400AbgAGU5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727313AbgAGU4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:54 -0500
+        id S1727340AbgAGU45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C683208C4;
-        Tue,  7 Jan 2020 20:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31AA214D8;
+        Tue,  7 Jan 2020 20:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430613;
-        bh=QestFWGVHbe/Gb8feuUz8X8ErqxKLaYAg4icAmx07Rk=;
+        s=default; t=1578430616;
+        bh=UK7zvFuwT4nHkVVu7h+EziwchvrSTVowkisJx0hoD5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/MVEMTg5PmYQnF6tS5iBI48WLCxVrlOjN0JTlvI2nkeyl66oYaRJyA00EV0lLAJ3
-         I8gF2VJVfnPbrdHb8JlNv4x4ywKeWDQB3Wu6mYdAv1CCcUI7vvNuetOJFuvIE0zj3o
-         +nuzm9T8yIkampk/c1jhDpywmJPZZTe7JFif5Pjg=
+        b=JBiumg8OrWyi6/Tcmt0AO5FJ4dZ1AftPOCyhS23hLZGG9FnbXiNyjb10UXBpMFYPo
+         quPaWW8IL1DWWJm4TP1DMfB8DthZSbAKK0yhti2uHuj4Jty2/XZAMaU7cFx5y8Y+LR
+         Q81YYcHeEUqLhTIZzk4KS2hxAsOcr0NH6M9hUdUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
+        Himanshu Madhani <hmadhani@marvel.com>,
         Hannes Reinecke <hare@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
         Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 025/191] scsi: qla2xxx: Drop superfluous INIT_WORK of del_work
-Date:   Tue,  7 Jan 2020 21:52:25 +0100
-Message-Id: <20200107205334.348754280@linuxfoundation.org>
+Subject: [PATCH 5.4 026/191] scsi: qla2xxx: Dont call qlt_async_event twice
+Date:   Tue,  7 Jan 2020 21:52:26 +0100
+Message-Id: <20200107205334.400880662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -66,38 +66,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 600954e6f2df695434887dfc6a99a098859990cf ]
+[ Upstream commit 2c2f4bed9b6299e6430a65a29b5d27b8763fdf25 ]
 
-del_work is already initialized inside qla2x00_alloc_fcport, there's no
-need to overwrite it. Indeed, it might prevent complete traversal of
-workqueue list.
+MBA_PORT_UPDATE generates duplicate log lines in target mode because
+qlt_async_event is called twice. Drop the calls within the case as the
+function will be called right after the switch statement.
 
-Fixes: a01c77d2cbc45 ("scsi: qla2xxx: Move session delete to driver work queue")
 Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-5-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-8-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvel.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 950764ed4ab2..18522ac79d9e 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1265,7 +1265,6 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
- 	    "Scheduling sess %p for deletion %8phC\n",
- 	    sess, sess->port_name);
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 9204e8467a4e..b3766b1879e3 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1061,8 +1061,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 			ql_dbg(ql_dbg_async, vha, 0x5011,
+ 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
+ 			    mb[1], mb[2], mb[3]);
+-
+-			qlt_async_event(mb[0], vha, mb);
+ 			break;
+ 		}
  
--	INIT_WORK(&sess->del_work, qla24xx_delete_sess_fn);
- 	WARN_ON(!queue_work(sess->vha->hw->wq, &sess->del_work));
- }
+@@ -1079,8 +1077,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
+ 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
+ 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
+ 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
+-
+-		qlt_async_event(mb[0], vha, mb);
+ 		break;
  
+ 	case MBA_RSCN_UPDATE:		/* State Change Registration */
 -- 
 2.20.1
 
