@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195CFC33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9149C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF9C2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B113320880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431923;
-	bh=mEoiRRRiyvq4fUVlCBdBtBnEX8SFrQs/gQdcwaGPweI=;
+	s=default; t=1578431927;
+	bh=hNWhhKLpEyLjW7HqyBgu6SklEZFnQ74DzmvMpjq06+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaQR/3EiLXaLdiQ0Xp/y15CbqBKOj5g0UtZ/JXSoesuLZ1WuBJFG9viP5HGTTXIXF
-	 yxRQHx1ZJ/h0rk8AFVu7vp/Tj9NpwTiyMQwQ30bwEgi8eLOYFsv3t6nZfWXJQAQ7BH
-	 9gzwS6Dni59qz0CbX4Tv6Q8zBON0pel9qBiioR2A=
+	b=y8yraifs43MFEM1Ydu8Y4c7B/5xtV1c8AQ7pr4GnSQVwnhsWrU0UW3ZusklTg3Q2Y
+	 pVS7hXp85CFz2zsT4Wz8EmV9Noz50c9WXQPtzXTqHsGDjdvIddTHX2kpi8hRUOpzEB
+	 Fya0eYUWkmiuTIVqi1JUV7XxZsZZfesvKz3otuq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgAGVSm (ORCPT
+        id S1729158AbgAGVE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:18:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgAGVFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:02 -0500
+        id S1729094AbgAGVEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:04:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99612081E;
-        Tue,  7 Jan 2020 21:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 459AB208C4;
+        Tue,  7 Jan 2020 21:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431102;
-        bh=mEoiRRRiyvq4fUVlCBdBtBnEX8SFrQs/gQdcwaGPweI=;
+        s=default; t=1578431087;
+        bh=hNWhhKLpEyLjW7HqyBgu6SklEZFnQ74DzmvMpjq06+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ije/gydtrKl3RjGz6f8LarjkIGtEx6xuLNfralKq9tDxT5XygDfEPS3KwqJQ9db2P
-         e4ki38WSmgoWT21s0k33KEP19heGV4/CEsrmScoOTlsm7kR1SeFZSAkl5l7MoQ1neg
-         SbiCSWNbN9xWF4stgHIPfhMg6VXVSoqKUBU/S8s0=
+        b=YZjJsg5rGXB1y5rDmXzIo88rWTfrG/UwM3e69VdffQt/U5VwKf3Xmkzy3LTuAfZ4C
+         VZF1lRt5vowIr7w1FvyC/XP0JH4tsQEmY0T1LQMDPYal2wGJS65O4HgLoO+Yq95Mde
+         NLmeJQJxo+VKYLgpMKsMySXu9sPqTJKQ1nxTnCqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/115] PM / devfreq: Fix devfreq_notifier_call returning errno
-Date:   Tue,  7 Jan 2020 21:53:37 +0100
-Message-Id: <20200107205244.929267818@linuxfoundation.org>
+Subject: [PATCH 4.19 028/115] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+Date:   Tue,  7 Jan 2020 21:53:58 +0100
+Message-Id: <20200107205300.877535070@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,71 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit e876e710ede23f670494331e062d643928e4142a ]
+[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
 
-Notifier callbacks shouldn't return negative errno but one of the
-NOTIFY_OK/DONE/BAD values.
+Function perf_event_ever_overflow() and perf_event_account_interrupt()
+are called every time samples are processed by the interrupt handler.
+However function perf_event_account_interrupt() has checks to avoid being
+flooded with interrupts (more then 1000 samples are received per
+task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
+added to the perf data. The perf subsystem limit calculation is:
 
-The OPP core will ignore return values from notifiers but returning a
-value that matches NOTIFY_STOP_MASK will stop the notification chain.
+    maximum sample frequency := 100000 --> 1 samples per 10 us
+    task_tick = 10ms = 10000us --> 1000 samples per task_tick
 
-Fix by always returning NOTIFY_OK.
+The work flow is
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+measurement_alert() uses SDBT head and each SBDT points to 511
+ SDB pages, each with 126 sample entries. After processing 8 SBDs
+ and for each valid sample calling:
+
+     perf_event_overflow()
+       perf_event_account_interrupts()
+
+there is a considerable amount of samples being dropped, especially when
+the sample frequency is very high and near the 100000 limit.
+
+To avoid the high amount of samples being dropped near the end of a
+task_tick time frame, increment the sampling interval in case of
+dropped events. The CPU Measurement sampling facility on the s390
+supports only intervals, specifiing how many CPU cycles have to be
+executed before a sample is generated. Increase the interval when the
+samples being generated hit the task_tick limit.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 61fbaa89d7b4..34e297f28fc2 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -538,26 +538,28 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
- 				 void *devp)
- {
- 	struct devfreq *devfreq = container_of(nb, struct devfreq, nb);
--	int ret;
-+	int err = -EINVAL;
- 
- 	mutex_lock(&devfreq->lock);
- 
- 	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
--	if (!devfreq->scaling_min_freq) {
--		mutex_unlock(&devfreq->lock);
--		return -EINVAL;
--	}
-+	if (!devfreq->scaling_min_freq)
-+		goto out;
- 
- 	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
--	if (!devfreq->scaling_max_freq) {
--		mutex_unlock(&devfreq->lock);
--		return -EINVAL;
--	}
-+	if (!devfreq->scaling_max_freq)
-+		goto out;
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 5c3fd9032b74..0f4957ac81b6 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1273,6 +1273,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 	if (sampl_overflow)
+ 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
+ 						 sampl_overflow, 1 + num_sdb);
 +
-+	err = update_devfreq(devfreq);
- 
--	ret = update_devfreq(devfreq);
-+out:
- 	mutex_unlock(&devfreq->lock);
-+	if (err)
-+		dev_err(devfreq->dev.parent,
-+			"failed to update frequency from OPP notifier (%d)\n",
-+			err);
- 
--	return ret;
-+	return NOTIFY_OK;
- }
- 
- /**
++	/* Perf_event_overflow() and perf_event_account_interrupt() limit
++	 * the interrupt rate to an upper limit. Roughly 1000 samples per
++	 * task tick.
++	 * Hitting this limit results in a large number
++	 * of throttled REF_REPORT_THROTTLE entries and the samples
++	 * are dropped.
++	 * Slightly increase the interval to avoid hitting this limit.
++	 */
++	if (event_overflow) {
++		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
++		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
++				    __func__,
++				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
++	}
++
+ 	if (sampl_overflow || event_overflow)
+ 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
+ 				    "overflow stats: sample=%llu event=%llu\n",
 -- 
 2.20.1
 
