@@ -2,38 +2,38 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914A2C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280B1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6944420848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F025A20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tQksiQGL"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b8NkhnkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgAGTn4 (ORCPT
+        id S1728741AbgAGToA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:43:56 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:34188 "EHLO
+        Tue, 7 Jan 2020 14:44:00 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:34272 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgAGTnz (ORCPT
+        with ESMTP id S1728660AbgAGTnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 14:43:55 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 523E72007683;
-        Tue,  7 Jan 2020 11:43:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 523E72007683
+        by linux.microsoft.com (Postfix) with ESMTPSA id 08ACF20B479D;
+        Tue,  7 Jan 2020 11:43:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 08ACF20B479D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578426234;
-        bh=WXotn1iSKnCuEmTsYF5Dp7o6kjEJuPdeZMzgjAtruXM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tQksiQGLBVmnl3G2L1YmWnC0O1yK837EQZwDmMfDuhiQKynyq7CgUiemLfgpblsms
-         mLq/l6byFh6QZ4YG4QTvgPciMO6ejyx9hQBT/9Hi4phAPvzxWIFJ3X8a3uQ9jwZsBx
-         YHVuaC/2AyR524O0oVlCslwFS9ULsKqUToXYsmZQ=
+        s=default; t=1578426235;
+        bh=vKopEemioZDxxkhIIhSrX9LVxTYuu1tqhtvTwXFOlw8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b8NkhnkW15jpOvwrsK2vCU2avcMqxoWfj7dFv01AQww+lucA4+JhSNjxL845MgVrt
+         /2zrxEA1T7oS2TqQrLBAyBpYvOXrajBEKhDihs6ARkRhYiUZ4yMHiDU5dS9RZdc8SU
+         ZRF2oHLjWMor95mHprMl9e8tm04ZaFhzcRjr2t2E=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
         linux-integrity@vger.kernel.org
@@ -41,51 +41,126 @@ Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
         mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
         sashal@kernel.org, jamorris@linux.microsoft.com,
         linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH 0/4] KEYS: Measure keys when they are created or updated
-Date:   Tue,  7 Jan 2020 11:43:46 -0800
-Message-Id: <20200107194350.3782-1-nramas@linux.microsoft.com>
+Subject: [PATCH 4/4] IMA: Read keyrings= option from the IMA policy
+Date:   Tue,  7 Jan 2020 11:43:50 -0800
+Message-Id: <20200107194350.3782-5-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200107194350.3782-1-nramas@linux.microsoft.com>
+References: <20200107194350.3782-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 88e70da170e8 ("IMA: Define an IMA hook to measure keys")
-in next-integrity added an IMA hook to measure keys when they
-are created or updated in the system. This hook is defined in
-ima_asymmetric_keys.c which was built if
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE was defined.
-But this config is a tristate (and not a bool type).
-If CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE was set to "m" in
-the .config, ima_asymmetric_keys.c was built as a kernel module
-when it is not a kernel module. This issue was reported by
-"kbuild test robot <lkp@intel.com>".
+Read "keyrings=" option, if specified in the IMA policy, and store in
+the list of IMA rules when the configured IMA policy is read.
 
-This change defines a new config namely
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS to enable building
-ima_asymmetric_keys.c. This new config is enabled when both
-CONFIG_IMA and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE are defined.
+This patch defines a new policy token enum namely Opt_keyrings
+and an option flag IMA_KEYRINGS for reading "keyrings=" option
+from the IMA policy.
 
-Lakshmi Ramasubramanian (4):
-  IMA: Define an IMA hook to measure keys
-  KEYS: Call the IMA hook to measure keys
-  IMA: Add support to limit measuring keys
-  IMA: Read keyrings= option from the IMA policy
+Updated ima_parse_rule() to parse "keyrings=" option in the policy.
+Updated ima_policy_show() to display "keyrings=" option.
 
- Documentation/ABI/testing/ima_policy         | 10 ++-
- include/linux/ima.h                          | 14 +++
- security/integrity/ima/Kconfig               |  9 ++
- security/integrity/ima/Makefile              |  1 +
- security/integrity/ima/ima.h                 |  8 +-
- security/integrity/ima/ima_api.c             |  8 +-
- security/integrity/ima/ima_appraise.c        |  4 +-
- security/integrity/ima/ima_asymmetric_keys.c | 58 +++++++++++++
- security/integrity/ima/ima_main.c            |  9 +-
- security/integrity/ima/ima_policy.c          | 91 ++++++++++++++++++--
- security/keys/key.c                          | 10 +++
- 11 files changed, 204 insertions(+), 18 deletions(-)
- create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
+The following example illustrates how key measurement can be verified.
 
+Sample "key" measurement rule in the IMA policy:
+
+measure func=KEY_CHECK uid=0 keyrings=.ima|.evm template=ima-buf
+
+Display "key" measurement in the IMA measurement list:
+
+cat /sys/kernel/security/ima/ascii_runtime_measurements
+
+10 faf3...e702 ima-buf sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b .ima 308202863082...4aee
+
+Verify "key" measurement data for a key added to ".ima" keyring:
+
+cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | grep -m 1 "\.ima" | cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der | sha256sum | cut -d' ' -f 1
+
+The output of the above command should match the template hash
+of the first "key" measurement entry in the IMA measurement list for
+the key added to ".ima" keyring.
+
+The file namely "ima-cert.der" generated by the above command
+should be a valid x509 certificate (in DER format) and should match
+the one that was used to import the key to the ".ima" keyring.
+The certificate file can be verified using openssl tool.
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+---
+ security/integrity/ima/ima_policy.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 7667ca546ce9..8f2ca487753b 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -34,6 +34,7 @@
+ #define IMA_EUID	0x0080
+ #define IMA_PCR		0x0100
+ #define IMA_FSNAME	0x0200
++#define IMA_KEYRINGS	0x0400
+ 
+ #define UNKNOWN		0
+ #define MEASURE		0x0001	/* same as IMA_MEASURE */
+@@ -820,7 +821,8 @@ enum {
+ 	Opt_uid_gt, Opt_euid_gt, Opt_fowner_gt,
+ 	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
+ 	Opt_appraise_type, Opt_appraise_flag,
+-	Opt_permit_directio, Opt_pcr, Opt_template, Opt_err
++	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
++	Opt_err
+ };
+ 
+ static const match_table_t policy_tokens = {
+@@ -856,6 +858,7 @@ static const match_table_t policy_tokens = {
+ 	{Opt_permit_directio, "permit_directio"},
+ 	{Opt_pcr, "pcr=%s"},
+ 	{Opt_template, "template=%s"},
++	{Opt_keyrings, "keyrings=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -1105,6 +1108,23 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 			result = 0;
+ 			entry->flags |= IMA_FSNAME;
+ 			break;
++		case Opt_keyrings:
++			ima_log_string(ab, "keyrings", args[0].from);
++
++			if ((entry->keyrings) ||
++			    (entry->action != MEASURE) ||
++			    (entry->func != KEY_CHECK)) {
++				result = -EINVAL;
++				break;
++			}
++			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
++			if (!entry->keyrings) {
++				result = -ENOMEM;
++				break;
++			}
++			result = 0;
++			entry->flags |= IMA_KEYRINGS;
++			break;
+ 		case Opt_fsuuid:
+ 			ima_log_string(ab, "fsuuid", args[0].from);
+ 
+@@ -1480,6 +1500,13 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 		seq_puts(m, " ");
+ 	}
+ 
++	if (entry->flags & IMA_KEYRINGS) {
++		if (entry->keyrings != NULL)
++			snprintf(tbuf, sizeof(tbuf), "%s", entry->keyrings);
++		seq_printf(m, pt(Opt_keyrings), tbuf);
++		seq_puts(m, " ");
++	}
++
+ 	if (entry->flags & IMA_PCR) {
+ 		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
+ 		seq_printf(m, pt(Opt_pcr), tbuf);
 -- 
 2.17.1
 
