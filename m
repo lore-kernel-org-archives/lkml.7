@@ -4,160 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5268C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AA1C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5E72081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD0C20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578394135;
-	bh=zxHNRJ8BMyhu9nKPoaajNBjN8A33KfzEyKTtopb08W0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u5Y3Y8PWp7hyu3wfmisc+wiIv6ara96BcajZxIPKgP411MN+2NtIjr7aogNim6brN
-	 /2zubvojJSY02vYkRLXK1ywLuGYln+KsJnyioM93vOkd//YVem2LvMe29PpzqZE9tI
-	 5gZVaObt8p4MO+JxIaY2afTmci92FAorpiknJdWA=
+	s=default; t=1578394187;
+	bh=hj5Ofem7QaFRGtGYasAZLFhJrthKQ3jmVb1gGcmhWog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KjxOXDJQQOitt0/vMOBR9q2sJLuMPQvMqknnAuVXOyaMcNrzc8C+7iVz7lZHoX8rB
+	 7wAacYXXqnxUtdzcUYwWexfD9UzzWYCl1MT1we2lpb7y8SztWbWT1t/bQ764YEqjcw
+	 kjLy6yeBWID2bFCEZlKIju1nquPRMlQHcMWGpjJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgAGKsy (ORCPT
+        id S1727907AbgAGKtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:48:54 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34351 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbgAGKsy (ORCPT
+        Tue, 7 Jan 2020 05:49:46 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43190 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbgAGKtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:48:54 -0500
-Received: by mail-ot1-f67.google.com with SMTP id a15so75887497otf.1;
-        Tue, 07 Jan 2020 02:48:53 -0800 (PST)
+        Tue, 7 Jan 2020 05:49:46 -0500
+Received: by mail-lj1-f194.google.com with SMTP id a13so54202160ljm.10;
+        Tue, 07 Jan 2020 02:49:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WSE97IsDt/0HNGDotMlpkWXy8wGljVOzhB0c9xp6lOQ=;
-        b=CgClBwzsglgCjFH7jdg5jX6oBmETH6CNZ+GEj6qCjKg+S5IT1Y7/ib8cFQIieikey8
-         pJX+0w5gNhGki9gAyOlAtF4nSXqvDuYEbY8EAJt1giRo6Em89z0g4ikRH5FqW7HUiMSt
-         tYmlFjowoStg++ONMkxW13NmKpjlfLPlwZlQTZDblo2N18J1cGPWwtvwbthYnvSooeNd
-         U9xF+uuecSgLhbG0Scse1mLLoIzOTMg8xhxoTbxLVU23h/IzyR0aKpAClmTJbSQ3iE2N
-         bLLfcOum6ZnYbPrIGEEbNfQganFapm+rjJWEl1LShpTUdmOkWsGKu05e1MMTqU15BBtS
-         r8YA==
-X-Gm-Message-State: APjAAAXwLPUnrJe/Hz1ggf/PN2dwevoBs2tz72bSDLKiHts7mYIjxCGK
-        JEEcgu45Y8t2b8bxc7irjAV1m8zRXrnnvkGPkIY=
-X-Google-Smtp-Source: APXvYqyb909xw3pW97wWn1+hEZa4V25wQcI/pM8kvkSjy7tVft8dVm7RxOov26ChMbLWIGhx807LcgPTRqNHsWQ5k50=
-X-Received: by 2002:a9d:7b4a:: with SMTP id f10mr12352350oto.4.1578394133504;
- Tue, 07 Jan 2020 02:48:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=igqXhyBK3Tw7qA7fPi39REnLMkJjJzXKeEqTbYMsdYc=;
+        b=l0jHNItq2YYyLLI71+2CMZbLiSREa/SoFLNKA8bzoB5kmQTT4AZExaG9MAYUFi1Po7
+         G6ojapTgMtFvQ6+siaUyi+408Bh3dj3w6eY9Q/IQ1+1IkltZ9edHl6u/5XfXFjOQFyOf
+         R4CtJFR+AhtvrFPOO2+o+JPJCV8AitRFi35ViK0yFexuCyiX6RYpnykK7iFVeYxU8TPd
+         Rlq7pS9nUSlwPZXdmSmxBEz3nUJixt5bLz4fAkUNNMCb5e0umTjXbkNkgshi+6xSyxF6
+         0bKn7EF+gTbBCjab6/1lRV/Jj7Ob5oX5LGQD+tTZgzP0tXVkPx8lUHvem3kQi7cFOnFy
+         8MLA==
+X-Gm-Message-State: APjAAAUrsf6YQOJOgeHuI3DlizmWBCyq2Wy74vpkEG7X3OQM3DDla77Y
+        mjVDxSQUuk87UqDds9gRZUCTIlLC
+X-Google-Smtp-Source: APXvYqyk7taw7aH61gPaO4/Bcm/IwyyD5N215qxAFhujxVFAEo3QZ8nXKpzfCjkOxDNawX2QfScHWg==
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr54938973ljl.5.1578394183491;
+        Tue, 07 Jan 2020 02:49:43 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id i4sm30438434ljg.102.2020.01.07.02.49.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 02:49:42 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iomQo-0005N9-Nw; Tue, 07 Jan 2020 11:49:50 +0100
+Date:   Tue, 7 Jan 2020 11:49:50 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Brant Merryman <Brant.Merryman@silabs.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>
+Subject: Re: [PATCH] Proper RTS control when buffers fill
+Message-ID: <20200107104950.GD30908@localhost>
+References: <4C7B31CD-2DD2-4824-AE67-9280199703BE@silabs.com>
 MIME-Version: 1.0
-References: <1577706988-56848-1-git-send-email-wangxiongfeng2@huawei.com>
-In-Reply-To: <1577706988-56848-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jan 2020 11:48:42 +0100
-Message-ID: <CAJZ5v0gN4A+eRtebxY=8DYfFiRE7FWO_3=a4m9G1_sgUsGPBWA@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI/PPTT: fixed some parameter type is not right
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tiantao <tiantao6@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4C7B31CD-2DD2-4824-AE67-9280199703BE@silabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 1:01 PM Xiongfeng Wang
-<wangxiongfeng2@huawei.com> wrote:
->
-> From: Tian Tao <tiantao6@huawei.com>
->
-> The fourth parameter 'level' of function 'acpi_find_cache_level()' is a
-> signed interger, but its caller 'acpi_find_cache_node()' passes that
-> parameter an unsigned interger. This patch fixes the paramter type
-> inconsistency.
->
-> Signed-off-by: Tian Tao <tiantao6@huawei.com>
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->
-> ---
-> v2:     fix the conflicts in the third hunk.
->         Modify the commit information a little bit.
-> ---
->  drivers/acpi/pptt.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index f31544d..4ae9335 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -98,11 +98,11 @@ static inline bool acpi_pptt_match_type(int table_type, int type)
->   *
->   * Return: The cache structure and the level we terminated with.
->   */
-> -static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
-> -                               int local_level,
-> -                               struct acpi_subtable_header *res,
-> -                               struct acpi_pptt_cache **found,
-> -                               int level, int type)
-> +static unsigned int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
-> +                                        unsigned int local_level,
-> +                                        struct acpi_subtable_header *res,
-> +                                        struct acpi_pptt_cache **found,
-> +                                        unsigned int level, int type)
->  {
->         struct acpi_pptt_cache *cache;
->
-> @@ -119,7 +119,7 @@ static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
->                         if (*found != NULL && cache != *found)
->                                 pr_warn("Found duplicate cache level/type unable to determine uniqueness\n");
->
-> -                       pr_debug("Found cache @ level %d\n", level);
-> +                       pr_debug("Found cache @ level %u\n", level);
->                         *found = cache;
->                         /*
->                          * continue looking at this node's resource list
-> @@ -132,16 +132,17 @@ static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
->         return local_level;
->  }
->
-> -static struct acpi_pptt_cache *acpi_find_cache_level(struct acpi_table_header *table_hdr,
-> -                                                    struct acpi_pptt_processor *cpu_node,
-> -                                                    int *starting_level, int level,
-> -                                                    int type)
-> +static struct acpi_pptt_cache *
-> +acpi_find_cache_level(struct acpi_table_header *table_hdr,
-> +                     struct acpi_pptt_processor *cpu_node,
-> +                     unsigned int *starting_level, unsigned int level,
-> +                     int type)
->  {
->         struct acpi_subtable_header *res;
-> -       int number_of_levels = *starting_level;
-> +       unsigned int number_of_levels = *starting_level;
->         int resource = 0;
->         struct acpi_pptt_cache *ret = NULL;
-> -       int local_level;
-> +       unsigned int local_level;
->
->         /* walk down from processor node */
->         while ((res = acpi_get_pptt_resource(table_hdr, cpu_node, resource))) {
-> @@ -321,12 +322,12 @@ static struct acpi_pptt_cache *acpi_find_cache_node(struct acpi_table_header *ta
->                                                     unsigned int level,
->                                                     struct acpi_pptt_processor **node)
->  {
-> -       int total_levels = 0;
-> +       unsigned int total_levels = 0;
->         struct acpi_pptt_cache *found = NULL;
->         struct acpi_pptt_processor *cpu_node;
->         u8 acpi_type = acpi_cache_type(type);
->
-> -       pr_debug("Looking for CPU %d's level %d cache type %d\n",
-> +       pr_debug("Looking for CPU %d's level %u cache type %d\n",
->                  acpi_cpu_id, level, acpi_type);
->
->         cpu_node = acpi_find_processor_node(table_hdr, acpi_cpu_id);
-> --
+On Wed, Dec 18, 2019 at 08:40:48PM +0000, Brant Merryman wrote:
 
-Applied for 5.6 as "ACPI: PPTT: Consistently use unsigned int as
-parameter type" with some minor changes in the changelog.
+You forgot to add the Subject prefix.
 
-Thanks!
+> CP210x hardware disables auto-RTS but leaves auto-CTS when
+> in hardware flow control mode and UART on cp210x hardware
+> is disabled. This allows data to flow out, but new data
+> will not come into the port. When re-opening the port, if
+> auto-CTS is enabled on the cp210x, then auto-RTS must be
+> re-enabled in the driver.
+> 
+> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+> ---
+>  drivers/usb/serial/cp210x.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+> index bcceb4ad8be0..74c9f3822bd2 100644
+> --- a/drivers/usb/serial/cp210x.c
+> +++ b/drivers/usb/serial/cp210x.c
+> @@ -917,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+>  	u32 baud;
+>  	u16 bits;
+>  	u32 ctl_hs;
+> +	u32 flow_repl;
+>  
+>  	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+>  
+> @@ -1015,8 +1016,24 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+>  	cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
+>  			sizeof(flow_ctl));
+>  	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+> +	flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
+
+Move inside the if block (after the comment).
+
+>  	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+>  		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
+> +		/*
+> +		 * CP210x hardware disables auto-RTS but leaves auto-CTS when
+> +		 * in hardware flow control mode and UART on cp210x hardware
+> +		 * is disabled. This allows data to flow out, but new data
+> +		 * will not come into the port. When re-opening the port, if
+> +		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
+> +		 * re-enabled in the driver.
+> +		 */
+
+Maybe drop the "allows data to flow out" bit, the uart has been disabled
+after all, right? And RTS is asserted on open by the TTY layer anyway so
+data should flow in once opened.
+
+As I asked you before, could you be more specific about what state
+RTS-line end up in when disabling the UART (e.g. 0x00: statically
+inactive)?
+
+> +		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
+> +		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
+> +
+> +		flow_ctl.ulControlHandshake = cpu_to_le32(ctl_hs);
+
+Again, this line is not needed.
+
+> +		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
+> +		cp210x_write_reg_block(port, CP210X_SET_FLOW, &flow_ctl, sizeof(flow_ctl));
+
+You still need to break this line. 
+
+> +
+>  		cflag |= CRTSCTS;
+>  	} else {
+>  		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
+
+Johan
