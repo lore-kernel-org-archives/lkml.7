@@ -2,128 +2,129 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4B5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E65C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C342087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124FE2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbgAGWP3 (ORCPT
+        id S1727300AbgAGWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:15:29 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:47015 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgAGWP2 (ORCPT
+        Tue, 7 Jan 2020 17:19:02 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:50311 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbgAGWTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:15:28 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Miqvq-1jIoEP0oqq-00eu3b; Tue, 07 Jan 2020 23:15:13 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ata: brcm: fix reset controller API usage
-Date:   Tue,  7 Jan 2020 23:15:00 +0100
-Message-Id: <20200107221506.2731280-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200107221506.2731280-1-arnd@arndb.de>
-References: <20200107221506.2731280-1-arnd@arndb.de>
+        Tue, 7 Jan 2020 17:19:01 -0500
+Received: by mail-io1-f72.google.com with SMTP id e13so778973iob.17
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 14:19:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=EdYBfb9elhNzCS6nVfUUeF91E19TZISwHJvUe8cvhIY=;
+        b=oqI3jKax4GQ8BqJ+/oFLeFwP5UYSFIQmVQL2Ub9b+jMjElNd+bKeTSw+70llVRP34H
+         vF1GrGoM60abmueU/zNOq/FBgXBu8nffJJKz1QF+0A9xqJJFVpi1TpUpQ18cD9LpaJED
+         W8fGohCy+LIF+Nb/PQNkQjRtScd54whdP5+TC/zjbCJ9fBths2/UJ17gO/8tMzfabFrx
+         RR9RsudUrFfIx34X4mtHoQwKF98dXBhpAN6aX0UK+iV7tqhFiqt5SNv+tBmbTA/CXzIa
+         Py7MK9emeGVMtoNeSXF4SOJ7AGNGPbwg1dDMknt0zzs++2tz9R4t6em28NPSZ+1mSjAB
+         G1qQ==
+X-Gm-Message-State: APjAAAU4vB1K7s54+lrMxi1fTvV7VvPiaro8w6NFBBVnVB1QMj0S6AKK
+        IUZt/jTJB0sp59O3U9WDWV9FcIj1Ol6cBMlCRRSScWWLnccr
+X-Google-Smtp-Source: APXvYqw4ziw6b0NOCP0C+XN7LSo85RyAPU0ikCkIYra/xOmqW2R+353h9sekM1tp7raPU7gtiJfNXipkNXEZP28R2uljf4K2iqbm
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:NmmCTE4SXgwe7dUPXnI9R0WefSBAKTAyb3PWuBBiYqWyYG90CIG
- 0a8RCDIQQ+Vd26gby7ZP3c2cW27ewxbB9iSPYUfA9EXVptS9kj5H0ENFlg31yYVdEBOj6sV
- acRO95sS1zZ6ZPeXqR8IRsnKduiT840K+cilEHftOVYbb5d6tsZbUbs3pmjvwPyFlFYG8kD
- veSvtvARr3CEDyBPO1AOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MVAdRrNCLEs=:KAngBEb356Ra2Eto7yZgT+
- iK2PfTImBXwfmwyBHC9TKyZgr8yiFTgG85pjfdAL9MpXWLEjAwHkiTi7q+B6ijTEUljlDxrlq
- /eLrS+y644W6iBzlHLnYiZY1NXYeeHjqs1HbPiSJCZgyDlFPZVPfz+i83NRwBrwFl8UZVCvhH
- NtqcgNB2MI/GPxHYw+yhp77ATL2+EfKPth+p3coW4rTzIjNcMq8mDAwv2UP2ruqD56hDj89gI
- iQb5vVzy/TvLj43PuAU8+jcPZ9WHMqzybrZdAN/50squZjxlzbrMfQeNE/wftSj4IhtHhE963
- zHl7NP3yNS1Ys/BFHY/KyQq3nrktYAuCe1P2wDTXqpu72LTWUfiivwRh1NdbzSkprAdYL2ciH
- /2v2DRQpAPsMH9l66Ery6vP8lTEAd/EDN5UuNL6fu10zw/G059jeAmSygj/MSVP7EEjus5SYy
- YBytvtfQXNJOPBOM2X+9J7mLNY2mecBwgdTz025IWvYc0j84WUG3FtcXInqJGquAkuwnUg8p0
- NEXgCgje0oSn1nvcJc2UvxpFn53Lx2wa5eg4U5kesL5/AvOGf0Uj5jBEk+hQU8kdH94J7GfeI
- GrYLbMA4hIJBSLKSo+f2LRYPrwLvhOQ8MBJ6LV+4jXtaiVtWOty2jGx7uQSH0qGzFHKQ2Ml6O
- 8atGV3xDiQ7Ofd47roRsJ0G7x8UgROHTjHU2u6QjA/wDpoTVQxCd6zpSG8Wb3/02SfgFX2wWn
- OrTI5rgxmJTvlmS2d8PcQHl0V8sNNry7nF62tKqtQyntmXjj3l9nKfhSEA6AEcAtk0r6I426Y
- kya9rlzWEyCT+V0o9ePI2nS3kkwUF9la10AAmPWad3nK1rfJdiag+1LE0IeOiX1HTp9laSJfZ
- 0NkMrQcShznSWX6fWYxg==
+X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr980111iop.144.1578435541031;
+ Tue, 07 Jan 2020 14:19:01 -0800 (PST)
+Date:   Tue, 07 Jan 2020 14:19:01 -0800
+In-Reply-To: <Pine.LNX.4.44L0.2001071624021.1567-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b962af059b9429bd@google.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
+From:   syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, ingrassia@epigenesys.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While fixing another issue in this driver I noticed it uses
-IS_ERR_OR_NULL(), which is almost always a mistake.
+Hello,
 
-Change the driver to use the proper devm_reset_control_get_optional()
-interface instead and remove the checks except for the one that
-checks for a failure in that function.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+WARNING in usbhid_raw_request/usb_submit_urb
 
-Fixes: 2b2c47d9e1fe ("ata: ahci_brcm: Allow optional reset controller to be used")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/ata/ahci_brcm.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+------------[ cut here ]------------
+usb 4-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 0 PID: 4185 at drivers/usb/core/urb.c:478  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:478
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 4185 Comm: syz-executor.3 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xef/0x16e lib/dump_stack.c:118
+  panic+0x2aa/0x6e1 kernel/panic.c:221
+  __warn.cold+0x2f/0x30 kernel/panic.c:582
+  report_bug+0x27b/0x2f0 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:478
+Code: 4d 85 ed 74 2c e8 68 90 e7 fd 4c 89 f7 e8 60 2c 1d ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 80 59 15 86 e8 10 ad bc fd <0f> 0b e9 20 f4  
+ff ff e8 3c 90 e7 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881c0017b30 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81295dad RDI: ffffed1038002f58
+RBP: 0000000000000000 R08: ffff8881cf3b6200 R09: fffffbfff11f1ec0
+R10: fffffbfff11f1ebf R11: ffffffff88f8f5ff R12: 0000000000000002
+R13: ffff8881d884d0a8 R14: ffff8881da3c70a0 R15: ffff8881ca8f1c00
+  usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
+  usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+  usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
+  usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:917 [inline]
+  usbhid_raw_request+0x21f/0x640 drivers/hid/usbhid/hid-core.c:1265
+  hid_hw_raw_request include/linux/hid.h:1079 [inline]
+  hidraw_send_report+0x296/0x500 drivers/hid/hidraw.c:151
+  hidraw_write+0x34/0x50 drivers/hid/hidraw.c:164
+  __vfs_write+0x76/0x100 fs/read_write.c:494
+  vfs_write+0x262/0x5c0 fs/read_write.c:558
+  ksys_write+0x127/0x250 fs/read_write.c:611
+  do_syscall_64+0xb6/0x5c0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a919
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f996c966c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a919
+RDX: 0000000000000002 RSI: 0000000020000040 RDI: 0000000000000007
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f996c9676d4
+R13: 00000000004cbe90 R14: 00000000004e5ce0 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 239333d11b88..7ac1141c6ad0 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -352,8 +352,7 @@ static int brcm_ahci_suspend(struct device *dev)
- 	else
- 		ret = 0;
- 
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		reset_control_assert(priv->rcdev);
-+	reset_control_assert(priv->rcdev);
- 
- 	return ret;
- }
-@@ -365,8 +364,7 @@ static int __maybe_unused brcm_ahci_resume(struct device *dev)
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
- 	int ret = 0;
- 
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
- 
-@@ -454,9 +452,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 	else
- 		reset_name = "ahci";
- 
--	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		reset_control_deassert(priv->rcdev);
-+	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-+	if (IS_ERR(priv->rcdev))
-+		return PTR_ERR(priv->rcdev);
-+
-+	reset_control_deassert(priv->rcdev);
- 
- 	hpriv = ahci_platform_get_resources(pdev, 0);
- 	if (IS_ERR(hpriv)) {
-@@ -520,8 +520,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- out_disable_clks:
- 	ahci_platform_disable_clks(hpriv);
- out_reset:
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		reset_control_assert(priv->rcdev);
-+	reset_control_assert(priv->rcdev);
- 	return ret;
- }
- 
--- 
-2.20.0
+
+Tested on:
+
+commit:         ecdf2214 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b2e656e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
+dashboard link: https://syzkaller.appspot.com/bug?extid=10e5f68920f13587ab12
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16c162aee00000
 
