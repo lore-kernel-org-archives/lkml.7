@@ -2,161 +2,154 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ED4C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BEC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66C22080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDC82080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TP0gEdiY"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="b7XXJm4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgAGNh4 (ORCPT
+        id S1728114AbgAGNi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:37:56 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47290 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGNhz (ORCPT
+        Tue, 7 Jan 2020 08:38:28 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26644 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727880AbgAGNi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:37:55 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007DbsqS117064;
-        Tue, 7 Jan 2020 07:37:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578404274;
-        bh=y7OG/HB4e1SJdhnzrFIBHuFkRinvpiow8MiLLExRC8g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TP0gEdiYlUHzzHL05xw6i7hvM8dCYkjnIA+wuOfaU61jB+GHvaiYMwHcWPuT9kvx8
-         8DOslR5vxE4NhgQ7Dj0neNcVqUh7Lk6VEH1VCwKCgVpN5SwHPD+RtfOUQLY1bHZsF0
-         t3tu/3PawvBJyBx+XEr7GqvrAeT7cBxgrey56+S4=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007Dbsc3000940
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 07:37:54 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 07:37:54 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 07:37:53 -0600
-Received: from [10.250.65.50] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Dbrhw047496;
-        Tue, 7 Jan 2020 07:37:53 -0600
-Subject: Re: [PATCHv4 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, <s-anna@ti.com>
-References: <20200102131845.12992-1-t-kristo@ti.com>
- <20200102131845.12992-7-t-kristo@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <f380b7a7-cef5-bf56-2344-49b83a15422e@ti.com>
-Date:   Tue, 7 Jan 2020 08:37:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 08:38:28 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007Dai0C031061;
+        Tue, 7 Jan 2020 08:37:53 -0500
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xarg9700u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 08:37:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X3PutjIminsTL8rN5N0KsTr9pD8JymHE3p8bIwGGv/XQj7uTCh1swAkJGa/fHlDdZKPgK+LG1TbA6o3g/j7F5UjfxOvzfGNKgm0qo4Y/9XpKY7Vb0HKhZ1e7TeQurJO3IMIhOaKvWK+i2x05OhHjYM63oU9B2WQWh4PPnvpIzdI+5/+Luk4ra+QTcWzJgf/JIID4RFxRurQg0r9btK3uOeDKfahQSo4UyrCXG18kcDo6ScaVgRCaL3MpDDtD04w4wF+g9CLrTaPjF+t+ieeZoUk+d3W4Mt5AVQd+sXyPuChHag3vuy5idevQD6KEN0fVt8BQ/ifesPA2tkfUzfXAcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
+ b=VoXgZSM6oQbKJ4FWs7pdzP0Jt2riXMvItCGZyUzzWw4Aadd918MA9kOavCQFL/N4s7UChVytgte+nDJieXLk2Whuc4P9G6oayd5dP/3wgXU1mMjmvSWodamVXm2cJ14cPCCJK6OujeaT2w0xiDGUTtrRYmFmnWGZaPC4GStb5PKkzz8dD7SlYTzUWLju9mbY5bAtpnQSEESWy8aY6JeT1qsRlE4fXY+R/iS0hF+7kZjp4rtD2YvcSVZyIRf/LzkU4wnRwwM8vlnpcjTum66JWIqMgnU1f43U+s8VbfoGjoowfFXGNZZAZM8dVzhUbTYyHVfVjNjQfPpPz0OypQ5Wvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=lists.freedesktop.org
+ smtp.mailfrom=analog.com; dmarc=bestguesspass action=none
+ header.from=analog.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
+ b=b7XXJm4Ka4urUESs9MEn0NbQvlmQPYDkXDbjkFJFw5u8oKARVgoAwucdU8F7AMeFDHxKTv/UUIAQnKndLu6jFcPjhAM+0D4SAEA9fCFYqnRgfdKJrGobGWQByemdNlPzrpVr2dHckBEUoTY3q45/Wipg0J1rIoa1gXX+JH83VEk=
+Received: from BN3PR03CA0103.namprd03.prod.outlook.com (2603:10b6:400:4::21)
+ by DM6PR03MB3532.namprd03.prod.outlook.com (2603:10b6:5:ba::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15; Tue, 7 Jan
+ 2020 13:37:50 +0000
+Received: from CY1NAM02FT033.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::203) by BN3PR03CA0103.outlook.office365.com
+ (2603:10b6:400:4::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend
+ Transport; Tue, 7 Jan 2020 13:37:50 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT033.mail.protection.outlook.com (10.152.75.179) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2602.11
+ via Frontend Transport; Tue, 7 Jan 2020 13:37:49 +0000
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 007DbbDu004373
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:37:37 -0800
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Jan 2020
+ 08:37:47 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 7 Jan 2020 08:37:47 -0500
+Received: from btogorean-pc.ad.analog.com ([10.48.65.146])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 007DbflP002280;
+        Tue, 7 Jan 2020 08:37:41 -0500
+From:   Bogdan Togorean <bogdan.togorean@analog.com>
+To:     <dri-devel@lists.freedesktop.org>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <sam@ravnborg.org>, <alexander.deucher@amd.com>,
+        <matt.redfearn@thinci.com>, <robdclark@chromium.org>,
+        <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>
+Subject: [RESEND v3 0/2] drm: bridge: adv7511: Add support For ADV7535
+Date:   Tue, 7 Jan 2020 15:34:30 +0200
+Message-ID: <20200107133431.5201-1-bogdan.togorean@analog.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200102131845.12992-7-t-kristo@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(39860400002)(346002)(199004)(189003)(246002)(4744005)(8936002)(8676002)(6916009)(2616005)(1076003)(7416002)(5660300002)(86362001)(356004)(36756003)(6666004)(7636002)(426003)(44832011)(186003)(336012)(478600001)(2906002)(107886003)(316002)(54906003)(26005)(7696005)(70586007)(70206006)(4326008)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3532;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f5c145c7-01a8-4221-4bfa-08d79376c9ed
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3532:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB35321A3FE1FC408E04DA5FB89B3F0@DM6PR03MB3532.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-Forefront-PRVS: 027578BB13
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 11lT62xBRkJmxzTNZuLZOzB4Xjk+YADi/nW/BSLhNG4SRvNm/jk4KfDrKip6ArJ10UTGZfi0JDl+dKa3ulvhpctUvoJlTFmnZDcp+7wFYVu3/CLg7wJafo1VYkEVblC8ib1S3MesqvJ2QAP/bsbYyzUGCr5bsSS2uCrby3wSenGMDv3fM2mdUMoo8Kl16qsgppM5k94GBlCSAcXpKD3CMhWZ2RCOopgc3N3G04kbG6stx6CbYVv0/qnyAidk96ACF3XCiQ9jxC5h1IWqdztXS7+IZbhwMUu+q0jRf166xFhRAK1I0K7f/8vhBFbZNaNHaZ5cKfYhWLKbSX4ZWWp8FUdzXJcxM41JdEbJTSEbWiWceosEGj50ArZe2sWHtfHKYOWe3R6TAkRxENlD299h3F+5g/yovcEpzBlttO5N5sFRH8UcWptoacpKPH+7z/IMyB3W70sezCEk0+RjULxAotZDOvPECcZ7B1tMNvYUzSQr6RFk52OTH7kLppqe90JJ
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 13:37:49.7789
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5c145c7-01a8-4221-4bfa-08d79376c9ed
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3532
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 priorityscore=1501 spamscore=0 suspectscore=1
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
+ mlxlogscore=767 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 8:18 AM, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The reserved memory nodes are not assigned to platform devices by
-> default in the driver core to avoid the lookup for every platform
-> device and incur a penalty as the real users are expected to be
-> only a few devices.
-> 
-> OMAP remoteproc devices fall into the above category and the OMAP
-> remoteproc driver _requires_ specific CMA pools to be assigned
-> for each device at the moment to align on the location of the
-> vrings and vring buffers in the RTOS-side firmware images. So,
+This patch-set add support for ADV7535 part in ADV7511 driver.
 
+ADV7535 and ADV7533 are pin to pin compatible parts but ADV7535
+support TMDS clock upto 148.5Mhz and resolutions up to 1080p@60Hz.
 
-Requires only at the moment due to firmware..
+---
+Changes in v3:
+ - remove CONFIG_DRM_I2C_ADV7533 from Kconfig. Now driver support
+all chip versions
+ - create macros for v1p2 config registers
+ - remove dummy functions from header
 
-This sounds like some firmware images hard-coded their vring addresses
-instead of getting them dynamically as they should and we are hacking
-around that on the kernel side by giving them the addresses they use as
-carveouts.
+Bogdan Togorean (2):
+  dt-bindings: drm: bridge: adv7511: Add ADV7535 support
+  drm: bridge: adv7511: Add support for ADV7535
 
-Should we rather make use of the IOMMU attached to the DSP to map any
-kernel address to the DSP where the firmware expects it? Or better yet
-fixup the firmwares.
+ .../bindings/display/bridge/adi,adv7511.txt   | 23 +++++-----
+ drivers/gpu/drm/bridge/adv7511/Kconfig        | 13 ++----
+ drivers/gpu/drm/bridge/adv7511/Makefile       |  3 +-
+ drivers/gpu/drm/bridge/adv7511/adv7511.h      | 44 +++----------------
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  | 35 ++++++++++-----
+ 5 files changed, 44 insertions(+), 74 deletions(-)
 
-DRAM carveouts should be a last resort used only for when hardware
-really requires it.
+-- 
+2.23.0
 
-Andrew
-
-
-> use the of_reserved_mem_device_init/release() API appropriately
-> to assign the corresponding reserved memory region to the OMAP
-> remoteproc device. Note that only one region per device is
-> allowed by the framework.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 9ca337f18ac2..8a6dd742a8b1 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/err.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/remoteproc.h>
-> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto free_rproc;
->  
-> +	ret = of_reserved_mem_device_init(&pdev->dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
-> +		goto free_rproc;
-> +	}
-> +
->  	platform_set_drvdata(pdev, rproc);
->  
->  	ret = rproc_add(rproc);
->  	if (ret)
-> -		goto free_rproc;
-> +		goto release_mem;
->  
->  	return 0;
->  
-> +release_mem:
-> +	of_reserved_mem_device_release(&pdev->dev);
->  free_rproc:
->  	rproc_free(rproc);
->  	return ret;
-> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
->  
->  	rproc_del(rproc);
->  	rproc_free(rproc);
-> +	of_reserved_mem_device_release(&pdev->dev);
->  
->  	return 0;
->  }
-> 
