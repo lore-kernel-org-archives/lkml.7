@@ -2,135 +2,172 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E6EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95CCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175A12073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B9321744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="it6jWsNZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JprkbSdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgAGQOG (ORCPT
+        id S1728358AbgAGQP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:14:06 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41698 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgAGQOF (ORCPT
+        Tue, 7 Jan 2020 11:15:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40085 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgAGQP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:14:05 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so54618363wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:14:04 -0800 (PST)
+        Tue, 7 Jan 2020 11:15:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c77so17664371oib.7;
+        Tue, 07 Jan 2020 08:15:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BnDKwUCZGErP+KyVZtLEwU8FgiR2KztEMGDlEQCZd7s=;
-        b=it6jWsNZqZnJRkxU0QF0aJRe+H0+HCzalY18g4ewAHrgujNSc8aGGHJOyIkjkmXvPP
-         5BXRcjhZEebBC8Fh/fPqNbuvXUVZRTPyF+QlRNp3popqzAHBTYNQLBz/Dzff+SBqtnJb
-         i+pZDiEyjvepJxb7O5j423j2fpP6tNpbG9J18=
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=OZxJnB1DYtw8zolbAPJSc4mNYJnP83L9HUFtNXkxNXo=;
+        b=JprkbSdq56PZOBTa8U2MleFu4Z9Jzse32ho48Zw7RFla008pIdVz+s9Kmf33qwUB18
+         jJUue/mCXkQyybXHcvFTkTMI4hTCWbhBufEFx/I/rILkldFoBhF0Vrk5UKngjzirdmHs
+         QosYj3toTLrtwWcc5gcM9KSM89LPYg8gzDYe4IHrkdbzft7lsyba3wZ5NSkGmkT6N8oD
+         tfni23vfcLtpEt6avvTasYWdQVrTBlIsJ0rOhDlUfDuk5sLjMt0yPjzripZSRb6U+zEu
+         M9XFF2rheXrZ7rCc4ac0kdu4pfBqQyaMwHZVjVp6KFR5/X4gYR+SdLv+TKuhCAGI3qy8
+         6vpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=BnDKwUCZGErP+KyVZtLEwU8FgiR2KztEMGDlEQCZd7s=;
-        b=KmeXwhi7r97FxRZipjlVeeMiTIxCb0cUp5HpGD7SmV1mSG6p14l+XJWg+meR5Xdrou
-         LgYCzGO1IWTNPbMFCfkFWDoOGvt4tlqb+xcbK+jg9qwphOf1fNaNVvgo547rBX4SeQ3t
-         C6uLEskiqhx5oWEP9ejAkkg6mHZDCvfT1SsE0My8x/lsr4eHlYdkCUEYdZ8BNHUM5bXz
-         3k5NsjBz5wO9D/PuVKeMGLXIUhrarQgXOEtS62jbGe6rkO5LfUe3oeeaVnL7mzik0X4X
-         s3Zk3/llqRaF6QLMenlmfnUZytJEEl5hmtnEnJx9cgLZcuT/NT5F9hfu5Ba5QzWxQtJU
-         FrdA==
-X-Gm-Message-State: APjAAAWDCquxamMdQQuiTmIF0GBuP0SCj2J54lZ+Hac1bRGfId9WN2ED
-        Gxzmeyj9F27s4BSWZ0lEzfRnGw==
-X-Google-Smtp-Source: APXvYqyQHK3dzkGnpN+A204ch3gC1JI6BVacIWD7/CNfZ+GZU0DG7Tm8hsvhn35Lq2tPf4RZVD7Biw==
-X-Received: by 2002:a5d:4c8c:: with SMTP id z12mr79526820wrs.222.1578413643880;
-        Tue, 07 Jan 2020 08:14:03 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id q14sm133727wmj.14.2020.01.07.08.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 08:14:03 -0800 (PST)
-Date:   Tue, 7 Jan 2020 17:14:01 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, kbuild-all@lists.01.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Steve Winslow <swinslow@gmail.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH] video: fbdev: mmp: fix platform_get_irq.cocci warnings
-Message-ID: <20200107161401.GF43062@phenom.ffwll.local>
-Mail-Followup-To: Julia Lawall <julia.lawall@inria.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, kbuild-all@lists.01.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Steve Winslow <swinslow@gmail.com>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-References: <alpine.DEB.2.21.2001042140310.6944@hadrien>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=OZxJnB1DYtw8zolbAPJSc4mNYJnP83L9HUFtNXkxNXo=;
+        b=mAwIDlyeNnWUx4q5Gl8WHvNvigPnSJi20E4oLf/wsjO3hduiEBDHuEEgrZE0BHCXEo
+         emkbl0fRIfmcDmvFptqKyIK8p8eLTrnoFIbtYYWnshNQ9BBEzeefgat8eMZ1XtzZ9QAE
+         xJf7/GCOX+Lkb13ebndRMexMki9Yf1mvVmtvyX9v4zEltpwo46qiIfn5wBNFtSH38DGc
+         eBbAJJvAxK6LW7BIvJ507AazZPvM7RUE7wLyetIOpQAQsnVLw74NlxYJdFJIW7EaxroB
+         d/H1Le097DRlRRcWQtP2bQ3fWj/93CVulZsgDKEH3YWmtsWKOtmjZ+/Bq+aDkhqe1Z9l
+         jlAg==
+X-Gm-Message-State: APjAAAUrFcRACwF1Id2rpg135Jw6fQVLWz0sXhAdkl7Z8k+OfLDI5PBj
+        AAusnLFr6t28da3s9cBENBdywBptH8340i13gyOVxM3W
+X-Google-Smtp-Source: APXvYqyHdohV/pTOS7O+0bK6K+fijJasQ+i3SqqIgYR48fzKG8iRyQJnTDmtHZ2RngcMIazYBHhKuO73LMfnRUWpc8Y=
+X-Received: by 2002:a54:4501:: with SMTP id l1mr251542oil.101.1578413724985;
+ Tue, 07 Jan 2020 08:15:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001042140310.6944@hadrien>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Tue, 7 Jan 2020 21:45:13 +0530
+Message-ID: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
+Subject: pcie: xilinx: kernel hang - ISR readl()
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 09:43:31PM +0100, Julia Lawall wrote:
-> From: kbuild test robot <lkp@intel.com>
-> 
-> Remove dev_err() messages after platform_get_irq*() failures.
-> Line 450 is redundant because platform_get_irq() already prints
-> an error.
-> 
-> Generated by: scripts/coccinelle/api/platform_get_irq.cocci
-> 
-> Fixes: dd90e9ae55a1 ("video: fbdev: mmp: add COMPILE_TEST support")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+Hi,
 
-Applied to drm-misc-next, thanks for your patch.
--Daniel
+I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+I see that my system freezes without capturing the crash dump for
+certain tests. I debugged this issue and it was tracked down to the
+below mentioned interrupt handler code.
 
-> 
-> ---
-> 
-> tree:   git://anongit.freedesktop.org/drm/drm-misc for-linux-next
-> head:   80805774fc354f9ae7755a8e649a01dedfd0dcf8
-> commit: dd90e9ae55a1e7efd3ac036afe9f7ae7bb64d39d [2/16] video: fbdev: mmp: add COMPILE_TEST support
-> :::::: branch date: 11 hours ago
-> :::::: commit date: 11 hours ago
-> 
->  mmp_ctrl.c |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> --- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-> +++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-> @@ -447,7 +447,6 @@ static int mmphw_probe(struct platform_d
-> 
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> -		dev_err(&pdev->dev, "%s: no IRQ defined\n", __func__);
->  		ret = -ENOENT;
->  		goto failed;
->  	}
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+In ISR, first reads the Interrupt Status register using =E2=80=98readl()=E2=
+=80=99 as
+given below.
+    status =3D readl(ctrl->reg + INT_STATUS);
+
+
+And then clears the pending interrupts using =E2=80=98writel()=E2=80=99 as =
+given blow.
+        writel(status, ctrl->reg + INT_STATUS);
+
+
+I've noticed a kernel hang if INT_STATUS register read again after
+clearing the pending interrupts.
+
+Can someone clarify me why the kernel hangs without crash dump incase
+if I read the INT_STATUS register using readl() after clearing the
+pending bits?
+
+Can readl() block?
+
+
+Snippet of the ISR code is given blow:
+
+https://pastebin.com/WdnZJZF5
+
+
+
+static irqreturn_t pcie_isr(int irq, void *dev_id)
+
+{
+
+        struct test_device *ctrl =3D data;
+
+        u32 status;
+
+=E2=80=A6
+
+
+
+        status =3D readl(ctrl->reg + INT_STATUS);
+
+        /*
+
+         * Check to see if it was our interrupt
+
+         */
+
+        if (!(status & 0x000C))
+
+                return IRQ_NONE;
+
+
+
+        /* Clear the interrupt */
+
+        writel(status, ctrl->reg + INT_STATUS);
+
+
+
+        if (status & 0x0004) {
+
+                /*
+
+                 * Tx interrupt pending.
+
+                 */
+
+                 ....
+
+       }
+
+
+
+        if (status & 0x0008) {
+
+                /* Rx interrupt Pending */
+
+                /* The system freezes if I read again the INT_STATUS
+register as given below */
+
+                status =3D readl(ctrl->reg + INT_STATUS);
+
+                ....
+
+        }
+
+..
+
+        return IRQ_HANDLED;
+}
+
+
+
+--=20
+Thanks,
+Sekhar
