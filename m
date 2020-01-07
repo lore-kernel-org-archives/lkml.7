@@ -2,142 +2,111 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC350C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7277AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1E12467D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479DB2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578428085;
+	bh=bNL2pASZSJID2jDyYzU0XIjoswv2WeqpUSWN4W3sFTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cZ6IpnxmcHf0pD7dpTYJCHATIonAP7VV3YUHV5R287CFdVCMDaBmO5xhCocCo1owj
+	 3Ll1khvIyJN4egP/YK6heOf2HxSex3n9aZqwjicAcnXSa/8sd6J5ME8kTbAoUGkPE/
+	 +tzT0yBXRfrQcBZ43MeMWzar3fiEz9t+spjQjdPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgAGUO3 (ORCPT
+        id S1728763AbgAGUOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:14:29 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:59605 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgAGUO3 (ORCPT
+        Tue, 7 Jan 2020 15:14:44 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43494 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgAGUOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:14:29 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MTfgb-1jGb592rZl-00U0gY; Tue, 07 Jan 2020 21:13:34 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Polyakov <appro@cryptogams.org>,
-        Samuel Neves <sneves@dei.uc.pt>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: curve25519 - Work around link failure
-Date:   Tue,  7 Jan 2020 21:12:52 +0100
-Message-Id: <20200107201327.3863345-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 15:14:44 -0500
+Received: by mail-ed1-f68.google.com with SMTP id dc19so640593edb.10;
+        Tue, 07 Jan 2020 12:14:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=shdUU23K0IEf7ZFJ8JLqr2RIvpPkSrbg6xdebmpUuBk=;
+        b=CE7JxfLxTCbq+CfKqig1FP7+uAICGegXA38mgHVhFcu8tIDzOnK2DmN/87NzcKkdLi
+         S0yqEQucpHBMl5gcGJimsDnPnWDP5f8keVWyaxsAGHKYpc5eos/i0VoaeEzmyROQqNZu
+         ZBc1ROaM/nHDqbEQxk+x7x8hOH712yObovXaEF3Cysoz77j6ua5rtY5OtdrtWmq2FbGM
+         B/IsiLzExLIa/R7bTkdHvm6s0GqR/ov4ITSSuWoY55Oz+igPWKwRGsFYx5J+SAkqC3en
+         cMpJElxEVCs9gv5kH9LG6xaEDoV6o96mOb5aCV4ZUNhvL56X37VFKI60fEOrAvSppDYm
+         rJrw==
+X-Gm-Message-State: APjAAAWpNsK3LqcVyNQO1DxQFlCGrYX9p3h1mJJn5UYPjWPF49S1kNr5
+        ibQLVw7t0fTQuux9mzLXoGVBYcBr
+X-Google-Smtp-Source: APXvYqxvhO+xtcJuzGv5TR4UrQN67+VzGE8I0ZqMCIB4xGEAsxpokcN4a/8SFQaVXLRtd6nc5VnFtg==
+X-Received: by 2002:a17:906:1181:: with SMTP id n1mr1218322eja.218.1578428081904;
+        Tue, 07 Jan 2020 12:14:41 -0800 (PST)
+Received: from kozik-book ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id h5sm12464ejt.91.2020.01.07.12.14.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 12:14:41 -0800 (PST)
+Date:   Tue, 7 Jan 2020 21:14:39 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] ARM: samsung: Rename Samsung and Exynos to
+ lowercase
+Message-ID: <20200107201439.GC8636@kozik-book>
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-5-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:pH50uSqCPXHunlRYi6L8CL6v1F+HPRpeGWLVm1siLpp01pLtaYn
- 2PDMeX31+oZWljGNiyUjWfyxUAFZwK/QAfPI1wCcfZl5GAPYJx5qHOhEpBctrIl2uSjelXj
- i1UTXn5i/CNQUw0e09IOKdcp8GXAp2bsUdxECMYVmA0h1keXVYE+yFYXhAL5ixNOMrFMeQw
- TFVM2igKOFrWWhhnU2NUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tDcVV9wxuqU=:t8AUGn6nGKs3yyta8KcKP9
- YezldtC334Khb/zyCxX4Fu431iOpWdOxOc9G3oFdit+QZ2W3BW4i7FDBhGMWSDe/eF1m0hCHt
- oXUfPnslXBwdE5ok7fJkCYAQM9UDMAp0hKGIge5Wpk+ygXLgA0ob73HjQRi0YzRXC1tKogWq+
- H6Kit0nwKikgOhDWy+1aHIO681UnKANQgTn1Ni8AnssmzzAWOuSwF6QiTyyjQyJLwD4o8GtQo
- wS/yE6dJrhWtHYpUMAaoU1UfjiYtt1MR5FYhRNMTRNh87Zvr2rFixrKANALKT1mf3rk9uC8d4
- i6YuQwE7HI/bGAHs3jKN/QOIXJJ1FRruNQVhTL/zEZujMszjaLc6R03kNW2XQIf7p4nO42U/W
- FiFkMy1iV7GZ5rwv38Xy9YeDyrLjT1wrWWOclFTgof+QoMdfsYFFhXeu7rUysNAoFhO+9RfOg
- t2KxGnJV/Q9wx9PRTY0/e5VHmarkx8Zx/sJUhU7azenscql3gXSITqJkGmGBvjVP00LZNwrKA
- EStlkmVMa3GgKb1tPQhMRcNaRwKGAGSQbFNVHMV5Vc1IMuX713DOS6JusgMuGAKyA+GsPFaoa
- ZyxVll8+IOIJCw8bMPb7sUNWWvoCexA5E2hdmeQxuauQZ5BEI3f3sOvFNTYemcv+8ma6Spg1g
- h0VllTvNpGHXiww1strijITU48e7q/RmxzKm5dK8z+WcPT+iRZmcjkgghcv++j0aX6i7cpIb9
- O1NRNJ3fyT2sshmooUf71rr1om2p6WjYb5qRDNHEO6RJOxw2xjsEzH5xsJHgFlKjeJs9m7Ljj
- Urp5ZSnywq+FNozooUpaW/j2zFufIRrtkNpG4N3lDDlGhdEO1W5qCWR38VhXtov6MNnNNim3T
- 5zcMACR9nlBNHY2eU8KA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200104152107.11407-5-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The curve25519 selftest causes a link failure when one of the two
-implementations is built-in and the other one is a loadable module,
-as then the library gets built in as well but cannot call into the
-module:
+On Sat, Jan 04, 2020 at 04:20:51PM +0100, Krzysztof Kozlowski wrote:
+> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+> and "Exynos" names.
+> 
+> "SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+> names.  Therefore they should be written with lowercase letters starting
+> with capital letter.
+> 
+> The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> Electronics Co., Ltd., in advertisement materials and on website.
+> 
+> Although advertisement materials usually use uppercase "SAMSUNG", the
+> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+> privacy/legal statements on
+> https://www.samsung.com/semiconductor/privacy-global/).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/mach-exynos/Kconfig                  | 36 +++++++++----------
+>  arch/arm/mach-exynos/common.h                 |  2 +-
+>  arch/arm/mach-exynos/exynos.c                 |  4 +--
+>  arch/arm/mach-exynos/include/mach/map.h       |  2 +-
+>  arch/arm/mach-exynos/pm.c                     |  2 +-
+>  arch/arm/mach-exynos/smc.h                    |  2 +-
+>  arch/arm/mach-exynos/suspend.c                |  2 +-
+>  arch/arm/mach-s3c24xx/Kconfig                 | 16 ++++-----
+>  arch/arm/plat-samsung/adc.c                   |  2 +-
+>  arch/arm/plat-samsung/devs.c                  |  2 +-
+>  arch/arm/plat-samsung/gpio-samsung.c          |  2 +-
+>  .../plat-samsung/include/plat/samsung-time.h  |  2 +-
 
-lib/crypto/curve25519-selftest.o: In function `curve25519_selftest':
-curve25519-selftest.c:(.init.text+0x5c): undefined reference to `curve25519_arch'
-curve25519-selftest.c:(.init.text+0xfd): undefined reference to `curve25519_base_arch'
-curve25519-selftest.c:(.init.text+0x15a): undefined reference to `curve25519_arch'
+Applied.
 
-There is probably a better fix, but this is the local workaround
-that I used to get a clean randconfig build again, using Makefile
-tricks to make all the curve25519 code built-in if any of the
-implementations are.
-
-Fixes: aa127963f1ca ("crypto: lib/curve25519 - re-add selftests")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/crypto/Makefile | 4 +++-
- arch/x86/crypto/Makefile | 4 +++-
- crypto/Makefile          | 5 ++++-
- 3 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/crypto/Makefile b/arch/arm/crypto/Makefile
-index b745c17d356f..a7b3957aca58 100644
---- a/arch/arm/crypto/Makefile
-+++ b/arch/arm/crypto/Makefile
-@@ -12,7 +12,9 @@ obj-$(CONFIG_CRYPTO_SHA512_ARM) += sha512-arm.o
- obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
- obj-$(CONFIG_CRYPTO_POLY1305_ARM) += poly1305-arm.o
- obj-$(CONFIG_CRYPTO_NHPOLY1305_NEON) += nhpoly1305-neon.o
--obj-$(CONFIG_CRYPTO_CURVE25519_NEON) += curve25519-neon.o
-+ifdef CONFIG_CRYPTO_CURVE25519_NEON
-+obj-$(CONFIG_CRYPTO_LIB_CURVE25519_GENERIC) += curve25519-neon.o
-+endif
- 
- obj-$(CONFIG_CRYPTO_AES_ARM_CE) += aes-arm-ce.o
- obj-$(CONFIG_CRYPTO_SHA1_ARM_CE) += sha1-arm-ce.o
-diff --git a/arch/x86/crypto/Makefile b/arch/x86/crypto/Makefile
-index 958440eae27e..7546c276e2f0 100644
---- a/arch/x86/crypto/Makefile
-+++ b/arch/x86/crypto/Makefile
-@@ -39,7 +39,9 @@ obj-$(CONFIG_CRYPTO_AEGIS128_AESNI_SSE2) += aegis128-aesni.o
- 
- obj-$(CONFIG_CRYPTO_NHPOLY1305_SSE2) += nhpoly1305-sse2.o
- obj-$(CONFIG_CRYPTO_NHPOLY1305_AVX2) += nhpoly1305-avx2.o
--obj-$(CONFIG_CRYPTO_CURVE25519_X86) += curve25519-x86_64.o
-+ifdef CONFIG_CRYPTO_CURVE25519_X86
-+obj-$(CONFIG_CRYPTO_LIB_CURVE25519_GENERIC) += curve25519-x86_64.o
-+endif
- 
- # These modules require assembler to support AVX.
- ifeq ($(avx_supported),yes)
-diff --git a/crypto/Makefile b/crypto/Makefile
-index 4ca12b6044f7..93ecbfe50285 100644
---- a/crypto/Makefile
-+++ b/crypto/Makefile
-@@ -166,7 +166,10 @@ obj-$(CONFIG_CRYPTO_ZSTD) += zstd.o
- obj-$(CONFIG_CRYPTO_OFB) += ofb.o
- obj-$(CONFIG_CRYPTO_ECC) += ecc.o
- obj-$(CONFIG_CRYPTO_ESSIV) += essiv.o
--obj-$(CONFIG_CRYPTO_CURVE25519) += curve25519-generic.o
-+
-+ifdef CONFIG_CRYPTO_CURVE25519
-+obj-$(CONFIG_CRYPTO_LIB_CURVE25519_GENERIC) += curve25519-generic.o
-+endif
- 
- ecdh_generic-y += ecdh.o
- ecdh_generic-y += ecdh_helper.o
--- 
-2.20.0
+Best regards,
+Krzysztof
 
