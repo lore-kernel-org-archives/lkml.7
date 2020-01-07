@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADB2C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B138C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F66E2187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A822081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430728;
-	bh=tkThJCemrhN4PT6CIjxsGWTLeuQmOKStYLnxtNXjcfQ=;
+	s=default; t=1578430730;
+	bh=1eQ1jSy1kf6B7aa/e/iFyNP8UUt59wTJOYQE5NThX4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwQ5juV9vyQoFpWxJcH/knBa8LWYgto82bxIGEcRs1ttHWLut+dRmaOqR6kvRfctu
-	 v3RtGssHETN3NEAcEsdYgn0wLFHYnw69MdQJIIMehQRHKjy6paiZ7PS6DpXzvjwzOz
-	 oc8Q5RFseAlFG86634bvuqKwPBs3S6bAVuyI1diA=
+	b=hdGKQl3bEQkhjQmlam4/AEvK8mKLtbcgcysFwRcwRz2kR6HrVNitW5KxV+a2iZA4e
+	 zU4sf3tKRYyq2bNTVCbLd2gkgvfauoTSAc5nuDNwssIkMZaQpGSFSuzQA7u0gM03Q2
+	 Wk4T/1vyMQSEb0dazNxIkvd0apqHrXGGfTz5Eu1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgAGU6r (ORCPT
+        id S1727957AbgAGU6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58608 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgAGU6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:45 -0500
+        id S1727945AbgAGU6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66560214D8;
-        Tue,  7 Jan 2020 20:58:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D276021744;
+        Tue,  7 Jan 2020 20:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430724;
-        bh=tkThJCemrhN4PT6CIjxsGWTLeuQmOKStYLnxtNXjcfQ=;
+        s=default; t=1578430727;
+        bh=1eQ1jSy1kf6B7aa/e/iFyNP8UUt59wTJOYQE5NThX4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8mac5JF6t9L1qREJHknNDJ0IkQIiewDqVea94IynpZCae64Ep0Y0qKcku3n6ZZK3
-         3c4DIl0efxJuE2jh1AH4WF+9ZqwrKcT9DUmucmUkd2J6FXLIXA0zIsQ4pqLEBcVMCR
-         m/Q6fIzicQzV3Faw/1Ze13CScN2h4+D5Oyk3P+cE=
+        b=aKOSCyx/npaTsvk9eSYeg5YfQe49N6CiJZHlWgYfit3frkAGBafgrYibFHtQrr+4Q
+         oRkSGXyAN9pvLAyJ5mIaELAVWvml+qr6x6NhRwV7LmDx1YU6Vx6AgvT7aQVCXC+eFo
+         geuhF/1F0y9GoyIc4M+GyGKrNIscHoRklrp/bb2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 070/191] ALSA: hda/realtek - Add headset Mic no shutup for ALC283
-Date:   Tue,  7 Jan 2020 21:53:10 +0100
-Message-Id: <20200107205336.734592657@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Mavrodiev <stefan@olimex.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 5.4 071/191] drm/sun4i: hdmi: Remove duplicate cleanup calls
+Date:   Tue,  7 Jan 2020 21:53:11 +0100
+Message-Id: <20200107205336.786170031@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,32 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Stefan Mavrodiev <stefan@olimex.com>
 
-commit 66c5d718e5a6f80153b5e8d6ad8ba8e9c3320839 upstream.
+commit 57177d214ee0816c4436c23d6c933ccb32c571f1 upstream.
 
-Chrome machine had humming noise from external speaker plugin at
-codec D3 state.
+When the HDMI unbinds drm_connector_cleanup() and drm_encoder_cleanup()
+are called. This also happens when the connector and the encoder are
+destroyed. This double call triggers a NULL pointer exception.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
+The patch fixes this by removing the cleanup calls in the unbind
+function.
+
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/2692449396954c6c968f5b75e2660358@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191217124632.20820-1-stefan@olimex.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -501,6 +501,7 @@ static void alc_shutup_pins(struct hda_c
- 	struct alc_spec *spec = codec->spec;
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -683,8 +683,6 @@ static void sun4i_hdmi_unbind(struct dev
+ 	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
  
- 	switch (codec->core.vendor_id) {
-+	case 0x10ec0283:
- 	case 0x10ec0286:
- 	case 0x10ec0288:
- 	case 0x10ec0298:
+ 	cec_unregister_adapter(hdmi->cec_adap);
+-	drm_connector_cleanup(&hdmi->connector);
+-	drm_encoder_cleanup(&hdmi->encoder);
+ 	i2c_del_adapter(hdmi->i2c);
+ 	i2c_put_adapter(hdmi->ddc_i2c);
+ 	clk_disable_unprepare(hdmi->mod_clk);
 
 
