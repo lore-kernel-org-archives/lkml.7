@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EE7C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADED7C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDD62080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D32E20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431402;
-	bh=Pu3pIpNS+wrWaBiCF3WMklOxbzyYKT613GwXbhqFZXE=;
+	s=default; t=1578431411;
+	bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YOmAbQKjdxmP7LX5IOpzv7JHh+o+1RUgwkR6ZIHuwwZsIN55cFSUFWVHrIAV/7UC
-	 A0tiw0sANfWgZNC2BV2WEliSCJ7GNI8Kw93cgDvAzgH0XbebkaIBQyDLSYtIOxhC0S
-	 cjFjYJsA8yrMc+Y3qME4lrzKNcb84QShSEkhZZOs=
+	b=kRRriz9VnUY2WDmNTxYLD2R1o1H1fC6lJi0xKv9xO6a+FD6x3NiSuRwFDZEE82z3J
+	 ajTA6eiMiuPkmtdiSrVAcJ0n56HFxb3q2zGV8pN8Gp0jMtGOtmV3sn2ri1ZJCC53q6
+	 B9TiKmvZWQ1XxyOJ2IIRe0cK2fc7hdnXWIQAJvWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbgAGVKB (ORCPT
+        id S1729650AbgAGVKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729882AbgAGVJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:54 -0500
+        id S1729438AbgAGVKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA3AF2077B;
-        Tue,  7 Jan 2020 21:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0669E2077B;
+        Tue,  7 Jan 2020 21:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431393;
-        bh=Pu3pIpNS+wrWaBiCF3WMklOxbzyYKT613GwXbhqFZXE=;
+        s=default; t=1578431405;
+        bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkdi/ifFayD9+dsLln2fOFAxVNQEzxEK5BW8EyTGQoDNfhRNdSJySTCv1KuhoSw3E
-         JZmqLNPRneWX4q3HiLflzESA+DmiU2e9yLRmR+4Pt6sW+HuBli1nyCRDz32IKel/5T
-         UiC+olRhEnMpxisL/i4XLPKqbj4ah2dQxZXQAd6w=
+        b=LDcJCp7NFPKvl6o5xvNJzqY4aAhFP0B16ZTN5dE1XaES4EDE6P1QxHNpu3wstrHP+
+         pyoK3uNDZCqvBHaPjF++g8Bl+wNgAwpUoPdwFH7FA/kjbkmnbl7RV2NR+xQKi3yzHH
+         fKybdM5xD03NBkcnzXaNzHiLscOPJf4omAYUPMUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.14 39/74] gpiolib: fix up emulated open drain outputs
-Date:   Tue,  7 Jan 2020 21:55:04 +0100
-Message-Id: <20200107205208.934980588@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.14 26/74] media: pulse8-cec: fix lost cec_transmit_attempt_done() call
+Date:   Tue,  7 Jan 2020 21:54:51 +0100
+Message-Id: <20200107205155.720076902@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -60,44 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit 256efaea1fdc4e38970489197409a26125ee0aaa upstream.
+commit e5a52a1d15c79bb48a430fb263852263ec1d3f11 upstream.
 
-gpiolib has a corner case with open drain outputs that are emulated.
-When such outputs are outputting a logic 1, emulation will set the
-hardware to input mode, which will cause gpiod_get_direction() to
-report that it is in input mode. This is different from the behaviour
-with a true open-drain output.
+The periodic PING command could interfere with the result of
+a CEC transmit, causing a lost cec_transmit_attempt_done()
+call.
 
-Unify the semantics here.
-
-Cc: <stable@vger.kernel.org>
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: <stable@vger.kernel.org>      # for v4.10 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/usb/pulse8-cec/pulse8-cec.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -206,6 +206,14 @@ int gpiod_get_direction(struct gpio_desc
- 	chip = gpiod_to_chip(desc);
- 	offset = gpio_chip_hwgpio(desc);
+--- a/drivers/media/usb/pulse8-cec/pulse8-cec.c
++++ b/drivers/media/usb/pulse8-cec/pulse8-cec.c
+@@ -121,6 +121,7 @@ struct pulse8 {
+ 	unsigned int vers;
+ 	struct completion cmd_done;
+ 	struct work_struct work;
++	u8 work_result;
+ 	struct delayed_work ping_eeprom_work;
+ 	struct cec_msg rx_msg;
+ 	u8 data[DATA_SIZE];
+@@ -142,8 +143,10 @@ static void pulse8_irq_work_handler(stru
+ {
+ 	struct pulse8 *pulse8 =
+ 		container_of(work, struct pulse8, work);
++	u8 result = pulse8->work_result;
  
-+	/*
-+	 * Open drain emulation using input mode may incorrectly report
-+	 * input here, fix that up.
-+	 */
-+	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
-+	    test_bit(FLAG_IS_OUT, &desc->flags))
-+		return 0;
-+
- 	if (!chip->get_direction)
- 		return status;
+-	switch (pulse8->data[0] & 0x3f) {
++	pulse8->work_result = 0;
++	switch (result & 0x3f) {
+ 	case MSGCODE_FRAME_DATA:
+ 		cec_received_msg(pulse8->adap, &pulse8->rx_msg);
+ 		break;
+@@ -177,12 +180,12 @@ static irqreturn_t pulse8_interrupt(stru
+ 		pulse8->escape = false;
+ 	} else if (data == MSGEND) {
+ 		struct cec_msg *msg = &pulse8->rx_msg;
++		u8 msgcode = pulse8->buf[0];
  
+ 		if (debug)
+ 			dev_info(pulse8->dev, "received: %*ph\n",
+ 				 pulse8->idx, pulse8->buf);
+-		pulse8->data[0] = pulse8->buf[0];
+-		switch (pulse8->buf[0] & 0x3f) {
++		switch (msgcode & 0x3f) {
+ 		case MSGCODE_FRAME_START:
+ 			msg->len = 1;
+ 			msg->msg[0] = pulse8->buf[1];
+@@ -191,14 +194,20 @@ static irqreturn_t pulse8_interrupt(stru
+ 			if (msg->len == CEC_MAX_MSG_SIZE)
+ 				break;
+ 			msg->msg[msg->len++] = pulse8->buf[1];
+-			if (pulse8->buf[0] & MSGCODE_FRAME_EOM)
++			if (msgcode & MSGCODE_FRAME_EOM) {
++				WARN_ON(pulse8->work_result);
++				pulse8->work_result = msgcode;
+ 				schedule_work(&pulse8->work);
++				break;
++			}
+ 			break;
+ 		case MSGCODE_TRANSMIT_SUCCEEDED:
+ 		case MSGCODE_TRANSMIT_FAILED_LINE:
+ 		case MSGCODE_TRANSMIT_FAILED_ACK:
+ 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_DATA:
+ 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_LINE:
++			WARN_ON(pulse8->work_result);
++			pulse8->work_result = msgcode;
+ 			schedule_work(&pulse8->work);
+ 			break;
+ 		case MSGCODE_HIGH_ERROR:
 
 
