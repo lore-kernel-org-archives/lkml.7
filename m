@@ -2,91 +2,102 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBD0C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64632C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420D8207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C028207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:43:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HqDMmYVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgAGFkr (ORCPT
+        id S1726470AbgAGFnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:40:47 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:48264 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725835AbgAGFkr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 00:40:47 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Jan 2020 11:10:43 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 07 Jan 2020 11:10:11 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 2F2FC256D; Tue,  7 Jan 2020 11:10:10 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] drm/msm: update LANE_CTRL register value from default value
-Date:   Tue,  7 Jan 2020 11:10:08 +0530
-Message-Id: <1578375608-28995-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 Jan 2020 00:43:24 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35909 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgAGFnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 00:43:23 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sLrl0wlqz9sPn;
+        Tue,  7 Jan 2020 16:43:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578375800;
+        bh=X9vjrI1Lwv1FP46BoDJdpJqV+onCifTfPABlXvfeWVs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HqDMmYVBJ057mrfA3W0uNfYJAdT6492y6NLnfbibLKycrxOlQfn0xMtfnHomfTDqs
+         3KbH4jHDOvl/ksOFcUzgTaNDip7YLq6PiRfQblPYnP1Sy7uP5yFe/8Tp83kx8bXuM/
+         iz5CwFLu6iOLKqZMjlR/2FHydhMwyI6Bj6UHJvOKA/I3U0jzrTZk+9rfID2MZIk7U0
+         ezuj/HhKMWJC75uyl8kw5wI85dk1JafUULHFZ+0nirWBSd7Fps/lO8bIwu7MniGAs/
+         Ym2pC4L3nd24YaabrbNHZcknhWT0m5f7QtjrySMUhXu3BZx5y9ZjmTg7NnctrGjK1P
+         3LgVwRSFOKroA==
+Date:   Tue, 7 Jan 2020 16:43:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+Subject: linux-next: build warning after merge of the tip tree
+Message-ID: <20200107164317.51190747@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/kJ9G.R6pHsqk5ni8ZYg+kWJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LANE_CTRL register in latest version of DSI controller (v2.2)
-has additional functionality introduced to enable/disable HS
-signalling with default value set to enabled. To accommodate this
-change, LANE_CTRL register should be read and bit wise ORed to enable
-non continuous clock mode. Without this change, if register is written
-directly, HS signalling will be disabled resulting in black screen.
+--Sig_/kJ9G.R6pHsqk5ni8ZYg+kWJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v1:
-	-Update LANE_CTRL register value
-Changes in v2:
-	-Changing commit message accordingly.
+Hi all,
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- drivers/gpu/drm/msm/dsi/dsi_host.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+[This has been happening for a while, I just missed it :-( ]
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index e6289a3..d3c5233 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -816,7 +816,7 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
- 	u32 flags = msm_host->mode_flags;
- 	enum mipi_dsi_pixel_format mipi_fmt = msm_host->format;
- 	const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
--	u32 data = 0;
-+	u32 data = 0, lane_ctrl = 0;
- 
- 	if (!enable) {
- 		dsi_write(msm_host, REG_DSI_CTRL, 0);
-@@ -904,9 +904,11 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
- 	dsi_write(msm_host, REG_DSI_LANE_SWAP_CTRL,
- 		  DSI_LANE_SWAP_CTRL_DLN_SWAP_SEL(msm_host->dlane_swap));
- 
--	if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-+	if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)) {
-+		lane_ctrl = dsi_read(msm_host, REG_DSI_LANE_CTRL);
- 		dsi_write(msm_host, REG_DSI_LANE_CTRL,
--			DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-+			lane_ctrl | DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-+	}
- 
- 	data |= DSI_CTRL_ENABLE;
- 
--- 
-2.7.4
+After merging the tip tree, today's linux-next build (x86_64 allnoconfig)
+produced this warning:
 
+arch/x86/kernel/unwind_orc.c:210:12: warning: 'orc_sort_cmp' defined but no=
+t used [-Wunused-function]
+  210 | static int orc_sort_cmp(const void *_a, const void *_b)
+      |            ^~~~~~~~~~~~
+arch/x86/kernel/unwind_orc.c:190:13: warning: 'orc_sort_swap' defined but n=
+ot used [-Wunused-function]
+  190 | static void orc_sort_swap(void *_a, void *_b, int size)
+      |             ^~~~~~~~~~~~~
+
+Introduced by commit
+
+  f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting=
+")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kJ9G.R6pHsqk5ni8ZYg+kWJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4UGnUACgkQAVBC80lX
+0GyNQQf9Hu7jqQ0EnR+61XDUjlbyJar0srNrR552esV4mOAPLZ2tuHL0wBpoWUi3
+0CXYb9hsFLWcN3s3TOdJ65kwdn22plchzRSU3ctJALarR/ikJcLiHdk8CYyorQ8S
+i0wZD3tcohx2dZ+HBQHKg5CRwi0L97nsTWujn8bvG51FN4YwDu2MJpMNDIWxY+Wo
+4f1LpC5vxmNuAkdNMoc8AGvwtkvDM6UdflzGNzfmpv8SHbZnMe2UabjIrpbAztem
+kF8jOgw7xqSi8dNYCVz+uDUWg71bIZYxvTcaU3aBV2JywLq5psaW6zakbo7HJONf
+uZWKWMX2iFqyyyjlcYpm6NCHPzgbhw==
+=ED+X
+-----END PGP SIGNATURE-----
+
+--Sig_/kJ9G.R6pHsqk5ni8ZYg+kWJ--
