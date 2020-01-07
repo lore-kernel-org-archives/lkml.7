@@ -2,83 +2,94 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC97C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425FFC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC22E206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF87206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgAGQ5b (ORCPT
+        id S1728389AbgAGRAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:57:31 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51925 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728235AbgAGQ5a (ORCPT
+        Tue, 7 Jan 2020 12:00:34 -0500
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:46142
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728211AbgAGRAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:57:30 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007Gv9f9002875
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 11:57:10 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D7EBD4207DF; Tue,  7 Jan 2020 11:57:08 -0500 (EST)
-Date:   Tue, 7 Jan 2020 11:57:08 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Jan Kara <jack@suse.cz>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Subject: Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2% regression
-Message-ID: <20200107165708.GA3619@mit.edu>
-References: <20191224005915.GW2760@shao2-debian>
- <20200107134106.GD25547@quack2.suse.cz>
+        Tue, 7 Jan 2020 12:00:34 -0500
+X-IronPort-AV: E=Sophos;i="5.69,406,1571695200"; 
+   d="scan'208";a="335051849"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 18:00:31 +0100
+Date:   Tue, 7 Jan 2020 18:00:31 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: julia@hadrien
+To:     Alex Williamson <alex.williamson@redhat.com>
+cc:     kernel-janitors@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] vfio: vfio_pci_nvlink2: use mmgrab
+In-Reply-To: <20200106160505.2f962d38@w520.home>
+Message-ID: <alpine.DEB.2.21.2001071800090.3004@hadrien>
+References: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr> <1577634178-22530-3-git-send-email-Julia.Lawall@inria.fr> <20200106160505.2f962d38@w520.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107134106.GD25547@quack2.suse.cz>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:41:06PM +0100, Jan Kara wrote:
-> Hello,
-> 
-> On Tue 24-12-19 08:59:15, kernel test robot wrote:
-> > FYI, we noticed a -20.2% regression of filebench.sum_bytes_mb/s due to commit:
-> > 
-> > 
-> > commit: b1b4705d54abedfd69dcdf42779c521aa1e0fbd3 ("ext4: introduce direct I/O read using iomap infrastructure")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > 
-> > in testcase: filebench
-> > on test machine: 8 threads Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz with 8G memory
-> > with following parameters:
-> > 
-> > 	disk: 1HDD
-> > 	fs: ext4
-> > 	test: fivestreamreaddirect.f
-> > 	cpufreq_governor: performance
-> > 	ucode: 0x27
-> 
-> I was trying to reproduce this but I failed with my test VM. I had SATA SSD
-> as a backing store though so maybe that's what makes a difference. Maybe
-> the new code results in somewhat more seeks because the five threads which
-> compete in submitting sequential IO end up being more interleaved?
 
-A "-20.2% regression" should be read as a "20.2% performance
-improvement" is zero-day kernel speak.
 
-Yeah, it's confusing.  I believe Dave Chinner has complianed about
-this previously.
+On Mon, 6 Jan 2020, Alex Williamson wrote:
 
-					- Ted
+> On Sun, 29 Dec 2019 16:42:56 +0100
+> Julia Lawall <Julia.Lawall@inria.fr> wrote:
+>
+> > Mmgrab was introduced in commit f1f1007644ff ("mm: add new mmgrab()
+> > helper") and most of the kernel was updated to use it. Update a
+> > remaining file.
+> >
+> > The semantic patch that makes this change is as follows:
+> > (http://coccinelle.lip6.fr/)
+> >
+> > <smpl>
+> > @@ expression e; @@
+> > - atomic_inc(&e->mm_count);
+> > + mmgrab(e);
+> > </smpl>
+> >
+> > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> >
+> > ---
+> >  drivers/vfio/pci/vfio_pci_nvlink2.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> > index f2983f0f84be..43df10af7f66 100644
+> > --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
+> > +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> > @@ -159,7 +159,7 @@ static int vfio_pci_nvgpu_mmap(struct vfio_pci_device *vdev,
+> >  	data->useraddr = vma->vm_start;
+> >  	data->mm = current->mm;
+> >
+> > -	atomic_inc(&data->mm->mm_count);
+> > +	mmgrab(data->mm);
+> >  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
+> >  			vma_pages(vma), data->gpu_hpa, &data->mem);
+> >
+> >
+>
+> Acked-by: Alex Williamson <alex.williamson@redhat.com>
+>
+> Thanks!  I'm assuming these will be routed via janitors tree, please
+> let me know if you intend me to grab these two vfio patches from the
+> series.  Thanks,
+
+Please take them directly.
+
+thanks,
+julia
