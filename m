@@ -2,223 +2,118 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085EDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFECC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE326206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1B2206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xbWxsZpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgAGJXP (ORCPT
+        id S1727714AbgAGJX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:23:15 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:27723 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgAGJXO (ORCPT
+        Tue, 7 Jan 2020 04:23:27 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43591 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgAGJX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:23:14 -0500
-IronPort-SDR: DTH7b/YHklWdtscrk0AXRcpodAl62dhBjd5ew3Nt9UD4m/et7ceA0/2JBnOg3T1e77uOri2CLb
- syd6zYuibimpQFHODEH6qeEttBauGfcQP5F817xlYk45ZUljge4iEvyXylDT6OCrSfk39oVvk4
- hhLmWmssy1GkTeffm+zZRLl6/K2CJhLq1QG9TL297K5w5sMTBZI2orxJzOZUpJHp1CoYO/YcRd
- Uq6ITq2LfippA2KqRng82ngUrNtLjUFkBVr9gqTww60FeLvyvG3Zh085qxxtYzAP5XcdXmWB/Z
- D9k=
-X-IronPort-AV: E=Sophos;i="5.69,405,1571731200"; 
-   d="scan'208";a="44610273"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 07 Jan 2020 01:23:13 -0800
-IronPort-SDR: tplytpQIcwlbIf6KWtUbVKFft0awdS/aTQTvzBBS5nfk2+yF+nNPt/gKw3Bp71JWpuXBjDgttE
- ou1DhX9GL7maq4Zt5tL3WB5lEug62wNjDQ0Hf5D9pPSCdaw1Y9rbyeUHtGVD2TjUdPc9PBiXKo
- UVxCnDd8dmEOwk2n/far46XKA96RK92eSVdaRRC80sjVtkIX25JWz5QUy8HK2/aVsudoVSRlCF
- kKLKCz+exnrzdiTz5LU5QWud31JtVK56w8RQptKsfehgn286N8ErL2Qu9zAFY69vhCdFJagpm0
- WSE=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh@kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
- <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com>
- <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
- <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Date:   Tue, 7 Jan 2020 14:52:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 04:23:27 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0079HUtg001703;
+        Tue, 7 Jan 2020 10:22:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=STMicroelectronics;
+ bh=xFQQE6kgeKNO6UlYOlui/VsGLZg0eOZacGJld0hOGcs=;
+ b=xbWxsZpm4thxEojwsKJ0Eqn9TdnF1G3Kigv0zNNlo7HHz17GSXo3BTHc877V37dlRcnU
+ g2K6pHj4YsYGzzPn1MVfJmMDUrH6p4sKD30bC/XhPX41O5CEKyqa8jrVbGwb1thYClK/
+ U24hfn/QlhSZGYwkuUyTMBHI8dfIclL4FrW+b3Rh39r5HYTbSmFhmBYK9qOaGytuyu9X
+ VB8iRS0/TenxLsIn1gQj1y6VxjejRzgA4xUGEuzDRNg6knd+NtTy4nIdO71gd2kXfgGO
+ pZy9ca4Kxd8MAfskWEn4QImFVCTRqqxGWrrHYwMES83YW9baXvt1DUdrvPFMgyXhVIeE fw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakuqn095-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 10:22:53 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5D81F100039;
+        Tue,  7 Jan 2020 10:22:47 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E63122A790F;
+        Tue,  7 Jan 2020 10:22:46 +0100 (CET)
+Received: from lshz10676 (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan 2020 10:22:41
+ +0100
+Message-ID: <dc9a1a6a32b0e028837a315834c4723ed44dbac5.camel@st.com>
+Subject: Re: [PATCH] tracing: Fix printing ptrs in preempt/irq
+ enable/disable events
+From:   Antonio Borneo <antonio.borneo@st.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+CC:     Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Date:   Tue, 7 Jan 2020 10:21:55 +0100
+In-Reply-To: <20191223151301.20be63f7@gandalf.local.home>
+References: <20191127154428.191095-1-antonio.borneo@st.com>
+         <20191204092115.30ef75c9@gandalf.local.home>
+         <20191221234741.GA116648@google.com>
+         <20191223151301.20be63f7@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_02:2020-01-06,2020-01-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-12-23 at 15:13 -0500, Steven Rostedt wrote:
+> On Sat, 21 Dec 2019 18:47:41 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > On Wed, Dec 04, 2019 at 09:21:15AM -0500, Steven Rostedt wrote:
+> > > Joel,
+> > > 
+> > > Any comments on this patch?  
+> > 
+> > Steve, it looks like this issue happens with trace-cmd not knowing what
+> > _stext is. If I do cat trace_pipe , then I don't see the issue as _stext is
+> > looked up correctly but the reporter of the bug is using trace-cmd. Is there
+> > a way to solve this within trace-cmd? Not knowing much about trace-cmd
+> > internals, I will have to defer to you on this though..
+> > 
+> > Other than this, I need to make the offset to _stext as s32 instead of u32
+> > type so that the problem of the symbol location being before _stext does not
+> > cause overflow.
+> > 
+> > Lastly, I am not super convinced that we need to store the full pointer just
+> > to handle a case where the offset of the symbol might be more than +-2G from
+> > _stext. Once we see such issue, then we can handle it. But right now the size
+> > of the trace buffer is utilized better by just storing the offset IMHO.
+> > 
+> 
+> Does this fix it for you?
+> 
+> -- Steve
+> 
 
-On 06/01/20 1:42 PM, Geert Uytterhoeven wrote:
-> Hi Rob,
->
-> On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
->> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>> On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
->>>> On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
->>>>> Add Device Tree bindings for a GPIO repeater, with optional translation
->>>>> of physical signal properties.  This is useful for describing explicitly
->>>>> the presence of e.g. an inverter on a GPIO line, and was inspired by the
->>>>> non-YAML gpio-inverter bindings by Harish Jenny K N
->>>>> <harish_kandiga@mentor.com>[1].
->>>>>
->>>>> Note that this is different from a GPIO Nexus Node[2], which cannot do
->>>>> physical signal property translation.
->>>> It can't? Why not? The point of the passthru mask is to not do
->>>> translation of flags, but without it you are always doing translation of
->>>> cells.
->>> Thanks for pushing me deeper into nexuses!
->>> You're right, you can map from one type to another.
->>> However, you cannot handle the "double inversion" of an ACTIVE_LOW
->>> signal with a physical inverter added:
->>>
->>>         nexus: led-nexus {
->>>                 #gpio-cells = <2>;
->>>                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
->>>                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
->>>                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
->>>                 gpio-map-mask = <3 0>;
->>>                 // default gpio-map-pass-thru = <0 0>;
->>>         };
->>>
->>>         leds {
->>>                 compatible = "gpio-leds";
->>>                 led6-inverted {
->>>                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
->>>                 };
->>>                 led7-noninverted {
->>>                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
->>>                 };
->>>                 led8-double-inverted {  // FAILS: still inverted
->>>                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
->>>                 };
->>>         };
->>>
->>> It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
->>> Still, the consumer would see the final translated polarity, and not the
->>> actual one it needs to program the consumer for.
->> I'm not really following. Why isn't a double inversion just the same
->> as no inversion?
-> Because the nexus can only mask and/or substitute bits.
-> It cannot do a XOR operation on the GPIO flags.
->
->>>>> While an inverter can be described implicitly by exchanging the
->>>>> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
->>>>> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
->>>>> th provider and consumer sides:
->>>>>   1. The GPIO provider (controller) looks at the flags to know the
->>>>>      polarity, so it can translate between logical (active/not active)
->>>>>      and physical (high/low) signal levels.
->>>>>   2. While the signal polarity is usually fixed on the GPIO consumer
->>>>>      side (e.g. an LED is tied to either the supply voltage or GND),
->>>>>      it may be configurable on some devices, and both sides need to
->>>>>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->>>>>      match the actual polarity.
->>>>>      There exists a similar issue with interrupt flags, where both the
->>>>>      interrupt controller and the device generating the interrupt need
->>>>>      to agree, which breaks in the presence of a physical inverter not
->>>>>      described in DT (see e.g. [3]).
->>>> Adding an inverted flag as I've suggested would also solve this issue.
->>> As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
->>> the inverter bindings"?
->>> https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
->>>
->>> Oh, now I understand. I was misguided by Harish' interpretation
->>> https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
->>> which assumed an "inverted" property, e.g.
->>>
->>>     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
->>>
->>> But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
->>> cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
->>>
->>>     /* Bit 6 expresses the presence of a physical inverter */
->>>     #define GPIO_INVERTED 64
->> Exactly.
-> OK, makes sense.
+Steve,
+
+this patch fixes the issue for me, thanks!
+Tested-by: Antonio Borneo <antonio.borneo@st.com>
+
+There are other cases where the trace buffer is under stress, e.g. during function tracing.
+Would it be useful to only store the offset in such cases too?
+
+Regards,
+Antonio
 
 
-The reason I went for "inverted" property is because, we can specify this for gpios at provider side.
-
-The usecase needed to define the polarity which did not have kernel space consumer driver.
-
-
-I am not sure how do we achieve this using GPIO_INVERTED flag. We need some sort of node/gpio-hog to specify these
-
-type of properties? Otherwise gpio-pin will be held by kernel or the module using the hog property and the user space application will not be able to access pin.
-
-
-or please let me know if I am missing something.
-
-
->
->>> We need to be very careful in defining to which side the GPIO_ACTIVE_*
->>> applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
->>> Still, this doesn't help if e.g. a FET is used instead of a push-pull
->>> inverter, as the former needs translation of other flags (which the
->>> nexus can do, the caveats above still applies, though).
->> Yes. Historically the cells values are meaningful to the provider and
->> opaque to the consumer. Standardized cell values changes that
->> somewhat. I think we want the active flag to be from the provider's
->> prospective because the provider always needs to know. The consumer
->> often doesn't need to know. That also means things work without the
->> GPIO_INVERTED flag if the consumer doesn't care which is what we have
->> today already and we can't go back in time.
->>
-
-Things will work without GPIO_INVERTED flag for consumers which can specify GPIO_ACTIVE_* flags.
-
-
-
->>> Same for adding IRQ_TYPE_INVERTED.
->> I suppose so, yes.
->>
->>> Related issue: how to handle physical inverters on SPI chip select lines,
->>> if the SPI slave can be configured for both polarities?
->> Good question. Perhaps in a different way because we have to handle
->> both h/w controlled and gpio chip selects.
->>
->> However, how would one configure the polarity in the device in the
->> first place? You have to assert the CS first to give a command to
->> reprogram it.
-> That's indeed true for a simple SPI slave.
-> But if it is a smarter device (e.g. a generic micro controller), it may use the
-> system's DTB to configure itself.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
