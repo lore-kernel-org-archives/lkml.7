@@ -2,98 +2,172 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006A3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9324C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3B92070E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCA82070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMfH6Xnx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VNvP1zpC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgAGFdO (ORCPT
+        id S1726651AbgAGFeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:33:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38412 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgAGFdO (ORCPT
+        Tue, 7 Jan 2020 00:34:10 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31928 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726346AbgAGFeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 00:33:14 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so31395426ljh.5;
-        Mon, 06 Jan 2020 21:33:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
-        b=MMfH6XnxLwcfhqY5ZYFKRsc3ald9qks2waZ+5mhHbxfbPDldlzeHEyFnWC32mjlXiD
-         nv5uIdsSajiXc6qMcPW+thKv2TdmQxMyY+KSy0o2fyGK91cU93LX0jr8dTipdjZEisxa
-         n92MWUnqgs+nXMqghBgQrTgDdj9/4KyBOGOOK+ftTLiwW96rgYuiA0ye296hJCljaHKk
-         bS8T8oyQai1Im75g3knKsixURKV1ZaFfm/fzitEejbyMebTkXFfMGS1vFF1HJJpsQYMP
-         FYiPRWPQ+N0sW95n1immb1Q1q4u1FFcuWp31D9cM+7DsZGTBOSb+AWGP9WkopSZPfBhw
-         8JBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
-        b=bXr3C7oya5CfXPs9LQ8oxzcLO1AzrP5BgIH9PFl6gUQYnrxYOncxf/txR/CblRwQwS
-         U8+DDP/C6c8/x6ZGHoaaZ3RC2YrtJSZVM+LRhCAqBt9aPYDv0YhezI3OW10uwcVYSqIj
-         bjDDFmBa7iIACbp2TyAAqu+7CY4DJlps93+7/WjJiJwikzKH5zee2urVz/h9Z3Q7Q3Mz
-         UzjiSih8AyRxz9Py0digkOVE1BGFPcRJTUUqupj4jXM8PrR94FJJXojvowidnHSgaOsx
-         AatVB3Sg+hoMseapFzzZxVysIDH33cFqprdZ4dMXkVd6B5uVwOlHKAm7ZgVpsat37VhQ
-         NPLA==
-X-Gm-Message-State: APjAAAWFnVu3ZAlKBI46ufBWB8nwCMcizsJjSqF7fzt/u2oEeu1WdrNq
-        SJKwmi9WWEDtVnO+OZoExSQ=
-X-Google-Smtp-Source: APXvYqwQuxl/nNc1WZx6Hq7z8hwzhuGnyiQkFsUMBIML9+phR645Yvg8qHIcxH0R9Etz+2+hei6HEw==
-X-Received: by 2002:a2e:7e05:: with SMTP id z5mr48052335ljc.99.1578375191537;
-        Mon, 06 Jan 2020 21:33:11 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id m21sm29860754lfh.53.2020.01.06.21.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 21:33:10 -0800 (PST)
-Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Scott Liu <scott.liu@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <20191212192420.GD101194@dtor-ws>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
-Date:   Tue, 7 Jan 2020 08:33:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 7 Jan 2020 00:34:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578375248; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hDX1FUcP5Aot8QFTLd70cw4PHvydDdZUlj595/m554o=;
+ b=VNvP1zpCkVsYyfgQl7PPI6HUJA7n68gEekCOJO0TNC7StA7CpupPYWJpsv/NdaQXuWXfRJPS
+ NBzpkgzJ626XvaW1HMLgBoeewJPC+YFkt0FxLcNELRcMNBULPMJnhbvSxlCJL/+mPXt136Ej
+ c4NxlER2xcvFdtiZ3Xau7wacpmc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e14184d.7f5e9788c148-smtp-out-n01;
+ Tue, 07 Jan 2020 05:34:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76BD8C4479F; Tue,  7 Jan 2020 05:34:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD617C433CB;
+        Tue,  7 Jan 2020 05:34:04 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20191212192420.GD101194@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Tue, 07 Jan 2020 13:34:04 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] Bluetooth: hci_qca: Retry btsoc initialize when it
+ fails
+In-Reply-To: <20200103162750.GC89495@google.com>
+References: <20191225060317.5258-1-rjliao@codeaurora.org>
+ <20191227072130.29431-1-rjliao@codeaurora.org>
+ <20191227072130.29431-2-rjliao@codeaurora.org>
+ <20200102184116.GA89495@google.com>
+ <bfba08a185c81f82d3e05ec03b5ddd65@codeaurora.org>
+ <20200103162750.GC89495@google.com>
+Message-ID: <16cfaba272ad50fa5ae0f778731844f6@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.12.2019 22:24, Dmitry Torokhov пишет:
-> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
->> This series cleans up the driver a bit and implements changes needed to
->> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
+在 2020-01-04 00:27，Matthias Kaehlcke 写道：
+> On Fri, Jan 03, 2020 at 02:31:46PM +0800, rjliao@codeaurora.org wrote:
+>> 在 2020-01-03 02:41，Matthias Kaehlcke 写道：
+>> 
+>> > Hi Rocky,
+>> >
+>> > On Fri, Dec 27, 2019 at 03:21:28PM +0800, Rocky Liao wrote:
+>> >
+>> > > This patch adds the retry of btsoc initialization when it fails.
+>> > > There are
+>> > > reports that the btsoc initialization may fail on some platforms but
+>> > > the
+>> > > repro ratio is very low. The failure may be caused by UART, platform
+>> > > HW or
+>> > > the btsoc itself but it's very difficlut to root cause, given the
+>> > > repro
+>> > > ratio is very low. Add a retry for the btsoc initialization will
+>> > > resolve
+>> > > most of the failures and make Bluetooth finally works.
+>> >
+>> > Is this problem specific to a certain chipset?
+>> >
+>> > What are the symptoms?
+>> 
+>> It's reported on Rome so far but I think the patch is potentially 
+>> helpful
+>> for
+>> wcn399x as well.
+>> 
+>> The symptoms is the firmware downloading failed due to the UART write 
+>> timed
+>> out.
 > 
-> Johnny, could you please take a look at this patch series?
+> Working around this with retries seems ok for now if the repro rate is
+> really low, but it shouldn't necessarily be interpreted as "the problem 
+> is
+> fixed". Please mention the symptoms in the commit message for 
+> documentation,
+> then the retries can potentially be removed in the futures when the 
+> root
+> cause is fixed.
 > 
-> Thanks!
+>> > > enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>> > > const char *firmware_name = qca_get_firmware_name(hu);
+>> > > int ret;
+>> > > @@ -1275,6 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+>> > > */
+>> > > set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>> > >
+>> > > +retry:
+>> > > if (qca_is_wcn399x(soc_type)) {
+>> > > bt_dev_info(hdev, "setting up wcn3990");
+>> > >
+>> > > @@ -1293,6 +1299,12 @@ static int qca_setup(struct hci_uart *hu)
+>> > > return ret;
+>> > > } else {
+>> > > bt_dev_info(hdev, "ROME setup");
+>> > > +        if (hu->serdev) {
+>> > > +            qcadev = serdev_device_get_drvdata(hu->serdev);
+>> > > +            gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>> > > +            /* Controller needs time to bootup. */
+>> > > +            msleep(150);
+>> >
+>> > Shouldn't this be in qca_power_on(), analogous to the power off code
+>> > from
+>> > "[1/4]Bluetooth: hci_qca: Add QCA Rome power off support to the
+>> > qca_power_off()"?
+>> >
+>> > qca_power_on() should then also be called for ROME. If you opt for this
+>> > it
+>> > should be done in a separate patch, or possibly merged into the one
+>> > mentioned above.
+>> >
+>> 
+>> There is no qca_power_on() func and wcn399x is calling 
+>> qca_wcn3990_init() to
+>> do power on, I prefer to not do this change this time.
+> 
+> I would say it's precisely the right time to add this function. Patch 1 
+> of this
+> series adds handling of the BT_EN GPIO to qca_power_off(), now this 
+> patch
+> duplicates the code of the BT_EN handling in qca_open().
+> 
+>> If it's needed
+> 
+> 'needed' is a relative term. It certainly isn't needed from a purely 
+> functional
+> POV. However it is desirable for encapsulation and to avoid code 
+> duplication.
+> 
+>> it should be a new patch to add qca_power_on() which supports both 
+>> Rome and wcn399x.
+> 
+> Agreed
+> 
 
-Hello Johnny,
+Have sent out a new patch to add the qca_power_on() API, will refresh 
+this patch after that new patch merged.
 
-Could you please let us know whether you or anyone else from Elan are
-going to take a look at this patchset anytime soon?
+> m.
