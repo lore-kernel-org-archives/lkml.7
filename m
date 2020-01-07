@@ -2,196 +2,93 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD4FC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5242077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64BD207FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgAGIAM (ORCPT
+        id S1727555AbgAGIBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:00:12 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41510 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgAGIAL (ORCPT
+        Tue, 7 Jan 2020 03:01:13 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46413 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgAGIBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:00:11 -0500
-Received: by mail-ua1-f66.google.com with SMTP id f7so18141549uaa.8;
-        Tue, 07 Jan 2020 00:00:10 -0800 (PST)
+        Tue, 7 Jan 2020 03:01:13 -0500
+Received: by mail-ed1-f68.google.com with SMTP id m8so49578050edi.13;
+        Tue, 07 Jan 2020 00:01:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G49jRNz3gZEEfFLdDkAYLnHIdkVGIsHq5slg+jNpVFc=;
-        b=mbpt0NSmw9B4UnQCxMDWyWwCwou7ce/Q5pH2J67R1Le24dJLYeLjM0AFKewcLYMfru
-         kfVCdLqV2mMV0rXtzvr1tdZ0S38npKmzHwJVZkBfxjyzxD1yzC3bdvow9qiPPX4BwH7G
-         4IgjZ3Ela4grO3LRJkMkKmwgmdTlMKTJyoS4BpuZMvL5loQ4aN0uqDqYR0kO/2rPDOPe
-         y367TGes9sz6fMPzphCCnPAnAgkLT2Op62JT2cLZPi3q9zUlrJEngs9tHb3RqMQkBJtF
-         b5Bzm8X0seVgVRQ7iDi8I3+qz/GhlyyiQJalk4xSf1IA/IdBzqLDzs2rHGKlg3mmsBmx
-         2qBA==
-X-Gm-Message-State: APjAAAVz/onlkSWTHPdIGr56p1EY+Gc1kpSn7n6FnPREeG04gnFa2vOX
-        6Yf9rylesq5SwyZ9CMMicC6QA2yjlfkw+8u1xaFAd7N5
-X-Google-Smtp-Source: APXvYqwQnXa32S88cpjnb3svuNV9ptbTWxgj2NofkIqvD/8kqS/ZPs9hBEPuCGHdaUp3cBLRZNHLHyFoUBcnaWP4Nl8=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr21273637ots.250.1578384008305;
- Tue, 07 Jan 2020 00:00:08 -0800 (PST)
+        bh=17ic3/G09jy7yYXFGdQ26exOrAH82ahIbhZQJdHdte4=;
+        b=SpHQZf1Q3omVUc9dR4WfGvMfOJD6R+MaY0qc8DSOv3MsdaIFIyXeCORidLSHD/ch3a
+         /PCHcpadCImyTZLqsFzWGiNIm6/hy8JHA1Q45FHmGb3sLF7Q0h8v44jbEGBZ7aXFat2E
+         5j23h02dPte9mHRSCme66NA9XhsZGVzcOWdnozuFS+8IBUH1UciCEpFZICAaoeGc4vo5
+         6H7ut6nO6lhnzD2AAis3RFoVFrXAAVoBJsPrOQqsDrenX6hDCBp9x/K5SlFH5CuHX5Sy
+         ilgVNSQo+nxOe49HeTg/Gk5R6SM6oTEnJNx8gf2nK7QD7fxRnn4nKlgg9gKEira2oj1w
+         YlaA==
+X-Gm-Message-State: APjAAAWktDpvpoQ1d+owrdkx1AbsdXgqcJO44S5PpAPsTkoo0Avd9glO
+        Vu/sF2cUs5OWTLgAonoa4+CcrY/zJOM=
+X-Google-Smtp-Source: APXvYqzkjrffx5DSwF/5iaRax5nn5EP1txw6vCxmEui3choX47L614ytWCeIxvdEvsuGPSAM7ZAz1Q==
+X-Received: by 2002:a17:906:198b:: with SMTP id g11mr113027594ejd.271.1578384070360;
+        Tue, 07 Jan 2020 00:01:10 -0800 (PST)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
+        by smtp.gmail.com with ESMTPSA id r7sm7449741eds.32.2020.01.07.00.01.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 00:01:09 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id q9so17847341wmj.5;
+        Tue, 07 Jan 2020 00:01:09 -0800 (PST)
+X-Received: by 2002:a7b:cf12:: with SMTP id l18mr41183295wmg.66.1578384069457;
+ Tue, 07 Jan 2020 00:01:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <20191230133852.5890-3-geert+renesas@glider.be> <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
-In-Reply-To: <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 08:59:57 +0100
-Message-ID: <CAMuHMdVO7QvfdOEooJCVHDAwqzbZ_nYnZ6x97qVmFTyS+7kbKA@mail.gmail.com>
-Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200106174639.20862-1-tiny.windzz@gmail.com> <20200106174639.20862-2-tiny.windzz@gmail.com>
+ <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+In-Reply-To: <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 7 Jan 2020 16:00:59 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64nLnHbpUyadD9H4ZyMX82v1nMr88dM=UrLhrRnBK7f-g@mail.gmail.com>
+Message-ID: <CAGb2v64nLnHbpUyadD9H4ZyMX82v1nMr88dM=UrLhrRnBK7f-g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
+ thermal zones
+To:     Maxime Ripard <mripard@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
-
-On Tue, Jan 7, 2020 at 12:34 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
-> > As GPIO hogs are configured at GPIO controller initialization time,
-> > adding/removing GPIO hogs in DT overlays does not work.
+On Tue, Jan 7, 2020 at 3:58 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
+> > There are two sensors, sensor0 for CPU, sensor1 for GPU.
 > >
-> > Add support for GPIO hogs described in DT overlays by registering an OF
-> > reconfiguration notifier, to handle the addition and removal of GPIO hog
-> > subnodes to/from a GPIO controller device node.
-> >
-> > Note that when a GPIO hog device node is being removed, its "gpios"
-> > properties is no longer available, so we have to keep track of which
-> > node a hog belongs to, which is done by adding a pointer to the hog's
-> > device node to struct gpio_desc.
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > Tested-on: sun8i-r40-bananapi-m2-ultra
 >
-> If I have read the patches and the existing overlay source correctly,
-> then some observations:
->
-> - A gpio hog node added in an overlay will be properly processed.
->
-> - A gpio hog node already existing in the live devicetree, but with a
->   non-active status will be properly processed if the status of the
->   gpio hog node is changed to "ok" in the overlay.
->
-> - If a gpio hog node already exists in the live devicetree with an
->   active status, then any updated or added properties in that gpio
->   hog node in the overlay will have no effect.
->
->   There is a scenario where the updated property would have an effect:
->   apply a second overlay that sets the status to inactive, then apply
->   a third overlay that sets the status back to active.  This is a
->   rather contrived example and I think it should be documented as
->   not supported and the result undefined.
->
-> It would be good to document this explicitly.
+> As far as I know, tested-on is not documented anywhere (and isn't
+> really used either). I've removed it and applied, thanks!
 
-I didn't verify this in detail, but I believe the existing overlay
-support for platform, i2c, and SPI devices behaves the same.
+I normally add it as a comment following the Tested-by. Makes it
+easier to track who tested what when patches touch multiple
+boards.
 
-> > --- a/drivers/gpio/gpiolib-of.c
-> > +++ b/drivers/gpio/gpiolib-of.c
-
-> > +static int of_gpio_notify(struct notifier_block *nb, unsigned long action,
-> > +                       void *arg)
-> > +{
-> > +     struct of_reconfig_data *rd = arg;
-> > +     struct gpio_chip *chip;
-> > +     int ret;
-> > +
-> > +     switch (of_reconfig_get_state_change(action, arg)) {
-> > +     case OF_RECONFIG_CHANGE_ADD:
-> > +             if (!of_property_read_bool(rd->dn, "gpio-hog"))
-> > +                     return NOTIFY_OK;       /* not for us */
-> > +
-> > +             if (of_node_test_and_set_flag(rd->dn, OF_POPULATED))
-> > +                     return NOTIFY_OK;
->
-> I don't think OF_POPULATED could be already set.  It seems to be a
-> bug if it is.
-
-For a real gpio-hog it indeed is not.  But this function is called for
-every change made to the device tree (add a printk() and look at the
-output during boot).  So this serves as a (cheap) line of defense.
-The of_find_gpiochip_by_node() call below is more expensive to call.
-
-> > +
-> > +             chip = of_find_gpiochip_by_node(rd->dn->parent);
-> > +             if (chip == NULL)
-> > +                     return NOTIFY_OK;       /* not for us */
->
-> If I understand correctly, "not for us" is a misleading comment.
-> The notification is for the node rd->dn->parent, but the device
-> does not exist, so we can't do the hogging at the moment.  (If the
-> device is created later, then the gpio hog child node will exist,
-> and the init will "do the right thing" with the hog node -- so
-> not a problem.)
-
-This function is called for all additions to the device tree.
-So rd->dn->parent may not even be a gpio controller node.
-Hence unless this is a gpio controller node for this hog, this
-notification is "not for us".
-
-> > +
-> > +             ret = of_gpiochip_add_hog(chip, rd->dn);
-> > +             if (ret < 0) {
-> > +                     pr_err("%s: failed to add hogs for %pOF\n", __func__,
-> > +                            rd->dn);
-> > +                     of_node_clear_flag(rd->dn, OF_POPULATED);
-> > +                     return notifier_from_errno(ret);
-> > +             }
-> > +             break;
-> > +
-> > +     case OF_RECONFIG_CHANGE_REMOVE:
-> > +             if (!of_node_check_flag(rd->dn, OF_POPULATED))
-> > +                     return NOTIFY_OK;       /* already depopulated */
->
-> I don't think OF_POPULATED could be already cleared.  It seems to be a
-> bug if it is.
-
-Same here. First line of defense.
-
-> > +
-> > +             chip = of_find_gpiochip_by_node(rd->dn->parent);
-> > +             if (chip == NULL)
-> > +                     return NOTIFY_OK;       /* not for us */
->
-> Again, a misleading comment.
-
-Same here. rd->dn->parent may be something else.
-
-> > +
-> > +             of_gpiochip_remove_hog(chip, rd->dn);
-> > +             of_node_clear_flag(rd->dn, OF_POPULATED);
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_OK;
-> > +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ChenYu
