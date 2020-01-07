@@ -2,137 +2,120 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AEDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F42C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F370222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578436557;
-	bh=BgA8C4OTAz+hxCasEQP7pvCyh/DwxtbAh1GUts8nezA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F5bWnwt8lFQLsgqKSvcI3YKpJ7VQweLcYMgYoqzjGzr3aJlEnzqWAJEJOQIX34as/
-	 7Ex8oSo7yriZoxIwNK1A3WmxY0Wh3LOS+M3hChvoDyJBHE3fdR4vhQ6vDitcuIBXQy
-	 YtFjZs0KX2VsD7WtXMsP/Nkp0rOOA8lN8ADCv4Xg=
+	by mail.kernel.org (Postfix) with ESMTP id 0DB1B2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qVa3ZCDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgAGWf4 (ORCPT
+        id S1727505AbgAGWgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:35:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 17:36:00 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52465 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgAGWf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:35:56 -0500
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727077AbgAGWf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:35:59 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C492075A;
-        Tue,  7 Jan 2020 22:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578436555;
-        bh=BgA8C4OTAz+hxCasEQP7pvCyh/DwxtbAh1GUts8nezA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yWOcJ4bv5iW4TRnYRgZGZ/BJs0qsGOFzjb8o7RBKqqrNguvml8lzupE1xJuIKaMfB
-         iErWnLpwyYpb6/w875DR52n37uZOZ50MpkkmU6b1oda4BfsL9V9X4B05cj4e6y0NeY
-         cbcUjXUTWOvd7AhemGfOZySLN4qSG1W1W5qGbZCY=
-Received: by mail-qv1-f44.google.com with SMTP id y8so601497qvk.6;
-        Tue, 07 Jan 2020 14:35:55 -0800 (PST)
-X-Gm-Message-State: APjAAAWmUIUfw6jA/QWX0bqXgpRQxub0TRJ5Slh3xQm+cOvu+bpHwQhg
-        XQ4R51rFN0W3KfI1KIvdKgP5/hhlJPyM2TyK3A==
-X-Google-Smtp-Source: APXvYqzopuxiPCMInWh5xVv9RadZ1sApQkhglDfFUgmBFrCNOFhOQ9CLkzQ4agTXHKEgEAENe2y53m3p+ZuzT2OQ6J0=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr1502340qvn.79.1578436554153;
- Tue, 07 Jan 2020 14:35:54 -0800 (PST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47snK63d1Nz9sPJ;
+        Wed,  8 Jan 2020 09:35:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578436555;
+        bh=5K7yUQoezMG22YaczQTjWBI2s9CqzR+7Y1yt9iqiwo8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qVa3ZCDUkwzpku+Jm6SBeOvJGF7OaTNVthlSkDdBritbwx0R/NLDJ6hCef0obL85y
+         GeliNjoJmvumvNk97Lmit1L1wMqHcgPbkwoj9xfJsr76k8Cx8OxDWLg/Y+HMI9uAas
+         ulqow6Z8YUYSVr3AhVbDHZwfNK/zrjqQSj8DKL97VyGnDTtFcgtFrP2S5jJNq0P+v/
+         iPfv3gChAcJrFsmEBwFw3R3+m/lAdxKfdINskzir5WXOeOpKYN0Q9dEMwLQeeQuXk2
+         iQjaCBw/rDXkkmhkTWgJHlqE4VGFDdM5edxaPu4kCoPrFEoTJt+Zjm7iEmC3ufrE2W
+         xp9FTVUOymdHQ==
+Date:   Wed, 8 Jan 2020 09:35:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amanieu d'Antras <amanieu@gmail.com>,
+        Nick Hu <nickhu@andestech.com>
+Subject: linux-next: manual merge of the risc-v tree with the pidfd-fixes
+ tree
+Message-ID: <20200108093548.71a9db91@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200107185753.28308-1-rjones@gateworks.com> <20200107185753.28308-2-rjones@gateworks.com>
-In-Reply-To: <20200107185753.28308-2-rjones@gateworks.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 16:35:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKYvJPJNdnEoADMQm_7zFUtF2vSZA90t4Us0tp899iV5A@mail.gmail.com>
-Message-ID: <CAL_JsqKYvJPJNdnEoADMQm_7zFUtF2vSZA90t4Us0tp899iV5A@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
- i.MX6DL/Q compatibles
-To:     Robert Jones <rjones@gateworks.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/1gGwnvrxr3zydp08JWaOGPj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:58 PM Robert Jones <rjones@gateworks.com> wrote:
->
-> Add the compatible enum entries for Gateworks Ventana boards.
->
-> Signed-off-by: Robert Jones <rjones@gateworks.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 37 ++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index f79683a..9f73bef 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -154,6 +154,43 @@ properties:
->                - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
->            - const: fsl,imx6dl
->
-> +      - description: i.MX6DL or i.MX6Q Gateworks Ventana Boards
-> +        items:
-> +          - enum:
-> +              - gw,imx6dl-gw51xx
-> +              - gw,imx6dl-gw52xx
-> +              - gw,imx6dl-gw53xx
-> +              - gw,imx6dl-gw54xx
-> +              - gw,imx6dl-gw551x
-> +              - gw,imx6dl-gw552x
-> +              - gw,imx6dl-gw553x
-> +              - gw,imx6dl-gw560x
-> +              - gw,imx6dl-gw5903
-> +              - gw,imx6dl-gw5904
-> +              - gw,imx6dl-gw5907
-> +              - gw,imx6dl-gw5910
-> +              - gw,imx6dl-gw5912
-> +              - gw,imx6dl-gw5913
-> +              - gw,imx6q-gw51xx
-> +              - gw,imx6q-gw52xx
-> +              - gw,imx6q-gw53xx
-> +              - gw,imx6q-gw5400-a
-> +              - gw,imx6q-gw54xx
-> +              - gw,imx6q-gw551x
-> +              - gw,imx6q-gw552x
-> +              - gw,imx6q-gw553x
-> +              - gw,imx6q-gw560x
-> +              - gw,imx6q-gw5903
-> +              - gw,imx6q-gw5904
-> +              - gw,imx6q-gw5907
-> +              - gw,imx6q-gw5910
-> +              - gw,imx6q-gw5912
-> +              - gw,imx6q-gw5913
+--Sig_/1gGwnvrxr3zydp08JWaOGPj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I missed that there's 2 sets of compatibles here for imx6dl and imx6q
-variants. No point in combining these, so you should have 2 separate
-entries for 6Q and 6DL boards.
+Hi all,
 
-> +          - const: gw,ventana
-> +          - enum:
-> +            - fsl,imx6dl
-> +            - fsl,imx6q
-> +
->        - description: i.MX6SL based Boards
->          items:
->            - enum:
-> --
-> 2.9.2
->
+Today's linux-next merge of the risc-v tree got a conflict in:
+
+  arch/riscv/Kconfig
+
+between commit:
+
+  b57cd1cdb197 ("riscv: Implement copy_thread_tls")
+
+from the pidfd-fixes tree and commit:
+
+  d0f057940663 ("riscv: Add KASAN support")
+
+from the risc-v tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/Kconfig
+index fa7dc03459e7,82e7168a81fa..000000000000
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@@ -65,7 -65,7 +65,8 @@@ config RISC
+  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+  	select HAVE_ARCH_MMAP_RND_BITS if MMU
+  	select ARCH_HAS_GCOV_PROFILE_ALL
+ +	select HAVE_COPY_THREAD_TLS
++ 	select HAVE_ARCH_KASAN if MMU && 64BIT
+ =20
+  config ARCH_MMAP_RND_BITS_MIN
+  	default 18 if 64BIT
+
+--Sig_/1gGwnvrxr3zydp08JWaOGPj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VB8QACgkQAVBC80lX
+0Gx3BQf/e16rkxO4kgUKwsSRNY+3ga3hdOPEaUaHKKrTnNbMoaDye28IfhLhG3zu
+qU4O/6VyBj5hCD4xdlkKPRf5m2QxHE7c5IF/EEGt7g+8iosh8Qi4c2zgHeykGut/
+QmRvMDmVbgo++h5y8rpnKNezOTizaDuDkvMQr8owVqI4f+P7ei4us0IZsk2ZL+GK
+7HuCcAq0ERQLUv3rK19mTZl16ixlMsjdfAORSyCF0onRY72OsCWhvWGf7ej5PJ9p
+JkGpxsH+5TS00VR4Rx2gKj58P7Ws45FORGH56/JkWLFUYrRv3ckH1ACNL2FArEYC
+SFA7urs6VrCMPk2ngB1eCvuEpE7jfQ==
+=4gJF
+-----END PGP SIGNATURE-----
+
+--Sig_/1gGwnvrxr3zydp08JWaOGPj--
