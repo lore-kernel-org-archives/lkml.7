@@ -2,134 +2,126 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B24C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761B12087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C30D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L72FmqY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgAGRbs (ORCPT
+        id S1728470AbgAGRbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:31:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgAGRbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:31:48 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475E12072A;
-        Tue,  7 Jan 2020 17:31:46 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 12:31:44 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Subject: Re: [PATCH] sched/fair: Load balance aggressively for SCHED_IDLE
- CPUs
-Message-ID: <20200107123144.2d6dc5a2@gandalf.local.home>
-In-Reply-To: <20200107112518.fqqzldnflqxonptf@vireshk-i7>
-References: <885b1be9af68d124f44a863f54e337f8eb6c4917.1577090998.git.viresh.kumar@linaro.org>
-        <20200102122901.6acbf857@gandalf.local.home>
-        <20200107112518.fqqzldnflqxonptf@vireshk-i7>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 Jan 2020 12:31:52 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41980 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgAGRbw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:31:52 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so192819pgk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:31:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6tbx6y0alCppo4JulU8ZX+Wq5gWxVblT3if0J5vpiqg=;
+        b=L72FmqY7y9JcE1Hl8aVOS075lkg2C/pQlQl3XVkV9+o4hG12UWm6Z+RNU4UaowMX7l
+         AzJI7/sOkWRixckpCz3sLqVPZ9Lmn0VMJOukcWmnoz0mlT/zeKG8T+7vtUMCBlLNLNmD
+         C7TYuadNxUKRk5Jyrl5xgt4f5z004pCSe3P5Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6tbx6y0alCppo4JulU8ZX+Wq5gWxVblT3if0J5vpiqg=;
+        b=qD3LYnsRPtHr8u/sGzNBkvvYe9XG5dk48Qbcd6xRBbSXd80KpvrQj5GsAFd0VMB9wx
+         XRZBzpX5pf0X9MMQsjiKIja+C5rgxJGnFwE03bwmNyppu4SCWoOOc9T3SIvBw5tt+TtW
+         E89ojsppNhiAjg2chqtYYL+uOOw0WzTTr7nD6DjnqdbR4wRf6+NLSOqFv+ES2TLdZ3qh
+         NzKVwZwk8Mz2OToxL5IIRht3z6fC+RXbz2gGBEEETZeeOI3j+3XXeWSbKOqWrcaub0kK
+         RQE88sP7naivwABzXJGSAxpfK6vKNLQuFZzsbDfIyBhHWxuFH8LCaHbYC9dS5cMrL8gy
+         ogyw==
+X-Gm-Message-State: APjAAAUtbLQkA0su4lfll1GAwbh4n5F1kHoe5QzO56T/2NBzDwL22ds/
+        CZ8Oo1mLNEkStoqGrZ2lnOtqVg==
+X-Google-Smtp-Source: APXvYqxuZTRMvr2E0NVTDg27lnwD7H9kx+RE+QwcVmHID/+AUrQOH+CqDmCL6ILFL3+vIgX9QTQ34Q==
+X-Received: by 2002:a63:8041:: with SMTP id j62mr551347pgd.41.1578418311104;
+        Tue, 07 Jan 2020 09:31:51 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 80sm126769pfw.123.2020.01.07.09.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 09:31:50 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:31:49 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Add qca_power_on() API to support
+ both wcn399x and Rome power up
+Message-ID: <20200107173149.GD89495@google.com>
+References: <20200107052601.32216-1-rjliao@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200107052601.32216-1-rjliao@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 16:55:18 +0530
-Viresh Kumar <viresh.kumar@linaro.org> wrote:
+Hi Rocky,
 
-> Hi Steven,
+On Tue, Jan 07, 2020 at 01:26:01PM +0800, Rocky Liao wrote:
+> This patch adds a unified API qca_power_on() to support both wcn399x and
+> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
+> regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
 > 
-> On 02-01-20, 12:29, Steven Rostedt wrote:
-> > On Tue, 24 Dec 2019 10:43:30 +0530
-> > Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >   
-> > > This is tested on ARM64 Hikey620 platform (octa-core) with the help of
-> > > rt-app and it is verified, using kernel traces, that the newly
-> > > SCHED_IDLE CPU does load balancing shortly after it becomes SCHED_IDLE
-> > > and pulls tasks from other busy CPUs.  
-> > 
-> > Can you post the actual steps you used to test this and show the before
-> > and after results? Then others can reproduce what you have shown and
-> > even run other tests to see if this change has any other side effects.  
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> I have attached the json file I used on my octa-core hikey platform along with
-> before/after kernelshark screenshots with this email.
-> 
-> The json file does following:
-> 
-> - it first creates 8 always running sched_idle tasks (thread-idle-X) and let
->   them spread on all 8 CPUs.
-> 
-> - it then creates 8 cfs tasks (thread-cfs-X) that run 50ms every 100ms which
->   will also spread on the 8 cores.
->   
->   one of these threads (thread-cfs2-7) run only 1ms instead of 50ms once every 6
->   periods. During this 6th period, a 9th task (thread-cfs3-8) wakes up.
-> 
-> - The 9th cfs task (thread-cfs3-8) is timed in a way that it wakes up only
->   during the 6th period of thread-cfs2-7. This thread runs 50ms every 600ms.
->   
->   Most of the time, thread-cfs3-8 doesn't wakeup on the cpu with the short
->   thread-cfs2-7 task so after 1ms, we have 1 cpu running only sched_idle task
->   and on another CPU 2 CFS tasks compete during 100ms.
->   
->   - the 9th task has to wait a full sched slice (12ms) before its 1st schedule
->   - the 2 cfs tasks that compete for the same CPU, need 100ms to complete
->     instead of 50ms (51ms in this case).
-> 
-> The before.jpg image shows what happened before this patch was applied. The
-> thread-cfs3-8 doesn't migrate to CPU4 which was only running sched-idle stuff at
-> the 6th period of thread-cfs2-7. The migration happened though when the
-> thread-cfs3-8 woke up next time (after 600 ms), this isn't shown in the picture.
-> 
-> The after.jpg image shows what happened after this patch was applied. On the
-> very first instance when thread-cfs3-8 gets a chance to run, the load balancer
-> starts balancing the CPUs. It migrates lot of sched-idle tasks to CPU7 first
-> (CPU7 was running thread-cfs2-7 then), and finally migrates the thread-cfs3-8
-> task to CPU7.
-> 
-> I have done some markings on the jpg files as well to show the tasks and
-> migration points.
-> 
-> Please lemme know in case someone needs further clarification. Thanks.
-> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 9392cc7f9908..f6555bd1adbc 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+>  	return 0;
+>  }
+>  
+> +static int qca_power_on(struct hci_dev *hdev)
+> +{
+> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+> +	struct qca_serdev *qcadev;
+> +	int ret = 0;
 
-Thanks. I think I was able to reproduce it. Speaking of, I'd
-recommend that you download and install the latest KernelShark
-(https://www.kernelshark.org), as it looks like you're still using the
-pre-1.0 version (which is now deprecated). One nice feature of the
-latest is that it has json session files that you can pass to others.
-If you install KernelShark 1.0, then you can do:
+another option would be to return directly from the if/else branches,
+but either way is fine.
 
- 1) download http://rostedt.org/private/sched_idle_ks_data.tar.bz2
- 2) extract it:
-     $ cd /tmp
-     $ wget http://rostedt.org/private/sched_idle_ks_data.tar.bz2
-     $ tar xvf sched_idle_ks_data.tar.bz2
-     $ cd sched_idle_ks_data
- 3) Open up each of the data files and it will bring you right to
-    where you want to be.
-     $ kernelshark -s sched_idle_ks-before.json &
-     $ kernelshark -s sched_idle_ks-after.json &
+> +
+> +	if (qca_is_wcn399x(soc_type)) {
+> +		ret = qca_wcn3990_init(hu);
+> +	} else {
+> +		if (hu->serdev) {
+> +			qcadev = serdev_device_get_drvdata(hu->serdev);
+> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> +			/* Controller needs time to bootup. */
+> +			msleep(150);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
 
-And you can see if I duplicated what you explained ;-)
-
--- Steve
+I expected qca_power_on() would be called from qca_open(), but as is
+this would only work for ROME, and not WCN399x, which only enables
+the regulators in qca_open(), qca_wcn3990_init() is called from
+qca_setup(). Is there a particular reason for this assymmetry between
+the ROME and WCN399x initialization (i.e. one is fully powered up after
+open(), the other not)?
