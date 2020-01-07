@@ -2,314 +2,278 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F74C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D44CC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DA520880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34932080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hVYyNLsC"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fqh5U2fC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgAGX2N (ORCPT
+        id S1727653AbgAGX3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:28:13 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33764 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAGX2N (ORCPT
+        Tue, 7 Jan 2020 18:29:16 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43934 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgAGX3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:28:13 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so1421227lji.0;
-        Tue, 07 Jan 2020 15:28:11 -0800 (PST)
+        Tue, 7 Jan 2020 18:29:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id d16so1413659wre.10;
+        Tue, 07 Jan 2020 15:29:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eTZGag+y6119nfv8Dd/B27LF9AMF/5U+f13CKpoPEUE=;
-        b=hVYyNLsCsAy1f7z532KOxTvi4vu+IVQDm7L35oiVOsJXTmngWBP/xaq8WFldkeJLOh
-         VhITjPRL51WOT7c0tjGD/w0ZpiD470HjkUWVF/ShekSQIu9VVoK1+iLQUg+zt9CyaPQB
-         fWGV4zJyJHRjgCwcuqtgrUxORaCER0gY1G/Ipwd7Htzd6ZKDAyAJtPhcfYebLLKcEtit
-         nB4slwP/hrIaT9+XKYO/fsgj6iZOPFvElSkCpMG43jtDivgUa2uWauszbyb+tuKToWcK
-         Q9UMZkxnK97PRT4D5N65mhzNyi9w0kKlF+/kb9eNNef2us1Dt++sUUiaztjzHAZHFq8p
-         nc0g==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tW6HmVMiDgLM2CovlrlsfjuFYlon1yNOi28H4tR49g=;
+        b=fqh5U2fC4UTSDw9CbE6H1ohLxAJ9RdXme36gItZ/Gt4BTBe5ptN6v5SZyUnkgUGr7R
+         RbV0SOUOkw2j37tf26eow4UcUsd1w4+eNBL+we7Jkd2kV+4bJ/hBO0k5/AFmZPm2P7zm
+         L3rkCqNGELtYbgCQxb+NRyqWHeIYTW/iKwJVX/VRFV5K+IBPt++AxqEa8fmWIqodg13E
+         YoZUmPqlSvdvWoo1iqB88gYWRIfORC6tnRFv0vUOSLl3QbRFYYB5OpKEyr6CVIfw78LJ
+         BdmA25HOu5JsAYQ560uPmsiNOisrWDvJNWLo0ulxR1lrH6Q+Kr6HNpX4mUhIZOd8yNEB
+         C4+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=eTZGag+y6119nfv8Dd/B27LF9AMF/5U+f13CKpoPEUE=;
-        b=eA1u3RjnNPacP3EgzdODz76teElvanTSJ2OOWMRV1PBaKWZ1NBVDkxAg2tSqwwA/Rb
-         Aww4KqAsFp0IXo0PqGtLHsnVBdlRHju7pRvCmTXccwZwp4ai8VpNWOPPcdA+ROrI3Fa/
-         d6zKEsat2YcdjZG17Smu3lug4qxORllMlg65Gdn/vnNrRpKG59YCJ6zqwgo5muEYPL2H
-         Ua9ufqhMmIMgfQBStkTR0a08F0KLQyd+gd77CU84AB5evoe5tpZ+w5ACPHYIB2N5b08N
-         Z+UFzn54V3ivIU1fKTak6cRte5oiYoVJNw4dpUr3J9D4KBmVP+jdaaRaf8Do5ulESQBg
-         PCOA==
-X-Gm-Message-State: APjAAAWcr0W1g9elouqgu/CfQrFcIcET5hTLFXmsLfEdr2aRnwu4q3li
-        wcfuQ2oXu0z4d94nt9afdVrth4VE
-X-Google-Smtp-Source: APXvYqwvzYcRGsb23HVw3Gc+K7buHuUVz83DL1Yf/5A4zjfvva27qftO3pt05dDeXo6F86b8IySA4Q==
-X-Received: by 2002:a2e:98c6:: with SMTP id s6mr1170474ljj.14.1578439689994;
-        Tue, 07 Jan 2020 15:28:09 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id x29sm539782lfg.45.2020.01.07.15.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 15:28:09 -0800 (PST)
-Subject: Re: [PATCH v6 00/19] Move PMC clocks into Tegra PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
- <4f52bc6e-3e97-f5fb-ce20-be7b55e688ee@gmail.com>
- <d0447620-48bb-ab2a-1f5f-f8a62aa736f7@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1e603a95-fb6b-1b8a-a0c2-9b47666da79a@gmail.com>
-Date:   Wed, 8 Jan 2020 02:28:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        bh=1tW6HmVMiDgLM2CovlrlsfjuFYlon1yNOi28H4tR49g=;
+        b=iNM8009I+XFB0K4Z9/qXg5SOITijDpkJmdGhDFWA8G5vEh1fQPILjXEIc8EOu40GPz
+         ibsqjKhwnNX0kbimXI4uXGJaVBFiFhXr7ugg2IUKZ8sO2nmfP+P7tAur8RVoQ1htYSCZ
+         YZrBVjGsUOhlxA9UC8b/mmO91iv+ObWbEHNIk1c9KS8yEKOzWn+VjPdGi/6lTODq9YDs
+         pj6Us84saev2kZjuTdHX1N+PK6vu8eWhgDxn2Ha+KvdOy/d4ap1F/jj114SywWCqQVCK
+         35kfb/UnDiAlHg8/ciynA/j0ialf4wDRgQiV1RYLL62jpJ0qH37ZnGnvTtNdq2mMufzu
+         48mw==
+X-Gm-Message-State: APjAAAXFGUdNlAiYHSLSCE8SPjHieev5cjrNRl3JT4nLiSznU0IHOBrH
+        QUPBQmiUkUAg5VazR2gfw5hgXntbovA=
+X-Google-Smtp-Source: APXvYqy414W/mvEzb9sLPeO3N9gkDzA+wEZN6OvA6Cds/IsShTOMuCZUlBnSZJPKh9rkCEmf+VB3tg==
+X-Received: by 2002:adf:dc86:: with SMTP id r6mr1540773wrj.68.1578439752099;
+        Tue, 07 Jan 2020 15:29:12 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id k13sm1714127wrx.59.2020.01.07.15.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 15:29:11 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        wsa@the-dreams.de
+Cc:     khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        b.galvani@gmail.com, jian.hu@amlogic.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] i2c: meson: implement the master_xfer_atomic callback
+Date:   Wed,  8 Jan 2020 00:29:01 +0100
+Message-Id: <20200107232901.891177-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <d0447620-48bb-ab2a-1f5f-f8a62aa736f7@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.01.2020 02:24, Sowjanya Komatineni пишет:
-> 
-> On 1/7/20 3:01 PM, Dmitry Osipenko wrote:
->> Hello Sowjanya,
->>
->> 07.01.2020 07:13, Sowjanya Komatineni пишет:
->>> This patch series moves Tegra PMC clocks from clock driver to pmc driver
->>> along with the device trees changes and audio driver which uses one of
->>> the pmc clock for audio mclk.
->>>
->>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
->>> are currently registered by Tegra clock driver using clk_regiser_mux and
->>> clk_register_gate which performs direct Tegra PMC register access.
->>>
->>> When Tegra PMC is in secure mode, any access from non-secure world will
->>> not go through.
->>>
->>> This patch series adds these Tegra PMC clocks and blink controls to
->>> Tegra
->>> PMC driver with PMC as clock provider and removes them from Tegra clock
->>> driver.
->>>
->>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru
->>> Tegra210
->>> and clock driver does inital parent configuration for it and enables
->>> them.
->>> But this clock should be taken care by audio driver as there is no need
->>> to have this clock pre enabled.
->>>
->>> So, this series also includes patch that updates ASoC driver to take
->>> care of parent configuration for mclk if device tree don't specify
->>> initial parent configuration using assigned-clock-parents and controls
->>> audio mclk enable/disable during ASoC machine startup and shutdown.
->>>
->>> DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
->>>
->>> This series also includes a patch for mclk fallback to extern1 when
->>> retrieving mclk fails to have this backward compatible of new DT with
->>> old kernels.
->>>
->>> [v6]:    Changes between v5 and v6 are
->>>     - v5 feedback
->>>     - Added ASoC machine startup and shutdown callbacks to control audio
->>>       mclk enable/disable and removed default mclk enable from clock
->>> driver.
->>>     - Updated tegra_asoc_utils_set_rate to disable mclk only during PLLA
->>>       rate change and removed disabling PLLA as its already taken
->>> care by
->>>       pll clock driver.
->>>     - Removed tegra_asoc_utils_set_rate call from utils_init as set_rate
->>>       is set during machine hw_params and during utils_init mclk is
->>>       already in disabled state and this causes warning during mclk
->>> disable
->>>       in utils_set_rate.
->>>
->>> [v5]:    Changes between v4 and v5 are
->>>     - v4 feedback
->>>     - updated dt-binding pmc YAML schema with more description on power
->>>       gate nodes and pad configuration state nodes.
->>>     - update tegra_asoc_utils_set_rate to disable audio mclk only if
->>>       its in enable state.
->>>
->>> [v4]:    Changes between v3 and v4 are
->>>     - v3 Feedback
->>>     - Updated clocks clk_m_div2 and clk_m_div4 as osc_div2 and osc_div4.
->>>       Tegra don't have clk_m_div2, clk_m_div4 and they should actually
->>>       be osc_div2 and osc_div4 clocks from osc pads.
->>>     - Fixed PMC clock parents to use osc, osc_div2, osc_div4.
->>>     - Register each PMC clock as single clock rather than separate
->>>       mux and gate clocks.
->>>     - Update ASoC utils to use resource managed APIs rather than
->>>       using clk_get and clk_put.
->>>     - Updated device tree and ASoC driver to use clk_out_1 instead of
->>>       clk_out_1_mux as PMC clocks are registered as single clock.
->>>     - Update clock driver init_table to not enable audio related clocks
->>>       as ASoC utils will do audio clock enables.
->>>
->>> [v3]:    Changes between v2 and v3 are
->>>     - Removes set parent of clk_out_1_mux to extern1 and enabling
->>>       extern1 from the clock driver.
->>>     - Doesn't enable clk_out_1 and blink by default in pmc driver
->>>     - Updates ASoC driver to take care of audio mclk parent
->>>       configuration incase if device tree don't specify assigned
->>>       clock parent properties and enables mclk using both clk_out_1
->>>       and extern1.
->>>     - updates all device trees using extern1 as mclk in sound node
->>>       to use clk_out_1 from pmc.
->>>     - patch for YAML format pmc dt-binding
->>>     - Includes v2 feedback
->>>
->>> [v2]:    Changes between v1 and v2 are
->>>     - v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
->>>       blink controls to Tegra PMC driver and removing clk-tegra-pmc.
->>>     - feedback related to pmc clocks in Tegra PMC driver from v1
->>>     - Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC
->>> programming
->>>       by the clock driver using helper functions from Tegra PMC.
->>>
->>>         Note:
->>>       To use helper functions from PMC driver, PMC early init need to
->>>       happen prior to using helper functions and these helper
->>> functions are
->>>       for PLLM Override and PLLE IDDQ programming in PMC during
->>> PLLM/PLLE
->>>       clock registration which happen in clock_init prior to Tegra PMC
->>>       probe.
->>>       Moving PLLM/PLLE clocks registration to happen after Tegra PMC
->>>       impacts other clocks EMC, MC and corresponding tegra_emc_init and
->>>       tegra_mc_init.
->>>       This implementation of configuring PMC registers thru helper
->>>       functions in clock driver needs proper changes across PMC, Clock,
->>>       EMC and MC inits to have it work across all Tegra platforms.
->>>
->>>       Currently PLLM Override is not enabled in the bootloader so proper
->>>       patches for this fix will be taken care separately.
->>>
->>> [v1]:    v1 includes patches for below fixes.
->>>     - adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra
->>> PMC
->>>       driver and removing clk-tegra-pmc.
->>>     - updated clock provider from tegra_car to pmc in the device tree
->>>       tegra210-smaug.dts that uses clk_out_2.
->>>     - Added helper functions in PMC driver for WB0 PLLM overrides and
->>> PLLE
->>>       IDDQ programming to use by clock driver and updated clock
->>> driver to
->>>       use these helper functions and removed direct PMC access from
->>> clock
->>>       driver and all pmc base address references in clock driver.
->>>
->>>
->>>
->>>
->>> Sowjanya Komatineni (19):
->>>    dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
->>>    clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
->>>    clk: tegra: Fix Tegra PMC clock out parents
->>>    dt-bindings: tegra: Convert Tegra PMC bindings to YAML
->>>    dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
->>>    soc: tegra: Add Tegra PMC clocks registration into PMC driver
->>>    dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz blink clock
->>>    soc: tegra: Add support for 32KHz blink clock
->>>    clk: tegra: Remove tegra_pmc_clk_init along with clk ids
->>>    dt-bindings: clock: tegra: Remove pmc clock ids from clock
->>> dt-bindings
->>>    ASoC: tegra: Use device managed resource APIs to get the clock
->>>    ASoC: tegra: Add audio mclk configuration
->>>    ASoC: tegra: Add fallback implementation for audio mclk
->>>    clk: tegra: Remove audio related clock enables from init_table
->>>    ARM: dts: tegra: Add clock-cells property to pmc
->>>    arm64: tegra: Add clock-cells property to Tegra PMC node
->>>    ARM: tegra: Update sound node clocks in device tree
->>>    arm64: tegra: smaug: Change clk_out_2 provider to pmc
->>>    ASoC: nau8825: change Tegra clk_out_2 provider from tegra_car to pmc
->>>
->>>   .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 300
->>> -----------------
->>>   .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     | 354
->>> +++++++++++++++++++++
->>>   .../devicetree/bindings/sound/nau8825.txt          |   2 +-
->>>   arch/arm/boot/dts/tegra114-dalmore.dts             |   8 +-
->>>   arch/arm/boot/dts/tegra114.dtsi                    |   4 +-
->>>   arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi        |   8 +-
->>>   arch/arm/boot/dts/tegra124-apalis.dtsi             |   8 +-
->>>   arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   8 +-
->>>   arch/arm/boot/dts/tegra124-nyan.dtsi               |   8 +-
->>>   arch/arm/boot/dts/tegra124-venice2.dts             |   8 +-
->>>   arch/arm/boot/dts/tegra124.dtsi                    |   4 +-
->>>   arch/arm/boot/dts/tegra20.dtsi                     |   4 +-
->>>   arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi         |   8 +-
->>>   arch/arm/boot/dts/tegra30-apalis.dtsi              |   8 +-
->>>   arch/arm/boot/dts/tegra30-beaver.dts               |   8 +-
->>>   arch/arm/boot/dts/tegra30-cardhu.dtsi              |   8 +-
->>>   arch/arm/boot/dts/tegra30-colibri.dtsi             |   8 +-
->>>   arch/arm/boot/dts/tegra30.dtsi                     |   4 +-
->>>   arch/arm64/boot/dts/nvidia/tegra132.dtsi           |   4 +-
->>>   arch/arm64/boot/dts/nvidia/tegra210-smaug.dts      |   2 +-
->>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +-
->>>   drivers/clk/tegra/Makefile                         |   1 -
->>>   drivers/clk/tegra/clk-id.h                         |  11 +-
->>>   drivers/clk/tegra/clk-tegra-fixed.c                |  32 +-
->>>   drivers/clk/tegra/clk-tegra-pmc.c                  | 122 -------
->>>   drivers/clk/tegra/clk-tegra114.c                   |  41 +--
->>>   drivers/clk/tegra/clk-tegra124.c                   |  46 +--
->>>   drivers/clk/tegra/clk-tegra20.c                    |   9 +-
->>>   drivers/clk/tegra/clk-tegra210.c                   |  30 +-
->>>   drivers/clk/tegra/clk-tegra30.c                    |  31 +-
->>>   drivers/clk/tegra/clk.h                            |   1 -
->>>   drivers/soc/tegra/pmc.c                            | 352
->>> ++++++++++++++++++++
->>>   include/dt-bindings/clock/tegra114-car.h           |  18 +-
->>>   include/dt-bindings/clock/tegra124-car-common.h    |  18 +-
->>>   include/dt-bindings/clock/tegra20-car.h            |   2 +-
->>>   include/dt-bindings/clock/tegra210-car.h           |  18 +-
->>>   include/dt-bindings/clock/tegra30-car.h            |  18 +-
->>>   include/dt-bindings/soc/tegra-pmc.h                |  16 +
->>>   sound/soc/tegra/tegra_alc5632.c                    |  28 +-
->>>   sound/soc/tegra/tegra_asoc_utils.c                 | 125 ++++----
->>>   sound/soc/tegra/tegra_asoc_utils.h                 |   3 +-
->>>   sound/soc/tegra/tegra_max98090.c                   |  43 ++-
->>>   sound/soc/tegra/tegra_rt5640.c                     |  43 ++-
->>>   sound/soc/tegra/tegra_rt5677.c                     |  28 +-
->>>   sound/soc/tegra/tegra_sgtl5000.c                   |  28 +-
->>>   sound/soc/tegra/tegra_wm8753.c                     |  43 ++-
->>>   sound/soc/tegra/tegra_wm8903.c                     |  43 ++-
->>>   sound/soc/tegra/tegra_wm9712.c                     |   8 +-
->>>   sound/soc/tegra/trimslice.c                        |  39 ++-
->>>   49 files changed, 1192 insertions(+), 777 deletions(-)
->>>   delete mode 100644
->>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->>>   create mode 100644
->>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
->>>   delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
->>>   create mode 100644 include/dt-bindings/soc/tegra-pmc.h
->>>
->> I briefly looked through the patches and tested them in all possible
->> configurations. For now everything looks and works well.
->>
->> You could add this to all patches:
->>
->> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Thanks Dmitry
+Boards with some of the 32-bit SoCs (mostly Meson8 and Meson8m2) use a
+Ricoh RN5T618 PMU which acts as system power controller. The driver for
+the system power controller may need to the I2C bus just before shutting
+down or rebooting the system. At this stage the interrupts may be
+disabled already.
 
-Actually, it will be more accurate if you will add my t-b only to the
-T20/30 patches. I only looked through the T114+ patches without testing
-them, thanks.
+Implement the master_xfer_atomic callback so the driver for the RN5T618
+PMU can communicate properly with the PMU when shutting down or
+rebooting the board. The CTRL register has a status bit which can be
+polled to determine when processing has completed. According to the
+public S805 datasheet the value 0 means "idle" and 1 means "running".
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/i2c/busses/i2c-meson.c | 97 +++++++++++++++++++++++-----------
+ 1 file changed, 65 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+index 1e2647f9a2a7..7486b46e475f 100644
+--- a/drivers/i2c/busses/i2c-meson.c
++++ b/drivers/i2c/busses/i2c-meson.c
+@@ -10,6 +10,7 @@
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -213,6 +214,30 @@ static void meson_i2c_prepare_xfer(struct meson_i2c *i2c)
+ 	writel(i2c->tokens[1], i2c->regs + REG_TOK_LIST1);
+ }
+ 
++static void meson_i2c_transfer_complete(struct meson_i2c *i2c, u32 ctrl)
++{
++	if (ctrl & REG_CTRL_ERROR) {
++		/*
++		 * The bit is set when the IGNORE_NAK bit is cleared
++		 * and the device didn't respond. In this case, the
++		 * I2C controller automatically generates a STOP
++		 * condition.
++		 */
++		dev_dbg(i2c->dev, "error bit set\n");
++		i2c->error = -ENXIO;
++		i2c->state = STATE_IDLE;
++	} else {
++		if (i2c->state == STATE_READ && i2c->count)
++			meson_i2c_get_data(i2c, i2c->msg->buf + i2c->pos,
++					   i2c->count);
++
++		i2c->pos += i2c->count;
++
++		if (i2c->pos >= i2c->msg->len)
++			i2c->state = STATE_IDLE;
++	}
++}
++
+ static irqreturn_t meson_i2c_irq(int irqno, void *dev_id)
+ {
+ 	struct meson_i2c *i2c = dev_id;
+@@ -232,27 +257,9 @@ static irqreturn_t meson_i2c_irq(int irqno, void *dev_id)
+ 		return IRQ_NONE;
+ 	}
+ 
+-	if (ctrl & REG_CTRL_ERROR) {
+-		/*
+-		 * The bit is set when the IGNORE_NAK bit is cleared
+-		 * and the device didn't respond. In this case, the
+-		 * I2C controller automatically generates a STOP
+-		 * condition.
+-		 */
+-		dev_dbg(i2c->dev, "error bit set\n");
+-		i2c->error = -ENXIO;
+-		i2c->state = STATE_IDLE;
+-		complete(&i2c->done);
+-		goto out;
+-	}
+-
+-	if (i2c->state == STATE_READ && i2c->count)
+-		meson_i2c_get_data(i2c, i2c->msg->buf + i2c->pos, i2c->count);
++	meson_i2c_transfer_complete(i2c, ctrl);
+ 
+-	i2c->pos += i2c->count;
+-
+-	if (i2c->pos >= i2c->msg->len) {
+-		i2c->state = STATE_IDLE;
++	if (i2c->state == STATE_IDLE) {
+ 		complete(&i2c->done);
+ 		goto out;
+ 	}
+@@ -279,10 +286,11 @@ static void meson_i2c_do_start(struct meson_i2c *i2c, struct i2c_msg *msg)
+ }
+ 
+ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
+-			      int last)
++			      int last, bool atomic)
+ {
+ 	unsigned long time_left, flags;
+ 	int ret = 0;
++	u32 ctrl;
+ 
+ 	i2c->msg = msg;
+ 	i2c->last = last;
+@@ -300,13 +308,24 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
+ 
+ 	i2c->state = (msg->flags & I2C_M_RD) ? STATE_READ : STATE_WRITE;
+ 	meson_i2c_prepare_xfer(i2c);
+-	reinit_completion(&i2c->done);
++
++	if (!atomic)
++		reinit_completion(&i2c->done);
+ 
+ 	/* Start the transfer */
+ 	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, REG_CTRL_START);
+ 
+-	time_left = msecs_to_jiffies(I2C_TIMEOUT_MS);
+-	time_left = wait_for_completion_timeout(&i2c->done, time_left);
++	if (atomic) {
++		ret = readl_poll_timeout_atomic(i2c->regs + REG_CTRL, ctrl,
++						!(ctrl & REG_CTRL_STATUS),
++						10, I2C_TIMEOUT_MS * 1000);
++	} else {
++		time_left = msecs_to_jiffies(I2C_TIMEOUT_MS);
++		time_left = wait_for_completion_timeout(&i2c->done, time_left);
++
++		if (!time_left)
++			ret = -ETIMEDOUT;
++	}
+ 
+ 	/*
+ 	 * Protect access to i2c struct and registers from interrupt
+@@ -315,13 +334,14 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
+ 	 */
+ 	spin_lock_irqsave(&i2c->lock, flags);
+ 
++	if (atomic && !ret)
++		meson_i2c_transfer_complete(i2c, ctrl);
++
+ 	/* Abort any active operation */
+ 	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, 0);
+ 
+-	if (!time_left) {
++	if (ret)
+ 		i2c->state = STATE_IDLE;
+-		ret = -ETIMEDOUT;
+-	}
+ 
+ 	if (i2c->error)
+ 		ret = i2c->error;
+@@ -331,8 +351,8 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
+ 	return ret;
+ }
+ 
+-static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+-			  int num)
++static int meson_i2c_xfer_messages(struct i2c_adapter *adap,
++				   struct i2c_msg *msgs, int num, bool atomic)
+ {
+ 	struct meson_i2c *i2c = adap->algo_data;
+ 	int i, ret = 0;
+@@ -340,7 +360,7 @@ static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+ 	clk_enable(i2c->clk);
+ 
+ 	for (i = 0; i < num; i++) {
+-		ret = meson_i2c_xfer_msg(i2c, msgs + i, i == num - 1);
++		ret = meson_i2c_xfer_msg(i2c, msgs + i, i == num - 1, atomic);
+ 		if (ret)
+ 			break;
+ 	}
+@@ -350,14 +370,27 @@ static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+ 	return ret ?: i;
+ }
+ 
++static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
++			  int num)
++{
++	return meson_i2c_xfer_messages(adap, msgs, num, false);
++}
++
++static int meson_i2c_xfer_atomic(struct i2c_adapter *adap,
++				 struct i2c_msg *msgs, int num)
++{
++	return meson_i2c_xfer_messages(adap, msgs, num, true);
++}
++
+ static u32 meson_i2c_func(struct i2c_adapter *adap)
+ {
+ 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+ }
+ 
+ static const struct i2c_algorithm meson_i2c_algorithm = {
+-	.master_xfer	= meson_i2c_xfer,
+-	.functionality	= meson_i2c_func,
++	.master_xfer		= meson_i2c_xfer,
++	.master_xfer_atomic	= meson_i2c_xfer_atomic,
++	.functionality		= meson_i2c_func,
+ };
+ 
+ static int meson_i2c_probe(struct platform_device *pdev)
+-- 
+2.24.1
+
