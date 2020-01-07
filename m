@@ -2,94 +2,184 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E080CC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E06C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12F92077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D4F2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Jvncn3ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgAGOs6 (ORCPT
+        id S1728361AbgAGOtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:48:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:18792 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbgAGOs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:48:58 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:48:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="215574314"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2020 06:48:55 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ioqAC-0005tX-Lo; Tue, 07 Jan 2020 16:48:56 +0200
-Date:   Tue, 7 Jan 2020 16:48:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20200107144856.GI32742@smile.fi.intel.com>
-References: <20191229013059.495767-1-linus.walleij@linaro.org>
- <20191230102021.GF2628@lahna.fi.intel.com>
- <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
- <20200107135216.GR465886@lahna.fi.intel.com>
+        Tue, 7 Jan 2020 09:49:09 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45945 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgAGOtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:49:08 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so52796402ioi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:49:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xURPOfyF2UK2ImfN0jV4a8KRwy9Nblqyu9sgwhGxs5s=;
+        b=Jvncn3tijiI+u+3cvBj5W7Gb8ZHassVRprsVHpn6hdwsYUoJIf0J0zpAeyjjlzCKeH
+         nY+P3BP7Dw5q/F2TclcXczu+dhVPWcEesVllGg3V5LCZB1c/N5KqP2tOmpf9j7VMdQpK
+         KngmC4wGP2sX/E4BgHtDXa4zfoHX1IAC4kUp07/Odh23+CKkbfvPlLgEj7v/4Gl+BrTZ
+         2Vz+p8Oh5sXHSdNTbR4adTEz/1Zk5t8Lz9bx9c9jDMpuMPCAV2bhUfsgs8ABaF4ERObH
+         H+0nTbLsW1JugC37ccnnPMklDcH6g0yRp2vwGwKe0YuxHWinMCKYlxDscq+FsSIayYy1
+         eLxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xURPOfyF2UK2ImfN0jV4a8KRwy9Nblqyu9sgwhGxs5s=;
+        b=M2Mf7YueNyv9tENcMjuj36Ga2PLTW2b4sb2g6MQWjgmjta09qbJ/bR8iF5FVb/OOHQ
+         FFHgX0ByKgFc9KesXj1AFLLkPWoUMhABD48BQVkTrjk41ZzHs7By30DRpfTyxlIaE+7C
+         8NcrT6OQwilYBrpSo6TfP9WJ8kQCIqoAQX7e+UKjx4uqpSqjmGEsP3FVoIEhvoQGN5h6
+         u6UorcnRBfJ2NZneDqXp8/f4IQikFATMtEDOZkhCHOU8I8Vao2G1rfaZG9kf/8USz8pP
+         6eZTJyOTcm1Gbl2qupzlsRKdM4z3xsDV0WF3dCjms2g0YHF3maX7iP9gEQNaxo5qfRpm
+         hwfg==
+X-Gm-Message-State: APjAAAVfFyTaZebmjXAVF0qJrRmU7yduGWw3plgGNR+IFql/HUtRPwak
+        jdyThzURAH8TFLnc0cbhJjPo3ngPaNsLo41HbzcDpg==
+X-Google-Smtp-Source: APXvYqwETYMrSMTjdRtdmgSUVl74ByetyxJrK526VXRrVqCE2iVr2NU5SXb6JOM2nA3EHkb6x606TcaLA6Rbh2tg4BE=
+X-Received: by 2002:a6b:6e02:: with SMTP id d2mr75006830ioh.22.1578408548041;
+ Tue, 07 Jan 2020 06:49:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107135216.GR465886@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191230102942.18395-1-jinpuwang@gmail.com> <20191230102942.18395-15-jinpuwang@gmail.com>
+ <1ad8b279-1a45-1d70-39c7-acd42f28abca@acm.org>
+In-Reply-To: <1ad8b279-1a45-1d70-39c7-acd42f28abca@acm.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 7 Jan 2020 15:48:57 +0100
+Message-ID: <CAMGffEnzoo7Y-Bh4F7ZDONr1kE3U20Btr=763rQyiYu=+YMosA@mail.gmail.com>
+Subject: Re: [PATCH v6 14/25] rtrs: a bit of documentation
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:52:16PM +0200, Mika Westerberg wrote:
-> On Tue, Jan 07, 2020 at 11:32:54AM +0100, Linus Walleij wrote:
-> > On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> > > > We need to convert all old gpio irqchips to pass the irqchip
-> > > > setup along when adding the gpio_chip. For more info see
-> > > > drivers/gpio/TODO.
-> > > >
-> > > > Set up the pin ranges using the new callback.
-> > >
-> > > Maybe have this one split as a separate patch? Same what we do for
-> > > Baytrail and Cherryview.
-> > 
-> > I'm afraid to do that since splitting the semantic ordering was
-> > something that broke a lot of times already, I was under the
-> > impression that doing the two things (moving to the callback
-> > and adding along with the gpio_chip) at the same time was
-> > the only way to preserve the semantic ordering.
-> 
-> Well at least we do the same for others (add the callback in another
-> patch and then pass irqchip in another) but no strong feelings. I'm fine
-> with this one as well :)
-> 
-> > But more than anything I want someone to test it ...
-> 
-> I quickly tested this on Whiskey Lake and SD card detection interrupt
-> still works fine after this patch.
+On Tue, Dec 31, 2019 at 12:19 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2019-12-30 02:29, Jack Wang wrote:
+> > diff --git a/drivers/infiniband/ulp/rtrs/README b/drivers/infiniband/ulp/rtrs/README
+>
+> Other kernel driver documentation exists under the Documentation/
+> directory. Should this README file perhaps be moved to a subdirectory of
+> the Documentation/ directory?
+I did check most of the drivers are in the drivers directory eg:
+find ./ -name README
+./fs/reiserfs/README
+./fs/qnx4/README
+./fs/qnx6/README
+./fs/cramfs/README
+./Documentation/ABI/README
+./Documentation/virt/kvm/devices/README
+./README
+./tools/usb/usbip/README
+./tools/virtio/ringtest/README
+./tools/virtio/virtio-trace/README
+./tools/power/pm-graph/README
+./tools/power/cpupower/README
+./tools/memory-model/README
+./tools/memory-model/scripts/README
+./tools/memory-model/litmus-tests/README
+./tools/testing/vsock/README
+./tools/testing/ktest/examples/README
+./tools/testing/selftests/ftrace/README
+./tools/testing/selftests/arm64/signal/README
+./tools/testing/selftests/arm64/README
+./tools/testing/selftests/android/ion/README
+./tools/testing/selftests/zram/README
+./tools/testing/selftests/livepatch/README
+./tools/testing/selftests/net/forwarding/README
+./tools/testing/selftests/futex/README
+./tools/testing/selftests/tc-testing/README
+./tools/thermal/tmon/README
+./tools/build/tests/ex/empty2/README
+./tools/perf/tests/attr/README
+./tools/perf/pmu-events/README
+./tools/perf/scripts/perl/Perf-Trace-Util/README
+./tools/io_uring/README
+./net/decnet/README
+./scripts/ksymoops/README
+./scripts/selinux/README
+./arch/powerpc/boot/README
+./arch/m68k/q40/README
+./arch/m68k/ifpsp060/README
+./arch/m68k/fpsp040/README
+./arch/parisc/math-emu/README
+./arch/x86/math-emu/README
+./drivers/bcma/README
+./drivers/char/mwave/README
+./drivers/staging/nvec/README
+./drivers/staging/wlan-ng/README
+./drivers/staging/axis-fifo/README
+./drivers/staging/fbtft/README
+./drivers/staging/fsl-dpaa2/ethsw/README
+./drivers/staging/goldfish/README
+./drivers/staging/gs_fpgaboot/README
+./drivers/staging/comedi/drivers/ni_routing/README
+./drivers/net/wireless/marvell/mwifiex/README
+./drivers/net/wireless/marvell/libertas/README
 
-My understanding that Linus asked to test a proposed (two patch) series...
+>
+> > +****************************
+> > +InfiniBand Transport (RTRS)
+> > +****************************
+>
+> The abbreviation does not match the full title. Do you agree that this
+> is confusing?
+>
+> > +RTRS is used by the RNBD (Infiniband Network Block Device) modules.
+>
+> Is RNBD an RDMA or an InfiniBand network block device?
+will fix.
+>
+> > +
+> > +==================
+> > +Transport protocol
+> > +==================
+> > +
+> > +Overview
+> > +--------
+> > +An established connection between a client and a server is called rtrs
+> > +session. A session is associated with a set of memory chunks reserved on the
+> > +server side for a given client for rdma transfer. A session
+> > +consists of multiple paths, each representing a separate physical link
+> > +between client and server. Those are used for load balancing and failover.
+> > +Each path consists of as many connections (QPs) as there are cpus on
+> > +the client.
+> > +
+> > +When processing an incoming rdma write or read request rtrs client uses memory
+>
+> A quote from
+> https://linuxplumbersconf.org/event/4/contributions/367/attachments/331/555/LPC_2019_RMDA_MC_IBNBD_IBTRS_Upstreaming.pdf:
+> "Only RDMA writes with immediate". Has the wire protocol perhaps been
+> changed such that both RDMA reads and writes are used? I haven't found
+> any references to RDMA reads in the "IO path" section in this file. Did
+> I perhaps overlook something?
+>
+> Thanks,
+>
+> Bart.
+We do not use RDMA_READ, only RDMA_WRITE/RDMA_WRITE_WITH_IMM/SEND_WITH_IMM
+SEND_WITH_IMM was used only when always_invalidate=Y.
+Will extend the document.
 
-Linus, can you send v2 as series of two patches as Mika suggested?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks Bart.
