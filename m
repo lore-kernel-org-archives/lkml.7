@@ -2,68 +2,141 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A396CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BC3208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779882080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578431146;
+	bh=h78LiViRzEh6d+ijw9JkEE6khZZLjwesHoeCtKLHX88=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I8wJ7deVMqkZQ/wE6zJailsfVeZNYQS2Bj0QjBTCr2/JGmBRBebK+WiUqt/FBmGQD
+	 qq2pDSIkqnJh+qWJtk/B96hKu5LILK6V11unUYyWyBBY9Sx5tE7ZO4Y4ePaJ6GbJ0m
+	 83QrJAEEipiZuXo6uxLHJTAqC1/x5XSGplphXksM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgAGVFm (ORCPT
+        id S1727241AbgAGVFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:42 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36630 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729256AbgAGVFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:36 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007L4V00024994
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 16:04:32 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 2BA3E4207DF; Tue,  7 Jan 2020 16:04:31 -0500 (EST)
-Date:   Tue, 7 Jan 2020 16:04:31 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v3 8/8] random: Remove kernel.random.read_wakeup_threshold
-Message-ID: <20200107210431.GM3619@mit.edu>
-References: <cover.1577088521.git.luto@kernel.org>
- <a74ed2cf0b5a5451428a246a9239f5bc4e29358f.1577088521.git.luto@kernel.org>
+        Tue, 7 Jan 2020 16:05:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729279AbgAGVFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 332E9208C4;
+        Tue,  7 Jan 2020 21:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431138;
+        bh=h78LiViRzEh6d+ijw9JkEE6khZZLjwesHoeCtKLHX88=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hlpAi7vE1QDTDvWd2xO53PmnJtivkdMtdGONO/2lA+Z4+pNFahtFzDCWsordhbsTr
+         zMoBMzWI9Q9WaOiGU9bpQPrTC+3aJiOWb1TJ89p39MCmWbw/pC5WPIfk9OZcad0W+/
+         /sXN4OZBlHgJjbHk4eqg2Puwh4zfjotjtG+ifxTo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Steve Wise <larrystevenwise@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 013/115] rxe: correctly calculate iCRC for unaligned payloads
+Date:   Tue,  7 Jan 2020 21:53:43 +0100
+Message-Id: <20200107205248.080933189@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a74ed2cf0b5a5451428a246a9239f5bc4e29358f.1577088521.git.luto@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:20:51AM -0800, Andy Lutomirski wrote:
-> It has no effect any more, so remove it.  We can revert this if
-> there is some user code that expects to be able to set this sysctl.
-> 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+From: Steve Wise <larrystevenwise@gmail.com>
 
-Applied, thanks.
+[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
 
-					- Ted
+If RoCE PDUs being sent or received contain pad bytes, then the iCRC
+is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
+iCRC, as well as ingress PDUs being dropped due to erroneously detecting
+a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
+in iCRC computations.
+
+Note: This bug has caused broken on-the-wire compatibility with actual
+hardware RoCE devices since the soft-RoCE driver was first put into the
+mainstream kernel.  Fixing it will create an incompatibility with the
+original soft-RoCE devices, but is necessary to be compatible with real
+hardware devices.
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
+Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
+ drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
+ drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
+index d30dbac24583..695a607e2d14 100644
+--- a/drivers/infiniband/sw/rxe/rxe_recv.c
++++ b/drivers/infiniband/sw/rxe/rxe_recv.c
+@@ -391,7 +391,7 @@ void rxe_rcv(struct sk_buff *skb)
+ 
+ 	calc_icrc = rxe_icrc_hdr(pkt, skb);
+ 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
+-			      payload_size(pkt));
++			      payload_size(pkt) + bth_pad(pkt));
+ 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
+ 	if (unlikely(calc_icrc != pack_icrc)) {
+ 		if (skb->protocol == htons(ETH_P_IPV6))
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index f7dd8de79941..1c1eae0ef8c2 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
+ 			if (err)
+ 				return err;
+ 		}
++		if (bth_pad(pkt)) {
++			u8 *pad = payload_addr(pkt) + paylen;
++
++			memset(pad, 0, bth_pad(pkt));
++			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
++		}
+ 	}
+ 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
+ 
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 681d8e0913d0..9078cfd3b8bd 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -737,6 +737,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
+ 	if (err)
+ 		pr_err("Failed copying memory\n");
+ 
++	if (bth_pad(&ack_pkt)) {
++		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
++		u8 *pad = payload_addr(&ack_pkt) + payload;
++
++		memset(pad, 0, bth_pad(&ack_pkt));
++		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
++	}
+ 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
+ 	*p = ~icrc;
+ 
+-- 
+2.20.1
+
+
+
