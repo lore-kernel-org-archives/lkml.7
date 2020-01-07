@@ -2,59 +2,121 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E550C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6781AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3866F206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3B0206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432409;
+	bh=WDWhd5zGGRJLISsdlOzwEI0kY03uCFpBBDHuR6FeEX4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tnPScwiFhDZolCXjfiSF+QfH8YEaXlt4KKshHGldw8mBr5bSDrRLhJHfCIF+JCv0d
+	 vOtOQgN0mPzvXObmmbG5EhvBXejYm8NF/uAryfGwBxJhVgZIcchetdJI4Z1N4lt19r
+	 mu4/wnm+5mf6Ze2xwGY3zCQfUiSeuckaUF02Xw+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgAGV0h (ORCPT
+        id S1727922AbgAGU6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:26:37 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38226 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAGV0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:26:35 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D21AF15A16D6A;
-        Tue,  7 Jan 2020 13:26:33 -0800 (PST)
-Date:   Tue, 07 Jan 2020 13:26:33 -0800 (PST)
-Message-Id: <20200107.132633.1454816315429651325.davem@davemloft.net>
-To:     jiping.ma2@windriver.com
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net V5] stmmac: debugfs entry name is not be changed
- when udev rename device name.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200107063400.41666-1-jiping.ma2@windriver.com>
-References: <20200107063400.41666-1-jiping.ma2@windriver.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jan 2020 13:26:34 -0800 (PST)
+        Tue, 7 Jan 2020 15:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbgAGU6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:35 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C53CD24679;
+        Tue,  7 Jan 2020 20:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578430715;
+        bh=WDWhd5zGGRJLISsdlOzwEI0kY03uCFpBBDHuR6FeEX4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fw0K15+MEn8AyoTdQUP7i4tiA47MSzcvMfRuJGqWsCZ+lfpE85xRYaXqFne5aSlsS
+         R9gC4cKjqPOwMzZs9NRIcO4/3WLbDQ5IId+OJRK5C4IDnARZ+TUlTH+zo79Hp7Nu2r
+         SFTrMLbkymCSQI/11KXt0Gk/NkpXyNTT1EWvsjA4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 066/191] ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
+Date:   Tue,  7 Jan 2020 21:53:06 +0100
+Message-Id: <20200107205336.523680567@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+References: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
-Date: Tue, 7 Jan 2020 14:34:00 +0800
+From: Takashi Iwai <tiwai@suse.de>
 
-> Add one notifier for udev changes net device name.
-> Fixes: b6601323ef9e ("net: stmmac: debugfs entry name is not be changed when udev rename")
-> 
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+commit 0aec96f5897ac16ad9945f531b4bef9a2edd2ebd upstream.
 
-Applied.
+Jia-Ju Bai reported a possible sleep-in-atomic scenario in the ice1724
+driver with Infrasonic Quartet support code: namely, ice->set_rate
+callback gets called inside ice->reg_lock spinlock, while the callback
+in quartet.c holds ice->gpio_mutex.
+
+This patch fixes the invalid call: it simply moves the calls of
+ice->set_rate and ice->set_mclk callbacks outside the spinlock.
+
+Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/5d43135e-73b9-a46a-2155-9e91d0dcdf83@gmail.com
+Link: https://lore.kernel.org/r/20191218192606.12866-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/pci/ice1712/ice1724.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/sound/pci/ice1712/ice1724.c
++++ b/sound/pci/ice1712/ice1724.c
+@@ -647,6 +647,7 @@ static int snd_vt1724_set_pro_rate(struc
+ 	unsigned long flags;
+ 	unsigned char mclk_change;
+ 	unsigned int i, old_rate;
++	bool call_set_rate = false;
+ 
+ 	if (rate > ice->hw_rates->list[ice->hw_rates->count - 1])
+ 		return -EINVAL;
+@@ -670,7 +671,7 @@ static int snd_vt1724_set_pro_rate(struc
+ 		 * setting clock rate for internal clock mode */
+ 		old_rate = ice->get_rate(ice);
+ 		if (force || (old_rate != rate))
+-			ice->set_rate(ice, rate);
++			call_set_rate = true;
+ 		else if (rate == ice->cur_rate) {
+ 			spin_unlock_irqrestore(&ice->reg_lock, flags);
+ 			return 0;
+@@ -678,12 +679,14 @@ static int snd_vt1724_set_pro_rate(struc
+ 	}
+ 
+ 	ice->cur_rate = rate;
++	spin_unlock_irqrestore(&ice->reg_lock, flags);
++
++	if (call_set_rate)
++		ice->set_rate(ice, rate);
+ 
+ 	/* setting master clock */
+ 	mclk_change = ice->set_mclk(ice, rate);
+ 
+-	spin_unlock_irqrestore(&ice->reg_lock, flags);
+-
+ 	if (mclk_change && ice->gpio.i2s_mclk_changed)
+ 		ice->gpio.i2s_mclk_changed(ice);
+ 	if (ice->gpio.set_pro_rate)
+
+
