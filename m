@@ -2,107 +2,138 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D252AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B66D206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HF9Ln4ef"
+	by mail.kernel.org (Postfix) with ESMTP id ABBEF208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578425450;
+	bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zq1AarPTZRXJqcKWt6KXbd4ghgUFLe+j/05divKKGawcjX5fdbIy9DfUy0YFMVYrZ
+	 qMkXXqB9S+nVhH7UBy2SmU84jZcpuxdBjypI59fp3nJ08MrwHWmvY9yKCgYeURd+qO
+	 oFwzM6UP4oPJ2MNurt03ojuhvTjtqyz+ulyL+JQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgAGTaq (ORCPT
+        id S1728779AbgAGTat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:30:46 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44900 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728307AbgAGTaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:30:46 -0500
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007JSqT1006966
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 11:30:45 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=Uij8Ue7p80JCsa0xFwke2dRkold23rvr67wlz2fHIsY=;
- b=HF9Ln4efAj+LOMvJIl+LeIA7PNfek34P7iHxXk1OINs8KT6GfUSQSs+1yg8actiQPt5y
- RLdOWw/MT3PUgf8jlyXeeEucxKyuTodKiE7QxZA4U6L45ayEchwUre3vW36wS8s7rCno
- w0Fq4b5xmC9BRYTyxn30G+71C98JmA3hbxQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xcwm1h1ur-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:30:45 -0800
-Received: from intmgw002.41.prn1.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Tue, 7 Jan 2020 11:30:41 -0800
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id 62C4519717D23; Tue,  7 Jan 2020 11:30:38 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <vijaykhemka@fb.com>, <joel@jms.id.au>,
-        <linux-aspeed@lists.ozlabs.org>, <sdasari@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [net-next PATCH] net/ncsi: Send device address as source address
-Date:   Tue, 7 Jan 2020 11:30:33 -0800
-Message-ID: <20200107193034.1322431-1-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Tue, 7 Jan 2020 14:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728307AbgAGTat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:30:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66ED206DB;
+        Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578425448;
+        bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mspJgrcd3kka6cRo+m/U4Jk7qGCePRKsS2a86k+iP6adF9v7uQxR84KhP4c0z0NYh
+         OcoENlWN8eKeW/waEEdBjCv613rFOeKnd8XONxxn2G5BBQ2Okfshb5GHklCCKkja0+
+         7OtcjypDEs10nMLdEsmZ3sXif0Dld54tNdO8+eSg=
+Date:   Tue, 7 Jan 2020 20:30:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+Message-ID: <20200107193046.GB2021584@kroah.com>
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+ <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+ <CA+G9fYvmwetcZPraZrHbj=MjgWZik-wFK7nEejs-6TrYyODcSg@mail.gmail.com>
+ <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- spamscore=0 malwarescore=0 mlxscore=0 priorityscore=1501 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001070153
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After receiving device mac address from device, send this as
-a source address for further commands instead of broadcast
-address.
+On Tue, Jan 07, 2020 at 09:39:58AM -0800, Florian Fainelli wrote:
+> On 1/7/20 9:29 AM, Naresh Kamboju wrote:
+> > On Tue, 7 Jan 2020 at 22:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>
+> >> On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>>
+> >>> Hi Jens,
+> >>>
+> >>> The first 4 patches are fixes and should ideally be queued up/picked up
+> >>> by stable. The last 4 patches add support for BCM7216 which is one of
+> >>> our latest devices supported by this driver.
+> >>>
+> >>> Patch #2 does a few things, but it was pretty badly broken before and it
+> >>> is hard not to fix all call sites (probe, suspend, resume) in one shot.
+> >>>
+> >>> Please let me know if you have any comments.
+> >>>
+> >>> Thanks!
+> >>>
+> >>> Florian Fainelli (8):
+> >>>   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+> >>>   ata: ahci_brcm: Fix AHCI resources management
+> >>
+> >> Following error on stable-rc 4.14 and 4.9 branch for arm build.
+> > 
+> > Following error on stable-rc 4.19, 4.14 and 4.9 branch for arm build.
+> > 
+> >>
+> >>  drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
+> >>  drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
+> >> member named 'rcdev'; did you mean 'dev'?
+> >>    if (!IS_ERR_OR_NULL(priv->rcdev))
+> >>                              ^~~~~
+> >>                              dev
+> >>    CC      fs/pnode.o
+> >>    CC      block/genhd.o
+> >>  drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
+> >> function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
+> >> [-Werror=implicit-function-declaration]
+> >>     reset_control_assert(priv->rcdev);
+> >>     ^~~~~~~~~~~~~~~~~~~~
+> >>     ahci_reset_controller
+> >>  drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
+> >> member named 'rcdev'; did you mean 'dev'?
+> >>     reset_control_assert(priv->rcdev);
+> >>                                ^~~~~
+> >>                                dev
+> >>  cc1: some warnings being treated as errors
+> >>
+> >> Full build log links,
+> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
+> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
+> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/404/consoleText
+> 
+> The reset controller support was added in
+> 2b2c47d9e1fe90311b725125d6252a859ee87a79 ("ata: ahci_brcm: Allow
+> optional reset controller to be used") which was include in v4.20 and
+> newer so that explains the build failure.
+> 
+> You may want to cherry pick that change into the respective stable
+> branches and then back port the fixes if that is not too much trouble.
+> If that does not work or is impractical, please let me know and I can
+> provide directed backport changes for 4.9, 4.14 and 4.19.
 
-This will help in multi host NIC cards.
+No need, I'll just queue up the other needed patch now, thanks.
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- net/ncsi/ncsi-cmd.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
-index 0187e65176c0..ba9ae482141b 100644
---- a/net/ncsi/ncsi-cmd.c
-+++ b/net/ncsi/ncsi-cmd.c
-@@ -369,7 +369,15 @@ int ncsi_xmit_cmd(struct ncsi_cmd_arg *nca)
- 	eh = skb_push(nr->cmd, sizeof(*eh));
- 	eh->h_proto = htons(ETH_P_NCSI);
- 	eth_broadcast_addr(eh->h_dest);
--	eth_broadcast_addr(eh->h_source);
-+
-+	/* If mac address received from device then use it for
-+	 * source address as unicast address else use broadcast
-+	 * address as source address
-+	 */
-+	if (nca->ndp->gma_flag == 1)
-+		memcpy(eh->h_source, nca->ndp->ndev.dev->dev_addr, ETH_ALEN);
-+	else
-+		eth_broadcast_addr(eh->h_source);
- 
- 	/* Start the timer for the request that might not have
- 	 * corresponding response. Given NCSI is an internal
--- 
-2.17.1
-
+greg k-h
