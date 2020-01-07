@@ -2,160 +2,75 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEB0C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF8C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C8B2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578395045;
-	bh=mJd7R8sR47JUSLSBskF6LeJbShoDIHtU/B33wPHM1ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xDAJMyttPyoDQrdmZby/qCy7eNzOmvn53cPaDB1gIjsvJ23tdi875uTa39uHQIJ1U
-	 fW3uWvmiOuVjqA76nLT04xoc6jRu1P8ISW0KadJ6IIzcm4W2hofac9g3n0n8AOpb7q
-	 Ievjftfj3GdjtwTPm2Ym+XZrdwIAXfWXxnfdpODs=
+	by mail.kernel.org (Postfix) with ESMTP id 67FC22073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgAGLEF convert rfc822-to-8bit (ORCPT
+        id S1727875AbgAGLFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:04:05 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45639 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbgAGLEE (ORCPT
+        Tue, 7 Jan 2020 06:05:12 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35223 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgAGLFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:04:04 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so49948890edw.12;
-        Tue, 07 Jan 2020 03:04:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ptBtaLfSefXKIlF4+ATcVDfD9CqQtKSIYDSRdZx4Dts=;
-        b=eVXkihyWBjCuraKu083wbSrBVI9yMv26kq3qNMgx+p0Ci+wCVx9J+zeYmJ84MBirIL
-         Juv4yHoaO2UPzphKzbWeXgpxLdOK58FA/TBZLwrI2mxlqYC+h5EOvrzOri01tMEk9JlO
-         EBvifdogEquBi9YohbYNuCbMG5gSw6+iJc3P1sU8e5zJGA/PRVHZ2iCy8THl1L7JUlJ5
-         ZkHJ3zzAROMyMgYS3vqRcrDSDYKuKOO6VcLeAQEdkdUuqz4DWAL4OFDqol6ZzXSd/YqZ
-         JsZC7BS2lJZ8bb0QtAxy55UB2mYSma7jd+gKnjl/fajF0q1F2XtLYE4mPFE3AAR/Lmgd
-         o+Ew==
-X-Gm-Message-State: APjAAAVw2yqKVwUjuXUkVEymj30KX9c+G/4erhwMG4/qDtUITiwGPR+y
-        g08bHUQda60MNSsvSjRd5p8=
-X-Google-Smtp-Source: APXvYqzKoAnAzDFoVmt8WsrTLEo61oVGbLtxhYn9w1G9R8M+n/U0qKkIJnksdqHSF0YmF+wOzkLZyQ==
-X-Received: by 2002:a17:906:c4d:: with SMTP id t13mr112159727ejf.198.1578395042449;
-        Tue, 07 Jan 2020 03:04:02 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id x8sm7492342eds.88.2020.01.07.03.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:04:01 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:03:59 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
-        Richard Weinberger <richard@nod.at>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107110359.GA32423@pi3>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+        Tue, 7 Jan 2020 06:05:12 -0500
+X-Originating-IP: 84.44.14.226
+Received: from nexussix.ar.arcelik (unknown [84.44.14.226])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 47D181C000C;
+        Tue,  7 Jan 2020 11:05:06 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     Cengiz Can <cengiz@kernel.wtf>
+Subject: [PATCH] fs: pstore: fix double-free on ramoops_init_przs
+Date:   Tue,  7 Jan 2020 14:04:46 +0300
+Message-Id: <20200107110445.162404-1-cengiz@kernel.wtf>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-König wrote:
-> > I guess other solution would be to add stubs for few clk functions...
-> > 
-> > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > > config (which does't have HAS_IOMEM) and they all compile fine.
-> > 
-> > Because of !HAS_IOMEM, since some time ARCH=um does not support
-> > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> > testing (and for regular build it is selected by ARCH).
-> 
-> Hehe, I didn't notice because for testing I just dropped the "depends on
-> ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-> compile fine on UML.
-> 
-> Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-> !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-> later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-> == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-> revert bc083a64b6c0 today? (And if not, a comment about why near the
-> "depends on !UML" in init/Kconfig would be great.)
-> 
-> Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-> though the compile testers won't notice it missing. Or should HAS_IOMEM
-> be dropped?
+According to Coverity scanner (CID 1457526) kfree on ram.c:591 frees
+label which has already been freed.
 
-I think yes, it can be dropped, but this would require:
-1. Fixing any dependencies on HAS_IOMEM, e.g.:
-    WARNING: unmet direct dependencies detected for MFD_SYSCON
-      Depends on [n]: HAS_IOMEM [=n]
-      Selected by [y]:
-      - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
+Here's the flow as I have understood (this is my first time reading
+pstore's files):
 
-2. Checking if all of stubs are implemented (not only IOMEM but maybe
-   DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
-   need devm_ioremap_resource() and others.
+Whenever `persistent_ram_new` fails, it implicitly calls
+`persistent_ram_free(prz)` which already does `kfree(prz->label)` and a
+`kfree(prz)` consequently.
 
-Quick test shows mentioned "unmet direct dependencies" and:
-    phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
-    dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
+Removed `kfree(label)` to prevent double-free.
 
-> 
-> > > > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
-> > > >  
-> > > >  config PWM_MXS
-> > > >  	tristate "Freescale MXS PWM support"
-> > > > -	depends on ARCH_MXS && OF
-> > > > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
-> > > >  	select STMP_DEVICE
-> > > >  	help
-> > > >  	  Generic PWM framework driver for Freescale MXS.
-> > > > @@ -328,7 +329,8 @@ config PWM_MXS
-> > > >  
-> > > >  config PWM_OMAP_DMTIMER
-> > > >  	tristate "OMAP Dual-Mode Timer PWM support"
-> > > > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-> > > > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-> > > > +	depends on OF
-> > > 
-> > > I'm surprised that OF isn't required for PWM_MXS but is is for
-> > > PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
-> > > pwm-omap-dmtimer.
-> > 
-> > Since some time !OF has all necessary stubs so OF is actually needed
-> > only for binding, not compiling.
-> 
-> That doesn't explain why you handle PWM_MXS and PWM_OMAP_DMTIMER
-> differently though.
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+---
+ fs/pstore/ram.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-You're right, I missed this. None of them require OF for building so
-separate "depends on OF" makes sense only for readability of this.  Let
-me send v2 to make it similar to PWM_MXS.
-
-
-Best regards,
-Krzysztof
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 487ee39b4..e196aa08f 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -588,7 +588,6 @@ static int ramoops_init_przs(const char *name,
+ 			dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
+ 				name, record_size,
+ 				(unsigned long long)*paddr, err);
+-			kfree(label);
+ 
+ 			while (i > 0) {
+ 				i--;
+-- 
+2.24.1
 
