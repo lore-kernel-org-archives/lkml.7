@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93454C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143362072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578AD2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431779;
-	bh=34/IyFqFPD/e0Yuum+sb4oDXj/l6OoAwcd75+zSUQN8=;
+	s=default; t=1578431786;
+	bh=kHWeVqFe+m0kkb4VihQ/ZQA4wtRTqA+ReUP+mQlbl0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQORYF6XLY88E5k1Dd3Ww3Pk+fJ8+8Xs5KaJ9lz6HdFpzx7DknhXFbwPUoN0fzVPD
-	 kOPimRuEfzm73dNToDeysFDm86ViwCc677MhWTu40sHIdlccHWhqsF3hFMJMjLCvLc
-	 nWKGRtQRUkHnzQYeMJuyUjV96YpAp1/NLado51qM=
+	b=oyhz7DcF5MBsZccJXl4mDAAFgcOAzfgb6bonbTxQ/Fe3shq09dVz/gmY4v28HVrLL
+	 wTVxi55n4iwqhJC4TAe8caj59Y5mO5yWiQgOlX0YouA7/Jb0+n5BYl163lPmJ6eyIE
+	 cVyrkRZtRH4OaX4csak56Zf6SD5JU7BcUXeDE+Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgAGVHW (ORCPT
+        id S1729533AbgAGVQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57826 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:16:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbgAGVHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:19 -0500
+        id S1729501AbgAGVHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5A82072A;
-        Tue,  7 Jan 2020 21:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D65A20678;
+        Tue,  7 Jan 2020 21:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431238;
-        bh=34/IyFqFPD/e0Yuum+sb4oDXj/l6OoAwcd75+zSUQN8=;
+        s=default; t=1578431236;
+        bh=kHWeVqFe+m0kkb4VihQ/ZQA4wtRTqA+ReUP+mQlbl0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTwzRDe5KhlCbMSNdv3cOo2idmRrXwC6SROo6eKrMBswbJDe0nhNNFCDpetI20aqF
-         1QkmdFuoFs6epUvtdezIUmPyOkf4u+0v4XOFOKxfaFV+KwpDOwaVm/oG6LRoQFTyiH
-         Oqv4W3gu+QBjIdn2Ki/wa7It1zz2M92tMtdWOn6g=
+        b=PFfDfLWzNN+yw+L3+t4utARzaihDboTm6Y8bAHjHffBttSwhK/8n2SkUoVYJ07Y5R
+         YVfBxGcJ7yOLJxYGCgK3pjQySPOvfFwCSPA2kDUmF+3Y+8Yx/48KEJP8LKC/xtNa9f
+         Eiq2d+64gReBXu1gNzuaGn60FGNUj8e1RrxDDL/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 091/115] media: usb: fix memory leak in af9005_identify_state
-Date:   Tue,  7 Jan 2020 21:55:01 +0100
-Message-Id: <20200107205306.791768542@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.19 082/115] HID: i2c-hid: Reset ALPS touchpads on resume
+Date:   Tue,  7 Jan 2020 21:54:52 +0100
+Message-Id: <20200107205305.171742306@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,37 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 2289adbfa559050d2a38bcd9caac1c18b800e928 upstream.
+commit fd70466d37bf3fe0118d18c56ddde85b428f86cf upstream.
 
-In af9005_identify_state when returning -EIO the allocated buffer should
-be released. Replace the "return -EIO" with assignment into ret and move
-deb_info() under a check.
+Commit 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system
+resume") fixes many touchpads and touchscreens, however ALPS touchpads
+start to trigger IRQ storm after system resume.
 
-Fixes: af4e067e1dcf ("V4L/DVB (5625): Add support for the AF9005 demodulator from Afatech")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Since it's total silence from ALPS, let's bring the old behavior back
+to ALPS touchpads.
+
+Fixes: 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system resume")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/af9005.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-core.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/dvb-usb/af9005.c
-+++ b/drivers/media/usb/dvb-usb/af9005.c
-@@ -985,8 +985,9 @@ static int af9005_identify_state(struct
- 	else if (reply == 0x02)
- 		*cold = 0;
- 	else
--		return -EIO;
--	deb_info("Identify state cold = %d\n", *cold);
-+		ret = -EIO;
-+	if (!ret)
-+		deb_info("Identify state cold = %d\n", *cold);
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -51,6 +51,7 @@
+ #define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
+ #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
+ #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
++#define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(5)
  
- err:
- 	kfree(buf);
+ /* flags */
+ #define I2C_HID_STARTED		0
+@@ -182,6 +183,8 @@ static const struct i2c_hid_quirks {
+ 		I2C_HID_QUIRK_NO_RUNTIME_PM },
+ 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
++	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
++		 I2C_HID_QUIRK_RESET_ON_RESUME },
+ 	{ 0, 0 }
+ };
+ 
+@@ -1290,8 +1293,15 @@ static int i2c_hid_resume(struct device
+ 	 * solves "incomplete reports" on Raydium devices 2386:3118 and
+ 	 * 2386:4B33 and fixes various SIS touchscreens no longer sending
+ 	 * data after a suspend/resume.
++	 *
++	 * However some ALPS touchpads generate IRQ storm without reset, so
++	 * let's still reset them here.
+ 	 */
+-	ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
++	if (ihid->quirks & I2C_HID_QUIRK_RESET_ON_RESUME)
++		ret = i2c_hid_hwreset(client);
++	else
++		ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
++
+ 	if (ret)
+ 		return ret;
+ 
 
 
