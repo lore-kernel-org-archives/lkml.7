@@ -2,99 +2,91 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1827EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A378C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF52420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:29:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Doa0xXd4"
+	by mail.kernel.org (Postfix) with ESMTP id 46A70214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgAGT3Y (ORCPT
+        id S1728665AbgAGTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:29:24 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40338 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGT3X (ORCPT
+        Tue, 7 Jan 2020 14:30:06 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:35007 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbgAGTaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:29:23 -0500
-Received: by mail-pj1-f68.google.com with SMTP id bg7so210204pjb.5;
-        Tue, 07 Jan 2020 11:29:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vHcS5MGixSiDikhb0k92gL0arFETtVoaijzCLdHtLs4=;
-        b=Doa0xXd4L03LriDOdzUb4PU2OvOqF2EQ8JOzdGLm73k7Vxe/dz15NwT7qpKFg8RrNJ
-         65cNAAU4n7s14QuA25hrNAMpkYen3wc6txbuBvmkpRgQvOY3zSfU9Kt6DtpqFVmwFFty
-         IR/ORtSpbVlygr3LEUQwC9kKqZWpt/myftShQUzkBPuN0sZ0IgtTI34IVdXtQJE8VIHw
-         MDjsz/M4AqyXXrBtJOFfLD2fPWfSjUgt6BxH5ZDSFwelFWyIA7/W4dRdHhCtWL+oLDOd
-         1lhLfZ5sQ7/mfya9t5ChQCM/176AKI/2Jl6+r+bZuIZ9TSMv8syU0lh7RCMnq9lZjp/D
-         Rm8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vHcS5MGixSiDikhb0k92gL0arFETtVoaijzCLdHtLs4=;
-        b=jTXYhoxUs3KCC1Tn8dqKrgGHBq9pTDaN0KeWnFt3Rch9IRjmGkd5N11TZNq861VbE0
-         yMK/4GvoFTkYrVyQvWHgd9UriKCFHjnamQuiYwMsakCFp3jRq9Mxe1jdWbjXh+I4BuMH
-         b8iTXmKoh1vYprCfHSIInuT+ffteermz40Y7meX89CoJrrnYgsIvFPLEzzgcedJtg93D
-         I89r3jPnd6PcLTRQ6v5LTs2/JbF1twbV0lRprBvXz/XNXRdHnA2LACEZMZ1Pg9Zdvea5
-         wVNuXxe/5RPDfFthNpmw3JviFJo4axTrUDxQhnTQ/z6UCxPO5nNbk1neI6bv2tpN0LpZ
-         jm6A==
-X-Gm-Message-State: APjAAAUbJrZlkwjiIQw0STWAKZMw9GSybWWpaFicYPJbKNR+YcfeNrGq
-        3DUZsOwmNtFzyNbxblhqi5Y=
-X-Google-Smtp-Source: APXvYqyWhmCx9SqRgxjB8qdN1U0G0J1bBoWoaWFrOZ9tfpnMbEDodA/3o3t2QYZgXg19a7MsJuhHyA==
-X-Received: by 2002:a17:902:426:: with SMTP id 35mr1291908ple.176.1578425362592;
-        Tue, 07 Jan 2020 11:29:22 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:fd53:8500:6ea8:4ef2:c9be])
-        by smtp.gmail.com with ESMTPSA id w7sm333554pjb.31.2020.01.07.11.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 11:29:22 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
-        dledford@redhat.com, paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list checking
-Date:   Wed,  8 Jan 2020 00:59:12 +0530
-Message-Id: <20200107192912.22691-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jan 2020 14:30:06 -0500
+Received: from ip-109-41-1-29.web.vodafone.de ([109.41.1.29] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iouYD-0004D8-2A; Tue, 07 Jan 2020 19:30:01 +0000
+Date:   Tue, 7 Jan 2020 20:30:03 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Amanieu d'Antras <amanieu@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        keescook@chromium.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
+Message-ID: <20200107193002.qr4c7oeb5qae4n6d@wittgenstein>
+References: <20200102172413.654385-1-amanieu@gmail.com>
+ <20200102172413.654385-3-amanieu@gmail.com>
+ <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
+ <20200106173953.GB9676@willie-the-truck>
+ <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
+ <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
+ <20200107174508.GC32009@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200107174508.GC32009@willie-the-truck>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Tue, Jan 07, 2020 at 05:45:09PM +0000, Will Deacon wrote:
+> On Tue, Jan 07, 2020 at 10:02:27AM +0100, Christian Brauner wrote:
+> > [Cc Kees in case he knows something about where arch specific tests live
+> >  or whether we have a framework for this]
+> > 
+> > On Mon, Jan 06, 2020 at 07:03:32PM +0100, Amanieu d'Antras wrote:
+> > > On Mon, Jan 6, 2020 at 6:39 PM Will Deacon <will@kernel.org> wrote:
+> > > > I also ran the native and compat selftests but, unfortunately, they all
+> > > > pass even without this patch. Do you reckon it would be possible to update
+> > > > them to check the tls pointer?
+> > > 
+> > > Here's the program I used for testing on arm64. I considered adding it
+> > > to the selftests but there is no portable way of reading the TLS
+> > > register on all architectures.
+> > 
+> > I'm not saying you need to do this right now.
+> 
+> Agreed, these patches should be merged in their current state and my ack
+> stands for that.
 
-list_for_each_entry_rcu has built-in RCU and lock checking.
-Pass cond argument to list_for_each_entry_rcu.
+Oh yeah, that's how I took your Ack.
+Thanks! :)
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/infiniband/hw/hfi1/verbs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> > It feels like we must've run into the "this is architecture
+> > specific"-and-we-want-to-test-this issue before... Do we have a place
+> > where architecture specific selftests live?
+> 
+> For arch-specific selftests there are tools/testing/selftests/$ARCH
+> directories, although in this case maybe it's better to have an #ifdef
+> in a header so that architectures with __builtin_thread_pointer can use
+> that.
 
-diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-index 089e201d7550..e6abdbcb4ffb 100644
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -515,7 +515,8 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
- 				       opa_get_lid(packet->dlid, 9B));
- 		if (!mcast)
- 			goto drop;
--		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
-+		list_for_each_entry_rcu(p, &mcast->qp_list, list,
-+					lock_is_held(&(ibp->rvp.lock).dep_map)) {
- 			packet->qp = p->qp;
- 			if (hfi1_do_pkey_check(packet))
- 				goto drop;
--- 
-2.17.1
+Yeah, I think the #ifdef approach might make the most sense.
 
+Christian
