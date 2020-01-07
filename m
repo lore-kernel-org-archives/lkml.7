@@ -2,86 +2,213 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2453C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B3C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74ED206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AgSB2QGc"
+	by mail.kernel.org (Postfix) with ESMTP id B5E9A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578369751;
+	bh=SGiwJZ1cj1RSxCwq18Rs//spHGsKusiqB2dlalvIa2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zMcDANEGDoFWFC7FzHsOFMGDcwfzZkBqa2hKdBKUQ0uJ8D2wbNT6VCQ36vm5LknE8
+	 6KYcGGflqNEaAnGDReJYFKI7+/53yS+kqDDOG+SDAk34HKqECDRsnWP9RM8Y34uP7V
+	 4wVelghnqQyieN36pWB7J58SemFV65kamvNekQrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgAGEAw (ORCPT
+        id S1727537AbgAGECa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:00:52 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51994 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbgAGEAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 23:00:52 -0500
-Received: by mail-pj1-f66.google.com with SMTP id j11so8427115pjs.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 20:00:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IDCrh5LU02xdyVVSeGrhk0v+Nn+rcCBZJkM7RND9gQc=;
-        b=AgSB2QGcNOkAmQDnPg0qJ95jZuF+cox/xKD8BbOZPNirA5QsJ2qABy6jsOHbmFe86x
-         feKPo1pAzo5sNCeduh1hwtHtLlqlI3KqiQfI3X84uB/ZdCymQ6/jKqDhDOp5ISFzwUeU
-         W0Zc5STk1TY4RG2xQ9M5kW1GwIsoPNDDz/J2F3xef2CoXrLGRzWMQXat7Y15YLT8Gzrx
-         O08dvSkjnrUFYr3OdkVNFRuoR6xo4U447jP2K6R3irf8dkurnhJmkvLOwHfvzIgwpCQ3
-         0VtuhTtLDYytE0lzl3RnNoRJjtq1/L5aBFyxl25W+9mpkBt0tg3q8Z6wd8QenQmAWOpB
-         nvRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IDCrh5LU02xdyVVSeGrhk0v+Nn+rcCBZJkM7RND9gQc=;
-        b=kECaaSstuldLxUtXfDjxRxrg412xegDdSbJmO+kf4S5omA9g7+qU4d9i1HB8xmjtgg
-         OZRtP2SFwBKws/WtSuDoJkgR7WcbpAV7XKef/mikYfhNxX+fQdC2wpvu1RDLC0nz5V+P
-         5e96faWLjke16/EuWyh215tXRxMtz3HyyQuzB0XSVUQX02sNi1a5B0JBrGbpP0G5KnD4
-         LNsaVvQ/BOUiK97ddXpDmEbt2SfweAZdteXORrMjGTNj1k+F+2Mv3bwsaqT1qY07zq7U
-         lLdej/G/Tf66UAYrzqWBv5dvQ19rdTerPVZZ1c/ACvGp5TaIg12mkyU8qa48if543Oj2
-         K50Q==
-X-Gm-Message-State: APjAAAUqp9wJMcEluYbmrAGJ6xgNt9JQlHwgs1jf5IgRCl6KgTh4TzaF
-        1tr0MaHJO2BCBB1vgBbI83x3wA==
-X-Google-Smtp-Source: APXvYqxXapE4v1DYtCz23M9HSUSd41DR55c5Hx3bHbCFrSt8T1CTv9+m5BUMjHoBcbR81AGcHP0z0A==
-X-Received: by 2002:a17:902:a407:: with SMTP id p7mr103951146plq.4.1578369651826;
-        Mon, 06 Jan 2020 20:00:51 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id z22sm73051202pfr.83.2020.01.06.20.00.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 20:00:51 -0800 (PST)
-Subject: Re: [RESEND PATCH v3] blk-mq: Document functions for sending request
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, krisman@collabora.com
-References: <20200106180818.85365-1-andrealmeid@collabora.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6ff62e36-b285-3fcd-be2e-fece1ddcb0cb@kernel.dk>
-Date:   Mon, 6 Jan 2020 21:00:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Jan 2020 23:02:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727441AbgAGECa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 23:02:30 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3854E2075A;
+        Tue,  7 Jan 2020 04:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578369749;
+        bh=SGiwJZ1cj1RSxCwq18Rs//spHGsKusiqB2dlalvIa2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X/7oUzcEYRNo7uvBJNRjQdavOJiB2GJZ0dp5hb5RPicSqGlYymTrHcnj9c8zqkQZT
+         +y2h6F/4GXqimgSRmO0vQDpwm/pDyE/hnor1SydCiUAawgSRG0rvRczrm6HxgQbQ7E
+         x6FGzOvpVSQaxFhW7UuJ6S0Jzrcu+bdcDpKjcLaU=
+Date:   Mon, 6 Jan 2020 20:02:27 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 1/3] fscrypt: Add siphash and hash key for policy v2
+Message-ID: <20200107040227.GE705@sol.localdomain>
+References: <20200107023323.38394-1-drosen@google.com>
+ <20200107023323.38394-2-drosen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106180818.85365-1-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107023323.38394-2-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 11:08 AM, André Almeida wrote:
-> Add or improve documentation for function regarding creating and sending
-> IO requests to the hardware.
+On Mon, Jan 06, 2020 at 06:33:21PM -0800, Daniel Rosenberg wrote:
+> With encryption and casefolding, we cannot simply take the hash of the
+> ciphertext because of case insensitivity, and we can't take the hash of
+> the unencrypted name since that would leak information about the
+> encrypted name. Instead we can use siphash to compute a keyed hash of
+> the file names.
+> 
+> When a v2 policy is used on a directory, we derive a key for use with
+> siphash.
+> 
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/crypto/fname.c           | 22 ++++++++++++++++++++++
+>  fs/crypto/fscrypt_private.h |  9 +++++++++
+>  fs/crypto/keysetup.c        | 32 +++++++++++++++++++++++---------
+>  include/linux/fscrypt.h     |  9 +++++++++
+>  4 files changed, 63 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+> index 3fd27e14ebdd..371e8f01d1c8 100644
+> --- a/fs/crypto/fname.c
+> +++ b/fs/crypto/fname.c
+> @@ -402,6 +402,28 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
+>  }
+>  EXPORT_SYMBOL(fscrypt_setup_filename);
+>  
+> +/**
+> + * fscrypt_fname_siphash() - Calculate the siphash for a file name
+> + * @dir: the parent directory
+> + * @name: the name of the file to get the siphash of
+> + *
+> + * Given a user-provided filename @name, this function calculates the siphash of
+> + * that name using the directory's hash key.
+> + *
+> + * This assumes the directory uses a v2 policy, and the key is available.
+> + *
+> + * Return: the siphash of @name using the hash key of @dir
+> + */
+> +u64 fscrypt_fname_siphash(const struct inode *dir, const struct qstr *name)
+> +{
+> +	struct fscrypt_info *ci = dir->i_crypt_info;
+> +
+> +	WARN_ON(!ci->ci_hash_key_initialized);
+> +
+> +	return siphash(name->name, name->len, &ci->ci_hash_key);
+> +}
+> +EXPORT_SYMBOL(fscrypt_fname_siphash);
+> +
+>  /*
+>   * Validate dentries in encrypted directories to make sure we aren't potentially
+>   * caching stale dentries after a key has been added.
+> diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
+> index b22e8decebed..8b37a5eebb57 100644
+> --- a/fs/crypto/fscrypt_private.h
+> +++ b/fs/crypto/fscrypt_private.h
+> @@ -12,6 +12,7 @@
+>  #define _FSCRYPT_PRIVATE_H
+>  
+>  #include <linux/fscrypt.h>
+> +#include <linux/siphash.h>
+>  #include <crypto/hash.h>
+>  
+>  #define CONST_STRLEN(str)	(sizeof(str) - 1)
+> @@ -188,6 +189,13 @@ struct fscrypt_info {
+>  	 */
+>  	struct fscrypt_direct_key *ci_direct_key;
+>  
+> +	/*
+> +	 * With v2 policies, this can be used with siphash
+> +	 * When the key has been set, ci_hash_key_initialized is set to true
+> +	 */
+> +	siphash_key_t ci_hash_key;
+> +	bool ci_hash_key_initialized;
+> +
+>  	/* The encryption policy used by this inode */
+>  	union fscrypt_policy ci_policy;
+>  
+> @@ -262,6 +270,7 @@ extern int fscrypt_init_hkdf(struct fscrypt_hkdf *hkdf, const u8 *master_key,
+>  #define HKDF_CONTEXT_PER_FILE_KEY	2
+>  #define HKDF_CONTEXT_DIRECT_KEY		3
+>  #define HKDF_CONTEXT_IV_INO_LBLK_64_KEY	4
+> +#define HKDF_CONTEXT_FNAME_HASH_KEY     5
+>  
+>  extern int fscrypt_hkdf_expand(const struct fscrypt_hkdf *hkdf, u8 context,
+>  			       const u8 *info, unsigned int infolen,
+> diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
+> index 96074054bdbc..c1bd897c9310 100644
+> --- a/fs/crypto/keysetup.c
+> +++ b/fs/crypto/keysetup.c
+> @@ -189,7 +189,7 @@ static int fscrypt_setup_v2_file_key(struct fscrypt_info *ci,
+>  		 * This ensures that the master key is consistently used only
+>  		 * for HKDF, avoiding key reuse issues.
+>  		 */
+> -		return setup_per_mode_key(ci, mk, mk->mk_direct_tfms,
+> +		err = setup_per_mode_key(ci, mk, mk->mk_direct_tfms,
+>  					  HKDF_CONTEXT_DIRECT_KEY, false);
+>  	} else if (ci->ci_policy.v2.flags &
+>  		   FSCRYPT_POLICY_FLAG_IV_INO_LBLK_64) {
+> @@ -199,20 +199,34 @@ static int fscrypt_setup_v2_file_key(struct fscrypt_info *ci,
+>  		 * the IVs.  This format is optimized for use with inline
+>  		 * encryption hardware compliant with the UFS or eMMC standards.
+>  		 */
+> -		return setup_per_mode_key(ci, mk, mk->mk_iv_ino_lblk_64_tfms,
+> +		err = setup_per_mode_key(ci, mk, mk->mk_iv_ino_lblk_64_tfms,
+>  					  HKDF_CONTEXT_IV_INO_LBLK_64_KEY,
+>  					  true);
+> +	} else {
+> +		err = fscrypt_hkdf_expand(&mk->mk_secret.hkdf,
+> +					  HKDF_CONTEXT_PER_FILE_KEY,
+> +					  ci->ci_nonce,
+> +					  FS_KEY_DERIVATION_NONCE_SIZE,
+> +					  derived_key, ci->ci_mode->keysize);
+> +		if (err)
+> +			return err;
+> +
+> +		err = fscrypt_set_derived_key(ci, derived_key);
+> +		memzero_explicit(derived_key, ci->ci_mode->keysize);
+>  	}
+> -
+> -	err = fscrypt_hkdf_expand(&mk->mk_secret.hkdf,
+> -				  HKDF_CONTEXT_PER_FILE_KEY,
+> -				  ci->ci_nonce, FS_KEY_DERIVATION_NONCE_SIZE,
+> -				  derived_key, ci->ci_mode->keysize);
+>  	if (err)
+>  		return err;
+>  
+> -	err = fscrypt_set_derived_key(ci, derived_key);
+> -	memzero_explicit(derived_key, ci->ci_mode->keysize);
+> +	if (S_ISDIR(ci->ci_inode->i_mode)) {
+> +		err = fscrypt_hkdf_expand(&mk->mk_secret.hkdf,
+> +					  HKDF_CONTEXT_FNAME_HASH_KEY,
+> +					  ci->ci_nonce,
+> +					  FS_KEY_DERIVATION_NONCE_SIZE,
+> +					  (u8 *)&ci->ci_hash_key,
+> +					  sizeof(ci->ci_hash_key));
+> +		if (!err)
+> +			ci->ci_hash_key_initialized = true;
+> +	}
+>  	return err;
+>  }
+>  
 
-Applied, thanks.
+This is deriving a SipHash key for every directory, even ones which won't use it
+at all.  Since deriving a SipHash key is just as expensive as deriving an
+encryption key, this doubles the time needed to setup every directory's key(s)
+-- or even much more than doubles it, in the case of per-mode encryption keys.
 
--- 
-Jens Axboe
+It's really important that we keep fscrypt overhead as low as possible.
+How feasible would it be to only derive the SipHash key when needed?
+I.e., check IS_CASEFOLDED() here, and derive the SipHash key if needed in
+fscrypt_ioc_setflags_prepare()?  Is the problem that safely getting access to
+the master key again is hard?
 
+- Eric
