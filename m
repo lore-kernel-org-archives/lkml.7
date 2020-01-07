@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9E2C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3035C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED852072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W6iE9iOb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KqmBySt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgAGVEt (ORCPT
+        id S1729483AbgAGVTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:04:49 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27848 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729064AbgAGVEk (ORCPT
+        Tue, 7 Jan 2020 16:19:50 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:42403 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729086AbgAGVEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:04:40 -0500
+        Tue, 7 Jan 2020 16:04:48 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578431080; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1578431087; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=pM96uG7kOvxrdrZdRV9eTx7muU1tYbOYa1CmMpkX/ic=; b=W6iE9iObbquD9u5884Go/532ljVuZ9QIVNKIfudClYqsvpfhBgo2sjtDRV12dGOR7gRPqBga
- X+RlYQg2KdXgmcGqQnhRZ0eIks6n275+z3vTU/ED/i19ltHfri0wXCzN0SMopd+8OcWn7PoF
- YaeFMmRhYU9l5Pln6HvRvZFtdvo=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=0nlGGwirtAVPgL4UORRMtcfDdVk3FnibwGP7lgA6b10=; b=KqmBySt5Xt1X3BsRx1e7F2KoXWQ7GS605pWmbEwwAY0UsNjDn6sYvxhjRTqxQh9qxQM6+A14
+ QjMR5EyZfDui2lBh10o9FNyjY+K7hBJZkq4IC/SVk1ft1tUwtQFgNpUyq9ZYdtwhUgdwhzJc
+ BNs3Pkxsqc36PzLpubchLlB2Zws=
+X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e14f267.7f77e90ae030-smtp-out-n02;
- Tue, 07 Jan 2020 21:04:39 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e14f26c.7fc3d2cfeae8-smtp-out-n03;
+ Tue, 07 Jan 2020 21:04:44 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BE17EC447A4; Tue,  7 Jan 2020 21:04:38 +0000 (UTC)
+        id 869FBC447B1; Tue,  7 Jan 2020 21:04:44 +0000 (UTC)
 Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CAB05C447A6;
-        Tue,  7 Jan 2020 21:04:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CAB05C447A6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9580C433CB;
+        Tue,  7 Jan 2020 21:04:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9580C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -53,9 +53,9 @@ Cc:     Elliot Berman <eberman@codeaurora.org>,
         sidgup@codeaurora.org, psodagud@codeaurora.org,
         Brian Masney <masneyb@onstation.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/17] firmware: qcom_scm: Remove unused qcom_scm_get_version
-Date:   Tue,  7 Jan 2020 13:04:12 -0800
-Message-Id: <1578431066-19600-4-git-send-email-eberman@codeaurora.org>
+Subject: [PATCH v5 05/17] firmware: qcom_scm-64: Move svc/cmd/owner into qcom_scm_desc
+Date:   Tue,  7 Jan 2020 13:04:14 -0800
+Message-Id: <1578431066-19600-6-git-send-email-eberman@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
 References: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
@@ -64,87 +64,510 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused qcom_scm_get_version.
+Service, command, and owner IDs are all part of qcom_scm_desc struct and
+have no special reason to be a function argument (or hard-coded in the
+case of owner [1]). Moving them to be part of qcom_scm_desc struct improves
+readability.
 
-Change-Id: I7e638d3ece7a2d52b51f570bb680cf3c5dcdc347
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[1]: Example of SCM function using owner vale other than hard-coded SIP value:
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/soc/qcom/smcinvoke.c?h=kernel.lnx.4.9.r28-rel#n35
+
+Change-Id: I422e5b0c2c117ff4eafc80f16b34874ff86643d3
 Tested-by: Brian Masney <masneyb@onstation.org> # arm32
 Tested-by: Stephan Gerhold <stephan@gerhold.net>
 Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- drivers/firmware/qcom_scm-32.c | 36 ------------------------------------
- include/linux/qcom_scm.h       |  2 --
- 2 files changed, 38 deletions(-)
+ drivers/firmware/qcom_scm-64.c | 195 +++++++++++++++++++++++++----------------
+ 1 file changed, 121 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 6e62f73..8b57240 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -292,42 +292,6 @@ static s32 qcom_scm_call_atomic2(u32 svc, u32 cmd, u32 arg1, u32 arg2)
- 	return r0;
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index 3101f36..7b7aa88 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -48,8 +48,11 @@ enum qcom_scm_arg_types {
+  * @res:	The values returned by the secure syscall
+  */
+ struct qcom_scm_desc {
++	u32 svc;
++	u32 cmd;
+ 	u32 arginfo;
+ 	u64 args[MAX_QCOM_SCM_ARGS];
++	u32 owner;
+ };
+ 
+ static u64 qcom_smccc_convention = -1;
+@@ -63,14 +66,16 @@ static DEFINE_MUTEX(qcom_scm_lock);
+ #define SCM_SMC_N_EXT_ARGS	(MAX_QCOM_SCM_ARGS - SCM_SMC_N_REG_ARGS + 1)
+ 
+ static void __scm_smc_do_quirk(const struct qcom_scm_desc *desc,
+-			       struct arm_smccc_res *res, u32 fn_id,
+-			       u64 x5, u32 type)
++			       struct arm_smccc_res *res, u64 x5, u32 type)
+ {
+ 	u64 cmd;
+ 	struct arm_smccc_quirk quirk = { .id = ARM_SMCCC_QUIRK_QCOM_A6 };
+ 
+-	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
+-				 ARM_SMCCC_OWNER_SIP, fn_id);
++	cmd = ARM_SMCCC_CALL_VAL(
++		type,
++		qcom_smccc_convention,
++		desc->owner,
++		SCM_SMC_FNID(desc->svc, desc->cmd));
+ 
+ 	quirk.state.a6 = 0;
+ 
+@@ -86,22 +91,19 @@ static void __scm_smc_do_quirk(const struct qcom_scm_desc *desc,
  }
  
--u32 qcom_scm_get_version(void)
--{
--	int context_id;
--	static u32 version = -1;
--	register u32 r0 asm("r0");
--	register u32 r1 asm("r1");
--
--	if (version != -1)
--		return version;
--
--	mutex_lock(&qcom_scm_lock);
--
--	r0 = 0x1 << 8;
--	r1 = (u32)&context_id;
--	do {
--		asm volatile(
--			__asmeq("%0", "r0")
--			__asmeq("%1", "r1")
--			__asmeq("%2", "r0")
--			__asmeq("%3", "r1")
--#ifdef REQUIRES_SEC
--			".arch_extension sec\n"
--#endif
--			"smc	#0	@ switch to secure world\n"
--			: "=r" (r0), "=r" (r1)
--			: "r" (r0), "r" (r1)
--			: "r2", "r3", "r12");
--	} while (r0 == QCOM_SCM_INTERRUPTED);
--
--	version = r1;
--	mutex_unlock(&qcom_scm_lock);
--
--	return version;
--}
--EXPORT_SYMBOL(qcom_scm_get_version);
--
+ static void __scm_smc_do(const struct qcom_scm_desc *desc,
+-			     struct arm_smccc_res *res, u32 fn_id,
+-			     u64 x5, bool atomic)
++			 struct arm_smccc_res *res, u64 x5, bool atomic)
+ {
+ 	int retry_count = 0;
+ 
+ 	if (atomic) {
+-		__scm_smc_do_quirk(desc, res, fn_id, x5,
+-					 ARM_SMCCC_FAST_CALL);
++		__scm_smc_do_quirk(desc, res, x5, ARM_SMCCC_FAST_CALL);
+ 		return;
+ 	}
+ 
+ 	do {
+ 		mutex_lock(&qcom_scm_lock);
+ 
+-		__scm_smc_do_quirk(desc, res, fn_id, x5,
+-					 ARM_SMCCC_STD_CALL);
++		__scm_smc_do_quirk(desc, res, x5, ARM_SMCCC_STD_CALL);
+ 
+ 		mutex_unlock(&qcom_scm_lock);
+ 
+@@ -113,13 +115,11 @@ static void __scm_smc_do(const struct qcom_scm_desc *desc,
+ 	}  while (res->a0 == QCOM_SCM_V2_EBUSY);
+ }
+ 
+-static int __scm_smc_call(struct device *dev, u32 svc_id, u32 cmd_id,
+-				  const struct qcom_scm_desc *desc,
+-				  struct arm_smccc_res *res, bool atomic)
++static int __scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
++			  struct arm_smccc_res *res, bool atomic)
+ {
+ 	int arglen = desc->arginfo & 0xf;
+ 	int i;
+-	u32 fn_id = SCM_SMC_FNID(svc_id, cmd_id);
+ 	u64 x5 = desc->args[SCM_SMC_FIRST_EXT_IDX];
+ 	dma_addr_t args_phys = 0;
+ 	void *args_virt = NULL;
+@@ -158,7 +158,7 @@ static int __scm_smc_call(struct device *dev, u32 svc_id, u32 cmd_id,
+ 		x5 = args_phys;
+ 	}
+ 
+-	__scm_smc_do(desc, res, fn_id, x5, atomic);
++	__scm_smc_do(desc, res, x5, atomic);
+ 
+ 	if (args_virt) {
+ 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
+@@ -181,12 +181,11 @@ static int __scm_smc_call(struct device *dev, u32 svc_id, u32 cmd_id,
+  * Sends a command to the SCM and waits for the command to finish processing.
+  * This should *only* be called in pre-emptible context.
+  */
+-static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+-			 const struct qcom_scm_desc *desc,
++static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 			 struct arm_smccc_res *res)
+ {
+ 	might_sleep();
+-	return __scm_smc_call(dev, svc_id, cmd_id, desc, res, false);
++	return __scm_smc_call(dev, desc, res, false);
+ }
+ 
  /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index 2c1d203..98e775d 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -78,7 +78,6 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 			       const struct qcom_scm_vmperm *newvm,
- 			       unsigned int dest_cnt);
- extern void qcom_scm_cpu_power_down(u32 flags);
--extern u32 qcom_scm_get_version(void);
- extern int qcom_scm_set_remote_state(u32 state, u32 id);
- extern bool qcom_scm_restore_sec_cfg_available(void);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
-@@ -123,7 +122,6 @@ static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 				      const struct qcom_scm_vmperm *newvm,
- 				      unsigned int dest_cnt) { return -ENODEV; }
- static inline void qcom_scm_cpu_power_down(u32 flags) {}
--static inline u32 qcom_scm_get_version(void) { return 0; }
- static inline u32
- qcom_scm_set_remote_state(u32 state,u32 id) { return -ENODEV; }
- static inline bool qcom_scm_restore_sec_cfg_available(void) { return false; }
+@@ -200,11 +199,11 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+  * Sends a command to the SCM and waits for the command to finish processing.
+  * This can be called in atomic context.
+  */
+-static int qcom_scm_call_atomic(struct device *dev, u32 svc_id, u32 cmd_id,
++static int qcom_scm_call_atomic(struct device *dev,
+ 				const struct qcom_scm_desc *desc,
+ 				struct arm_smccc_res *res)
+ {
+-	return __scm_smc_call(dev, svc_id, cmd_id, desc, res, true);
++	return __scm_smc_call(dev, desc, res, true);
+ }
+ 
+ /**
+@@ -250,15 +249,18 @@ void __qcom_scm_cpu_power_down(u32 flags)
+ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_INFO,
++		.cmd = QCOM_SCM_INFO_IS_CALL_AVAIL,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 	desc.args[0] = SCM_SMC_FNID(svc_id, cmd_id) |
+ 			(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_SCM_INFO_IS_CALL_AVAIL,
+-			    &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -267,7 +269,11 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+ 			u32 req_cnt, u32 *resp)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_HDCP,
++		.cmd = QCOM_SCM_HDCP_INVOKE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	if (req_cnt > QCOM_SCM_HDCP_MAX_REQ_CNT)
+@@ -285,8 +291,7 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+ 	desc.args[9] = req[4].val;
+ 	desc.arginfo = QCOM_SCM_ARGS(10);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_HDCP, QCOM_SCM_HDCP_INVOKE, &desc,
+-			    &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 	*resp = res.a1;
+ 
+ 	return ret;
+@@ -326,15 +331,17 @@ void __qcom_scm_init(void)
+ bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_IS_SUPPORTED,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+-				QCOM_SCM_PIL_PAS_IS_SUPPORTED,
+-				&desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? false : !!res.a1;
+ }
+@@ -343,15 +350,18 @@ int __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+ 			      dma_addr_t metadata_phys)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_INIT_IMAGE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.args[1] = metadata_phys;
+ 	desc.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_VAL, QCOM_SCM_RW);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_INIT_IMAGE,
+-				&desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -360,7 +370,11 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+ 			      phys_addr_t addr, phys_addr_t size)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_MEM_SETUP,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+@@ -368,8 +382,7 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+ 	desc.args[2] = size;
+ 	desc.arginfo = QCOM_SCM_ARGS(3);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_MEM_SETUP,
+-				&desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -377,15 +390,17 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_AUTH_AND_RESET,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+-				QCOM_SCM_PIL_PAS_AUTH_AND_RESET,
+-				&desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -393,21 +408,28 @@ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_SHUTDOWN,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = peripheral;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_SHUTDOWN,
+-			&desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+ 
+ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_PIL,
++		.cmd = QCOM_SCM_PIL_PAS_MSS_RESET,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+@@ -415,15 +437,18 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+ 	desc.args[1] = 0;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_MSS_RESET, &desc,
+-			    &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+ 
+ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_BOOT,
++		.cmd = QCOM_SCM_BOOT_SET_REMOTE_STATE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+@@ -431,8 +456,7 @@ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+ 	desc.args[1] = id;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_REMOTE_STATE,
+-			    &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -442,7 +466,11 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+ 			  phys_addr_t dest, size_t dest_sz)
+ {
+ 	int ret;
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_MP,
++		.cmd = QCOM_SCM_MP_ASSIGN,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = mem_region;
+@@ -457,16 +485,18 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+ 				     QCOM_SCM_RO, QCOM_SCM_VAL, QCOM_SCM_RO,
+ 				     QCOM_SCM_VAL, QCOM_SCM_VAL);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+-			    QCOM_SCM_MP_ASSIGN,
+-			    &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+ 
+ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_MP,
++		.cmd = QCOM_SCM_MP_RESTORE_SEC_CFG,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+@@ -474,8 +504,7 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+ 	desc.args[1] = spare;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP, QCOM_SCM_MP_RESTORE_SEC_CFG,
+-			    &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	return ret ? : res.a1;
+ }
+@@ -483,15 +512,18 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+ 				      size_t *size)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_MP,
++		.cmd = QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = spare;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+-			    QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE, &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	if (size)
+ 		*size = res.a1;
+@@ -502,7 +534,11 @@ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 				      u32 spare)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_MP,
++		.cmd = QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+@@ -512,8 +548,7 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 	desc.arginfo = QCOM_SCM_ARGS(3, QCOM_SCM_RW, QCOM_SCM_VAL,
+ 				     QCOM_SCM_VAL);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+-			    QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT, &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 
+ 	/* the pg table has been initialized already, ignore the error */
+ 	if (ret == -EPERM)
+@@ -524,29 +559,35 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+ 
+ int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_BOOT,
++		.cmd = QCOM_SCM_BOOT_SET_DLOAD_MODE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = QCOM_SCM_BOOT_SET_DLOAD_MODE;
+ 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_DLOAD_MODE,
+-			     &desc, &res);
++	return qcom_scm_call(dev, &desc, &res);
+ }
+ 
+ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+ 			unsigned int *val)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_IO,
++		.cmd = QCOM_SCM_IO_READ,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 	int ret;
+ 
+ 	desc.args[0] = addr;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_READ,
+-			    &desc, &res);
++	ret = qcom_scm_call(dev, &desc, &res);
+ 	if (ret >= 0)
+ 		*val = res.a1;
+ 
+@@ -555,26 +596,32 @@ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+ 
+ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_IO,
++		.cmd = QCOM_SCM_IO_WRITE,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = addr;
+ 	desc.args[1] = val;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE,
+-			     &desc, &res);
++	return qcom_scm_call(dev, &desc, &res);
+ }
+ 
+ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
+ {
+-	struct qcom_scm_desc desc = {0};
++	struct qcom_scm_desc desc = {
++		.svc = QCOM_SCM_SVC_SMMU_PROGRAM,
++		.cmd = QCOM_SCM_SMMU_CONFIG_ERRATA1,
++		.owner = ARM_SMCCC_OWNER_SIP,
++	};
+ 	struct arm_smccc_res res;
+ 
+ 	desc.args[0] = QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL;
+ 	desc.args[1] = en;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call_atomic(dev, QCOM_SCM_SVC_SMMU_PROGRAM,
+-				    QCOM_SCM_SMMU_CONFIG_ERRATA1, &desc, &res);
++	return qcom_scm_call_atomic(dev, &desc, &res);
+ }
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
