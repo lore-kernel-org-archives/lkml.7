@@ -2,92 +2,219 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D42C32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A3CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF4B20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6898207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dgkNIwEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgAGCd4 (ORCPT
+        id S1727486AbgAGChe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 21:33:56 -0500
-Received: from mga04.intel.com ([192.55.52.120]:11317 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727529AbgAGCdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 21:33:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 18:33:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
-   d="scan'208";a="217587426"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Jan 2020 18:33:52 -0800
-Date:   Tue, 7 Jan 2020 10:33:57 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        cgroups@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200107023357.GD15341@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
- <CAKgT0Uf+EP8yGf93=R3XK0Y=0To0KQDys0O1BkG-Odej3Rwj5A@mail.gmail.com>
- <20200107012624.GB15341@richard>
- <alpine.DEB.2.21.2001061803200.55132@chino.kir.corp.google.com>
+        Mon, 6 Jan 2020 21:37:34 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46520 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgAGChe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 21:37:34 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7BA5252F;
+        Tue,  7 Jan 2020 03:37:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578364651;
+        bh=MBDwBfB1yvrUNnyLXlcyy033c7X1+3QQ5e/fUKD3MKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dgkNIwEXqZQBu93oKiUijThMtexXm7eh/FkOhKVRu7MS7FF9Z+Sh7w7iMfaXM4MIe
+         AArZP3HEFWe7Ccmi40N5Rkrsbv/FH0LioCZ6g+mJAlUoGcJpuxPYlIpiRR+YFwUtkA
+         gBJGUambx7da7F87o1LtzkVfs/TBk+XufHVdpXz4=
+Date:   Tue, 7 Jan 2020 04:37:21 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI
+ RX D-PHY yaml bindings
+Message-ID: <20200107023721.GG22189@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <20191227200116.2612137-10-helen.koike@collabora.com>
+ <20200107001055.GE22189@pendragon.ideasonboard.com>
+ <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001061803200.55132@chino.kir.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 06:07:29PM -0800, David Rientjes wrote:
->On Tue, 7 Jan 2020, Wei Yang wrote:
->
->> >One thing you might want to do is pull the "if (compound)" check out
->> >and place it outside of the spinlock check. It would then simplify
->> >this signficantly so it is something like
->> >if (compound) {
->> >  spin_lock();
->> >  list = page_deferred_list(page);
->> >  if (!list_empty(list)) {
->> >    list_del_init(list);
->> >    from->..split_queue_len--;
->> >  }
->> >  spin_unlock();
->> >}
->> >
->> >Same for the block below. I would pull the check for compound outside
->> >of the spinlock call since it is a value that shouldn't change and
->> >would eliminate an unnecessary lock in the non-compound case.
->> 
->> This is reasonable, if no objection from others, I would change this in v2.
->
->Looks fine to me; I don't see it as a necessary improvement but there's 
->also no reason to object to it.  It's definitely a patch that is needed, 
->however, for the simple reason that with the existing code we can 
->manipulate the deferred split queue incorrectly so either way works for 
->me.  Feel free to keep my acked-by.
+On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > Hi Helen,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > 
+> > > This was tested and verified with:
+> > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > 
+> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > 
+> > > ---
+> > > 
+> > > Changes in v12:
+> > > - The commit replaces the following commit in previous series named
+> > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > This new patch adds yaml binding and was verified with
+> > > make dtbs_check and make dt_binding_check
+> > > 
+> > > Changes in v11: None
+> > > Changes in v10:
+> > > - unsquash
+> > > 
+> > > Changes in v9:
+> > > - fix title division style
+> > > - squash
+> > > - move to staging
+> > > 
+> > > Changes in v8: None
+> > > Changes in v7:
+> > > - updated doc with new design and tested example
+> > > 
+> > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > >  1 file changed, 75 insertions(+)
+> > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > 
+> > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
+> > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > new file mode 100644
+> > > index 000000000000..af97f1b3e005
+> > > --- /dev/null
+> > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > @@ -0,0 +1,75 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > 
+> > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
+> 
+> The driver currently only supports RX0, but I think you are right,
+> it should say RX here. This binding could be extended for RX1.
+> 
+> > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> 
+> I am not following this. The driver handles just one PHY. Each PHY
+> should have its own node.
 
-Ah, thanks David. You are so supportive.
+Looking at the registers, it seems that the different PHYs are
+intertwined and we would could have trouble handling the different PHYs
+with different DT nodes and thus struct device instances.
+
+> > > +
+> > > +maintainers:
+> > > +  - Helen Koike <helen.koike@collabora.com>
+> > > +  - Ezequiel Garcia <ezequiel@collabora.com>
+> > > +
+> > > +description: |
+> > > +  The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
+> > > +  the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: rockchip,rk3399-mipi-dphy
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: Mipi d-phy ref clock
+> > > +      - description: Mipi d-phy rx0 cfg clock
+> > 
+> > s/Mipi d-phy/MIPI D-PHY/
+> 
+> Yep.
+> 
+> > > +      - description: Video in/out general register file clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: dphy-ref
+> > > +      - const: dphy-cfg
+> > > +      - const: grf
+> > > +
+> > > +  '#phy-cells':
+> > > +    const: 0
+> > > +
+> > > +  power-domains:
+> > > +    description: Video in/out power domain.
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - '#phy-cells'
+> > > +  - power-domains
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +
+> > > +    /*
+> > > +     * MIPI RX D-PHY use registers in "general register files", it
+> > > +     * should be a child of the GRF.
+> > > +     *
+> > > +     * grf: syscon@ff770000 {
+> > > +     *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> > > +     *  ...
+> > 
+> > missing
+> > 
+> > 	* };
+> 
+> OK.
+> 
+> > > +     */
+> > > +
+> > > +    #include <dt-bindings/clock/rk3399-cru.h>
+> > > +    #include <dt-bindings/power/rk3399-power.h>
+> > > +
+> > > +    dphy: mipi-dphy {
+> > > +        compatible = "rockchip,rk3399-mipi-dphy";
+> > > +        clocks = <&cru SCLK_MIPIDPHY_REF>,
+> > > +                 <&cru SCLK_DPHY_RX0_CFG>,
+> > > +                 <&cru PCLK_VIO_GRF>;
+> > > +        clock-names = "dphy-ref", "dphy-cfg", "grf";
+> > > +        power-domains = <&power RK3399_PD_VIO>;
+> > > +        #phy-cells = <0>;
+> > > +    };
 
 -- 
-Wei Yang
-Help you, Help me
+Regards,
+
+Laurent Pinchart
