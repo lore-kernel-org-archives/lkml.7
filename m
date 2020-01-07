@@ -2,159 +2,113 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53495C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F4CC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F36F20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329AD2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gpk5HGln"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="muBYzEDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgAGJQV (ORCPT
+        id S1727769AbgAGJQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:16:21 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23511 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726558AbgAGJQU (ORCPT
+        Tue, 7 Jan 2020 04:16:34 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37459 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGJQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:16:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578388580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=clGfX34pXGaRCKwFoGSOic8XcbmLo2uuRhXYSPGsI3g=;
-        b=Gpk5HGlniZNiB4yfLxdFliaizmKM4jsnnJCoB5oLPECi+ODkx9IXdHL8Zd/EB9T5+xzvvf
-        SAERoKzTQ2uhbE6j2OSsWUsY+YfgFZScRgwEgkBpS+sBSYK572KQLG3R040D9R7HNRk6QT
-        WAZgTLH2COMG35OyFBoV6WqJjZm6PkA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-Kva9NSiEP7-y3zmBrMRpFg-1; Tue, 07 Jan 2020 04:16:16 -0500
-X-MC-Unique: Kva9NSiEP7-y3zmBrMRpFg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EC0B1800D4E;
-        Tue,  7 Jan 2020 09:16:14 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB75560F82;
-        Tue,  7 Jan 2020 09:16:11 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:16:09 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2] perf parse: Copy string to perf_evsel_config_term
-Message-ID: <20200107091609.GB290055@krava>
-References: <20200107031828.23103-1-leo.yan@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107031828.23103-1-leo.yan@linaro.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 7 Jan 2020 04:16:33 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so8994188pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:16:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=7oMdgWioDWITQzSI98n4NagJatFFPYMLbqTtAUUpj0w=;
+        b=muBYzEDf3kXREd5gF/6B8QBbwzXQ3RFt696Xz/URWaNaLG9ung8yAF+OK3RJKqO3t8
+         3vX9swBxnsrQyh/mJZkDaN6vc44EeKnHTyJZSLsbAGFC8BMiZJZjFTfCyBpYeENAz0gV
+         n00TprtefUwyHJW71jx+mQ9WY4I/ucnCWax+RHAcaIMyGwYhVEoat88B1c61uUNdPGzC
+         b9j19ZZP09ngqo45VMdPj7mhT13TKoT6GkpklqR4AOkfmWggI/3u6+YW1Gf3Y1yH2rje
+         sYxiy5MY08iUZD9pWNIeLV5+lpBblpq2ncFB3OWfvEVjGhVh/yM9ft6FIo8fklLXvF8X
+         gz5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7oMdgWioDWITQzSI98n4NagJatFFPYMLbqTtAUUpj0w=;
+        b=joQh6hflWlI1lZc1J5+V9pAGZRrjjAPLwgUkQRo2ySwkpYgW3KAPfMqut4O7Q8ApDj
+         fG96lr5MTRjCev19QUoUVBZ0qCcB0ZaiK8ZFaySXkw0mOwnS6TC9OhKFYgZsdPOUWMD3
+         WlyhhxssaE+Z1OWXvlTig3w1tvehcXPyHczcJRbaDrajKoVn7Ei+u26+Mn/NsE09pxyA
+         kPJPII2a+MSQKOg5uV85V6K4Z+ris6BGOb+6FmpJa5uCRlUbsFr4Qjpnla8RaNk+MSVj
+         Udj7MTB8K0A2voxzSxMsqKPdFmAPPB8H6YdwDXeRaOmQCB66tNS8Vh8EH86SxJKf4gyy
+         YfnQ==
+X-Gm-Message-State: APjAAAUWJ0KouBAMOk1GSe/U7hE5QPeU16FWn+BQg1GnxHkdt4rJ+M51
+        HzRKpCqY7cOfKfXjyB37miwUQQ==
+X-Google-Smtp-Source: APXvYqxjLep94Ti3iFTWlLDf1xdX+FyHt3IAErpNxzG6ui1L7m8uCDC6PAwPl7aQSChPTwNjZZihzg==
+X-Received: by 2002:a17:902:9684:: with SMTP id n4mr44455505plp.154.1578388592754;
+        Tue, 07 Jan 2020 01:16:32 -0800 (PST)
+Received: from greentime-VirtualBox.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id s26sm48350814pfe.166.2020.01.07.01.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:16:32 -0800 (PST)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     green.hu@gmail.com, greentime@kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Greentime Hu <greentime.hu@sifive.com>
+Subject: [PATCH] riscv: to make sure the cores in .Lsecondary_park
+Date:   Tue,  7 Jan 2020 17:16:18 +0800
+Message-Id: <20200107091618.7214-1-greentime.hu@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:18:28AM +0800, Leo Yan wrote:
-> perf with CoreSight fails to record trace data with command:
-> 
->   perf record -e cs_etm/@tmc_etr0/u --per-thread ls
->   failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
->   directory)/perf/
-> 
-> This failure is root caused with the commit 1dc925568f01 ("perf
-> parse: Add a deep delete for parse event terms").
-> 
-> The log shows, cs_etm fails to parse the sink attribution; cs_etm event
-> relies on the event configuration to pass sink name, but the event
-> specific configuration data cannot be passed properly with flow:
-> 
->   get_config_terms()
->     ADD_CONFIG_TERM(DRV_CFG, drv_cfg, term->val.str);
->       __t->val.drv_cfg = term->val.str;
->         `> __t->val.drv_cfg is assigned to term->val.str;
-> 
->   parse_events_terms__purge()
->     parse_events_term__delete()
->       zfree(&term->val.str);
->         `> term->val.str is freed and assigned to NULL pointer;
-> 
->   cs_etm_set_sink_attr()
->     sink = __t->val.drv_cfg;
->       `> sink string has been freed.
-> 
-> To fix this issue, in the function get_config_terms(), this patch
-> changes from directly assignment pointer value for the strings to
-> use strdup() for allocation a new duplicate string for the cases:
-> 
->   perf_evsel_config_term::val.callgraph
->   perf_evsel_config_term::val.branch
->   perf_evsel_config_term::val.drv_cfg.
-> 
-> Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/parse-events.c | 55 +++++++++++++++++++++-------------
->  1 file changed, 34 insertions(+), 21 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index ed7c008b9c8b..49b26504bee3 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1220,7 +1220,6 @@ static int get_config_terms(struct list_head *head_config,
->  			    struct list_head *head_terms __maybe_unused)
->  {
->  #define ADD_CONFIG_TERM(__type, __name, __val)			\
-> -do {								\
->  	struct perf_evsel_config_term *__t;			\
->  								\
->  	__t = zalloc(sizeof(*__t));				\
-> @@ -1229,9 +1228,23 @@ do {								\
->  								\
->  	INIT_LIST_HEAD(&__t->list);				\
->  	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
-> -	__t->val.__name = __val;				\
->  	__t->weak	= term->weak;				\
-> -	list_add_tail(&__t->list, head_terms);			\
-> +	list_add_tail(&__t->list, head_terms)
-> +
-> +#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
-> +do {								\
-> +	ADD_CONFIG_TERM(__type, __name, __val);			\
-> +	__t->val.__name = __val;				\
-> +} while (0)
-> +
-> +#define ADD_CONFIG_TERM_STR(__type, __name, __val)		\
-> +do {								\
-> +	ADD_CONFIG_TERM(__type, __name, __val);			\
-> +	__t->val.__name = strdup(__val);			\
-> +	if (!__t->val.__name) {					\
-> +		zfree(&__t);					\
-> +		return -ENOMEM;					\
-> +	}							\
->  } while (0)
+The code in secondary_park is currently placed in the .init section.  The
+kernel reclaims and clears this code when it finishes booting.  That
+causes the cores parked in it to go to somewhere unpredictable, so we
+move this function out of init to make sure the cores stay looping there.
 
-hum, I did not check yesterday how we release perf_evsel_config_term
-objects, but looks like now we need to release those pointers in here:
-  perf_evsel__free_config_terms
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+---
+ arch/riscv/kernel/head.S | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-jirka
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index f8f996916c5b..d8da076fc69e 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -217,11 +217,6 @@ relocate:
+ 	tail smp_callin
+ #endif
+ 
+-.align 2
+-.Lsecondary_park:
+-	/* We lack SMP support or have too many harts, so park this hart */
+-	wfi
+-	j .Lsecondary_park
+ END(_start)
+ 
+ #ifdef CONFIG_RISCV_M_MODE
+@@ -303,6 +298,14 @@ ENTRY(reset_regs)
+ END(reset_regs)
+ #endif /* CONFIG_RISCV_M_MODE */
+ 
++__FINIT
++.section ".text", "ax",@progbits
++.align 2
++.Lsecondary_park:
++	/* We lack SMP support or have too many harts, so park this hart */
++	wfi
++	j .Lsecondary_park
++
+ __PAGE_ALIGNED_BSS
+ 	/* Empty zero page */
+ 	.balign PAGE_SIZE
+-- 
+2.17.1
 
