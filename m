@@ -2,116 +2,107 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904BBC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6934B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B66D206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HF9Ln4ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgAGTal (ORCPT
+        id S1728703AbgAGTaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:30:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:33626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgAGTal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:30:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53C4330E;
-        Tue,  7 Jan 2020 11:30:40 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDE953F534;
-        Tue,  7 Jan 2020 11:30:37 -0800 (PST)
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-To:     Quentin Perret <qperret@google.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200107134234.GA158998@google.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
-Date:   Tue, 7 Jan 2020 20:30:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 14:30:46 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44900 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728307AbgAGTaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:30:46 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007JSqT1006966
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 11:30:45 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=Uij8Ue7p80JCsa0xFwke2dRkold23rvr67wlz2fHIsY=;
+ b=HF9Ln4efAj+LOMvJIl+LeIA7PNfek34P7iHxXk1OINs8KT6GfUSQSs+1yg8actiQPt5y
+ RLdOWw/MT3PUgf8jlyXeeEucxKyuTodKiE7QxZA4U6L45ayEchwUre3vW36wS8s7rCno
+ w0Fq4b5xmC9BRYTyxn30G+71C98JmA3hbxQ= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xcwm1h1ur-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:30:45 -0800
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 7 Jan 2020 11:30:41 -0800
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 62C4519717D23; Tue,  7 Jan 2020 11:30:38 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <joel@jms.id.au>,
+        <linux-aspeed@lists.ozlabs.org>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [net-next PATCH] net/ncsi: Send device address as source address
+Date:   Tue, 7 Jan 2020 11:30:33 -0800
+Message-ID: <20200107193034.1322431-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20200107134234.GA158998@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 priorityscore=1501 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070153
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 14:42, Quentin Perret wrote:
-> Hi Qais,
-> 
-> On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
+After receiving device mac address from device, send this as
+a source address for further commands instead of broadcast
+address.
 
-[...]
+This will help in multi host NIC cards.
 
->> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
->> index e591d40fd645..19572dfc175b 100644
->> --- a/kernel/sched/rt.c
->> +++ b/kernel/sched/rt.c
->> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
->>   */
->>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
->>  {
->> +	/*
->> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
->> +	 * we apply any new value on the next wakeup, which is here.
->> +	 */
->> +	uclamp_rt_sync_default_util_min(p);
-> 
-> The task has already been enqueued and sugov has been called by then I
-> think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ net/ncsi/ncsi-cmd.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-That's probably better.
-Just to be sure ...we want this feature (an existing rt task gets its
-UCLAMP_MIN value set when the sysctl changes) because there could be rt
-tasks running before the sysctl is set?
+diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
+index 0187e65176c0..ba9ae482141b 100644
+--- a/net/ncsi/ncsi-cmd.c
++++ b/net/ncsi/ncsi-cmd.c
+@@ -369,7 +369,15 @@ int ncsi_xmit_cmd(struct ncsi_cmd_arg *nca)
+ 	eh = skb_push(nr->cmd, sizeof(*eh));
+ 	eh->h_proto = htons(ETH_P_NCSI);
+ 	eth_broadcast_addr(eh->h_dest);
+-	eth_broadcast_addr(eh->h_source);
++
++	/* If mac address received from device then use it for
++	 * source address as unicast address else use broadcast
++	 * address as source address
++	 */
++	if (nca->ndp->gma_flag == 1)
++		memcpy(eh->h_source, nca->ndp->ndev.dev->dev_addr, ETH_ALEN);
++	else
++		eth_broadcast_addr(eh->h_source);
+ 
+ 	/* Start the timer for the request that might not have
+ 	 * corresponding response. Given NCSI is an internal
+-- 
+2.17.1
 
->> +
->>  	if (!task_running(rq, p) &&
->>  	    !test_tsk_need_resched(rq->curr) &&
->>  	    p->nr_cpus_allowed > 1 &&
->> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->> index 280a3c735935..337bf17b1a9d 100644
->> --- a/kernel/sched/sched.h
->> +++ b/kernel/sched/sched.h
->> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
->>  #endif /* CONFIG_CPU_FREQ */
->>  
->>  #ifdef CONFIG_UCLAMP_TASK
->> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
->> +
->>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
->>  
->>  static __always_inline
->> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
->>  	return uclamp_util_with(rq, util, NULL);
->>  }
->>  #else /* CONFIG_UCLAMP_TASK */
->> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
-
--void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
-+static inline void uclamp_rt_sync_default_util_min(struct task_struct
-*p) {}
-
-[...]
