@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E4DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8442AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24ED32080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5760C2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432165;
-	bh=kQG2NmVnqlvSpcEBxhVGFGo+zFzV3jRfRwpVE4asfow=;
+	s=default; t=1578432168;
+	bh=DqfXjYHAgHZqv84WzodfCpB6d+/ao7YuK6XlquCQias=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVVtqabeSWk927rBdq8G5QAk1+KZzRncYNtURnoXw7lVQiZLy6YSGbU1jy1wIvonw
-	 Z2oBScnGI22OdZb6VlHB0HE61h02AS+83diJ7SvqbGLT7toSBTEeR3vfGWaQKDrUoa
-	 5VgxTPDvljW/OBYdgCabb9pxw9hXPZ48/XqDabqc=
+	b=rwR4tTmax4+UxEneQhQ8GzG66DbqbSTYnL6fg4fxHfS+xga0ei8t8UdsYumsx7rTz
+	 8u+r2ajzdbiL4yLxE/NyCz53i15pP6W1m7WJTKmnXigjG8espVjuv6w+v5iYYfY3iZ
+	 xbT+H9/mzUcgSv2nA+ivk8sC9RxnvkSfmWhtU+TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgAGVWo (ORCPT
+        id S1728654AbgAGVBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:22:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728667AbgAGVB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:56 -0500
+        id S1728264AbgAGVBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A70CD20678;
-        Tue,  7 Jan 2020 21:01:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5445E20678;
+        Tue,  7 Jan 2020 21:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430916;
-        bh=kQG2NmVnqlvSpcEBxhVGFGo+zFzV3jRfRwpVE4asfow=;
+        s=default; t=1578430908;
+        bh=DqfXjYHAgHZqv84WzodfCpB6d+/ao7YuK6XlquCQias=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GIt+41W4txdzEGBErZQnc4xmTZ8m7Mq8LIscqd/FksXsV3vOaMJiO77W0LpS7N+Pf
-         ahnGdobdCDIw1K9oQfes+LDofqxuSRzDd81UNK7fTv87q/A32PShPD0Pepgqs413xF
-         2+B6AJGFnjxKlmIEGPQ9cFN0zr9vyP4szTQkfeIE=
+        b=Txs4YoKgnb2FziPW0cl88Ubzea1Cs3XqpaZ1GWtZatUCmn8Isk3KzD6o1MSiEUn0G
+         yVVPrnZMIQ9x68em3znVhT/di12OL5jaqEsDH9wBL+iwnWen9gaySMKEVssIF/IAtN
+         pRhFhMPy+g8l5Am4V1zO+b0jxhiUSHfkh1E7lzl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Haener <michael.haener@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 149/191] platform/x86: pmc_atom: Add Siemens CONNECT X300 to critclk_systems DMI table
-Date:   Tue,  7 Jan 2020 21:54:29 +0100
-Message-Id: <20200107205340.944264324@linuxfoundation.org>
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 146/191] cifs: Fix potential softlockups while refreshing DFS cache
+Date:   Tue,  7 Jan 2020 21:54:26 +0100
+Message-Id: <20200107205340.787098324@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,40 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Haener <michael.haener@siemens.com>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-commit e8796c6c69d129420ee94a1906b18d86b84644d4 upstream.
+commit 84a1f5b1cc6fd7f6cd99fc5630c36f631b19fa60 upstream.
 
-The CONNECT X300 uses the PMC clock for on-board components and gets
-stuck during boot if the clock is disabled. Therefore, add this
-device to the critical systems list.
-Tested on CONNECT X300.
+We used to skip reconnects on all SMB2_IOCTL commands due to SMB3+
+FSCTL_VALIDATE_NEGOTIATE_INFO - which made sense since we're still
+establishing a SMB session.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Michael Haener <michael.haener@siemens.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+However, when refresh_cache_worker() calls smb2_get_dfs_refer() and
+we're under reconnect, SMB2_ioctl() will not be able to get a proper
+status error (e.g. -EHOSTDOWN in case we failed to reconnect) but an
+-EAGAIN from cifs_send_recv() thus looping forever in
+refresh_cache_worker().
+
+Fixes: e99c63e4d86d ("SMB3: Fix deadlock in validate negotiate hits reconnect")
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Suggested-by: Aurelien Aptel <aaptel@suse.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/pmc_atom.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/cifs/smb2pdu.c |   41 +++++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -429,6 +429,14 @@ static const struct dmi_system_id critcl
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
- 		},
- 	},
-+	{
-+		.ident = "CONNECT X300",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "A5E45074588"),
-+		},
-+	},
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -252,7 +252,7 @@ smb2_reconnect(__le16 smb2_command, stru
+ 	if (tcon == NULL)
+ 		return 0;
+ 
+-	if (smb2_command == SMB2_TREE_CONNECT || smb2_command == SMB2_IOCTL)
++	if (smb2_command == SMB2_TREE_CONNECT)
+ 		return 0;
+ 
+ 	if (tcon->tidStatus == CifsExiting) {
+@@ -426,16 +426,9 @@ fill_small_buf(__le16 smb2_command, stru
+  * SMB information in the SMB header. If the return code is zero, this
+  * function must have filled in request_buf pointer.
+  */
+-static int
+-smb2_plain_req_init(__le16 smb2_command, struct cifs_tcon *tcon,
+-		    void **request_buf, unsigned int *total_len)
++static int __smb2_plain_req_init(__le16 smb2_command, struct cifs_tcon *tcon,
++				  void **request_buf, unsigned int *total_len)
+ {
+-	int rc;
+-
+-	rc = smb2_reconnect(smb2_command, tcon);
+-	if (rc)
+-		return rc;
+-
+ 	/* BB eventually switch this to SMB2 specific small buf size */
+ 	if (smb2_command == SMB2_SET_INFO)
+ 		*request_buf = cifs_buf_get();
+@@ -456,7 +449,31 @@ smb2_plain_req_init(__le16 smb2_command,
+ 		cifs_stats_inc(&tcon->num_smbs_sent);
+ 	}
+ 
+-	return rc;
++	return 0;
++}
 +
- 	{ /*sentinel*/ }
- };
++static int smb2_plain_req_init(__le16 smb2_command, struct cifs_tcon *tcon,
++			       void **request_buf, unsigned int *total_len)
++{
++	int rc;
++
++	rc = smb2_reconnect(smb2_command, tcon);
++	if (rc)
++		return rc;
++
++	return __smb2_plain_req_init(smb2_command, tcon, request_buf,
++				     total_len);
++}
++
++static int smb2_ioctl_req_init(u32 opcode, struct cifs_tcon *tcon,
++			       void **request_buf, unsigned int *total_len)
++{
++	/* Skip reconnect only for FSCTL_VALIDATE_NEGOTIATE_INFO IOCTLs */
++	if (opcode == FSCTL_VALIDATE_NEGOTIATE_INFO) {
++		return __smb2_plain_req_init(SMB2_IOCTL, tcon, request_buf,
++					     total_len);
++	}
++	return smb2_plain_req_init(SMB2_IOCTL, tcon, request_buf, total_len);
+ }
+ 
+ /* For explanation of negotiate contexts see MS-SMB2 section 2.2.3.1 */
+@@ -2661,7 +2678,7 @@ SMB2_ioctl_init(struct cifs_tcon *tcon,
+ 	int rc;
+ 	char *in_data_buf;
+ 
+-	rc = smb2_plain_req_init(SMB2_IOCTL, tcon, (void **) &req, &total_len);
++	rc = smb2_ioctl_req_init(opcode, tcon, (void **) &req, &total_len);
+ 	if (rc)
+ 		return rc;
  
 
 
