@@ -2,69 +2,137 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C4FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0C4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA032072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="OwKjuKYc"
+	by mail.kernel.org (Postfix) with ESMTP id 5638A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgAGOAP (ORCPT
+        id S1728202AbgAGOAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:00:15 -0500
-Received: from onstation.org ([52.200.56.107]:59478 "EHLO onstation.org"
+        Tue, 7 Jan 2020 09:00:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:60315 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbgAGOAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:00:15 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 640D53EE6F;
-        Tue,  7 Jan 2020 14:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1578405614;
-        bh=F6/bC3WaEdJIW6MX3Lz//wft6IJlpoSxsTV7q3G+ET0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OwKjuKYc5PBpQN6DascPHMtS70Wop9JG59kZqpgakYCOjrEbYgMMrxTUlcKPbz0Fm
-         hTn4Idz97xS9Yb5Q/3v/HskYI0L4VttgS6RrDIxSVXNCeoCiWHDYMr+EYD1xR/+x0d
-         k4qZI6kJ6yZguJHqmedjvPx9S76EAU6roaqNetnc=
-Date:   Tue, 7 Jan 2020 09:00:14 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     robdclark@gmail.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] iommu/qcom: fix NULL pointer dereference during probe
- deferral
-Message-ID: <20200107140013.GA9084@onstation.org>
-References: <20200101033949.755-1-masneyb@onstation.org>
- <20200107132530.GC30750@8bytes.org>
+        id S1728037AbgAGOAt (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:00:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:00:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="225676433"
+Received: from xiangfum-mobl1.ccr.corp.intel.com (HELO [10.254.208.77]) ([10.254.208.77])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Jan 2020 06:00:46 -0800
+Subject: Re: [PATCH v2 2/3] perf util: Flexible to set block info output
+ formats
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200106194525.12228-1-yao.jin@linux.intel.com>
+ <20200106194525.12228-2-yao.jin@linux.intel.com>
+ <20200107100637.GE290055@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <99bac5b2-4fa8-c3f4-e558-13b64de4378e@linux.intel.com>
+Date:   Tue, 7 Jan 2020 22:00:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107132530.GC30750@8bytes.org>
+In-Reply-To: <20200107100637.GE290055@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:25:30PM +0100, Joerg Roedel wrote:
-> On Tue, Dec 31, 2019 at 10:39:49PM -0500, Brian Masney wrote:
-> >  drivers/iommu/qcom_iommu.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
+
+
+On 1/7/2020 6:06 PM, Jiri Olsa wrote:
+> On Tue, Jan 07, 2020 at 03:45:24AM +0800, Jin Yao wrote:
+>> Currently we use a predefined array to set the
+>> block info output formats, it's fixed and inflexible.
+>>
+>> This patch adds two parameters "block_hpps" and "nr_hpps"
+>> in block_info__create_report and other static functions,
+>> in order to let user decide which columns to report and
+>> with specified report ordering. It should be more flexible.
+>>
+>> Buffers will be allocated to contain the new fmts, of course,
+>> we need to release them before perf exits.
+>>
+>>   v2:
+>>   ---
+>>   New patch created in v2.
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/builtin-report.c  | 25 +++++++++++---
+>>   tools/perf/util/block-info.c | 64 ++++++++++++++++++++++++++----------
+>>   tools/perf/util/block-info.h | 12 +++++--
+>>   3 files changed, 76 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>> index de988589d99b..81ae1f862d11 100644
+>> --- a/tools/perf/builtin-report.c
+>> +++ b/tools/perf/builtin-report.c
+>> @@ -104,6 +104,7 @@ struct report {
+>>   	bool			symbol_ipc;
+>>   	bool			total_cycles_mode;
+>>   	struct block_report	*block_reports;
+>> +	int			nr_block_reports;
+>>   };
+>>   
+>>   static int report__config(const char *var, const char *value, void *cb)
+>> @@ -503,7 +504,7 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
+>>   		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
+>>   						 rep->min_percent, pos,
+>>   						 &rep->session->header.env,
+>> -						 &rep->annotation_opts);
+>> +						 &rep->annotation_opts, true);
+>>   		if (ret != 0)
+>>   			return ret;
+>>   	}
+>> @@ -536,7 +537,7 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>>   		if (rep->total_cycles_mode) {
+>>   			report__browse_block_hists(&rep->block_reports[i++].hist,
+>>   						   rep->min_percent, pos,
+>> -						   NULL, NULL);
+>> +						   NULL, NULL, true);
+>>   			continue;
+>>   		}
+>>   
+>> @@ -966,8 +967,19 @@ static int __cmd_report(struct report *rep)
+>>   	report__output_resort(rep);
+>>   
+>>   	if (rep->total_cycles_mode) {
+>> +		int block_hpps[6] = {
+>> +			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+>> +			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>> +			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>> +			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>> +			PERF_HPP_REPORT__BLOCK_RANGE,
+>> +			PERF_HPP_REPORT__BLOCK_DSO,
+>> +		};
 > 
-> Shortened commit-message a bit and applied for v5.5, thanks.
+> I'd understand this change if there was another place in the code using
+> this, but it's not part of this patchset.. is it comming later?
+> 
 
-You might want to hold off on applying this since it looks like Robin
-Murphy has a better fix.
+Yes, you guessed it. :)
 
-https://lore.kernel.org/lkml/fc055443-8716-4a0e-b4d5-311517d71ea0@arm.com/
+I will have some follow-up patches, maybe post some weeks later.
 
-Brian
+Thanks
+Jin Yao
 
+> thanks,
+> jirka
+> 
