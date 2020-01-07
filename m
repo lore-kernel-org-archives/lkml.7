@@ -2,147 +2,119 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E514CC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7033C32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00C3207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9338E207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578366872;
+	bh=E9/8p5B7oPg0uiqg4UpaYHTvWRDU095e/2vCZwqujMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SD4v4RIQQg4maqv24j4grjaRbl2McCLOLqTn0M5GLjh14rRkpdEuzdcG3UMDOhX3V
+	 UG65XMR/c33rAfSwLSEeA46i2Eb5ZwQZHNr0P4CNt6pFs/AwdogzIQW45+pJCAPWJM
+	 ctnK8NXQzsk+9zujxv1TuLkNNCJYM2iVGGN0uS/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgAGDLX (ORCPT
+        id S1727465AbgAGDOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:11:23 -0500
-Received: from mga14.intel.com ([192.55.52.115]:30988 "EHLO mga14.intel.com"
+        Mon, 6 Jan 2020 22:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbgAGDLV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:11:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 19:11:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
-   d="scan'208";a="217009587"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jan 2020 19:11:19 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 3/3] perf util: Support color ops to print block percents in color
-Date:   Tue,  7 Jan 2020 03:45:25 +0800
-Message-Id: <20200106194525.12228-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106194525.12228-1-yao.jin@linux.intel.com>
-References: <20200106194525.12228-1-yao.jin@linux.intel.com>
+        id S1727295AbgAGDOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:14:31 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B182F2075A;
+        Tue,  7 Jan 2020 03:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578366871;
+        bh=E9/8p5B7oPg0uiqg4UpaYHTvWRDU095e/2vCZwqujMM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z73zzkF7jkeYbFC1ete0J7l5Gs1w/r8FTSQEiafb0NuioT7quruDw+3kM6BpBpB3P
+         5A0xQEbQIlIOOPmDr/RHVoIEmGG8ADIOlTINhJA4sUh0qUVolTKFCP8CWq+HBKWG62
+         RtNasi6iojBE7PtSQRqDL6hGnHWoD/uHrWr0+9DQ=
+Date:   Mon, 6 Jan 2020 19:14:29 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     zhou_xianrong <zhou_xianrong@sohu.com>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org, agk@redhat.com,
+        snitzer@redhat.com, wanbin.wang@transsion.com,
+        haizhou.song@transsion.com,
+        "xianrong.zhou" <xianrong.zhou@transsion.com>,
+        "yuanjiong . gao" <yuanjiong.gao@transsion.com>,
+        "ruxian . feng" <ruxian.feng@transsion.com>
+Subject: Re: [PATCH] dm-verity:unnecessary data blocks that need not read
+ hash blocks
+Message-ID: <20200107031429.GA705@sol.localdomain>
+References: <20200107024843.8660-1-zhou_xianrong@sohu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107024843.8660-1-zhou_xianrong@sohu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice to print the block percents with colors.
+On Tue, Jan 07, 2020 at 10:48:43AM +0800, zhou_xianrong wrote:
 
-This patch supports the 'Sampled Cycles%' and 'Avg Cycles%'
-printed in colors.
+> Subject: [PATCH] dm-verity:unnecessary data blocks that need not read
 
-For example,
+Please use a proper commit subject.  It should begin with "dm verity: " and use
+the imperative tense to describe the change, e.g.
 
-perf record -b ...
-perf report --total-cycles or perf report --total-cycles --stdio
+	dm verity: don't prefetch hash blocks for already-verified data
 
-percent > 5%, colored in red
-percent > 0.5%, colored in green
-percent < 0.5%, default color
+Also this should have been "PATCH v2", not simply PATCH, since you already sent
+out a previous version.
 
- v2:
- ---
- No functional change
+You also sent out multiple copies of this email for some reason, so I just chose
+one arbitrarily to reply to...
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/util/block-info.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+> index 4fb33e7..4127711 100644
+> --- a/drivers/md/dm-verity-target.c
+> +++ b/drivers/md/dm-verity-target.c
+> @@ -611,8 +611,27 @@ static void verity_prefetch_io(struct work_struct *work)
+>  
+>  static void verity_submit_prefetch(struct dm_verity *v, struct dm_verity_io *io)
+>  {
+> +	sector_t block = io->block;
+> +	unsigned int n_blocks = io->n_blocks;
+>  	struct dm_verity_prefetch_work *pw;
+>  
+> +	if (v->validated_blocks) {
+> +		while (n_blocks) {
+> +			if (unlikely(!test_bit(block, v->validated_blocks)))
+> +				break;
+> +			block++;
+> +			n_blocks--;
+> +		}
+> +		while (n_blocks) {
+> +			if (unlikely(!test_bit(block + n_blocks - 1,
+> +				v->validated_blocks)))
+> +				break;
+> +			n_blocks--;
+> +		}
+> +		if (!n_blocks)
+> +			return;
+> +	}
 
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 0818db17b3f2..60b3a0107177 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -185,6 +185,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
- 	return block_fmt->width;
- }
- 
-+static int color_pct(struct perf_hpp *hpp, int width, double pct)
-+{
-+#ifdef HAVE_SLANG_SUPPORT
-+	if (use_browser) {
-+		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
-+						 width - 1, pct);
-+	}
-+#endif
-+	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
-+}
-+
- static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 					struct perf_hpp *hpp,
- 					struct hist_entry *he)
-@@ -192,14 +203,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
--	char buf[16];
- 
- 	if (block_fmt->total_cycles)
- 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
-@@ -252,16 +260,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
- 	u64 avg;
--	char buf[16];
- 
- 	if (block_fmt->block_cycles && bi->num_aggr) {
- 		avg = bi->cycles_aggr / bi->num_aggr;
- 		ratio = (double)avg / (double)block_fmt->block_cycles;
- 	}
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
-@@ -348,7 +353,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 
- 	switch (idx) {
- 	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
--		fmt->entry = block_total_cycles_pct_entry;
-+		fmt->color = block_total_cycles_pct_entry;
- 		fmt->cmp = block_info__cmp;
- 		fmt->sort = block_total_cycles_pct_sort;
- 		break;
-@@ -356,7 +361,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 		fmt->entry = block_cycles_lbr_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
--		fmt->entry = block_cycles_pct_entry;
-+		fmt->color = block_cycles_pct_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
- 		fmt->entry = block_avg_cycles_entry;
--- 
-2.17.1
+This looks fine now, though it's a bit more verbose than necessary, and I don't
+think unlikely() will make any difference here.  Consider simplifying it to:
 
+	if (v->validated_blocks) {
+		while (n_blocks && test_bit(block, v->validated_blocks)) {
+			block++;
+			n_blocks--;
+		}
+		while (n_blocks && test_bit(block + n_blocks - 1,
+					    v->validated_blocks))
+			n_blocks--;
+		if (!n_blocks)
+			return;
+	}
