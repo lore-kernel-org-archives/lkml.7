@@ -2,138 +2,54 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B79C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20ADA206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ue5Czogp"
+	by mail.kernel.org (Postfix) with ESMTP id 6C12E20715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgAGWax (ORCPT
+        id S1727466AbgAGWcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:30:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38481 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727174AbgAGWaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:30:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578436251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FN/82vVAxc6XEGEfrEz5NnjIGWwecvczTJRijpb0J5I=;
-        b=Ue5CzogpB5PNr7hx9NpHn5Eg2dRB02WL7pZO0XqQv5fviL52SExJ8wH1QsH4AQgf7D1Dv/
-        pKW6iWD+1myI7IeewlhE2o45THxv7uYqc7JrjM0yQWZWoz1w2LGFfBhJgJgYZRgiXzp4Zj
-        w19dRzZ9Se8EAh/sgmIuZe5oCrwcjaM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-pXs9sK5SP0a-kkriMQE20A-1; Tue, 07 Jan 2020 17:30:48 -0500
-X-MC-Unique: pXs9sK5SP0a-kkriMQE20A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BE501800D4E;
-        Tue,  7 Jan 2020 22:30:46 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 19F1A7FB65;
-        Tue,  7 Jan 2020 22:30:40 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 06:30:35 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>
-Subject: Re: [PATCH] block: fix splitting segments
-Message-ID: <20200107223035.GA7505@ming.t460p>
-References: <20191229023230.28940-1-ming.lei@redhat.com>
- <20200107124708.GA20285@roeck-us.net>
- <20200107152339.GA23622@ming.t460p>
- <20200107181145.GA22076@roeck-us.net>
+        Tue, 7 Jan 2020 17:32:10 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:37618 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgAGWcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:32:10 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioxOP-000534-Gq; Tue, 07 Jan 2020 23:32:05 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: rk3399-firefly: remove num-slots from &sdio0 node
+Date:   Tue, 07 Jan 2020 23:32:04 +0100
+Message-ID: <2012646.CMKZZmdTN9@phil>
+In-Reply-To: <20191231191154.5587-1-jbx6244@gmail.com>
+References: <20191231191154.5587-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107181145.GA22076@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:11:45AM -0800, Guenter Roeck wrote:
-> On Tue, Jan 07, 2020 at 11:23:39PM +0800, Ming Lei wrote:
-> > On Tue, Jan 07, 2020 at 04:47:08AM -0800, Guenter Roeck wrote:
-> > > Hi,
-> > > 
-> > > On Sun, Dec 29, 2019 at 10:32:30AM +0800, Ming Lei wrote:
-> > > > There are two issues in get_max_segment_size():
-> > > > 
-> > > > 1) the default segment boudary mask is bypassed, and some devices still
-> > > > require segment to not cross the default 4G boundary
-> > > > 
-> > > > 2) the segment start address isn't taken into account when checking
-> > > > segment boundary limit
-> > > > 
-> > > > Fixes the two issues.
-> > > > 
-> > > > Fixes: dcebd755926b ("block: use bio_for_each_bvec() to compute multi-page bvec count")
-> > > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > > 
-> > > This patch, pushed into mainline as "block: fix splitting segments on
-> > > boundary masks", results in the following crash when booting 'versatilepb'
-> > > in qemu from disk. Bisect log is attached. Detailed log is at
-> > > https://kerneltests.org/builders/qemu-arm-master/builds/1410/steps/qemubuildcommand/logs/stdio
-> > > 
-> > > Guenter
-> > > 
-> > > ---
-> > > Crash:
-> > > 
-> > > kernel BUG at block/bio.c:1885!
-> > > Internal error: Oops - BUG: 0 [#1] ARM
-> > 
-> > Please apply the following debug patch, and post the log.
-> > 
+Am Dienstag, 31. Dezember 2019, 20:11:54 CET schrieb Johan Jonker:
+> The option "num-slots" was deprecated long time ago, so remove it.
 > 
-> Here you are:
-> 
-> max_sectors 2560 max_segs 96 max_seg_size 65536 mask ffffffff
-> c738da80: 8c80/0 2416 28672, 0
->          total sectors 56
-> 
-> (I replaced %p with %px).
-> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Please try the following patch and see if it makes a difference.
-If not, replace trace_printk with printk in previous debug patch,
-and apply the debug patch only & post the log.
+applied for 5.6
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 347782a24a35..f152bdee9b05 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -159,12 +159,12 @@ static inline unsigned get_max_io_size(struct request_queue *q,
- 
- static inline unsigned get_max_segment_size(const struct request_queue *q,
- 					    struct page *start_page,
--					    unsigned long offset)
-+					    unsigned long long offset)
- {
- 	unsigned long mask = queue_segment_boundary(q);
- 
- 	offset = mask & (page_to_phys(start_page) + offset);
--	return min_t(unsigned long, mask - offset + 1,
-+	return min_t(unsigned long long, mask - offset + 1,
- 		     queue_max_segment_size(q));
- }
- 
+Thanks
+Heiko
 
-Thanks,
-Ming
 
