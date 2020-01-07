@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDD9C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48894C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB7D214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CA1208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431039;
-	bh=oXd5dKaowLc4ClFuqWWYnG6HXOWV+nA6qCKogbnQTPc=;
+	s=default; t=1578431044;
+	bh=qQqkLG6E4zlxNyW71ejH7Xg6ZNSF3zn+NcXKNezev8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTOPQns1aSud28umFUL8yWgZOUPL9EG6+huA6XV83+dtYS/poee6n81l2Ep6ruAxg
-	 cAMLmxca6EBFk07hmL5ziIMXpLgRqGpjMwJ7YA7FrjyjkRQrfFFwT/422iyx+9dFy5
-	 /o3JA9WqDQNxw7fOjGB1Zpmi5lmNKcEI2mZ72ScI=
+	b=AGtthZ9SHbkLKZbXT7K5Goh0rlZmBdq0G8Z2vgbwqd8y+oORT5KDnUqTHK8vMyA9L
+	 JdnrVTAYgYd9qTwtxSitP5ODF2o9/rNGzP+gOuBdUaZ93FN5e4z3hBDwTcKqGLE71o
+	 cEEpzLrDqKfBzCQ44qeCiLRJcLcgTFjpqu6lWXz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgAGVD6 (ORCPT
+        id S1729004AbgAGVEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:04:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgAGVDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:52 -0500
+        id S1728043AbgAGVDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87A1020678;
-        Tue,  7 Jan 2020 21:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B7E2081E;
+        Tue,  7 Jan 2020 21:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431032;
-        bh=oXd5dKaowLc4ClFuqWWYnG6HXOWV+nA6qCKogbnQTPc=;
+        s=default; t=1578431034;
+        bh=qQqkLG6E4zlxNyW71ejH7Xg6ZNSF3zn+NcXKNezev8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjnaRPmcheJZeftCVz1dyXT5xn9UgfnhNL38Gpo63ieVYA3fcZnalNpLSt/eL5ERs
-         eyHqiR429EdzNtvhnBhhCACAtAOV7YREBllT7TFyAuctbyvOrq++9fd/tCTvnV3FwP
-         CLml/972mym2AT7CJtDKDZ5lbnXPX102I9R8ZCRk=
+        b=RiIr8yTyknmDAemZk5w80NFsfxsIcumO2e5cFw5mi8kurtfVb2Byb1TllYNA4dmdu
+         FZF634h8InI+9byBlAZ8pWtIpWHgUgbnytCUaLTmJt++swdxufgR1cJcOFts4yfppA
+         HMprsuvWtqvAXEfw8Lryus4dHzD4M6a8L+XllpWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Aurelien Aptel <aaptel@suse.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 170/191] cifs: Fix lookup of root ses in DFS referral cache
-Date:   Tue,  7 Jan 2020 21:54:50 +0100
-Message-Id: <20200107205342.101065922@linuxfoundation.org>
+        stable@vger.kernel.org, Deepa Dinamani <deepa.kernel@gmail.com>,
+        stfrench@microsoft.com, linux-cifs@vger.kernel.org
+Subject: [PATCH 5.4 171/191] fs: cifs: Fix atime update check vs mtime
+Date:   Tue,  7 Jan 2020 21:54:51 +0100
+Message-Id: <20200107205342.153253181@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,57 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara (SUSE) <pc@cjr.nz>
+From: Deepa Dinamani <deepa.kernel@gmail.com>
 
-commit df3df923b31d298c3d3653a0380202b9f2df9864 upstream.
+commit 69738cfdfa7032f45d9e7462d24490e61cf163dd upstream.
 
-We don't care about module aliasing validation in
-cifs_compose_mount_options(..., is_smb3) when finding the root SMB
-session of an DFS namespace in order to refresh DFS referral cache.
+According to the comment in the code and commit log, some apps
+expect atime >= mtime; but the introduced code results in
+atime==mtime.  Fix the comparison to guard against atime<mtime.
 
-The following issue has been observed when mounting with '-t smb3' and
-then specifying 'vers=2.0':
-
-...
-Nov 08 15:27:08 tw kernel: address conversion returned 0 for FS0.WIN.LOCAL
-Nov 08 15:27:08 tw kernel: [kworke] ==> dns_query((null),FS0.WIN.LOCAL,13,(null))
-Nov 08 15:27:08 tw kernel: [kworke] call request_key(,FS0.WIN.LOCAL,)
-Nov 08 15:27:08 tw kernel: [kworke] ==> dns_resolver_cmp(FS0.WIN.LOCAL,FS0.WIN.LOCAL)
-Nov 08 15:27:08 tw kernel: [kworke] <== dns_resolver_cmp() = 1
-Nov 08 15:27:08 tw kernel: [kworke] <== dns_query() = 13
-Nov 08 15:27:08 tw kernel: fs/cifs/dns_resolve.c: dns_resolve_server_name_to_ip: resolved: FS0.WIN.LOCAL to 192.168.30.26
-===> Nov 08 15:27:08 tw kernel: CIFS VFS: vers=2.0 not permitted when mounting with smb3
-Nov 08 15:27:08 tw kernel: fs/cifs/dfs_cache.c: CIFS VFS: leaving refresh_tcon (xid = 26) rc = -22
-...
-
-Fixes: 5072010ccf05 ("cifs: Fix DFS cache refresher for DFS links")
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Fixes: 9b9c5bea0b96 ("cifs: do not return atime less than mtime")
+Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: stfrench@microsoft.com
+Cc: linux-cifs@vger.kernel.org
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/dfs_cache.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/cifs/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/dfs_cache.c
-+++ b/fs/cifs/dfs_cache.c
-@@ -1317,7 +1317,6 @@ static struct cifs_ses *find_root_ses(st
- 	int rc;
- 	struct dfs_info3_param ref = {0};
- 	char *mdata = NULL, *devname = NULL;
--	bool is_smb3 = tcon->ses->server->vals->header_preamble_size == 0;
- 	struct TCP_Server_Info *server;
- 	struct cifs_ses *ses;
- 	struct smb_vol vol;
-@@ -1344,7 +1343,7 @@ static struct cifs_ses *find_root_ses(st
- 		goto out;
- 	}
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -163,7 +163,7 @@ cifs_fattr_to_inode(struct inode *inode,
  
--	rc = cifs_setup_volume_info(&vol, mdata, devname, is_smb3);
-+	rc = cifs_setup_volume_info(&vol, mdata, devname, false);
- 	kfree(devname);
- 
- 	if (rc) {
+ 	spin_lock(&inode->i_lock);
+ 	/* we do not want atime to be less than mtime, it broke some apps */
+-	if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime))
++	if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime) < 0)
+ 		inode->i_atime = fattr->cf_mtime;
+ 	else
+ 		inode->i_atime = fattr->cf_atime;
 
 
