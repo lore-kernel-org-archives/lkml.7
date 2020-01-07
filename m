@@ -2,74 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66E0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD97C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFA82072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7E12077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578431710;
+	bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NWrN3LOLBRJYMrtsY+VJWXLrGb3EII2yKHufl8nKDkGbfWTEc1c0J1Bkq0upLegPG
+	 wVp1fXvXswXsoGYwiYVEWnYykdENh3p0AkaiWSXQ1s9sWeH8yauHtR/77hQJzs7ObB
+	 pbhMc2Ho8n0ZUGKaZeYVR1peJw4bHnTq+2YuJDL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgAGVIl (ORCPT
+        id S1729877AbgAGVPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:41 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37159 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729389AbgAGVIf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:35 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007L7OUj026037
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 16:07:27 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id BA95E4207DF; Tue,  7 Jan 2020 16:07:24 -0500 (EST)
-Date:   Tue, 7 Jan 2020 16:07:24 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Qian Cai <cai@lca.pw>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
-        rostedt@goodmis.org, catalin.marinas@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, peterz@infradead.org, longman@redhat.com,
-        tglx@linutronix.de, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char/random: silence a lockdep splat with printk()
-Message-ID: <20200107210724.GN3619@mit.edu>
-References: <1573679785-21068-1-git-send-email-cai@lca.pw>
+        Tue, 7 Jan 2020 16:15:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729379AbgAGVIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C1E2077B;
+        Tue,  7 Jan 2020 21:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431313;
+        bh=hH3BpXvUSthOpywz1EXtWem4Tr0fToBTO+LJZEemSFc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UCB4Ts3bhoBrrXBftsekZZywwAkWAvStq01OtX6XO6A0XjIiRsVzbCUUG0yveJHlx
+         Sq203F65BuuWFx5UjLjWikg17n30EexzoJwFMxsde+lFFNSwHia3btsXgrsgxsnIeI
+         FegNptjgoOeJ8p2vM44nZFf8OnZx7QkmdCy//6Bg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.19 089/115] media: flexcop-usb: ensure -EIO is returned on error condition
+Date:   Tue,  7 Jan 2020 21:54:59 +0100
+Message-Id: <20200107205306.668297634@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573679785-21068-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 04:16:25PM -0500, Qian Cai wrote:
-> From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-> 
-> Sergey didn't like the locking order,
-> 
-> uart_port->lock  ->  tty_port->lock
-> 
-> uart_write (uart_port->lock)
->   __uart_start
->     pl011_start_tx
->       pl011_tx_chars
->         uart_write_wakeup
->           tty_port_tty_wakeup
->             tty_port_default
->               tty_port_tty_get (tty_port->lock)
-> 
-> but those code is so old, and I have no clue how to de-couple it after
-> checking other locks in the splat. There is an onging effort to make all
-> printk() as deferred, so until that happens, workaround it for now as a
-> short-term fix.
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied, thanks.
+commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
 
-					- Ted
+An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
+even though the an -EIO was intended to be returned in the case where
+ret != buflen.  Fix this by replacing the return 0 with the return of
+ret to return the error return code.
+
+Addresses-Coverity: ("Unused value")
+
+Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -294,7 +294,7 @@ static int flexcop_usb_i2c_req(struct fl
+ 
+ 	mutex_unlock(&fc_usb->data_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /* actual bus specific access functions,
+
+
