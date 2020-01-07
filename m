@@ -2,226 +2,153 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64074C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4E6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBF32081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A774F2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N6FkUc8u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYB3jpo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgAGTDP (ORCPT
+        id S1728726AbgAGTFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:03:15 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:40956 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgAGTDP (ORCPT
+        Tue, 7 Jan 2020 14:05:17 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44043 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgAGTFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:03:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007Ixl88041642;
-        Tue, 7 Jan 2020 19:03:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=pP16p7CV5biucxONI1CRWwnudpCh2Qi23iKl1PGz9LU=;
- b=N6FkUc8uj9VXenfU0c2VcsoliMtTS1p0znfOAfeQ9EsHfSXpNx3QARReX3CQaDxCxWWN
- qcHCOY20RNX5dkMFqktZpRcj4zqvwn3NVoykkV4ixXFUikVxd970Gy+bHdVBFhrJ5hDu
- jrzcHMUaFqmNcx+ps0MORoKuohfsmAKYopXF+TOQHdtnnoPJdf80lVUtqf8qitZVPuKV
- LCOkAcrosCgRFLrFydJh7EX5CAtInoOUiBikY6HuUr9+M7a/ERlvVhpJQ7x3xKsVGmq2
- qZE+K7uf4+mazdelDWgUzXiWiMGdncChudF15pHR1N7IO4Oc8WS/1a2G6NsXHoNZlCNZ kg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xaj4tynfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 19:03:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007IsJxd089569;
-        Tue, 7 Jan 2020 19:03:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xcpcqvtmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 19:03:01 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 007J30x7016123;
-        Tue, 7 Jan 2020 19:03:00 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 11:03:00 -0800
-Date:   Tue, 7 Jan 2020 11:02:58 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20200107190258.GB472665@magnolia>
-References: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
- <20191216181014.GA30106@redhat.com>
- <20200107125159.GA15745@infradead.org>
- <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
- <20200107170731.GA472641@magnolia>
- <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
- <20200107180101.GC15920@redhat.com>
- <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
- <20200107183307.GD15920@redhat.com>
- <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
+        Tue, 7 Jan 2020 14:05:16 -0500
+Received: by mail-ed1-f67.google.com with SMTP id bx28so462992edb.11;
+        Tue, 07 Jan 2020 11:05:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vZHbnxQhbkfCNbXjBH5OjU/5z31AX+7RUONEgUj90PQ=;
+        b=rYB3jpo+JZNto1c9vxGzmcflyUlDW1MHAwv8d4Ibo+e4PjUqU4XXbdWKkvu5wj4Yd6
+         6+CCJd8SHTbA5rsjePZI+nB2lLPcR+LAz48e4EeEg9wlBnEYO+tDfOPPjc3OsOy3mnAU
+         SEnDCLccOZu6Fz4DJlgIqjB6XVJGctlaTo7yQrpdRGLSp285Y41FH1XwSwgcWI/CFXSu
+         IpAodx6rzkOFLwrdcp5sPk/N9ocC0XE6oYV+aupklQhWaANyeP3KGb50XaK5rt+9ZEER
+         MC2L3QZ32WbSD0FvN2cig06oe7mFdWDFeEb/08Dc5uHct88IU24h9pa9RJjSrXKnhSgc
+         Q/MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vZHbnxQhbkfCNbXjBH5OjU/5z31AX+7RUONEgUj90PQ=;
+        b=Grr5x1UwRFG6BGR9ymfonsVMJFm8zjRTOc72OwgGp7WQxyLb8gBcUY93wTN10hOs+8
+         E025loOGc+oywz8teTuUH/ZCyb15SbZoPwsysoR+D/gxaFcONKTz3aRwxe4MM5HNoAah
+         Zu194TrQKJq8m8dHxmItBWhQ1e0cf9u6X3yiVA7MCqbH5E+/1sagJFmtCqJqV5a1c3s/
+         guj1clX14M/+GbsBFPgwScjv1yGh4+ZC6TH5ur1AKZmN5/iq8O5j1Zp27GxFibFjKaZP
+         tK19nXrijhemzNPFsOSHlSbqEYEaevww6couMSfnM7DJqA8tMSRK1DInXFkaaM/s4Fda
+         +qSQ==
+X-Gm-Message-State: APjAAAXbFitvjVCtF7ry8ut0KMImNicfJvJypDbzMh02U52+Tztspu0b
+        s3t2CksUyu0gO58v84ifWzM=
+X-Google-Smtp-Source: APXvYqxpdioRq8v4DUGMsag8nw7GAoYV3iaKDW52kELylvTw3skO/OENIN/+iEMG2PeziY5Pn7UaFw==
+X-Received: by 2002:a17:906:5210:: with SMTP id g16mr874594ejm.305.1578423914031;
+        Tue, 07 Jan 2020 11:05:14 -0800 (PST)
+Received: from [10.67.50.41] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id y21sm19080edu.70.2020.01.07.11.05.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 11:05:13 -0800 (PST)
+Subject: Re: [PATCH net] net: stmmac: Fixed link does not need MDIO Bus
+To:     Jose Abreu <Jose.Abreu@synopsys.com>, netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Sriram Dash <sriram.dash@samsung.com>
+References: <5764e60da6d3af7e76c30f63b07f1a12b4787918.1578400471.git.Jose.Abreu@synopsys.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
+ S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
+ 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
+ r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
+ IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
+ Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
+ b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
+ JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
+ cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
+ +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
+ BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
+ Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
+ WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
+ P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
+ 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
+ C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
+ es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
+ 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
+ zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
+ 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
+ skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
+ 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
+ 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
+ SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
+ PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
+ WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
+ nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
+ gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
+ rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
+ QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
+ BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
+ PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
+ hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
+ OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
+ Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
+ LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
+ RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
+ k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
+ uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
+ 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
+ HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
+ TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <5d4a30a5-7af5-7147-11a9-bb5ca3564baa@gmail.com>
+Date:   Tue, 7 Jan 2020 11:05:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001070148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001070149
+In-Reply-To: <5764e60da6d3af7e76c30f63b07f1a12b4787918.1578400471.git.Jose.Abreu@synopsys.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:49:55AM -0800, Dan Williams wrote:
-> On Tue, Jan 7, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > On Tue, Jan 07, 2020 at 10:07:18AM -0800, Dan Williams wrote:
-> > > On Tue, Jan 7, 2020 at 10:02 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > >
-> > > > On Tue, Jan 07, 2020 at 09:29:17AM -0800, Dan Williams wrote:
-> > > > > On Tue, Jan 7, 2020 at 9:08 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> > > > > >
-> > > > > > On Tue, Jan 07, 2020 at 06:22:54AM -0800, Dan Williams wrote:
-> > > > > > > On Tue, Jan 7, 2020 at 4:52 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, Dec 16, 2019 at 01:10:14PM -0500, Vivek Goyal wrote:
-> > > > > > > > > > Agree. In retrospect it was my laziness in the dax-device
-> > > > > > > > > > implementation to expect the block-device to be available.
-> > > > > > > > > >
-> > > > > > > > > > It looks like fs_dax_get_by_bdev() is an intercept point where a
-> > > > > > > > > > dax_device could be dynamically created to represent the subset range
-> > > > > > > > > > indicated by the block-device partition. That would open up more
-> > > > > > > > > > cleanup opportunities.
-> > > > > > > > >
-> > > > > > > > > Hi Dan,
-> > > > > > > > >
-> > > > > > > > > After a long time I got time to look at it again. Want to work on this
-> > > > > > > > > cleanup so that I can make progress with virtiofs DAX paches.
-> > > > > > > > >
-> > > > > > > > > I am not sure I understand the requirements fully. I see that right now
-> > > > > > > > > dax_device is created per device and all block partitions refer to it. If
-> > > > > > > > > we want to create one dax_device per partition, then it looks like this
-> > > > > > > > > will be structured more along the lines how block layer handles disk and
-> > > > > > > > > partitions. (One gendisk for disk and block_devices for partitions,
-> > > > > > > > > including partition 0). That probably means state belong to whole device
-> > > > > > > > > will be in common structure say dax_device_common, and per partition state
-> > > > > > > > > will be in dax_device and dax_device can carry a pointer to
-> > > > > > > > > dax_device_common.
-> > > > > > > > >
-> > > > > > > > > I am also not sure what does it mean to partition dax devices. How will
-> > > > > > > > > partitions be exported to user space.
-> > > > > > > >
-> > > > > > > > Dan, last time we talked you agreed that partitioned dax devices are
-> > > > > > > > rather pointless IIRC.  Should we just deprecate partitions on DAX
-> > > > > > > > devices and then remove them after a cycle or two?
-> > > > > > >
-> > > > > > > That does seem a better plan than trying to force partition support
-> > > > > > > where it is not needed.
-> > > > > >
-> > > > > > Question: if one /did/ have a partitioned DAX device and used kpartx to
-> > > > > > create dm-linear devices for each partition, will DAX still work through
-> > > > > > that?
-> > > > >
-> > > > > The device-mapper support will continue, but it will be limited to
-> > > > > whole device sub-components. I.e. you could use kpartx to carve up
-> > > > > /dev/pmem0 and still have dax, but not partitions of /dev/pmem0.
-> > > >
-> > > > So we can't use fdisk/parted to partition /dev/pmem0. Given /dev/pmem0
-> > > > is a block device, I thought tools will expect it to be partitioned.
-> > > > Sometimes I create those partitions and use /dev/pmem0. So what's
-> > > > the replacement for this. People often have tools/scripts which might
-> > > > want to partition the device and these will start failing.
-> > >
-> > > Partitioning will still work, but dax operation will be declined and
-> > > fall back to page-cache.
-> >
-> > Ok, so if I mount /dev/pmem0p1 with dax enabled, that might fail or
-> > filesystem will fall back to using page cache. (But dax will not be
-> > enabled).
-> >
-> > >
-> > > > IOW, I do not understand that why being able to partition /dev/pmem0
-> > > > (which is a block device from user space point of view), is pointless.
-> > >
-> > > How about s/pointless/redundant/. Persistent memory can already be
-> > > "partitioned" via namespace boundaries.
-> >
-> > But that's an entirely different way of partitioning. To me being able
-> > to use block devices (with dax capability) in same way as any other
-> > block device makes sense.
-> >
-> > > Block device partitioning is
-> > > then redundant and needlessly complicates, as you have found, the
-> > > kernel implementation.
-> >
-> > It does complicate kernel implementation. Is it too hard to solve the
-> > problem in kernel.
-> >
-> > W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
-> > dax code refers back to block device to figure out partition offset in
-> > dax device. If we create a dax object corresponding to "struct block_device"
-> > and store sector offset in that, then we could pass that object to dax
-> > code and not worry about referring back to bdev. I have written some
-> > proof of concept code and called that object "dax_handle". I can post
-> > that code if there is interest.
+On 1/7/20 4:35 AM, Jose Abreu wrote:
+> When using fixed link we don't need the MDIO bus support.
 > 
-> I don't think it's worth it in the end especially considering
-> filesystems are looking to operate on /dev/dax devices directly and
-> remove block entanglements entirely.
-> 
-> > IMHO, it feels useful to be able to partition and use a dax capable
-> > block device in same way as non-dax block device. It will be really
-> > odd to think that if filesystem is on /dev/pmem0p1, then dax can't
-> > be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
-> > will work.
-> 
-> That can already happen today. If you do not properly align the
-> partition then dax operations will be disabled.
+> Reported-by: Heiko Stuebner <heiko@sntech.de>
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Fixes: d3e014ec7d5e ("net: stmmac: platform: Fix MDIO init for platforms without PHY")
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Er... is this conversation getting confused?  I was talking about
-kpartx's /dev/mapper/pmem0p1 being a straight replacement for the kernel
-creating /dev/pmem0p1.  I thnk Vivek was complaining about the
-inconsistent behavior between the two, even if the partition is aligned
-properly.
-
-I'm not sure how alignment leaked in here?
-
-> This proposal just
-> extends that existing failure domain to make all partitions fail to
-> support dax.
-
-Oh, wait.  You're proposing that "partitions of pmem devices don't
-support DAX", not "the kernel will not create partitions for pmem
-devices".
-
-Yeah, that would be inconsistent and weird.  I'd say deprecate the
-kernel automounting partitions, but I guess it already does that, and
-removing it would break /something/.  I guess you could put
-"/dev/pmemXpY" on the deprecation schedule.
-
---D
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Florian Fainelli <f.fainelli@gmail> # Lamobo R1 (fixed-link +
+MDIO sub node for roboswitch).
+-- 
+Florian
