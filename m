@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029B6C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA8C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94E624656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848102081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430594;
-	bh=hysfUu4p0Fqb8tnXbESrzUN74FW2jpMqqXphEDibYMA=;
+	s=default; t=1578430597;
+	bh=5BDH2OtEN2ptYmOVRek6RZcBR+CsB+tafPzud33I/ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBJpyvcYtkF31MVXOP62K3ASvyCTn3HbGjW3qaf6MdFWauWvXZMHQDN3G9APDKGea
-	 BVOoWVU8sTUUYll/tahss5Z3aTuWR3pYfVpdYjvvgd4V7nPAbziw61yyH2do8ZxZCl
-	 grTeT1l421hP4T4Gb27EaQH5KX/WCcOqL1yQTxqo=
+	b=bvwPfABITdzzE5qft56Uwm42Nmo9JTZ/pDVeGhb6lz2+gbHq7phYv7YkKmHRBHQT8
+	 kDzoWsYtF+SXoQpkrulFlU6YG5J35F2FvpYT8U7YmCLb9OhcaAsfc0TQaMYfFf1ld6
+	 omJ0yf9MwunS6bV7DWNzbFIWEzcobehTKX+mBz58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgAGU4d (ORCPT
+        id S1727227AbgAGU4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:56:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727176AbgAGU43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:29 -0500
+        id S1727192AbgAGU4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB2FE2081E;
-        Tue,  7 Jan 2020 20:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A0872081E;
+        Tue,  7 Jan 2020 20:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430589;
-        bh=hysfUu4p0Fqb8tnXbESrzUN74FW2jpMqqXphEDibYMA=;
+        s=default; t=1578430591;
+        bh=5BDH2OtEN2ptYmOVRek6RZcBR+CsB+tafPzud33I/ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/4bFLEEzw5/wbpEFbfl646XZDv5JfH48+X/AGlx/WTwug1CGCPXNG4WQw8amG+/0
-         f+pktRv778lVTcGe7VO3VteU50Ik3lBPhLEbZPeqRNYdW4aK52tuqDulyVJkSdclvm
-         BLCuxNcxjyv7pvm+Kl9PBkJglFnCvPXNaSUMQYvE=
+        b=G24lTAjoiW8X6ohWNf3KXN/7dLG0Lj/HVa8ZNvbwobpg/zkJfMsWGFTrcetd8+jpH
+         R9GEn7q1nx12ZbJvyUQVLajCEd1YY37xcR6IAO6abEwAc6ICAluOqzpOP+eLxid2RE
+         yveYLOwm1FpOixV5oVuh7y0lBUL6i13QgmpnWwXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        stable@vger.kernel.org,
+        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 005/191] drm/amdgpu: add header line for power profile on Arcturus
-Date:   Tue,  7 Jan 2020 21:52:05 +0100
-Message-Id: <20200107205333.294699840@linuxfoundation.org>
+Subject: [PATCH 5.4 006/191] drm/amdgpu: add cache flush workaround to gfx8 emit_fence
+Date:   Tue,  7 Jan 2020 21:52:06 +0100
+Message-Id: <20200107205333.346955333@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,41 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
 
-[ Upstream commit 14891c316ca7e15d81dba78f30fb630e3f9ee2c9 ]
+[ Upstream commit bf26da927a1cd57c9deb2db29ae8cf276ba8b17b ]
 
-So the output is consistent with other asics.
+The same workaround is used for gfx7.
+Both PAL and Mesa use it for gfx8 too, so port this commit to
+gfx_v8_0_ring_emit_fence_gfx.
 
-Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-index d493a3f8c07a..b68bf8dcfa78 100644
---- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-@@ -1388,12 +1388,17 @@ static int arcturus_get_power_profile_mode(struct smu_context *smu,
- 					"VR",
- 					"COMPUTE",
- 					"CUSTOM"};
-+	static const char *title[] = {
-+			"PROFILE_INDEX(NAME)"};
- 	uint32_t i, size = 0;
- 	int16_t workload_type = 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+index 87dd55e9d72b..cc88ba76a8d4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+@@ -6184,7 +6184,23 @@ static void gfx_v8_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64 addr,
+ 	bool write64bit = flags & AMDGPU_FENCE_FLAG_64BIT;
+ 	bool int_sel = flags & AMDGPU_FENCE_FLAG_INT;
  
- 	if (!smu->pm_enabled || !buf)
- 		return -EINVAL;
- 
-+	size += sprintf(buf + size, "%16s\n",
-+			title[0]);
+-	/* EVENT_WRITE_EOP - flush caches, send int */
++	/* Workaround for cache flush problems. First send a dummy EOP
++	 * event down the pipe with seq one below.
++	 */
++	amdgpu_ring_write(ring, PACKET3(PACKET3_EVENT_WRITE_EOP, 4));
++	amdgpu_ring_write(ring, (EOP_TCL1_ACTION_EN |
++				 EOP_TC_ACTION_EN |
++				 EOP_TC_WB_ACTION_EN |
++				 EVENT_TYPE(CACHE_FLUSH_AND_INV_TS_EVENT) |
++				 EVENT_INDEX(5)));
++	amdgpu_ring_write(ring, addr & 0xfffffffc);
++	amdgpu_ring_write(ring, (upper_32_bits(addr) & 0xffff) |
++				DATA_SEL(1) | INT_SEL(0));
++	amdgpu_ring_write(ring, lower_32_bits(seq - 1));
++	amdgpu_ring_write(ring, upper_32_bits(seq - 1));
 +
- 	for (i = 0; i <= PP_SMC_POWER_PROFILE_CUSTOM; i++) {
- 		/*
- 		 * Conv PP_SMC_POWER_PROFILE* to WORKLOAD_PPLIB_*_BIT
++	/* Then send the real EOP event down the pipe:
++	 * EVENT_WRITE_EOP - flush caches, send int */
+ 	amdgpu_ring_write(ring, PACKET3(PACKET3_EVENT_WRITE_EOP, 4));
+ 	amdgpu_ring_write(ring, (EOP_TCL1_ACTION_EN |
+ 				 EOP_TC_ACTION_EN |
+@@ -6926,7 +6942,7 @@ static const struct amdgpu_ring_funcs gfx_v8_0_ring_funcs_gfx = {
+ 		5 +  /* COND_EXEC */
+ 		7 +  /* PIPELINE_SYNC */
+ 		VI_FLUSH_GPU_TLB_NUM_WREG * 5 + 9 + /* VM_FLUSH */
+-		8 +  /* FENCE for VM_FLUSH */
++		12 +  /* FENCE for VM_FLUSH */
+ 		20 + /* GDS switch */
+ 		4 + /* double SWITCH_BUFFER,
+ 		       the first COND_EXEC jump to the place just
+@@ -6938,7 +6954,7 @@ static const struct amdgpu_ring_funcs gfx_v8_0_ring_funcs_gfx = {
+ 		31 + /*	DE_META */
+ 		3 + /* CNTX_CTRL */
+ 		5 + /* HDP_INVL */
+-		8 + 8 + /* FENCE x2 */
++		12 + 12 + /* FENCE x2 */
+ 		2, /* SWITCH_BUFFER */
+ 	.emit_ib_size =	4, /* gfx_v8_0_ring_emit_ib_gfx */
+ 	.emit_ib = gfx_v8_0_ring_emit_ib_gfx,
 -- 
 2.20.1
 
