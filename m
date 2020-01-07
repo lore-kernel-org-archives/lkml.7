@@ -2,260 +2,173 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD758C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC314C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA44207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D172077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDWVcu0d"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YAQSC9O3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgAGXOP (ORCPT
+        id S1727511AbgAGXPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:14:15 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42011 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgAGXOO (ORCPT
+        Tue, 7 Jan 2020 18:15:47 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43650 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgAGXPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:14:14 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y4so1319870ljj.9;
-        Tue, 07 Jan 2020 15:14:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FcIxm8AhY/2sV10O/AVFqObtg5E2pOFn+ToK2jASBfA=;
-        b=RDWVcu0debhNToXbrNLwWix9tphOSPFzNmZg0ATzXyhb7BXo0Drv1WS8XhZhnUeFky
-         BSXhu0TIf6lkPtuzoVK83bHIAASAmiZlPYfwRMsM4D2UILwAlI8DI3Ubq9uJOkp9xWIE
-         3eoyaot5PUI++fw9FA1yX0NJcbEoS2CVFL8cK6/wEW62KsrFliPN/LLIGBmr8O7ojb7t
-         badIatk4ZZwvj8KoFaYIN8TrSYiM7WZbLVKRTfeT0+1otFdpQYvJTQ7k0dGUu3HBEUzJ
-         tZWGIfe056mGBS5tUL8FiYSKu4hQcp0BSP9Ljq1fqdAy6mN+jb97gYJbRsvy9P7Hehwt
-         fFrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FcIxm8AhY/2sV10O/AVFqObtg5E2pOFn+ToK2jASBfA=;
-        b=opeYKEgN7sHv+EEBxSP5s9dwa0B3DYL898wB4rfCqKpwOjGg63LpQfbhm5/XvFki3U
-         7eq+nRXK8TqtzA0gw437Nel+cNVM9Pxm75N5e5Z5lM6nnH/42142OMV8Tf3aWN52Hd5Z
-         QfPIkZGJh+9xIenm32MOIU5uex6gKoShZQiJpg8pxk1m7OXHfd0xNfYzyfTLFDevEikV
-         6mXc3W/QGhqItB8EggWRXYhephgbQ9EXmvjcqoVBVRAUPukYjx6sXDqkINBy2etHj6vX
-         bS3AiSBQ5zl8+oAwtEKiXqP6ZASrEbkBLMpPSoMefT5LFf3/m2QBKeN55lIi6+sa2Lsp
-         lE0w==
-X-Gm-Message-State: APjAAAU/gJqdVZFRy3Oy7lLQ33S3u7XPfsoik47I4nkL1AT2w+pAvO9W
-        cpUmwDY+b08A9dg3S8uaWsQlaj7n
-X-Google-Smtp-Source: APXvYqyqWTJ1hG6DpDoOVUDKrL0vprZzJ9V3h8Xs6/SktZvXFRu+OD8b0X9+SUyR5r1wiRUnD3PkmQ==
-X-Received: by 2002:a2e:97d9:: with SMTP id m25mr1099475ljj.146.1578438851726;
-        Tue, 07 Jan 2020 15:14:11 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p136sm472706lfa.8.2020.01.07.15.14.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 15:14:11 -0800 (PST)
-Subject: Re: [PATCH v9 00/17] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 7 Jan 2020 18:15:46 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007N9a7f042422;
+        Tue, 7 Jan 2020 23:15:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=WpsBbFX5r44G2/iXWy3Z8/bfxahWOQDAfZxzk6WB/Zg=;
+ b=YAQSC9O3UeFeLreC1t7t1YB5cIL/Kimf3vX9z/bc4Gjw0ePD5kjKp5ENHmbOcUIwGTaQ
+ xu5A3y5C7veYMqyyOHx76znLqVKFsfknzZTfKtZnTry5kF5rK+7A9NfWBVsZrsl7kfx2
+ D7xD4a6k8Gkzfa3k6tZXSI6t5unm2gD2zSGX5/PjMKGrE+64nglNagYTEO/BqfheHMil
+ fR8JBbz9z/4b3z+FEMB7IG+4k3B319IV+uT5WjDTPZfZx/HCGiTor+sDgIuoSYODgtHX
+ 5XezPBdmeSxWRJ0RFshS3SPNeADi07HoO5bb04chMppLRLFLy0F8nLDickKvVqzNR5ID 2g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xaj4u0s82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 23:15:27 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NE9M3074156;
+        Tue, 7 Jan 2020 23:15:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xcjve77yf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 23:15:26 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007NFOSG001342;
+        Tue, 7 Jan 2020 23:15:24 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 15:15:24 -0800
+Date:   Tue, 7 Jan 2020 15:15:22 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20191218210503.6689-1-digetx@gmail.com>
-Message-ID: <b4220470-8ed4-d819-846c-3ea44c37eac3@gmail.com>
-Date:   Wed, 8 Jan 2020 02:14:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+Message-ID: <20200107231522.GC472641@magnolia>
+References: <20191228143651.bjb4sjirn2q3xup4@pali>
+ <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
+ <20200101181054.GB191637@mit.edu>
+ <20200101183920.imncit5sllj46c22@pali>
+ <20200102215754.GA1508646@magnolia>
+ <20200102220800.nasrhtz23xkqxxkg@pali>
 MIME-Version: 1.0
-In-Reply-To: <20191218210503.6689-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200102220800.nasrhtz23xkqxxkg@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070185
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.12.2019 00:04, Dmitry Osipenko пишет:
-> Hello,
+On Thu, Jan 02, 2020 at 11:08:00PM +0100, Pali Roh�r wrote:
+> On Thursday 02 January 2020 13:57:54 Darrick J. Wong wrote:
+> > On Wed, Jan 01, 2020 at 07:39:20PM +0100, Pali Roh�r wrote:
+> > > On Wednesday 01 January 2020 13:10:54 Theodore Y. Ts'o wrote:
+> > > > On Tue, Dec 31, 2019 at 04:54:18PM -0600, Eric Sandeen wrote:
+> > > > > > Because I was not able to find any documentation for it, what is format
+> > > > > > of passed buffer... null-term string? fixed-length? and in which
+> > > > > > encoding? utf-8? latin1? utf-16? or filesystem dependent?
+> > > > > 
+> > > > > It simply copies the bits from the memory location you pass in, it knows
+> > > > > nothing of encodings.
+> > > > > 
+> > > > > For the most part it's up to the filesystem's own utilities to do any
+> > > > > interpretation of the resulting bits on disk, null-terminating maximal-length
+> > > > > label strings, etc.
+> > > > 
+> > > > I'm not sure this is going to be the best API design choice.  The
+> > > > blkid library interprets the on disk format for each file syustem
+> > > > knowing what is the "native" format for that particular file system.
+> > > > This is mainly an issue only for the non-Linux file systems; for the
+> > > > Linux file system, the party line has historically been that we don't
+> > > > get involved with character encoding, but in practice, what that has
+> > > > evolved into is that userspace has standardized on UTF-8, and that's
+> > > > what we pass into the kernel from userspace by convention.
+> > > > 
+> > > > But the problem is that if the goal is to make FS_IOC_GETFSLABEL and
+> > > > FS_IOC_SETFSLABEL work without the calling program knowing what file
+> > > > system type a particular pathname happens to be, then it would be
+> > > > easist for the userspace program if it can expect that it can always
+> > > > pass in a null-terminated UTF-8 string, and get back a null-terminated
+> > > > UTF-8.  I bet that in practice, that is what most userspace programs
+> > > > are going to be do anyway, since it works that way for all other file
+> > > > system syscalls.
+> > 
+> > "Null terminated sequence of bytes*" is more or less what xfsprogs do,
+> > and it looks like btrfs does that as well.
+> > 
+> > (* with the idiotic exception that if the label is exactly 256 bytes long
+> > then the array is not required to have a null terminator, because btrfs
+> > encoded that quirk of their ondisk format into the API. <grumble>)
+> > 
+> > So for VFAT, I think you can use the same code that does the name
+> > encoding transformations for iocharset= to handle labels, right?
 > 
-> This series does the following:
-> 
->   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->      into common drivers/cpuidle/ directory.
-> 
->   2. Preapres code for CPU cluster power-down idling state enabling on
->      Tegra30.
-> 
-> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> and of the Tegra's arch code in general. Please review, thanks!
-> 
-> WARNING!!! This series in made on top of CPUFreq patches [1]. The CPUFreq
-> patches should be applied first, otherwise there will be a minor merge
-> conflict in 'arch/arm/mach-tegra/tegra.c' because CPUFreq patches add a
-> new simple-platform device for Tegra30 [2].
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=149451
-> [2] https://patchwork.ozlabs.org/patch/1212772/
-> 
-> Changelog:
-> 
-> v9: - Rebased on recent linux-next. Dropped the v8 "Avoid NULL dereference.."
->       patch as a result, it's not needed anymore.
-> 
->     - Temporarily dropped "cpuidle: tegra: Support CPU cluster power-down
->       state on Tegra30" patch because Michał Mirosław reported that it causes
->       problem for ASUS TF300T Tegra30 device, we'll have to resolve the
->       problem first.
-> 
->     - Added ACKs from Peter De Schrijver to the patches.
-> 
-> v8: - Rebased on recent linux-next, now making use of
->       cpuidle_driver_state_disabled(). Added new patch to make this new API
->       usable by the updated Tegra cpuidle driver:
-> 
->         cpuidle: Avoid NULL dereference in cpuidle_driver_state_disabled()
-> 
->     - Added new patch to handle case where LP2 isn't available:
-> 
->         cpuidle: tegra: Disable CC6 state if LP2 unavailable
-> 
-> v7: - drivers/cpuidle/cpuidle-tegra.c now includes an explicit comment that
->       clarifies the new terminology that is used for naming of the idling
->       states. This change was suggested by Peter De Schrijver in the review
->       comment to v6. See the comment to struct tegra_idle_driver in the code.
-> 
->     - (!) This series is now based on top of the "NVIDIA Tegra20 CPUFreq
->       driver major update" patchset. The conflict between these two series
->       is trivial to resolve, but still it's worth to mention about that.
-> 
-> v6: - Addressed request from Thierry Reding to change the way patches are
->       organized by making changes in a more incremental manner.
-> 
->     - tegra_sleep_cpu() now checks for the secondary CPUs to be offline
->       in the "Make outer_disable() open-coded" patch.
-> 
-> v5: - Rebased on a recent linux-next, fixed one minor conflict in Kconfig.
-> 
->     - Improved commit's message of the "Support CPU cluster power-down state
->       on Tegra30" patch.
-> 
->     - The "Support CPU cluster power-down state on Tegra30" patch is also
->       got split and now there is additional "Make outer_disable() open-coded"
->       patch.
-> 
->     - Made minor cosmetic changes to the "Introduce unified driver for
->       NVIDIA Tegra SoCs" patch by improving error message and renaming
->       one variable.
-> 
-> v4: - Fixed compilation with !CONFIG_CACHE_L2X0 (and tested that it still
->       works).
-> 
->     - Replaced ktime_compare() with ktime_before() in the new driver,
->       for consistency.
-> 
-> v3: - Addressed review comments that were made by Jon Hunter to v2 by
->       splitting patches into smaller (and simpler) chunks, better
->       documenting changes in the commit messages and using proper error
->       codes in the code.
-> 
->       Warnings are replaced with a useful error messages in the code of
->       "Introduce unified driver for NVIDIA Tegra SoCs" patch.
-> 
->       Secondary CPUs parking timeout increased to 100ms because I found
->       that it actually may happen to take more than 1ms if CPU is running
->       on a *very* low frequency.
-> 
->       Added diagnostic messages that are reporting Flow Controller state
->       when CPU parking fails.
-> 
->       Further polished cpuidle driver's code.
-> 
->       The coupled state entering is now aborted if there is a pending SGI
->       (Software Generated Interrupt) because it will be lost after GIC's
->       power-cycling. Like it was done by the old Tegra20 CPUIDLE driver.
-> 
-> v2: - Added patches to enable the new cpuidle driver in the defconfigs:
-> 
->         ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
->         ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-> 
->     - Dropped patches that removed CPUIDLE_FLAG_TIMER_STOP from the idling
->       states because that flag actually doesn't have any negative effects,
->       but still is correct for the case of a local CPU timer on older Tegra
->       SoCs:
-> 
->         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124 idle-state
->         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
-> 
->     - The "Add unified driver for NVIDIA Tegra SoCs" patch got more polish.
->       Tegra30 and Terga114 states are now squashed into a single common C7
->       state (following Parker TRM terminology, see 17.2.2.2 Power Management
->       States), more comments added, etc minor changes.
-> 
-> Dmitry Osipenko (17):
->   ARM: tegra: Compile sleep-tegra20/30.S unconditionally
->   ARM: tegra: Add tegra_pm_park_secondary_cpu()
->   ARM: tegra: Remove pen-locking from cpuidle-tegra20
->   ARM: tegra: Change tegra_set_cpu_in_lp2() type to void
->   ARM: tegra: Propagate error from tegra_idle_lp2_last()
->   ARM: tegra: Expose PM functions required for new cpuidle driver
->   ARM: tegra: Rename some of the newly exposed PM functions
->   ARM: tegra: Make outer_disable() open-coded
->   arm: tegra20: cpuidle: Handle case where secondary CPU hangs on
->     entering LP2
->   arm: tegra20: cpuidle: Make abort_flag atomic
->   arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
->   cpuidle: Refactor and move out NVIDIA Tegra20 driver into
->     drivers/cpuidle
->   cpuidle: tegra: Squash Tegra30 driver into the common driver
->   cpuidle: tegra: Squash Tegra114 driver into the common driver
->   cpuidle: tegra: Disable CC6 state if LP2 unavailable
->   ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
->   ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-> 
->  arch/arm/configs/multi_v7_defconfig           |   1 +
->  arch/arm/configs/tegra_defconfig              |   1 +
->  arch/arm/mach-tegra/Makefile                  |  19 +-
->  arch/arm/mach-tegra/cpuidle-tegra114.c        |  89 ----
->  arch/arm/mach-tegra/cpuidle-tegra20.c         | 212 ----------
->  arch/arm/mach-tegra/cpuidle-tegra30.c         | 132 ------
->  arch/arm/mach-tegra/cpuidle.c                 |  50 ---
->  arch/arm/mach-tegra/cpuidle.h                 |  21 -
->  arch/arm/mach-tegra/irq.c                     |   3 +-
->  arch/arm/mach-tegra/pm.c                      |  54 ++-
->  arch/arm/mach-tegra/pm.h                      |   4 -
->  arch/arm/mach-tegra/reset-handler.S           |  11 -
->  arch/arm/mach-tegra/reset.h                   |   9 +-
->  arch/arm/mach-tegra/sleep-tegra20.S           | 170 --------
->  arch/arm/mach-tegra/sleep-tegra30.S           |   6 +-
->  arch/arm/mach-tegra/sleep.h                   |  15 -
->  arch/arm/mach-tegra/tegra.c                   |   7 +-
->  drivers/cpuidle/Kconfig.arm                   |   8 +
->  drivers/cpuidle/Makefile                      |   1 +
->  drivers/cpuidle/cpuidle-tegra.c               | 389 ++++++++++++++++++
->  include/soc/tegra/cpuidle.h                   |   2 +-
->  .../mach-tegra => include/soc/tegra}/irq.h    |   8 +-
->  include/soc/tegra/pm.h                        |  31 ++
->  23 files changed, 482 insertions(+), 761 deletions(-)
->  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
->  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
->  delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
->  delete mode 100644 arch/arm/mach-tegra/cpuidle.c
->  delete mode 100644 arch/arm/mach-tegra/cpuidle.h
->  create mode 100644 drivers/cpuidle/cpuidle-tegra.c
->  rename {arch/arm/mach-tegra => include/soc/tegra}/irq.h (59%)
-> 
+> Yes I can! But I need to process also codepage= transformation (details
+> in email <20191228200523.eaxpwxkpswzuihow@pali>). And I already have
+> this implementation in progress.
 
-Hello Rafael and Daniel,
+<nod>
 
-Could you please take a look at the CPUIDLE driver patches and ACK them
-if they are okay to you? Then Thierry will be able to take this series
-via Tegra tree. Thanks in advance!
+> > > > So for a file system which is a non-Linux-native file system, if it
+> > > > happens to store the its label using utf-16, or some other
+> > > > Windows-system-silliness, it would work a lot better if it assumed
+> > > > that it was passed in utf-8, and stored in the the Windows file system
+> > > > using whatever crazy encoding Windows wants to use.  Otherwise, why
+> > > > bother uplifting the ioctl to one which is file system independent, if
+> > > > the paramters are defined to be file system *dependent*?
+> > > 
+> > > Exactly. In another email I wrote that for those non-Linux-native
+> > > filesystem could be used encoding specified in iocharset= mount
+> > > parameter. I think it is better as usage of one fixing encoding (e.g.
+> > > UTF-8) if other filesystem strings are propagated to userspace in other
+> > > encoding (as specified by iocharset=).
+> > 
+> > I'm confused by this statement... but I think we're saying the same
+> > thing?
+> 
+> Theodore suggested to use UTF-8 encoding for FS_IOC_GETFSLABEL. And I
+> suggested to use iocharset= encoding for FS_IOC_GETFSLABEL. You said to
+> use for VFAT "same code that does the name encoding", so if I'm
+> understanding correctly, yes it is the same thing (as VFAT use
+> iocharset= and codepage= mount options for name encoding). Right?
+
+Right.
+
+--D
+
+> -- 
+> Pali Roh�r
+> pali.rohar@gmail.com
+
+
