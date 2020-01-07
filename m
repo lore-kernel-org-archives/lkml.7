@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBD3C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C61FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8482087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F242081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432242;
-	bh=lBf9sA7WTA250z718+ZZzpBOwT83vp1JQTiDek8zm5E=;
+	s=default; t=1578432247;
+	bh=Oq/IGIoS/9lpokSgXwduhp3ax8b9IJZeMgYsrpXfaKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKb6wD1ugKUNoVjYFyWEWFHsKSihnTiHxlx3Y9kWArqnr4l/nPQtBN+tUzgUlUGjd
-	 cdyPx7Z5Oh9yplTSVckaGDx5hhskyx9FsxlO0iOeFS1pAfkK5/21jJmj2yc/aTMMbq
-	 CelWVY5fmV9KdzqKz5ud+pvnoc/mNXYyvOg9ldfQ=
+	b=uH3vtXVSGhH6G58zQaGGFj8w+s/bGGSrYl2g4FdYotp8635VsMKyV0elVkRJ3Ao+Y
+	 o5PTksTGCYEefeN4UFMJ+M8GIwFy9hzktgXKrKGWHg8Mgg6N6HGL9LD+53gDbDQa7b
+	 FCYlBoqe3MrwmJRRfa49srBqNWPHR5s+1BmIHQbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgAGVAu (ORCPT
+        id S1728866AbgAGVYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:24:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbgAGVAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:36 -0500
+        id S1728457AbgAGVAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF347214D8;
-        Tue,  7 Jan 2020 21:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9C4222D9;
+        Tue,  7 Jan 2020 21:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430836;
-        bh=lBf9sA7WTA250z718+ZZzpBOwT83vp1JQTiDek8zm5E=;
+        s=default; t=1578430848;
+        bh=Oq/IGIoS/9lpokSgXwduhp3ax8b9IJZeMgYsrpXfaKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTCM7HcvxOBLyJY8uto0svBZbqd7dSy97t6IapR0EZLyswc4r/RkNhPajb8q5nS0Y
-         2HcwlQ116nsXxPmnaMKrBw9tLYpZhhtvyRBAwSnmAmTdkXiwWgCH5ejSbJuH1ALrFQ
-         ebWtnnC5Qz7kDa8t6ik1h1LwASxt0zDe5RnJIWOY=
+        b=iZjuJH+u+0YfE8X4nU/WhWAYIF42U/LVWUwXuQiVSEQ/4lSHCfLgk/BxnybOsxyVR
+         6ER8iEWcR34Cb1F4Rt+SMLtMhb1fJPtQkGiY7NlqO3Yi+pkr8Wv4WvtCZZD8Y75Rto
+         7uKtz/UDQEcSmtw5m2WDIQ031z3Jzjk5rYVQka+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 115/191] tracing: Fix lock inversion in trace_event_enable_tgid_record()
-Date:   Tue,  7 Jan 2020 21:53:55 +0100
-Message-Id: <20200107205339.137365016@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 120/191] io_uring: use current task creds instead of allocating a new one
+Date:   Tue,  7 Jan 2020 21:54:00 +0100
+Message-Id: <20200107205339.401944946@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,117 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prateek Sood <prsood@codeaurora.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 3a53acf1d9bea11b57c1f6205e3fe73f9d8a3688 upstream.
+commit 0b8c0ec7eedcd8f9f1a1f238d87f9b512b09e71a upstream.
 
-       Task T2                             Task T3
-trace_options_core_write()            subsystem_open()
+syzbot reports:
 
- mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9217 Comm: io_uring-sq Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
+RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
+RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
+Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c
+24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
+c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
+RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
+RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
+RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
+R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
+R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  io_sq_thread+0x1c7/0xa20 fs/io_uring.c:3274
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace f2e1a4307fbe2245 ]---
+RIP: 0010:creds_are_invalid kernel/cred.c:792 [inline]
+RIP: 0010:__validate_creds include/linux/cred.h:187 [inline]
+RIP: 0010:override_creds+0x9f/0x170 kernel/cred.c:550
+Code: ac 25 00 81 fb 64 65 73 43 0f 85 a3 37 00 00 e8 17 ab 25 00 49 8d 7c
+24 10 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84
+c0 74 08 3c 03 0f 8e 96 00 00 00 41 8b 5c 24 10 bf
+RSP: 0018:ffff88809c45fda0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000043736564 RCX: ffffffff814f3318
+RDX: 0000000000000002 RSI: ffffffff814f3329 RDI: 0000000000000010
+RBP: ffff88809c45fdb8 R08: ffff8880a3aac240 R09: ffffed1014755849
+R10: ffffed1014755848 R11: ffff8880a3aac247 R12: 0000000000000000
+R13: ffff888098ab1600 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd51c40664 CR3: 0000000092641000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
- set_tracer_flag()
+which is caused by slab fault injection triggering a failure in
+prepare_creds(). We don't actually need to create a copy of the creds
+as we're not modifying it, we just need a reference on the current task
+creds. This avoids the failure case as well, and propagates the const
+throughout the stack.
 
-   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
-
-    mutex_lock(event_mutex)
-
-This gives a circular dependency deadlock between trace_types_lock and
-event_mutex. To fix this invert the usage of trace_types_lock and
-event_mutex in trace_options_core_write(). This keeps the sequence of
-lock usage consistent.
-
-Link: http://lkml.kernel.org/r/0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com
-
-Cc: stable@vger.kernel.org
-Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 181e448d8709 ("io_uring: async workers should inherit the user creds")
+Reported-by: syzbot+5320383e16029ba057ff@syzkaller.appspotmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[ only use the io_uring.c portion of the patch - gregkh]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c        |    8 ++++++++
- kernel/trace/trace_events.c |    8 ++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ fs/io_uring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4590,6 +4590,10 @@ int trace_keep_overwrite(struct tracer *
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -239,7 +239,7 @@ struct io_ring_ctx {
  
- int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- {
-+	if ((mask == TRACE_ITER_RECORD_TGID) ||
-+	    (mask == TRACE_ITER_RECORD_CMD))
-+		lockdep_assert_held(&event_mutex);
-+
- 	/* do nothing if flag is already set */
- 	if (!!(tr->trace_flags & mask) == !!enabled)
- 		return 0;
-@@ -4657,6 +4661,7 @@ static int trace_set_options(struct trac
+ 	struct user_struct	*user;
  
- 	cmp += len;
+-	struct cred		*creds;
++	const struct cred	*creds;
  
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
+ 	struct completion	ctx_done;
  
- 	ret = match_string(trace_options, -1, cmp);
-@@ -4667,6 +4672,7 @@ static int trace_set_options(struct trac
- 		ret = set_tracer_flag(tr, 1 << ret, !neg);
+@@ -3876,7 +3876,7 @@ static int io_uring_create(unsigned entr
+ 	ctx->account_mem = account_mem;
+ 	ctx->user = user;
  
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	/*
- 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
-@@ -7972,9 +7978,11 @@ trace_options_core_write(struct file *fi
- 	if (val != 0 && val != 1)
- 		return -EINVAL;
- 
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 	ret = set_tracer_flag(tr, 1 << index, val);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	if (ret < 0)
- 		return ret;
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -320,7 +320,8 @@ void trace_event_enable_cmd_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
-@@ -334,7 +335,6 @@ void trace_event_enable_cmd_record(bool
- 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- void trace_event_enable_tgid_record(bool enable)
-@@ -342,7 +342,8 @@ void trace_event_enable_tgid_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
- 			continue;
-@@ -356,7 +357,6 @@ void trace_event_enable_tgid_record(bool
- 				  &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- static int __ftrace_event_enable_disable(struct trace_event_file *file,
+-	ctx->creds = prepare_creds();
++	ctx->creds = get_current_cred();
+ 	if (!ctx->creds) {
+ 		ret = -ENOMEM;
+ 		goto err;
 
 
