@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C4BC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4389C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093102087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DA72087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430896;
-	bh=zTcBiJ776ZmoyF0xxIU0eFvQt5XSeW4yAov5XItHXKo=;
+	s=default; t=1578430900;
+	bh=VsAKcuwz34bLlP+Y3q+0drDh08CUdjD6iUtyB1R+Apc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnC7+I53vyHtPUF4XCCqQdJy0Tfyw3QFjFGKH5cZkbT+P/+hzkLoCSugb0gmB1Ph9
-	 u/Jp3y8g60b3YuwFeyJP81dhV49X5ACHp89uwInTPllsbo3EBqg/cpvoRFQjuUgN5E
-	 DB2fAcJWWu7aGn2bBw7/KTnrCRlXAQSoJwanJxz8=
+	b=DKcfLW5tjddij3GpKG14kHa7s1gI6nhOfnvuE3RWC3I2AtjmEzzC6S1y1nSmAbBpC
+	 B32CelqOopVVB1TibkzKsdp1X1oTmGwB4pWBPAp+oWOwV6L1PpdtltqHhPhZ5Pnkxg
+	 JtKgttp3CNqldzo83TUWGMm34av5VGwpA2RJUbis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgAGVBe (ORCPT
+        id S1727982AbgAGVBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38788 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbgAGVBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:30 -0500
+        id S1728606AbgAGVBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB42720678;
-        Tue,  7 Jan 2020 21:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26834214D8;
+        Tue,  7 Jan 2020 21:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430889;
-        bh=zTcBiJ776ZmoyF0xxIU0eFvQt5XSeW4yAov5XItHXKo=;
+        s=default; t=1578430896;
+        bh=VsAKcuwz34bLlP+Y3q+0drDh08CUdjD6iUtyB1R+Apc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHlwfEJVpgyX3izKRq6gMPaRlAkkweON8mqMQz/Lyzb4c86AkwntEHGbDdy+uEWX9
-         U+5T5/ukGPzRvyC7rUtxyNipiExKCePyG8fppm5OKmnbM7G/baN2Den7s0YSFAww2b
-         udYf4ftuIqtAXaGxCoRgGifNVdFH+ramq+zO7n3w=
+        b=ijOWSk6lpN9p3aIuO4kJkv5FuNnaOqQ78POgi1boe3qfmIn+3R3YSMPQf9Fi6LrvW
+         ebMB6aOW9A+t+4U2fK17fJqbgcZe2mVf5QYo/8eDMh5oax8u2u/mDWQE4eFA676Msm
+         V7yByWWi9aP463wu+kZx5UEh2Si9v2+ahQp+b6nE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 139/191] HID: i2c-hid: Reset ALPS touchpads on resume
-Date:   Tue,  7 Jan 2020 21:54:19 +0100
-Message-Id: <20200107205340.416115795@linuxfoundation.org>
+        stable@vger.kernel.org, "Jory A. Pratt" <anarchy@gentoo.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 5.4 124/191] gen_initramfs_list.sh: fix bad variable name error
+Date:   Tue,  7 Jan 2020 21:54:04 +0100
+Message-Id: <20200107205339.616130663@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,61 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit fd70466d37bf3fe0118d18c56ddde85b428f86cf upstream.
+commit cc976614f59bd8e45de8ce988a6bcb5de711d994 upstream.
 
-Commit 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system
-resume") fixes many touchpads and touchscreens, however ALPS touchpads
-start to trigger IRQ storm after system resume.
+Prior to commit 858805b336be ("kbuild: add $(BASH) to run scripts with
+bash-extension"), this shell script was almost always run by bash since
+bash is usually installed on the system by default.
 
-Since it's total silence from ALPS, let's bring the old behavior back
-to ALPS touchpads.
+Now, this script is run by sh, which might be a symlink to dash. On such
+distributions, the following code emits an error:
 
-Fixes: 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system resume")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+  local dev=`LC_ALL=C ls -l "${location}"`
+
+You can reproduce the build error, for example by setting
+CONFIG_INITRAMFS_SOURCE="/dev".
+
+    GEN     usr/initramfs_data.cpio.gz
+  ./usr/gen_initramfs_list.sh: 131: local: 1: bad variable name
+  make[1]: *** [usr/Makefile:61: usr/initramfs_data.cpio.gz] Error 2
+
+This is because `LC_ALL=C ls -l "${location}"` contains spaces.
+Surrounding it with double-quotes fixes the error.
+
+Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
+Reported-by: Jory A. Pratt <anarchy@gentoo.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/i2c-hid/i2c-hid-core.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ usr/gen_initramfs_list.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -48,6 +48,7 @@
- #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
- #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
- #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
-+#define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(5)
- 
- /* flags */
- #define I2C_HID_STARTED		0
-@@ -174,6 +175,8 @@ static const struct i2c_hid_quirks {
- 		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
- 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
- 		 I2C_HID_QUIRK_BOGUS_IRQ },
-+	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
-+		 I2C_HID_QUIRK_RESET_ON_RESUME },
- 	{ 0, 0 }
- };
- 
-@@ -1214,8 +1217,15 @@ static int i2c_hid_resume(struct device
- 	 * solves "incomplete reports" on Raydium devices 2386:3118 and
- 	 * 2386:4B33 and fixes various SIS touchscreens no longer sending
- 	 * data after a suspend/resume.
-+	 *
-+	 * However some ALPS touchpads generate IRQ storm without reset, so
-+	 * let's still reset them here.
- 	 */
--	ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
-+	if (ihid->quirks & I2C_HID_QUIRK_RESET_ON_RESUME)
-+		ret = i2c_hid_hwreset(client);
-+	else
-+		ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
-+
- 	if (ret)
- 		return ret;
- 
+--- a/usr/gen_initramfs_list.sh
++++ b/usr/gen_initramfs_list.sh
+@@ -128,7 +128,7 @@ parse() {
+ 			str="${ftype} ${name} ${location} ${str}"
+ 			;;
+ 		"nod")
+-			local dev=`LC_ALL=C ls -l "${location}"`
++			local dev="`LC_ALL=C ls -l "${location}"`"
+ 			local maj=`field 5 ${dev}`
+ 			local min=`field 6 ${dev}`
+ 			maj=${maj%,}
 
 
