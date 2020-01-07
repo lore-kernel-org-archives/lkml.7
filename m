@@ -2,88 +2,102 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57612C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2672DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2004A2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD272081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gpWMaS9g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jj1iEWw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgAGNJd (ORCPT
+        id S1728179AbgAGNJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:09:33 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59908 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728068AbgAGNJL (ORCPT
+        Tue, 7 Jan 2020 08:09:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35600 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGNJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:09:11 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007D315O029953;
-        Tue, 7 Jan 2020 14:09:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=2+5EdBtXPI+Jvepo+w/i3cRQX8riz6EwR4XXKmacQ6Y=;
- b=gpWMaS9gGngeW7AKup6/R402dCZAjV32SPjezpy/wdVUpgjHQKQndqqRn5MFdRjupAjQ
- HIty22LtdAMnZK2elzAnMMm1E+msScFyWy+ldhoPxC+J4p3H3kDHN7wMVlpO0m9Abg6A
- To2jFo1KgCpwM5ms+N/O5v5ulzzCdJY7RQyPY80RPbcwy1iAeg2we81Gw+fNx6vEO9fs
- PQnimH3RW5hvccDkk3UiDO3q+eaAQA71YhBSkGj8m7n9oc1i7eQHBbYiU7kvwvzpLIGa
- VxZRfoCUmUSk1simJB0nbfKd1Z/034wL6YGTOXeUN52gSj7HRK1TC3OaIY5r9Kt7Dsdz Tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2xakvb6ctd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 14:09:06 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 974A110002A;
-        Tue,  7 Jan 2020 14:09:05 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6D2372AD9EB;
-        Tue,  7 Jan 2020 14:09:05 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 7 Jan 2020 14:09:05
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yannick.fertre@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 0/2] Convert Goodix touchscreen to json-schema
-Date:   Tue, 7 Jan 2020 14:09:01 +0100
-Message-ID: <20200107130903.14421-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 7 Jan 2020 08:09:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ldmliGj77Bk3OVBj9ERxJRO2ubWIHjpdcz6AoITqvp0=; b=jj1iEWw24sTXo/D0Mh2CfthJN
+        GT12pVWKqZnm/w288YM76uZfrCuqW86k7ylN7c3P1uSVcez0cHu9cBPUejMb8W5/2q5F89ayIsaeG
+        CH4TZRUn6b8L8gcVNsnpcfcUb50aHxve+/FnmfE33g8FoYMfGag2tTClFAHEEOIoXBfkPVQ+pDXXt
+        nOA9wnLSoCAQwk7+VxpoQXA8rqE1pyd7PB10j1MlFNeOqQzCb7rJLANpxwTck4TQJobHc9Yc6xcar
+        aaV7kzztv88ewDtRG2v9tWEDFsvKlNM552GSM/NUhIBUpnr41/Wu2VI+RU8MHdzhYDbHrOajqQPGB
+        Cqesm/gvw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iooc9-0003DI-4k; Tue, 07 Jan 2020 13:09:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9FF74305EDF;
+        Tue,  7 Jan 2020 14:08:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2967220D3D423; Tue,  7 Jan 2020 14:09:39 +0100 (CET)
+Date:   Tue, 7 Jan 2020 14:09:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] locking/qspinlock: Fix inaccessible URL of MCS lock paper
+Message-ID: <20200107130939.GV2871@hirez.programming.kicks-ass.net>
+References: <20191223022532.14864-1-longman@redhat.com>
+ <20200107125824.GA2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107125824.GA2844@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series convert Goodix touchscreen used on STM32 boards to json-schema.
-Before converting goodix bindings itself it add a schema for common
-touchscreen properties.
+On Tue, Jan 07, 2020 at 01:58:24PM +0100, Peter Zijlstra wrote:
+> On Sun, Dec 22, 2019 at 09:25:32PM -0500, Waiman Long wrote:
+> > It turns out that the URL of the MCS lock paper listed in the source
+> > code is no longer accessible. I did got question about where the paper
+> > was. This patch updates the URL to one that is still accessible.
+> > 
+> > Signed-off-by: Waiman Long <longman@redhat.com>
+> > ---
+> >  kernel/locking/qspinlock.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> > index 2473f10c6956..1d008d2333c0 100644
+> > --- a/kernel/locking/qspinlock.c
+> > +++ b/kernel/locking/qspinlock.c
+> > @@ -34,7 +34,7 @@
+> >   * MCS lock. The paper below provides a good description for this kind
+> >   * of lock.
+> >   *
+> > - * http://www.cise.ufl.edu/tr/DOC/REP-1992-71.pdf
+> > + * https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
+> 
+> Do we want to stick a copy of the paper in our bugzilla and link that
+> instead? ISTR we do something similar elsewhere, but I'm having trouble
+> finding it.
+> 
+> Thomas, Konstantin?
 
-Benjamin Gaignard (2):
-  dt-bindings: touchscreen: Add touchscreen schema
-  dt-bindings: touchscreen: Convert Goodix touchscreen to json-schema
+Boris provided an example from commit:
 
- .../bindings/input/touchscreen/goodix.txt          | 50 ----------------
- .../bindings/input/touchscreen/goodix.yaml         | 69 ++++++++++++++++++++++
- .../bindings/input/touchscreen/touchscreen.yaml    | 63 ++++++++++++++++++++
- 3 files changed, 132 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+  018ebca8bd70 ("x86/cpufeatures: Enable a new AVX512 CPU feature")
 
--- 
-2.15.0
+That puts a copy of the relevant Intel document here:
 
+  https://bugzilla.kernel.org/show_bug.cgi?id=204215
