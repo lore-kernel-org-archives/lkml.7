@@ -2,255 +2,86 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1587C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B04BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D418208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615EF208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:03:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="APnBX3xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgAGRDI (ORCPT
+        id S1728447AbgAGRDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:03:08 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41727 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728321AbgAGRDI (ORCPT
+        Tue, 7 Jan 2020 12:03:11 -0500
+Received: from mail-io1-f44.google.com ([209.85.166.44]:42956 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728427AbgAGRDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:03:08 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Tn6D..0_1578416563;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tn6D..0_1578416563)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 Jan 2020 01:02:51 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
+        Tue, 7 Jan 2020 12:03:10 -0500
+Received: by mail-io1-f44.google.com with SMTP id n11so29032iom.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:03:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yuCPGN5ltIi9ToyvfT1B3Z6meGbkDm5bTI9RM16HMkE=;
+        b=APnBX3ximAuUIBEX8AS2/wvamE1ubhqqBZ35sIxAgsPOFrL+BKe4onVJgFGlUw8I1c
+         SdoZd7YXYjIyCgQp+yjME3Hx3vmy62nST5v7xHnhMOfaELWASv3RbpgKBjCHHlb2Sb+H
+         tFZzexpa4gk2JeTo4geqQrpugmuU+26zTI/lbgFiyVWD/RtYH/PHF9tjEGxNvDtAqNPn
+         8PXKQ7IvcaTinwdDieVmLdnUdpPaywsYtaxpGxgfw/7Kxd+JgN3JB8n7vTstfTPRf2J2
+         wZJlKDhIwPGbSp65yY5mIV7TpNwB2vCPp/WSsKzuYR5CD3igyPVw7XlylS6fqqNXsSy8
+         2x8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yuCPGN5ltIi9ToyvfT1B3Z6meGbkDm5bTI9RM16HMkE=;
+        b=Kije+rXUM0BSAiM/o3xJRjiFwmz+Xjo1afm4xtGuBAxLF55nNxeOwjew57NTS7fvso
+         sDODTE9OpzRZh3y8Sv+Dy862p4/YtaO3xFxb5e4X2JJOwSt1ssAijYOhc3QbT3zCxpph
+         qQp1J+WARrcxjieM5rBU7LnW6w6gLy+6dcXhpozzQfEI7sS6hPWmmO/j9vJmRNJ4Ntx7
+         rPsZKJY3JlyxN+p12KnJvEpu8iOPOMEKHmSWLLbiPWuDkcpKMy7ZRLejR0byP/3MfUa8
+         D5gIX1kAbDZy8HvEO8owEcJjbip+cJUj9E+DSnmMAGNQlL25WhioB2aLMKQM31vZhcws
+         SskQ==
+X-Gm-Message-State: APjAAAWIx9tHtkbN0rAKn9vRdi39BZEWvygkChS+eP60N2yRYEC3GrsM
+        p/6BX2fkh58BUK5u1GVuxMQH6QV4RJA=
+X-Google-Smtp-Source: APXvYqzdB+ofu0kVmJA44d34y3Pv+AEzKmUy2lLY6HIJ2JwrL+bA8fuo94EBafrNKvx8AapBOFLwlA==
+X-Received: by 2002:a6b:7201:: with SMTP id n1mr64850957ioc.37.1578416589140;
+        Tue, 07 Jan 2020 09:03:09 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 75sm48079ila.61.2020.01.07.09.03.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 09:03:08 -0800 (PST)
+Subject: Re: [PATCH -next] io_uring: Remove unnecessary null check
+To:     YueHaibing <yuehaibing@huawei.com>, viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] coccinelle: semantic patch to check for inappropriate do_div() calls
-Date:   Wed,  8 Jan 2020 01:02:40 +0800
-Message-Id: <20200107170240.47207-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+References: <20200107142244.41260-1-yuehaibing@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4373ff3f-686c-8e82-af5c-8225ae16da41@kernel.dk>
+Date:   Tue, 7 Jan 2020 10:03:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107142244.41260-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_div() does a 64-by-32 division.
-When the divisor is unsigned long, u64, or s64,
-do_div() truncates it to 32 bits, this means it
-can test non-zero and be truncated to zero for division.
-This semantic patch is inspired by Mateusz Guzik's patch:
-commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
+On 1/7/20 7:22 AM, YueHaibing wrote:
+> Null check kfree is redundant, so remove it.
+> This is detected by coccinelle.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Julia Lawall <julia.lawall@inria.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Matthias Maennich <maennich@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: cocci@systeme.lip6.fr
-Cc: linux-kernel@vger.kernel.org
----
-v2:
-- add a special case for constants and checking whether the value is obviously safe and no warning is needed.
-- fix 'WARNING:' twice in each case.
-- extend the warning to say "consider using div64_xxx instead".
+Applied, thanks.
 
- scripts/coccinelle/misc/do_div.cocci | 169 +++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
- create mode 100644 scripts/coccinelle/misc/do_div.cocci
-
-diff --git a/scripts/coccinelle/misc/do_div.cocci b/scripts/coccinelle/misc/do_div.cocci
-new file mode 100644
-index 000000000000..0fd904b9157f
---- /dev/null
-+++ b/scripts/coccinelle/misc/do_div.cocci
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// do_div() does a 64-by-32 division.
-+/// When the divisor is long, unsigned long, u64, or s64,
-+/// do_div() truncates it to 32 bits, this means it can test
-+/// non-zero and be truncated to 0 for division on 64bit platforms.
-+///
-+//# This makes an effort to find those inappropriate do_div() calls.
-+//
-+// Confidence: Moderate
-+// Copyright: (C) 2020 Wen Yang, Alibaba.
-+// Comments:
-+// Options: --no-includes --include-headers
-+
-+virtual context
-+virtual org
-+virtual report
-+
-+@initialize:python@
-+@@
-+
-+def get_digit_type_and_value(str):
-+    is_digit = False
-+    value = 0
-+
-+    try:
-+        if (str.isdigit()):
-+           is_digit = True
-+           value =  int(str, 0)
-+        elif (str.upper().endswith('ULL')):
-+           is_digit = True
-+           value = int(str[:-3], 0)
-+        elif (str.upper().endswith('LL')):
-+           is_digit = True
-+           value = int(str[:-2], 0)
-+        elif (str.upper().endswith('UL')):
-+           is_digit = True
-+           value = int(str[:-2], 0)
-+        elif (str.upper().endswith('L')):
-+           is_digit = True
-+           value = int(str[:-1], 0)
-+        elif (str.upper().endswith('U')):
-+           is_digit = True
-+           value = int(str[:-1], 0)
-+    except Exception as e:
-+          print('Error:',e)
-+          is_digit = False
-+          value = 0
-+    finally:
-+        return is_digit, value
-+
-+def construct_warnings(str, suggested_fun):
-+    msg="WARNING: do_div() does a 64-by-32 division, please consider using %s instead."
-+    is_digit, value = get_digit_type_and_value(str)
-+    if (is_digit):
-+        if (value >= 0x100000000):
-+            return  msg %(suggested_fun)
-+        else:
-+            return None
-+    else:
-+        return  msg % suggested_fun
-+
-+@depends on context@
-+expression f;
-+long l;
-+unsigned long ul;
-+u64 ul64;
-+s64 sl64;
-+
-+@@
-+(
-+* do_div(f, l);
-+|
-+* do_div(f, ul);
-+|
-+* do_div(f, ul64);
-+|
-+* do_div(f, sl64);
-+)
-+
-+@r depends on (org || report)@
-+expression f;
-+long l;
-+unsigned long ul;
-+position p;
-+u64 ul64;
-+s64 sl64;
-+@@
-+(
-+do_div@p(f, l);
-+|
-+do_div@p(f, ul);
-+|
-+do_div@p(f, ul64);
-+|
-+do_div@p(f, sl64);
-+)
-+
-+@script:python depends on org@
-+p << r.p;
-+ul << r.ul;
-+@@
-+
-+warnings = construct_warnings(ul, "div64_ul")
-+if warnings != None:
-+   coccilib.org.print_todo(p[0], warnings)
-+
-+@script:python depends on org@
-+p << r.p;
-+l << r.l;
-+@@
-+
-+warnings = construct_warnings(l, "div64_long")
-+if warnings != None:
-+   coccilib.org.print_todo(p[0], warnings)
-+
-+@script:python depends on org@
-+p << r.p;
-+ul64 << r.ul64;
-+@@
-+
-+warnings = construct_warnings(ul64, "div64_u64")
-+if warnings != None:
-+   coccilib.org.print_todo(p[0], warnings)
-+
-+@script:python depends on org@
-+p << r.p;
-+sl64 << r.sl64;
-+@@
-+
-+warnings = construct_warnings(sl64, "div64_s64")
-+if warnings != None:
-+   coccilib.org.print_todo(p[0], warnings)
-+
-+
-+@script:python depends on report@
-+p << r.p;
-+ul << r.ul;
-+@@
-+
-+warnings = construct_warnings(ul, "div64_ul")
-+if warnings != None:
-+   coccilib.report.print_report(p[0], warnings)
-+
-+@script:python depends on report@
-+p << r.p;
-+l << r.l;
-+@@
-+
-+warnings = construct_warnings(l, "div64_long")
-+if warnings != None:
-+   coccilib.report.print_report(p[0], warnings)
-+
-+@script:python depends on report@
-+p << r.p;
-+sl64 << r.sl64;
-+@@
-+
-+warnings = construct_warnings(sl64, "div64_s64")
-+if warnings != None:
-+   coccilib.report.print_report(p[0], warnings)
-+
-+@script:python depends on report@
-+p << r.p;
-+ul64 << r.ul64;
-+@@
-+
-+warnings = construct_warnings(ul64, "div64_u64")
-+if warnings != None:
-+   coccilib.report.print_report(p[0], warnings)
 -- 
-2.23.0
+Jens Axboe
 
