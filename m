@@ -2,91 +2,99 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD35C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F187C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5FB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572282077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayegAG88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgAGTb1 (ORCPT
+        id S1728831AbgAGTb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:31:27 -0500
-Received: from sauhun.de ([88.99.104.3]:54282 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgAGTb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:31:27 -0500
-Received: from localhost (p5486CF8B.dip0.t-ipconnect.de [84.134.207.139])
-        by pokefinder.org (Postfix) with ESMTPSA id F092A2C05BA;
-        Tue,  7 Jan 2020 20:31:25 +0100 (CET)
-Date:   Tue, 7 Jan 2020 20:31:25 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Korsgaard <peter@korsgaard.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
-Message-ID: <20200107193125.GA10117@ninjato>
-References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
- <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
- <87muazjewd.fsf@dell.be.48ers.dk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
-Content-Disposition: inline
-In-Reply-To: <87muazjewd.fsf@dell.be.48ers.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 7 Jan 2020 14:31:29 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32783 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbgAGTb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:31:28 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so356397pgk.0;
+        Tue, 07 Jan 2020 11:31:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3ST/dj3po+BlNeYM5PMnB4Z+srpzBM2wonPJAfu44pg=;
+        b=ayegAG88ic4ZMzTrQ5veoMKLjpAiwBmaJgBtFHY14G+/hkJWblccaas0os4TVCGKU0
+         JGskHw2/EF9g9oqgXWRZsQu4bwEUv/mzKh0vtW8N5JbfoEpH5mc0iHPYBSMiPx+kQ2Ii
+         UuR8zZmrVymnRwa0240MOFfMrmIM7RKUC65YyifibGP5k6UoAFQFrFilwcrjFwwEBxtx
+         G+FprGREsEVGy+JsYmWUJV4/xv8NtSNKW/yHeoQktpOY5C/saZF2HMvWjOEQKzWmNd40
+         +W24LHsjIQZ/DDnBiyXvFxhjBBjSMsYlbxPM5KLkvs/s/edJ/HDUCfqpw616E4/D+1Rq
+         114g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3ST/dj3po+BlNeYM5PMnB4Z+srpzBM2wonPJAfu44pg=;
+        b=eiM8jxS1sZV0LGCHkUP0NhJ7At+2L6Z3TgBUjjey4wYO4LdbkiDDmyk7hkhV9uER38
+         Qot/y4vJf1HiMSzh+J67JvD5UJ4R5Y629lm1vY+3FOhqGCM2YeuuAolIlzsTedwGMCNs
+         DL5eY4d2/e2LiETM/4Y5X917ui4smL/kEqYGPTz5lzbcDVdfOYdjxkpK4LauICbHVlT0
+         zrbp1ZKOWiQ84EAv6DgmgpkCWJNNmfNDRlXCia+6dbcyNFoINePcu0kT9P82x/EhsPPE
+         RzQVS1X2tQvRD1Dh1Vqw644Sgc9jaZ4wxAM7wcIf6jxiuaN+gOcGXojSge10yaktmivX
+         1nWw==
+X-Gm-Message-State: APjAAAUhRv5MsMqVHymJmE2+t39jQFYNTxSgsnC2t/4uENrGPc82i/hG
+        445rNiPe4j44pzgOMnJHNDk=
+X-Google-Smtp-Source: APXvYqwEJ4DGXraHQ+XTpgucybYYLANGWqLS0H5FRZ2LWC/vCHUIp2l5InPQcrZS3vIu3NDqkcJVHA==
+X-Received: by 2002:a62:1548:: with SMTP id 69mr837034pfv.239.1578425487834;
+        Tue, 07 Jan 2020 11:31:27 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:fd53:8500:6ea8:4ef2:c9be])
+        by smtp.gmail.com with ESMTPSA id b4sm365817pfd.18.2020.01.07.11.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 11:31:26 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
+        dledford@redhat.com, paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH 3/3] infiniband: sw: rdmavt: mcast.c: Use built-in RCU list checking
+Date:   Wed,  8 Jan 2020 01:01:19 +0530
+Message-Id: <20200107193119.22915-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use built-in RCU and lock-checking for list_for_each_entry_rcu()
+by passing the cond argument.
 
-Hi Peter,
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ drivers/infiniband/sw/rdmavt/mcast.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-a happy new year to you!
+diff --git a/drivers/infiniband/sw/rdmavt/mcast.c b/drivers/infiniband/sw/rdmavt/mcast.c
+index dd11c6fcd060..983cf6d06dfc 100644
+--- a/drivers/infiniband/sw/rdmavt/mcast.c
++++ b/drivers/infiniband/sw/rdmavt/mcast.c
+@@ -224,7 +224,8 @@ static int rvt_mcast_add(struct rvt_dev_info *rdi, struct rvt_ibport *ibp,
+ 		}
+ 
+ 		/* Search the QP list to see if this is already there. */
+-		list_for_each_entry_rcu(p, &tmcast->qp_list, list) {
++		list_for_each_entry_rcu(p, &tmcast->qp_list, list,
++					lock_is_held(&(ibp->lock).dep_map)) {
+ 			if (p->qp == mqp->qp) {
+ 				ret = ESRCH;
+ 				goto bail;
+-- 
+2.17.1
 
->  > Move away from the deprecated API and return the shiny new ERRPTR where
->  > useful.
->=20
->  > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->=20
-> I didn't follow the discussion, but I don't see any returns anywhere?
-
-Yeah, an ERRPTR is not "useful" here. However, the old API is going to
-be removed, so your driver is converted, too.
-
-Happy hacking,
-
-   Wolfram
-
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4U3IkACgkQFA3kzBSg
-KbZOQw/+KNbdLqPPRk+Teo1q6rmLAezU9VUKrLEycDckg/mvdKEvf7B+sV35KcVW
-ACqGYuYq9hzoMV4qi2JT/aX6Q6hVNxKQGBsVRTbtbjzqU3BeDC4P8CpR9trRB4N7
-EE5zBQEuIOdQH+F5O0kYC82xIHyQqxBnPPmX9nulKPeckdM/2RXSFs8cZb7gd2CZ
-vzTJCdVEQ3bTS1Vp7ugNuEQMtScscbiAfP4szmb4rzMPfEm9LccPHgIMEmTxY2Sb
-a8D9c/7xsaA1BQqwN568sfn8zFYYMS0hHFF4kIXkK/4bfYldBb47eNqwoaQjrs63
-7VRN9e357C1EA+ylZrJNKp2n1mrr68a5KvJuMLkWAFHNxO01nkib6KbdW9RHgVBa
-VuSNRDUgMmdREglrEu68xnFviKZkgPjw4+v0QdBdAkfSkPrF+ZfsxQ/IzxxpQCj4
-ipoLlt7ve2KJh61jMSp2xYriawMLq1QjRMdxUl9BAIAYICfvhRFaL+GEMo+WCK/r
-UHuSA5ACecxQPdh+C6adTX3tBSJvkwDReWJVWtyoNURZ+ETxKyIIXaki2YPt0kFj
-52faoD+ZBRrV43TGtIKldwJg/Ci5KzeoP+2rnuJZeaL0uvPGsqwVXV96Tb9iPcAv
-xMyUzzT9cRkO9v4Xd3Pfnx8njSA5OBQR9r/LQem6GDOHoVSe2t8=
-=6dcu
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
