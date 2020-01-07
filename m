@@ -2,100 +2,196 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81243C32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D38EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A1E2064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BL2c59YK"
+	by mail.kernel.org (Postfix) with ESMTP id 64AC12064C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578368107;
+	bh=e118KvI5qb2fDQ7LkiIqY/PWfnMIY8wleRWU1qItE80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ft2y6tAWwlpD29xs+c++6r+78HBbN+WIkgsinTrL1bP+pjDgYqPGEQsWBvGW+AKV0
+	 M+J3xHWZBEJZPpib0T6NFN5KGICXuNuJ0IeKEpjLEMHtdYHS6wnY/3L1paBotMVRjI
+	 E5xG8GdKnS4yxW8W2XjjDT6bls0tLVA0/860xMAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgAGDdR (ORCPT
+        id S1727524AbgAGDfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:33:17 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:57500 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbgAGDdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:33:16 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073U8Dt044508;
-        Tue, 7 Jan 2020 03:33:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=n3hOFxO756b5o0zbvtzmSTUCQEAHulQgbhS1INkyH2Y=;
- b=BL2c59YKlqagCI5G8PPSwaI3ahdwNQVZCQw8l9Qy0hk5S+Mm+ILSWLBVAvzLvY5qjv/f
- dPdlc2hZfQauXDlAHeYBRWPbGNFfwCsqgM3tae+nQFfneR5+KFic6LEDV0ULl9DDIz8z
- B8a+8aFh4kkcxD+/fNcAwTSB9uR7peCDdTmQGVWD3ujL6KPBJKsDm6irMyKnfEn8hMgg
- H0q2n8pHkEQQnSXMglv+UZXICy0hkVdcnp+KrSGFMt1CeTusWomANmCvYeHbvqv+7O+L
- 7/mt3LqDv8zwlRbdnjMmEGyslco1Zdd0dNml7S3LE0HUlwL2pu5BAcwgLnmyGUUCVEPd Hg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xakbqjqxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 03:33:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073U4NP086406;
-        Tue, 7 Jan 2020 03:33:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2xb47hhg1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 03:33:00 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0073WwDN031416;
-        Tue, 7 Jan 2020 03:32:58 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Jan 2020 19:32:58 -0800
-To:     Balbir Singh <sblbir@amazon.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>, <axboe@kernel.dk>,
-        <ssomesh@amazon.com>, <jejb@linux.ibm.com>, <hch@lst.de>,
-        <mst@redhat.com>, <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [resend v1 1/5] block/genhd: Notify udev about capacity change
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200102075315.22652-1-sblbir@amazon.com>
-        <20200102075315.22652-2-sblbir@amazon.com>
-Date:   Mon, 06 Jan 2020 22:32:55 -0500
-In-Reply-To: <20200102075315.22652-2-sblbir@amazon.com> (Balbir Singh's
-        message of "Thu, 2 Jan 2020 07:53:11 +0000")
-Message-ID: <yq1ftgs2b6g.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 6 Jan 2020 22:35:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbgAGDfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:35:05 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44BD02064C;
+        Tue,  7 Jan 2020 03:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578368104;
+        bh=e118KvI5qb2fDQ7LkiIqY/PWfnMIY8wleRWU1qItE80=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v/YT298JtKLhlmgaYYQkrPwvxIqWw/qoIJvqTiVulWgtsARHsnEPgfQgMHIgGs8vG
+         xiI/sxLjHuJ4kkBdKzR/jjZfeaZK87Mg1FafCVo3xj3+NPRid9ey2FibIroRnR82ST
+         LcyZrrRZJl01rFA78G+AUzrA9ejJJuUV2Qs9wHFM=
+Date:   Mon, 6 Jan 2020 19:35:02 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 2/3] fscrypt: Don't allow v1 policies with casefolding
+Message-ID: <20200107033502.GC705@sol.localdomain>
+References: <20200107023323.38394-1-drosen@google.com>
+ <20200107023323.38394-3-drosen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=906
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001070026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=969 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001070026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107023323.38394-3-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 06, 2020 at 06:33:22PM -0800, Daniel Rosenberg wrote:
+> Casefolding currently requires a derived key for computing the siphash.
+> This is available for v2 policies, but not v1, so we disallow it for v1.
+> 
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/crypto/keysetup.c    |  7 ++++---
+>  fs/crypto/policy.c      | 39 +++++++++++++++++++++++++++++++++++++++
+>  fs/inode.c              |  7 +++++++
+>  include/linux/fscrypt.h | 11 +++++++++++
+>  4 files changed, 61 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
+> index c1bd897c9310..7445ab76e0b3 100644
+> --- a/fs/crypto/keysetup.c
+> +++ b/fs/crypto/keysetup.c
+> @@ -224,10 +224,11 @@ static int fscrypt_setup_v2_file_key(struct fscrypt_info *ci,
+>  					  FS_KEY_DERIVATION_NONCE_SIZE,
+>  					  (u8 *)&ci->ci_hash_key,
+>  					  sizeof(ci->ci_hash_key));
+> -		if (!err)
+> -			ci->ci_hash_key_initialized = true;
+> +		if (err)
+> +			return err;
+> +		ci->ci_hash_key_initialized = true;
+>  	}
+> -	return err;
+> +	return 0;
+>  }
 
-Hi Balbir,
+This part should be folded into patch 1.
 
-> Allow block/genhd to notify user space (via udev) about disk size
-> changes using a new helper disk_set_capacity(), which is a wrapper on
-> top of set_capacity(). disk_set_capacity() will only notify via udev
-> if the current capacity or the target capacity is not zero.
+>  
+>  /*
+> diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
+> index f1cff83c151a..9e937cfa732c 100644
+> --- a/fs/crypto/policy.c
+> +++ b/fs/crypto/policy.c
+> @@ -124,6 +124,12 @@ static bool fscrypt_supported_v1_policy(const struct fscrypt_policy_v1 *policy,
+>  					policy->filenames_encryption_mode))
+>  		return false;
+>  
+> +	if (IS_CASEFOLDED(inode)) {
+> +		fscrypt_warn(inode,
+> +			     "v1 policy does not support casefolded directories");
+> +		return false;
+> +	}
+> +
+>  	return true;
+>  }
+>  
+> @@ -579,3 +585,36 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
+>  	return preload ? fscrypt_get_encryption_info(child): 0;
+>  }
+>  EXPORT_SYMBOL(fscrypt_inherit_context);
+> +
+> +static int fscrypt_set_casefolding_allowed(struct inode *inode)
+> +{
+> +	union fscrypt_policy policy;
+> +	int err = fscrypt_get_policy(inode, &policy);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	if (policy.version != FSCRYPT_POLICY_V2)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +int fscrypt_ioc_setflags_prepare(struct inode *inode,
+> +				 unsigned int oldflags,
+> +				 unsigned int flags)
+> +{
+> +	int err;
+> +
+> +	/*
+> +	 * When a directory is encrypted, the CASEFOLD flag can only be turned
+> +	 * on if the fscrypt policy supports it.
+> +	 */
+> +	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
+> +		err = fscrypt_set_casefolding_allowed(inode);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
 
-I know set_capacity() is called all over the place making it a bit of a
-pain to audit. Is that the reason you introduced a new function instead
-of just emitting the event in set_capacity()?
+There's not really any point to the fscrypt_set_casefolding_allowed() function.
+It can just be folded into fscrypt_ioc_setflags_prepare():
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+int fscrypt_ioc_setflags_prepare(struct inode *inode,
+				 unsigned int oldflags,
+				 unsigned int flags)
+{
+	union fscrypt_policy policy;
+	int err;
+
+	/*
+	 * When a directory is encrypted, the CASEFOLD flag can only be turned
+	 * on if the fscrypt policy supports it.
+	 */
+	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
+		err = fscrypt_get_policy(inode, &policy);
+		if (err)
+			return err;
+		if (policy.version != FSCRYPT_POLICY_V2)
+			return -EINVAL;
+	}
+
+	return 0;
+}
+
+> @@ -2242,6 +2243,8 @@ EXPORT_SYMBOL(current_time);
+>  int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+>  			     unsigned int flags)
+>  {
+> +	int err;
+> +
+>  	/*
+>  	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+>  	 * the relevant capability.
+> @@ -2252,6 +2255,10 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
+>  	    !capable(CAP_LINUX_IMMUTABLE))
+>  		return -EPERM;
+>  
+> +	err = fscrypt_ioc_setflags_prepare(inode, oldflags, flags);
+> +	if (err)
+> +		return err;
+> +
+>  	return 0;
+>  }
+
+Can just do 'return fscrypt_ioc_setflags_prepare(inode, oldflags, flags);'
+
+- Eric
