@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC3C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5972DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F17206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2325A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432150;
-	bh=ZiwqsVStrh5XLJWgXBme2VY+hxWjwx2k0nG2DEFL674=;
+	s=default; t=1578432156;
+	bh=u1ijtqyYYwOMDo0bCfRl85cXKA5Ng3PJa34eRlUH728=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Unsp+lQOsWY85uYCrJkcR28tMKN32M2LAwJx8P0gCssLnRGUwMm3nJKc0LyKXHX1J
-	 qXHw94FaCXpT8uqeArspdqPPZPhjrfXXECuUDGossRmhJeTimTnc3NFDz2qn/GTXNQ
-	 oPZP1owexzmRK2x04k7G1pBgs5WVacpxoBaNsTtA=
+	b=AZpeueCisVc6BCX4S+p9Thb5T4n7eWjOWeW01uAu/+oHmqJxLHcXkVHHhvJ+0z7y7
+	 33PscmfXRqLczufwR3ONA6+8Tz4hbhhY4UH66XWN1s2u2KQ5iuLrBm9Y8mUWiHyo7e
+	 RMNB2ix9RJATkTNW4cZjtZmI0qAWM2HrFrisy3Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgAGVCI (ORCPT
+        id S1728939AbgAGVWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40576 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728160AbgAGVCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:01 -0500
+        id S1728671AbgAGVCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE8120678;
-        Tue,  7 Jan 2020 21:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE572077B;
+        Tue,  7 Jan 2020 21:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430921;
-        bh=ZiwqsVStrh5XLJWgXBme2VY+hxWjwx2k0nG2DEFL674=;
+        s=default; t=1578430923;
+        bh=u1ijtqyYYwOMDo0bCfRl85cXKA5Ng3PJa34eRlUH728=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gOGfuOpdb3/wQKBGoyhG6eyNZxEwaTvrjcZsA+09cE+60fpPj5FcxwDgBdWSry+Om
-         75KekESy+K1PsGitrXUolbCTM7uthAGLrb+JvfCDAjlkX3mCVeZLKf1/u3Ff3ibtvN
-         BGn5HYdysnJIeSOKZZ+SwWQ4BNJR0TNoBfBpWaWY=
+        b=Lq+xoIG6a/WG2TVxgMRk5MDDQlXPlfYMtnD50dpHmYDtb7FO5xfLctsCdlPOWikyY
+         0kdzJn7AzfwPkg5JX65vRIUQ4vEBL3fttPwQR0FU42zMPUWG2z7BYULUqycjuIJ/4S
+         1+ad0pWj67zL8x4oV/AOuIN4YTMaqa2I3S8opMWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.4 151/191] net, sysctl: Fix compiler warning when only cBPF is present
-Date:   Tue,  7 Jan 2020 21:54:31 +0100
-Message-Id: <20200107205341.050025831@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 125/191] ALSA: cs4236: fix error return comparison of an unsigned integer
+Date:   Tue,  7 Jan 2020 21:54:05 +0100
+Message-Id: <20200107205339.668661614@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,62 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 1148f9adbe71415836a18a36c1b4ece999ab0973 upstream.
+commit d60229d84846a8399257006af9c5444599f64361 upstream.
 
-proc_dointvec_minmax_bpf_restricted() has been firstly introduced
-in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
-under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
-ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
-allocations"), because a new sysctl, bpf_jit_limit, made use of it.
-Finally, this parameter has become long instead of integer with
-fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
-added.
+The return from pnp_irq is an unsigned integer type resource_size_t
+and hence the error check for a positive non-error code is always
+going to be true.  A check for a non-failure return from pnp_irq
+should in fact be for (resource_size_t)-1 rather than >= 0.
 
-With this last change, we got back to that
-proc_dointvec_minmax_bpf_restricted() is used only under
-CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
-brought back.
-
-So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
-since v4.20 we have:
-
-  CC      net/core/sysctl_net_core.o
-net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
-  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
-
-Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: a9824c868a2c ("[ALSA] Add CS4232 PnP BIOS support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20191122131354.58042-1-colin.king@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/sysctl_net_core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/isa/cs423x/cs4236.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -288,6 +288,7 @@ static int proc_dointvec_minmax_bpf_enab
- 	return ret;
- }
- 
-+# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -298,6 +299,7 @@ proc_dointvec_minmax_bpf_restricted(stru
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+# endif /* CONFIG_HAVE_EBPF_JIT */
- 
- static int
- proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+--- a/sound/isa/cs423x/cs4236.c
++++ b/sound/isa/cs423x/cs4236.c
+@@ -278,7 +278,8 @@ static int snd_cs423x_pnp_init_mpu(int d
+ 	} else {
+ 		mpu_port[dev] = pnp_port_start(pdev, 0);
+ 		if (mpu_irq[dev] >= 0 &&
+-		    pnp_irq_valid(pdev, 0) && pnp_irq(pdev, 0) >= 0) {
++		    pnp_irq_valid(pdev, 0) &&
++		    pnp_irq(pdev, 0) != (resource_size_t)-1) {
+ 			mpu_irq[dev] = pnp_irq(pdev, 0);
+ 		} else {
+ 			mpu_irq[dev] = -1;	/* disable interrupt */
 
 
