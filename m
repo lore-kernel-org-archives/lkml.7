@@ -2,100 +2,104 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B13C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1FC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88392075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039352081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WAxrkLng"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WOX+/1IM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgAGLQA (ORCPT
+        id S1727947AbgAGLQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:16:00 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:47058 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbgAGLP6 (ORCPT
+        Tue, 7 Jan 2020 06:16:42 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50712 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgAGLQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:15:58 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so45337729ilm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 03:15:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=kypRA7JMHk1v7MxzKCcUZ8vO8CJrvSfBF/vgrYLZzLs=;
-        b=WAxrkLng0N51YO/HxMWdKmP3MBdFhRH67U4dYNeGCc2DeCf4y5JrR8t6Bl4Rws0uQm
-         AlZe8/enQtXFoR/MO0heuEPF0/jJWV4p0xPLr9UGr1BUTC9Vvm4+8/qWV6KJoZwK1KWn
-         4ALVtnFGttzFci5n+Lzz2HnlF1xy3+bqPfxhFNHzp6yrwyJa8Fq1FF9jHMI4b4DznHmC
-         BXK6XbyGTVIwhXBnfGLdDFt0ChyJqBQWJtzNrhgonSiC6+b9jVvpfb7vSPP2FSqJczFI
-         PHK7nSquh3JFWDZdhhVvNCUvdqRD5j5lpglbe9dnokvJp6SyNGYIo0eUVJknWudJHGRk
-         6zAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=kypRA7JMHk1v7MxzKCcUZ8vO8CJrvSfBF/vgrYLZzLs=;
-        b=BK+uk6dGTi1wDFTIgrdl9NhU5d+odSUUGEDwJnSzWOkv/6MV8i06W7DNO8KfphJJoe
-         2145N//PenKhuRxOYmAJ+Tg2Wl5y4bCtkDYspYnRf2okzW21Pdy0QRUQJ3dPF24dBFJX
-         yAPtnvd5kW8R5vWEc/8QqtadeIFyAZSUlm9UhTV5PjhhQYZJqTbjEemR9fC69rvIgJ8T
-         iLP65OIkwWnjscuZ9AWr21mxE6Kw30QjX0rpVabWfmknDcKWd80gqtZG1PC7lB9FqZuu
-         do1Ewrep3TNb5FblLTnFhMh8HOq+wNgvWQp4e9OJd5X4cBTLYKnctmgoT3x1oXivmWPr
-         eRPg==
-X-Gm-Message-State: APjAAAVRnXXmfJhmDuSZAlduno+maYXHRQnDjHBH2/hPdUIJbMFjilIr
-        IDeozBi3TJ1yLCT+dIBqrfb0yw==
-X-Google-Smtp-Source: APXvYqxrIj55LYycBTrbBE+ljCYOHB9ysZ8mMBJp/6ZfUJDQG+HkGsk064dRkXUbjSZcuErja8iRng==
-X-Received: by 2002:a92:5ec8:: with SMTP id f69mr91584935ilg.8.1578395757558;
-        Tue, 07 Jan 2020 03:15:57 -0800 (PST)
-Received: from localhost (67-0-46-172.albq.qwest.net. [67.0.46.172])
-        by smtp.gmail.com with ESMTPSA id a12sm17977316ion.73.2020.01.07.03.15.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:15:57 -0800 (PST)
-Date:   Tue, 7 Jan 2020 03:15:56 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Olof Johansson <olof@lixom.net>
-cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
-In-Reply-To: <CAOesGMir810kVTDyoTFuhK-PdFe4J2u2VM+L8jOdO8DghAELQg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.2001070314050.75790@viisi.sifive.com>
-References: <20191218170603.58256-1-olof@lixom.net> <alpine.DEB.2.21.9999.2001031723310.283180@viisi.sifive.com> <CAOesGMir810kVTDyoTFuhK-PdFe4J2u2VM+L8jOdO8DghAELQg@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 7 Jan 2020 06:16:41 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007BGXc2024300;
+        Tue, 7 Jan 2020 05:16:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578395793;
+        bh=HXqsa6+h9NoRNz+G1rKqdekJZz8yz8ren1fxTOBhDrY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WOX+/1IMdd097RzhC/63SuwVfRY2EPkT94tkpqLfeFiD0SSKHvc+7xIDjiCXX8Cc+
+         m5e3/iqMlvEay2LILXYfaNoWFppmMtGLIxp+OXU1uE8wZhKxUIFONSvAPlAps/1Gng
+         HKztDIn7I6qsUaeycJIICpyO2HrTwh0EczMQMw2Y=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BGX8L064520
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:16:33 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 05:16:33 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 05:16:33 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BGTRd027407;
+        Tue, 7 Jan 2020 05:16:30 -0600
+Subject: Re: [PATCH v4 08/11] dt-bindings: sdhci-omap: Add documentation for
+ ti,needs-special-reset property
+To:     Rob Herring <robh@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
+        <ulf.hansson@linaro.org>, <tony@atomide.com>
+References: <20200106110133.13791-1-faiz_abbas@ti.com>
+ <20200106110133.13791-9-faiz_abbas@ti.com> <20200106220313.GA6822@bogus>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <fa2866cb-485a-9eed-47c2-fb3f6f260d31@ti.com>
+Date:   Tue, 7 Jan 2020 16:48:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200106220313.GA6822@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jan 2020, Olof Johansson wrote:
+Hi Rob,
 
-> Sure, this does the job. I'd personally prefer consistent prefixes but
-> that's just bikeshed color preferences -- this is fine.
+On 07/01/20 3:33 am, Rob Herring wrote:
+> On Mon, Jan 06, 2020 at 04:31:30PM +0530, Faiz Abbas wrote:
+>> Some controllers need a special software reset sequence. Document the
+>> ti,needs-special-reset binding to indicate that a controller needs this.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>> index 97efb01617dd..0f5389c72bda 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+>> @@ -21,6 +21,7 @@ Optional properties:
+>>  - dma-names:	List of DMA request names. These strings correspond 1:1 with the
+>>  		DMA specifiers listed in dmas. The string naming is to be "tx"
+>>  		and "rx" for TX and RX DMA requests, respectively.
+>> +- ti,needs-special-reset: Requires a special softreset sequence
+> 
+> Why can't this be implied by the compatible string?
+> 
 
-Thanks for the ack.  For what it's worth, we're in agreement that we 
-should prophylactically place RV_ prefixes on the rest of the CSR_ macro 
-names.  I just would prefer that it's done outside the late -rc series, 
-since it's not technically a fix.
+You are right. We can assign the special_reset flag in the next patch
+using compatible as well. Will drop this patch in next version.
 
-> (Builds are still failing for some configs, but will be fixed if/when
-> you pick up https://lore.kernel.org/linux-riscv/20191217040631.91886-1-olof@lixom.net/)
-
-That one is on my radar - just haven't had a chance to review/test it 
-yet.  Thanks for sending that one too! 
-
-
-- Paul
+Thanks,
+Faiz
