@@ -2,94 +2,75 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0506C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18323C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A350820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rCQ72smI"
+	by mail.kernel.org (Postfix) with ESMTP id E1D2920715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgAGJDj (ORCPT
+        id S1727458AbgAGJEn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:03:39 -0500
-Received: from mail-io1-f51.google.com ([209.85.166.51]:33162 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgAGJDj (ORCPT
+        Tue, 7 Jan 2020 04:04:43 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60583 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgAGJEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:03:39 -0500
-Received: by mail-io1-f51.google.com with SMTP id z8so51801338ioh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
-        b=rCQ72smI0DeWhto4Sdmg+g3DY80KqgNn96Sod2Bue/c4qK+Y2AWvn1/SKK0jdm3uMy
-         4OWncNlPthi60+f6sTGrp8rrYPvKwtxNVE9q20Fone5ubfhDjcoDdqDxDEQToIC91W19
-         1MVc8vTRmZbJ50sao+hrdDQ6lVbXLTX/7vT5BJWxxIBEeAFbgdIfsd/GZdCMEtBd/9XW
-         w/H6CWiDdCHqLtmpvq1SBiQSd6pm40ProtZ5QnDcHg1DjzsNfg/SH0EFcbZVvQ/7Uyww
-         dtkSLL0pOjU3mdP9zeAlTeJT3ui9xN4Vqsimo4y4KrTLY/1HDnct8cCDJuH61tYEXyMC
-         9K4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
-        b=eeqOpeTKB+KAuq+DxIBAMJPIV1re6HdwgVxwrgcn5A1TnEqvCsgigzis6uXuwmZD9R
-         vbnYHShsqBr3njXuP1nEx4ugz2uupwV1nh6dUh61bOwxJOkVjk70PcSm9m/FQ+qqR3ny
-         CDQk2MWbNfDuCWmKUh67QlZ/77AxHXha6Q+2zxs7cFfrVLIo3rB1+3HGbaAtLhYUuwsH
-         wx6NasIbDM9O3JTYxSchNKn9tcGaTvCsZe1tb8uaUuEy7hQyneW00Fv0GWQ5MIX2wNGV
-         weXHfRnfydap40XVmgS4OH4IS5Jbfrlcq1vrOPR0meEgJHmW7wYpTUU+OJr0OcC6NfTm
-         Bpuw==
-X-Gm-Message-State: APjAAAUTA1fpUDxjDjz0vOvoVfw0v3S3KnjP7q+o6MEEpAtutRVtRxsk
-        7bybV6WQyurlU0bALS7UEz0dHArHZZbmaMvclvorDQ==
-X-Google-Smtp-Source: APXvYqyUtDB0HoymsX65YpI76/mEkEWx0c+eKzafBa4vfpoPil7ziDgesHwZmWXrZmHNbTMZb+waD2Dwo254bAv1VmM=
-X-Received: by 2002:a6b:fb19:: with SMTP id h25mr72537201iog.40.1578387818317;
- Tue, 07 Jan 2020 01:03:38 -0800 (PST)
+        Tue, 7 Jan 2020 04:04:42 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 16206FF80D;
+        Tue,  7 Jan 2020 09:04:39 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 10:04:39 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mtd: cadence: Fix cast to pointer from integer of
+ different size warning
+Message-ID: <20200107100439.23f86175@xps13>
+In-Reply-To: <CAOesGMjp8=uOwTnGwuMwTJMKVh915udgkhSb0joKMTcwWBEy-Q@mail.gmail.com>
+References: <20191216110947.6fb2423a@xps13>
+        <20191218095715.25585-1-gomonovych@gmail.com>
+        <CAOesGMjp8=uOwTnGwuMwTJMKVh915udgkhSb0joKMTcwWBEy-Q@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com> <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 7 Jan 2020 10:03:27 +0100
-Message-ID: <CAMRc=Mf6CpsMpqwXjzC7jF0rxchSop+q7GQ2xgooKVRuC52VPQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 7 sty 2020 o 08:46 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
-=82(a):
->
-> I'm happy with a (static) GPIO hog.
->
-> BTW, what exactly do you mean with "mux framework"? Pinctrl/pinmux?
->
+Hi Olof,
 
-No, I meant the multiplexer subsystem under drivers/mux. I thought we
-could call mux_control_select() from pm_runtime_get_*() or something
-similar. This is just an idea though, and I see Frank already did an
-in-depth analysis so never mind my comment.
+Olof Johansson <olof@lixom.net> wrote on Mon, 6 Jan 2020 13:18:17 -0800:
 
-Bart
+> Miquel, this warning is still there both in mainline and linux-next.
+> 
+> Can you please apply it and get it sent in so we can keep the tree
+> building cleaning and spot warnings without the noise? Thanks!
+> 
+> On Wed, Dec 18, 2019 at 1:57 AM Vasyl Gomonovych <gomonovych@gmail.com> wrote:
+> >
+> > Use dma_addr_t type to pass memory address and control data in
+> > DMA descriptor fields memory_pointer and ctrl_data_ptr
+> > To fix warning: cast to pointer from integer of different size
+> >
+> > Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>  
+> 
+> Acked-by: Olof Johansson <olof@lixom.net>
+> 
+
+Sorry, I am late. I'll send a fixes PR this week.
+
+Thanks,
+Miquèl
