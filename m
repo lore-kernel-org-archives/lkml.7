@@ -2,144 +2,145 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925C4C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662482077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578393748;
-	bh=y/abBZ0/9ebLV1sY/b1FzoBX8fdpheX+nifIodwC4BA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YHCzZhdFjAo24G39tshAi++LC47NfwIQNCrvBHh4iZGphqAr2XyaUauaWpABse6F1
-	 KXr16aM2Du1qFu86kSyAPPGxr9enYf2Me7oDb8xIEyg7NlCB+C5YsU3xmyQjwwKhPe
-	 ERMqvQr5rY48YXSqS2a3qVIZJH3l3Mhar8b3Onoc=
+	by mail.kernel.org (Postfix) with ESMTP id 6E69A2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgAGKm1 (ORCPT
+        id S1727868AbgAGKmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:42:27 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43237 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGKm1 (ORCPT
+        Tue, 7 Jan 2020 05:42:49 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32965 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:42:27 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so39440114oth.10;
-        Tue, 07 Jan 2020 02:42:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nd8jgbCvZkL/081SlQ6LZjHh33JnnHni+WG4RTXiTgw=;
-        b=edlbGvO28MeGtUyxeKAMGb48F+V37DzH/JTE2+U4t1oQSehY+a7cNsI5+oarWXhCjg
-         8QOYcc5vdVFSeUWvP+AzznVEwYUZdmmnWLKqxMj+6rfpvd2JSa9K0SzRMC+/zV0M9FsC
-         LsGKa7iOI43UU6+30keebmE9faIdi6QtzTqQrvdjqfeQ7DjM3Yhy+NTJtXSJlpwkA/8T
-         sisMPGV8Z2c7xqW7fRSXmbAYpJvZmbABCHWhYcpiLT3W3cicCuW2mrWdUV8u4mCngapf
-         gndsfNhINV8N1BRK7iy5jhlC+lgaEyWea7IYQmEqXBU5uQVCRJaIu/oP0n17qmfdQcYM
-         nFPg==
-X-Gm-Message-State: APjAAAWJxFqeOAsd3uflXxjAXRoYQNa8xMnoE4M61qJ7cJCethCIEhPb
-        M3UsQqnsloNsGbJo7LuhGkM8ut6SgoXHpPGRftI=
-X-Google-Smtp-Source: APXvYqxhZ7xy5gDsh3CimaPszslaURcaXBI23q5xLEQB8oWuHipl9EqnxBuiyWQfiYgsVWI52Ni7PlFZ09sDvbDn9Lc=
-X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr118557717otr.262.1578393746844;
- Tue, 07 Jan 2020 02:42:26 -0800 (PST)
+        Tue, 7 Jan 2020 05:42:49 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomJn-0005TW-KM; Tue, 07 Jan 2020 11:42:35 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomJm-0004iE-4c; Tue, 07 Jan 2020 11:42:34 +0100
+Date:   Tue, 7 Jan 2020 11:42:34 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
+        Richard Weinberger <richard@nod.at>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Message-ID: <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+References: <20191230172113.17222-1-krzk@kernel.org>
+ <20191230172113.17222-2-krzk@kernel.org>
+ <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
+ <20200107082539.GA31827@pi3>
 MIME-Version: 1.0
-References: <20200106163735.1826-1-cai@lca.pw> <20200106223500.GG8314@dtor-ws>
-In-Reply-To: <20200106223500.GG8314@dtor-ws>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jan 2020 11:42:15 +0100
-Message-ID: <CAJZ5v0j5EtDfP4ydVP0jbYytwQ3De5zo+cUUONwYub2Wq2oyqw@mail.gmail.com>
-Subject: Re: [PATCH -next] drivers/base/test: fix global-out-of-bounds error
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, Qian Cai <cai@lca.pw>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107082539.GA31827@pi3>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 11:35 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Mon, Jan 06, 2020 at 11:37:35AM -0500, Qian Cai wrote:
-> > The commit c032ace71c29 ("software node: add basic tests for property
-> > entries") introduced a global-out-of-bounds error because it forgot to
-> > add a terminator of "nodes "for software_node_register_nodes() to
-> > process.
-> >
-> >       # Subtest: property-entry
-> >       1..7
-> >       ok 1 - pe_test_uints
-> >       ok 2 - pe_test_uint_arrays
-> >       ok 3 - pe_test_strings
-> >       ok 4 - pe_test_bool
-> >       ok 5 - pe_test_move_inline_u8
-> >       ok 6 - pe_test_move_inline_str
-> >  ==================================================================
-> >  BUG: KASAN: global-out-of-bounds in
-> >  software_node_register_nodes+0x41/0x80
-> >  Read of size 8 at addr ffffffff989ef250 by task kunit_try_catch/316
-> >
-> >  CPU: 17 PID: 316 Comm: kunit_try_catch Not tainted
-> >  5.5.0-rc4-next-20200106+ #1
-> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
-> >  03/09/2018
-> >  Call Trace:
-> >   dump_stack+0xa0/0xea
-> >   print_address_description.constprop.5.cold.7+0x64/0x384
-> >   __kasan_report.cold.8+0x7a/0xc0
-> >   kasan_report+0x12/0x20
-> >   __asan_load8+0x71/0xa0
-> >   software_node_register_nodes+0x41/0x80
-> >   pe_test_reference+0x1eb/0x1200
-> >   kunit_try_run_case+0x6b/0xd1
-> >   kunit_generic_run_threadfn_adapter+0x29/0x50
-> >   kthread+0x1e6/0x210
-> >   ret_from_fork+0x27/0x50
-> >
-> >  The buggy address belongs to the variable:
-> >   nodes.21544+0x30/0x920
-> >
-> >  Memory state around the buggy address:
-> >   ffffffff989ef100: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 00 00
-> >   ffffffff989ef180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >  >ffffffff989ef200: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
-> >                                                   ^
-> >   ffffffff989ef280: 00 06 fa fa fa fa fa fa 00 00 04 fa fa fa fa fa
-> >   ffffffff989ef300: 00 00 fa fa fa fa fa fa 00 05 fa fa fa fa fa fa
-> >  ==================================================================
-> >  Disabling lock debugging due to kernel taint
-> >       ok 7 - pe_test_reference
-> >  ok 8 - property-entry
-> >
-> > Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-> > Signed-off-by: Qian Cai <cai@lca.pw>
->
-> Thanks Qian.
->
-> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hello Krzysztof,
 
-Applied, thanks!
+On Tue, Jan 07, 2020 at 09:25:39AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Jan 07, 2020 at 08:26:45AM +0100, Uwe Kleine-König wrote:
+> > On Mon, Dec 30, 2019 at 06:21:13PM +0100, Krzysztof Kozlowski wrote:
+> > > Some of the PWM drivers can be compile tested to increase build
+> > > coverage.
+> > > 
+> > > The Meson PWM driver requires COMMON_CLK dependency.
+> > 
+> > I'm surprised that there are not more that need this. Is HAVE_CLK not
+> > enough?
+> 
+> Nope. E.g. for alpha architecture, HAVE_CLK is not set and without
+> COMMON_CLK:
+> 
+> drivers/pwm/pwm-meson.o: In function `meson_pwm_init_channels':
+> (.text+0x244): undefined reference to `devm_clk_register'
 
-> > ---
-> >  drivers/base/test/property-entry-test.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
-> > index da812834b631..abe03315180f 100644
-> > --- a/drivers/base/test/property-entry-test.c
-> > +++ b/drivers/base/test/property-entry-test.c
-> > @@ -366,6 +366,7 @@ static void pe_test_reference(struct kunit *test)
-> >       static const struct software_node nodes[] = {
-> >               { .name = "1", },
-> >               { .name = "2", },
-> > +             { }
-> >       };
-> >
-> >       static const struct software_node_ref_args refs[] = {
-> > --
+I see. devm_clk_register() only exists in include/linux/clk-provider.h.
+
+> I guess other solution would be to add stubs for few clk functions...
+> 
+> > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
+> > config (which does't have HAS_IOMEM) and they all compile fine.
+> 
+> Because of !HAS_IOMEM, since some time ARCH=um does not support
+> COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
+> testing (and for regular build it is selected by ARCH).
+
+Hehe, I didn't notice because for testing I just dropped the "depends on
+..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
+compile fine on UML.
+
+Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
+!UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
+later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
+== v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
+revert bc083a64b6c0 today? (And if not, a comment about why near the
+"depends on !UML" in init/Kconfig would be great.)
+
+Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
+though the compile testers won't notice it missing. Or should HAS_IOMEM
+be dropped?
+
+> > > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
+> > >  
+> > >  config PWM_MXS
+> > >  	tristate "Freescale MXS PWM support"
+> > > -	depends on ARCH_MXS && OF
+> > > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
+> > >  	select STMP_DEVICE
+> > >  	help
+> > >  	  Generic PWM framework driver for Freescale MXS.
+> > > @@ -328,7 +329,8 @@ config PWM_MXS
+> > >  
+> > >  config PWM_OMAP_DMTIMER
+> > >  	tristate "OMAP Dual-Mode Timer PWM support"
+> > > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
+> > > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
+> > > +	depends on OF
+> > 
+> > I'm surprised that OF isn't required for PWM_MXS but is is for
+> > PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
+> > pwm-omap-dmtimer.
+> 
+> Since some time !OF has all necessary stubs so OF is actually needed
+> only for binding, not compiling.
+
+That doesn't explain why you handle PWM_MXS and PWM_OMAP_DMTIMER
+differently though.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
