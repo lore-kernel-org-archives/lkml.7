@@ -2,196 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D38EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0CFC32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AC12064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578368107;
-	bh=e118KvI5qb2fDQ7LkiIqY/PWfnMIY8wleRWU1qItE80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ft2y6tAWwlpD29xs+c++6r+78HBbN+WIkgsinTrL1bP+pjDgYqPGEQsWBvGW+AKV0
-	 M+J3xHWZBEJZPpib0T6NFN5KGICXuNuJ0IeKEpjLEMHtdYHS6wnY/3L1paBotMVRjI
-	 E5xG8GdKnS4yxW8W2XjjDT6bls0tLVA0/860xMAc=
+	by mail.kernel.org (Postfix) with ESMTP id 6B69F206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NE5X04jT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgAGDfG (ORCPT
+        id S1727479AbgAGDnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:35:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgAGDfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:35:05 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44BD02064C;
-        Tue,  7 Jan 2020 03:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578368104;
-        bh=e118KvI5qb2fDQ7LkiIqY/PWfnMIY8wleRWU1qItE80=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v/YT298JtKLhlmgaYYQkrPwvxIqWw/qoIJvqTiVulWgtsARHsnEPgfQgMHIgGs8vG
-         xiI/sxLjHuJ4kkBdKzR/jjZfeaZK87Mg1FafCVo3xj3+NPRid9ey2FibIroRnR82ST
-         LcyZrrRZJl01rFA78G+AUzrA9ejJJuUV2Qs9wHFM=
-Date:   Mon, 6 Jan 2020 19:35:02 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 2/3] fscrypt: Don't allow v1 policies with casefolding
-Message-ID: <20200107033502.GC705@sol.localdomain>
-References: <20200107023323.38394-1-drosen@google.com>
- <20200107023323.38394-3-drosen@google.com>
+        Mon, 6 Jan 2020 22:43:41 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45585 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgAGDnk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:43:40 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so27891652pfg.12;
+        Mon, 06 Jan 2020 19:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gHUbb7q4zKarJa/jENsWhe5joUzhUsIi3+/OkwV0nCg=;
+        b=NE5X04jTW9D4AAlZ1NLkRw5E9lCP2JS0FFDHcxeKeNssEwk0Mk+MrFridEDJinkcxq
+         syLjplEhUDUrD8ygUiPRE9enG6yVswHHLvmVT2kvZS/klLV4fLBVu+c3K2OXJswU4afd
+         9kIXv1MJ2R5GIvuXapD/4vTtXP60JPelynxOKGpuszywHtf6QU/F1JJ6tx2YkzGVMaop
+         UC4Z5ZMiLbiG67W/X8Stcl2y83ASsmSXYLypJP+UVWCQt4rM1FMDNLhTtCPlX6FPvXD9
+         I9pu0MoNcHR6B1pSIFLeoMD6/5OFVhTHALCAlBkg4EHpv6yPNsSoL2UeZvr9p6QwpFDP
+         CnHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=gHUbb7q4zKarJa/jENsWhe5joUzhUsIi3+/OkwV0nCg=;
+        b=OgMwkZ2WHhmU9sdJoSQDXgrYcNnIUJhTkMg2S642HTx8dfVnok74q55aAFkyzat5LV
+         2UYn+39uhBTO05EJUaalAHGyfIzBF0Lr+wqU0EsWizV8irdu9v/lbH7ohP5MHzY2UTzK
+         GOS0xdIMV991Zn2e9SygZ8lS60Riitf1dugLBsc0/pUUmqtsoAjm1MT69zb50DuCPpdG
+         qvGw7tJIwMvgdF0RsvVD13uyvpnq5Mwc7cM1qOWCRiihg9aWak4B05RzlTQWrUoE5SOF
+         QgW0N+DMfQGLbebK+kF03p6pmLMh71ZzZSIy4/I6ejJg4XsYohgkuzzbBj7PH9nLmW/w
+         QY3w==
+X-Gm-Message-State: APjAAAVWG/pggAbRPOnC+zkmpTpd1LS3flrehRAqDEyf9Ce/ijM/sdvO
+        qTQL5Uv7Ki+lLZfExMTer+0=
+X-Google-Smtp-Source: APXvYqzKmGQn30OyGYuc8Yfb7XzY/DQP1By/9LJ3V3cFnc8q3uPr3UXvgAaQ6v64km7Wwt3R6On/ZQ==
+X-Received: by 2002:a63:ce55:: with SMTP id r21mr97706108pgi.156.1578368620173;
+        Mon, 06 Jan 2020 19:43:40 -0800 (PST)
+Received: from voyager.lan ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id g10sm73455929pgh.35.2020.01.06.19.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 19:43:39 -0800 (PST)
+From:   Joel Stanley <joel@jms.id.au>
+To:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] video: aspeed video engine cleanups
+Date:   Tue,  7 Jan 2020 14:13:21 +1030
+Message-Id: <20200107034324.38073-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107023323.38394-3-drosen@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 06:33:22PM -0800, Daniel Rosenberg wrote:
-> Casefolding currently requires a derived key for computing the siphash.
-> This is available for v2 policies, but not v1, so we disallow it for v1.
-> 
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
-> ---
->  fs/crypto/keysetup.c    |  7 ++++---
->  fs/crypto/policy.c      | 39 +++++++++++++++++++++++++++++++++++++++
->  fs/inode.c              |  7 +++++++
->  include/linux/fscrypt.h | 11 +++++++++++
->  4 files changed, 61 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
-> index c1bd897c9310..7445ab76e0b3 100644
-> --- a/fs/crypto/keysetup.c
-> +++ b/fs/crypto/keysetup.c
-> @@ -224,10 +224,11 @@ static int fscrypt_setup_v2_file_key(struct fscrypt_info *ci,
->  					  FS_KEY_DERIVATION_NONCE_SIZE,
->  					  (u8 *)&ci->ci_hash_key,
->  					  sizeof(ci->ci_hash_key));
-> -		if (!err)
-> -			ci->ci_hash_key_initialized = true;
-> +		if (err)
-> +			return err;
-> +		ci->ci_hash_key_initialized = true;
->  	}
-> -	return err;
-> +	return 0;
->  }
+When reviewing some patches from Jae I noticed the driver used compile
+time tests for some registers. When thinking about how to avoid that, I
+came up with a few cleanups.
 
-This part should be folded into patch 1.
+Jae, feel free to base your patches on this series if you, Eddie and
+Mauro are ok with the changes.
 
->  
->  /*
-> diff --git a/fs/crypto/policy.c b/fs/crypto/policy.c
-> index f1cff83c151a..9e937cfa732c 100644
-> --- a/fs/crypto/policy.c
-> +++ b/fs/crypto/policy.c
-> @@ -124,6 +124,12 @@ static bool fscrypt_supported_v1_policy(const struct fscrypt_policy_v1 *policy,
->  					policy->filenames_encryption_mode))
->  		return false;
->  
-> +	if (IS_CASEFOLDED(inode)) {
-> +		fscrypt_warn(inode,
-> +			     "v1 policy does not support casefolded directories");
-> +		return false;
-> +	}
-> +
->  	return true;
->  }
->  
-> @@ -579,3 +585,36 @@ int fscrypt_inherit_context(struct inode *parent, struct inode *child,
->  	return preload ? fscrypt_get_encryption_info(child): 0;
->  }
->  EXPORT_SYMBOL(fscrypt_inherit_context);
-> +
-> +static int fscrypt_set_casefolding_allowed(struct inode *inode)
-> +{
-> +	union fscrypt_policy policy;
-> +	int err = fscrypt_get_policy(inode, &policy);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	if (policy.version != FSCRYPT_POLICY_V2)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +int fscrypt_ioc_setflags_prepare(struct inode *inode,
-> +				 unsigned int oldflags,
-> +				 unsigned int flags)
-> +{
-> +	int err;
-> +
-> +	/*
-> +	 * When a directory is encrypted, the CASEFOLD flag can only be turned
-> +	 * on if the fscrypt policy supports it.
-> +	 */
-> +	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
-> +		err = fscrypt_set_casefolding_allowed(inode);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
+Joel Stanley (3):
+  media: aspeed: Rework memory mapping in probe
+  media: aspeed: Use runtime configuration
+  video: aspeed: Update copyright information
 
-There's not really any point to the fscrypt_set_casefolding_allowed() function.
-It can just be folded into fscrypt_ioc_setflags_prepare():
+ drivers/media/platform/aspeed-video.c | 73 ++++++++++++++++++---------
+ 1 file changed, 48 insertions(+), 25 deletions(-)
 
-int fscrypt_ioc_setflags_prepare(struct inode *inode,
-				 unsigned int oldflags,
-				 unsigned int flags)
-{
-	union fscrypt_policy policy;
-	int err;
+-- 
+2.24.1
 
-	/*
-	 * When a directory is encrypted, the CASEFOLD flag can only be turned
-	 * on if the fscrypt policy supports it.
-	 */
-	if (IS_ENCRYPTED(inode) && (flags & ~oldflags & FS_CASEFOLD_FL)) {
-		err = fscrypt_get_policy(inode, &policy);
-		if (err)
-			return err;
-		if (policy.version != FSCRYPT_POLICY_V2)
-			return -EINVAL;
-	}
-
-	return 0;
-}
-
-> @@ -2242,6 +2243,8 @@ EXPORT_SYMBOL(current_time);
->  int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
->  			     unsigned int flags)
->  {
-> +	int err;
-> +
->  	/*
->  	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
->  	 * the relevant capability.
-> @@ -2252,6 +2255,10 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
->  	    !capable(CAP_LINUX_IMMUTABLE))
->  		return -EPERM;
->  
-> +	err = fscrypt_ioc_setflags_prepare(inode, oldflags, flags);
-> +	if (err)
-> +		return err;
-> +
->  	return 0;
->  }
-
-Can just do 'return fscrypt_ioc_setflags_prepare(inode, oldflags, flags);'
-
-- Eric
