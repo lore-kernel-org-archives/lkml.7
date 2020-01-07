@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDDFC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3612077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D910A2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431829;
-	bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
+	s=default; t=1578431832;
+	bh=1sDJJCskldaXVxSqJVNRGymPpRyy0DkfLUmehVr0vdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1P5bmECAF1AT7DJ8VX9N5xG3I6BYGwIHtpSxW1lSGLomkrzETl2/3VsdtSaIepONy
-	 7IQ2TFJJosn4SVhv9CYh1iCGeTixG8lKzJCIoVrw2LGfPl+0DkDNx19BrTe11aVtc6
-	 yZ2blB9nOyUmZaUCuFZm9iSUToDYx4RW88UWST8M=
+	b=aXRWWbf8L8n1ktOwp+KoEqpjZ91ru4Pdr3o81kgyK5FQOyH4QFvUUt94h62FByz4n
+	 Wn6GxsNmbg0Uj9cyy6/NN+5XFRFJwmxCWouX7bnTSMChV8mpQyT+H/UxL24XVMUFwc
+	 9jRCfJiQORKir0aJopi1BeZIlQXXvSLz9BXudQFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgAGVRI (ORCPT
+        id S1729177AbgAGVGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:17:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:06:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgAGVGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:25 -0500
+        id S1728857AbgAGVGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8372F2080A;
-        Tue,  7 Jan 2020 21:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8BB2077B;
+        Tue,  7 Jan 2020 21:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431185;
-        bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
+        s=default; t=1578431167;
+        bh=1sDJJCskldaXVxSqJVNRGymPpRyy0DkfLUmehVr0vdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NTWSMu+T8uG+uIa5H0PYfzetWlmLOWZagS79flcVlnPtn0vXsDGU/Tm19cK91Yamb
-         11Do0MVTD7fE+COrwvFQjAXVE4OgKQKF12oE2mB5TrKlkh99lc1SbiR4V4hy7LQtgx
-         gYaB0X3CfMB1jaOdTI2t5hwhqTSvDDVkvLHtbwvI=
+        b=eILu/+m0s92Xep+bz2LCqdPPUfd4iPA76HGEByYPIS3aMJjB2swmlYZKe1Q3j5b7f
+         0L9r4j8mjpF9QYQUSvngbPYWwf303tyXMlADGzxnd09OcvyCRX3ekjO6Z8rx+zqVDI
+         WxTPHzF/mtJtcRu8GQBOnO9SFM6t/k0zFbO3kX9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Tommi T. Rantala" <tommi.t.rantala@nokia.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH 4.19 068/115] rseq/selftests: Fix: Namespace gettid() for compatibility with glibc 2.30
-Date:   Tue,  7 Jan 2020 21:54:38 +0100
-Message-Id: <20200107205303.746563145@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 062/115] ata: ahci_brcm: Allow optional reset controller to be used
+Date:   Tue,  7 Jan 2020 21:54:32 +0100
+Message-Id: <20200107205303.355115454@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -67,101 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 8df34c56321479bfa1ec732c675b686c2b4df412 upstream.
+commit 2b2c47d9e1fe90311b725125d6252a859ee87a79 upstream.
 
-glibc 2.30 introduces gettid() in public headers, which clashes with
-the internal static definition within rseq selftests.
+On BCM63138, we need to reset the AHCI core prior to start utilizing it,
+grab the reset controller device cookie and do that.
 
-Rename gettid() to rseq_gettid() to eliminate this symbol name clash.
-
-Reported-by: Tommi T. Rantala <tommi.t.rantala@nokia.com>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Tommi T. Rantala <tommi.t.rantala@nokia.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: <stable@vger.kernel.org>	# v4.18+
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/rseq/param_test.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/ata/ahci_brcm.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/tools/testing/selftests/rseq/param_test.c
-+++ b/tools/testing/selftests/rseq/param_test.c
-@@ -15,7 +15,7 @@
- #include <errno.h>
- #include <stddef.h>
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -25,6 +25,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ #include <linux/string.h>
  
--static inline pid_t gettid(void)
-+static inline pid_t rseq_gettid(void)
- {
- 	return syscall(__NR_gettid);
- }
-@@ -373,11 +373,12 @@ void *test_percpu_spinlock_thread(void *
- 		rseq_percpu_unlock(&data->lock, cpu);
- #ifndef BENCHMARK
- 		if (i != 0 && !(i % (reps / 10)))
--			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
-+			printf_verbose("tid %d: count %lld\n",
-+				       (int) rseq_gettid(), i);
- #endif
- 	}
- 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
--		       (int) gettid(), nr_abort, signals_delivered);
-+		       (int) rseq_gettid(), nr_abort, signals_delivered);
- 	if (!opt_disable_rseq && thread_data->reg &&
- 	    rseq_unregister_current_thread())
- 		abort();
-@@ -454,11 +455,12 @@ void *test_percpu_inc_thread(void *arg)
- 		} while (rseq_unlikely(ret));
- #ifndef BENCHMARK
- 		if (i != 0 && !(i % (reps / 10)))
--			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
-+			printf_verbose("tid %d: count %lld\n",
-+				       (int) rseq_gettid(), i);
- #endif
- 	}
- 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
--		       (int) gettid(), nr_abort, signals_delivered);
-+		       (int) rseq_gettid(), nr_abort, signals_delivered);
- 	if (!opt_disable_rseq && thread_data->reg &&
- 	    rseq_unregister_current_thread())
- 		abort();
-@@ -605,7 +607,7 @@ void *test_percpu_list_thread(void *arg)
- 	}
+ #include "ahci.h"
+@@ -94,6 +95,7 @@ struct brcm_ahci_priv {
+ 	u32 port_mask;
+ 	u32 quirks;
+ 	enum brcm_ahci_version version;
++	struct reset_control *rcdev;
+ };
  
- 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
--		       (int) gettid(), nr_abort, signals_delivered);
-+		       (int) rseq_gettid(), nr_abort, signals_delivered);
- 	if (!opt_disable_rseq && rseq_unregister_current_thread())
- 		abort();
+ static inline u32 brcm_sata_readreg(void __iomem *addr)
+@@ -433,6 +435,11 @@ static int brcm_ahci_probe(struct platfo
+ 	if (IS_ERR(priv->top_ctrl))
+ 		return PTR_ERR(priv->top_ctrl);
  
-@@ -796,7 +798,7 @@ void *test_percpu_buffer_thread(void *ar
- 	}
- 
- 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
--		       (int) gettid(), nr_abort, signals_delivered);
-+		       (int) rseq_gettid(), nr_abort, signals_delivered);
- 	if (!opt_disable_rseq && rseq_unregister_current_thread())
- 		abort();
- 
-@@ -1011,7 +1013,7 @@ void *test_percpu_memcpy_buffer_thread(v
- 	}
- 
- 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
--		       (int) gettid(), nr_abort, signals_delivered);
-+		       (int) rseq_gettid(), nr_abort, signals_delivered);
- 	if (!opt_disable_rseq && rseq_unregister_current_thread())
- 		abort();
- 
++	/* Reset is optional depending on platform */
++	priv->rcdev = devm_reset_control_get(&pdev->dev, "ahci");
++	if (!IS_ERR_OR_NULL(priv->rcdev))
++		reset_control_deassert(priv->rcdev);
++
+ 	if ((priv->version == BRCM_SATA_BCM7425) ||
+ 		(priv->version == BRCM_SATA_NSP)) {
+ 		priv->quirks |= BRCM_AHCI_QUIRK_NO_NCQ;
 
 
