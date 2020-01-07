@@ -2,154 +2,125 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2271C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34FEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16F22077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B806C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MKjc8aAF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZRYo76yK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgAGKij (ORCPT
+        id S1727868AbgAGKit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:38:39 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56494 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgAGKij (ORCPT
+        Tue, 7 Jan 2020 05:38:49 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43938 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGKit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:38:39 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007AcTBQ052064;
-        Tue, 7 Jan 2020 04:38:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578393509;
-        bh=BSpms8vYzmAl/YFEGgI8wzX4uGpMNJOd+zSnFgxFaP0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MKjc8aAF40U5qjbdM4l/1SABZ0JniIFWxtHuneoS4v0G7TPEk0yLjiPYPP36egmvR
-         ja1LaMDtkIm4jF81pIDJpn4/wHbw8TX78YJZ+w0Jr3G+t6LIusO81C2Iy7/mxq0ewj
-         tCHIdn1VvkIz+qwHIec8EhRlRho2N/kIyP3sfgm4=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007AcTZo112928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 04:38:29 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 04:38:28 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 04:38:28 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007AcPAU005113;
-        Tue, 7 Jan 2020 04:38:27 -0600
-Subject: Re: [PATCH] media: stm32-dcmi: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191217104135.23554-1-peter.ujfalusi@ti.com>
- <84946ffd-8e90-7b6a-6667-a10e27d31655@st.com>
- <8229c7ed-b513-6bf8-5684-60d87a92d41f@st.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <a4682783-e966-6176-4ab5-cc9345e3508f@ti.com>
-Date:   Tue, 7 Jan 2020 12:38:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 05:38:49 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so42188589qke.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:38:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fpJndPxyZ4R+jrK+jYf8rr5h0Mx9Gx0vV4jnzYZ9o90=;
+        b=ZRYo76yK4Ep4lXuT3n8Ha2XS6sXPq73ctrxZg83MQEjRpIl4t+6y4n+h/bjxe1vLbg
+         hCW9PizMi6zlo5oAScKGk0BsUz+mXQdA10p1IYRBvAev5hjg/UQuzrEHMKN6heFOHXdw
+         GFPs1uH6Sxxwt8QHadQAndwGb2+q61QVCrBBx1S0xduB3Tiiyd8GYWmbKJXaLRYKHoSq
+         kb5qM4jUpZwnWb0rjin3K4uokTrbMcNkYHWR9HLPyLNlgSBIZ4k7PLYKC3aKP7gXH6v1
+         681NWvHC0KZLpD2uxAX4KHfcC4zRN94sNCDo9g7AFUaokK6X6NK2VR384HY5TKXuQ1Zw
+         pcJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fpJndPxyZ4R+jrK+jYf8rr5h0Mx9Gx0vV4jnzYZ9o90=;
+        b=AkLx1OwxZEjzWWqV1FFDkAk30XiG8GgxAQiIgUT6gMgXr8DwCpkKnG0bbBksNxvsh6
+         UN8ZMUOJzzEAzKvAz0lP/SzNZt3GUyjvqLHNt7qEEcLaukO7bpX52e9hiw8aprx/o/qT
+         CUeBJvA/D5Z0uuuyBwzUqR0JwLLYBHU6GxTfNiA38onwSBHwBU4oG5xoqmOO4P9Ehvyl
+         AIO2lrdd1ya/MgweAxxaJ/9hbME692VFLSvVOmQ8fpTYLPhqMfC88oiTCJq1YtgzclNE
+         9jjl64NCbw8lsSYlw/jkpgeJcGw7+DW2kVQQkcpONY2P1sJPcZ9wPoEPbuEOIUTbLpWJ
+         eBJA==
+X-Gm-Message-State: APjAAAXg3jR36mepQL5ZauZFnbYd4BQLXRVnI8p84aUa/1R9asA7DrHs
+        fAM3Bv24pLOAqSRErV+9Vegs/wDXkcfqQov/1Q/Wyw==
+X-Google-Smtp-Source: APXvYqx9JP/WGb4Aqga4lH+lNLo76HxwGBCa20iTllDpa40cjyNaPJ1zfTmbRokAgshaXrw25DIDAjbxam/gRTuuCVY=
+X-Received: by 2002:a37:6255:: with SMTP id w82mr88081222qkb.330.1578393528231;
+ Tue, 07 Jan 2020 02:38:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <8229c7ed-b513-6bf8-5684-60d87a92d41f@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191224120709.18247-1-brgl@bgdev.pl> <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+In-Reply-To: <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 7 Jan 2020 11:38:37 +0100
+Message-ID: <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
+ status changes
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hugues,
+wt., 7 sty 2020 o 11:07 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > When discussing the recent user-space changes with Kent and while worki=
+ng
+> > on dbus API for libgpiod I noticed that we really don't have any way of
+> > keeping the line info synchronized between the kernel and user-space
+> > processes. We can of course periodically re-read the line information o=
+r
+> > even do it every time we want to read a property but this isn't optimal=
+.
+> >
+> > This series adds a new ioctl() that allows user-space to set up a watch=
+ on
+> > the GPIO chardev file-descriptor which can then be polled for events
+> > emitted by the kernel when the line is requested, released or its statu=
+s
+> > changed. This of course doesn't require the line to be requested. Multi=
+ple
+> > user-space processes can watch the same lines.
+> >
+> > This series also includes a variety of minor tweaks & fixes for problem=
+s
+> > discovered during development. For instance it addresses a race-conditi=
+on
+> > in current line event fifo.
+>
+> The patch set overall looks good to me, I don't understand the kfifo
+> parts but I trust you on this, though we need review from a FIFO
+> maintainer.
 
-On 07/01/2020 11.46, Hugues FRUCHET wrote:
-> Hi Peter,
-> 
-> If not too late, could you change trace to only trig error trace when
-> error is not "probe defered" ? See below:
-> 
-> -	chan = dma_request_slave_channel(&pdev->dev, "tx");
-> -	if (!chan) {
-> -		dev_info(&pdev->dev, "Unable to request DMA channel, defer probing\n");
-> -		return -EPROBE_DEFER;
-> +	chan = dma_request_chan(&pdev->dev, "tx");
-> +	if (IS_ERR(chan)) {
-> +		if (PTR_ERR(chan) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Unable to request DMA channel\n");
-> +		return PTR_ERR(chan);
+Ha! This may be a problem - there doesn't seem to be one. This is why
+I Cc'd Greg.
 
-Sure, I don't know how I missed it.
+>
+> Could you send me a pull request of the first patches before the
+> FIFO changes start, they are good cleanups on their own, also
+> it brings down the size of your patch stack.
 
-Regards,
-- Péter
+Sure, will do.
 
-> 
-> Best regards,
-> Hugues.
-> 
-> On 12/18/19 11:52 AM, Hugues FRUCHET wrote:
->> Thanks for patching Peter,
->>
->> No regression observed on my side.
->>
->> Acked-by: Hugues Fruchet <hugues.fruchet@st.com>
->>
->> Best regards,
->> Hugues.
->>
->> On 12/17/19 11:41 AM, Peter Ujfalusi wrote:
->>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->>> eating up the error code.
->>>
->>> By using dma_request_chan() directly the driver can support deferred
->>> probing against DMA.
->>>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>   drivers/media/platform/stm32/stm32-dcmi.c | 6 +++---
->>>   1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c 
->>> b/drivers/media/platform/stm32/stm32-dcmi.c
->>> index 9392e3409fba..55351872b0c7 100644
->>> --- a/drivers/media/platform/stm32/stm32-dcmi.c
->>> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
->>> @@ -1910,10 +1910,10 @@ static int dcmi_probe(struct platform_device 
->>> *pdev)
->>>           return PTR_ERR(mclk);
->>>       }
->>> -    chan = dma_request_slave_channel(&pdev->dev, "tx");
->>> -    if (!chan) {
->>> +    chan = dma_request_chan(&pdev->dev, "tx");
->>> +    if (IS_ERR(chan)) {
->>>           dev_info(&pdev->dev, "Unable to request DMA channel, defer 
->>> probing\n");
->>> -        return -EPROBE_DEFER;
->>> +        return PTR_ERR(chan);
->>>       }
->>>       spin_lock_init(&dcmi->irqlock);
->> >
+>
+> Yours,
+> Linus Walleij
 
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Bart
