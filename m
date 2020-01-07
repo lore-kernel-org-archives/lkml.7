@@ -2,146 +2,321 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B89C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B06C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0692821744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC252073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YPAXbqoV"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HkNn+Mcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgAGQSz (ORCPT
+        id S1728421AbgAGQTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:18:55 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:57690 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgAGQSz (ORCPT
+        Tue, 7 Jan 2020 11:19:45 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33244 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgAGQTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:18:55 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007GC1l8073481;
-        Tue, 7 Jan 2020 16:18:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=LrUamD+V8wbn5/d7X40R8tpABzP39MyqAKN7D5HtWXc=;
- b=YPAXbqoVr3cTDeqFBB4Nz6GhRhpaQiNLlaj1xNdMcLkBtF0ngywq9yRXvYToJ9bViSA3
- Esgaj70CkduG48RRyZ8pMtLe0W1Qii8EstRPyJZI81+nUqgdIFg7HvwUiIFN/rlWQTWL
- gsNlTsrEzmjCVnF35m/S36gxeU/WUdINnH3X8tobEmYliVHEEPH3flnvGYND2rIt4NqW
- jx2eHScgjPX7Lv4mW7xSe6Z6vdZR/8cxFwJ4l3vX3R29LCuRElqVmasJ+hV7VUBaSQmB
- 7HZ4TlPVYtZAC1fO77g61AgMpk02MuUTWXXblHDkH8aAMxqbu2dcX+TENZLPPPKPXUT7 rQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xakbqpg4b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 16:18:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007G4Heb015586;
-        Tue, 7 Jan 2020 16:18:37 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xcpcqk745-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 16:18:37 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007GIZha024022;
-        Tue, 7 Jan 2020 16:18:35 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 08:18:35 -0800
-Date:   Tue, 7 Jan 2020 19:18:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/rose: remove redundant assignment to variable failed
-Message-ID: <20200107161827.GO3911@kadam>
-References: <20200107152415.106353-1-colin.king@canonical.com>
+        Tue, 7 Jan 2020 11:19:45 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C028352F;
+        Tue,  7 Jan 2020 17:19:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578413982;
+        bh=ePBq3gwBEwF1GIYrfuJj8013Yt+Uie+hLIRudyo/dw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HkNn+Mclmn9Y3BBpXeUWX3gJmCnnzXIOv+0DeFaMGiwyssNdHA2IwGKzCWkwrEKiP
+         AaAQjjEG/kOgNVsDF/kSzXUyTC4YsnBMNRk1cKSCCKx2DjRPfDROz4JrISCAx1ze+N
+         ih/no+WPtqkoYyg3FWcEcX/vYVjkD7n7F9weFwwc=
+Date:   Tue, 7 Jan 2020 18:19:32 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
+ yaml bindings
+Message-ID: <20200107161932.GJ4871@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <20191227200116.2612137-9-helen.koike@collabora.com>
+ <20200106235957.GA28230@pendragon.ideasonboard.com>
+ <a465c895f944b5cb0b63bfab2f8642fc81f1576e.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200107152415.106353-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001070134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001070134
+In-Reply-To: <a465c895f944b5cb0b63bfab2f8642fc81f1576e.camel@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:24:15PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+Hi Ezequiel,
+
+On Tue, Jan 07, 2020 at 10:45:15AM -0300, Ezequiel Garcia wrote:
+> On Tue, 2020-01-07 at 01:59 +0200, Laurent Pinchart wrote:
+> > On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
+> > > Add yaml DT bindings for Rockchip ISP1.
+> > > 
+> > > This was tested and verified with:
+> > > mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
+> > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > 
+> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > 
+> > > ---
+> > > 
+> > > Changes in v12:
+> > > - The commit replaces the following commit in previous series named
+> > > media: staging: dt-bindings: Document the Rockchip ISP1 bindings
+> > > This new patch adds yaml binding and was verified with
+> > > make dtbs_check and make dt_binding_check
+> > > 
+> > > Changes in v11:
+> > > - add clock-names values
+> > > 
+> > > Changes in v10:
+> > > - unsquash
+> > > 
+> > > Changes in v9:
+> > > - squash
+> > > - move to staging
+> > > 
+> > > Changes in v8:
+> > > - fix title division style
+> > > 
+> > > Changes in v7:
+> > > - update document with new design and tested example
+> > > 
+> > >  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
+> > >  1 file changed, 193 insertions(+)
+> > >  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > 
+> > > diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > new file mode 100644
+> > > index 000000000000..4d1b2c67a4cd
+> > > --- /dev/null
+> > > +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> > > @@ -0,0 +1,193 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Rockchip SoC Image Signal Processing unit v1
+> > > +
+> > > +maintainers:
+> > > +  - Helen Koike <helen.koike@collabora.com>
+> > > +
+> > > +description: |
+> > > +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> > > +  which contains image processing, scaling, and compression funcitons.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: rockchip,rk3399-cif-isp
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  iommus:
+> > > +    maxItems: 1
+> > > +
+> > > +  power-domains:
+> > > +    maxItems: 1
+> > > +
+> > > +  phys:
+> > > +    maxItems: 1
+> > > +    description: phandle for the PHY port
+> > 
+> > According to http://opensource.rock-chips.com/wiki_Camera_driver, RK3388
+> > can route either of DPHY RX0 or DPHY RX1 to the single ISP instance,
+> > while RK3399 has one PHY per ISP instance, with DPHY RX1 being shared
+> > with the display. Have you given any thought on how we will support this
+> > in a backward-compatible way in the DT bindings ?
 > 
-> The variable failed is being assigned a value that is never read, the
-> following goto statement jumps to the end of the function and variable
-> failed is not referenced at all.  Remove the redundant assignment.
+> As discussed on IRC, we could have multiple PHYs specifiers
+> in the phy property. The ISP would have multiple ports,
+> with one PHY per port.
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  net/rose/rose_route.c | 1 -
->  1 file changed, 1 deletion(-)
+> > > +
+> > > +  phy-names:
+> > > +    const: dphy
+> > > +
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: ISP clock
+> > > +      - description: ISP aclk clock
+> > > +      - description: ISP aclk wrapper clock
+> > > +      - description: ISP hclk clock
+> > > +      - description: ISP hclk wrapper clock
+> > 
+> > I wonder what aclk and hclk stand far. In any case those names match the
+> > CRU documentation, so that seems fine.
 > 
-> diff --git a/net/rose/rose_route.c b/net/rose/rose_route.c
-> index c53307623236..5277631fa14c 100644
-> --- a/net/rose/rose_route.c
-> +++ b/net/rose/rose_route.c
-> @@ -696,7 +696,6 @@ struct rose_neigh *rose_get_neigh(rose_address *addr, unsigned char *cause,
->  				for (i = 0; i < node->count; i++) {
->  					if (!rose_ftimer_running(node->neighbour[i])) {
->  						res = node->neighbour[i];
-> -						failed = 0;
->  						goto out;
->  					}
->  					failed = 1;
+> IIRC, traditionally, Rockchip calls aclk to the AXI clock,
+> and hclk to the AHB. We'll improve this description.
+> 
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: clk_isp
+> > > +      - const: aclk_isp
+> > > +      - const: aclk_isp_wrap
+> > > +      - const: hclk_isp
+> > > +      - const: hclk_isp_wrap
+> > > +
+> 
+> I wonder if we should better amend the names as well.
 
-I don't know the code, but I would have expected the out label to come
-earlier:
+We could, but they match the names in the CRU documentation, so I think
+they're fine.
 
+> > > +  # See ./video-interfaces.txt for details
+> > > +  ports:
+> > > +    type: object
+> > > +    additionalProperties: false
+> > > +
+> > > +    properties:
+> > > +      "#address-cells":
+> > > +        const: 1
+> > > +
+> > > +      "#size-cells":
+> > > +        const: 0
+> > > +
+> > > +      port@0:
+> > > +        type: object
+> > > +        additionalProperties: false
+> > 
+> > I think this should have a description to tell what this port
+> > corresponds to.
+> 
+> OK.
+> 
+> > > +
+> > > +        properties:
+> > > +          "#address-cells":
+> > > +            const: 1
+> > > +
+> > > +          "#size-cells":
+> > > +            const: 0
+> > > +
+> > > +          reg:
+> > > +            const: 0
+> > > +            description: port identifier.
+> > 
+> > Here and for the endpoint below the description is probably not needed.
+> 
+> OK.
+> 
+> > > +
+> > > +        patternProperties:
+> > > +          endpoint:
+> > > +            type: object
+> > > +            additionalProperties: false
+> > > +
+> > > +            properties:
+> > > +              reg:
+> > > +                maxItems: 1
+> > > +                description: endpoint identifier.
+> > > +
+> > > +              data-lanes:
+> > > +                minItems: 1
+> > > +                maxItems: 4
+> > > +
+> > > +              remote-endpoint: true
+> > > +
+> > > +    required:
+> > > +      - port@0
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - power-domains
+> > > +  - iommus
+> > > +  - phys
+> > > +  - phy-names
+> > > +  - ports
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +
+> > > +    #include <dt-bindings/clock/rk3399-cru.h>
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +    #include <dt-bindings/power/rk3399-power.h>
+> > > +
+> > > +    parent0: parent@0 {
+> > > +        #address-cells = <2>;
+> > > +        #size-cells = <2>;
+> > > +
+> > > +        isp0: isp0@ff910000 {
+> > > +            compatible = "rockchip,rk3399-cif-isp";
+> > > +            reg = <0x0 0xff910000 0x0 0x4000>;
+> > > +            interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +            clocks = <&cru SCLK_ISP0>,
+> > > +                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> > > +                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> > > +            clock-names = "clk_isp",
+> > > +                          "aclk_isp", "aclk_isp_wrap",
+> > > +                          "hclk_isp", "hclk_isp_wrap";
+> > > +            power-domains = <&power RK3399_PD_ISP0>;
+> > > +            iommus = <&isp0_mmu>;
+> > > +            phys = <&dphy>;
+> > > +            phy-names = "dphy";
+> > > +
+> > > +            ports {
+> > > +                #address-cells = <1>;
+> > > +                #size-cells = <0>;
+> > > +
+> > > +                port@0 {
+> > > +                    #address-cells = <1>;
+> > > +                    #size-cells = <0>;
+> > > +                    reg = <0>;
+> > > +
+> > > +                    mipi_in_wcam: endpoint@0 {
+> > > +                        reg = <0>;
+> > > +                        remote-endpoint = <&wcam_out>;
+> > > +                        data-lanes = <1 2>;
+> > > +                    };
+> > > +
+> > > +                    mipi_in_ucam: endpoint@1 {
+> > > +                        reg = <1>;
+> > > +                        remote-endpoint = <&ucam_out>;
+> > > +                        data-lanes = <1>;
+> > > +                    };
+> > 
+> > Are those two cameras connected to the same CSI-2 lines with at most one
+> > sensor out of reset ?
+> 
+> Indeed, these are two cameras connected to the same DPHY,
+> and only one can work at a time.
+> 
+> > With the above small issues addressed,
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-        }
-        if (!route_frame) { /* connect request */
-                for (node = rose_node_list; node != NULL; node = node->next) {
-                        if (rosecmpm(addr, &node->address, node->mask) == 0) {
-                                for (i = 0; i < node->count; i++) {
-                                        if (!rose_ftimer_running(node->neighbour[i])) {
-                                                res = node->neighbour[i];
-                                                failed = 0;
-                                                goto out;
-                                        }
-                                        failed = 1;
-                                }
-                        }
-                }
-        }
+-- 
+Regards,
 
-<--------***********  I would have expected it to be right here.
-        if (failed) {
-                *cause      = ROSE_OUT_OF_ORDER;
-                *diagnostic = 0;
-        } else {
-                *cause      = ROSE_NOT_OBTAINABLE;
-                *diagnostic = 0;
-        }
-
-out:
-        if (!route_frame) spin_unlock_bh(&rose_node_list_lock);
-        return res;
-
-regards,
-dan carpenter
-
+Laurent Pinchart
