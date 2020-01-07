@@ -2,115 +2,106 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD5DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3D5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95442077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B2E2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LzfATNAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgAGUdM (ORCPT
+        id S1728744AbgAGUd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:33:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:46835 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGUdM (ORCPT
+        Tue, 7 Jan 2020 15:33:57 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35739 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728384AbgAGUd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:33:12 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N8GhM-1jjtnH2mDQ-014Clh; Tue, 07 Jan 2020 21:32:35 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/drm_panel: fix export of drm_panel_of_backlight, try #3
-Date:   Tue,  7 Jan 2020 21:32:19 +0100
-Message-Id: <20200107203231.920256-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 15:33:57 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so469553qvi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 12:33:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3zhpjGKRs5oCN7gE0zJUv09fBYY5DJxxWR8yhyAhckI=;
+        b=LzfATNAFVRCE8SAl1d6Ctk4/lJ3RQSwN2ruwf6LC27wA411ljbwylPEOr6fqE9gRJK
+         /aW3Q/ojQqDrhd3inOEO0hHNcy6SAQJ1vTsbc9lFG5jVP3pvqSdDSaU8Pa5owAqvBU8B
+         luGS4iid5TYnlqBU3ecv9aw61bsN9ZpBz3F+DDSVAdrPb4wNO92hWHqqoQxhrBdpv5Ph
+         oPrKDojhIIATLeooNxbXC9kMnsP5qZA1e90aV/Tz4jgc5sIqaT9AIJXuDHRgZ+XbpjTv
+         +nk4SnEi+FeRmci7r55ERdAASdZgPpAY02r9b46vZe0iLEDR3Xge2WCmwVarMRF8iPmL
+         g1JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3zhpjGKRs5oCN7gE0zJUv09fBYY5DJxxWR8yhyAhckI=;
+        b=GxfriBa9LKz3BuGlKA7z1HbK3c6uuOLePXbLv8BXK2crJjKBaVQ9UBhOpSkna5wmcm
+         Alo5jf3vSfk/Tek1OVJj4q7ltse3NH4Cohe5uJs7ktn1RvRm6dx9vmUocqfCT1J2KtST
+         DVNUhaEmiUxc7mWuzNc5Z6MK1kDgbv1TAYntlmSrn98bPn1rPQy90iH1TMtXmAq+cDo3
+         K64TGycmF/q3I6J60t+XUOhlSDhzz0Zgla0VFeFISH2TOAaGGnxeBPTaFTNebbP3zUFs
+         1XXZkSrd1K97vkkLTuXHVi0T+BmmcYxADU7FcYVufHhGyPVLooV4HRQegh6W0vdIhEuV
+         JGUA==
+X-Gm-Message-State: APjAAAXlo0l+HtOeZ79rKeQsQGF/wWbwbrZjzGQiqZpJZ5qKn6TpaVqq
+        uBWNzamfxSg18IXv8b+RJOHkVw==
+X-Google-Smtp-Source: APXvYqzWbftKZEr84YWD8iGrR1oDz0h1VmVb/RITKJH7Bi68eIZnbK/lkG9EUM5l75oi0+8mHGJU/Q==
+X-Received: by 2002:a05:6214:1150:: with SMTP id b16mr1181882qvt.71.1578429235967;
+        Tue, 07 Jan 2020 12:33:55 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id i28sm446729qtc.57.2020.01.07.12.33.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 12:33:55 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iovY2-0001Xd-Ue; Tue, 07 Jan 2020 16:33:54 -0400
+Date:   Tue, 7 Jan 2020 16:33:54 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
+        dledford@redhat.com, paulmck@kernel.org, rcu@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+Message-ID: <20200107203354.GD26174@ziepe.ca>
+References: <20200107192912.22691-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/NhLrxqpg6XKvAA2QlCXou9wFzS/QEKD9R22jKCGu83ingNmFkN
- 8MKJzffFKDqvRIrsAPk+c1QSho9DtI86Ndl/BtKD+qRSvZjghtRLKzMid8BkN6Yls7VdoNV
- zAmpNGWH3fEMQN2DuipIjGicyuruC2NiPTCCXC6CNomfbcKXkpQa2iOCj8LI4ZCbS00CRo6
- 2pHcQsagbx8cdNUjBi32Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PEMphTNeLWo=:mweMGnIlw93YdAYqxBZoQu
- 7H2EeQ4t3AUCa8WHL3++FS0s6CJY7X2UnWl9g7eTvCjiqn/FB67KDtRvP4Q5xTmiZcOImAoih
- o1hXGbxgljwuCuRCXclzum+bMm6SuUY7ANoIQejfdTxKQriLLFMzG+C+VjRx9c23Fzk1O7NDO
- BmtiPqER+q/xyB+p8dEBm8rZeNEflN+l7pji2XRJaafocGfvHA6QawsH924SGJz6IouqJtPEa
- cFhYpNuUTBUCVQmN1v/9ieNuM95hHBQVZ0wcQl63RojxoSewN9+izIJyQp2W4eOJUBYx/7+dk
- Fun2yYNPSZ6WutvLqwP1Mg496/PTRU2hzsq+XtM01QNrL8dwByQviVewb0VuYJgTYWrZ5QhTW
- fS7ddL+1l1ZpfEHlrD2jfCfUMT+lcHIhdAyf7MxlZaijFBepm84O6bYXSflzAp4Yz8M66u00p
- C7u4883CF9OV7r75hZXxELrAIWKGLpWe/qJ0oFC4BnULiAW+QZ6vd0VkZnZFV1F4Y1KzMwxkf
- AZgT2gu3vL6IHC5e3BIcz5GGBHyG1vBEklExqXXfJpO2r3gXZ8iqcIXptrsQuntER0AiWEzVs
- TRBNmGY3UvYfaU9PfYCu4f4bAxGhfplLsWUxKTI92DV2WabM6lv6YSDhkQarHLeYdcvH/GbPV
- Mxpe4fxRKnblva+5ZN+19zUxTmVH/poabY7f1VGR+Inkq5JCkRyKO5JwK0Wph2MHNaDQe3zWj
- r6rtr3+3xFzBB3wwE1MG7YY0Vt7fcQZOOu+BplGWLrk6HTz9nO818HGDNIdMBQqbjlkBYXkg0
- o/1xJm8WQH1jPch7Kjd9F6ym5y3JfV/RrHHRhzznzNOdvi4MwWmODvAiFHhxRphjbuICNGnSM
- d+4mfVH7phEBahBH4CaQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107192912.22691-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Making this IS_REACHABLE() was still wrong, as that just determines
-whether the lower-level backlight code would be reachable from the panel
-driver. However, with CONFIG_DRM=y and CONFIG_BACKLIGHT_CLASS_DEVICE=m,
-the drm_panel_of_backlight is left out of drm_panel.o but the condition
-tells the driver that it is there, leading to multiple link errors such as
+On Wed, Jan 08, 2020 at 12:59:12AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> 
+> list_for_each_entry_rcu has built-in RCU and lock checking.
+> Pass cond argument to list_for_each_entry_rcu.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>  drivers/infiniband/hw/hfi1/verbs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+> index 089e201d7550..e6abdbcb4ffb 100644
+> +++ b/drivers/infiniband/hw/hfi1/verbs.c
+> @@ -515,7 +515,8 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
+>  				       opa_get_lid(packet->dlid, 9B));
+>  		if (!mcast)
+>  			goto drop;
+> -		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+> +		list_for_each_entry_rcu(p, &mcast->qp_list, list,
+> +					lock_is_held(&(ibp->rvp.lock).dep_map)) {
 
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sitronix-st7701.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sharp-ls043t1le01.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-seiko-43wvf1g.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-ronbo-rb070d30.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-rocktech-jh057n00900.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-panasonic-vvx10f034n00.ko] undefined!
-ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.ko] undefined!
+Why .dep_map? Does this compile?
 
-Change the condition to check for whether the function was actually part
-of the drm module. This version of the patch survived a few hundred
-randconfig builds, so I have a good feeling this might be the last
-one for the export.
-
-Fixes: 4a34a9dcec94 ("drm/drm_panel: Fix EXPORT of drm_panel_of_backlight() one more time")
-Fixes: 907aa265fde6 ("drm/drm_panel: fix EXPORT of drm_panel_of_backlight")
-Fixes: 152dbdeab1b2 ("drm/panel: add backlight support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/drm/drm_panel.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-index 121f7aabccd1..6193cb555acc 100644
---- a/include/drm/drm_panel.h
-+++ b/include/drm/drm_panel.h
-@@ -198,7 +198,8 @@ static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
- }
- #endif
- 
--#if IS_REACHABLE(CONFIG_BACKLIGHT_CLASS_DEVICE)
-+#if IS_ENABLED(CONFIG_DRM_PANEL) && (IS_BUILTIN(CONFIG_BACKLIGHT_CLASS_DEVICE) || \
-+	(IS_MODULE(CONFIG_DRM) && IS_MODULE(CONFIG_BACKLIGHT_CLASS_DEVICE)))
- int drm_panel_of_backlight(struct drm_panel *panel);
- #else
- static inline int drm_panel_of_backlight(struct drm_panel *panel)
--- 
-2.20.0
-
+Jason
