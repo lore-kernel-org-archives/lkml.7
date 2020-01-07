@@ -2,108 +2,101 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD28DC32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087FAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D520207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sTFeI61t"
+	by mail.kernel.org (Postfix) with ESMTP id DCC3D2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgAGCHb (ORCPT
+        id S1727458AbgAGCIo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 21:07:31 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42033 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbgAGCHb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 21:07:31 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p9so22558459plk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 18:07:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=FcqVbuH4BEZl+ciRs0e0B8iPKj0+hshWElohx4nDlP8=;
-        b=sTFeI61tYPfuAIi6zuNSHzccw82y+IFJQZN/FOERtaSSqtpiXv2rOpO1dyPm4suK9d
-         ftLYzVvf4icX0o3N0u/z5HFcxiat1L2XRuge1iX7lbBY2Md2XAs+Vxt04yEGQu7uv2l8
-         B9lrwHI36DRK0JUm1QxdEBLBDZl4WkM/Ai4x6+Hqh019u9drIfYC7rQPYih72eXUlL7V
-         KOFBxa2toSREPK7LfZYoSs+/8fgvnWy7jTYEu1twlyKcjKroHFNdQjabRMii/TID8Eev
-         FBntvssn6jwCDIMA8zHiVazWzc611aei+IvMD9PvhSF9GrFnfsLNykTivOxhqLapB3+P
-         +P0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=FcqVbuH4BEZl+ciRs0e0B8iPKj0+hshWElohx4nDlP8=;
-        b=o1ynMgGqiK8MG8cSCqLZeIt/Hb3PjSPvInkClEQ+TpumYpK7BdO8flPC8LZpvvb6pT
-         zgkfZaRQig2AtGfRCRrg2b0D1+sMUWqkudTHc6MywsrrzAjMUr977GkCowcZ0ue9q4LP
-         UaZ5cMJjvF7W2Bt9A0jher1iPs6DXIv0Fxpw42llJFA4kMjsryU3pzuLr1Qe4KWQvl/x
-         fw/SpBUQCRfuT/4gJHKjZeIP8qFFRprRNTfp4xi9TcOZ/TrVcT7iVclqovRUPjUyMWts
-         HE4LsGZ54K+oW7XsNEIFQ6TV5cLV6eqa7SKRdD/gq2Elpn789aUsO1/1SwTcShNA+Ovu
-         hjKw==
-X-Gm-Message-State: APjAAAVio9Y40a8HGGq7KWTEMYUzYiceY3GPhepYaqeeS8p6jGOzb49s
-        QU97aOl+zly5nE6sjORDR6hQDQ==
-X-Google-Smtp-Source: APXvYqxSmH3jtb3yGf6lQzuN/p1hBfhYZSwhFc2W7ST0vDRyyIEI7Z+ED8qhCWhzRta6FDHArc60zA==
-X-Received: by 2002:a17:90a:660b:: with SMTP id l11mr45934270pjj.47.1578362850725;
-        Mon, 06 Jan 2020 18:07:30 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id i3sm78670353pfg.94.2020.01.06.18.07.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 18:07:29 -0800 (PST)
-Date:   Mon, 6 Jan 2020 18:07:29 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Wei Yang <richardw.yang@linux.intel.com>
-cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        cgroups@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200107012624.GB15341@richard>
-Message-ID: <alpine.DEB.2.21.2001061803200.55132@chino.kir.corp.google.com>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com> <CAKgT0Uf+EP8yGf93=R3XK0Y=0To0KQDys0O1BkG-Odej3Rwj5A@mail.gmail.com> <20200107012624.GB15341@richard>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 6 Jan 2020 21:08:44 -0500
+Received: from mga06.intel.com ([134.134.136.31]:8223 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727250AbgAGCIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 21:08:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 18:08:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
+   d="scan'208";a="217583466"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Jan 2020 18:08:42 -0800
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 6 Jan 2020 18:08:42 -0800
+Received: from fmsmsx123.amr.corp.intel.com ([169.254.7.87]) by
+ fmsmsx158.amr.corp.intel.com ([169.254.15.85]) with mapi id 14.03.0439.000;
+ Mon, 6 Jan 2020 18:08:42 -0800
+From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Xiyu Yang <xiyuyang19@fudan.edu.cn>
+CC:     "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>,
+        "kjlu@umn.edu" <kjlu@umn.edu>, "leon@kernel.org" <leon@kernel.org>,
+        "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Latif, Faisal" <faisal.latif@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Shannon Nelson <shannon.nelson@intel.com>,
+        "Singhai, Anjali" <anjali.singhai@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
+ dereference
+Thread-Topic: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
+ dereference
+Thread-Index: AQHVvrhzchRnSKHHyEuZXScGHS/Gk6faLOQAgARUNiA=
+Date:   Tue, 7 Jan 2020 02:08:41 +0000
+Message-ID: <9DD61F30A802C4429A01CA4200E302A7C1DF97F0@fmsmsx123.amr.corp.intel.com>
+References: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
+ <20200104000128.GA20711@ziepe.ca>
+In-Reply-To: <20200104000128.GA20711@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjI0MGQ1YjMtZGMxMS00MGRlLWE1ZTctNGI2ZTdlMDk2ZTkwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibDJqaU1hdDUzbzg3MGVnT2k0a1VDenZhd2FYbnRZTUNCdkFhT2xoQ1o0UkhDTTU0aDk0ZGV1eGk3WGZGOExCaSJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.106]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020, Wei Yang wrote:
-
-> >One thing you might want to do is pull the "if (compound)" check out
-> >and place it outside of the spinlock check. It would then simplify
-> >this signficantly so it is something like
-> >if (compound) {
-> >  spin_lock();
-> >  list = page_deferred_list(page);
-> >  if (!list_empty(list)) {
-> >    list_del_init(list);
-> >    from->..split_queue_len--;
-> >  }
-> >  spin_unlock();
-> >}
-> >
-> >Same for the block below. I would pull the check for compound outside
-> >of the spinlock call since it is a value that shouldn't change and
-> >would eliminate an unnecessary lock in the non-compound case.
+> Subject: Re: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer dereference
 > 
-> This is reasonable, if no objection from others, I would change this in v2.
+> On Mon, Dec 30, 2019 at 10:24:28AM +0800, Xiyu Yang wrote:
+> > A NULL pointer can be returned by in_dev_get(). Thus add a
+> > corresponding check so that a NULL pointer dereference will be avoided
+> > at this place.
+> >
+> > Fixes: 8e06af711bf2 ("i40iw: add main, hdr, status")
+> > Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> > Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> > ---
+> > Changes in v2:
+> > - Release rtnl lock when in_dev_get return NULL Changes in v3:
+> > - Continue the next loop when in_dev_get return NULL Changes in v4:
+> > - Change commit message
+> >
+> >  drivers/infiniband/hw/i40iw/i40iw_main.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Applied to for-next
+> 
+> And Shiraz, Leon is right, that trylock stuff is completely wrong, let's fix it.
+> 
 
-Looks fine to me; I don't see it as a necessary improvement but there's 
-also no reason to object to it.  It's definitely a patch that is needed, 
-however, for the simple reason that with the existing code we can 
-manipulate the deferred split queue incorrectly so either way works for 
-me.  Feel free to keep my acked-by.
+Sure.
