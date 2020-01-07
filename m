@@ -2,53 +2,51 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02400C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A732C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FBA20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFC42077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431721;
-	bh=d1qpflQK46k/4iySWlyG7VTcPhhMCixsO4uhdBHj1/w=;
+	s=default; t=1578431727;
+	bh=SU7IFwXxIGchuif/YWTqFR+gv0K9MabXSVyIQP1Gu80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1kQkJRhY7J65aJyuusQSxp4lSoefbZmfYyCv1NVbtb+zuJl3J7w7iyxx28v+i0FKU
-	 PiZXdLZEbvhxFnnLS2jRzbTx6Lkx1Y6vS/kRWvuq/JKVwyTt3rOZer9GjH7G75ZTX7
-	 iaisdia2hIX6msMxQcJ24Q0wtKKAh8J01uWR7qxk=
+	b=VE0MGZ5aVPliP+vDVufwTN0/cXfLYgiXo1MiKkW+pnd71Ls1S890LyGS689HYT0JA
+	 Pn/vvbTz6/9hHFDxMWzXUmywa69wjBBrN1aXWwqi/iE/5fvigKQZY0rBKFcDf+2Vtx
+	 zwurAprkLB2SlehjYLoYozHPvVGrEgYvOFn9wv8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAGVIP (ORCPT
+        id S1729678AbgAGVP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60196 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729478AbgAGVIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:12 -0500
+        id S1729659AbgAGVIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7999924672;
-        Tue,  7 Jan 2020 21:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC92214D8;
+        Tue,  7 Jan 2020 21:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431291;
-        bh=d1qpflQK46k/4iySWlyG7VTcPhhMCixsO4uhdBHj1/w=;
+        s=default; t=1578431289;
+        bh=SU7IFwXxIGchuif/YWTqFR+gv0K9MabXSVyIQP1Gu80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZOBBRW3N+yYjhV3TCP2cDjWLSS3NaG4I8R1s71v7CEUsqMkZf4aE/VKLKikstwBY
-         rSmpHhZO8VtJSY0LZBbpCOtm93caAGwIvcYDtjtu0HtdxxRAQVw4anN/qeULtjjui8
-         0n/Rx0HDXpzygQVVAxNHdICm+bQCFvk7YXkI91Rw=
+        b=2OE10hMwk7r5rdPhksOk+fu4tBeii8+ZIXZZdtAvidGnNKzHwAEs9Z57OXQkWjK+Q
+         feMpaq8wSJIMEdrzuhilNb2d0AxIsKtw1+L8uX9/k7bC9HuR9yPlbUwenH8HTqdzD6
+         q/yf13wjksAIWHYgmPfPAOGG45yB4dAvbFkkqvN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/115] net: add annotations on hh->hh_len lockless accesses
-Date:   Tue,  7 Jan 2020 21:55:21 +0100
-Message-Id: <20200107205309.837348332@linuxfoundation.org>
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 4.19 084/115] xfs: dont check for AG deadlock for realtime files in bunmapi
+Date:   Tue,  7 Jan 2020 21:54:54 +0100
+Message-Id: <20200107205305.737731060@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,149 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit c305c6ae79e2ce20c22660ceda94f0d86d639a82 ]
+commit 69ffe5960df16938bccfe1b65382af0b3de51265 upstream.
 
-KCSAN reported a data-race [1]
+Commit 5b094d6dac04 ("xfs: fix multi-AG deadlock in xfs_bunmapi") added
+a check in __xfs_bunmapi() to stop early if we would touch multiple AGs
+in the wrong order. However, this check isn't applicable for realtime
+files. In most cases, it just makes us do unnecessary commits. However,
+without the fix from the previous commit ("xfs: fix realtime file data
+space leak"), if the last and second-to-last extents also happen to have
+different "AG numbers", then the break actually causes __xfs_bunmapi()
+to return without making any progress, which sends
+xfs_itruncate_extents_flags() into an infinite loop.
 
-While we can use READ_ONCE() on the read sides,
-we need to make sure hh->hh_len is written last.
+Fixes: 5b094d6dac04 ("xfs: fix multi-AG deadlock in xfs_bunmapi")
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[1]
-
-BUG: KCSAN: data-race in eth_header_cache / neigh_resolve_output
-
-write to 0xffff8880b9dedcb8 of 4 bytes by task 29760 on cpu 0:
- eth_header_cache+0xa9/0xd0 net/ethernet/eth.c:247
- neigh_hh_init net/core/neighbour.c:1463 [inline]
- neigh_resolve_output net/core/neighbour.c:1480 [inline]
- neigh_resolve_output+0x415/0x470 net/core/neighbour.c:1470
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- NF_HOOK include/linux/netfilter.h:305 [inline]
- ndisc_send_skb+0x459/0x5f0 net/ipv6/ndisc.c:505
- ndisc_send_ns+0x207/0x430 net/ipv6/ndisc.c:647
- rt6_probe_deferred+0x98/0xf0 net/ipv6/route.c:615
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-read to 0xffff8880b9dedcb8 of 4 bytes by task 29572 on cpu 1:
- neigh_resolve_output net/core/neighbour.c:1479 [inline]
- neigh_resolve_output+0x113/0x470 net/core/neighbour.c:1470
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- NF_HOOK include/linux/netfilter.h:305 [inline]
- ndisc_send_skb+0x459/0x5f0 net/ipv6/ndisc.c:505
- ndisc_send_ns+0x207/0x430 net/ipv6/ndisc.c:647
- rt6_probe_deferred+0x98/0xf0 net/ipv6/route.c:615
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
- worker_thread+0xa0/0x800 kernel/workqueue.c:2415
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 29572 Comm: kworker/1:4 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events rt6_probe_deferred
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firewire/net.c  | 6 +++++-
- include/net/neighbour.h | 2 +-
- net/core/neighbour.c    | 4 ++--
- net/ethernet/eth.c      | 7 ++++++-
- 4 files changed, 14 insertions(+), 5 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
-index 82ba110d9d1a..bbabfca812bb 100644
---- a/drivers/firewire/net.c
-+++ b/drivers/firewire/net.c
-@@ -249,7 +249,11 @@ static int fwnet_header_cache(const struct neighbour *neigh,
- 	h = (struct fwnet_header *)((u8 *)hh->hh_data + HH_DATA_OFF(sizeof(*h)));
- 	h->h_proto = type;
- 	memcpy(h->h_dest, neigh->ha, net->addr_len);
--	hh->hh_len = FWNET_HLEN;
-+
-+	/* Pairs with the READ_ONCE() in neigh_resolve_output(),
-+	 * neigh_hh_output() and neigh_update_hhs().
-+	 */
-+	smp_store_release(&hh->hh_len, FWNET_HLEN);
- 
- 	return 0;
- }
-diff --git a/include/net/neighbour.h b/include/net/neighbour.h
-index c84807c1c5bd..5ce035984a4d 100644
---- a/include/net/neighbour.h
-+++ b/include/net/neighbour.h
-@@ -459,7 +459,7 @@ static inline int neigh_hh_output(const struct hh_cache *hh, struct sk_buff *skb
- 
- 	do {
- 		seq = read_seqbegin(&hh->hh_lock);
--		hh_len = hh->hh_len;
-+		hh_len = READ_ONCE(hh->hh_len);
- 		if (likely(hh_len <= HH_DATA_MOD)) {
- 			hh_alen = HH_DATA_MOD;
- 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index 7597afee7068..e260d44ebdca 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -1097,7 +1097,7 @@ static void neigh_update_hhs(struct neighbour *neigh)
- 
- 	if (update) {
- 		hh = &neigh->hh;
--		if (hh->hh_len) {
-+		if (READ_ONCE(hh->hh_len)) {
- 			write_seqlock_bh(&hh->hh_lock);
- 			update(hh, neigh->dev, neigh->ha);
- 			write_sequnlock_bh(&hh->hh_lock);
-@@ -1360,7 +1360,7 @@ int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
- 		struct net_device *dev = neigh->dev;
- 		unsigned int seq;
- 
--		if (dev->header_ops->cache && !neigh->hh.hh_len)
-+		if (dev->header_ops->cache && !READ_ONCE(neigh->hh.hh_len))
- 			neigh_hh_init(neigh);
- 
- 		do {
-diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index fd8faa0dfa61..ca06e9a53d15 100644
---- a/net/ethernet/eth.c
-+++ b/net/ethernet/eth.c
-@@ -239,7 +239,12 @@ int eth_header_cache(const struct neighbour *neigh, struct hh_cache *hh, __be16
- 	eth->h_proto = type;
- 	memcpy(eth->h_source, dev->dev_addr, ETH_ALEN);
- 	memcpy(eth->h_dest, neigh->ha, ETH_ALEN);
--	hh->hh_len = ETH_HLEN;
-+
-+	/* Pairs with READ_ONCE() in neigh_resolve_output(),
-+	 * neigh_hh_output() and neigh_update_hhs().
-+	 */
-+	smp_store_release(&hh->hh_len, ETH_HLEN);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(eth_header_cache);
--- 
-2.20.1
-
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -5239,7 +5239,7 @@ __xfs_bunmapi(
+ 		 * Make sure we don't touch multiple AGF headers out of order
+ 		 * in a single transaction, as that could cause AB-BA deadlocks.
+ 		 */
+-		if (!wasdel) {
++		if (!wasdel && !isrt) {
+ 			agno = XFS_FSB_TO_AGNO(mp, del.br_startblock);
+ 			if (prev_agno != NULLAGNUMBER && prev_agno > agno)
+ 				break;
 
 
