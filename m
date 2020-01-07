@@ -2,187 +2,125 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5986FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618AFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2432D207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342502077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQsoySUS"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="HJOmLIqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgAGXRF (ORCPT
+        id S1727641AbgAGXSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:17:05 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40900 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgAGXRF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:17:05 -0500
-Received: by mail-lf1-f65.google.com with SMTP id i23so996086lfo.7;
-        Tue, 07 Jan 2020 15:17:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z3UtITc4zK9Gssc2kyYRqxkunqDolPS6OQRkM0QUDtY=;
-        b=EQsoySUSRqREURbglDkMpdKVjg7eKOdVdnGQceh4ZMZckD9eTKjPsdhL+J6E+QZ69N
-         QyuynbapDeAO0nc3e4xnbjaxGiBgLXE71h2iL85U+G/ycdrz7H07Cpj/yPyaeO3F+4Rt
-         /WUO85IAyOKH3NhVnNdAFoYsmqcpbDBBJUvv6NXa8C9yHLjXJEyPnNQFBfAau/Nu7bzs
-         qlAckR03wlON54gxxfPHou2/3MmBavmx5cb2wBQadXgAQxQImuvPEqfkM8/Bq1T+JqXI
-         5ZvOuE41iPq+wKT4RMc9Myu3ablGDLJJSXQAPUanLqQn3HaTArsHCA9VKrfDVSKnDFy2
-         OWew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z3UtITc4zK9Gssc2kyYRqxkunqDolPS6OQRkM0QUDtY=;
-        b=kp8jjM1+S13xUS+Wfr8vOi9/uZRUsvLUzzSJPknjunRkhChKLoohRl8Pdab92ce3rN
-         +2UTtzEacWG0+n5bTsGyY4X5NoOLA+mhh6dH8rZyDQkriWdL7sjd/SR2oWDhWtbY//rv
-         ZDaZ34pVXFrQ2KsymkHA38JsHd5j/cbvbUKfbKlCTkR6Rfw1IKFfbi3rcOc/yEpV52Sg
-         cPxVpGPAVJdY3abSPjtlep54d4/8dJebL7BlCHsFd+5025DPqwZ/dLQTwMJ0aIhG1kXp
-         f+REIFodGNPlwZct08C81pbHI1SfXzI7ulxaXYIjef8Y1PSGt1NHnXkuvWaedrSCZwWD
-         lHKg==
-X-Gm-Message-State: APjAAAWNmDaeZLagUmFytqfklg0PR/OVbGVgANkZNyNzk3+6NTQ1Ab3v
-        Lw+vo7J3FCWrRLrsWkd9sF/VGEIV
-X-Google-Smtp-Source: APXvYqxZMJb5KnSBEXAC4K7LWG92+6r0yVQIv2mY1VHq/LxhTXrOjzLw0n/qj2BPsGoqosGpf6xGxA==
-X-Received: by 2002:a19:9157:: with SMTP id y23mr1176014lfj.74.1578439021866;
-        Tue, 07 Jan 2020 15:17:01 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t27sm407149ljd.26.2020.01.07.15.17.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 15:17:01 -0800 (PST)
-Subject: Re: [PATCH v6 00/12] NVIDIA Tegra20 CPUFreq driver major update
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191218202142.11717-1-digetx@gmail.com>
-Message-ID: <ff3006a1-b5b1-5854-3a2c-67278e53b6dd@gmail.com>
-Date:   Wed, 8 Jan 2020 02:17:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 7 Jan 2020 18:18:23 -0500
+Received: from onstation.org ([52.200.56.107]:35462 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727074AbgAGXSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:18:22 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 3FF903EE6F;
+        Tue,  7 Jan 2020 23:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1578439101;
+        bh=dPi/tlFFpKEhh6XGOkAwyWFcjw/UEJV74jJZmzMoFC4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HJOmLIqBjzocoa69Tgfssq8+Zhsh/tT9Ma4MDBktwAV8J8Eg9QpZQxspeRIIPCEly
+         4OT73k4esnw71aA6YvcjVvjU51j2V3r36iUt/GxRhIcFoFUrIgm/Zoy3wrcNXGiPJk
+         bzaaAwwrQzuZNwx8/a154IzGC6zRXEYe0O+vl7s8=
+Date:   Tue, 7 Jan 2020 18:18:20 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator
+ bindings
+Message-ID: <20200107231820.GA13416@onstation.org>
+References: <20191205002503.13088-1-masneyb@onstation.org>
+ <20191205002503.13088-5-masneyb@onstation.org>
+ <20200105083534.01EB12071A@mail.kernel.org>
+ <20200107120317.GB8083@onstation.org>
+ <20200107175222.6B5052073D@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191218202142.11717-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107175222.6B5052073D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.12.2019 23:21, Dmitry Osipenko пишет:
-> Hello,
+On Tue, Jan 07, 2020 at 09:52:21AM -0800, Stephen Boyd wrote:
+> Quoting Brian Masney (2020-01-07 04:03:17)
+> > On Sun, Jan 05, 2020 at 12:35:33AM -0800, Stephen Boyd wrote:
+> > > Quoting Brian Masney (2019-12-04 16:25:00)
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> > > > +    #include <dt-bindings/gpio/gpio.h>
+> > > > +
+> > > > +    vibrator {
+> > > > +        compatible = "clk-vibrator";
+> > > > +
+> > > > +        vcc-supply = <&pm8941_l19>;
+> > > > +
+> > > > +        clocks = <&mmcc CAMSS_GP1_CLK>;
+> > > > +        clock-names = "core";
+> > > > +        clock-frequency = <24000>;
+> > > > +
+> > > > +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> > > > +
+> > > > +        pinctrl-names = "default";
+> > > > +        pinctrl-0 = <&vibrator_pin>;
+> > > 
+> > > I'm still trying to wrap my head around this. I think we can have a pwm
+> > > provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
+> > > then this 'clk-vibrator' binding wouldn't exist? Instead we would have
+> > > some sort of binding for a device that expects a pwm and whatever else
+> > > is required, like the enable gpio and power supply. Is there an actual
+> > > hardware block that is this way? Does it have a real product id and is
+> > > made by some company? Right now this looks a little too generic to not
+> > > just be a catch-all for something that buzzes.
+> > 
+> > So have some of the Qualcomm clocks like this one register with both the
+> > clk and the pwm frameworks? I feel that approach would better represent
+> > the hardware in device tree.
 > 
-> This series moves intermediate-clk handling from tegra20-cpufreq into
-> tegra-clk driver. This allows us to switch to generic cpufreq-dt driver
-> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
-> of the box. All boards need to adopt CPU OPPs in their device-trees in
-> order to get cpufreq support.
+> That is one option. Or another option would be to have another node that
+> "adapts" a clk signal to a pwm provider. Similar to how we adapt a gpio
+> to make a clk gate or mux. Something like:
 > 
-> Changelog:
+> 	gcc: clock-controller@f00d {
+> 		reg = <0xf00d 0xd00d>;
+> 		#clock-cells = <1>;
+> 	};
 > 
-> v6: - Dropped "cpufreq: dt-platdev: Blacklist NVIDIA Tegra20 and Tegra30 SoCs"
->       patch from the series since Viresh picked up that patch separately.
 > 
->     - Added two new patches to this series:
+> 	pwm {
+> 		compatible = "pwm-clk";
+> 		#pwm-cells = <0>;
+> 		clocks = <&gcc 45>;
+> 		assigned-clocks = <&gcc 45>;
+> 		assigned-clock-rates = <1400000>;
+> 	};
 > 
->         ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
->         ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
-> 
->       Previously these patches were sent out separately from this series,
->       but it should be more consistent to include them into the series since
->       they directly relate to enabling of the cpufreq driver on Tegra30.
-> 
-> v5: - The "Use generic cpufreq-dt driver (Tegra30 supported now)" patch
->       is separated now into two patches by factoring out the blacklisting
->       of cpufreq-dt-platdev into a standalone patch. This is done in a
->       response to request from Jon Hunter to fix the warning splats during
->       boot that are coming from OPP core because OPPs are unavailable. The
->       OPPs will become available once tegra20-cpufreq driver will be updated
->       to support the cpufreq-dt.
-> 
-> v4: - Updated CCLK diagram in the "Add custom CCLK implementation" patch.
-> 
->     - <linux/cpu.h> is now included in the "Use generic cpufreq-dt driver"
->       patch, for consistency.
-> 
->     - Returned value of get_cpu_device() is now checked in the "Use generic
->       cpufreq-dt driver" patch, for consistency as well.
-> 
-> v3: - The "Add custom CCLK implementation" patch was updated in accordance
->       to the comments from Peter De Schrijver. We will not use the clock
->       skipper.
-> 
->     - Re added OPPs for T30 Beaver board because Thierry has that board ;)
-> 
->     - Added r-b for the "DT binding" patch from Rob Herring.
-> 
-> v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh Kumar
->       in a review comment to v1.
-> 
->     - Added acks from Viresh Kumar.
-> 
->     - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
->       Nicolas told me on IRC that it works fine.
-> 
->     - Fixed compilation of the "Add custom CCLK implementation" patch. The
->       error happened because v1 was based on top of yet unreviewed/unapplied
->       patch "clk: tegra: divider: Support enable-bit for Super clocks".
->       Thanks to Peter Geis for reporting the problem.
-> 
->     - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
->       that's what NVIDIA uses in the testing farm.
-> 
-> Dmitry Osipenko (12):
->   clk: tegra: Add custom CCLK implementation
->   clk: tegra: pll: Add pre/post rate-change hooks
->   clk: tegra: cclk: Add helpers for handling PLLX rate changes
->   clk: tegra20: Use custom CCLK implementation
->   clk: tegra30: Use custom CCLK implementation
->   ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
->   ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
->   dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
->   cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
->     now)
->   ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
->   ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
->   ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
-> 
->  .../cpufreq/nvidia,tegra20-cpufreq.txt        |  56 +++++
->  arch/arm/boot/dts/tegra30-beaver.dts          |  40 +++-
->  arch/arm/mach-tegra/sleep-tegra30.S           |  18 +-
->  arch/arm/mach-tegra/tegra.c                   |   4 +
->  drivers/clk/tegra/Makefile                    |   1 +
->  drivers/clk/tegra/clk-pll.c                   |  12 +-
->  drivers/clk/tegra/clk-tegra-super-cclk.c      | 212 +++++++++++++++++
->  drivers/clk/tegra/clk-tegra20.c               |   7 +-
->  drivers/clk/tegra/clk-tegra30.c               |   6 +-
->  drivers/clk/tegra/clk.h                       |  19 +-
->  drivers/cpufreq/Kconfig.arm                   |   6 +-
->  drivers/cpufreq/tegra20-cpufreq.c             | 217 +++++-------------
->  12 files changed, 418 insertions(+), 180 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->  create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
-> 
+> And then the pwm-clk driver would adjust the duty cycle to generate a
+> pwm.
 
-Hello Peter,
+OK, that makes sense.
 
-Could you please take a look at the patches and ACK them if they are
-okay to you?
+I'll pick this up after someone from Qualcomm posts a patch that
+implements the clock duty cycle. I'm willing to do that work if someone
+explains the relationship between the m, n, and d values on these clocks.
+
+Brian
