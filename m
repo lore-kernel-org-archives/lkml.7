@@ -2,87 +2,105 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E08C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D58C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E68208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2242187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578428103;
+	bh=APNOiLZhJ+qURXUP3Reuf+QURzzyJRzavVUavOcUaY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AY8WVZu74lTKtuqsnOhtWalp48pS6j7S66+UZY10oqyoZGYAgoCuBOnLkrtIQDLsf
+	 z22+mhmp2QfY9LlRrpVC0xD456yPvJLu5V1hvy7OH2QXu8I4hOOQ5TjU98aDy54dV6
+	 0SjoZLEE4gBv0b8/hxTTcCusp+O0MKSAU1Ev2uec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAGUPA (ORCPT
+        id S1728796AbgAGUPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:15:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgAGUPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:15:00 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51DBA2080A;
-        Tue,  7 Jan 2020 20:14:59 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 15:14:57 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH] libtraceevent: Add dependency on libdl
-Message-ID: <20200107151457.39c1e81f@gandalf.local.home>
-In-Reply-To: <20200106221955.GC16851@kernel.org>
-References: <20191226224931.3458-1-sudipm.mukherjee@gmail.com>
-        <20200106221955.GC16851@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 7 Jan 2020 15:15:02 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41952 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728421AbgAGUPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:15:01 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so654290eds.8;
+        Tue, 07 Jan 2020 12:15:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RezWGX4/KzRhjUL8C/w2qwO9LCJwafyvIRxk+EkpPaQ=;
+        b=CyltCQWqa1OUJL8K7buMEnwbjFAddhp7ULqWv8qeeLNnXskJ1oDVj5Qv8CKN3T/1oy
+         rlWuFQITSi6jHpiqYPCIavTVfhSG1DC4DXjrBuWI4pjCnmTBy6OQ9SamBJBZkCtxgzR7
+         XpD28XgA3Vy/jq76PRpvKLDY42nRbTnhv2YglxZ/ISdUU0jLaJDbswNViIROorjoivvY
+         jb+D2mL/LLbG/DEJ7w4RsxYypBkXa57w4v8sjf9oypwRhtjkbq9XAZksi+9OUH517EBi
+         70fUG2eSmqKFBhOhuWcnvkAtVibNZ3rlIjAu8SP5s0dgJmO4x2fRg4mwQFr7OAla1x8v
+         rckA==
+X-Gm-Message-State: APjAAAXJrioRsXaWmz2OFDvruibz6/y2NVrsguc7bxg7VT1V2QqGPFJx
+        1eo65Bznde2HaAGAoxtF4WBYN41F
+X-Google-Smtp-Source: APXvYqw6e4hhOXHOzwm4STWo1T2YNVmlHVOtMiLI34CH3pgDXDvwEbqN3AaLJCk+BtY7g6rkS+l7hQ==
+X-Received: by 2002:a17:906:2cd6:: with SMTP id r22mr1163948ejr.313.1578428099440;
+        Tue, 07 Jan 2020 12:14:59 -0800 (PST)
+Received: from kozik-book ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id cw10sm10946ejb.56.2020.01.07.12.14.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 12:14:58 -0800 (PST)
+Date:   Tue, 7 Jan 2020 21:14:56 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 05/20] soc: samsung: Rename Samsung and Exynos to
+ lowercase
+Message-ID: <20200107201456.GD8636@kozik-book>
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-6-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200104152107.11407-6-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jan 2020 19:19:55 -0300
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-
-> Em Thu, Dec 26, 2019 at 10:49:31PM +0000, Sudip Mukherjee escreveu:
-> > event-plugin.c is calling dl_*() functions but it is not linked with
-> > libdl. As a result when we use ldd on the generated libtraceevent.so
-> > file, it does not list libdl as one of its dependencies.
-> > Add -ldl explicitly as done in tools/lib/lockdep.  
+On Sat, Jan 04, 2020 at 04:20:52PM +0100, Krzysztof Kozlowski wrote:
+> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+> and "Exynos" names.
 > 
-> Rostedt, can you ack this one? It applies just fine.
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-Thanks!
-
--- Steve
-
+> "SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+> names.  Therefore they should be written with lowercase letters starting
+> with capital letter.
 > 
-> - Arnaldo
->  
-> > Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> > ---
-> >  tools/lib/traceevent/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-> > index c874c017c636..0d0575981cc7 100644
-> > --- a/tools/lib/traceevent/Makefile
-> > +++ b/tools/lib/traceevent/Makefile
-> > @@ -143,7 +143,7 @@ $(TE_IN): force
-> >  	$(Q)$(MAKE) $(build)=libtraceevent
-> >  
-> >  $(OUTPUT)libtraceevent.so.$(EVENT_PARSE_VERSION): $(TE_IN)
-> > -	$(QUIET_LINK)$(CC) --shared $(LDFLAGS) $^ -Wl,-soname,libtraceevent.so.$(EP_VERSION) -o $@
-> > +	$(QUIET_LINK)$(CC) --shared $(LDFLAGS) $^ -ldl -Wl,-soname,libtraceevent.so.$(EP_VERSION) -o $@
-> >  	@ln -sf $(@F) $(OUTPUT)libtraceevent.so
-> >  	@ln -sf $(@F) $(OUTPUT)libtraceevent.so.$(EP_VERSION)
-> >  
-> > -- 
-> > 2.11.0  
+> The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> Electronics Co., Ltd., in advertisement materials and on website.
 > 
+> Although advertisement materials usually use uppercase "SAMSUNG", the
+> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+> privacy/legal statements on
+> https://www.samsung.com/semiconductor/privacy-global/).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/soc/samsung/Kconfig                 |  2 +-
+>  drivers/soc/samsung/exynos-chipid.c         |  2 +-
+>  drivers/soc/samsung/exynos-pmu.c            |  2 +-
+>  drivers/soc/samsung/exynos-pmu.h            |  2 +-
+>  drivers/soc/samsung/exynos3250-pmu.c        |  2 +-
+>  drivers/soc/samsung/exynos4-pmu.c           |  2 +-
+>  drivers/soc/samsung/exynos5250-pmu.c        |  2 +-
+>  drivers/soc/samsung/exynos5420-pmu.c        |  2 +-
+>  include/linux/soc/samsung/exynos-pmu.h      |  2 +-
+>  include/linux/soc/samsung/exynos-regs-pmu.h | 16 ++++++++--------
+
+Applied.
+
+Best regards,
+Krzysztof
 
