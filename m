@@ -2,205 +2,387 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429AC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F94C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3713A206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="SlkuC2H9"
+	by mail.kernel.org (Postfix) with ESMTP id 97CB0206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgAGHvq (ORCPT
+        id S1727281AbgAGHxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:51:46 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54213 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgAGHvp (ORCPT
+        Tue, 7 Jan 2020 02:53:50 -0500
+Received: from jax4mhob23.registeredsite.com ([64.69.218.111]:38864 "EHLO
+        jax4mhob23.registeredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgAGHxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:51:45 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m24so17813286wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 23:51:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=JeiqdmtUMyWOTftvNLubB0ZlSpHFDswOnC4RjW6U6GE=;
-        b=SlkuC2H9D5qWyaQ8qcx3F+xQydYl+QJcDgYjhvL4rtZQwX4HIrQo4UgAuLTY7BfB75
-         PUeh0Dq+H0Lmi7EtK7cBvCCoww5Kp3sGm9mU/3mOkZSw69UhjD+dCEyocHKQzVFBOd/f
-         1hwCcKM1Jvr1F0sNP7oAEe9J0ArUT1iAGTQbRCmMofqUGZfdbWQ22aWbnK6QGFNM/taU
-         qqGf8Zcd7yvzxKWY8xV2IPz3IF3sQfTXtFPQdTwi3R8+4tYmOFdNmQIeynklFPby/TXs
-         f4cDx6dhVDp86rGW02rMNHn6GVKqhBo0PIficdDSpRPP8cpoOPEqbZuJ0bNnB52K6viV
-         oc7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=JeiqdmtUMyWOTftvNLubB0ZlSpHFDswOnC4RjW6U6GE=;
-        b=UbsEawBdRi7coUAy19mD4zEClFYFMMDRVs1bbvcPJFU5wRh0uRBRbkXh8AHZr90pJH
-         uxX8gBS3LTsTtjVzw6tD8BauHF0pgBGkY6HGICXudZD5sMVmOrNO7HVEu/dLl8m4gAQX
-         stRijmfyaJ2GeOuNcmLa4fHoVi0x4nsAmjOfhzs+QnvJHI4kmj2z7RAkcAKuEB/FDz9Z
-         F6FPa1GBG0KvlMCKM296FZtqizaGFiYo1UZxxUBjt9x6I4iqfh3gOgZMW2AIj5jsUTRf
-         KazjTzzYq4j+JCsoJxFJBPc36avRAIQNdrmAl2cGO6RNNu1FRO+2r4yftGeHD+iofSOE
-         thEg==
-X-Gm-Message-State: APjAAAXyzL5PnBnj/bMhMvexim2LDsc5lqArMOQXvvcSFiWvJZU9lyCY
-        Oay5A5zoi8+V1zYgly9nTn47eA==
-X-Google-Smtp-Source: APXvYqwbTzi4da5sYoYBNersGjGd0bPEnenG66OEdAADR5SYHnHw2lSWqTjx0cyI8PP76Y14jUTwNg==
-X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr35755682wml.156.1578383503183;
-        Mon, 06 Jan 2020 23:51:43 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id s10sm76197003wrw.12.2020.01.06.23.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 23:51:42 -0800 (PST)
-Message-ID: <5bd51904b1b6511748c5454bce437bdc038eeb1f.camel@unipv.it>
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>, "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Tue, 07 Jan 2020 08:51:41 +0100
-In-Reply-To: <20191226083706.GA17974@ming.t460p>
-References: <20191223130828.GA25948@ming.t460p>
-         <20191223162619.GA3282@mit.edu>
-         <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
-         <20191223172257.GB3282@mit.edu>
-         <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
-         <20191223195301.GC3282@mit.edu> <20191224012707.GA13083@ming.t460p>
-         <20191225051722.GA119634@mit.edu> <20191226022702.GA2901@ming.t460p>
-         <20191226033057.GA10794@mit.edu> <20191226083706.GA17974@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 7 Jan 2020 02:53:50 -0500
+Received: from mailpod.hostingplatform.com ([10.30.71.205])
+        by jax4mhob23.registeredsite.com (8.14.4/8.14.4) with ESMTP id 0077rlDp108662
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 02:53:47 -0500
+Received: (qmail 5502 invoked by uid 0); 7 Jan 2020 07:53:47 -0000
+X-TCPREMOTEIP: 81.173.50.109
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
+  by 0 with ESMTPA; 7 Jan 2020 07:53:46 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     linux-clk@vger.kernel.org
+Cc:     sboyd@kernel.org, mturquette@baylibre.com,
+        linux-kernel@vger.kernel.org,
+        Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v2] clk, clk-si5341: Support multiple input ports
+Date:   Tue,  7 Jan 2020 08:53:40 +0100
+Message-Id: <20200107075340.14528-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+In-Reply-To: <20200107054837.DB91F2075A@mail.kernel.org>
+References: <20191205115734.6987-1-mike.looijmans@topic.nl> <20200107054837.DB91F2075A@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno gio, 26/12/2019 alle 16.37 +0800, Ming Lei ha scritto:
-> On Wed, Dec 25, 2019 at 10:30:57PM -0500, Theodore Y. Ts'o wrote:
-> > On Thu, Dec 26, 2019 at 10:27:02AM +0800, Ming Lei wrote:
-> > > Maybe we need to be careful for HDD., since the request count in
-> scheduler
-> > > queue is double of in-flight request count, and in theory NCQ
-> should only
-> > > cover all in-flight 32 requests. I will find a sata HDD., and
-> see if
-> > > performance drop can be observed in the similar 'cp' test.
-> > 
-> > Please try to measure it, but I'd be really surprised if it's
-> > significant with with modern HDD's.
-> 
-> Just find one machine with AHCI SATA, and run the following xfs
-> overwrite test:
-> 
-> #!/bin/bash
-> DIR=$1
-> echo 3 > /proc/sys/vm/drop_caches
-> fio --readwrite=write --filesize=5g --overwrite=1 --
-> filename=$DIR/fiofile \
->         --runtime=60s --time_based --ioengine=psync --direct=0 --
-> bs=4k
-> 		--iodepth=128 --numjobs=2 --group_reporting=1 --
-> name=overwrite
-> 
-> FS is xfs, and disk is LVM over AHCI SATA with NCQ(depth 32),
-> because the
-> machine is picked up from RH beaker, and it is the only disk in the
-> box.
-> 
-> #lsblk
-> NAME                            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-> sda                               8:0    0 931.5G  0 disk 
-> ├─sda1                            8:1    0     1G  0 part /boot
-> └─sda2                            8:2    0 930.5G  0 part 
->   ├─rhel_hpe--ml10gen9--01-root 253:0    0    50G  0 lvm  /
->   ├─rhel_hpe--ml10gen9--01-swap 253:1    0   3.9G  0 lvm  [SWAP]
->   └─rhel_hpe--ml10gen9--01-home 253:2    0 876.6G  0 lvm  /home
-> 
-> 
-> kernel: 3a7ea2c483a53fc("scsi: provide mq_ops->busy() hook") which
-> is
-> the previous commit of f664a3cc17b7 ("scsi: kill off the legacy IO
-> path").
-> 
->             |scsi_mod.use_blk_mq=N |scsi_mod.use_blk_mq=Y |
-> -----------------------------------------------------------
-> throughput: |244MB/s               |169MB/s               |
-> -----------------------------------------------------------
-> 
-> Similar result can be observed on v5.4 kernel(184MB/s) with same
-> test
-> steps.
-> 
-> 
-> > That because they typically have
-> > a queue depth of 16, and a max_sectors_kb of 32767 (e.g., just
-> under
-> > 32 MiB).  Sort seeks are typically 1-2 ms, with full stroke seeks
-> > 8-10ms.  Typical sequential write speeds on a 7200 RPM drive is
-> > 125-150 MiB/s.  So suppose every other request sent to the HDD is
-> from
-> > the other request stream.  The disk will chose the 8 requests from
-> its
-> > queue that are contiguous, and so it will be writing around 256
-> MiB,
-> > which will take 2-3 seconds.  If it then needs to spend between 1
-> and
-> > 10 ms seeking to another location of the disk, before it writes
-> the
-> > next 256 MiB, the worst case overhead of that seek is 10ms / 2s,
-> or
-> > 0.5%.  That may very well be within your measurements' error bars.
-> 
-> Looks you assume that disk seeking just happens once when writing
-> around
-> 256MB. This assumption may not be true, given all data can be in
-> page
-> cache before writing. So when two tasks are submitting IOs
-> concurrently,
-> IOs from each single task is sequential, and NCQ may order the
-> current batch
-> submitted from the two streams. However disk seeking may still be
-> needed
-> for the next batch handled by NCQ.
-> 
-> > And of course, note that in real life, we are very *often* writing
-> to
-> > multiple files in parallel, for example, during a "make -j16"
-> while
-> > building the kernel.  Writing a single large file is certainly
-> > something people do (but even there people who are burning a 4G
-> DVD
-> > rip are often browsing the web while they are waiting for it to
-> > complete, and the browser will be writing cache files, etc.).  So
-> > whether or not this is something where we should be stressing over
-> > this specific workload is going to be quite debateable.
-> 
+The Si5341 and Si5340 have multiple input clock options. So far, the driver
+only supported the XTAL input, this adds support for the three external
+clock inputs as well.
 
-Hi,
-  is there any update on this? Sorry if I am making noise, but I would
-like to help to improve the kernel (or fix it) if I can help.
-Otherwise, please let me know how to consider this case,
+If the clock chip isn't programmed at boot, the driver will default to the
+XTAL input as before. If there is no "xtal" clock input available, it will
+pick the first connected input (e.g. "in0") as the input clock for the PLL.
+One can use clock-assigned-parents to select a particular clock as input.
 
-Thanks, and bye
-Andrea
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v2: Typo "isn't", remove first hunk, s/unsigned char/u8/
+
+ drivers/clk/clk-si5341.c | 212 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 196 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
+index 6e780c2a9e6b..3c228b018116 100644
+--- a/drivers/clk/clk-si5341.c
++++ b/drivers/clk/clk-si5341.c
+@@ -16,6 +16,8 @@
+ #include <linux/slab.h>
+ #include <asm/unaligned.h>
+ 
++#define SI5341_NUM_INPUTS 4
++
+ #define SI5341_MAX_NUM_OUTPUTS 10
+ #define SI5340_MAX_NUM_OUTPUTS 4
+ 
+@@ -56,8 +58,8 @@ struct clk_si5341 {
+ 	struct i2c_client *i2c_client;
+ 	struct clk_si5341_synth synth[SI5341_NUM_SYNTH];
+ 	struct clk_si5341_output clk[SI5341_MAX_NUM_OUTPUTS];
+-	struct clk *pxtal;
+-	const char *pxtal_name;
++	struct clk *input_clk[SI5341_NUM_INPUTS];
++	const char *input_clk_name[SI5341_NUM_INPUTS];
+ 	const u16 *reg_output_offset;
+ 	const u16 *reg_rdiv_offset;
+ 	u64 freq_vco; /* 13500–14256 MHz */
+@@ -78,10 +80,25 @@ struct clk_si5341_output_config {
+ #define SI5341_DEVICE_REV	0x0005
+ #define SI5341_STATUS		0x000C
+ #define SI5341_SOFT_RST		0x001C
++#define SI5341_IN_SEL		0x0021
++#define SI5341_XAXB_CFG		0x090E
++#define SI5341_IN_EN		0x0949
++#define SI5341_INX_TO_PFD_EN	0x094A
++
++/* Input selection */
++#define SI5341_IN_SEL_MASK	0x06
++#define SI5341_IN_SEL_SHIFT	1
++#define SI5341_IN_SEL_REGCTRL	0x01
++#define SI5341_INX_TO_PFD_SHIFT	4
++
++/* XTAL config bits */
++#define SI5341_XAXB_CFG_EXTCLK_EN	BIT(0)
++#define SI5341_XAXB_CFG_PDNB		BIT(1)
+ 
+ /* Input dividers (48-bit) */
+ #define SI5341_IN_PDIV(x)	(0x0208 + ((x) * 10))
+ #define SI5341_IN_PSET(x)	(0x020E + ((x) * 10))
++#define SI5341_PX_UPD		0x0230
+ 
+ /* PLL configuration */
+ #define SI5341_PLL_M_NUM	0x0235
+@@ -120,6 +137,10 @@ struct si5341_reg_default {
+ 	u8 value;
+ };
+ 
++static const char * const si5341_input_clock_names[] = {
++	"in0", "in1", "in2", "xtal"
++};
++
+ /* Output configuration registers 0..9 are not quite logically organized */
+ static const u16 si5341_reg_output_offset[] = {
+ 	0x0108,
+@@ -390,7 +411,112 @@ static unsigned long si5341_clk_recalc_rate(struct clk_hw *hw,
+ 	return (unsigned long)res;
+ }
+ 
++static int si5341_clk_get_selected_input(struct clk_si5341 *data)
++{
++	int err;
++	u32 val;
++
++	err = regmap_read(data->regmap, SI5341_IN_SEL, &val);
++	if (err < 0)
++		return err;
++
++	return (val & SI5341_IN_SEL_MASK) >> SI5341_IN_SEL_SHIFT;
++}
++
++static u8 si5341_clk_get_parent(struct clk_hw *hw)
++{
++	struct clk_si5341 *data = to_clk_si5341(hw);
++	int res = si5341_clk_get_selected_input(data);
++
++	if (res < 0)
++		return 0; /* Apparently we cannot report errors */
++
++	return res;
++}
++
++static int si5341_clk_reparent(struct clk_si5341 *data, u8 index)
++{
++	int err;
++	u8 val;
++
++	val = (index << SI5341_IN_SEL_SHIFT) & SI5341_IN_SEL_MASK;
++	/* Enable register-based input selection */
++	val |= SI5341_IN_SEL_REGCTRL;
++
++	err = regmap_update_bits(data->regmap,
++		SI5341_IN_SEL, SI5341_IN_SEL_REGCTRL | SI5341_IN_SEL_MASK, val);
++	if (err < 0)
++		return err;
++
++	if (index < 3) {
++		/* Enable input buffer for selected input */
++		err = regmap_update_bits(data->regmap,
++				SI5341_IN_EN, 0x07, BIT(index));
++		if (err < 0)
++			return err;
++
++		/* Enables the input to phase detector */
++		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
++				0x7 << SI5341_INX_TO_PFD_SHIFT,
++				BIT(index + SI5341_INX_TO_PFD_SHIFT));
++		if (err < 0)
++			return err;
++
++		/* Power down XTAL oscillator and buffer */
++		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
++				SI5341_XAXB_CFG_PDNB, 0);
++		if (err < 0)
++			return err;
++
++		/*
++		 * Set the P divider to "1". There's no explanation in the
++		 * datasheet of these registers, but the clockbuilder software
++		 * programs a "1" when the input is being used.
++		 */
++		err = regmap_write(data->regmap, SI5341_IN_PDIV(index), 1);
++		if (err < 0)
++			return err;
++
++		err = regmap_write(data->regmap, SI5341_IN_PSET(index), 1);
++		if (err < 0)
++			return err;
++
++		/* Set update PDIV bit */
++		err = regmap_write(data->regmap, SI5341_PX_UPD, BIT(index));
++		if (err < 0)
++			return err;
++	} else {
++		/* Disable all input buffers */
++		err = regmap_update_bits(data->regmap, SI5341_IN_EN, 0x07, 0);
++		if (err < 0)
++			return err;
++
++		/* Disable input to phase detector */
++		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
++				0x7 << SI5341_INX_TO_PFD_SHIFT, 0);
++		if (err < 0)
++			return err;
++
++		/* Power up XTAL oscillator and buffer */
++		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
++				SI5341_XAXB_CFG_PDNB, SI5341_XAXB_CFG_PDNB);
++		if (err < 0)
++			return err;
++	}
++
++	return 0;
++}
++
++static int si5341_clk_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_si5341 *data = to_clk_si5341(hw);
++
++	return si5341_clk_reparent(data, index);
++}
++
+ static const struct clk_ops si5341_clk_ops = {
++	.set_parent = si5341_clk_set_parent,
++	.get_parent = si5341_clk_get_parent,
+ 	.recalc_rate = si5341_clk_recalc_rate,
+ };
+ 
+@@ -985,7 +1111,8 @@ static const struct regmap_range si5341_regmap_volatile_range[] = {
+ 	regmap_reg_range(0x000C, 0x0012), /* Status */
+ 	regmap_reg_range(0x001C, 0x001E), /* reset, finc/fdec */
+ 	regmap_reg_range(0x00E2, 0x00FE), /* NVM, interrupts, device ready */
+-	/* Update bits for synth config */
++	/* Update bits for P divider and synth config */
++	regmap_reg_range(SI5341_PX_UPD, SI5341_PX_UPD),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(0), SI5341_SYNTH_N_UPD(0)),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(1), SI5341_SYNTH_N_UPD(1)),
+ 	regmap_reg_range(SI5341_SYNTH_N_UPD(2), SI5341_SYNTH_N_UPD(2)),
+@@ -1122,6 +1249,7 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 	struct device_node *np = data->i2c_client->dev.of_node;
+ 	u32 m_num = 0;
+ 	u32 m_den = 0;
++	int sel;
+ 
+ 	if (of_property_read_u32(np, "silabs,pll-m-num", &m_num)) {
+ 		dev_err(&data->i2c_client->dev,
+@@ -1135,7 +1263,11 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 	if (!m_num || !m_den) {
+ 		dev_err(&data->i2c_client->dev,
+ 			"PLL configuration invalid, assume 14GHz\n");
+-		m_den = clk_get_rate(data->pxtal) / 10;
++		sel = si5341_clk_get_selected_input(data);
++		if (sel < 0)
++			return sel;
++
++		m_den = clk_get_rate(data->input_clk[sel]) / 10;
+ 		m_num = 1400000000;
+ 	}
+ 
+@@ -1143,11 +1275,52 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
+ 			SI5341_PLL_M_NUM, m_num, m_den);
+ }
+ 
++static int si5341_clk_select_active_input(struct clk_si5341 *data)
++{
++	int res;
++	int err;
++	int i;
++
++	res = si5341_clk_get_selected_input(data);
++	if (res < 0)
++		return res;
++
++	/* If the current register setting is invalid, pick the first input */
++	if (!data->input_clk[res]) {
++		dev_dbg(&data->i2c_client->dev,
++			"Input %d not connected, rerouting\n", res);
++		res = -ENODEV;
++		for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
++			if (data->input_clk[i]) {
++				res = i;
++				break;
++			}
++		}
++		if (res < 0) {
++			dev_err(&data->i2c_client->dev,
++				"No clock input available\n");
++			return res;
++		}
++	}
++
++	/* Make sure the selected clock is also enabled and routed */
++	err = si5341_clk_reparent(data, res);
++	if (err < 0)
++		return err;
++
++	err = clk_prepare_enable(data->input_clk[res]);
++	if (err < 0)
++		return err;
++
++	return res;
++}
++
+ static int si5341_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *id)
+ {
+ 	struct clk_si5341 *data;
+ 	struct clk_init_data init;
++	struct clk *input;
+ 	const char *root_clock_name;
+ 	const char *synth_clock_names[SI5341_NUM_SYNTH];
+ 	int err;
+@@ -1161,12 +1334,16 @@ static int si5341_probe(struct i2c_client *client,
+ 
+ 	data->i2c_client = client;
+ 
+-	data->pxtal = devm_clk_get(&client->dev, "xtal");
+-	if (IS_ERR(data->pxtal)) {
+-		if (PTR_ERR(data->pxtal) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		dev_err(&client->dev, "Missing xtal clock input\n");
++	for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
++		input = devm_clk_get(&client->dev, si5341_input_clock_names[i]);
++		if (IS_ERR(input)) {
++			if (PTR_ERR(input) == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
++			data->input_clk_name[i] = si5341_input_clock_names[i];
++		} else {
++			data->input_clk[i] = input;
++			data->input_clk_name[i] = __clk_get_name(input);
++		}
+ 	}
+ 
+ 	err = si5341_dt_parse_dt(client, config);
+@@ -1188,9 +1365,6 @@ static int si5341_probe(struct i2c_client *client,
+ 	if (err < 0)
+ 		return err;
+ 
+-	/* "Activate" the xtal (usually a fixed clock) */
+-	clk_prepare_enable(data->pxtal);
+-
+ 	if (of_property_read_bool(client->dev.of_node, "silabs,reprogram")) {
+ 		initialization_required = true;
+ 	} else {
+@@ -1223,7 +1397,14 @@ static int si5341_probe(struct i2c_client *client,
+ 					ARRAY_SIZE(si5341_reg_defaults));
+ 		if (err < 0)
+ 			return err;
++	}
++
++	/* Input must be up and running at this point */
++	err = si5341_clk_select_active_input(data);
++	if (err < 0)
++		return err;
+ 
++	if (initialization_required) {
+ 		/* PLL configuration is required */
+ 		err = si5341_initialize_pll(data);
+ 		if (err < 0)
+@@ -1231,9 +1412,8 @@ static int si5341_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Register the PLL */
+-	data->pxtal_name = __clk_get_name(data->pxtal);
+-	init.parent_names = &data->pxtal_name;
+-	init.num_parents = 1; /* For now, only XTAL input supported */
++	init.parent_names = data->input_clk_name;
++	init.num_parents = SI5341_NUM_INPUTS;
+ 	init.ops = &si5341_clk_ops;
+ 	init.flags = 0;
+ 	data->hw.init = &init;
+-- 
+2.17.1
 
