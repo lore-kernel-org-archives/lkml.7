@@ -2,83 +2,106 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A11C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B2BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8712072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F5A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y9TuhSxt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="igFaqiZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgAGNMC (ORCPT
+        id S1728118AbgAGNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:12:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35738 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbgAGNMB (ORCPT
+        Tue, 7 Jan 2020 08:12:01 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43980 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgAGNMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 08:12:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3roxz6guEJ/YxIFLVeBH//5xGM64ZcJTUKnaWntqOek=; b=Y9TuhSxtHADNgC+2XWQQAGths
-        ovny7OuepH+xVuWPmyn4B+ua4SVqEtowwCDWlINRJv0VJ2VP0ymXprj00rnSN8JT5OVwQFETUW6qO
-        BbpldV8TlVGvgWQlTA0oLWB51Oa07YC1RCBnL9uGQlvFSWiF60KfIFA8nlsHJ/q83J26Shk4eWW5M
-        0UOXVUP4U5BpVHf+OD346c8iMFtjIwtAOK3GoKe5xPnZ9KMLWhnuGzQ8Swi8DF+lkAlzF/wa+ej8n
-        0LPFr0wJS9UE0hwrkWNWNlKhqrbYPONIglqfj4iMRRpSFxcfYFIhDo6qHDOawg4JyrXqKDYk4lZFy
-        QVjRRrheg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iooeC-0004hQ-Gg; Tue, 07 Jan 2020 13:11:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 817633012C3;
-        Tue,  7 Jan 2020 14:10:13 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 19BEE20D3D423; Tue,  7 Jan 2020 14:11:46 +0100 (CET)
-Date:   Tue, 7 Jan 2020 14:11:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+bcad772bbc241b4c6147@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in sys_sendfile64
-Message-ID: <20200107131146.GX2827@hirez.programming.kicks-ass.net>
-References: <000000000000e728ec057d5c9d90@google.com>
- <a5478450-f975-228f-1ca6-886a45b654a1@I-love.SAKURA.ne.jp>
- <CACT4Y+YqWgZZFXdX2A2jVYEdHfY9ywGMgRRP5W4Uqdu__rA63g@mail.gmail.com>
- <bc53fe0b-2c17-4d4f-1c40-f290997d0521@i-love.sakura.ne.jp>
- <CACT4Y+bEi9ZsJn0Jm2Lwt-1cijQq=wc5MqYh0qf6R6+wpZVD2Q@mail.gmail.com>
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007D9Xld095298;
+        Tue, 7 Jan 2020 13:11:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=g7nkYe1ARDrVKx7na1mVAWf8BhUTVbUMNdy8zKM4VjY=;
+ b=igFaqiZEbD8KP3BJ+EQV9Gtq2QRSC4xIWQURvW7BcUEs5vRr/VwRsmgF5mjmskAF+0He
+ eUXOClMz/QeQnXT4B6pE7LDD3JYFxIVt/WTJCpUPv0o7hCHQjPkvKkwaFUsgJ3HMl1ZP
+ xs1RBl6elszKcQcr/t91Bbp5Y+sqUMg1/Lzan4nZYyLN06Lht0QPdAit9VBEdSFOm9Qp
+ tc3X9aaW2t51WveNc+7/lTiJQ/5lU5fM1QjCofkDzIa4lDyb/GpjGz26aLcCtsoq8uHl
+ dODhTilOLp+lDL/sPSgAeBFrM2l2jkXd39eApuGXwHebQCxH7X3n05McbU0gZfd7vdsq Xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnpwc3d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 13:11:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007D4B8C022179;
+        Tue, 7 Jan 2020 13:11:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xcpamgbny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 13:11:53 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 007DBpI9017448;
+        Tue, 7 Jan 2020 13:11:51 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 05:11:51 -0800
+Date:   Tue, 7 Jan 2020 16:11:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>, Po Liu <po.liu@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH net-next] enetc: Fix an off by one in enetc_setup_tc_txtime()
+Message-ID: <20200107131143.jqytedvewberqp5c@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+bEi9ZsJn0Jm2Lwt-1cijQq=wc5MqYh0qf6R6+wpZVD2Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:02:47PM +0100, Dmitry Vyukov wrote:
-> > >> This is not a LSM problem, for the reproducer is calling
-> > >> sched_setattr(SCHED_DEADLINE) with very large values.
-> > >>
-> > >>   sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_??? */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=2251799813724439, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
-> > >>
-> > >> I think that this problem is nothing but an insane sched_setattr() parameter.
+The priv->tx_ring[] has 16 elements but only priv->num_tx_rings are
+set up, the rest are NULL.  This ">" comparison should be ">=" to avoid
+a potential crash.
 
-Argh, I had a patch for that somewhere. Let me go dig that out.
+Fixes: 0d08c9ec7d6e ("enetc: add support time specific departure base on the qos etf")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/net/ethernet/freescale/enetc/enetc_qos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index e910aaf0f5ec..00382b7c5bd8 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -315,7 +315,7 @@ int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data)
+ 
+ 	tc = qopt->queue;
+ 
+-	if (tc < 0 || tc > priv->num_tx_rings)
++	if (tc < 0 || tc >= priv->num_tx_rings)
+ 		return -EINVAL;
+ 
+ 	/* Do not support TXSTART and TX CSUM offload simutaniously */
+-- 
+2.11.0
+
