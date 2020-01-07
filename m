@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9119C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E04C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D28D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCCB206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432441;
-	bh=BO8+W/pUvcFEVd4Mbd+GoOcjP9xt29bGdvNc8cIPo1M=;
+	s=default; t=1578432448;
+	bh=/c4Zv3LUahUixv4fM0DPOnMkHwrKF/jP/VtElEH70mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhusHJtahUCnU12wDgKeOe75OUvehX4Bc4c6KJ84SPYkT4fsAVIzSAMm/lm5b4mLV
-	 yIltycQg/4UMcHdIODsG5YYb8XvlN4PzhS5+D/ldCBiBJguqkY5S8qb21Gm8UQAW3k
-	 QJrZSu/r4SdGNZyUnnwrqCikCEsECR/agE96pj9k=
+	b=FBzoM3rXsLndXPNSNA82HF0rqY4CCfpfq4T7FSv5dwHx3GUbvnn1PZIzlabBePJWu
+	 Ibmxjd1s8HtzvqLJ3mnNhCWmQxbjU8L/9/rTieyLE2qOsWnjtO3zdVq9QY83MSGXvX
+	 QUYk9kdKf2Ai0TwbhCBGZDODSbW6Q2pbsKUZZ9eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgAGV1U (ORCPT
+        id S1727678AbgAGU5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:27:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbgAGU5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:54 -0500
+        id S1727653AbgAGU5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E9424681;
-        Tue,  7 Jan 2020 20:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B062081E;
+        Tue,  7 Jan 2020 20:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430674;
-        bh=BO8+W/pUvcFEVd4Mbd+GoOcjP9xt29bGdvNc8cIPo1M=;
+        s=default; t=1578430659;
+        bh=/c4Zv3LUahUixv4fM0DPOnMkHwrKF/jP/VtElEH70mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uf7zNq6Z5QNghu2DYhVO7UwN/z9iHwY9QgNUlPuJFnLFBf5SY8vlLc6qBqL5xIK7/
-         hK32gMgcF06Agx7e5QfegnHCBDG19KTx3Ji+5MAJEZQ7CLEw0fj4zI+NR4Qa1ip4JJ
-         HfoDIrf6bJBb+DariGRO1nIOEgO9ektKUiCphguE=
+        b=wRO9GY7q/Xq2hQ/2pUmpbVt4siRzTFi2PtvyLY0B3558iXY/5rw4a08imY5TAZkf2
+         d4Hz+EUmUdaf5hZO+TGRYKgIc2cLSRZxKzCqKBSo8jf5ISMAq/SDbkjyA8ITfgjXqQ
+         Q9dxPeCpVRe6NIRp2Y9oKiwbvvy4hOJ/qsQe9oyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jonathan Billings <jsbillings@jsbillings.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 021/191] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Tue,  7 Jan 2020 21:52:21 +0100
-Message-Id: <20200107205334.138651059@linuxfoundation.org>
+Subject: [PATCH 5.4 042/191] afs: Fix creation calls in the dynamic root to fail with EOPNOTSUPP
+Date:   Tue,  7 Jan 2020 21:52:42 +0100
+Message-Id: <20200107205335.245874356@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
+[ Upstream commit 1da4bd9f9d187f53618890d7b66b9628bbec3c70 ]
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+Fix the lookup method on the dynamic root directory such that creation
+calls, such as mkdir, open(O_CREAT), symlink, etc. fail with EOPNOTSUPP
+rather than failing with some odd error (such as EEXIST).
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+lookup() itself tries to create automount directories when it is invoked.
+These are cached locally in RAM and not committed to storage.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/afs/dynroot.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index d78f67623f24..50052e9a1731 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4736,6 +4736,7 @@ static int __init cma_init(void)
- err:
- 	unregister_netdevice_notifier(&cma_nb);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 4150280509ff..7503899c0a1b 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -136,6 +136,9 @@ static struct dentry *afs_dynroot_lookup(struct inode *dir, struct dentry *dentr
+ 
+ 	ASSERTCMP(d_inode(dentry), ==, NULL);
+ 
++	if (flags & LOOKUP_CREATE)
++		return ERR_PTR(-EOPNOTSUPP);
++
+ 	if (dentry->d_name.len >= AFSNAMEMAX) {
+ 		_leave(" = -ENAMETOOLONG");
+ 		return ERR_PTR(-ENAMETOOLONG);
 -- 
 2.20.1
 
