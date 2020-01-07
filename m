@@ -2,148 +2,295 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD08BC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD02C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9F02087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E362081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXO+Giyq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ziDuMHvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgAGJ5n (ORCPT
+        id S1727783AbgAGJ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:57:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41569 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726558AbgAGJ5n (ORCPT
+        Tue, 7 Jan 2020 04:58:17 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39432 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgAGJ6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:57:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578391062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gJTdSZMyEb+Dqypz7jjPA/TCQrPtQYbIPnT3NNnPf2Y=;
-        b=QXO+GiyqTeJOjTo3aZEBLZM88HZz/PUOS8FXYJxfJNf+nMF/2HmGNYuBszuFASnJ3SSxkN
-        gjAJH3/EZqKEz4w0i+cJQkywwnJLBjtJRVjli1HXNe/T7amW6meLfyXykhgiueO1e7MEq7
-        IcIoxh1k2D7+ROpKsfTLfgJVbT4C6Sg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-_fnASorKNXqM7tyA8BnwUA-1; Tue, 07 Jan 2020 04:57:39 -0500
-X-MC-Unique: _fnASorKNXqM7tyA8BnwUA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3C8D18552AE;
-        Tue,  7 Jan 2020 09:57:37 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C91D0272B4;
-        Tue,  7 Jan 2020 09:57:35 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:57:33 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 1/3] perf util: Move block_pair_cmp to block-info
-Message-ID: <20200107095733.GD290055@krava>
-References: <20200106194525.12228-1-yao.jin@linux.intel.com>
+        Tue, 7 Jan 2020 04:58:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 20so18611225wmj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:58:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
+        b=ziDuMHvptB5Iu+MWIvv7l5G8tPvQ62nt+243YesP3kh3NQllbFzC0wCoWuOPEliMoN
+         fO8w5gcZPdaccC5JuLJLdvgPrLjqL5NMPXXhH9H+If4iQQR4TwPn94FfkkM9ixj98/tI
+         eiNUZ0h09fFAS6fsjhBMM3VPL9oFlrySbPVIbbo2bkKhmdEQ2ib1aWRSNM1l/Ka5D/3u
+         HaDAB7iNzcL0++VaSvgApD5ZwEvqceQQ2onwnpRQNghmfll5WqYbhG7v5iayIrHzmDw6
+         qcliaLUXAbEkkV2d8LJ2M1/jzQm7CUgjmZoNEZjokSJ5AynhB/n2OY/cV0XY5GwUTyqw
+         Wmbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
+        b=AAC7WblFrUPubMffbcF+MDhDD12ypVJSzNAazDwSCdoKMgpt543/DPEnMd9fUnbMtA
+         q8PjxFf8eP61zP+39Rex/bIogdXQCrxUgAC2Npa04qFOsXoUtYdZ4xIeQu+J070IEpxY
+         lGfyDbG6epVdnD85qLsDTexq79XjH0sOhPGgApx2KETCBcXLGWd2zfIg4/UNPCSC/+fb
+         ZDOaWeEpIFhLbdUI5rNGQ/dpdxouPmevztK6r6tZy6V3pX7rB62L5NjWo9+ekMeFr4WO
+         R0x6BBgH3Ugy0KqRTLnw5mGZNqSJw189gC7d0l8jkcCQGHXLyhtndM3858fUm8VEWY1W
+         QDVA==
+X-Gm-Message-State: APjAAAUsyqj6hcKmdxwXhCI444dYkCS3zI0INRmYaUbFYHjCQpgFQBKA
+        WlQNhW24qFv9uVrsscOnfET/AQ==
+X-Google-Smtp-Source: APXvYqw02ATk0nvqjCckJPV3pNCB6y4om3PfcHfNjLxZVW3lmZbv6PEn/XkS6a6cZR4h/pibsnaHDw==
+X-Received: by 2002:a1c:61c1:: with SMTP id v184mr38685861wmb.160.1578391093938;
+        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h8sm78708203wrx.63.2020.01.07.01.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
+References: <20191220091611.36319-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
+In-reply-to: <20191220091611.36319-1-jian.hu@amlogic.com>
+Date:   Tue, 07 Jan 2020 10:58:12 +0100
+Message-ID: <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106194525.12228-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:45:23AM +0800, Jin Yao wrote:
-> block_pair_cmp() is a function which is used to compare
-> two blocks. Moving it from builtin-diff.c to block-info.c
-> to let it be used by other builtins.
-> 
-> In block_pair_cmp, there is a minor change. It checks valid
-> for map, dso and sym first. If they are invalid, we will not
-> compare the address because the address might not make sense.
 
-please separate the change as well, it's hard to track
-what you did when the whole function is moved
+On Fri 20 Dec 2019 at 10:16, Jian Hu <jian.hu@amlogic.com> wrote:
 
-> 
->  v2:
->  ---
->  New patch created in v2
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG. Compared to AXG,
+> Drive strength feature is newly added in A1.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>
 > ---
->  tools/perf/builtin-diff.c    | 17 -----------------
->  tools/perf/util/block-info.c | 23 +++++++++++++++++++++++
->  tools/perf/util/block-info.h |  2 ++
->  3 files changed, 25 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-> index f8b6ae557d8b..5ff1e21082cb 100644
-> --- a/tools/perf/builtin-diff.c
-> +++ b/tools/perf/builtin-diff.c
-> @@ -572,23 +572,6 @@ static void init_block_hist(struct block_hist *bh)
->  	bh->valid = true;
->  }
+> This patch depends on A1 clock patchset at [0][3]
+>
+> Changes since v1 at [1]:
+> -change reg length to 0x20
+> -assign i2c bus alias in dts file
+> -add new feature note compared to AXG in changelog
+>
+> Changes since v2 at [2]:
+> -remove the dependence the commit description
+> -remove i2c alias in dtsi
+> -reorder the i2c nodes
+> -reorder the i2c pins
+>
+> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+> [2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
+> [3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+> ---
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..1542eeee699d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -117,6 +117,16 @@
+>  				};
+>  			};
 >  
-> -static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
-> -{
-> -	struct block_info *bi_a = a->block_info;
-> -	struct block_info *bi_b = b->block_info;
-> -	int cmp;
-> -
-> -	if (!bi_a->sym || !bi_b->sym)
-> -		return -1;
-> -
-> -	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
-> -
-> -	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
-> -		return 0;
-> -
-> -	return -1;
-> -}
-> -
->  static struct hist_entry *get_block_pair(struct hist_entry *he,
->  					 struct hists *hists_pair)
->  {
-> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-> index c4b030bf6ec2..18a445938681 100644
-> --- a/tools/perf/util/block-info.c
-> +++ b/tools/perf/util/block-info.c
-> @@ -475,3 +475,26 @@ float block_info__total_cycles_percent(struct hist_entry *he)
+> +			i2c0: i2c@1400 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x1400 0x0 0x20>;
+> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_AO: serial@1c00 {
+>  				compatible = "amlogic,meson-gx-uart",
+>  					     "amlogic,meson-ao-uart";
+> @@ -136,6 +146,36 @@
+>  				clock-names = "xtal", "pclk", "baud";
+>  				status = "disabled";
+>  			};
+> +
+> +			i2c1: i2c@5c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x5c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c2: i2c@6800 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6800 0x0 0x20>;
+> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c3: i2c@6c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+> +				status = "disabled";
+> +			};
+>  		};
 >  
->  	return 0.0;
->  }
+>  		gic: interrupt-controller@ff901000 {
+> @@ -171,3 +211,105 @@
+>  		#clock-cells = <0>;
+>  	};
+>  };
 > +
-> +int block_pair_cmp(struct hist_entry *pair, struct hist_entry *he)
-> +{
-> +	struct block_info *bi_p = pair->block_info;
-> +	struct block_info *bi_h = he->block_info;
-> +	struct map_symbol *ms_p = &pair->ms;
-> +	struct map_symbol *ms_h = &he->ms;
-> +	int cmp;
-> +
-> +	if (!ms_p->map || !ms_p->map->dso || !ms_p->sym ||
-> +	    !ms_h->map || !ms_h->map->dso || !ms_h->sym) {
-> +		return -1;
-> +	}
-> +
-> +	cmp = strcmp(ms_p->sym->name, ms_h->sym->name);
-> +	if (cmp)
-> +		return -1;
+> +&periphs_pinctrl {
 
-should this return cmp? also you don't mention this change in the changelog
+Why is this not directly under the periphs_pinctrl node ?
 
-thanks,
-jirka
+> +	i2c0_f9_pins:i2c0-f9 {
+                     ^
+                     Missing space here. Same for the other nodes
+
+> +		mux {
+> +			groups = "i2c0_sck_f9",
+> +				"i2c0_sda_f10";
+> +			function = "i2c0";
+> +			bias-pull-up;
+
+Most device we have seen so far have the pull-up on the PCB.
+
+If you look at the other dts file, the i2c pad bias is disabled. If the
+pull-up resistor is missing on the PCB, this setting can overloaded in
+the board dt.
+
+Bottom line please put "bias-disable" or justify why a1 is different
+from the SoC.
+
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c0_f11_pins:i2c0-f11 {
+> +		mux {
+> +			groups = "i2c0_sck_f11",
+> +				"i2c0_sda_f12";
+> +			function = "i2c0";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_a_pins:i2c1-a {
+> +		mux {
+> +			groups = "i2c1_sck_a",
+> +				"i2c1_sda_a";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_x_pins:i2c1-x {
+> +		mux {
+> +			groups = "i2c1_sck_x",
+> +				"i2c1_sda_x";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a4_pins:i2c2-a4 {
+> +		mux {
+> +			groups = "i2c2_sck_a4",
+> +				"i2c2_sda_a5";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a8_pins:i2c2-a8 {
+> +		mux {
+> +			groups = "i2c2_sck_a8",
+> +				"i2c2_sda_a9";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x0_pins:i2c2-x0 {
+> +		mux {
+> +			groups = "i2c2_sck_x0",
+> +				"i2c2_sda_x1";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x15_pins:i2c2-x15 {
+> +		mux {
+> +			groups = "i2c2_sck_x15",
+> +				"i2c2_sda_x16";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_f_pins:i2c3-f {
+> +		mux {
+> +			groups = "i2c3_sck_f",
+> +				"i2c3_sda_f";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_x_pins:i2c3-x {
+> +		mux {
+> +			groups = "i2c3_sck_x",
+> +				"i2c3_sda_x";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +};
 
