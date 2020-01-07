@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6556CC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9381D208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A29F214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431371;
-	bh=d8wRk7T6ysTFGPcOPju/2JZbQD8sgNQgpLFSwlkVAAs=;
+	s=default; t=1578431373;
+	bh=zOlqaQpxM1m/+KIGUD2u5e/3x76nbC70RLJUYZH/7qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qsmp50rc2jaTeIKoOvR7szbdl6U5OzJanOn829zT9XxEIKgbxOpL45TtClRMtAVSp
-	 e1HJOK+zt1BbyBZktH+M/vf1ztNQYG0czGVjT3jQsZu0xVxr97GENSq6oMlG5UzPJj
-	 oL53m2BRBPtSR8UkLmhsH7rMNdnmkmO0G6/LkPdI=
+	b=PwDriToVHn+DGLFh/fwK8v4dOmYtekBzWsOPWMMMBHQ7s+6RtRCPK+EnLOHM+G+ey
+	 xXe0uAQFmH0fb2laDG6fQ5FWNZJNOGYw6tnC3dGI9tU7vvlAt1aNaSPlNsxjGxeTqQ
+	 XHY8tzz/DXVbThs5rj65ktmaG3shb70dYerCCBjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgAGVJa (ORCPT
+        id S1729839AbgAGVJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729674AbgAGVJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:22 -0500
+        id S1729821AbgAGVJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 932AF2077B;
-        Tue,  7 Jan 2020 21:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68F3020678;
+        Tue,  7 Jan 2020 21:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431362;
-        bh=d8wRk7T6ysTFGPcOPju/2JZbQD8sgNQgpLFSwlkVAAs=;
+        s=default; t=1578431366;
+        bh=zOlqaQpxM1m/+KIGUD2u5e/3x76nbC70RLJUYZH/7qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4bWxYf8ED9wqMT9+aeQgvbZfnVhsFdeUc+YO2wgbC4pZ69a1PR/cbfVVOBXcx7IM
-         j1d7FlUsx7fE7KLThOBZFnPUndPlT2Srs6ATBqtjfpW5GRagZpkshpMlHopNMqTvD2
-         U0qJEJfmr5FMiOe0GhtDh0Xy62+ghXczoDTxIwMA=
+        b=Zh6BkSTurgiFzVkB5z8w282wQrjSf8vk0P27uPvow1OEivz+6iwwVrsm4Y4y0gK5u
+         RXmNuzZTZ22zVJg3AQK6qvOBVw8b/9Jx0rdbkMAHFK+sLYMudMPfaed1ARrB+Z6AJn
+         aCKAV62Wbncg2m9hQBW1hLPBL0MAbT4elDcCNTNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        James Smart <james.smart@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/74] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Tue,  7 Jan 2020 21:54:29 +0100
-Message-Id: <20200107205138.245988594@linuxfoundation.org>
+Subject: [PATCH 4.14 06/74] scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+Date:   Tue,  7 Jan 2020 21:54:31 +0100
+Message-Id: <20200107205139.736438450@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -61,36 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Bo Wu <wubo40@huawei.com>
 
-[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
+[ Upstream commit 9a1b0b9a6dab452fb0e39fe96880c4faf3878369 ]
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
+dd_data should be freed before return SLI_CONFIG_HANDLED.
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+When lpfc_sli_issue_mbox func return fails, pmboxq should be also freed in
+job_error tag.
+
+Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com
+Signed-off-by: Bo Wu <wubo40@huawei.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_bsg.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index f698c6a28c14..fc4630e4acdd 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4568,6 +4568,7 @@ static int __init cma_init(void)
- 	unregister_netdevice_notifier(&cma_nb);
- 	rdma_addr_unregister_client(&addr_client);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
+diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
+index 6dde21dc82a3..08ed27b0d4c6 100644
+--- a/drivers/scsi/lpfc/lpfc_bsg.c
++++ b/drivers/scsi/lpfc/lpfc_bsg.c
+@@ -4419,12 +4419,6 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	phba->mbox_ext_buf_ctx.seqNum++;
+ 	nemb_tp = phba->mbox_ext_buf_ctx.nembType;
+ 
+-	dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
+-	if (!dd_data) {
+-		rc = -ENOMEM;
+-		goto job_error;
+-	}
+-
+ 	pbuf = (uint8_t *)dmabuf->virt;
+ 	size = job->request_payload.payload_len;
+ 	sg_copy_to_buffer(job->request_payload.sg_list,
+@@ -4461,6 +4455,13 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 				"2968 SLI_CONFIG ext-buffer wr all %d "
+ 				"ebuffers received\n",
+ 				phba->mbox_ext_buf_ctx.numBuf);
++
++		dd_data = kmalloc(sizeof(struct bsg_job_data), GFP_KERNEL);
++		if (!dd_data) {
++			rc = -ENOMEM;
++			goto job_error;
++		}
++
+ 		/* mailbox command structure for base driver */
+ 		pmboxq = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 		if (!pmboxq) {
+@@ -4509,6 +4510,8 @@ lpfc_bsg_write_ebuf_set(struct lpfc_hba *phba, struct bsg_job *job,
+ 	return SLI_CONFIG_HANDLED;
+ 
+ job_error:
++	if (pmboxq)
++		mempool_free(pmboxq, phba->mbox_mem_pool);
+ 	lpfc_bsg_dma_page_free(phba, dmabuf);
+ 	kfree(dd_data);
+ 
 -- 
 2.20.1
 
