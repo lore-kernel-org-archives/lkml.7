@@ -2,84 +2,193 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880C9C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE05C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9702146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C555207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dDu5JEQz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ix7q3VoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgAGMjg (ORCPT
+        id S1727993AbgAGMlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:39:36 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11714 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbgAGMjF (ORCPT
+        Tue, 7 Jan 2020 07:41:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40363 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgAGMlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:39:05 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e147bd20000>; Tue, 07 Jan 2020 04:38:42 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 04:38:59 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Jan 2020 04:38:59 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 12:38:59 +0000
-Received: from [192.168.22.23] (10.124.1.5) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 12:38:57 +0000
-From:   Thierry Reding <treding@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/9] i2c: tegra: Properly disable runtime PM on
- driver's probe error
-In-Reply-To: <20200106010423.5890-3-digetx@gmail.com>
-References: <20200106010423.5890-3-digetx@gmail.com>
-X-NVConfidentiality: public
+        Tue, 7 Jan 2020 07:41:14 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so53746596wrn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
+        b=Ix7q3VoWX7RQy4IAIFvZnnhHrgIlYKKRROKOYAnNZ7BmaaaAs6jHQ61Lxw6GWYosc9
+         js3xOlPWY3Q5glXRYBlLsJy6HptsLcAlxLGYCX5GHoAzT1qratDLllAjeejrq4hB7AG3
+         xclbiyCAqcpiX6ql5hcsvKpZlQMb+kpvEcQEDqtz16NHo0TYR68+ZeN/Mm2pPWK6czSU
+         naCoCQZM/fCLwV2Ea7sZj7L9QcXiu2mYvkjJm3royTbxjzhTcA+uMJWvxw+zzgtrgGRD
+         KUow505mmVSANNrmqo07vaWfAbesYmYiyYN247IZipCnnBntZBu8utEIBaWfQ+VB+Uj5
+         q3DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
+        b=bE6o2YU1ItRldu7WbNny33hcHm03mCI3qNobNFtdGhDutH7NzQptHNILvWS/1UQSr7
+         +PN9CtVZaLaUoSbRjUdEKfueskIaqlV3KeaBmWNtO4sXKEOIxm937cBwYXhP6uz7VGed
+         Q7KVGeQymhIZOtCaVHW5kFllMQUohrvAsZRV+w6nNUJJfyhRFuehGRzazsZqhSX72yVc
+         vM6GqLong2uqs42GTaXjlplXXPx4K0iWjPfmV3q0xPFhgUkghJRxVYnldobfd3wBX54j
+         Zue9FZ0trxNLydfVoPMvMcLe0Pr4zQemLr+NcUmnQTTicEg0rbR6VGG5ObpAuCFx94Ff
+         30Ug==
+X-Gm-Message-State: APjAAAWjhqNEqD0cGwKcBHnvcEwNQhrrk1UNDQ++Z0jZgeBOx0aY2dmB
+        mKfcuwfntOfBxX/rLwp4bjoebQ==
+X-Google-Smtp-Source: APXvYqzbZqg0vGgagk5eTcBKjSPx4R7BBZCx64xNuANabxrxXTmsIcFLkSO0bRPr4frccQzcW69BPg==
+X-Received: by 2002:adf:ee45:: with SMTP id w5mr105522947wro.352.1578400871598;
+        Tue, 07 Jan 2020 04:41:11 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id i16sm27397404wmb.36.2020.01.07.04.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 04:41:10 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:41:24 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200107124124.GI14821@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Message-ID: <7497908b738d4f19a908dbd20736fda6@HQMAIL105.nvidia.com>
-Date:   Tue, 7 Jan 2020 12:38:57 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578400722; bh=Mwc3R9BWFhwxMeMItKqek+VJgVgKaAJiPIg+FJe1cd4=;
-        h=X-PGP-Universal:From:To:CC:Subject:In-Reply-To:References:
-         X-NVConfidentiality:MIME-Version:Message-ID:Date:Content-Type:
-         Content-Transfer-Encoding;
-        b=dDu5JEQzAm8sHZa0M+i7mUyZMWCbCsKHk214c+A62+zCY1c6RKDmuaQ/BYXD3NTCX
-         buxeVZlEjS5tUsKUK7OyflJaZKKuVeYp8uN8HzOMAcBiW39wMV5VrbFBDV4sotrj86
-         w2ms/FwRB3ao4GJiiuNBlUZrfe/ji/VRa8k7URc4FoD5DDZO8UgCzXMhDowHILDw/+
-         OQXkjDhNFWXO112FW9tDBtBocPSDvPHVcAaC3y/LyKseGgf3NJHBEHivJmQk8bSW4M
-         +BCfZQ5oIP6n1qyD+AqBuYlEA901Lm+A9k8lx6lKIAcu9PeSOHtuabHNNFAQspokI1
-         cqceqqI22jSXA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Jan 2020 04:04:16 +0300, Dmitry Osipenko wrote:
-> One of the recent Tegra I2C commits made a change that resumes runtime PM
-> during driver's probe, but it missed to put the RPM in a case of error.
-> Note that it's not correct to use pm_runtime_status_suspended because it
-> breaks RPM refcounting.
-> 
-> Fixes: 8ebf15e9c869 ("i2c: tegra: Move suspend handling to NOIRQ phase")
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 29 +++++++++++++++++++----------
->  1 file changed, 19 insertions(+), 10 deletions(-)
+On Mon, 30 Dec 2019, Matti Vaittinen wrote:
 
-Tested-by: Thierry Reding <treding@nvidia.com>
+> Few ROHM PMICs allow setting the voltage states for different system states
+> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
+> mechanisms. bd718x7 driver implemented device-tree parsing functions for
+> these state specific voltages. The parsing functions can be re-used by
+> other ROHM chip drivers like bd71828. Split the generic functions from
+> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
+> to use.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+> 
+> Changes from v7 - no changes
+> 
+>  drivers/regulator/Kconfig             |   4 +
+>  drivers/regulator/Makefile            |   1 +
+>  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
+>  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
+>  include/linux/mfd/rohm-generic.h      |  44 +++++++
+>  5 files changed, 199 insertions(+), 128 deletions(-)
+>  create mode 100644 drivers/regulator/rohm-regulator.c
+
+[...]
+
+> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+> index ff3dd7578fd3..8037421cc6a1 100644
+> --- a/include/linux/mfd/rohm-generic.h
+> +++ b/include/linux/mfd/rohm-generic.h
+> @@ -4,6 +4,9 @@
+>  #ifndef __LINUX_MFD_ROHM_H__
+>  #define __LINUX_MFD_ROHM_H__
+>  
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +
+>  enum rohm_chip_type {
+>  	ROHM_CHIP_TYPE_BD71837 = 0,
+>  	ROHM_CHIP_TYPE_BD71847,
+> @@ -17,4 +20,45 @@ struct rohm_regmap_dev {
+>  	struct regmap *regmap;
+>  };
+>  
+> +enum {
+> +	ROHM_DVS_LEVEL_UNKNOWN,
+> +	ROHM_DVS_LEVEL_RUN,
+> +	ROHM_DVS_LEVEL_IDLE,
+> +	ROHM_DVS_LEVEL_SUSPEND,
+> +	ROHM_DVS_LEVEL_LPSR,
+> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
+> +};
+> +
+> +struct rohm_dvs_config {
+> +	uint64_t level_map;
+> +	unsigned int run_reg;
+> +	unsigned int run_mask;
+> +	unsigned int run_on_mask;
+> +	unsigned int idle_reg;
+> +	unsigned int idle_mask;
+> +	unsigned int idle_on_mask;
+> +	unsigned int suspend_reg;
+> +	unsigned int suspend_mask;
+> +	unsigned int suspend_on_mask;
+> +	unsigned int lpsr_reg;
+> +	unsigned int lpsr_mask;
+> +	unsigned int lpsr_on_mask;
+> +};
+
+I think this deserves a kernel-doc header.
+
+> +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
+> +				  struct device_node *np,
+> +				  const struct regulator_desc *desc,
+> +				  struct regmap *regmap);
+
+Does these really need to live in the parent's header file?
+
+What other call-sites are there?
+
+> +#else
+> +static inline int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
+> +						struct device_node *np,
+> +						const struct regulator_desc *desc,
+> +						struct regmap *regmap)
+> +{
+> +	return 0;
+> +}
+> +#endif //IS_ENABLED(CONFIG_REGULATOR_ROHM)
+
+a) This comment is not really required
+b) You shouldn't be using C++ comments
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
