@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9F8C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C4BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3521820678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093102087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430893;
-	bh=d5JxfjMA/isDjhniQUrE0pRtEX7ugIZq5EQLorsBs8w=;
+	s=default; t=1578430896;
+	bh=zTcBiJ776ZmoyF0xxIU0eFvQt5XSeW4yAov5XItHXKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyvU/cJypD9HOUFNXemurn5/LbBgnW7nw7woe/2JsXyw5kZ9zOCA0EgOAt9sv6bzx
-	 K+ch2p9XjBaio88S8+ETRqG0JGs8B7r5WojpbeqqoNDTgIUcWFxg6NlJ7PB/Wv8VCI
-	 ZL5xVPyqzCPBFl02ZgzHZShM/215YNdmJrWiJeVQ=
+	b=OnC7+I53vyHtPUF4XCCqQdJy0Tfyw3QFjFGKH5cZkbT+P/+hzkLoCSugb0gmB1Ph9
+	 u/Jp3y8g60b3YuwFeyJP81dhV49X5ACHp89uwInTPllsbo3EBqg/cpvoRFQjuUgN5E
+	 DB2fAcJWWu7aGn2bBw7/KTnrCRlXAQSoJwanJxz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgAGVBc (ORCPT
+        id S1728601AbgAGVBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbgAGVBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:25 -0500
+        id S1727671AbgAGVBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2C42081E;
-        Tue,  7 Jan 2020 21:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB42720678;
+        Tue,  7 Jan 2020 21:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430884;
-        bh=d5JxfjMA/isDjhniQUrE0pRtEX7ugIZq5EQLorsBs8w=;
+        s=default; t=1578430889;
+        bh=zTcBiJ776ZmoyF0xxIU0eFvQt5XSeW4yAov5XItHXKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSfXirRzqu9U4rxNfiZAyeAZ71JOTZxq1Rbsv6E+K8dD8QSWFxMec3T8vpObW5tEl
-         oc0XdmsIpfF97BKC9eAYN7TLGlrxNBg0zCZwOX4iNpgqTPpN5LuiEPAf4KIh4oSoiD
-         wwfkmOTRqQtlPHcu04JawnpkrwQR5gNYOGUgULbI=
+        b=MHlwfEJVpgyX3izKRq6gMPaRlAkkweON8mqMQz/Lyzb4c86AkwntEHGbDdy+uEWX9
+         U+5T5/ukGPzRvyC7rUtxyNipiExKCePyG8fppm5OKmnbM7G/baN2Den7s0YSFAww2b
+         udYf4ftuIqtAXaGxCoRgGifNVdFH+ramq+zO7n3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.4 137/191] nfsd4: fix up replay_matches_cache()
-Date:   Tue,  7 Jan 2020 21:54:17 +0100
-Message-Id: <20200107205340.298705728@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 139/191] HID: i2c-hid: Reset ALPS touchpads on resume
+Date:   Tue,  7 Jan 2020 21:54:19 +0100
+Message-Id: <20200107205340.416115795@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,52 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 6e73e92b155c868ff7fce9d108839668caf1d9be upstream.
+commit fd70466d37bf3fe0118d18c56ddde85b428f86cf upstream.
 
-When running an nfs stress test, I see quite a few cached replies that
-don't match up with the actual request.  The first comment in
-replay_matches_cache() makes sense, but the code doesn't seem to
-match... fix it.
+Commit 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system
+resume") fixes many touchpads and touchscreens, however ALPS touchpads
+start to trigger IRQ storm after system resume.
 
-This isn't exactly a bugfix, as the server isn't required to catch every
-case of a false retry.  So, we may as well do this, but if this is
-fixing a problem then that suggests there's a client bug.
+Since it's total silence from ALPS, let's bring the old behavior back
+to ALPS touchpads.
 
-Fixes: 53da6a53e1d4 ("nfsd4: catch some false session retries")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 52cf93e63ee6 ("HID: i2c-hid: Don't reset device upon system resume")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-core.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3548,12 +3548,17 @@ static bool replay_matches_cache(struct
- 	    (bool)seq->cachethis)
- 		return false;
- 	/*
--	 * If there's an error than the reply can have fewer ops than
--	 * the call.  But if we cached a reply with *more* ops than the
--	 * call you're sending us now, then this new call is clearly not
--	 * really a replay of the old one:
-+	 * If there's an error then the reply can have fewer ops than
-+	 * the call.
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -48,6 +48,7 @@
+ #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
+ #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
+ #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
++#define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(5)
+ 
+ /* flags */
+ #define I2C_HID_STARTED		0
+@@ -174,6 +175,8 @@ static const struct i2c_hid_quirks {
+ 		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
+ 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
++	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
++		 I2C_HID_QUIRK_RESET_ON_RESUME },
+ 	{ 0, 0 }
+ };
+ 
+@@ -1214,8 +1217,15 @@ static int i2c_hid_resume(struct device
+ 	 * solves "incomplete reports" on Raydium devices 2386:3118 and
+ 	 * 2386:4B33 and fixes various SIS touchscreens no longer sending
+ 	 * data after a suspend/resume.
++	 *
++	 * However some ALPS touchpads generate IRQ storm without reset, so
++	 * let's still reset them here.
  	 */
--	if (slot->sl_opcnt < argp->opcnt)
-+	if (slot->sl_opcnt < argp->opcnt && !slot->sl_status)
-+		return false;
-+	/*
-+	 * But if we cached a reply with *more* ops than the call you're
-+	 * sending us now, then this new call is clearly not really a
-+	 * replay of the old one:
-+	 */
-+	if (slot->sl_opcnt > argp->opcnt)
- 		return false;
- 	/* This is the only check explicitly called by spec: */
- 	if (!same_creds(&rqstp->rq_cred, &slot->sl_cred))
+-	ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
++	if (ihid->quirks & I2C_HID_QUIRK_RESET_ON_RESUME)
++		ret = i2c_hid_hwreset(client);
++	else
++		ret = i2c_hid_set_power(client, I2C_HID_PWR_ON);
++
+ 	if (ret)
+ 		return ret;
+ 
 
 
