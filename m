@@ -2,109 +2,87 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7F0C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260DCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1231720715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED31B2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RcsLpyzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgAGKA5 (ORCPT
+        id S1727699AbgAGKCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:00:57 -0500
-Received: from smtp21.cstnet.cn ([159.226.251.21]:47980 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbgAGKA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:00:56 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-01 (Coremail) with SMTP id qwCowABXR5TEVhRet5vvEA--.36S3;
-        Tue, 07 Jan 2020 18:00:36 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com,
-        gregkh@linuxfoundation.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: [PATCH] mic: Remove unneeded NULL check
-Date:   Tue,  7 Jan 2020 10:00:35 +0000
-Message-Id: <1578391235-603-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: qwCowABXR5TEVhRet5vvEA--.36S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF4UGry7Cw18KryrArWUArb_yoW8Ar1rpa
-        1DuFyFyr1UZr4UG34kCw4DGFyfXa93Z3yagFy8Cw1rZrsxAF45tr4kKa4jvryrXFWUtFnI
-        vF15C34UCw4UZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8twCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j11v3UUUUU=
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwIIA1z4i+++3wABsi
+        Tue, 7 Jan 2020 05:02:43 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43645 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGKCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:02:42 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a13so54056009ljm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k1lyd87NrA9wszev9LfhXNOVXGOHKaNTISJStitwmE0=;
+        b=RcsLpyzf4vpkgl1YtDBbxw7DrhqxljVZKHJNIgnY8WFsI2xhW5/VFY0y8i5JxrIFrm
+         3dU+a+DRhxfuWJ1ObJ0YpoCu9EBMTH1+IKm/cguRoFxw9mYmPu4n2w0F79QtpSVE7Amk
+         PP8fkpLmQ0QzYVgVbSuL14THdjjfsiP3LGB6PfJxROcaGxyt5zst8dFMS9hCj//ef0D/
+         os4TMr+b1aTgvV5YmNOsZuip+7FgeyjxkLVXFT2xSj8QnjA8nu+sC8J8hwtKSyv796/j
+         2MTvm27KcqviD+LI28aFCQvIESoYTzBCgKEOPBMPhoghKuuL6J/BPq7lwaq5QIs6y3hK
+         GFxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k1lyd87NrA9wszev9LfhXNOVXGOHKaNTISJStitwmE0=;
+        b=UP2ETfSfJaqeksqFH4UdVRnH3e8xswCSW9w2uTyOMj7b9KyFAn+Y53/1ujOX+QUmzc
+         nyPzqNQ5eMVaulTJwNNmtTDv0JrNCMTnI++LwOIRf74qPEycDz6eUb5awebgiMoEFOLK
+         cE216T+h5Ie6vhpmZ7QFgxVl8xoZM5XvCamKUJTIvZGUSFpTgNrcIui5flylIV0rZyJJ
+         H7icmpOIXZ8ywvCOJ176S3WfhVXWAD0OU3bZkjIAagtU2pGpTJDCxKB5uLqwhRx/K7E5
+         /ufaHzlEK0YnoSC4PDLKEgdTKsupWnoW17rEkjfqNfNcyxz3uNi/ngxUCy2jG9PPdpbN
+         r45Q==
+X-Gm-Message-State: APjAAAVxjcW7RzSx9QcqlOPQf6YK3YUcL6othYDo6LMOlRWGLENQrprK
+        nYTRw6QcAi7og2oZkCmQUB05V8IuMPy/p+IgC0CC+Q==
+X-Google-Smtp-Source: APXvYqxkz1mhDzGYtgHjh5ZxouFmO30ufEvf3Z8mCja4QVI64JVX3+/i+d51yrkb+Nl35bdRTF5XQbnV9kiF4kzwGDs=
+X-Received: by 2002:a2e:86d6:: with SMTP id n22mr51896201ljj.77.1578391360561;
+ Tue, 07 Jan 2020 02:02:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-2-brgl@bgdev.pl>
+In-Reply-To: <20191224120709.18247-2-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 11:02:29 +0100
+Message-ID: <CACRpkdb96Atm7=N-Ku3Xvuz0ZC-KYKJ5p9sn4L31fE_a6tkPwA@mail.gmail.com>
+Subject: Re: [PATCH v4 01/13] gpiolib: use 'unsigned int' instead of
+ 'unsigned' in gpio_set_config()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-debugfs_remove_recursive will do NULL check, so remove
-the redundant null check.
+On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/misc/mic/card/mic_debugfs.c  | 3 ---
- drivers/misc/mic/cosm/cosm_debugfs.c | 3 ---
- drivers/misc/mic/host/mic_debugfs.c  | 3 ---
- 3 files changed, 9 deletions(-)
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Checkpatch complains about using 'unsigned' instead of 'unsigned int'.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/drivers/misc/mic/card/mic_debugfs.c b/drivers/misc/mic/card/mic_debugfs.c
-index 3ee3d24..b586088 100644
---- a/drivers/misc/mic/card/mic_debugfs.c
-+++ b/drivers/misc/mic/card/mic_debugfs.c
-@@ -65,9 +65,6 @@ void __init mic_create_card_debug_dir(struct mic_driver *mdrv)
-  */
- void mic_delete_card_debug_dir(struct mic_driver *mdrv)
- {
--	if (!mdrv->dbg_dir)
--		return;
--
- 	debugfs_remove_recursive(mdrv->dbg_dir);
- }
- 
-diff --git a/drivers/misc/mic/cosm/cosm_debugfs.c b/drivers/misc/mic/cosm/cosm_debugfs.c
-index 2fc9f4b..68a731f 100644
---- a/drivers/misc/mic/cosm/cosm_debugfs.c
-+++ b/drivers/misc/mic/cosm/cosm_debugfs.c
-@@ -102,9 +102,6 @@ void cosm_create_debug_dir(struct cosm_device *cdev)
- 
- void cosm_delete_debug_dir(struct cosm_device *cdev)
- {
--	if (!cdev->dbg_dir)
--		return;
--
- 	debugfs_remove_recursive(cdev->dbg_dir);
- }
- 
-diff --git a/drivers/misc/mic/host/mic_debugfs.c b/drivers/misc/mic/host/mic_debugfs.c
-index 8a8e416..ab0db7a 100644
---- a/drivers/misc/mic/host/mic_debugfs.c
-+++ b/drivers/misc/mic/host/mic_debugfs.c
-@@ -129,9 +129,6 @@ void mic_create_debug_dir(struct mic_device *mdev)
-  */
- void mic_delete_debug_dir(struct mic_device *mdev)
- {
--	if (!mdev->dbg_dir)
--		return;
--
- 	debugfs_remove_recursive(mdev->dbg_dir);
- }
- 
--- 
-2.7.4
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
