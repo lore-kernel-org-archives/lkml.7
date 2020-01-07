@@ -2,190 +2,86 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A155C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C318C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0252075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HyU5lIH/"
+	by mail.kernel.org (Postfix) with ESMTP id DB84B207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgAGHan (ORCPT
+        id S1727347AbgAGHcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:30:43 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:32178 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgAGHan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:30:43 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47sPDc1PwXz9v0p1;
-        Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=HyU5lIH/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id P9fTkc6DRsU6; Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47sPDc06yVz9v0p0;
-        Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578382240; bh=rWR96XmFfmb+CjVNvWtMBMF2Xc9wukNsYBTVVq1xWS4=;
-        h=From:Subject:To:Cc:Date:From;
-        b=HyU5lIH/D3fEj43JD9T09WE+nfS52NpEUIYUvwTllhTtRVOLaj6Twrr54Cs7aQEzJ
-         9yPPe0pBzjz/F4lV2LJVtf6aiJjfo7tO2rjAIWbBCemGj42OdsOuoChMXcHTnoUSh/
-         6ykyfIQCbRDFkpnhC6T7sScgfhWgz58iXbv9WMuc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB8008B7BE;
-        Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UhdJ8-51NQ94; Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A97EB8B797;
-        Tue,  7 Jan 2020 08:30:40 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E85DD63805; Tue,  7 Jan 2020 07:30:39 +0000 (UTC)
-Message-Id: <d63907761298a34d2e92fb0f1c2c77dc9716b9c7.1578382229.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32: warn and return error on syscalls from kernel
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue,  7 Jan 2020 07:30:39 +0000 (UTC)
+        Tue, 7 Jan 2020 02:32:08 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49621 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGHcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 02:32:08 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iojLR-0001Qt-Fj; Tue, 07 Jan 2020 08:32:05 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iojLQ-0002Ky-4c; Tue, 07 Jan 2020 08:32:04 +0100
+Date:   Tue, 7 Jan 2020 08:32:04 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thorsten Scherer <thorsten.scherer@eckelmann.de>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] siox: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20200107073204.k4t25kchrpczekfc@pengutronix.de>
+References: <20200101131418.GA3110@nishad>
+ <20200107063250.GA30387@ws067.eckelmann.group>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107063250.GA30387@ws067.eckelmann.group>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit b86fb88855ea ("powerpc/32: implement fast entry for
-syscalls on non BOOKE") and commit 1a4b739bbb4f ("powerpc/32:
-implement fast entry for syscalls on BOOKE"), syscalls from
-kernel are unexpected and can have catastrophic consequences
-as it will destroy the kernel stack.
+Hello,
 
-Test MSR_PR on syscall entry. In case syscall is from kernel,
-emit a warning and return ENOSYS error.
+On Tue, Jan 07, 2020 at 07:32:50AM +0100, Thorsten Scherer wrote:
+> On Wed, Jan 01, 2020 at 06:44:23PM +0530, Nishad Kamdar wrote:
+> > This patch corrects the SPDX License Identifier style in
+> > header file related to Eckelmann SIOX driver.
+> > For C header files Documentation/process/license-rules.rst
+> > mandates C-like comments (opposed to C source files where
+> > C++ style should be used).
+> > 
+> > Changes made by using a script provided by Joe Perches here:
+> > https://lkml.org/lkml/2019/2/7/46.
+> > 
+> > Suggested-by: Joe Perches <joe@perches.com>
+> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Acked-by: Thorsten Scherer <thorsten.scherer@eckelmann.de>
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S   | 26 ++++++++++++++++++++++++++
- arch/powerpc/kernel/head_32.h    |  9 ++++++---
- arch/powerpc/kernel/head_booke.h |  5 ++++-
- 3 files changed, 36 insertions(+), 4 deletions(-)
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index d60908ea37fb..4a7cd22a8aaf 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -568,6 +568,32 @@ syscall_exit_work:
- 	bl	do_syscall_trace_leave
- 	b	ret_from_except_full
- 
-+	/*
-+	 * System call was called from kernel. We get here with SRR1 in r9.
-+	 * Mark the exception as recoverable once we have retrieved SRR0,
-+	 * trap a warning and return ENOSYS with CR[SO] set.
-+	 */
-+	.globl	ret_from_kernel_syscall
-+ret_from_kernel_syscall:
-+	mfspr	r11, SPRN_SRR0
-+#if !defined(CONFIG_4xx) && !defined(CONFIG_BOOKE)
-+	LOAD_REG_IMMEDIATE(r12, MSR_KERNEL & ~(MSR_IR|MSR_DR))
-+	MTMSRD(r12)
-+#endif
-+
-+0:	trap
-+	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
-+
-+	li	r3, ENOSYS
-+	crset	so
-+#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
-+	mtspr	SPRN_NRI, r0
-+#endif
-+	mtspr	SPRN_SRR1, r9
-+	mtspr	SPRN_SRR0, r11
-+	SYNC
-+	RFI
-+
- /*
-  * The fork/clone functions need to copy the full register set into
-  * the child process. Therefore we need to save all the nonvolatile
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 8abc7783dbe5..07524be96ca7 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -62,16 +62,18 @@
- 
- .macro SYSCALL_ENTRY trapno
- 	mfspr	r12,SPRN_SPRG_THREAD
-+	mfspr	r9, SPRN_SRR1
- 	mfcr	r10
-+	andi.	r11, r9, MSR_PR
- 	lwz	r11,TASK_STACK-THREAD(r12)
--	mflr	r9
-+	beq-	99f
- 	addi	r11,r11,THREAD_SIZE - INT_FRAME_SIZE
- 	rlwinm	r10,r10,0,4,2	/* Clear SO bit in CR */
- 	tophys(r11,r11)
- 	stw	r10,_CCR(r11)		/* save registers */
-+	mflr	r10
-+	stw	r10, _LINK(r11)
- 	mfspr	r10,SPRN_SRR0
--	stw	r9,_LINK(r11)
--	mfspr	r9,SPRN_SRR1
- 	stw	r1,GPR1(r11)
- 	stw	r1,0(r11)
- 	tovirt(r1,r11)			/* set new kernel sp */
-@@ -139,6 +141,7 @@
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+99:	b	ret_from_kernel_syscall
- .endm
- 
- /*
-diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-index 2ae635df9026..f2d11cb8102f 100644
---- a/arch/powerpc/kernel/head_booke.h
-+++ b/arch/powerpc/kernel/head_booke.h
-@@ -104,16 +104,18 @@ FTR_SECTION_ELSE
- #ifdef CONFIG_KVM_BOOKE_HV
- ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- #endif
-+	mfspr	r9, SPRN_SRR1
- 	BOOKE_CLEAR_BTB(r11)
-+	andi.	r11, r9, MSR_PR
- 	lwz	r11, TASK_STACK - THREAD(r10)
- 	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
-+	beq-	99f
- 	ALLOC_STACK_FRAME(r11, THREAD_SIZE - INT_FRAME_SIZE)
- 	stw	r12, _CCR(r11)		/* save various registers */
- 	mflr	r12
- 	stw	r12,_LINK(r11)
- 	mfspr	r12,SPRN_SRR0
- 	stw	r1, GPR1(r11)
--	mfspr	r9,SPRN_SRR1
- 	stw	r1, 0(r11)
- 	mr	r1, r11
- 	stw	r12,_NIP(r11)
-@@ -176,6 +178,7 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
- 	mtspr	SPRN_SRR0,r11
- 	SYNC
- 	RFI				/* jump to handler, enable MMU */
-+99:	b	ret_from_kernel_syscall
- .endm
- 
- /* To handle the additional exception priority levels on 40x and Book-E
+Greg, do you care for application of this patch?
+
+Best regards
+Uwe
+
 -- 
-2.13.3
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
