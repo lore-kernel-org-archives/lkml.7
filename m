@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D272C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7718C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611B62077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78272072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431354;
-	bh=GQBVEZGlbksctnFREZSXoYAEJQU309V6FUkfk+fRUZk=;
+	s=default; t=1578431360;
+	bh=joXd9CG2yok9ASHpjkzNNCwmv3pkohL/Ug9Ra79t4p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKJnJ5C9trtGzcL3E77fBoBKWRnUIVok2kGfC8PSDlJcFh91ikLn5C1j1DZ4gDA/q
-	 j87azdSNGsc8JCtGuGxEt4BQeewjsZomfEoKw9arMmFLP9r2d++X7CNqSbTyp7+EVf
-	 J01rW5etSXmUgOdiQL18Z/kWuRHr/4CSL1yTnwLg=
+	b=pc+i5LjZvV1Tt1qAIMEspYWLq/irwylxc2fzp6ovISnoJppRP9yw+yMkDLRsNgSBU
+	 rwJiYScdZHfg/hxzm4qhYJX2HIXUWEAhbw8yPu4a+OXwGZnX1bEMzIWHV9qoO8enEo
+	 roz0ocH0Pnf7hlEeOr90OdaxUoMamWxTzGFcZaig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgAGVJN (ORCPT
+        id S1729801AbgAGVJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbgAGVI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:58 -0500
+        id S1729623AbgAGVJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAB72072A;
-        Tue,  7 Jan 2020 21:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A38E2072A;
+        Tue,  7 Jan 2020 21:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431338;
-        bh=GQBVEZGlbksctnFREZSXoYAEJQU309V6FUkfk+fRUZk=;
+        s=default; t=1578431347;
+        bh=joXd9CG2yok9ASHpjkzNNCwmv3pkohL/Ug9Ra79t4p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrWoHnyN8if3m77/j93HCOzvYCO97I02ix//jy8WzHp54kASFx2N6rYOP4Mot7d3/
-         9ozjZkvYzaKGIwBT6jnDX2zABq1RdWERcZfWPbeTW4FHXF3/syZS5olfsj6UwqfDFc
-         gZXVfpoAvWA7XQIdwYM5IQRq9ik4oweGAGxleFtg=
+        b=pFR/jCIendFDXkM3yY1zxsH0Cv1f13oz+Xq/VxMHRNoow3jR9q0aaz6x7Dtu4BQ4g
+         BshO48S1UaYWtlSXLTRTYwAXwaLJiPeuGMTtV/SFdY6jCiR6yJ9rydZAY3DHJwEyfE
+         5sHTvb82EFSMuVk9O745z+uuijL/AHKMdgJaPZ/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/74] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Tue,  7 Jan 2020 21:54:41 +0100
-Message-Id: <20200107205147.197514932@linuxfoundation.org>
+Subject: [PATCH 4.14 02/74] iio: adc: max9611: Fix too short conversion time delay
+Date:   Tue,  7 Jan 2020 21:54:27 +0100
+Message-Id: <20200107205136.664275202@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -62,64 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
+[ Upstream commit 9fd229c478fbf77c41c8528aa757ef14210365f6 ]
 
-Current code device add sequence is:
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
 
-Therefore, the remove sequence should be,
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
 
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  Maxim Technical Support
+confirmed this was tested with temperature Ta=25 degreeC, and promised
+to inform me if a maximum/minimum value is available (they didn't get
+back to me, so I assume it is not).
 
-However it is not above.
-Hence, make do above remove sequence.
+However, the driver assumes a 1 ms conversion time.  Usually the
+usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+When it returns earlier, the data register may be read too early, and
+the previous measurement value will be returned.  After boot, this is
+the temperature POR (power-on reset) value, causing the failure above.
 
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
+
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/iio/adc/max9611.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 0299c0642de8..7e73a1a6cb67 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3073,16 +3073,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index 33be07c78b96..8649a61c50bc 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -92,6 +92,12 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
  
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
++/*
++ * Conversion time is 2 ms (typically) at Ta=25 degreeC
++ * No maximum value is known, so play it safe.
++ */
++#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -239,11 +245,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 		return ret;
  	}
  
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
+-	/*
+-	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
+-	 */
+-	usleep_range(1000, 2000);
++	/* need a delay here to make register configuration stabilize. */
 +
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -511,7 +515,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
+ 	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
