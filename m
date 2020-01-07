@@ -2,128 +2,96 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3C8C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB94C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401EE2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1BA21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdRb1vPO"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WbaYEV5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgAGSFO (ORCPT
+        id S1728579AbgAGSGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:05:14 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50371 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgAGSFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:05:14 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so124644pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:05:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BjlkWiKh+g3cKf2mHxhVG1Q3e4MbsjG1T7AKRjtPSkI=;
-        b=hdRb1vPOgy96J5vwannmHaIeo+MQjIA7+ETDXumsG26Ddm7emM3k1YbhBfN61WrDIt
-         BxGjzW/2jKd352E4uJBsznTy21FffH4Ppg1+Do/EQQXKjx6vtroq2SEMpHVwp+PlOHFR
-         /FVCSzrPmHWT9nqHNoHwB4ub41QOCT+mA9FsI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BjlkWiKh+g3cKf2mHxhVG1Q3e4MbsjG1T7AKRjtPSkI=;
-        b=EV42U1nr6t/N5gQYAzkzHL/0LLMEjBHsMEvvuqCOmvg9QKu33Gy3w6fisrFs0LRDeV
-         izJXWMz8O696oz6celdCuZ0V89p43HS6iJdAvDSwpZST9/d2Q06yYOCBPA14eXcW3xxe
-         InDwdNc75c6CbnKljhoqEGExOSQlGm6GmEAm2gnmk11vVDXow8NcGTIUtAQRBi70vFhX
-         T0DruhVFmWzwIvsJB0zhRuWJjrYW2IREp2pUeC5Sb7FRaT+F0CGUiQfumiq5psCIvC7R
-         6wh0cR1V20NsuyU/TAgJbxx8bGt3P8xJadXOfdQ8T0V2AQg8SLzum8xpfHrZxiJOPHps
-         PLjw==
-X-Gm-Message-State: APjAAAXSgl7waZpXboZZBUl05FroFaUdCfXtybtPS6lu4YXew9L1Rlvq
-        RRG1CWW7Ypj5c+WRNaJ4a6ByE3Foj6Q=
-X-Google-Smtp-Source: APXvYqzCgYoCPrYnzJGsu76pjYsj0EP+XJTU+bFuIKwSg2Wa0NBKuO7VrNFDxglHxw8ONuKSXWSrPg==
-X-Received: by 2002:a17:902:ff05:: with SMTP id f5mr922058plj.197.1578420313576;
-        Tue, 07 Jan 2020 10:05:13 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t63sm207916pfb.70.2020.01.07.10.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 10:05:12 -0800 (PST)
-Date:   Tue, 7 Jan 2020 10:05:11 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH] fs: pstore: fix double-free on ramoops_init_przs
-Message-ID: <202001071002.A236EBCA0@keescook>
-References: <20200107110445.162404-1-cengiz@kernel.wtf>
+        Tue, 7 Jan 2020 13:06:19 -0500
+Received: from mout.gmx.net ([212.227.15.15]:41051 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728366AbgAGSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:06:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1578420363;
+        bh=iZfwkxOhTlh7umLDzawPWQ0XrV9W/IiTb8gMCTxXpOw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=WbaYEV5eRiFann9/oiOyPcDy34Y+BY6gun+3pW4kFlPWNeIT9nmOhnD30ASf6/coa
+         XBEr/izzX9N/zhmywoyIcPBmeWrOF46l/PeMloeBSL0U5mPFkTNjPIL+D+xd4FCkk5
+         OiUTVbZSsjBFCGfSShuE1JaFnYDWqnOcmH/p7vSU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTAFh-1jHB6S38gx-00UXoK; Tue, 07
+ Jan 2020 19:06:03 +0100
+Subject: Re: [RFC] ARM: add bcm2711_defconfig
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com
+Cc:     mbrugger@suse.com, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, hch@lst.de,
+        linux-arm-kernel@lists.infradead.org
+References: <20200107172459.28444-1-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <3688a55b-e929-6cef-66c6-affed97d938b@gmx.net>
+Date:   Tue, 7 Jan 2020 19:06:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107110445.162404-1-cengiz@kernel.wtf>
+In-Reply-To: <20200107172459.28444-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:3pRWyf+PH7jY01QAkX+MY0kKfyybc4wTL/skRdtoftPiphJvlUp
+ gjsmsMMFX92e93QGKqmkE9z0FF8emuDRv31KLkrcbr3pqxuvUU8Td/xYSJ2+R/7B4UuhZWn
+ HsxOGReKbIvxTIF8r4mHwkSD30d6zXwn5wD8fgzzv9rIhqY4ee5zuO5XjknKSxlUS8l5ek5
+ FpVfauNbe3DEu8YpIvVrw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EayFQX0crR4=:gh9FrsHEF2ODI54F2IWaaz
+ 8OjqnWjDGOwAejFffSMakdx0WmpVfPbquFmQVDLmB1Po9GH46DPWxLC89S6WR1dcRetDkE/wu
+ Tf9srWS3CSJSgU8++pAQY4YiLQhj1Xua4H3z3a6HfeFqWX11J88Mx3LxHhX4XFTonGPvY3siN
+ ct8jaY7bMXMsebXMzSChEfRmWgUwq8sZ+zUVhyZktDLEO2JQoM82cjJombQuelCKnDrxtoBQv
+ Zu7Gse+eAvoKD3TE5xb/g68eNfjqH/bqxK3uamkcfifW8+ues5K9TJsl3DOie3+DwtYAhAYbl
+ EKoj2pgbNsWxQam0PNsyrgkeBef1x/+bj5kfEspdZUZ5j+KEt8tBouDFdY8WTeK8BqZmW+Uu3
+ L0DjTLB9GJj9ijlxnV5qgNRl7e84A01lZeksQ5xph2zPGANK0P47rVVTEDy/dCwe2xCJ2Dm9V
+ +NfOltOwc5Cg8kaklXmvuWNcMi8nV9BPFL15xUb63ax+nLQcSaRTJQpQN2mGV6nvbkl1F4irb
+ csyAqlp7aO8acNzuL8vuGqy95G8wloprXxJ/cEPaU6eBrDbgFJwXh0RwXAI3l0/lyK6UbfBGu
+ 415RVBTD4iHuFgA8BIMYe9UWmx7tM2JJYs32vlIXu8F6gkto/gSkXD6Q6Fa21DcsA8yLIHtHe
+ VENtVFSF1H2Jj+aK0IIbq1ZLavsu9HRUco9YzBuB2FVdYk2j6eId7swupS7B3Ujh3mSwIPBh6
+ /thrRVqGIuLJFuM+DXh4E9XJyKC96ewta0PgtD/pSoD+vwK/GZ/B7qdn0SwUUAeYh3RwnvMMq
+ EcpGVa7ooLvderbCXWpKqYm61CLxt0Zfo0ELN+4l05q5eP/LDlQjbswNXdiFmTvR7dkJ37+8N
+ oZHCMADclAWy0nPZKa7z0p5hS1++n9TnLwPf0KVnGY0efKcOj2Ujz+Qt/jD9J3SDmeq2KlBU8
+ vzwCR9jSxgpGuHQAMimgmuzr+MzPV2t34szfieIf/99F2M7k42nkRFiBR9WHAKG86lqJ6hNHE
+ m02TFlVtBQw2Bj8Q+F+1qzfYCOuWRRFbehsDwTtvQ6+z50AIsbJL4spQZXSFIYCTVK/VdC1F1
+ a95g5GCN66UsHCW4d28K3d7VyZ4XoHlR2OUzjAR10J41y8wOIoKHeNQA7KEz/HMz03trSKQwG
+ amq100coXgSWcBHbZOAZc+XUmc7/plUwcRqGjBr5VvNaftkWMmpq3d7LsZXnOu22zlZUvJbUt
+ VfpHtq3vyTYvIJcoOF4wHVPy/oGgfcUyWPSqZQMwzsiPMmbMqan2xk9HJsuk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:04:46PM +0300, Cengiz Can wrote:
-> According to Coverity scanner (CID 1457526) kfree on ram.c:591 frees
-> label which has already been freed.
-> 
-> Here's the flow as I have understood (this is my first time reading
-> pstore's files):
-> 
-> Whenever `persistent_ram_new` fails, it implicitly calls
-> `persistent_ram_free(prz)` which already does `kfree(prz->label)` and a
-> `kfree(prz)` consequently.
-> 
-> Removed `kfree(label)` to prevent double-free.
+Hi Nicolas,
 
-I think this is a false positive (have you actually hit the
-double-free?). The logic in this area is:
+Am 07.01.20 um 18:24 schrieb Nicolas Saenz Julienne:
+> The Raspberry Pi 4 depends on LPAE in order to use its PCIe port, which
+> is essential, as it ultimately provides USB2/3 connectivity. As this
+> setup doesn't fit any generic purpose configuration this adds
+> bcm2711_defconfig which is based on the current Raspberry Pi foundation
+> config file[1] with as little changes as possible
 
-label = kmalloc(...)
-prz[i] = persistent_ram_new(..., label, ...)
-if (IS_ERR(prz[i])) {
-    kfree(label)
-    while (i > 0) {
-        i--;
-        persistent_ram_free(prz[i]);
-    }
-}
+i really dislike the Foundation config file, because it contains so many
+unnecessary features. Bisecting with such a kernel config is horrible.
 
-nothing was freeing the label on the failed prz, but all the other prz
-labels were free (i.e. there is a "i--" that skips the failed prz
-alloc).
+How about finding a compromise between bcm2835_defconfig and
+multi_v7_defconfig + LPAE?
 
--Kees
-
-> 
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->  fs/pstore/ram.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index 487ee39b4..e196aa08f 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -588,7 +588,6 @@ static int ramoops_init_przs(const char *name,
->  			dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
->  				name, record_size,
->  				(unsigned long long)*paddr, err);
-> -			kfree(label);
->  
->  			while (i > 0) {
->  				i--;
-> -- 
-> 2.24.1
-> 
-
--- 
-Kees Cook
