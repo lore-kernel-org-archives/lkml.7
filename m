@@ -2,94 +2,177 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174CC32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7D2C32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E34B20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727522073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="H/bxSDl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgAGBgK (ORCPT
+        id S1727452AbgAGBgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 20:36:10 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2980 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727250AbgAGBgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 20:36:09 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 1F2D2DE7084E300C9B17;
-        Tue,  7 Jan 2020 09:36:07 +0800 (CST)
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
- DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
- Tue, 7 Jan 2020 09:35:56 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
-Thread-Topic: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
-Thread-Index: AQHVwRzFqRRtqHdXdESmtZr5m5x/BafdeacAgAD0jOA=
-Date:   Tue, 7 Jan 2020 01:35:55 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340B5552@dggemm526-mbx.china.huawei.com>
-References: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
- <14a39167-5704-f406-614d-4d25b8fe8c68@arm.com>
-In-Reply-To: <14a39167-5704-f406-614d-4d25b8fe8c68@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Mon, 6 Jan 2020 20:36:52 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41661 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbgAGBgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 20:36:52 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so27688314pgk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 17:36:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=HWVPU6NTGp9nzRxw5BWJeatmP8pnvZxGmvGTyfzAkRc=;
+        b=H/bxSDl9ArODmhysOekCr4511LlfvhHtaBDU8GIImpRdmsvDx40o7nMg/xP6prsIR3
+         W3wfDDHw7bYbaNMyMAt/CZBXvSY1qUoH2OGKUMGcoGkZjTvK/Ss3sTUWmjPTx+xUnPcB
+         /Ri5nVSIBJ4fQ8uFTyem8NfwiSa8/uBW6+OJbrR+gDUtYqvj2yLwQek6ho40oG80i7c3
+         utvI49OLakatRGxFuN91PBHLPNGJO+b3PNIg2CMjCDaW5r58PLezOGoGIxRgPFxmOhIr
+         jmlP+7U7gJwDrjgCWKNqBW3MxgSLx2NQth3QScpuYOm1wjI7LyouHYobvzIozvvpD+8X
+         AyHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=HWVPU6NTGp9nzRxw5BWJeatmP8pnvZxGmvGTyfzAkRc=;
+        b=LOi1SBoeo8qVCcZexr/HvWH569NrAwmHWsjO3k8YVGkTq+LeEs1k+SNf433NMNH34U
+         6sXamBbN5sT5FkKADJH5XFZdoE3Gx8BkihSSiNkd85i2WDFmsxujemi4WsMSy1Degu9n
+         lENmerAX9tGKratkRrvERSRAGfda7IUx2BCSDrHrJikPTp8aXIEbsZQj9Qr+BUDyg9kY
+         0cRYPJ2zxWMy/ev4Vsjgyl1oAnGIPoII8kVlwrNVh+EOvaQX0bu56iJyEBIJCM0srLk4
+         A6NuAQl53Zyx7k0KsKj+jVueyDGBCId43xXy0DUJjUHhdLq0vOAUXdB/AFIPx8nA18yZ
+         5bNA==
+X-Gm-Message-State: APjAAAXDuEaVBLa4gsNI7NwHJil9skhYSTwKCvBBxZm0/a3T2FoSda7y
+        U04Vwjmy8K8gCyHEKb6X1itZew==
+X-Google-Smtp-Source: APXvYqwABUMpjwkXRj3CIQncBFYa4iBNoJvcnED7WOpDnd8SZzBtyrCvkbT8+x2IU2YDKmbRxbrMDw==
+X-Received: by 2002:aa7:9218:: with SMTP id 24mr110748206pfo.145.1578361011553;
+        Mon, 06 Jan 2020 17:36:51 -0800 (PST)
+Received: from ?IPv6:2600:1013:b01b:fb95:11fc:e81d:31f1:7b96? ([2600:1013:b01b:fb95:11fc:e81d:31f1:7b96])
+        by smtp.gmail.com with ESMTPSA id q12sm78770893pfh.158.2020.01.06.17.36.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 17:36:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
+Date:   Mon, 6 Jan 2020 15:36:49 -1000
+Message-Id: <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net>
+References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
+Cc:     "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "jannh@google.com" <jannh@google.com>,
+        "mjg59@google.com" <mjg59@google.com>,
+        "thgarnie@chromium.org" <thgarnie@chromium.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "revest@chromium.org" <revest@chromium.org>,
+        "jackmanb@chromium.org" <jackmanb@chromium.org>,
+        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "mhalcrow@google.com" <mhalcrow@google.com>,
+        "andriin@fb.com" <andriin@fb.com>
+In-Reply-To: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEaWV0bWFyIEVnZ2VtYW5uIFtt
-YWlsdG86ZGlldG1hci5lZ2dlbWFubkBhcm0uY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBKYW51YXJ5
-IDA3LCAyMDIwIDI6NDIgQU0NCj4gVG86IFplbmd0YW8gKEIpOyBzdWRlZXAuaG9sbGFAYXJtLmNv
-bQ0KPiBDYzogTGludXhhcm07IEdyZWcgS3JvYWgtSGFydG1hbjsgUmFmYWVsIEouIFd5c29ja2k7
-DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0g
-Y3B1LXRvcG9sb2d5OiBTa2lwIHRoZSBleGlzdCBidXQgbm90IHBvc3NpYmxlIGNwdQ0KPiBub2Rl
-cw0KPiANCj4gT24gMDIvMDEvMjAyMCAwNDoyNCwgWmVuZyBUYW8gd3JvdGU6DQo+ID4gV2hlbiBD
-T05GSUdfTlJfQ1BVUyBpcyBzbWFsbGVyIHRoYW4gdGhlIGNwdSBub2RlcyBkZWZpbmVkIGluIHRo
-ZQ0KPiBkZXZpY2UNCj4gPiB0cmVlLCB0aGUgY3B1IG5vZGUgcGFyc2luZyB3aWxsIGZhaWwuIEFu
-ZCB0aGlzIGlzIG5vdCByZWFzb25hYmxlIGZvciBhDQo+ID4gbGVnYWwgZGV2aWNlIHRyZWUgY29u
-Zmlncy4NCj4gPiBJbiB0aGlzIHBhdGNoLCBza2lwIHN1Y2ggY3B1IG5vZGVzIHJhdGhlciB0aGFu
-IHJldHVybiBhbiBlcnJvci4NCj4gDQo+IElzIHRoaXMgZXh0cmEgY29kZSByZWFsbHkgbmVjZXNz
-YXJ5Pw0KPiANCj4gQ3VycmVudGx5IHlvdSBnZXQgd2FybmluZ3MgaW5kaWNhdGluZyB0aGF0IENP
-TkZJR19OUl9DUFVTIGlzIHRvbyBzbWFsbA0KPiBzbyB5b3UgY291bGQgY29ycmVjdCB0aGUgc2V0
-dXAgaXNzdWUgZWFzaWx5Lg0KPg0KDQpOb3Qgb25seSBhYm91dCB3YXJuaW5nIG1lc3NhZ2VzLCB0
-aGUgcHJvYmxlbSBpcyA6DQpXaGF0IHdlIGFyZSBleHBlY3RlZCB0byBkbyBpZiB0aGUgQ09ORklH
-X05SX0NQVVMgaXMgdG9vIHNtYWxsPyBJIHRoaW5rIHRoZXJlDQphcmUgdHdvIGNob2ljZXM6DQox
-LiBLZWVwIHRoZSBkdHMgcGFyc2luZyByZXN1bHQsIGJ1dCBza2lwIHRoZSB0aGUgQ1BVIG5vZGVz
-IHdob3NlIGlkIGV4Y2VlZHMgdGhlIA0KdGhlIENPTkZJR19OUl9DUFVTLCBhbmQgdGhpcyBpcyB3
-aGF0IHRoaXMgcGF0Y2ggZG8uDQoyLiBKdXN0IGFib3J0IGFsbCB0aGUgQ1BVIG5vZGVzIHBhcnNp
-bmcsIGFuZCB1c2luZyBNUElEUiB0byBndWVzcyB0aGUgdG9wb2xvZ3ksIA0KYW5kIHRoaXMgaXMg
-d2hhdCB0aGUgY3VycmVudCBjb2RlIGRvLg0KQW5kIGkgdGhpbmsgY2hvaWNlIDEgaXMgYmV0dGVy
-IGJlY2F1c2U6DQoxLiBJdCdzIGEgbGVnYWwgZHRzLCB3ZSBzaG91bGQga2VlcCB0aGUgc2FtZSBy
-ZXN1bHQgd2hldGhlciBDT05GSUdfTlJfQ1BVUyBpcw0KdG9vIHNtYWxsIG9yIG5vdC4NCjIuIElu
-IHRoZSBmdW5jdGlvbiBvZl9wYXJzZV9hbmRfaW5pdF9jcHVzLCB3ZSBqdXN0IGRvIHRoZSBzYW1l
-IHdheSBhcyBjaG9pY2UgMS4NCg0KQnV0IGkgYW0gb3BlbiBmb3IgdGhlIGlzc3VlLCBhbnkgc3Vn
-Z2VzdGlvbnMgYXJlIHdlbGNvbWVkLg0KDQpUaGFua3MNClplbmd0YW8gDQogDQo+IEV4YW1wbGU6
-IEFybTY0IEp1bm8gYm9hcmQNCj4gDQo+ICQgZ3JlcCAiY3B1QCIgLi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2FybS9qdW5vLmR0cw0KPiAJCUE1N18wOiBjcHVAMCB7DQo+IAkJQTU3XzE6IGNwdUAxIHsN
-Cj4gCQlBNTNfMDogY3B1QDEwMCB7DQo+IAkJQTUzXzE6IGNwdUAxMDEgew0KPiAJCUE1M18yOiBj
-cHVAMTAyIHsNCj4gCQlBNTNfMzogY3B1QDEwMyB7DQo+IA0KPiByb290QGp1bm86fiMgdW5hbWUg
-LXINCj4gNS41LjAtcmM1DQo+IA0KPiByb290QGp1bm86fiMgemNhdCAvcHJvYy9jb25maWcuZ3og
-fCBncmVwIENPTkZJR19OUl9DUFVTDQo+IENPTkZJR19OUl9DUFVTPTQNCj4gDQo+IHJvb3RAanVu
-bzp+IyBjYXQgL3Byb2MvY3B1aW5mbyB8IGdyZXAgXnByb2MNCj4gcHJvY2Vzc29yICAgICAgIDog
-MA0KPiBwcm9jZXNzb3IgICAgICAgOiAxDQo+IHByb2Nlc3NvciAgICAgICA6IDINCj4gcHJvY2Vz
-c29yICAgICAgIDogMw0KPiANCj4gcm9vdEBqdW5vOn4jIGRtZXNnIHwgZ3JlcCAiVW5hYmxlXHxD
-YW4ndCINCj4gWyAgICAwLjA4NTA4OV0gVW5hYmxlIHRvIGZpbmQgQ1BVIG5vZGUgZm9yIC9jcHVz
-L2NwdUAxMDINCj4gWyAgICAwLjA5MDE3OV0gL2NwdXMvY3B1LW1hcC9jbHVzdGVyMS9jb3JlMjog
-Q2FuJ3QgZ2V0IENQVSBmb3IgbGVhZiBjb3JlDQo+IA0KPiBbLi4uXQ0K
+
+> On Jan 6, 2020, at 12:25 PM, Edgecombe, Rick P <rick.p.edgecombe@intel.com=
+> wrote:
+>=20
+> =EF=BB=BFOn Sat, 2020-01-04 at 09:49 +0900, Andy Lutomirski wrote:
+>>>> On Jan 4, 2020, at 8:47 AM, KP Singh <kpsingh@chromium.org> wrote:
+>>>=20
+>>> =EF=BB=BFFrom: KP Singh <kpsingh@google.com>
+>>>=20
+>>> The image for the BPF trampolines is allocated with
+>>> bpf_jit_alloc_exe_page which marks this allocated page executable. This
+>>> means that the allocated memory is W and X at the same time making it
+>>> susceptible to WX based attacks.
+>>>=20
+>>> Since the allocated memory is shared between two trampolines (the
+>>> current and the next), 2 pages must be allocated to adhere to W^X and
+>>> the following sequence is obeyed where trampolines are modified:
+>>=20
+>> Can we please do better rather than piling garbage on top of garbage?
+>>=20
+>>>=20
+>>> - Mark memory as non executable (set_memory_nx). While module_alloc for
+>>> x86 allocates the memory as PAGE_KERNEL and not PAGE_KERNEL_EXEC, not
+>>> all implementations of module_alloc do so
+>>=20
+>> How about fixing this instead?
+>>=20
+>>> - Mark the memory as read/write (set_memory_rw)
+>>=20
+>> Probably harmless, but see above about fixing it.
+>>=20
+>>> - Modify the trampoline
+>>=20
+>> Seems reasonable. It=E2=80=99s worth noting that this whole approach is s=
+uboptimal:
+>> the =E2=80=9Cmodule=E2=80=9D allocator should really be returning a list o=
+f pages to be
+>> written (not at the final address!) with the actual executable mapping to=
+ be
+>> materialized later, but that=E2=80=99s a bigger project that you=E2=80=99=
+re welcome to ignore
+>> for now.  (Concretely, it should produce a vmap address with backing page=
+s but
+>> with the vmap alias either entirely unmapped or read-only. A subsequent h=
+ealer
+>> would, all at once, make the direct map pages RO or not-present and make t=
+he
+>> vmap alias RX.)
+>>> - Mark the memory as read-only (set_memory_ro)
+>>> - Mark the memory as executable (set_memory_x)
+>>=20
+>> No, thanks. There=E2=80=99s very little excuse for doing two IPI flushes w=
+hen one
+>> would suffice.
+>>=20
+>> As far as I know, all architectures can do this with a single flush witho=
+ut
+>> races  x86 certainly can. The module freeing code gets this sequence righ=
+t.
+>> Please reuse its mechanism or, if needed, export the relevant interfaces.=
+
+>=20
+> So if I understand this right, some trampolines have been added that are
+> currently set as RWX at modification time AND left that way during runtime=
+? The
+> discussion on the order of set_memory_() calls in the commit message made m=
+e
+> think that this was just a modification time thing at first.
+
+I=E2=80=99m not sure what the status quo is.
+
+We really ought to have a genuinely good API for allocation and initializati=
+on of text.  We can do so much better than set_memory_blahblah.
+
+FWIW, I have some ideas about making kernel flushes cheaper. It=E2=80=99s cu=
+rrently blocked on finding some time and on tglx=E2=80=99s irqtrace work.
+
+>=20
+> Also, is there a reason you couldn't use text_poke() to modify the trampol=
+ine
+> with a single flush?
+>=20
+
+Does text_poke to an IPI these days?=
