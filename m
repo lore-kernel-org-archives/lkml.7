@@ -2,104 +2,66 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A27C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CF7C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53C92081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB06A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgAGUom (ORCPT
+        id S1727236AbgAGUpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:44:42 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:54201 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbgAGUol (ORCPT
+        Tue, 7 Jan 2020 15:45:06 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:32932 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726470AbgAGUpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:44:41 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MvJwN-1jfnHF0bPV-00rIcC; Tue, 07 Jan 2020 21:44:08 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chas Williams <3chas3@gmail.com>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] atm: eni: fix uninitialized variable warning
-Date:   Tue,  7 Jan 2020 21:43:59 +0100
-Message-Id: <20200107204405.1422392-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 15:45:05 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007Ki0V0017439
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 7 Jan 2020 15:44:01 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 7DF0D4207DF; Tue,  7 Jan 2020 15:44:00 -0500 (EST)
+Date:   Tue, 7 Jan 2020 15:44:00 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Stephan Mueller <smueller@chronox.de>
+Subject: Re: [PATCH v3 3/8] random: Add GRND_INSECURE to return best-effort
+ non-cryptographic bytes
+Message-ID: <20200107204400.GH3619@mit.edu>
+References: <cover.1577088521.git.luto@kernel.org>
+ <d5473b56cf1fa900ca4bd2b3fc1e5b8874399919.1577088521.git.luto@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TULl6mCWkNiAv5gxPXgAs79zlyz2CnZQ3KHOTQwLVhohs0SX6Jk
- 635/RcyQ672j8iOwYflEsNPY3GZy3Sa3cxjLx21sdZGGDuw0B2SLPMgFbx7y9dhFOEX2ava
- ThSXBB22GBsmZaf8421yU2sT5IHI5NFSr0KUTlhpFNOQb1b+PvhTO3AdydIn8Xc9AgmbXQA
- fMyWIdUZIPI0xyPKibNqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kVeW3gESbxE=:XXOuJlHEUO5YI8v8Kwlpih
- 4i/HnjhwF9rKJOIwC7J+j00TzQp3ZC9ZXAsXWZSKD2+vHbC2jPofn7yYIoakUBrd1Vousz9Y4
- J/VPgbq+Rou1w/habACrK2uvSIX2XwJAC7xPsFx9xu294iVc4jWFNEmsSVnxX+bUtb58EqeoV
- UlWOHdAyTvsUUPKBtGpFGK/lfkadZ6GNevkJoTY+Lq6wuduU1SLuUcxevqLCq6Cbv8jEgHinm
- EcXGDaIFWb1d9e8v6JQoMTsye7xhTvUq5gs9pMgx8RMTKaLlm5S6CA0ilHShzZMi9zgRzX7+a
- 8hyyB26HY9rUND3nGgVAfp1bZ1aalm4O028XlZ74zD95IGqaeAAoAIhjQ6SLdu8C4Cxw6Z7T8
- x0HBKDig+T0J5p0JRM9+hB87PrR+jubsy6JpNao8CchGgGkSwaRLKrdpp/18p3ZbRUhizQW8/
- pyKrC1VNPKtuPn5cz4oqOCOuMo3tgDTbyPxUGdwHIoyWV073797s8OCMLQ/2MzFUsHFvCByxu
- c/H53N2bnLyan7JTpvFAZPnPC2ug9mMqLxQqQanrmRV+6EzZ1NWkQjH4/7SQXitsQ5E/7iC+9
- cHEyCBMMmHxPW8VuiAWzwv6MinatLCogJGg7R2FNsqKWgsth7dBiupQTmUzI8ZTVphbakGuhI
- 3lobEJZcLyH0bP+EH+Us0Z8weohuNpDZYyeK3bVvPuo6+AWIvzrj8fzcPBbUjEbXJf6pgQfzf
- MscZpkjndV/iomUZqVH3+vF1+TY0fS0Y9NnHlZ8+242P014i4L65bZzcgrwBYRw1Jp3hQG+K7
- F1uwxyzwH/q0adP/KL6OaUoOBO/3f2xkfCjIrazX08KttAue2+ToZGd5g6yjsHi+SKUcGPkMm
- oZjM08tTakOJKTVBCqRA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5473b56cf1fa900ca4bd2b3fc1e5b8874399919.1577088521.git.luto@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With -O3, gcc has found an actual unintialized variable stored
-into an mmio register in two instances:
+On Mon, Dec 23, 2019 at 12:20:46AM -0800, Andy Lutomirski wrote:
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
 
-drivers/atm/eni.c: In function 'discard':
-drivers/atm/eni.c:465:13: error: 'dma[1]' is used uninitialized in this function [-Werror=uninitialized]
-   writel(dma[i*2+1],eni_dev->rx_dma+dma_wr*8+4);
-             ^
-drivers/atm/eni.c:465:13: error: 'dma[3]' is used uninitialized in this function [-Werror=uninitialized]
+Applied, thanks.
 
-Change the code to always write zeroes instead.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/atm/eni.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/atm/eni.c b/drivers/atm/eni.c
-index 8fad56f185ba..17d47ad03ab7 100644
---- a/drivers/atm/eni.c
-+++ b/drivers/atm/eni.c
-@@ -368,7 +368,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
- 		here = (eni_vcc->descr+skip) & (eni_vcc->words-1);
- 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) | (vcc->vci
- 		    << MID_DMA_VCI_SHIFT) | MID_DT_JK;
--		j++;
-+		dma[j++] = 0;
- 	}
- 	here = (eni_vcc->descr+size+skip) & (eni_vcc->words-1);
- 	if (!eff) size += skip;
-@@ -441,7 +441,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
- 	if (size != eff) {
- 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) |
- 		    (vcc->vci << MID_DMA_VCI_SHIFT) | MID_DT_JK;
--		j++;
-+		dma[j++] = 0;
- 	}
- 	if (!j || j > 2*RX_DMA_BUF) {
- 		printk(KERN_CRIT DEV_LABEL "!j or j too big!!!\n");
--- 
-2.20.0
-
+					- Ted
