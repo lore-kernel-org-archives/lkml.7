@@ -2,94 +2,80 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82FCC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449F9C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E5F206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1727320848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:37:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5MWuoqtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgAGTbv (ORCPT
+        id S1728548AbgAGTgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:31:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34258 "EHLO mx2.suse.de"
+        Tue, 7 Jan 2020 14:36:52 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:51248 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbgAGTbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:31:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9853BAC4A;
-        Tue,  7 Jan 2020 19:31:49 +0000 (UTC)
-Message-ID: <a2f77f1a8bb3b981d3e2fccd3fcb56733b63946a.camel@suse.de>
-Subject: [GIT PULL] bcm2835-dt-next-2020-01-07
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Date:   Tue, 07 Jan 2020 20:31:48 +0100
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-dPkd0/o+G6GVBoisjtIy"
-User-Agent: Evolution 3.34.2 
+        id S1728307AbgAGTgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:36:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Cbzy/2bT/fLLUdqy1XbXJMyT5+sZqroDJ+qaO7iOoDQ=; b=5MWuoqtpIMjkxFSxJ2AZ7hyLWY
+        naafxz1L8XCn2B5uye60IPjP7OW46wEIMpB1mIVBcXJz2SJELp1UnaQ6po9lZ9IwnZFMFCEXyxyHM
+        mjsJVjcB5SYgFUknDexOlmWggXFJ0akFS7pHx5JnXWMyEW5XeK1mopga9VCE4SgBAnWc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iouel-0004bC-7Y; Tue, 07 Jan 2020 20:36:47 +0100
+Date:   Tue, 7 Jan 2020 20:36:47 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Peter Korsgaard <peter@korsgaard.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
+Message-ID: <20200107193647.GA16895@lunn.ch>
+References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+ <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
+ <87muazjewd.fsf@dell.be.48ers.dk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87muazjewd.fsf@dell.be.48ers.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 07, 2020 at 07:32:50PM +0100, Peter Korsgaard wrote:
+> >>>>> "Wolfram" == Wolfram Sang <wsa+renesas@sang-engineering.com> writes:
+> 
+>  > Move away from the deprecated API and return the shiny new ERRPTR where
+>  > useful.
+> 
+>  > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> I didn't follow the discussion, but I don't see any returns anywhere?
 
---=-dPkd0/o+G6GVBoisjtIy
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Peter
 
-Hi Florian,
+I have also not been following the discussion. But i2c_new_device()
+seems to of always returned a NULL pointer on error, and the code has
+been ignoring it. The 'where useful' comment suggests the return value
+maybe checked, but it is optional to check it.  So this patch seems
+O.K.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a=
-:
+I suppose the commit message could be extended with:
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+In this case, the shiny new stuff is not useful, so ignore it.
 
-are available in the Git repository at:
+But:
 
-  https://github.com/vianpl/linux tags/bcm2835-dt-next-2020-01-07
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-for you to fetch changes up to 530735df62582d5d1f41faf0e0d1ca7d21dca571:
-
-  ARM: dts: bcm2711: Enable HWRNG support (2020-01-07 20:11:51 +0100)
-
-----------------------------------------------------------------
-Stephen Brennan (2):
-      ARM: dts: bcm2835: Move rng definition to common location
-      ARM: dts: bcm2711: Enable HWRNG support
-
- arch/arm/boot/dts/bcm2711.dtsi        | 6 ++----
- arch/arm/boot/dts/bcm2835-common.dtsi | 6 ++++++
- arch/arm/boot/dts/bcm283x.dtsi        | 6 ------
- 3 files changed, 8 insertions(+), 10 deletions(-)
-
-
---=-dPkd0/o+G6GVBoisjtIy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4U3KQACgkQlfZmHno8
-x/65SAf+NmZ2tYuGVZ1tPFBGugW+TKZ4/sZc8XrBeX8tDg1ozDZp27WsDe9umGb6
-ojqvPr7FUtSL1kG5PIBAqTIJl9upzCsmEECpLIp8ZES243ZcH7dWARjqM0SCBxVs
-OomJMI2NEuRyteq7s/7ibmVDyJGHSianm06hafyiups++fvjz0q8TrcZ6wM31Cu8
-eJ70koJNf+R/2xcMRKdqjAtu47NJ1c5ny7NxN6BGeRyuc99Owl7qyK+V8y0jnteK
-Ua4cW+EFy1DWILtDUT6tZpG+LEqdhcSM0V1f6KFPi3BwSDqtLPuszVMCf4iHkPCF
-LFgv6rKl1SrB/4es1gFccTV8lfV18w==
-=Hz8W
------END PGP SIGNATURE-----
-
---=-dPkd0/o+G6GVBoisjtIy--
-
+    Andrew
