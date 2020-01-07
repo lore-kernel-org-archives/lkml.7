@@ -2,245 +2,196 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80DFC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D4C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1952077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D35A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvwFbmRe"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rtRhb1x0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgAGVSb (ORCPT
+        id S1729178AbgAGVFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:18:31 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:46868 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgAGVSV (ORCPT
+        Tue, 7 Jan 2020 16:05:04 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:26466 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728740AbgAGVEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:18:21 -0500
-Received: by mail-vk1-f194.google.com with SMTP id u6so365863vkn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:18:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fWHlfsIIqdm4CbdrtbAbeq2yRN1pjIyOoBGlDv3Smng=;
-        b=jvwFbmReRt9SroYc8ybUNmLn1tiPYK6p8ILrC7V9oODm6acKcSC0C5Z8srJwQzhEky
-         mK9jaymqbeaX8fnhrt09ztan8PSQq6YqcFBdPcbK4IN+2+f9zMXdtieX3/PL5TN4ul+E
-         3PNCrM9CpCXg8SplB7jDlsZzz42uDf4zq2EsO9Z7NsGjZEkZn0FawYvjONzy/AVNfqoF
-         HEeV4oUbrc4kC1PgQ0mkJS53oPISOckpJv5VRNmxgSFZUsXnwulO9dFrFATaYD8Vawi1
-         6tIjCJa4UGyZFPHI9PjWHvd6UTWXCXwNmKYZ71udv3gZzFJ2eEOpRdzT3vETXRFDwKcn
-         3NKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fWHlfsIIqdm4CbdrtbAbeq2yRN1pjIyOoBGlDv3Smng=;
-        b=UmMeJkarTE9ycbrBwgFbdVwOFgOvRRqC2IrumNxbFF9svQxbr4XETcwP49btW8xUHb
-         EMhyXMPz1gz/h+hqXZtqmCI3Sw582u6B8r140rBsduae/2f16dGVC4amj100czA0sK0U
-         wujhHqc0SRPWjvyEXZ+0OUxnY4kLIPI3byIDZ81PKLTAa93xsG01iAk9VBNRtILJzk5r
-         YNIQUmp5pGkPzi8YeUw5NAyms/Kroz8RnGlbDWTu1NaCFUcfY9N6k7cA/25R78t11AU9
-         AqMCn1jbrMdy7g9x8AmkH7U7y/J3WGNeUZg0kwMAXbZ3ivLvUrR+DgR2SF3a6TAghv6D
-         4I3Q==
-X-Gm-Message-State: APjAAAUYsB7gWy0biEJ3foT9P3YfzmzXGJ0BxvkiQqTPPadRcmv/EwZP
-        CpCk7adXlClnen50yXbhR9Ouh1OBEAP/WMn/3iLKqQ==
-X-Google-Smtp-Source: APXvYqxumwkbw/b3bQhS1QzSVsUSdF39aqCErT/H6DqIdEW/GJF4vkawveLg6w1NU6pRre6WHkV6HbdXHk9+c9kEkTU=
-X-Received: by 2002:a1f:1fd1:: with SMTP id f200mr957892vkf.21.1578431899872;
- Tue, 07 Jan 2020 13:18:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20191216213901.106941-1-bgardon@google.com> <20191216213901.106941-5-bgardon@google.com>
- <20200107150245.cblsqirr5mu4fqoo@kamzik.brq.redhat.com>
-In-Reply-To: <20200107150245.cblsqirr5mu4fqoo@kamzik.brq.redhat.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Tue, 7 Jan 2020 13:18:08 -0800
-Message-ID: <CANgfPd-CiO-HmY0Hit4101EQR8YMqAPUe80n-g6EjQys7x69Gw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] KVM: selftests: Add memory size parameter to the
- demand paging test
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jan 2020 16:04:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578431090; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Q9pYTYXJ+ynpWFGfhxCQvH03pftFnUg3jaHziOPFltM=; b=rtRhb1x0M8tWkpCazpdkwl3nk6UaOOZLmtyYyZ6vCYrAGSNL0yQst96NR154L9vE+znWPfL8
+ dJsZLe0fLMHa7mfqlcQMyBZUdN51rrALxfpmuaJ1yPh6Bj1XNDmw1sfTYi4Ry6Z6VrJzBM77
+ yt8iwx3spEVTdcfUpKUTbcjN8cQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e14f26e.7f5e9864bc70-smtp-out-n01;
+ Tue, 07 Jan 2020 21:04:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 15D30C447AE; Tue,  7 Jan 2020 21:04:45 +0000 (UTC)
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A1E1C447AA;
+        Tue,  7 Jan 2020 21:04:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A1E1C447AA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        swboyd@chromium.org, Stephan Gerhold <stephan@gerhold.net>
+Cc:     Elliot Berman <eberman@codeaurora.org>,
+        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        Brian Masney <masneyb@onstation.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 07/17] firmware: qcom_scm-64: Move SMC register filling to qcom_scm_call_smccc
+Date:   Tue,  7 Jan 2020 13:04:16 -0800
+Message-Id: <1578431066-19600-8-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
+References: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 7:02 AM Andrew Jones <drjones@redhat.com> wrote:
->
-> On Mon, Dec 16, 2019 at 01:38:57PM -0800, Ben Gardon wrote:
-> > Add an argument to allow the demand paging test to work on larger and
-> > smaller guest sizes.
-> >
-> > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > ---
-> >  .../selftests/kvm/demand_paging_test.c        | 56 ++++++++++++-------
-> >  1 file changed, 35 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
-> > index 11de5b58995fb..4aa90a3fce99c 100644
-> > --- a/tools/testing/selftests/kvm/demand_paging_test.c
-> > +++ b/tools/testing/selftests/kvm/demand_paging_test.c
-> > @@ -32,6 +32,8 @@
-> >  /* Default guest test virtual memory offset */
-> >  #define DEFAULT_GUEST_TEST_MEM               0xc0000000
-> >
-> > +#define DEFAULT_GUEST_TEST_MEM_SIZE (1 << 30) /* 1G */
-> > +
-> >  /*
-> >   * Guest/Host shared variables. Ensure addr_gva2hva() and/or
-> >   * sync_global_to/from_guest() are used when accessing from
-> > @@ -264,11 +266,10 @@ static int setup_demand_paging(struct kvm_vm *vm,
-> >       return 0;
-> >  }
-> >
-> > -#define GUEST_MEM_SHIFT 30 /* 1G */
-> >  #define PAGE_SHIFT_4K  12
-> >
-> >  static void run_test(enum vm_guest_mode mode, bool use_uffd,
-> > -                  useconds_t uffd_delay)
-> > +                  useconds_t uffd_delay, uint64_t guest_memory_bytes)
-> >  {
-> >       pthread_t vcpu_thread;
-> >       pthread_t uffd_handler_thread;
-> > @@ -276,33 +277,40 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
-> >       int r;
-> >
-> >       /*
-> > -      * We reserve page table for 2 times of extra dirty mem which
-> > -      * will definitely cover the original (1G+) test range.  Here
-> > -      * we do the calculation with 4K page size which is the
-> > -      * smallest so the page number will be enough for all archs
-> > -      * (e.g., 64K page size guest will need even less memory for
-> > -      * page tables).
-> > +      * We reserve page table for twice the ammount of memory we intend
-> > +      * to use in the test region for demand paging. Here we do the
-> > +      * calculation with 4K page size which is the smallest so the page
-> > +      * number will be enough for all archs. (e.g., 64K page size guest
-> > +      * will need even less memory for page tables).
-> >        */
-> >       vm = create_vm(mode, VCPU_ID,
-> > -                    2ul << (GUEST_MEM_SHIFT - PAGE_SHIFT_4K),
-> > +                    (2 * guest_memory_bytes) >> PAGE_SHIFT_4K,
-> >                      guest_code);
-> >
-> >       guest_page_size = vm_get_page_size(vm);
-> > -     /*
-> > -      * A little more than 1G of guest page sized pages.  Cover the
-> > -      * case where the size is not aligned to 64 pages.
-> > -      */
-> > -     guest_num_pages = (1ul << (GUEST_MEM_SHIFT -
-> > -                                vm_get_page_shift(vm))) + 16;
-> > +
-> > +     TEST_ASSERT(guest_memory_bytes % guest_page_size == 0,
-> > +                 "Guest memory size is not guest page size aligned.");
-> > +
-> > +     guest_num_pages = guest_memory_bytes / guest_page_size;
-> > +
-> >  #ifdef __s390x__
-> >       /* Round up to multiple of 1M (segment size) */
-> >       guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-> >  #endif
-> > +     /*
-> > +      * If there should be more memory in the guest test region than there
-> > +      * can be pages in the guest, it will definitely cause problems.
-> > +      */
-> > +     TEST_ASSERT(guest_num_pages < vm_get_max_gfn(vm),
-> > +                 "Requested more guest memory than address space allows.\n"
-> > +                 "    guest pages: %lx max gfn: %lx\n",
-> > +                 guest_num_pages, vm_get_max_gfn(vm));
-> >
-> >       host_page_size = getpagesize();
-> > -     host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
-> > -                      !!((guest_num_pages * guest_page_size) %
-> > -                         host_page_size);
-> > +     TEST_ASSERT(guest_memory_bytes % host_page_size == 0,
-> > +                 "Guest memory size is not host page size aligned.");
-> > +     host_num_pages = guest_memory_bytes / host_page_size;
-> >
-> >       guest_test_phys_mem = (vm_get_max_gfn(vm) - guest_num_pages) *
-> >                             guest_page_size;
-> > @@ -381,7 +389,8 @@ static void help(char *name)
-> >       int i;
-> >
-> >       puts("");
-> > -     printf("usage: %s [-h] [-m mode] [-u] [-d uffd_delay_usec]\n", name);
-> > +     printf("usage: %s [-h] [-m mode] [-u] [-d uffd_delay_usec]\n"
-> > +            "          [-b bytes test memory]\n", name);
-> >       printf(" -m: specify the guest mode ID to test\n"
-> >              "     (default: test all supported modes)\n"
-> >              "     This option may be used multiple times.\n"
-> > @@ -395,6 +404,8 @@ static void help(char *name)
-> >       printf(" -d: add a delay in usec to the User Fault\n"
-> >              "     FD handler to simulate demand paging\n"
-> >              "     overheads. Ignored without -u.\n");
-> > +     printf(" -b: specify the number of bytes of memory which should be\n"
-> > +            "     allocated to the guest.\n");
->
-> Can we input in megabytes instead? And also it might be nice to output the
-> default size here.
+qcom_scm_call_smccc should be responsible for converting qcom_scm_desc
+into arguments for smc call. Consolidate the dispersed logic to convert
+qcom_scm_desc into smc arguments inside qcom_scm_call_smccc.
 
-I added a little function to parse size arguments so users can specify
-2M or 7G. I also changed this to print the default value.
+Change-Id: Ieae23c5fc6c77dbd76ef28dc4040b0f64de872c0
+Tested-by: Brian Masney <masneyb@onstation.org> # arm32
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ drivers/firmware/qcom_scm-64.c | 54 ++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 20 deletions(-)
 
->
-> >       puts("");
-> >       exit(0);
-> >  }
-> > @@ -402,6 +413,7 @@ static void help(char *name)
-> >  int main(int argc, char *argv[])
-> >  {
-> >       bool mode_selected = false;
-> > +     uint64_t guest_memory_bytes = DEFAULT_GUEST_TEST_MEM_SIZE;
-> >       unsigned int mode;
-> >       int opt, i;
-> >       bool use_uffd = false;
-> > @@ -414,7 +426,7 @@ int main(int argc, char *argv[])
-> >       vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-> >  #endif
-> >
-> > -     while ((opt = getopt(argc, argv, "hm:ud:")) != -1) {
-> > +     while ((opt = getopt(argc, argv, "hm:ud:b:")) != -1) {
-> >               switch (opt) {
-> >               case 'm':
-> >                       if (!mode_selected) {
-> > @@ -435,6 +447,8 @@ int main(int argc, char *argv[])
-> >                       TEST_ASSERT(uffd_delay >= 0,
-> >                                   "A negative UFFD delay is not supported.");
-> >                       break;
-> > +             case 'b':
-> > +                     guest_memory_bytes = strtoull(optarg, NULL, 0);
->
-> Missing break. So it doesn't look like this was tested.
-
-Woops, you're right, I must not have tested this commit. The break is
-added in commit 6/8 and I only tested at the end of the series.
-I'll have the break in this commit in the next version of this series.
-
->
-> >               case 'h':
-> >               default:
-> >                       help(argv[0]);
-> > @@ -448,7 +462,7 @@ int main(int argc, char *argv[])
-> >               TEST_ASSERT(vm_guest_mode_params[i].supported,
-> >                           "Guest mode ID %d (%s) not supported.",
-> >                           i, vm_guest_mode_string(i));
-> > -             run_test(i, use_uffd, uffd_delay);
-> > +             run_test(i, use_uffd, uffd_delay, guest_memory_bytes);
-> >       }
-> >
-> >       return 0;
-> > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
->
-> Thanks,
-> drew
->
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index e0e6530..3ae171a 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -62,6 +62,14 @@ struct qcom_scm_res {
+ 	u64 result[MAX_QCOM_SCM_RETS];
+ };
+ 
++/**
++ * struct arm_smccc_args
++ * @args:	The array of values used in registers in smc instruction
++ */
++struct arm_smccc_args {
++	unsigned long args[8];
++};
++
+ static u64 qcom_smccc_convention = -1;
+ static DEFINE_MUTEX(qcom_scm_lock);
+ 
+@@ -71,46 +79,42 @@ static DEFINE_MUTEX(qcom_scm_lock);
+ #define SCM_SMC_N_REG_ARGS	4
+ #define SCM_SMC_FIRST_EXT_IDX	(SCM_SMC_N_REG_ARGS - 1)
+ #define SCM_SMC_N_EXT_ARGS	(MAX_QCOM_SCM_ARGS - SCM_SMC_N_REG_ARGS + 1)
++#define SCM_SMC_FIRST_REG_IDX	2
++#define SCM_SMC_LAST_REG_IDX	(SCM_SMC_FIRST_REG_IDX + SCM_SMC_N_REG_ARGS - 1)
+ 
+-static void __scm_smc_do_quirk(const struct qcom_scm_desc *desc,
+-			       struct arm_smccc_res *res, u64 x5, u32 type)
++static void __scm_smc_do_quirk(const struct arm_smccc_args *smc,
++			       struct arm_smccc_res *res)
+ {
+-	u64 cmd;
++	unsigned long a0 = smc->args[0];
+ 	struct arm_smccc_quirk quirk = { .id = ARM_SMCCC_QUIRK_QCOM_A6 };
+ 
+-	cmd = ARM_SMCCC_CALL_VAL(
+-		type,
+-		qcom_smccc_convention,
+-		desc->owner,
+-		SCM_SMC_FNID(desc->svc, desc->cmd));
+-
+ 	quirk.state.a6 = 0;
+ 
+ 	do {
+-		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
+-				    desc->args[1], desc->args[2], x5,
+-				    quirk.state.a6, 0, res, &quirk);
++		arm_smccc_smc_quirk(a0, smc->args[1], smc->args[2],
++				    smc->args[3], smc->args[4], smc->args[5],
++				    quirk.state.a6, smc->args[7], res, &quirk);
+ 
+ 		if (res->a0 == QCOM_SCM_INTERRUPTED)
+-			cmd = res->a0;
++			a0 = res->a0;
+ 
+ 	} while (res->a0 == QCOM_SCM_INTERRUPTED);
+ }
+ 
+-static void __scm_smc_do(const struct qcom_scm_desc *desc,
+-			 struct arm_smccc_res *res, u64 x5, bool atomic)
++static void __scm_smc_do(const struct arm_smccc_args *smc,
++			 struct arm_smccc_res *res, bool atomic)
+ {
+ 	int retry_count = 0;
+ 
+ 	if (atomic) {
+-		__scm_smc_do_quirk(desc, res, x5, ARM_SMCCC_FAST_CALL);
++		__scm_smc_do_quirk(smc, res);
+ 		return;
+ 	}
+ 
+ 	do {
+ 		mutex_lock(&qcom_scm_lock);
+ 
+-		__scm_smc_do_quirk(desc, res, x5, ARM_SMCCC_STD_CALL);
++		__scm_smc_do_quirk(smc, res);
+ 
+ 		mutex_unlock(&qcom_scm_lock);
+ 
+@@ -127,12 +131,22 @@ static int __scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
+ {
+ 	int arglen = desc->arginfo & 0xf;
+ 	int i;
+-	u64 x5 = desc->args[SCM_SMC_FIRST_EXT_IDX];
+ 	dma_addr_t args_phys = 0;
+ 	void *args_virt = NULL;
+ 	size_t alloc_len;
+ 	gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
++	u32 smccc_call_type = atomic ? ARM_SMCCC_FAST_CALL : ARM_SMCCC_STD_CALL;
+ 	struct arm_smccc_res smc_res;
++	struct arm_smccc_args smc = {0};
++
++	smc.args[0] = ARM_SMCCC_CALL_VAL(
++		smccc_call_type,
++		qcom_smccc_convention,
++		desc->owner,
++		SCM_SMC_FNID(desc->svc, desc->cmd));
++	smc.args[1] = desc->arginfo;
++	for (i = 0; i < SCM_SMC_N_REG_ARGS; i++)
++		smc.args[i + SCM_SMC_FIRST_REG_IDX] = desc->args[i];
+ 
+ 	if (unlikely(arglen > SCM_SMC_N_REG_ARGS)) {
+ 		alloc_len = SCM_SMC_N_EXT_ARGS * sizeof(u64);
+@@ -163,10 +177,10 @@ static int __scm_smc_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 			return -ENOMEM;
+ 		}
+ 
+-		x5 = args_phys;
++		smc.args[SCM_SMC_LAST_REG_IDX] = args_phys;
+ 	}
+ 
+-	__scm_smc_do(desc, &smc_res, x5, atomic);
++	__scm_smc_do(&smc, &smc_res, atomic);
+ 
+ 	if (args_virt) {
+ 		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
