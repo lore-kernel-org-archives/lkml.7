@@ -2,96 +2,280 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA451C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F64C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2712081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A0520656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bPx7kY5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgAGNmK (ORCPT
+        id S1728156AbgAGNmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:42:10 -0500
-Received: from www84.your-server.de ([213.133.104.84]:53176 "EHLO
-        www84.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgAGNmJ (ORCPT
+        Tue, 7 Jan 2020 08:42:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39245 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgAGNml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:42:09 -0500
-X-Greylist: delayed 1564 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 08:42:08 EST
-Received: from [188.192.102.182] (helo=[192.168.0.7])
-        by www84.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <stefani@seibold.net>)
-        id 1iooiI-0003xj-OC; Tue, 07 Jan 2020 14:16:02 +0100
-Message-ID: <10721bebc81144c25e53b55c8cd086a34d4fd1f8.camel@seibold.net>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-From:   Stefani Seibold <stefani@seibold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 07 Jan 2020 14:15:59 +0100
-In-Reply-To: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
-         <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
-         <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
-         <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 
+        Tue, 7 Jan 2020 08:42:41 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so53974171wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 05:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xNvCQyjsNiMUg/1lQuS7zN7awhZ1AvaufUW/jWm6iRE=;
+        b=bPx7kY5OI+nNft9fnbwsarqoPjGBjJJSjjHzWemXe3t7GER+zoJfFAnPj400t2LQoz
+         fM/PlOJkPuNd55bpx8Xg2ungszpbk2ANrty4/RTg8I8f/rUiM0UTTJbSVUQllww5BtLk
+         MhbJDN/WMLVxKo+LFMjuLhbk7yiH5bSuk5gmrJYBUOfSjb3deloyUmPNpJHtSVJDo30d
+         Np1N/XWLrtCcUQpcB0ymOhi7kk+AqUKbjXVqvPurUks396AZbHpHhbjm0k45kYeCB2Dz
+         OR0+R4pYchkrRnCvDjZgBDAwE0sHfRuQH0svQql2ptcweXxcQHrOdhk3CmxxRAYMnqlQ
+         mEBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xNvCQyjsNiMUg/1lQuS7zN7awhZ1AvaufUW/jWm6iRE=;
+        b=qfrPoaNBfu5o12/EK+WhFENkUAtNUfHlpZ+wxkNJibDNA1b6X4Ni32Lql4ztpdtKBF
+         +iwaPO69VO+TxlCgKYRRH1eX5NS32PlC8qqOloJsdA8teeNmq8ur634IYT9gQHCNKwx7
+         lVVratHaT37RRukFiZHDtGnxT7LTuVa6BorW0HvFaw4ip3fZzB8hrG+K1vvooJh0OhCl
+         jvJx9xkNozitrjdG0qfNhcvqzKW1Cp82rlSAykRKdflhYnhQwvg4zihW//ZvUC0iRrPz
+         iY6ulSCsUbVEcdWwDdiIHK15sgi1aI4JFTXjC/+3vZojziYKlhCtoM/FSjyyDBVv+A8W
+         2BMw==
+X-Gm-Message-State: APjAAAXGcV9VGTwiJOwg1LSpu+PlAk/aSVmULhXmH/h7o3rwuuHOor1j
+        o993Cxs8zwWVkNj+LXMvqoZEtA==
+X-Google-Smtp-Source: APXvYqxZncKxrwIQPda/14R2WMIJ14evaqCxUBMzMvTe9xz6KV6xriLPnpaU0IjPUZ4UdN3tcI57rA==
+X-Received: by 2002:a5d:6901:: with SMTP id t1mr101971046wru.94.1578404558194;
+        Tue, 07 Jan 2020 05:42:38 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id f1sm77802537wrp.93.2020.01.07.05.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 05:42:37 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:42:34 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200107134234.GA158998@google.com>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: stefani@seibold.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25687/Tue Jan  7 10:56:22 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220164838.31619-1-qais.yousef@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 07.01.2020, 13:50 +0100 schrieb Linus Walleij:
-> On Tue, Jan 7, 2020 at 11:38 AM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > wt., 7 sty 2020 o 11:07 Linus Walleij <linus.walleij@linaro.org>
-> > napisał(a):
-> > > The patch set overall looks good to me, I don't understand the
-> > > kfifo
-> > > parts but I trust you on this, though we need review from a FIFO
-> > > maintainer.
-> > 
-> > Ha! This may be a problem - there doesn't seem to be one. This is
-> > why
-> > I Cc'd Greg.
+Hi Qais,
+
+On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
+> +/*
+> + * By default RT tasks run at the maximum performance point/capacity of the
+> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
+> + * SCHED_CAPACITY_SCALE.
+> + *
+> + * This knob allows admins to change the default behavior when uclamp is being
+> + * used. In battery powered devices particularly running at the maximum
+> + * capacity will increase energy consumption and shorten the battery life.
+> + *
+> + * This knob only affects the default value RT uses when a new RT task is
+> + * forked or has just changed policy to RT and no uclamp user settings were
+> + * applied (ie: the task didn't modify the default value to a new value.
+> + *
+> + * This knob will not override the system default values defined above.
+> + */
+
+I suppose this comment could go in the sysctl doc file instead ?
+
+> +unsigned int sysctl_sched_rt_uclamp_util_min = SCHED_CAPACITY_SCALE;
+
+I would suggest renaming the knob as 'sysctl_sched_rt_default_uclamp_min'
+or something along those lines to make it clear it's a default value.
+
+And for consistency with the existing code, perhaps set the default to
+uclamp_none(UCLAMP_MAX) instead of an explicit SCHED_CAPACITY_SCALE?
+
+>  /* All clamps are required to be less or equal than these values */
+>  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+>  
+> @@ -919,6 +936,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  	return uc_req;
+>  }
+>  
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> +{
+> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> +
+> +	if (!uc_se->user_defined)
+> +		uclamp_se_set(uc_se, sysctl_sched_rt_uclamp_util_min, false);
+> +}
+> +
+>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_eff;
+> @@ -1116,12 +1141,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  				loff_t *ppos)
+>  {
+>  	bool update_root_tg = false;
+> -	int old_min, old_max;
+> +	int old_min, old_max, old_rt_min;
+>  	int result;
+>  
+>  	mutex_lock(&uclamp_mutex);
+>  	old_min = sysctl_sched_uclamp_util_min;
+>  	old_max = sysctl_sched_uclamp_util_max;
+> +	old_rt_min = sysctl_sched_rt_uclamp_util_min;
+>  
+>  	result = proc_dointvec(table, write, buffer, lenp, ppos);
+>  	if (result)
+> @@ -1129,12 +1155,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  	if (!write)
+>  		goto done;
+>  
+> +	/*
+> +	 * The new value will be applied to all RT tasks the next time they
+> +	 * wakeup, assuming the task is using the system default and not a user
+> +	 * specified value. In the latter we shall leave the value as the user
+> +	 * requested.
+> +	 */
+>  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+>  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+>  		result = -EINVAL;
+>  		goto undo;
+>  	}
+>  
+> +	if (sysctl_sched_rt_uclamp_util_min > SCHED_CAPACITY_SCALE) {
+> +		result = -EINVAL;
+> +		goto undo;
+> +	}
+> +
+>  	if (old_min != sysctl_sched_uclamp_util_min) {
+>  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+>  			      sysctl_sched_uclamp_util_min, false);
+> @@ -1160,6 +1197,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  undo:
+>  	sysctl_sched_uclamp_util_min = old_min;
+>  	sysctl_sched_uclamp_util_max = old_max;
+> +	sysctl_sched_rt_uclamp_util_min = old_rt_min;
+>  done:
+>  	mutex_unlock(&uclamp_mutex);
+>  
+> @@ -1202,9 +1240,12 @@ static void __setscheduler_uclamp(struct task_struct *p,
+>  		if (uc_se->user_defined)
+>  			continue;
+>  
+> -		/* By default, RT tasks always get 100% boost */
+> +		/*
+> +		 * By default, RT tasks always get 100% boost, which the admins
+> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
+> +		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
+>  
+>  		uclamp_se_set(uc_se, clamp_value, false);
+>  	}
+> @@ -1236,9 +1277,12 @@ static void uclamp_fork(struct task_struct *p)
+>  	for_each_clamp_id(clamp_id) {
+>  		unsigned int clamp_value = uclamp_none(clamp_id);
+>  
+> -		/* By default, RT tasks always get 100% boost */
+> +		/*
+> +		 * By default, RT tasks always get 100% boost, which the admins
+> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
+> +		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
+>  
+>  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+>  	}
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index e591d40fd645..19572dfc175b 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
+>   */
+>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+>  {
+> +	/*
+> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
+> +	 * we apply any new value on the next wakeup, which is here.
+> +	 */
+> +	uclamp_rt_sync_default_util_min(p);
+
+The task has already been enqueued and sugov has been called by then I
+think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
+
+> +
+>  	if (!task_running(rq, p) &&
+>  	    !test_tsk_need_resched(rq->curr) &&
+>  	    p->nr_cpus_allowed > 1 &&
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 280a3c735935..337bf17b1a9d 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>  #endif /* CONFIG_CPU_FREQ */
+>  
+>  #ifdef CONFIG_UCLAMP_TASK
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
+> +
+>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>  
+>  static __always_inline
+> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+>  	return uclamp_util_with(rq, util, NULL);
+>  }
+>  #else /* CONFIG_UCLAMP_TASK */
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
+> +
+>  static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+>  					    struct task_struct *p)
+>  {
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 70665934d53e..06183762daac 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= sysctl_sched_uclamp_handler,
+>  	},
+> +	{
+> +		.procname	= "sched_rt_util_clamp_min",
+> +		.data		= &sysctl_sched_rt_uclamp_util_min,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_sched_uclamp_handler,
+> +	},
+>  #endif
+>  #ifdef CONFIG_SCHED_AUTOGROUP
+>  	{
+> -- 
+> 2.17.1
 > 
-> I was under the impression that KFIFO was part of the driver core.
-> Let's try to CC the actual author (Stefani Seibold) and see if the
-> mail
-> address works and if he can look at it. Or did you already talk to
-> Stefani?
-> 
-> (git blame is always my best friend in cases like this, hehe)
-> 
-> Yours,
-> Linus Walleij
 
-I have looked around for the patches and I found the following patches 
+Apart from the small things above, this seems like a sensible idea and
+would indeed be useful, so thanks for the patch!
 
-[PATCH v4 07/13] kfifo: provide noirqsave variants of spinlocked in and out helpers
-[PATCH v4 08/13] kfifo: provide kfifo_is_empty_spinlocked()
-
-dated on 24 Dec 2019.
-
-Both seems to be okay. The patch is non intrusive to KFIFO adding only
-spinlock wrapper functions for the contemporary kfifo functions.
-
-So...
-
-Acked by Stefani Seibold <stefani@seibold.net>
-
-
+Quentin
