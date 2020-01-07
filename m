@@ -2,133 +2,233 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7861C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A1DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA26C2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SRKTOX73"
+	by mail.kernel.org (Postfix) with ESMTP id 93E432080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgAGQCJ (ORCPT
+        id S1728397AbgAGQDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:02:09 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41916 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgAGQCJ (ORCPT
+        Tue, 7 Jan 2020 11:03:11 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40576 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728262AbgAGQDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:02:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x129so43070719qke.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:02:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m5L2Z7dBLaHFaGhh6t90np+r+vB2C1fkHc9c1XkE5eA=;
-        b=SRKTOX73kQ0C7bZJyVEQPX5lrHCfn6wtB+TUgnlKYaqAcPOJxRX9W33hvgPLf/Cqni
-         20bWZcvpVtp+u3kVVCy8Pr6p5WX771zG/aaYNm3a43PBoZMEWPkVUdafi6z8zdNbP875
-         wtMMQXxTZrS4EHq5APXk2wYx3oJy+7yGEHag0xh0L78KeLuZ6Up0ZEKAeisMiKKEo5bD
-         GnoA9zsPeHtXte1J8C12L3Ve4R2yJhPrmNnqIh1xILeh06Iq5UCkFiirkFczmkS1Durt
-         VPuB0v7XEVsThI6kRHNHza1+1T1XUR1zTV2kSimviYK2TK4yxqHmw1gQJk9t+jf8ah8+
-         YhdQ==
+        Tue, 7 Jan 2020 11:03:11 -0500
+Received: by mail-io1-f71.google.com with SMTP id e200so150016iof.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:03:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m5L2Z7dBLaHFaGhh6t90np+r+vB2C1fkHc9c1XkE5eA=;
-        b=jV2F+j5BstkhS7WmyAlpYu/6Zw1INEQKvI1QDhJ5D8YKKQTEYBFrisdDfDkR1Y8Jmu
-         fKdPdIgSBNldckkyOFJDVG9yjv8RpKfWSG0Qq6rgGW83WM6961PBupuPFLggKjCSeZr5
-         ECgATYJWAwMGaidWYVe4OX9RF7vJCzyTim3eFSFtFM8wFUmOUiluMdS+z/nDwYbZrYZL
-         N4bUYOLIAbsvVbyS1/NSubmG7/P2P3Ciq1BJI0M5oMZ16f3kIpPukAeE8MwYNG9e2Ryn
-         lag+Mb1XXlALXr/I5K3oSAnoHbA4f4XTKxlYszCiw5i5stQKaduPw+enOI0S9snvIWha
-         +1YA==
-X-Gm-Message-State: APjAAAXjVfrCvZsFRcVRCka8ByiYH4QA8YhR7/CUEnODKtuy3wzI9vHT
-        yy6suuIqZOguHtkDLAKHN1/bUGcBZDiI1JbrrqMGRA==
-X-Google-Smtp-Source: APXvYqzUW7seMxUlfo6okJae/fU1ZwL/kM+/uzTVDw6txhjzZH1cXINZE4qkaz5ynFXQaozCcU2Y+HQm3/FNG88d/6Y=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr18264qki.250.1578412928223;
- Tue, 07 Jan 2020 08:02:08 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Lq7oG4kN0bgyUSOq2ZBh0XJtTePNFuAjgOPCbZc9Tyk=;
+        b=miy9c7u8r45IHK2dfS8d+HZvKn4rXOqgVGzssbF57cwUmXy7drch9P8L4OqtB9EDjK
+         WQ3mkkMZIc1PPrX5fyMMklJ4ulGVnEukTLw64lgEIEe6LdDL1/7MnKO4UthjTQ2ZbJih
+         YkE3veQoWvGOAe0HcHHeiORMCICqNdofv0G3BOhSTIvRUcZWR8FeyaY+51IIWIMNxSRv
+         jcvLtcg1KNhjym5hZTnF8lTyRcqTi/Jc1cCQfKkD0pV91ZL82yw6u1+Bb1FDcAUv4Sna
+         UP53c6i5U1216U1IZFa4v5T02S7LN9a3jM5HOqWri4EnLcdSzY6rq84XM65r7cVzRKQ2
+         fRBg==
+X-Gm-Message-State: APjAAAVZa33n7rh2PqFatfCmDeLwPCstR5uW7fZNVEnuw2PHou/f4UX4
+        X99FWMetbwh5ItPUO1hhf8uXGFk/74+lgOASnMfZJT727Rm1
+X-Google-Smtp-Source: APXvYqxLPGxJ6STU0SP+dsrT/Jn9uV8vP3KVNj1bujWZ/SxTUkvVglfWHZM1pPa2wqhhV6SmSk+JSNH84hPk2YvW5obH86tfySxD
 MIME-Version: 1.0
-References: <00000000000082b80f059a56da1f@google.com> <0000000000002074ef059a5c86e2@google.com>
- <20200107154755.GB43062@phenom.ffwll.local>
-In-Reply-To: <20200107154755.GB43062@phenom.ffwll.local>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 7 Jan 2020 17:01:56 +0100
-Message-ID: <CACT4Y+arQyPjzHSFy1MkVF2jNPJbu262_FTL5ma9AnWkXosY1g@mail.gmail.com>
-Subject: Re: INFO: task hung in fb_release
-To:     syzbot <syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com>,
-        Rex.Zhu@amd.com, David Airlie <airlied@linux.ie>,
-        alexander.deucher@amd.com, amd-gfx@lists.freedesktop.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        christian.koenig@amd.com, david1.zhou@amd.com,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:498d:: with SMTP id k13mr4070880ilg.254.1578412990449;
+ Tue, 07 Jan 2020 08:03:10 -0800 (PST)
+Date:   Tue, 07 Jan 2020 08:03:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009ad299059b8ee99c@google.com>
+Subject: INFO: task hung in bcm_release
+From:   syzbot <syzbot+9d1d68a21e17513cb654@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
+        netdev@vger.kernel.org, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 4:48 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Dec 23, 2019 at 02:31:01AM -0800, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit e3933f26b657c341055443103bad331f4537b113
-> > Author: Rex Zhu <Rex.Zhu@amd.com>
-> > Date:   Tue Jan 16 10:35:15 2018 +0000
-> >
-> >     drm/amd/pp: Add edit/commit/show OD clock/voltage support in sysfs
->
-> Pretty sure you don't even have that driver loaded ... from the config:
->
-> # CONFIG_DRM_AMDGPU is not set
->
-> :-)
+Hello,
 
-Yes, it seems the bug is very flaky and flakiness changes over time.
-And this is combined with non-deterministic kernel build bug:
-https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
-It builds the same kernel, but gets a different result, so it's like
-"nope, this commit very much affects the kernel so could be the root
-cause"...
+syzbot found the following crash on:
+
+HEAD commit:    bed72351 Merge tag 'kbuild-fixes-v5.5-2' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16eeba56e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=874bac2ff63646fa
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d1d68a21e17513cb654
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9d1d68a21e17513cb654@syzkaller.appspotmail.com
+
+INFO: task syz-executor.5:25823 blocked for more than 143 seconds.
+       Not tainted 5.5.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.5  D26440 25823  10371 0x80004006
+Call Trace:
+  context_switch kernel/sched/core.c:3385 [inline]
+  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
+  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
+  rwsem_down_write_slowpath+0x706/0xf80 kernel/locking/rwsem.c:1238
+  __down_write kernel/locking/rwsem.c:1392 [inline]
+  down_write+0x13c/0x150 kernel/locking/rwsem.c:1535
+  unregister_netdevice_notifier+0x7e/0x3a0 net/core/dev.c:1772
+  bcm_release+0x93/0x650 net/can/bcm.c:1474
+  __sock_release+0xce/0x280 net/socket.c:592
+  sock_close+0x1e/0x30 net/socket.c:1270
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0xba9/0x2f50 kernel/exit.c:801
+  do_group_exit+0x135/0x360 kernel/exit.c:899
+  get_signal+0x47c/0x24f0 kernel/signal.c:2734
+  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45af49
+Code: Bad RIP value.
+RSP: 002b:00007f5d7155ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
+RAX: 0000000000000004 RBX: 0000000000000003 RCX: 000000000045af49
+RDX: 0000000000000002 RSI: 0000000000000002 RDI: 000000000000001d
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f5d7155f6d4
+R13: 00000000004cb57f R14: 00000000004e58a8 R15: 00000000ffffffff
+
+Showing all locks held in the system:
+2 locks held by kworker/u4:0/7:
+1 lock held by khungtaskd/1103:
+  #0: ffffffff899a5680 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
+1 lock held by rsyslogd/10193:
+  #0: ffff8880a9a7a660 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/10315:
+  #0: ffff8880a8966090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900017e32e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10316:
+  #0: ffff8880953a1090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018832e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10317:
+  #0: ffff8880a551a090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018132e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10318:
+  #0: ffff88809f175090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018532e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10319:
+  #0: ffff888094002090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018232e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10320:
+  #0: ffff888099c20090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900018732e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+2 locks held by getty/10321:
+  #0: ffff8880a8ab1090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc900017bb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
+3 locks held by kworker/u4:7/16900:
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at: __write_once_size  
+include/linux/compiler.h:226 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at: arch_atomic64_set  
+arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:855 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at: atomic_long_set  
+include/asm-generic/atomic-long.h:40 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at: set_work_data  
+kernel/workqueue.c:615 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+  #0: ffff8880a9a96128 ((wq_completion)netns){+.+.}, at:  
+process_one_work+0x88b/0x1740 kernel/workqueue.c:2235
+  #1: ffffc90007fcfdc0 (net_cleanup_work){+.+.}, at:  
+process_one_work+0x8c1/0x1740 kernel/workqueue.c:2239
+  #2: ffffffff8a4af948 (pernet_ops_rwsem){++++}, at: cleanup_net+0xae/0xaf0  
+net/core/net_namespace.c:559
+2 locks held by syz-executor.5/25823:
+  #0: ffff888091a84700 (&sb->s_type->i_mutex_key#12){+.+.}, at: inode_lock  
+include/linux/fs.h:791 [inline]
+  #0: ffff888091a84700 (&sb->s_type->i_mutex_key#12){+.+.}, at:  
+__sock_release+0x89/0x280 net/socket.c:591
+  #1: ffffffff8a4af948 (pernet_ops_rwsem){++++}, at:  
+unregister_netdevice_notifier+0x7e/0x3a0 net/core/dev.c:1772
+1 lock held by syz-executor.0/25891:
+  #0: ffffffff8a4af948 (pernet_ops_rwsem){++++}, at: copy_net_ns+0x27b/0x5a0  
+net/core/net_namespace.c:472
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1103 Comm: khungtaskd Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x0/0x20 kernel/kcov.c:273
+Code: f6 fe ff ff 5d c3 0f 1f 40 00 55 0f b7 d6 0f b7 f7 bf 03 00 00 00 48  
+89 e5 48 8b 4d 08 e8 d8 fe ff ff 5d c3 66 0f 1f 44 00 00 <55> 89 f2 89 fe  
+bf 05 00 00 00 48 89 e5 48 8b 4d 08 e8 ba fe ff ff
+RSP: 0018:ffffc90000cdfcd8 EFLAGS: 00000246
+RAX: 0000000000000001 RBX: ffff8880a89978c0 RCX: 1ffffffff14f3a12
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc90000cdfd30 R08: ffff8880a99f61c0 R09: ffffed1015d0703d
+R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: 0000000000000001
+R13: 0000000000000140 R14: 0000000000000001 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 0000000087fff000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-> Cheers, Daniel
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b5a799e00000
-> > start commit:   c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=11b5a799e00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16b5a799e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=d130c4a0890561cfac5b
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b1925e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b9623ee00000
-> >
-> > Reported-by: syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com
-> > Fixes: e3933f26b657 ("drm/amd/pp: Add edit/commit/show OD clock/voltage
-> > support in sysfs")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200107154755.GB43062%40phenom.ffwll.local.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
