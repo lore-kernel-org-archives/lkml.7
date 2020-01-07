@@ -2,127 +2,340 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3DCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2546C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3EB2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE692087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578384795;
+	bh=sNltMChixzyWwX3zupZT4Ts/ZN+2imHrBMUIskkEt8Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hwmtegfDEJT69vZ1TF35KvoVmwi0+/wwI5+6FNQlBuf6yG4lJEn7rbkiIbX2vn3yf
+	 bF9+XaZwkYcFTDufAdJjk209I6NBxPqbzQ7vX77+xp9TcHY4QfjQ6NmUZ6VghZ5wnN
+	 X5+TSwf2Zfw1y3JY3uaN2cFWpesB2BIiPS1VbsFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgAGILT (ORCPT
+        id S1727559AbgAGINP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:11:19 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45912 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgAGILT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:11:19 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so75357634otp.12;
-        Tue, 07 Jan 2020 00:11:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CU/I+wYv+bXJX9c2nuNlCXwS1Rl4z06XpenSPVri4Bc=;
-        b=ZB6h/zkWeCKCIBYGKoer/IhU9va9q6p8NlI83feLgfyKj1dFwVlVQb3SetNbOoxC9T
-         EJxaeyLW1uA/O4BcYvdd14q7BWiu7/UVhoZWJM+h7NinD5RuV/O9Z9w3kwOpU1UVorsD
-         TUSyvT+hbuguIBypSIff3J5ydUodJduR6wySdnx53qIikbK4M8P99CdU+NCI/ZN0+3rv
-         m3BH6i0Xj6R8V58NmA5jw4B0um3ouJYweteP+5dTyeRmr5ugHDWeg2bNCgPfQe7FtW4u
-         k1y4/w4vyuTw2N/vfTQ3vYHv+39xykBiW4ifcje9EgeEVok957MqVV7SqkRKGGf0G4ST
-         1P1w==
-X-Gm-Message-State: APjAAAXaYAZ05sY6qTpAfbeF5AWXzs3d7mI9rU1w+JdSMnQRf122wG0V
-        3C8yt++WXbK21i4D8HOABOTSRFe5okGKVKHhahg=
-X-Google-Smtp-Source: APXvYqyC5pT/X+rRxviS8VZNVsGXhAyiX7ZAbRTGHKnakAkoHGVhnuTXjTsGiefkt7+yOFq6/flTLoNmET2ozo/a0/E=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr121170061otd.39.1578384678509;
- Tue, 07 Jan 2020 00:11:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <20191230133852.5890-3-geert+renesas@glider.be> <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
- <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
-In-Reply-To: <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 09:11:07 +0100
-Message-ID: <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
-Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jan 2020 03:13:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgAGINO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:13:14 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EA9207E0;
+        Tue,  7 Jan 2020 08:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578384793;
+        bh=sNltMChixzyWwX3zupZT4Ts/ZN+2imHrBMUIskkEt8Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sbQghMZJtOnTiCISsQ4ebIteWahMfX3lOe6FuGwMTD4fNuZvCGsgxYclnNG+YeXzV
+         4sVT29y9L7RbTBMtr3bh2zxlicV/poosjyGHDYO0lnwPmyomnugskZlQ/QwM67gztX
+         BTUusm0ai48vMPi44u/1g8GyHpKpLfPkKWb9HTEY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg KH <greg@kroah.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 1/2] i2c: Enable compile testing for some of drivers
+Date:   Tue,  7 Jan 2020 09:12:58 +0100
+Message-Id: <1578384779-15487-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
+Some of the I2C bus drivers can be compile tested to increase build
+coverage.  This requires also:
+1. Adding dependencies on COMMON_CLK for BCM2835 and Meson I2C
+   controllers,
+2. Adding 'if' conditional to 'default y' so they will not get enabled
+   by default on all other architectures,
+3. Limiting few compile test options to supported architectures (which
+   provide the readsX()/writesX() primitives).
 
-On Tue, Jan 7, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> On 1/6/20 5:34 PM, Frank Rowand wrote:
-> > On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
-> >> As GPIO hogs are configured at GPIO controller initialization time,
-> >> adding/removing GPIO hogs in DT overlays does not work.
-> >>
-> >> Add support for GPIO hogs described in DT overlays by registering an OF
-> >> reconfiguration notifier, to handle the addition and removal of GPIO hog
-> >> subnodes to/from a GPIO controller device node.
-> >>
-> >> Note that when a GPIO hog device node is being removed, its "gpios"
-> >> properties is no longer available, so we have to keep track of which
-> >> node a hog belongs to, which is done by adding a pointer to the hog's
-> >> device node to struct gpio_desc.
-> >
-> > If I have read the patches and the existing overlay source correctly,
-> > then some observations:
-> >
-> > - A gpio hog node added in an overlay will be properly processed.
-> >
-> > - A gpio hog node already existing in the live devicetree, but with a
-> >   non-active status will be properly processed if the status of the
-> >   gpio hog node is changed to "ok" in the overlay.
-> >
-> > - If a gpio hog node already exists in the live devicetree with an
-> >   active status, then any updated or added properties in that gpio
-> >   hog node in the overlay will have no effect.
-> >
-> >   There is a scenario where the updated property would have an effect:
-> >   apply a second overlay that sets the status to inactive, then apply
-> >   a third overlay that sets the status back to active.  This is a
-> >   rather contrived example and I think it should be documented as
-> >   not supported and the result undefined.
->
-> I went back and double checked the related code.  For gpio hog nodes
-> that are in a non-overlay, the status property is checked because
-> of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
-> to search for gpio hog nodes, and for_each_available_child_of_node()
-> checks the status property.  But in the case of a gpio hog node
-> added by an overlay, of_gpio_notify() does not check the status
-> property in the gpio hog node.  The check for the status property
-> should be added to of_gpio_notify().
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Right.  of_device_is_available() should be called to check this.
-Note that of_i2c_notify() and of_spi_notify() also lack such a check.
-of_platform_notify() calls of_platform_device_create_pdata(), which does
-have the check.
+---
 
-Gr{oetje,eeting}s,
+Changes since v1:
+1. Address Geert's comments (split depends, comment on weird
+   architecture selection).
+---
+ drivers/i2c/busses/Kconfig | 66 +++++++++++++++++++++++++---------------------
+ 1 file changed, 36 insertions(+), 30 deletions(-)
 
-                        Geert
-
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 6a0aa76859f3..132e6f374cd7 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -367,7 +367,8 @@ comment "I2C system bus drivers (mostly embedded / system-on-chip)"
+ 
+ config I2C_ALTERA
+ 	tristate "Altera Soft IP I2C"
+-	depends on (ARCH_SOCFPGA || NIOS2) && OF
++	depends on ARCH_SOCFPGA || NIOS2 || COMPILE_TEST
++	depends on OF
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  Altera Soft IP I2C interfaces on SoCFPGA and Nios2 architectures.
+@@ -387,7 +388,7 @@ config I2C_ASPEED
+ 
+ config I2C_AT91
+ 	tristate "Atmel AT91 I2C Two-Wire interface (TWI)"
+-	depends on ARCH_AT91
++	depends on ARCH_AT91 || COMPILE_TEST
+ 	help
+ 	  This supports the use of the I2C interface on Atmel AT91
+ 	  processors.
+@@ -440,7 +441,8 @@ config I2C_AXXIA
+ 
+ config I2C_BCM2835
+ 	tristate "Broadcom BCM2835 I2C controller"
+-	depends on ARCH_BCM2835 || ARCH_BRCMSTB
++	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
++	depends on COMMON_CLK
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  BCM2835 I2C controller.
+@@ -463,8 +465,8 @@ config I2C_BCM_IPROC
+ 
+ config I2C_BCM_KONA
+ 	tristate "BCM Kona I2C adapter"
+-	depends on ARCH_BCM_MOBILE
+-	default y
++	depends on ARCH_BCM_MOBILE || COMPILE_TEST
++	default y if ARCH_BCM_MOBILE
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  I2C interface on the Broadcom Kona family of processors.
+@@ -511,7 +513,7 @@ config I2C_CPM
+ 
+ config I2C_DAVINCI
+ 	tristate "DaVinci I2C driver"
+-	depends on ARCH_DAVINCI || ARCH_KEYSTONE
++	depends on ARCH_DAVINCI || ARCH_KEYSTONE || COMPILE_TEST
+ 	help
+ 	  Support for TI DaVinci I2C controller driver.
+ 
+@@ -572,7 +574,7 @@ config I2C_DESIGNWARE_BAYTRAIL
+ 
+ config I2C_DIGICOLOR
+ 	tristate "Conexant Digicolor I2C driver"
+-	depends on ARCH_DIGICOLOR
++	depends on ARCH_DIGICOLOR || COMPILE_TEST
+ 	help
+ 	  Support for Conexant Digicolor SoCs (CX92755) I2C controller driver.
+ 
+@@ -611,8 +613,9 @@ config I2C_EMEV2
+ 
+ config I2C_EXYNOS5
+ 	tristate "Exynos5 high-speed I2C driver"
+-	depends on ARCH_EXYNOS && OF
+-	default y
++	depends on OF
++	depends on ARCH_EXYNOS || COMPILE_TEST
++	default y if ARCH_EXYNOS
+ 	help
+ 	  High-speed I2C controller on Exynos5 based Samsung SoCs.
+ 
+@@ -634,7 +637,7 @@ config I2C_GPIO_FAULT_INJECTOR
+ 
+ config I2C_HIGHLANDER
+ 	tristate "Highlander FPGA SMBus interface"
+-	depends on SH_HIGHLANDER
++	depends on SH_HIGHLANDER || COMPILE_TEST
+ 	help
+ 	  If you say yes to this option, support will be included for
+ 	  the SMBus interface located in the FPGA on various Highlander
+@@ -686,7 +689,7 @@ config I2C_IMX_LPI2C
+ 
+ config I2C_IOP3XX
+ 	tristate "Intel IOPx3xx and IXP4xx on-chip I2C interface"
+-	depends on ARCH_IOP32X || ARCH_IXP4XX
++	depends on ARCH_IOP32X || ARCH_IXP4XX || COMPILE_TEST
+ 	help
+ 	  Say Y here if you want to use the IIC bus controller on
+ 	  the Intel IOPx3xx I/O Processors or IXP4xx Network Processors.
+@@ -726,6 +729,7 @@ config I2C_LPC2K
+ config I2C_MESON
+ 	tristate "Amlogic Meson I2C controller"
+ 	depends on ARCH_MESON || COMPILE_TEST
++	depends on COMMON_CLK
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  I2C interface on the Amlogic Meson family of SoCs.
+@@ -759,7 +763,7 @@ config I2C_MT7621
+ 
+ config I2C_MV64XXX
+ 	tristate "Marvell mv64xxx I2C Controller"
+-	depends on MV64X60 || PLAT_ORION || ARCH_SUNXI || ARCH_MVEBU
++	depends on MV64X60 || PLAT_ORION || ARCH_SUNXI || ARCH_MVEBU || COMPILE_TEST
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  built-in I2C interface on the Marvell 64xxx line of host bridges.
+@@ -770,7 +774,7 @@ config I2C_MV64XXX
+ 
+ config I2C_MXS
+ 	tristate "Freescale i.MX28 I2C interface"
+-	depends on SOC_IMX28
++	depends on SOC_IMX28 || COMPILE_TEST
+ 	select STMP_DEVICE
+ 	help
+ 	  Say Y here if you want to use the I2C bus controller on
+@@ -799,7 +803,7 @@ config I2C_OCORES
+ 
+ config I2C_OMAP
+ 	tristate "OMAP I2C adapter"
+-	depends on ARCH_OMAP || ARCH_K3
++	depends on ARCH_OMAP || ARCH_K3 || COMPILE_TEST
+ 	default y if MACH_OMAP_H3 || MACH_OMAP_OSK
+ 	help
+ 	  If you say yes to this option, support will be included for the
+@@ -833,7 +837,7 @@ config I2C_PCA_PLATFORM
+ 
+ config I2C_PMCMSP
+ 	tristate "PMC MSP I2C TWI Controller"
+-	depends on PMC_MSP
++	depends on PMC_MSP || COMPILE_TEST
+ 	help
+ 	  This driver supports the PMC TWI controller on MSP devices.
+ 
+@@ -842,7 +846,7 @@ config I2C_PMCMSP
+ 
+ config I2C_PNX
+ 	tristate "I2C bus support for Philips PNX and NXP LPC targets"
+-	depends on ARCH_LPC32XX
++	depends on ARCH_LPC32XX || COMPILE_TEST
+ 	help
+ 	  This driver supports the Philips IP3204 I2C IP block master and/or
+ 	  slave controller
+@@ -863,7 +867,7 @@ config I2C_PUV3
+ 
+ config I2C_PXA
+ 	tristate "Intel PXA2XX I2C adapter"
+-	depends on ARCH_PXA || ARCH_MMP || ARCH_MVEBU || (X86_32 && PCI && OF)
++	depends on ARCH_PXA || ARCH_MMP || ARCH_MVEBU || (X86_32 && PCI && OF) || COMPILE_TEST
+ 	help
+ 	  If you have devices in the PXA I2C bus, say yes to this option.
+ 	  This driver can also be built as a module.  If so, the module
+@@ -933,7 +937,7 @@ config HAVE_S3C2410_I2C
+ 
+ config I2C_S3C2410
+ 	tristate "S3C2410 I2C Driver"
+-	depends on HAVE_S3C2410_I2C
++	depends on HAVE_S3C2410_I2C || COMPILE_TEST
+ 	help
+ 	  Say Y here to include support for I2C controller in the
+ 	  Samsung SoCs.
+@@ -971,7 +975,7 @@ config I2C_SIMTEC
+ 
+ config I2C_SIRF
+ 	tristate "CSR SiRFprimaII I2C interface"
+-	depends on ARCH_SIRF
++	depends on ARCH_SIRF || COMPILE_TEST
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  CSR SiRFprimaII I2C interface.
+@@ -981,14 +985,14 @@ config I2C_SIRF
+ 
+ config I2C_SPRD
+ 	tristate "Spreadtrum I2C interface"
+-	depends on I2C=y && ARCH_SPRD
++	depends on I2C=y && (ARCH_SPRD || COMPILE_TEST)
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  Spreadtrum I2C interface.
+ 
+ config I2C_ST
+ 	tristate "STMicroelectronics SSC I2C support"
+-	depends on ARCH_STI
++	depends on ARCH_STI || COMPILE_TEST
+ 	help
+ 	  Enable this option to add support for STMicroelectronics SoCs
+ 	  hardware SSC (Synchronous Serial Controller) as an I2C controller.
+@@ -1019,7 +1023,7 @@ config I2C_STM32F7
+ 
+ config I2C_STU300
+ 	tristate "ST Microelectronics DDC I2C interface"
+-	depends on MACH_U300
++	depends on MACH_U300 || COMPILE_TEST
+ 	default y if MACH_U300
+ 	help
+ 	  If you say yes to this option, support will be included for the
+@@ -1055,15 +1059,16 @@ config I2C_SYNQUACER
+ 
+ config I2C_TEGRA
+ 	tristate "NVIDIA Tegra internal I2C controller"
+-	depends on ARCH_TEGRA
++	depends on ARCH_TEGRA || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
++	# COMPILE_TEST needs architectures with readsX()/writesX() primitives
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  I2C controller embedded in NVIDIA Tegra SOCs
+ 
+ config I2C_TEGRA_BPMP
+ 	tristate "NVIDIA Tegra BPMP I2C controller"
+-	depends on TEGRA_BPMP
+-	default y
++	depends on TEGRA_BPMP || COMPILE_TEST
++	default y if TEGRA_BPMP
+ 	help
+ 	  If you say yes to this option, support will be included for the I2C
+ 	  controller embedded in NVIDIA Tegra SoCs accessed via the BPMP.
+@@ -1101,7 +1106,7 @@ config I2C_VERSATILE
+ 
+ config I2C_WMT
+ 	tristate "Wondermedia WM8xxx SoC I2C bus support"
+-	depends on ARCH_VT8500
++	depends on ARCH_VT8500 || COMPILE_TEST
+ 	help
+ 	  Say yes if you want to support the I2C bus on Wondermedia 8xxx-series
+ 	  SoCs.
+@@ -1142,7 +1147,7 @@ config I2C_XILINX
+ 
+ config I2C_XLR
+ 	tristate "Netlogic XLR and Sigma Designs I2C support"
+-	depends on CPU_XLR || ARCH_TANGO
++	depends on CPU_XLR || ARCH_TANGO || COMPILE_TEST
+ 	help
+ 	  This driver enables support for the on-chip I2C interface of
+ 	  the Netlogic XLR/XLS MIPS processors and Sigma Designs SOCs.
+@@ -1328,7 +1333,7 @@ config I2C_ICY
+ 
+ config I2C_MLXCPLD
+ 	tristate "Mellanox I2C driver"
+-	depends on X86_64
++	depends on X86_64 || COMPILE_TEST
+ 	help
+ 	  This exposes the Mellanox platform I2C busses to the linux I2C layer
+ 	  for X86 based systems.
+@@ -1403,8 +1408,9 @@ config I2C_OPAL
+ 
+ config I2C_ZX2967
+ 	tristate "ZTE ZX2967 I2C support"
+-	depends on ARCH_ZX
+-	default y
++	depends on ARCH_ZX || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
++	# COMPILE_TEST needs architectures with readsX()/writesX() primitives
++	default y if ARCH_ZX
+ 	help
+ 	  Selecting this option will add ZX2967 I2C driver.
+ 	  This driver can also be built as a module. If so, the module will be
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
