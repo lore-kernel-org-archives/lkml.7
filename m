@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBDC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B942E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E2920678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431273;
-	bh=W+ewjJ2Jn42luW3zaCJNXkWRnC/jh25sJQvQGYDWDnI=;
+	s=default; t=1578431276;
+	bh=f/6kfKLPcBUw+uiHX1o2P2f3T3SXkYuPKKqkc7kl0c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfIZ525xlyyVCrdi/SZKHAY+nLOMqyjgsqiGg4OR0lgFUC9FOULbWG21UpJB1WmQR
-	 ePr9mc/W6c50s3s0owivamc9RpOUFkKllXMPTU/8Omczis0olPZ831ft9H6CTToiZf
-	 3z77UQ0XeOn9AAp4QDh0iPTJtAhEo+rXqUekmIRE=
+	b=INh+XyLxNayZkNo4DIsWeQDJ90CYOFOHmtEdQeZjSoiZotUfUBxx18TZbS+scg7XN
+	 o3dINFdhXs7/dRuDWAWCBa8Xj7MpyWIwp/4xrzXGUAhpVHy9dUuxyscevLtIgErDwP
+	 dI9RD4si37F8YHx1TAWQasTZK1NphVuZ1OOrY4CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbgAGVHx (ORCPT
+        id S1729594AbgAGVHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59358 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbgAGVHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:50 -0500
+        id S1727103AbgAGVHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4E522077B;
-        Tue,  7 Jan 2020 21:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35BE22087F;
+        Tue,  7 Jan 2020 21:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431270;
-        bh=W+ewjJ2Jn42luW3zaCJNXkWRnC/jh25sJQvQGYDWDnI=;
+        s=default; t=1578431267;
+        bh=f/6kfKLPcBUw+uiHX1o2P2f3T3SXkYuPKKqkc7kl0c4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGXoSGflreA51mro/Hp8IGrU1EDbFnFhc+ZXirl+5rKA7pkbRUVdYgrN4woxNvXGn
-         w5Zhf5cy6w0aihUUjPXWQ53m1SX1//qYibdtM3BZExdiSaggXSK/mrkQ4K96wZBdaP
-         RXHXJeRiZi6wP2IDHti/TT6BuQFajW1qQkIS++Xw=
+        b=l0QF7qTQwv1XmHTtePx84VXyrM7h7aLiq7hHH1ApIrogwlV1A00uO2iVLnsTASPmL
+         n0Q2QP27fOWvfV2yJb5ICSckIEKaHDSkUgiwszBN2ewJnroRxZMaUXh1pGWuf0r246
+         jVtIidXtNltrc/LNvXZILpmncXTVg32lLUMppvYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/115] coresight: etb10: Do not call smp_processor_id from preemptible
-Date:   Tue,  7 Jan 2020 21:55:13 +0100
-Message-Id: <20200107205308.383005810@linuxfoundation.org>
+Subject: [PATCH 4.19 102/115] coresight: tmc-etf: Do not call smp_processor_id from preemptible
+Date:   Tue,  7 Jan 2020 21:55:12 +0100
+Message-Id: <20200107205308.269793829@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
+[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
 
 During a perf session we try to allocate buffers on the "node" associated
 with the CPU the event is bound to. If it is not bound to a CPU, we
@@ -71,27 +71,46 @@ use the current CPU node, using smp_processor_id(). However this is unsafe
 in a pre-emptible context and could generate the splats as below :
 
  BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
+ caller is tmc_alloc_etf_buffer+0x5c/0x60
+ CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+ Call trace:
+  dump_backtrace+0x0/0x150
+  show_stack+0x14/0x20
+  dump_stack+0x9c/0xc4
+  debug_smp_processor_id+0x10c/0x110
+  tmc_alloc_etf_buffer+0x5c/0x60
+  etm_setup_aux+0x1c4/0x230
+  rb_alloc_aux+0x1b8/0x2b8
+  perf_mmap+0x35c/0x478
+  mmap_region+0x34c/0x4f0
+  do_mmap+0x2d8/0x418
+  vm_mmap_pgoff+0xd0/0xf8
+  ksys_mmap_pgoff+0x88/0xf8
+  __arm64_sys_mmap+0x28/0x38
+  el0_svc_handler+0xd8/0x138
+  el0_svc+0x8/0xc
 
 Use NUMA_NO_NODE hint instead of using the current node for events
 not bound to CPUs.
 
-Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org> # 4.6+
+Cc: stable <stable@vger.kernel.org> # 4.7+
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
+Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etb10.c | 4 +---
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-index 0dad8626bcfb..0a59bf3af40b 100644
---- a/drivers/hwtracing/coresight/coresight-etb10.c
-+++ b/drivers/hwtracing/coresight/coresight-etb10.c
-@@ -275,9 +275,7 @@ static void *etb_alloc_buffer(struct coresight_device *csdev, int cpu,
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index e31061308e19..4644ac5582cf 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -304,9 +304,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
  	int node;
  	struct cs_buffers *buf;
  
@@ -100,8 +119,8 @@ index 0dad8626bcfb..0a59bf3af40b 100644
 -	node = cpu_to_node(cpu);
 +	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
  
+ 	/* Allocate memory structure for interaction with Perf */
  	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
- 	if (!buf)
 -- 
 2.20.1
 
