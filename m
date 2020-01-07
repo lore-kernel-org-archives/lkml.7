@@ -2,87 +2,161 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0D6C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ED4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B66C2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578404189;
-	bh=IBTIy0if1YZO9UihklShSddP6rusTKUkvMMlAUvcBbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a4gEOF+Qv+alQS8PzRf7/6BaX3OStgOcCPYPIDfcimG9VXokKXSXCn5pngFvHFMhl
-	 5vqxYc8gzpT7rvk8FxC7N85lOvTRAt7JdIqTSjQKa0e5t14i/+MApREw1yms+e2fRq
-	 mWtURbn9WQDuSRydRdPCMXUEWFSJBpwLUgD5GOt0=
+	by mail.kernel.org (Postfix) with ESMTP id A66C22080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TP0gEdiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgAGNg2 (ORCPT
+        id S1728105AbgAGNh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:36:28 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39494 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgAGNg1 (ORCPT
+        Tue, 7 Jan 2020 08:37:56 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47290 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGNhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:36:27 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so53947646wrt.6;
-        Tue, 07 Jan 2020 05:36:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AH8QrVtR12IeR8yMYo+97ujGygRwsjvu4AYsXyeVsN4=;
-        b=Jvp+5VtcpYOml5Xnhk48gWmHYAeEUI3AvmIrtkYy0R1QdyM953N7vZmAZZJC5NSGyu
-         yi8USaYbD1xM0Ql2wz6wWfiAI2C5jDcqGtIseHx1QKvB/lbZ7hfmNlN1DsPZkuaZ+O1R
-         +VNTVLOfvtz/s6yPz9cWSNUP+Q6U6+W359kX64ACVs6x1WTkieV7Lz4NMSW7EyFL03uP
-         RJ5RJf6JuWZyM2CekHmzrvfWl3mxg82W/aYsQBoocgmFzZnFm4JDCeUmhuEWyIqwIrDQ
-         e21jw9srnYuvEVxZQSinWWBYUxsNozTG6Ehb+rFFmNZ+OrflljfssybxGOLPKdnNa2pR
-         jMjw==
-X-Gm-Message-State: APjAAAXXgmoUJVdkv8WYW6rdnc90bEoekvcIfBi+RictlR/rJazK1zMV
-        H0Xbqv4jN8a3Y/kcjInbBbg=
-X-Google-Smtp-Source: APXvYqySoHfDDMFqCr5GWL3JYiV6OuinzTu6RicyZZaXwH3sb5A8n5AylBh2i39PXkBOr0Awbsiv4g==
-X-Received: by 2002:adf:db84:: with SMTP id u4mr111448345wri.317.1578404185319;
-        Tue, 07 Jan 2020 05:36:25 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f16sm76245530wrm.65.2020.01.07.05.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 05:36:24 -0800 (PST)
-Date:   Tue, 7 Jan 2020 14:36:23 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     lantianyu1986@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, akpm@linux-foundation.org,
-        michael.h.kelley@microsoft.com, david@redhat.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, vkuznets@redhat.com, eric.devolder@oracle.com,
-        vbabka@suse.cz, osalvador@suse.de, pavel.tatashin@microsoft.com,
-        rppt@linux.ibm.com
-Subject: Re: [RFC PATCH V2 2/10] mm: expose is_mem_section_removable() symbol
-Message-ID: <20200107133623.GJ32178@dhcp22.suse.cz>
-References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
- <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+        Tue, 7 Jan 2020 08:37:55 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007DbsqS117064;
+        Tue, 7 Jan 2020 07:37:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578404274;
+        bh=y7OG/HB4e1SJdhnzrFIBHuFkRinvpiow8MiLLExRC8g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TP0gEdiYlUHzzHL05xw6i7hvM8dCYkjnIA+wuOfaU61jB+GHvaiYMwHcWPuT9kvx8
+         8DOslR5vxE4NhgQ7Dj0neNcVqUh7Lk6VEH1VCwKCgVpN5SwHPD+RtfOUQLY1bHZsF0
+         t3tu/3PawvBJyBx+XEr7GqvrAeT7cBxgrey56+S4=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007Dbsc3000940
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 07:37:54 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 07:37:54 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 07:37:53 -0600
+Received: from [10.250.65.50] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Dbrhw047496;
+        Tue, 7 Jan 2020 07:37:53 -0600
+Subject: Re: [PATCHv4 06/14] remoteproc/omap: Initialize and assign reserved
+ memory node
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, <s-anna@ti.com>
+References: <20200102131845.12992-1-t-kristo@ti.com>
+ <20200102131845.12992-7-t-kristo@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <f380b7a7-cef5-bf56-2344-49b83a15422e@ti.com>
+Date:   Tue, 7 Jan 2020 08:37:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200102131845.12992-7-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-01-20 21:09:42, lantianyu1986@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 1/2/20 8:18 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> Hyper-V balloon driver will use is_mem_section_removable() to
-> check whether memory block is removable or not when receive
-> memory hot remove msg. Expose it.
+> The reserved memory nodes are not assigned to platform devices by
+> default in the driver core to avoid the lookup for every platform
+> device and incur a penalty as the real users are expected to be
+> only a few devices.
+> 
+> OMAP remoteproc devices fall into the above category and the OMAP
+> remoteproc driver _requires_ specific CMA pools to be assigned
+> for each device at the moment to align on the location of the
+> vrings and vring buffers in the RTOS-side firmware images. So,
 
-I do not think this is a good idea. The check is inherently racy. Why
-cannot the balloon driver simply hotremove the region when asked?
--- 
-Michal Hocko
-SUSE Labs
+
+Requires only at the moment due to firmware..
+
+This sounds like some firmware images hard-coded their vring addresses
+instead of getting them dynamically as they should and we are hacking
+around that on the kernel side by giving them the addresses they use as
+carveouts.
+
+Should we rather make use of the IOMMU attached to the DSP to map any
+kernel address to the DSP where the firmware expects it? Or better yet
+fixup the firmwares.
+
+DRAM carveouts should be a last resort used only for when hardware
+really requires it.
+
+Andrew
+
+
+> use the of_reserved_mem_device_init/release() API appropriately
+> to assign the corresponding reserved memory region to the OMAP
+> remoteproc device. Note that only one region per device is
+> allowed by the framework.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 9ca337f18ac2..8a6dd742a8b1 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/err.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/remoteproc.h>
+> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto free_rproc;
+>  
+> +	ret = of_reserved_mem_device_init(&pdev->dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
+> +		goto free_rproc;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, rproc);
+>  
+>  	ret = rproc_add(rproc);
+>  	if (ret)
+> -		goto free_rproc;
+> +		goto release_mem;
+>  
+>  	return 0;
+>  
+> +release_mem:
+> +	of_reserved_mem_device_release(&pdev->dev);
+>  free_rproc:
+>  	rproc_free(rproc);
+>  	return ret;
+> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
+>  
+>  	rproc_del(rproc);
+>  	rproc_free(rproc);
+> +	of_reserved_mem_device_release(&pdev->dev);
+>  
+>  	return 0;
+>  }
+> 
