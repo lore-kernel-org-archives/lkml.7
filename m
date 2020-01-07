@@ -2,125 +2,126 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618AFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B77FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342502077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA75620715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="HJOmLIqB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JhCslAlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgAGXSX (ORCPT
+        id S1727571AbgAGXUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:18:23 -0500
-Received: from onstation.org ([52.200.56.107]:35462 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbgAGXSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:18:22 -0500
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 3FF903EE6F;
-        Tue,  7 Jan 2020 23:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1578439101;
-        bh=dPi/tlFFpKEhh6XGOkAwyWFcjw/UEJV74jJZmzMoFC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HJOmLIqBjzocoa69Tgfssq8+Zhsh/tT9Ma4MDBktwAV8J8Eg9QpZQxspeRIIPCEly
-         4OT73k4esnw71aA6YvcjVvjU51j2V3r36iUt/GxRhIcFoFUrIgm/Zoy3wrcNXGiPJk
-         bzaaAwwrQzuZNwx8/a154IzGC6zRXEYe0O+vl7s8=
-Date:   Tue, 7 Jan 2020 18:18:20 -0500
-From:   Brian Masney <masneyb@onstation.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator
- bindings
-Message-ID: <20200107231820.GA13416@onstation.org>
-References: <20191205002503.13088-1-masneyb@onstation.org>
- <20191205002503.13088-5-masneyb@onstation.org>
- <20200105083534.01EB12071A@mail.kernel.org>
- <20200107120317.GB8083@onstation.org>
- <20200107175222.6B5052073D@mail.kernel.org>
+        Tue, 7 Jan 2020 18:20:01 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60598 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgAGXUA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:20:00 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NJS1O022237;
+        Tue, 7 Jan 2020 23:19:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=HMNVQYf2L6i1rImoc77FBwwcKZmVc8Ro2oxJgICj6ow=;
+ b=JhCslAlHTZiRtpRujLDtLor9uxwb0P6uIHIZYXVS6xJ6EEscLr9uK0U5UT4M7tiQom92
+ qQEV8ygoCY3IkovJRMO3iOB6erVz/PLszaaMnYjzkwpq612JAt2XZWurd0kn9pzeYJs4
+ b3+XiamlEeGY/66tIYIyrJssRvcQt5qjDdQKU/0ElhQUdPRxe4UN2Yly59EnS8EDu+0E
+ uwEH06G2xih+yN1+pI8eZztRLDU8izODfDFl6c0FYpk6GFqRdIU5aAHPaJwHQCj7auef
+ uLRF92qXHxaHXEJcm6+PzumfXS/+V/MsvSRTarpib9cIn6k4QB3gudjcf7AHm9oyNxHC Ag== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnq0mkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 23:19:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NJCpk153348;
+        Tue, 7 Jan 2020 23:19:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xcpanhpbx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 23:19:35 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 007NJVtg018325;
+        Tue, 7 Jan 2020 23:19:32 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 15:19:31 -0800
+Date:   Tue, 7 Jan 2020 15:19:29 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Eric Whitney <enwlinux@gmail.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: fix ext4 unused-variable warning
+Message-ID: <20200107231929.GA472639@magnolia>
+References: <20200107200233.3244877-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107175222.6B5052073D@mail.kernel.org>
+In-Reply-To: <20200107200233.3244877-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=878
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070186
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=939 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:52:21AM -0800, Stephen Boyd wrote:
-> Quoting Brian Masney (2020-01-07 04:03:17)
-> > On Sun, Jan 05, 2020 at 12:35:33AM -0800, Stephen Boyd wrote:
-> > > Quoting Brian Masney (2019-12-04 16:25:00)
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> > > > +    #include <dt-bindings/gpio/gpio.h>
-> > > > +
-> > > > +    vibrator {
-> > > > +        compatible = "clk-vibrator";
-> > > > +
-> > > > +        vcc-supply = <&pm8941_l19>;
-> > > > +
-> > > > +        clocks = <&mmcc CAMSS_GP1_CLK>;
-> > > > +        clock-names = "core";
-> > > > +        clock-frequency = <24000>;
-> > > > +
-> > > > +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> > > > +
-> > > > +        pinctrl-names = "default";
-> > > > +        pinctrl-0 = <&vibrator_pin>;
-> > > 
-> > > I'm still trying to wrap my head around this. I think we can have a pwm
-> > > provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
-> > > then this 'clk-vibrator' binding wouldn't exist? Instead we would have
-> > > some sort of binding for a device that expects a pwm and whatever else
-> > > is required, like the enable gpio and power supply. Is there an actual
-> > > hardware block that is this way? Does it have a real product id and is
-> > > made by some company? Right now this looks a little too generic to not
-> > > just be a catch-all for something that buzzes.
-> > 
-> > So have some of the Qualcomm clocks like this one register with both the
-> > clk and the pwm frameworks? I feel that approach would better represent
-> > the hardware in device tree.
+On Tue, Jan 07, 2020 at 09:02:12PM +0100, Arnd Bergmann wrote:
+> A bugfix introduce a harmless warning:
 > 
-> That is one option. Or another option would be to have another node that
-> "adapts" a clk signal to a pwm provider. Similar to how we adapt a gpio
-> to make a clk gate or mux. Something like:
+> fs/ext4/inode.c: In function 'ext4_page_mkwrite':
+> fs/ext4/inode.c:5910:24: error: unused variable 'mapping' [-Werror=unused-variable]
 > 
-> 	gcc: clock-controller@f00d {
-> 		reg = <0xf00d 0xd00d>;
-> 		#clock-cells = <1>;
-> 	};
+> Remove the now-unused variable.
 > 
-> 
-> 	pwm {
-> 		compatible = "pwm-clk";
-> 		#pwm-cells = <0>;
-> 		clocks = <&gcc 45>;
-> 		assigned-clocks = <&gcc 45>;
-> 		assigned-clock-rates = <1400000>;
-> 	};
-> 
-> And then the pwm-clk driver would adjust the duty cycle to generate a
-> pwm.
+> Fixes: 4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-OK, that makes sense.
+FWIW I dropped the f2fs parts of the patch because there were conflicts
+and they never acked the patch, so I fixed this at the same time.
 
-I'll pick this up after someone from Qualcomm posts a patch that
-implements the clock duty cycle. I'm willing to do that work if someone
-explains the relationship between the m, n, and d values on these clocks.
+--D
 
-Brian
+> ---
+>  fs/ext4/inode.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 9a3e8d075cd0..d0049fd0bfd4 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5907,7 +5907,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  	vm_fault_t ret;
+>  	struct file *file = vma->vm_file;
+>  	struct inode *inode = file_inode(file);
+> -	struct address_space *mapping = inode->i_mapping;
+>  	handle_t *handle;
+>  	get_block_t *get_block;
+>  	int retries = 0;
+> -- 
+> 2.20.0
+> 
