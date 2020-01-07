@@ -2,113 +2,148 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B56C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD08BC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818E920848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9F02087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac4Fp/2J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXO+Giyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgAGJ5Y (ORCPT
+        id S1727743AbgAGJ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:57:24 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33252 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGJ5X (ORCPT
+        Tue, 7 Jan 2020 04:57:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41569 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726558AbgAGJ5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:57:23 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so46029549lji.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:57:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DqETa3KopmnqhBmKQkCkl339vUoTL40Ury4Oh30NJ/A=;
-        b=Ac4Fp/2JiwxQnvSwiDOmhTdurlLEWHHCzqzuyfwkcBsclNUL5vfxkoJNCevMGeTHnG
-         7XLr11elYPvivRsMhdIrZJWmkdb9AoEi77x8akM3w3dD17AI9da8Inmn7WasOJObO8Cz
-         FG/UF2v8VM7gkk+YH5uSuCkYVjvQGeBNnPeQVHUrkHwdxzMh6Efntgn8lVj02p71KgQ1
-         ROG0OMpjtcl+fsUQ9Sy2tMB9OrxyC2Gz+Ucw7iv5YhkgRC/v811RahDekBZ945xoj59q
-         qDVCCYHsFk4BBpi0FFrSv+s0kwkMtSzN6EpdByzHJnGd1Ws/60dhLVfxhYjVRXY5ewXk
-         iL2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DqETa3KopmnqhBmKQkCkl339vUoTL40Ury4Oh30NJ/A=;
-        b=cxcbppaUAsposSzvMOQS6ECMvUTU3NWpLMbdp+X952aLaNsN8mkWQbQLT3ipE+DPmR
-         GK8NXOFiLDfTQ14pYhSJkywVo0EK+mgW/8cI9f5fb6RiJVST1mZtwgPHjSYF0wcIn9bl
-         9WZeGzpawQ/wZfali7csOopQahE0iVL+8TK/KVfNp2qvVU4rP8Q/KaXwdUcyRhrhKQKx
-         X+tU7GVYVlT2szK8PqC92+9b2NOROUIlvUpYKGI0DYsMZGatdikxqg27RJsqvxIAtDGw
-         fK8LDCXpnuZf+ZPKYjqTHy+/zDMiioI9fJJtz+/utWWPcrB3DVy2WqXWxhlWnry+68I6
-         C94A==
-X-Gm-Message-State: APjAAAU7Q/8r4L6D01DJYTNXNjxE20o6Epn+hc7ejVAYjhrOyF69gQOO
-        Dzyp/e0aUNfEBC2llbgtPqLTJL63NVMvsvTXbbNJ82dZxg2HcQ==
-X-Google-Smtp-Source: APXvYqw3FYN0uI4aImFcJ5taMInCUjiIIQMXZbeTsXdgGvHxycERpns4e+a3FYoFe4c64LOaTaRAaZ+9U5MhrFwiIOc=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61158833ljj.191.1578391041640;
- Tue, 07 Jan 2020 01:57:21 -0800 (PST)
+        Tue, 7 Jan 2020 04:57:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578391062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gJTdSZMyEb+Dqypz7jjPA/TCQrPtQYbIPnT3NNnPf2Y=;
+        b=QXO+GiyqTeJOjTo3aZEBLZM88HZz/PUOS8FXYJxfJNf+nMF/2HmGNYuBszuFASnJ3SSxkN
+        gjAJH3/EZqKEz4w0i+cJQkywwnJLBjtJRVjli1HXNe/T7amW6meLfyXykhgiueO1e7MEq7
+        IcIoxh1k2D7+ROpKsfTLfgJVbT4C6Sg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-_fnASorKNXqM7tyA8BnwUA-1; Tue, 07 Jan 2020 04:57:39 -0500
+X-MC-Unique: _fnASorKNXqM7tyA8BnwUA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3C8D18552AE;
+        Tue,  7 Jan 2020 09:57:37 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C91D0272B4;
+        Tue,  7 Jan 2020 09:57:35 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 10:57:33 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 1/3] perf util: Move block_pair_cmp to block-info
+Message-ID: <20200107095733.GD290055@krava>
+References: <20200106194525.12228-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20191204231931.21378-1-linus.walleij@linaro.org> <20191219170409.GH35479@atomide.com>
-In-Reply-To: <20191219170409.GH35479@atomide.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 10:57:10 +0100
-Message-ID: <CACRpkdYm2b7G6dvmY5VCSSQCK6DMEYMYRqnoMpH6jaumkQL3Xg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: motorola-cpcap: Do not hardcode SPI mode flags
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106194525.12228-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
+On Tue, Jan 07, 2020 at 03:45:23AM +0800, Jin Yao wrote:
+> block_pair_cmp() is a function which is used to compare
+> two blocks. Moving it from builtin-diff.c to block-info.c
+> to let it be used by other builtins.
+> 
+> In block_pair_cmp, there is a minor change. It checks valid
+> for map, dso and sym first. If they are invalid, we will not
+> compare the address because the address might not make sense.
 
-> * Linus Walleij <linus.walleij@linaro.org> [700101 00:00]:
-> > The current use of mode flags to us SPI_MODE_0 and
-> > SPI_CS_HIGH is fragile: it overwrites anything already
-> > assigned by the SPI core. Change it thusly:
-> >
-> > - Just |= the SPI_MODE_0 so we keep other flags
-> > - Assign ^= SPI_CS_HIGH since we might be active high
-> >   already, and that is usually the case with GPIOs used
-> >   for chip select, even if they are in practice active low.
-> >
-> > Add a comment clarifying why ^= SPI_CS_HIGH is the right
-> > choice here.
->
-> Looks like this breaks booting for droid4 with a cpcap
-> PMIC, probably as regulators won't work. There's no GPIO
-> controller involved in this case for the chip select, the
-> pins are directly controlled by the spi-omap2-mcspi.c
-> driver.
->
-> From the pin muxing setup we see there's a pull-down on
-> mcspi1_cs0 pin meaning it's active high:
->
-> /* 0x4a100138 mcspi1_cs0.mcspi1_cs0 ae23 */
-> OMAP4_IOPAD(0x138, PIN_INPUT_PULLDOWN | MUX_MODE0)
->
-> My guess a similar issue is with similar patches for
-> all non-gpio spi controllers?
->
-> Let me know if you want me to test some other changes,
-> or if this patch depends on some other changes.
+please separate the change as well, it's hard to track
+what you did when the whole function is moved
 
-So this must mean that something else is setting SPI_CS_HIGH
-for this driver, such as the device tree, right?
+> 
+>  v2:
+>  ---
+>  New patch created in v2
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/builtin-diff.c    | 17 -----------------
+>  tools/perf/util/block-info.c | 23 +++++++++++++++++++++++
+>  tools/perf/util/block-info.h |  2 ++
+>  3 files changed, 25 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> index f8b6ae557d8b..5ff1e21082cb 100644
+> --- a/tools/perf/builtin-diff.c
+> +++ b/tools/perf/builtin-diff.c
+> @@ -572,23 +572,6 @@ static void init_block_hist(struct block_hist *bh)
+>  	bh->valid = true;
+>  }
+>  
+> -static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
+> -{
+> -	struct block_info *bi_a = a->block_info;
+> -	struct block_info *bi_b = b->block_info;
+> -	int cmp;
+> -
+> -	if (!bi_a->sym || !bi_b->sym)
+> -		return -1;
+> -
+> -	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
+> -
+> -	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
+> -		return 0;
+> -
+> -	return -1;
+> -}
+> -
+>  static struct hist_entry *get_block_pair(struct hist_entry *he,
+>  					 struct hists *hists_pair)
+>  {
+> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+> index c4b030bf6ec2..18a445938681 100644
+> --- a/tools/perf/util/block-info.c
+> +++ b/tools/perf/util/block-info.c
+> @@ -475,3 +475,26 @@ float block_info__total_cycles_percent(struct hist_entry *he)
+>  
+>  	return 0.0;
+>  }
+> +
+> +int block_pair_cmp(struct hist_entry *pair, struct hist_entry *he)
+> +{
+> +	struct block_info *bi_p = pair->block_info;
+> +	struct block_info *bi_h = he->block_info;
+> +	struct map_symbol *ms_p = &pair->ms;
+> +	struct map_symbol *ms_h = &he->ms;
+> +	int cmp;
+> +
+> +	if (!ms_p->map || !ms_p->map->dso || !ms_p->sym ||
+> +	    !ms_h->map || !ms_h->map->dso || !ms_h->sym) {
+> +		return -1;
+> +	}
+> +
+> +	cmp = strcmp(ms_p->sym->name, ms_h->sym->name);
+> +	if (cmp)
+> +		return -1;
 
-And the |= SPI_CS_HIGH assignment in the driver is just
-surplus and we should just delete this code instead.
+should this return cmp? also you don't mention this change in the changelog
 
-Would that be right?
+thanks,
+jirka
 
-Yours,
-Linus Walleij
