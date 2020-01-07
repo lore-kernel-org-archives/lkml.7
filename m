@@ -2,139 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33D6C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7E2C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD69207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073E1206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578386293;
+	bh=2/9iF/4Rm9p/MEZ+xdoF9UwLO+6u3d9J/LcRYNzjmxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OBVdUmwaYMJ10QDqMmMXB/IMlvDdASL7p1NKLZqInjHtFIjna3icUgpD7jODvCkM9
+	 n6kBn6ybVMTT95bLvTRrpiGO+TndDAoYRIpRINUbWyIFABbnvjZ4L+NeLQfaIbCobv
+	 uIpeX5WXcJ1R5sos9F6Ae+Gcbmrl2t3b5GPFZTsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgAGIhD (ORCPT
+        id S1727613AbgAGIiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:37:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35083 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGIhD (ORCPT
+        Tue, 7 Jan 2020 03:38:12 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53885 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgAGIiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:37:03 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iokMC-0007de-GN; Tue, 07 Jan 2020 09:36:56 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iokMA-0004B9-C9; Tue, 07 Jan 2020 09:36:54 +0100
-Date:   Tue, 7 Jan 2020 09:36:54 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
-References: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
+        Tue, 7 Jan 2020 03:38:12 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so17955766wmc.3;
+        Tue, 07 Jan 2020 00:38:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SGM8vCSlpFGCG/2t5WreFm3qVTUhAAZYlmJ6tgri9vo=;
+        b=TpYgjrWHZZsEgNbyHx+xRC7GQHx1H0BNGlOyCWxkPJrben0Wc1r/4mhEUmI8M1WDOY
+         DgZfmpceEExgmWU5wOtxvmbdRMooIiGDelvi218eRus2O6sCrSACT4UyrfoZiF8nDzsc
+         Jes4alkpsBeptNfJ9SqWF/OwzikL8cJiQGGebx9ZKveQLFzboQiyDXoW+X32+cumDNNW
+         fFmYf7iANSCKoJlnCKdzezyyMeDholyNddZ5xy2HPg9qu9YU45iMGhkyMkf7QgT8Tj4A
+         4QoA6BWRZltG0NVnXuSgh0QAr6027pFd5KWpShwvZWh0LuvL6j4J2h/zZR1omb9/h+4F
+         WScA==
+X-Gm-Message-State: APjAAAUE/Ck/PgkS3LcFEhHXaBfUJ9ncVI9teQLGkgQWHbXbh/0Uz4Nk
+        XJNYjUC/2PyVgkR0MJfou1g=
+X-Google-Smtp-Source: APXvYqy0l2pPimu0jmfAhj7eC6jxjBqL6qeDNUL2ENjX4Pdxdm00JiUu0Ra5iiAEjLelBdmYD4+x6w==
+X-Received: by 2002:a05:600c:141:: with SMTP id w1mr38077892wmm.61.1578386289713;
+        Tue, 07 Jan 2020 00:38:09 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id w19sm25365788wmc.22.2020.01.07.00.38.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 00:38:08 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:38:08 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200107083808.GC32178@dhcp22.suse.cz>
+References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+ <20200106102345.GE12699@dhcp22.suse.cz>
+ <20200107012241.GA15341@richard>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217125832.GF4755@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:14:30 up 52 days, 23:33, 43 users,  load average: 0.00, 0.04,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200107012241.GA15341@richard>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Tue 07-01-20 09:22:41, Wei Yang wrote:
+> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
+> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
+> >> As all the other places, we grab the lock before manipulate the defer list.
+> >> Current implementation may face a race condition.
+> >
+> >Please always make sure to describe the effect of the change. Why a racy
+> >list_empty check matters?
+> >
+> 
+> Hmm... access the list without proper lock leads to many bad behaviors.
 
-On 19-12-17 12:58, Mark Brown wrote:
-> On Tue, Dec 17, 2019 at 08:35:33AM +0100, Marco Felsch wrote:
-> > On 19-12-16 11:44, Mark Brown wrote:
-> 
-> > > What I'm saying is that I think the binding needs to explicitly talk
-> > > about that since at the minute it's really confusing reading it as it
-> > > is, it sounds very much like it's trying to override that in a chip
-> > > specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
-> > > really quite unusual.
-> 
-> > Hm.. I still think that we don't mux the pin to some special function.
-> > It is still a gpio input pin and if we don't request the pin we could
-> > read the input from user-space too and get a 'valid' value. Muxing would
-> > happen if we change the pad to so called _alternate_ function. Anyway,
-> > lets find a binding description:
-> 
-> I don't think any of this makes much difference from a user point of
-> view.
-> 
-> > IMHO this is very descriptive and needs no update.
-> 
-> > description:
-> >  - A GPIO reference to a local general purpose input, [1] calls it GPI.
-> >    The DA9062 regulators can select between voltage-a/-b settings.
-> >    Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
-> >    active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
-> >    to select between different signal sources, valid sources are: the
-> >    internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
-> >    information. Most the time the internal sequencer is fine but
-> >    sometimes it is necessary to use the signal from the DA9062 GPI
-> >    pads. This binding covers the second use case.
-> >    Attention: Sharing the same GPI for other purposes or across multiple
-> >    regulators is possible but the polarity setting must equal.
-> 
-> This doesn't say anything about how the GPIO input is expected to be
-> controlled, for voltage setting any runtime control would need to be
-> done by the driver and it sounds like that's all that can be controlled.
-> The way this reads I'd expect one use of this to be for fast voltage
-> setting for example (you could even combine that with suspend sequencing
-> using the internal sequencer if you mux back to the sequencer during
-> suspend).
+My point is that the changelog should describe that bad behavior.
 
-The input signal is routed trough the da9062 gpio block to the
-regualtors. You can't set any voltage value using a gpio instead you
-decide which voltage setting is applied. The voltage values for
-runtime/suspend comes from the dt-data. No it's not just a fast
-switching option imagine the system suspend case where the cpu and soc
-voltage can be reduced to a very low value. Older soc's like the imx6
-signaling this state by a hard wired gpio line because the soc and
-cpu cores don't work properly on such low voltage values. This is
-my use case and I can't use the sequencer.
+> For example, if we grab the lock after checking list_empty, the page may
+> already be removed from list in split_huge_page_list. And then list_del_init
+> would trigger bug.
 
-Regards,
-  Marco
-
+And how does list_empty check under the lock guarantee that the page is
+on the deferred list?
+-- 
+Michal Hocko
+SUSE Labs
