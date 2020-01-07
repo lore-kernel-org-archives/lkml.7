@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8378BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB35C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5759D2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B782187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432356;
-	bh=3jIM06pqXH85l3EYy8aFBlykGlLXVSm4DTRFl+qGYFU=;
+	s=default; t=1578432358;
+	bh=25YGG4pEpfFDp5ONUl1u+Nokxny0vt3ZlgrL6GDtJyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DX9LDUHf2ISCaes/6Gtg2uZUoSmRbhgtdGHbMtYOoc325DY/YUKL6sV8YO79gR2Qp
-	 2fsGhQtHfEe9sH5Aq1FIZwe71KkfQFFWC5TReRvZPnjUYh3DI47usHtv9jgprDSY0r
-	 ITG0sLd1ePU8E5vILb6q4dTkYrpZxkOv4c5goxUU=
+	b=BP+euD/HsI+aLfrZfwm3LeLaZA4jwosXEpYavAz3rEeF3ayYty+VjOniyXoZ3Ydo6
+	 brndqi32ad6sl5KV4YzlXdjzhMxgTyWxyFDsfNrJ2cOggRCE3FTHKIpn9hqZzvrX3P
+	 M7mmarMsJwJz4GuQWoBU9JOHr7BDiPeALYiESL5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgAGU7Z (ORCPT
+        id S1728732AbgAGVZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60188 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:25:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgAGU7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:19 -0500
+        id S1727387AbgAGU73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AEC021744;
-        Tue,  7 Jan 2020 20:59:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 419932081E;
+        Tue,  7 Jan 2020 20:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430758;
-        bh=3jIM06pqXH85l3EYy8aFBlykGlLXVSm4DTRFl+qGYFU=;
+        s=default; t=1578430768;
+        bh=25YGG4pEpfFDp5ONUl1u+Nokxny0vt3ZlgrL6GDtJyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrIGr/dTgzN2hswKwQJ7SzjlX55hxahJ1YmzJJV8o7XpkGtRFx5pRFLwGT5TQ1WIl
-         21iI1k9bvMN6JrTcADpm7d33vjhtGICYdHSXhVqzpFzql9G49SQE7pzJMDQ/JO9Arv
-         oLlG3np/A0w1Jipm8Unr2Z5A2aqzT+VNrQbMlnqk=
+        b=fP7NVOU0Q34dOMca8+Yeqj74d6bueXsq6+M2Obb8qsv7GcmtWqAz1OvOUrqXuV8qR
+         hu/MWOPoADGJydgY1xAtCnYeD7Sn27JZofrRd7ZKoVaa4B45fQ4d+3iXkWX2ECROHu
+         F6niOMRvs9ix80o+To2GAnvF4TMRd+G37hTQnS+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/191] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Tue,  7 Jan 2020 21:52:48 +0100
-Message-Id: <20200107205335.565991846@linuxfoundation.org>
+Subject: [PATCH 5.4 052/191] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
+Date:   Tue,  7 Jan 2020 21:52:52 +0100
+Message-Id: <20200107205335.786051636@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,64 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Andy Whitcroft <apw@canonical.com>
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
+[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
 
-Current code device add sequence is:
+When looking for a bit by number we make use of the cached result from the
+preceding lookup to speed up operation.  Firstly we check if the requested
+pfn is within the cached zone and if not lookup the new zone.  We then
+check if the offset for that pfn falls within the existing cached node.
+This happens regardless of whether the node is within the zone we are
+now scanning.  With certain memory layouts it is possible for this to
+false trigger creating a temporary alias for the pfn to a different bit.
+This leads the hibernation code to free memory which it was never allocated
+with the expected fallout.
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
+Ensure the zone we are scanning matches the cached zone before considering
+the cached node.
 
-Therefore, the remove sequence should be,
+Deep thanks go to Andrea for many, many, many hours of hacking and testing
+that went into cornering this bug.
 
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
-
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Reported-by: Andrea Righi <andrea.righi@canonical.com>
+Tested-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ kernel/power/snapshot.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 8d2f1e38b891..907d99822bf0 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3008,16 +3008,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
- 
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
- 
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 83105874f255..26b9168321e7 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -734,8 +734,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
+ 	 * We have found the zone. Now walk the radix tree to find the leaf node
+ 	 * for our PFN.
+ 	 */
 +
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
++	/*
++	 * If the zone we wish to scan is the the current zone and the
++	 * pfn falls into the current node then we do not need to walk
++	 * the tree.
++	 */
+ 	node = bm->cur.node;
+-	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
++	if (zone == bm->cur.zone &&
++	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+ 		goto node_found;
+ 
+ 	node      = zone->rtree;
 -- 
 2.20.1
 
