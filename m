@@ -2,105 +2,113 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF44C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A778FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5252072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="fGlV4Pr2"
+	by mail.kernel.org (Postfix) with ESMTP id 70771207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgAGXjG (ORCPT
+        id S1727594AbgAGXjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:39:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39461 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAGXjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:39:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so1793658oty.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 15:39:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xMZkcHtFGlxtWMU0/yJi4CuOWPo2x4C+GD+Xd4ftxtY=;
-        b=fGlV4Pr2MgSNzKMiDvbbOE+RWBOvNONUJBDPutDXvnKV0UHzXrxqy41oXKo6WrCibz
-         nIRkrfWVWS/3omjTf2Szli0DI/W6lLwbaiIUY2Th1bSJbzbi5GX640rH874VzisnSJBN
-         s3Goe8kx/MBl1KrfR/Q6Q38YPMR41UmkrW1Gd+X9IIEIxtYmHbhTJRqiFPcX8Z4JUIxo
-         AbpigFkKiQOO5NhcIFROnexkKOwsN9Kh7HoEvk2zwnpTt8e9OmkfedzdRR1luOdVBsXq
-         wj40LOEnqORt9GMjzv6fUO3xLP+gEY5sn5TmCNDBD42EaYbFnVTfd41qJspyjppYb7f8
-         ISzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xMZkcHtFGlxtWMU0/yJi4CuOWPo2x4C+GD+Xd4ftxtY=;
-        b=pEeKgnwSLkkDlVDqF9PDAZ5iGJXpd5vnoTRf2G4UeCu+aScvhBu7cI4bqpwuD/P2XM
-         MOncLrh+cptlqwIe516QitAxxhEPYoQbEmo8Zf+Wp9skNVP/HB47QVM1p1pmbgbNgFSo
-         B4/3XDlzBvUnFkGa5/9mp68X8QFT99yO7ebBpWg84vAQkWLZIQ/BYDGpx8HDHin5z0Jx
-         kGaEbvUrqqoCah3d8WHkkZDtJPKLNSsn3Mu/6RJ2qJlC4qtUhKM5lpjCsaenCsxTVuLa
-         41PBWOPewrtbaWxv40j0y3lt4DYCjLtGPlDQPvD1dgr2r3Wa7ZfXtqEsuPqqS3nXdGmI
-         bGRQ==
-X-Gm-Message-State: APjAAAWp2osDgh8kEZ7Aew7Ju48xOpz2iQp+dw1w0x9gM/F3bSreD/p2
-        yX+kBcnqvKIsOsSnHjkhAergrZPG81IRWwx/K4Kg93d9
-X-Google-Smtp-Source: APXvYqzvMVVYbs2feLkPKE0gtd4wuHz+YTqavAMbyJigJXY55hh1AQBdpn4tA6LqJn24ZzdQ5nOCMzZ/4ozWhNizGXo=
-X-Received: by 2002:a9d:68d3:: with SMTP id i19mr1958301oto.71.1578440345524;
- Tue, 07 Jan 2020 15:39:05 -0800 (PST)
+        Tue, 7 Jan 2020 18:39:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgAGXjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:39:11 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E69B2072A;
+        Tue,  7 Jan 2020 23:39:09 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 18:39:07 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [BUGFIX PATCH] kprobes: Fix to cancel optimizing/unoptimizing
+ kprobes correctly
+Message-ID: <20200107183907.3c87500a@gandalf.local.home>
+In-Reply-To: <157840814418.7181.13478003006386303481.stgit@devnote2>
+References: <157840814418.7181.13478003006386303481.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
- <20191216181014.GA30106@redhat.com> <20200107125159.GA15745@infradead.org>
- <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
- <20200107170731.GA472641@magnolia> <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
- <20200107180101.GC15920@redhat.com> <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
- <20200107183307.GD15920@redhat.com> <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
- <20200107190258.GB472665@magnolia> <CAPcyv4ia9r0rdbb7t0JvEnGW6nnHdAWUHbaMrY5FKBY+4Fum6Q@mail.gmail.com>
-In-Reply-To: <CAPcyv4ia9r0rdbb7t0JvEnGW6nnHdAWUHbaMrY5FKBY+4Fum6Q@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 Jan 2020 15:38:54 -0800
-Message-ID: <CAPcyv4jDYUPp=aqH1VTfxFAXiMa0Uqn+ykptfu_yNDOjR7Akfg@mail.gmail.com>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:46 AM Dan Williams <dan.j.williams@intel.com> wrote:
-[..]
-> > I'd say deprecate the
-> > kernel automounting partitions, but I guess it already does that, and
->
-> Ok, now I don't know why automounting is leaking into this discussion?
->
-> > removing it would break /something/.
->
-> Yes, the breakage risk is anyone that was using ext4 mount failure as
-> a dax capability detector.
->
-> > I guess you could put
-> > "/dev/pmemXpY" on the deprecation schedule.
->
-> ...but why deprecate /dev/pmemXpY partitions altogether? If someone
-> doesn't care about dax then they can do all the legacy block things.
-> If they do care about dax then work with whole device namespaces.
+On Tue,  7 Jan 2020 23:42:24 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Circling back on this point now that I understand what you meant by
-automount. It would need to be a full deprecation of /dev/pmemXpY
-devices if kpartx dax support is going to fully take over for people
-that want to use disk partition tables instead of EFI Namespace Labels
-to carve up pmem.
+> optimize_kprobe() and unoptimize_kprobe() cancels if given kprobe
+> is on the optimizing_list or unoptimizing_list. However, since
+> commit f66c0447cca1 ("kprobes: Set unoptimized flag after
+> unoptimizing code") modified the update timing of the
+> KPROBE_FLAG_OPTIMIZED, it doesn't work as expected anymore.
+> 
+> The optimized_kprobe could be following states.
+> 
+> - [optimizing]: Before inserting jump instruction
+>   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+>   op->list is not empty.
+> 
+> - [optimized]: jump inserted
+>   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+>   op->list is empty.
+> 
+> - [unoptimizing]: Before removing jump instruction (including unused
+>   optprobe)
+>   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+>   op->list is not empty.
+> 
+> - [unoptimized]: jump removed
+>   op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
+>   op->list is empty.
+> 
+> Current code mis-expects [unoptimizing] state doesn't have
+> KPROBE_FLAG_OPTIMIZED, and that can cause wrong results.
+> 
+> This introduces optprobe_queued_unopt() to distinguish [optimizing]
+> and [unoptimizing] states and fixes logics in optimize_kprobe() and
+> unoptimize_kprobe().
+> 
+> Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Looks good.
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+
+>  		return;
+>  	}
+> +
+>  	/* Optimized kprobe case */
+> -	if (force)
+> +	if (force) {
+>  		/* Forcibly update the code: this is a special case */
+>  		force_unoptimize_kprobe(op);
+> -	else {
+> +	} else {
+>  		list_add(&op->list, &unoptimizing_list);
+>  		kick_kprobe_optimizer();
+>  	}
+
+I see you added some clean up to this patch.
+
+-- Steve
