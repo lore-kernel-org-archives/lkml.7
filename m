@@ -2,153 +2,261 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F71DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DDDC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43F32080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432291;
-	bh=cnqALwMuRfyo5+y1ZAdyD4v7PD7Zz5NZ8hggQcZxekQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RwKxo0BIhNSvOcV1Ki2o32XV4deGkxQg9BsTCBaUvj+GmPisaCjG6VBhb5geNigFG
-	 a8E9gux8J6xrNslFUEXcJ7Ox0wKWNCZQe3pjnSurkRXbZaQ6yR3ZgOlS8lo5z5kUwN
-	 dRiKzreejSwwK206JMeY5n3dqI4EQRFoux/riT4o=
+	by mail.kernel.org (Postfix) with ESMTP id 0888B206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgAGVYt (ORCPT
+        id S1729306AbgAGVY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:24:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34694 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:24:57 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:51286 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgAGVAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B3824677;
-        Tue,  7 Jan 2020 21:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430817;
-        bh=cnqALwMuRfyo5+y1ZAdyD4v7PD7Zz5NZ8hggQcZxekQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QgjFxgaf9n5dskL4GUg3vQFB5EEEKOidOe4XpsQCX8KTs2Q3YCntGa0E0SUXfrqKI
-         siX5o8WCK37tEnNTAYgnv69Z16jrWg+sBejUt75Wk8UoLxFP3gMf5+WuPP0kO63LHP
-         8vpBfR58IJGnzYA0k6cob+sUVnQTSdTxgPgP75Pw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 108/191] ata: ahci_brcm: BCM7425 AHCI requires AHCI_HFLAG_DELAY_ENGINE
-Date:   Tue,  7 Jan 2020 21:53:48 +0100
-Message-Id: <20200107205338.767411951@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727591AbgAGVAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:17 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iovxP-0007vw-0F; Tue, 07 Jan 2020 14:00:10 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iovxJ-0001zM-5J; Tue, 07 Jan 2020 14:00:01 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michal Hocko <mhocko@suse.com>
+Date:   Tue,  7 Jan 2020 13:59:58 -0700
+Message-Id: <20200107205959.7575-8-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200107205959.7575-1-logang@deltatee.com>
+References: <20200107205959.7575-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, dan.j.williams@intel.com, akpm@linux-foundation.org, hch@lst.de, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, david@redhat.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, mhocko@kernel.org, will@kernel.org, luto@kernel.org, peterz@infradead.org, ebadger@gigaio.com, logang@deltatee.com, mhocko@suse.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v2 7/8] mm/memory_hotplug: Add pgprot_t to mhp_modifiers
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+struct page mappings for IO memory. At present, these mappings are created
+with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+x86, an mtrr register will typically override this and force the cache
+type to be UC-. In the case firmware doesn't set this register it is
+effectively WB and will typically result in a machine check exception
+when it's accessed.
 
-commit 1a3d78cb6e20779a19388315bd8efefbd8d4a656 upstream.
+Other arches are not currently likely to function correctly seeing they
+don't have any MTRR registers to fall back on.
 
-Set AHCI_HFLAG_DELAY_ENGINE for the BCM7425 AHCI controller thus making
-it conforming to the 'strict' AHCI implementation which this controller
-is based on.
+To solve this, add an argument to arch_add_memory() to explicitly
+set the pgprot value to a specific value.
 
-This solves long link establishment with specific hard drives (e.g.:
-Seagate ST1000VM002-9ZL1 SC12) that would otherwise have to complete the
-error recovery handling before finally establishing a succesful SATA
-link at the desired speed.
+Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
+simple change to pass the pgprot_t down to their respective functions
+which set up the page tables. For x86_32, set the page tables explicitly
+using _set_memory_prot() (seeing they are already mapped). For sh, reject
+anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
+sh doesn't support ZONE_DEVICE anyway.
 
-We re-order the hpriv->flags assignment to also remove the NONCQ quirk
-since we can set the flag directly.
-
-Fixes: 9586114cf1e9 ("ata: ahci_brcmstb: add support MIPS-based platforms")
-Fixes: 423be77daabe ("ata: ahci_brcmstb: add quirk for broken ncq")
-Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/ata/ahci_brcm.c |   31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ arch/arm64/mm/mmu.c            | 3 ++-
+ arch/ia64/mm/init.c            | 4 ++++
+ arch/powerpc/mm/mem.c          | 3 ++-
+ arch/s390/mm/init.c            | 2 +-
+ arch/sh/mm/init.c              | 3 +++
+ arch/x86/mm/init_32.c          | 5 +++++
+ arch/x86/mm/init_64.c          | 2 +-
+ include/linux/memory_hotplug.h | 2 ++
+ mm/memory_hotplug.c            | 2 +-
+ mm/memremap.c                  | 6 +++---
+ 10 files changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -76,8 +76,7 @@ enum brcm_ahci_version {
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 3320406579c3..9b214b0d268f 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+ 
+ 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+-			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
++			     size, modifiers->pgprot, __pgd_pgtable_alloc,
++			     flags);
+ 
+ 	memblock_clear_nomap(start, size);
+ 
+diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+index daf438e08b96..5fd6ae4929c9 100644
+--- a/arch/ia64/mm/init.c
++++ b/arch/ia64/mm/init.c
+@@ -677,6 +677,10 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	int ret;
+ 
+ 	ret = __add_pages(nid, start_pfn, nr_pages, modifiers);
++	if (modifiers->pgprot != PAGE_KERNEL)
++		return -EINVAL;
++
++	ret = __add_pages(nid, start_pfn, nr_pages, restrictions);
+ 	if (ret)
+ 		printk("%s: Problem encountered in __add_pages() as ret=%d\n",
+ 		       __func__,  ret);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 631ee684721f..fddeaee53198 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -137,7 +137,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+ 	resize_hpt_for_hotplug(memblock_phys_mem_size());
+ 
+ 	start = (unsigned long)__va(start);
+-	rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
++	rc = create_section_mapping(start, start + size, nid,
++				    modifiers->pgprot);
+ 	if (rc) {
+ 		pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
+ 			start, start + size, rc);
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index ef19522ddad2..c65fb33f6a89 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	if (WARN_ON_ONCE(modifiers->altmap))
+ 		return -EINVAL;
+ 
+-	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
++	rc = vmem_add_mapping(start, size, modifiers->pgprot);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+index 7e64f42fb570..7071dc5bd2e4 100644
+--- a/arch/sh/mm/init.c
++++ b/arch/sh/mm/init.c
+@@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	int ret;
+ 
++	if (modifiers->pgprot != PAGE_KERNEL)
++		return -EINVAL;
++
+ 	/* We only have ZONE_NORMAL, so this is easy.. */
+ 	ret = __add_pages(nid, start_pfn, nr_pages, modifiers);
+ 	if (unlikely(ret))
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 630d8a36fcd7..737da0dbc0d5 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -857,6 +857,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
++	int ret;
++
++	ret = _set_memory_prot(start, nr_pages, modifiers->pgprot);
++	if (ret)
++		return ret;
+ 
+ 	return __add_pages(nid, start_pfn, nr_pages, modifiers);
+ }
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 17ea0bfc0b83..cc9eb45ad120 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -868,7 +868,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 
+-	init_memory_mapping(start, start + size, PAGE_KERNEL);
++	init_memory_mapping(start, start + size, modifiers->pgprot);
+ 
+ 	return add_pages(nid, start_pfn, nr_pages, modifiers);
+ }
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 2152efae2f4b..00dfb2016737 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -56,9 +56,11 @@ enum {
+ /*
+  * Restrictions for the memory hotplug:
+  * altmap: alternative allocator for memmap array
++ * pgprot: page protection flags to apply to newly added page tables
+  */
+ struct mhp_modifiers {
+ 	struct vmem_altmap *altmap;
++	pgprot_t pgprot;
  };
  
- enum brcm_ahci_quirks {
--	BRCM_AHCI_QUIRK_NO_NCQ		= BIT(0),
--	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(1),
-+	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(0),
- };
+ /*
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 1bb3f92e087d..0888f821af06 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1027,7 +1027,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+  */
+ int __ref add_memory_resource(int nid, struct resource *res)
+ {
+-	struct mhp_modifiers modifiers = {};
++	struct mhp_modifiers modifiers = {.pgprot = PAGE_KERNEL};
+ 	u64 start, size;
+ 	bool new_node = false;
+ 	int ret;
+diff --git a/mm/memremap.c b/mm/memremap.c
+index e30be8ba706b..45ab4ef0643d 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -163,8 +163,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+ 		 * We do not want any optional features only our own memmap
+ 		 */
+ 		.altmap = pgmap_altmap(pgmap),
++		.pgprot = PAGE_KERNEL,
+ 	};
+-	pgprot_t pgprot = PAGE_KERNEL;
+ 	int error, is_ram;
+ 	bool need_devmap_managed = true;
  
- struct brcm_ahci_priv {
-@@ -439,18 +438,27 @@ static int brcm_ahci_probe(struct platfo
- 	if (!IS_ERR_OR_NULL(priv->rcdev))
- 		reset_control_deassert(priv->rcdev);
+@@ -252,8 +252,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+ 	if (nid < 0)
+ 		nid = numa_mem_id();
  
--	if ((priv->version == BRCM_SATA_BCM7425) ||
--		(priv->version == BRCM_SATA_NSP)) {
--		priv->quirks |= BRCM_AHCI_QUIRK_NO_NCQ;
--		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
--	}
--
- 	hpriv = ahci_platform_get_resources(pdev, 0);
- 	if (IS_ERR(hpriv)) {
- 		ret = PTR_ERR(hpriv);
- 		goto out_reset;
- 	}
+-	error = track_pfn_remap(NULL, &pgprot, PHYS_PFN(res->start), 0,
+-			resource_size(res));
++	error = track_pfn_remap(NULL, &modifiers.pgprot, PHYS_PFN(res->start),
++				0, resource_size(res));
+ 	if (error)
+ 		goto err_pfn_remap;
  
-+	hpriv->plat_data = priv;
-+	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP | AHCI_HFLAG_NO_WRITE_TO_RO;
-+
-+	switch (priv->version) {
-+	case BRCM_SATA_BCM7425:
-+		hpriv->flags |= AHCI_HFLAG_DELAY_ENGINE;
-+		/* fall through */
-+	case BRCM_SATA_NSP:
-+		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
-+		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	ret = ahci_platform_enable_clks(hpriv);
- 	if (ret)
- 		goto out_reset;
-@@ -470,15 +478,8 @@ static int brcm_ahci_probe(struct platfo
- 	/* Must be done before ahci_platform_enable_phys() */
- 	brcm_sata_phys_enable(priv);
- 
--	hpriv->plat_data = priv;
--	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP;
--
- 	brcm_sata_alpm_init(hpriv);
- 
--	if (priv->quirks & BRCM_AHCI_QUIRK_NO_NCQ)
--		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
--	hpriv->flags |= AHCI_HFLAG_NO_WRITE_TO_RO;
--
- 	ret = ahci_platform_enable_phys(hpriv);
- 	if (ret)
- 		goto out_disable_phys;
-
+-- 
+2.20.1
 
