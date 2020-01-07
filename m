@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF7AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406C1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648772080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C472077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431154;
-	bh=2zWao8QSzVN06CQem+gqpC3IhhdH24iP16vJ5U0VeVM=;
+	s=default; t=1578431159;
+	bh=Puf4cjTzQ89dCmtslBrHrCifQTnzFDr6sMafzpFF7P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRhBllTDcZToul6ffHL1R/Q0/1MQ888BHLN0gv3Wi8HdWXbpQfmUJAJwkLuOHfSLL
-	 aKs5/TpYUyzJJcQJVErAPNOS0STZtANUmo6PogSdCxF3BZWmZuDwu0tpLvs8V85j2h
-	 PTWdOyA0ifJMZv1QT4QZ88Mj+MIGpl0zpIbpaSD0=
+	b=dgcNav95tDG2mBMEwPxSGIAlzfe9w2Z6gHdnBeBR/+l3Wz5ZiGuqppl7OfdpD+sRA
+	 o1s+CMrOC42L7PUlz8328uTQMr8FeQRM39kXmcI9JOPlkotLJeX9VwIfokJq50zmtH
+	 q2TA8vuno0XGFjHMlPKcMCOjjxuS7+GkeCE4tp4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAGVFx (ORCPT
+        id S1729147AbgAGVF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgAGVFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:49 -0500
+        id S1729309AbgAGVFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B392080A;
-        Tue,  7 Jan 2020 21:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E41BE2077B;
+        Tue,  7 Jan 2020 21:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431148;
-        bh=2zWao8QSzVN06CQem+gqpC3IhhdH24iP16vJ5U0VeVM=;
+        s=default; t=1578431155;
+        bh=Puf4cjTzQ89dCmtslBrHrCifQTnzFDr6sMafzpFF7P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dq+/nZPQHakqnDXVY80/RKtQKax2dok69cn0k3igfBDgPRj6lkiQFHgNybpoTaDh9
-         b/tmGhUWLHHR6wQMl0xciXvlciPW853M3N6jkf2i+Skrqy1zJJBywunbva0prT9Q2V
-         qUvg2EXWeUKlMjypgdxlXIn6BtagHmSFbD9vA784=
+        b=nZd3lR51T6wc3Sbvs6xRia3qH3fbsWD2UHIYNuMVK+wXK7M7aSY2aLvd+LITHox/q
+         f3HODi7WwmHT1U5f02md7t4iBEMIU6mBgF9tMaadGCVhOsalUdu/898NYyIMflfY1t
+         Hdrraba9skC72a2EAv3EVgRn7NGrbMYCHXn2cQeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Felix Abecassis <fabecassis@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 054/115] mm: move_pages: return valid node id in status if the page is already on the target node
-Date:   Tue,  7 Jan 2020 21:54:24 +0100
-Message-Id: <20200107205302.756204728@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.19 057/115] dmaengine: Fix access to uninitialized dma_slave_caps
+Date:   Tue,  7 Jan 2020 21:54:27 +0100
+Message-Id: <20200107205302.962415588@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -66,144 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit e0153fc2c7606f101392b682e720a7a456d6c766 upstream.
+commit 53a256a9b925b47c7e67fc1f16ca41561a7b877c upstream.
 
-Felix Abecassis reports move_pages() would return random status if the
-pages are already on the target node by the below test program:
+dmaengine_desc_set_reuse() allocates a struct dma_slave_caps on the
+stack, populates it using dma_get_slave_caps() and then accesses one
+of its members.
 
-  int main(void)
-  {
-	const long node_id = 1;
-	const long page_size = sysconf(_SC_PAGESIZE);
-	const int64_t num_pages = 8;
+However dma_get_slave_caps() may fail and this isn't accounted for,
+leading to a legitimate warning of gcc-4.9 (but not newer versions):
 
-	unsigned long nodemask =  1 << node_id;
-	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
-	if (ret < 0)
-		return (EXIT_FAILURE);
+   In file included from drivers/spi/spi-bcm2835.c:19:0:
+   drivers/spi/spi-bcm2835.c: In function 'dmaengine_desc_set_reuse':
+>> include/linux/dmaengine.h:1370:10: warning: 'caps.descriptor_reuse' is used uninitialized in this function [-Wuninitialized]
+     if (caps.descriptor_reuse) {
 
-	void **pages = malloc(sizeof(void*) * num_pages);
-	for (int i = 0; i < num_pages; ++i) {
-		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
-				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
-				-1, 0);
-		if (pages[i] == MAP_FAILED)
-			return (EXIT_FAILURE);
-	}
+Fix it, thereby also silencing the gcc-4.9 warning.
 
-	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
-	if (ret < 0)
-		return (EXIT_FAILURE);
+The issue has been present for 4 years but surfaces only now that
+the first caller of dmaengine_desc_set_reuse() has been added in
+spi-bcm2835.c. Another user of reusable DMA descriptors has existed
+for a while in pxa_camera.c, but it sets the DMA_CTRL_REUSE flag
+directly instead of calling dmaengine_desc_set_reuse(). Nevertheless,
+tag this commit for stable in case there are out-of-tree users.
 
-	int *nodes = malloc(sizeof(int) * num_pages);
-	int *status = malloc(sizeof(int) * num_pages);
-	for (int i = 0; i < num_pages; ++i) {
-		nodes[i] = node_id;
-		status[i] = 0xd0; /* simulate garbage values */
-	}
-
-	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
-	printf("move_pages: %ld\n", ret);
-	for (int i = 0; i < num_pages; ++i)
-		printf("status[%d] = %d\n", i, status[i]);
-  }
-
-Then running the program would return nonsense status values:
-
-  $ ./move_pages_bug
-  move_pages: 0
-  status[0] = 208
-  status[1] = 208
-  status[2] = 208
-  status[3] = 208
-  status[4] = 208
-  status[5] = 208
-  status[6] = 208
-  status[7] = 208
-
-This is because the status is not set if the page is already on the
-target node, but move_pages() should return valid status as long as it
-succeeds.  The valid status may be errno or node id.
-
-We can't simply initialize status array to zero since the pages may be
-not on node 0.  Fix it by updating status with node id which the page is
-already on.
-
-Link: http://lkml.kernel.org/r/1575584353-125392-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reported-by: Felix Abecassis <fabecassis@nvidia.com>
-Tested-by: Felix Abecassis <fabecassis@nvidia.com>
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Christoph Lameter <cl@linux.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>	[4.17+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 272420214d26 ("dmaengine: Add DMA_CTRL_REUSE")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.3+
+Link: https://lore.kernel.org/r/ca92998ccc054b4f2bfd60ef3adbab2913171eac.1575546234.git.lukas@wunner.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/migrate.c |   23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ include/linux/dmaengine.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1508,9 +1508,11 @@ static int do_move_pages_to_node(struct
- /*
-  * Resolves the given address to a struct page, isolates it from the LRU and
-  * puts it to the given pagelist.
-- * Returns -errno if the page cannot be found/isolated or 0 when it has been
-- * queued or the page doesn't need to be migrated because it is already on
-- * the target node
-+ * Returns:
-+ *     errno - if the page cannot be found/isolated
-+ *     0 - when it doesn't have to be migrated because it is already on the
-+ *         target node
-+ *     1 - when it has been queued
-  */
- static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 		int node, struct list_head *pagelist, bool migrate_all)
-@@ -1549,7 +1551,7 @@ static int add_page_for_migration(struct
- 	if (PageHuge(page)) {
- 		if (PageHead(page)) {
- 			isolate_huge_page(page, pagelist);
--			err = 0;
-+			err = 1;
- 		}
- 	} else {
- 		struct page *head;
-@@ -1559,7 +1561,7 @@ static int add_page_for_migration(struct
- 		if (err)
- 			goto out_putpage;
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1373,8 +1373,11 @@ static inline int dma_get_slave_caps(str
+ static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
+ {
+ 	struct dma_slave_caps caps;
++	int ret;
  
--		err = 0;
-+		err = 1;
- 		list_add_tail(&head->lru, pagelist);
- 		mod_node_page_state(page_pgdat(head),
- 			NR_ISOLATED_ANON + page_is_file_cache(head),
-@@ -1636,8 +1638,17 @@ static int do_pages_move(struct mm_struc
- 		 */
- 		err = add_page_for_migration(mm, addr, current_node,
- 				&pagelist, flags & MPOL_MF_MOVE_ALL);
--		if (!err)
-+
-+		if (!err) {
-+			/* The page is already on the target node */
-+			err = store_status(status, i, current_node, 1);
-+			if (err)
-+				goto out_flush;
- 			continue;
-+		} else if (err > 0) {
-+			/* The page is successfully queued for migration */
-+			continue;
-+		}
+-	dma_get_slave_caps(tx->chan, &caps);
++	ret = dma_get_slave_caps(tx->chan, &caps);
++	if (ret)
++		return ret;
  
- 		err = store_status(status, i, err, 1);
- 		if (err)
+ 	if (caps.descriptor_reuse) {
+ 		tx->flags |= DMA_CTRL_REUSE;
 
 
