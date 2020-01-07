@@ -2,194 +2,282 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04638C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3FD2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE63B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431627;
-	bh=i1qhWJd/JIv/EvnYvOd+bBbFKX9FBjpyZH4/2g/2b4U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SRUQ1TTb4gD72zlLVuMkVcHAZFSvDDXBkKdD8c1ck9LEk6wUyidooxKlt6xaxWPe0
-	 aFplYq8t/4YX4MrzDsZT6z7Ch+qxKrOTOReqE3BGlb76ptDNjwOk0K9INVDOBnkvOs
-	 mYQh1APffJHUz5KNoYwEAkAG6kFB4mANo6iYOoq8=
+	s=default; t=1578431631;
+	bh=RvaC7pNhej1oSAJiA9zXX9la2pZ4q0jiBNDMmUppzfQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RkBk7s8DMvzWbAz7uWEqNGPxwvIPrhS2FxEFW5aQhqVP353hyVGWC2aU5dsnaymI3
+	 FX+Zx/JrMWhqFoY9Dt8gfil1C36UarBQB+7SICQQytmzhWsLi3Nic4ffq4lsz3Ccmx
+	 B59A/Ea6ONuRQuLetM5xWhdRE2nlh5w/dKtL30a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgAGVNq (ORCPT
+        id S1729895AbgAGVJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:13:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45832 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729946AbgAGVNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:13:41 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        id S1729871AbgAGVJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26725208C4;
-        Tue,  7 Jan 2020 21:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAE12087F;
+        Tue,  7 Jan 2020 21:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431620;
-        bh=i1qhWJd/JIv/EvnYvOd+bBbFKX9FBjpyZH4/2g/2b4U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VuyNT0vx/XbudQ2Gbc0TGX2wUKpjZv8Weu0kKC6w8ql8rK+p+I6Zf+yC9SMZqgwCW
-         Q1DVei+Qm4jH8R1L7n1tMnA3gUlctkjgB0K0EoYsaU8GWktZbT2H5WTEkzdUtHha2x
-         qludjgYJgeEv42vJifBCoYC8egPNQv2is8kgOstI=
-Date:   Tue, 7 Jan 2020 15:13:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kit Chow <kchow@gigaio.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v4] PCI: Fix disabling of bridge BARs when assigning bus
- resources
-Message-ID: <20200107211338.GA31548@google.com>
+        s=default; t=1578431390;
+        bh=RvaC7pNhej1oSAJiA9zXX9la2pZ4q0jiBNDMmUppzfQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RKR/jC494OphtlDRXP13TDM8wk1L5denoufprtnUqhiCux7GOUDh9/mfRDMI94CXi
+         cbqGtwmxIYglbKyn58KZGLPnfh+Zs+o7sZGnqzEVXwL6X8LMeIajs+7u7lbaBrwuAk
+         PZhS+iw/d0cFaW0liZNg64bwJBUsDFx0WSLvDWNs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 38/74] ata: ahci_brcm: Fix AHCI resources management
+Date:   Tue,  7 Jan 2020 21:55:03 +0100
+Message-Id: <20200107205208.176368966@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+References: <20200107205135.369001641@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107190902.5093-1-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:09:02PM -0700, Logan Gunthorpe wrote:
-> One odd quirk of PLX switches is that their upstream bridge port has
-> 256K of space allocated behind its BAR0 (most other bridge
-> implementations do not report any BAR space). The lspci for such  device
-> looks like:
-> 
->   04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
->             Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-> 	    (prog-if 00 [Normal decode])
->       Physical Slot: 1
->       Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
->       Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
->       Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
->       I/O behind bridge: 00002000-00003fff
->       Memory behind bridge: 90000000-909fffff
->       Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
->       Kernel driver in use: pcieport
-> 
-> It's not clear what the purpose of the memory at 0x90a00000 is, and
-> currently the kernel never actually uses it for anything. In most cases,
-> it's safely ignored and does not cause a problem.
-> 
-> However, when the kernel assigns the resource addresses (with the
-> pci=realloc command line parameter, for example) it can inadvertently
-> disable the struct resource corresponding to the bar. When this happens,
-> lspci will report this memory as ignored:
-> 
->    Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-> 
-> This is because the kernel reports a zero start address and zero flags
-> in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-> Investigation with 'lspci -x', however shows the bios-assigned address
-> will still be programmed in the device's BAR registers.
-> 
-> It's clearly a bug that the kernel's view of the registers differs from
-> what's actually programmed in the BAR, but in most cases, this still
-> won't result in a visibile issue because nothing uses the memory,
-> so nothing is affected. However, a big problem shows up when an IOMMU
-> is in use: the IOMMU will not reserve this space in the IOVA because the
-> kernel no longer thinks the range is valid. (See
-> dmar_init_reserved_ranges() for the Intel implementation of this.)
-> 
-> Without the proper reserved range, we have a situation where a DMA
-> mapping may occasionally allocate an IOVA which the PCI bus will actually
-> route to a BAR in the PLX switch. This will result in some random DMA
-> writes not actually writing to the RAM they are supposed to, or random
-> DMA reads returning all FFs from the PLX BAR when it's supposed to have
-> read from RAM.
-> 
-> The problem is caused in pci_assign_unassigned_root_bus_resources().
-> When any resource from a bridge device fails to get assigned, the code
-> sets the resource's flags to zero. This makes sense for bridge resources,
-> as they will be re-enabled later, but for regular BARs, it disables them
-> permanently.
-> 
-> The code in question seems to indent to check if "dev->subordinate" is
-> zero to determine whether a device is a bridge, however this is not
-> likely valid as there might be a bridge without a subordinate bus due to
-> running out of bus numbers or other cases.
-> 
-> To fix these issues we instead check that the idx is in the
-> PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
-> thus is sufficient for the "dev->subordinate" check and will also
-> prevent the bug above from clobbering PLX devices' regular BARs.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-s/bios/BIOS/
-s/bar/BAR/
-s/visibile/visible/
-s/indent/intend/
+commit c0cdf2ac4b5bf3e5ef2451ea29fb4104278cdabc upstream.
 
-> Reported-by: Kit Chow <kchow@gigaio.com>
-> Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/setup-bus.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> This patch was last submitted back in June as part of a series. I've
-> dropped the first patch in the series as a similar patch from Nicholas
-> takes care of the bug.
-> 
-> As a reminder, the previous discussion on this patch is here[1]. Per the
-> feedback, I've updated the patch to remove the check on
-> "dev->subordinate" entirely.
-> 
-> The patch is based on v5.5-rc5 and a git branch is available here:
-> 
-> https://github.com/sbates130272/linux-p2pmem pci_realloc_v4
-> 
-> [1] https://lore.kernel.org/linux-pci/20190617135307.GA13533@google.com/
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index f279826204eb..23f6c95f3fd7 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1803,11 +1803,15 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
->  	/* Restore size and flags */
->  	list_for_each_entry(fail_res, &fail_head, list) {
->  		struct resource *res = fail_res->res;
-> +		int idx;
-> 
->  		res->start = fail_res->start;
->  		res->end = fail_res->end;
->  		res->flags = fail_res->flags;
-> -		if (fail_res->dev->subordinate)
-> +
-> +		idx = res - &fail_res->dev->resource[0];
-> +		if (idx >= PCI_BRIDGE_RESOURCES &&
-> +		    idx <= PCI_BRIDGE_RESOURCE_END)
->  			res->flags = 0;
+The AHCI resources management within ahci_brcm.c is a little
+convoluted, largely because it historically had a dedicated clock that
+was managed within this file in the downstream tree. Once brough
+upstream though, the clock was left to be managed by libahci_platform.c
+which is entirely appropriate.
 
-So I guess previously, for everything on the fail_head list, we
-restored flags/start/end *and* we cleared flags for every BAR and
-window of a bridge.
+This patch series ensures that the AHCI resources are fetched and
+enabled before any register access is done, thus avoiding bus errors on
+platforms which clock gate the controller by default.
 
-Now we'll clear flags for only for bridge windows.  I'm sure that was
-the original intent, but I don't see why we bother.  The next thing we
-do is go back to "again", where we call __pci_bus_size_bridges(),
-where we immediately call pci_bridge_check_ranges(), which recomputes
-the flags.
+As a result we need to re-arrange the suspend() and resume() functions
+in order to avoid accessing registers after the clocks have been turned
+off respectively before the clocks have been turned on. Finally, we can
+refactor brcm_ahci_get_portmask() in order to fetch the number of ports
+from hpriv->mmio which is now accessible without jumping through hoops
+like we used to do.
 
-Is there actually any point in clearing res->flags, or could we just
-do this:
+The commit pointed in the Fixes tag is both old and new enough not to
+require major headaches for backporting of this patch.
 
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
- 	}
- 	free_list(&fail_head);
+Fixes: eba68f829794 ("ata: ahci_brcmstb: rename to support across Broadcom SoC's")
+Cc: stable@vger.kernel.org
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/ata/ahci_brcm.c |  105 ++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 76 insertions(+), 29 deletions(-)
+
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -223,19 +223,12 @@ static void brcm_sata_phys_disable(struc
+ 			brcm_sata_phy_disable(priv, i);
+ }
  
+-static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
++static u32 brcm_ahci_get_portmask(struct ahci_host_priv *hpriv,
+ 				  struct brcm_ahci_priv *priv)
+ {
+-	void __iomem *ahci;
+-	struct resource *res;
+ 	u32 impl;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
+-	ahci = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(ahci))
+-		return 0;
+-
+-	impl = readl(ahci + HOST_PORTS_IMPL);
++	impl = readl(hpriv->mmio + HOST_PORTS_IMPL);
+ 
+ 	if (fls(impl) > SATA_TOP_MAX_PHYS)
+ 		dev_warn(priv->dev, "warning: more ports than PHYs (%#x)\n",
+@@ -243,9 +236,6 @@ static u32 brcm_ahci_get_portmask(struct
+ 	else if (!impl)
+ 		dev_info(priv->dev, "no ports found\n");
+ 
+-	devm_iounmap(&pdev->dev, ahci);
+-	devm_release_mem_region(&pdev->dev, res->start, resource_size(res));
+-
+ 	return impl;
+ }
+ 
+@@ -272,11 +262,10 @@ static int brcm_ahci_suspend(struct devi
+ 	struct ata_host *host = dev_get_drvdata(dev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
+-	int ret;
+ 
+-	ret = ahci_platform_suspend(dev);
+ 	brcm_sata_phys_disable(priv);
+-	return ret;
++
++	return ahci_platform_suspend(dev);
+ }
+ 
+ static int brcm_ahci_resume(struct device *dev)
+@@ -284,11 +273,44 @@ static int brcm_ahci_resume(struct devic
+ 	struct ata_host *host = dev_get_drvdata(dev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
++	int ret;
++
++	/* Make sure clocks are turned on before re-configuration */
++	ret = ahci_platform_enable_clks(hpriv);
++	if (ret)
++		return ret;
+ 
+ 	brcm_sata_init(priv);
+ 	brcm_sata_phys_enable(priv);
+ 	brcm_sata_alpm_init(hpriv);
+-	return ahci_platform_resume(dev);
++
++	/* Since we had to enable clocks earlier on, we cannot use
++	 * ahci_platform_resume() as-is since a second call to
++	 * ahci_platform_enable_resources() would bump up the resources
++	 * (regulators, clocks, PHYs) count artificially so we copy the part
++	 * after ahci_platform_enable_resources().
++	 */
++	ret = ahci_platform_enable_phys(hpriv);
++	if (ret)
++		goto out_disable_phys;
++
++	ret = ahci_platform_resume_host(dev);
++	if (ret)
++		goto out_disable_platform_phys;
++
++	/* We resumed so update PM runtime state */
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
++	return 0;
++
++out_disable_platform_phys:
++	ahci_platform_disable_phys(hpriv);
++out_disable_phys:
++	brcm_sata_phys_disable(priv);
++	ahci_platform_disable_clks(hpriv);
++	return ret;
+ }
+ #endif
+ 
+@@ -340,38 +362,63 @@ static int brcm_ahci_probe(struct platfo
+ 		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
+ 	}
+ 
++	hpriv = ahci_platform_get_resources(pdev);
++	if (IS_ERR(hpriv)) {
++		ret = PTR_ERR(hpriv);
++		goto out_reset;
++	}
++
++	ret = ahci_platform_enable_clks(hpriv);
++	if (ret)
++		goto out_reset;
++
++	/* Must be first so as to configure endianness including that
++	 * of the standard AHCI register space.
++	 */
+ 	brcm_sata_init(priv);
+ 
+-	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
+-	if (!priv->port_mask)
+-		return -ENODEV;
++	/* Initializes priv->port_mask which is used below */
++	priv->port_mask = brcm_ahci_get_portmask(hpriv, priv);
++	if (!priv->port_mask) {
++		ret = -ENODEV;
++		goto out_disable_clks;
++	}
+ 
++	/* Must be done before ahci_platform_enable_phys() */
+ 	brcm_sata_phys_enable(priv);
+ 
+-	hpriv = ahci_platform_get_resources(pdev);
+-	if (IS_ERR(hpriv))
+-		return PTR_ERR(hpriv);
+ 	hpriv->plat_data = priv;
+ 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP;
+ 
+ 	brcm_sata_alpm_init(hpriv);
+ 
+-	ret = ahci_platform_enable_resources(hpriv);
+-	if (ret)
+-		return ret;
+-
+ 	if (priv->quirks & BRCM_AHCI_QUIRK_NO_NCQ)
+ 		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
+ 	hpriv->flags |= AHCI_HFLAG_NO_WRITE_TO_RO;
+ 
++	ret = ahci_platform_enable_phys(hpriv);
++	if (ret)
++		goto out_disable_phys;
++
+ 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_brcm_port_info,
+ 				      &ahci_platform_sht);
+ 	if (ret)
+-		return ret;
++		goto out_disable_platform_phys;
+ 
+ 	dev_info(dev, "Broadcom AHCI SATA3 registered\n");
+ 
+ 	return 0;
++
++out_disable_platform_phys:
++	ahci_platform_disable_phys(hpriv);
++out_disable_phys:
++	brcm_sata_phys_disable(priv);
++out_disable_clks:
++	ahci_platform_disable_clks(hpriv);
++out_reset:
++	if (!IS_ERR_OR_NULL(priv->rcdev))
++		reset_control_assert(priv->rcdev);
++	return ret;
+ }
+ 
+ static int brcm_ahci_remove(struct platform_device *pdev)
+@@ -381,12 +428,12 @@ static int brcm_ahci_remove(struct platf
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
+ 	int ret;
+ 
++	brcm_sata_phys_disable(priv);
++
+ 	ret = ata_platform_remove_one(pdev);
+ 	if (ret)
+ 		return ret;
+ 
+-	brcm_sata_phys_disable(priv);
+-
+ 	return 0;
+ }
+ 
+
+
