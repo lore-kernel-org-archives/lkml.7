@@ -2,106 +2,98 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA8C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006A3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC93220678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3B92070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MtqDiXAL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMfH6Xnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgAGF2j (ORCPT
+        id S1726276AbgAGFdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:28:39 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39265 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgAGF2h (ORCPT
+        Tue, 7 Jan 2020 00:33:14 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38412 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgAGFdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 00:28:37 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so20059603qvk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 21:28:37 -0800 (PST)
+        Tue, 7 Jan 2020 00:33:14 -0500
+Received: by mail-lj1-f193.google.com with SMTP id w1so31395426ljh.5;
+        Mon, 06 Jan 2020 21:33:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LrovKwm+jPRAKOqa0FyTlwwhDmCZ3Mza1hSSAiPcdyE=;
-        b=MtqDiXAL12AeJPWBUKa0PuyE6cxZyNgdZBT8RetZ3anpcZjnYU2Z/vlfeOkWLoxQiW
-         s5ydKbF6FWq0p3Z/mPVk5BBZEpn/k8brjogMHnHSJdOeb5wfGTFxl/hXoALIr1zXYI2n
-         +NWOJ13qjrWEslS+XaPx44uskG7aNyUS8sU18GukZii808jjkdkv0hYtJl68/hQPK6/X
-         9pijLCY6VczH3XtThl47JFuGuihn5YLowK8kOOxc2kMDItOOMM2Ec9HJPkX+rX65Ndor
-         r6exxXB9Sh9o4RFpji5U0KYFoZPZb0CwQFXPJYYUy5gbVW4o1V3OHvsD3+BcLgEfGTep
-         GppA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
+        b=MMfH6XnxLwcfhqY5ZYFKRsc3ald9qks2waZ+5mhHbxfbPDldlzeHEyFnWC32mjlXiD
+         nv5uIdsSajiXc6qMcPW+thKv2TdmQxMyY+KSy0o2fyGK91cU93LX0jr8dTipdjZEisxa
+         n92MWUnqgs+nXMqghBgQrTgDdj9/4KyBOGOOK+ftTLiwW96rgYuiA0ye296hJCljaHKk
+         bS8T8oyQai1Im75g3knKsixURKV1ZaFfm/fzitEejbyMebTkXFfMGS1vFF1HJJpsQYMP
+         FYiPRWPQ+N0sW95n1immb1Q1q4u1FFcuWp31D9cM+7DsZGTBOSb+AWGP9WkopSZPfBhw
+         8JBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LrovKwm+jPRAKOqa0FyTlwwhDmCZ3Mza1hSSAiPcdyE=;
-        b=R9wB0yo+3M0zUMkA+mTiCZDK2jkl3cMORLVxWXgeiyAhqMfdyVRhpkYmMi1Cjl5hk+
-         kbp8tB/meWsoeyhQUpFwCcBnnWwPJqurowxI5F3IBwjdHsJtTnpDyd2W0n9mYd+KmDN4
-         RiM372NsW51Xcjd8GTLiD0lgCCefhgLW7uGwQKD2UyFv55c3fsPFrdEF8lr8e+54NIKZ
-         nUvleOrn+Q4H7fngiBPsprMG0T+/iTS0mVhG12bDB/SMWak3OgA2DZ7HYkpO86hRVpds
-         EPEX9gtu7ZJZr17pv3cRs6rm36cWkDQCfGDr1bysvsO5X/vv1aos0B19sD8t4qSsdU+3
-         soWA==
-X-Gm-Message-State: APjAAAUd4oDCqsVfwFfjmY1H06qeHziviUxBeBT/CTp+fY6bALnXVT3G
-        9TQAvoNLCqJ8/F8S2YNpx1giGh3R9nJWqA+jIyrzQQ==
-X-Google-Smtp-Source: APXvYqyJn9I0DKa741yo+rZndYTlijoLIkHjVG5v1f6oc56h+ugdyOL9zZuDDOwzy2oaNgIKBCAKbWDGORgiOE17Noo=
-X-Received: by 2002:a0c:fa4b:: with SMTP id k11mr81417595qvo.55.1578374916826;
- Mon, 06 Jan 2020 21:28:36 -0800 (PST)
-MIME-Version: 1.0
-References: <1578317369-16045-1-git-send-email-rkambl@codeaurora.org> <1578317369-16045-3-git-send-email-rkambl@codeaurora.org>
-In-Reply-To: <1578317369-16045-3-git-send-email-rkambl@codeaurora.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 7 Jan 2020 10:58:25 +0530
-Message-ID: <CAP245DVdrTyn_h=anra21Psfh5znxKSz-mGM5P72v4aJYTJUwA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: thermal: tsens: Add configuration in yaml
-To:     Rajeshwari <rkambl@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
+        b=bXr3C7oya5CfXPs9LQ8oxzcLO1AzrP5BgIH9PFl6gUQYnrxYOncxf/txR/CblRwQwS
+         U8+DDP/C6c8/x6ZGHoaaZ3RC2YrtJSZVM+LRhCAqBt9aPYDv0YhezI3OW10uwcVYSqIj
+         bjDDFmBa7iIACbp2TyAAqu+7CY4DJlps93+7/WjJiJwikzKH5zee2urVz/h9Z3Q7Q3Mz
+         UzjiSih8AyRxz9Py0digkOVE1BGFPcRJTUUqupj4jXM8PrR94FJJXojvowidnHSgaOsx
+         AatVB3Sg+hoMseapFzzZxVysIDH33cFqprdZ4dMXkVd6B5uVwOlHKAm7ZgVpsat37VhQ
+         NPLA==
+X-Gm-Message-State: APjAAAWFnVu3ZAlKBI46ufBWB8nwCMcizsJjSqF7fzt/u2oEeu1WdrNq
+        SJKwmi9WWEDtVnO+OZoExSQ=
+X-Google-Smtp-Source: APXvYqwQuxl/nNc1WZx6Hq7z8hwzhuGnyiQkFsUMBIML9+phR645Yvg8qHIcxH0R9Etz+2+hei6HEw==
+X-Received: by 2002:a2e:7e05:: with SMTP id z5mr48052335ljc.99.1578375191537;
+        Mon, 06 Jan 2020 21:33:11 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id m21sm29860754lfh.53.2020.01.06.21.33.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 21:33:10 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Scott Liu <scott.liu@emc.com.tw>,
+        James Chen <james.chen@emc.com.tw>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sanm@codeaurora.org, sivaa@codeaurora.org, manaf@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh-dt@kernel.org>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <20191212192420.GD101194@dtor-ws>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
+Date:   Tue, 7 Jan 2020 08:33:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191212192420.GD101194@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 7:00 PM Rajeshwari <rkambl@codeaurora.org> wrote:
->
-> Added configuration in dt-bindings for SC7180.
->
-> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+12.12.2019 22:24, Dmitry Torokhov пишет:
+> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
+>> This series cleans up the driver a bit and implements changes needed to
+>> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
+> 
+> Johnny, could you please take a look at this patch series?
+> 
+> Thanks!
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Hello Johnny,
 
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index eef13b9..c0ed030 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -38,6 +38,7 @@ properties:
->            - enum:
->                - qcom,msm8996-tsens
->                - qcom,msm8998-tsens
-> +              - qcom,sc7180-tsens
->                - qcom,sdm845-tsens
->            - const: qcom,tsens-v2
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Could you please let us know whether you or anyone else from Elan are
+going to take a look at this patchset anytime soon?
