@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E71C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D38AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256382187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D26D24676
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430688;
-	bh=05YWyL5Q0ok9u+jLeXPtnubZc02gcD0Qx6Yr/YHUuRw=;
+	s=default; t=1578430691;
+	bh=NNBDTmI8xWCZc994tBLJOC1MAmxYjRS2Dai03XnsvJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cyaot7IBPpNeVbr2+kfTdyoOacZbF2AeCTg1x8CNEMxj3b0gPlWlahfo1Ei3IxOPj
-	 Fj+WMuh8a1oT8z/q7VMUVbcBc2n9s+pYEe8HsJupvq1WgVxZYQ2LJujmR2slPLjIrn
-	 F8Bs/eE5z4GJOhaUELjTV2VhDWi6dR2JuadOnue4=
+	b=yPiUsLAcZHwZS4reOajOLJKuvRCkY9CmgCj40YlwW/KsM9j7GazFcjhS/+dyBsf23
+	 yZNTr9V58NNXz/xVNuK7N/VlbhzONraLJBYsxPrSNJGldq3fHRu+z35SBFV9b4Xzkp
+	 7547z9JwFK0NoxatQeoIogbaOgKqkKTw9OOrzbKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgAGU6H (ORCPT
+        id S1727790AbgAGU6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56532 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727752AbgAGU6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:04 -0500
+        id S1727772AbgAGU6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 987C62187F;
-        Tue,  7 Jan 2020 20:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F9E21744;
+        Tue,  7 Jan 2020 20:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430684;
-        bh=05YWyL5Q0ok9u+jLeXPtnubZc02gcD0Qx6Yr/YHUuRw=;
+        s=default; t=1578430686;
+        bh=NNBDTmI8xWCZc994tBLJOC1MAmxYjRS2Dai03XnsvJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUnBImKamlOAJuYf4ZRZ74k/XEjb+1iYo3JGRCVQBvtH8T1g9txwscE6Tn3ePMd42
-         aRIFCi/erC4ztpKhojzd5H+xxxkN8KnbZFdQhAA28x7nZ6d8PCaa2d7fckUrNot447
-         TPTkVOWZqXgLHZlulYLJbDf5utNitF3JHos78qS4=
+        b=Cq8ZBqmCSeT6jru/MwxgVZT9imnoLlTx7LpFsYyul42iZNW+xpI0S+UEpC3d6bKAq
+         90OHW1ScwDQQ6AlLCwoDzsULqg2oWLkU/p5T9hL2iDfJW++aCiIxGSDTgrz8F1Exhh
+         ZyYad9ZFzFreqNhxjNGiKcLxhgW3GvZyKP4So9gU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/191] ALSA: hda/realtek - Enable the bass speaker of ASUS UX431FLC
-Date:   Tue,  7 Jan 2020 21:52:54 +0100
-Message-Id: <20200107205335.890950041@linuxfoundation.org>
+Subject: [PATCH 5.4 055/191] PCI: Add a helper to check Power Resource Requirements _PR3 existence
+Date:   Tue,  7 Jan 2020 21:52:55 +0100
+Message-Id: <20200107205335.943418103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,108 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 48e01504cf5315cbe6de9b7412e792bfcc3dd9e1 ]
+[ Upstream commit 52525b7a3cf82adec5c6cf0ecbd23ff228badc94 ]
 
-ASUS reported that there's an bass speaker in addition to internal
-speaker and it uses DAC 0x02. It was not enabled in the commit
-436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS
-UX431FLC") which only enables the amplifier and the front speaker.
-This commit enables the bass speaker on top of the aforementioned
-work to improve the acoustic experience.
+A driver may want to know the existence of _PR3, to choose different
+runtime suspend behavior. A user will be add in next patch.
 
-Fixes: 436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS UX431FLC")
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191230031118.95076-1-chiu@endlessm.com
+This is mostly the same as nouveau_pr3_present().
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/r/20191018073848.14590-1-kai.heng.feng@canonical.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 38 +++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+ drivers/pci/pci.c   | 18 ++++++++++++++++++
+ include/linux/pci.h |  2 ++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index dfcd0e611068..e849cf681e23 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5893,11 +5893,12 @@ enum {
- 	ALC256_FIXUP_ASUS_HEADSET_MIC,
- 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
- 	ALC299_FIXUP_PREDATOR_SPK,
--	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
- 	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
--	ALC294_FIXUP_ASUS_INTSPK_GPIO,
- 	ALC289_FIXUP_DELL_SPK2,
- 	ALC289_FIXUP_DUAL_SPK,
-+	ALC294_FIXUP_SPK2_TO_DAC1,
-+	ALC294_FIXUP_ASUS_DUAL_SPK,
-+
- };
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a97e2571a527..fcfaadc774ee 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5854,6 +5854,24 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+ 	return 0;
+ }
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6968,16 +6969,6 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{ }
- 		}
- 	},
--	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
--		.type = HDA_FIXUP_PINS,
--		.v.pins = (const struct hda_pintbl[]) {
--			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
--			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
--			{ }
--		},
--		.chained = true,
--		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
--	},
- 	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -6988,13 +6979,6 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
- 	},
--	[ALC294_FIXUP_ASUS_INTSPK_GPIO] = {
--		.type = HDA_FIXUP_FUNC,
--		/* The GPIO must be pulled to initialize the AMP */
--		.v.func = alc_fixup_gpio4,
--		.chained = true,
--		.chain_id = ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
--	},
- 	[ALC289_FIXUP_DELL_SPK2] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7010,6 +6994,20 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC289_FIXUP_DELL_SPK2
- 	},
-+	[ALC294_FIXUP_SPK2_TO_DAC1] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_speaker2_to_dac1,
-+		.chained = true,
-+		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
-+	},
-+	[ALC294_FIXUP_ASUS_DUAL_SPK] = {
-+		.type = HDA_FIXUP_FUNC,
-+		/* The GPIO must be pulled to initialize the AMP */
-+		.v.func = alc_fixup_gpio4,
-+		.chained = true,
-+		.chain_id = ALC294_FIXUP_SPK2_TO_DAC1
-+	},
++#ifdef CONFIG_ACPI
++bool pci_pr3_present(struct pci_dev *pdev)
++{
++	struct acpi_device *adev;
 +
- };
++	if (acpi_disabled)
++		return false;
++
++	adev = ACPI_COMPANION(&pdev->dev);
++	if (!adev)
++		return false;
++
++	return adev->power.flags.power_resources &&
++		acpi_has_method(adev->handle, "_PR3");
++}
++EXPORT_SYMBOL_GPL(pci_pr3_present);
++#endif
++
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index f9088c89a534..1d15c5d49cdd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2310,9 +2310,11 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
  
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7171,7 +7169,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
--	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_GPIO),
-+	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
+ void
+ pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
++bool pci_pr3_present(struct pci_dev *pdev);
+ #else
+ static inline struct irq_domain *
+ pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
++static bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+ #endif
+ 
+ #ifdef CONFIG_EEH
 -- 
 2.20.1
 
