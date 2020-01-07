@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F48C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88A3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44154206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C5A206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432256;
-	bh=rjfiq6c//nGl2IPh016mKpsk1jDqtQkxkkZfg1r3eVU=;
+	s=default; t=1578432262;
+	bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3Kif2ERBR4LZyYijCH+/Fd9AHLZgUs00XsXni6uwieEOgVeCxn9mdSsi1pyKIlYv
-	 MzSyHROMgBPPC6oaKFbSP36qL+h41Vte6V7GSyyCIGI6pUqI8WLVYdlkF1U9zYWk1X
-	 6FpFXxj8lHuO7/g+U6axVFutFJC5k823Zik75fmQ=
+	b=GlO4Vx3bJuwpes79Q9z44oEGb9dYlefuIQdaERbp4aVlubiPgzTiXfvV6L8op+LeA
+	 8DlBqD2U3t/W4znU2y6SqUBh3iitMPNBL5Di4zOTA+I7CWVl97Uzd0cmaWlWpyso+U
+	 WEt9AoEwt9kjxEO7oR4WXovxLTRI3KpH0WK7SrL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgAGVYO (ORCPT
+        id S1729143AbgAGVYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:24:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:24:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgAGVAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:44 -0500
+        id S1728382AbgAGVAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2883F2087F;
-        Tue,  7 Jan 2020 21:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D4392081E;
+        Tue,  7 Jan 2020 21:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430843;
-        bh=rjfiq6c//nGl2IPh016mKpsk1jDqtQkxkkZfg1r3eVU=;
+        s=default; t=1578430834;
+        bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6nTYgSXRP/MG5YXW7V5nHKC5d9oZ3/K9/KiS3jdqAD53yUh1ue03S3dIZwKkm2V+
-         JCu91bHTDVfp/znImIZRh52ZSPfgcIYkQLocWDqi1NREj0iRIpFeq2ZIi7FuNMkYY2
-         gfAICVX7OltAyPXymMAEqLBQRdMqH4LBqvvrJcuY=
+        b=OQqo3uhZqEpIU5Ghsa9IZJvOQE33sWl0kuqDYE09bnS1Eb2SJqJogKvEOyogmd6+N
+         seqwCMJgrykXV7ihmOUjaQ6r8LPWIvJKIAmzBHjzV7iW/SsJDQjlhSbhJd1V+MSnMx
+         KzFydMWo+SH7z71vCOTwKQTBde/CIFoLoIRYlCJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 118/191] tracing: Fix endianness bug in histogram trigger
-Date:   Tue,  7 Jan 2020 21:53:58 +0100
-Message-Id: <20200107205339.295739293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Tommi T. Rantala" <tommi.t.rantala@nokia.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH 5.4 114/191] rseq/selftests: Fix: Namespace gettid() for compatibility with glibc 2.30
+Date:   Tue,  7 Jan 2020 21:53:54 +0100
+Message-Id: <20200107205339.083839626@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,58 +67,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit fe6e096a5bbf73a142f09c72e7aa2835026eb1a3 upstream.
+commit 8df34c56321479bfa1ec732c675b686c2b4df412 upstream.
 
-At least on PA-RISC and s390 synthetic histogram triggers are failing
-selftests because trace_event_raw_event_synth() always writes a 64 bit
-values, but the reader expects a field->size sized value. On little endian
-machines this doesn't hurt, but on big endian this makes the reader always
-read zero values.
+glibc 2.30 introduces gettid() in public headers, which clashes with
+the internal static definition within rseq selftests.
 
-Link: http://lore.kernel.org/linux-trace-devel/20191218074427.96184-4-svens@linux.ibm.com
+Rename gettid() to rseq_gettid() to eliminate this symbol name clash.
 
-Cc: stable@vger.kernel.org
-Fixes: 4b147936fa509 ("tracing: Add support for 'synthetic' events")
-Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-by: Tommi T. Rantala <tommi.t.rantala@nokia.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Tommi T. Rantala <tommi.t.rantala@nokia.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: <stable@vger.kernel.org>	# v4.18+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_hist.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rseq/param_test.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -911,7 +911,26 @@ static notrace void trace_event_raw_even
- 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
--			entry->fields[n_u64] = var_ref_vals[var_ref_idx + i];
-+			struct synth_field *field = event->fields[i];
-+			u64 val = var_ref_vals[var_ref_idx + i];
-+
-+			switch (field->size) {
-+			case 1:
-+				*(u8 *)&entry->fields[n_u64] = (u8)val;
-+				break;
-+
-+			case 2:
-+				*(u16 *)&entry->fields[n_u64] = (u16)val;
-+				break;
-+
-+			case 4:
-+				*(u32 *)&entry->fields[n_u64] = (u32)val;
-+				break;
-+
-+			default:
-+				entry->fields[n_u64] = val;
-+				break;
-+			}
- 			n_u64++;
- 		}
+--- a/tools/testing/selftests/rseq/param_test.c
++++ b/tools/testing/selftests/rseq/param_test.c
+@@ -15,7 +15,7 @@
+ #include <errno.h>
+ #include <stddef.h>
+ 
+-static inline pid_t gettid(void)
++static inline pid_t rseq_gettid(void)
+ {
+ 	return syscall(__NR_gettid);
+ }
+@@ -373,11 +373,12 @@ void *test_percpu_spinlock_thread(void *
+ 		rseq_percpu_unlock(&data->lock, cpu);
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
  	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -454,11 +455,12 @@ void *test_percpu_inc_thread(void *arg)
+ 		} while (rseq_unlikely(ret));
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -605,7 +607,7 @@ void *test_percpu_list_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -796,7 +798,7 @@ void *test_percpu_buffer_thread(void *ar
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -1011,7 +1013,7 @@ void *test_percpu_memcpy_buffer_thread(v
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
 
 
