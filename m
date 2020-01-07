@@ -2,396 +2,70 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA06C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B6CC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF3A206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="i/0Zn/GU"
+	by mail.kernel.org (Postfix) with ESMTP id 8F862206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgAGR7p (ORCPT
+        id S1728637AbgAGSAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:59:45 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37454 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbgAGR7o (ORCPT
+        Tue, 7 Jan 2020 13:00:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32919 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgAGSAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:59:44 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so25851plz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:59:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6LG36Q0SWhG/CvbxDWW6ihwZbk0PyIKiASNL1qN4jbs=;
-        b=i/0Zn/GUy4XYg4TU3s98lgrvvX6bNyDP9vudbmIx+8iTgz4X+6uXf7MtEXR+mC7YHl
-         cFsxyRTyx7yzQPcgo47n0f4D5VENY/tCRYikuP5yv4gWS0q3zepcZvUUg2CEqzbETsrN
-         xLppc/bO4KoFDvdBrMjsixXGJLmBcn1wSVAxQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6LG36Q0SWhG/CvbxDWW6ihwZbk0PyIKiASNL1qN4jbs=;
-        b=jsN7lmMUmRZ0qSiJkhBqG5UbXnZEAcUD68aof04bwZESzqgAA7SiOttTllFAzTHho4
-         fGTVaPpszrxrh0b/GuCuyV66oyGiL8zccWJPYvmfoF9KVyjqtB0ZAsJEwX5c41r9Tub8
-         ZWcyRnM/CmXradxQ8gzEFLQSbi3vw6y8p75pkQoyQsM9whvhoggpBV7E88ErOwjTpKWT
-         22O89jsxx2o7t1FykeYti3PJA8lVm/Vu5E/QBI8CSo7iymrSzP/zG9xL21hZefYRsyNW
-         +HrhMTQOlWV/KDD3AJP9EE+BbqAjUW3auAlyS/P/mE7hw+44kL0v8dx/EB3bBG6HH3GA
-         TwrQ==
-X-Gm-Message-State: APjAAAXbFru67X7anaUA4xYnY1HsXwxJcF2eB3gbbRevI2xTjuoYTF1X
-        TzrzaFHu6xlw9CY9d5CXqIlhRelqnkl9wg==
-X-Google-Smtp-Source: APXvYqysf2AXME1Qm/O7vPO/Ou6BnNuDgIMkCsdqcKGejU8Aw+TCdQtJkoA5QpSA61it64agmoHf2A==
-X-Received: by 2002:a17:90a:9dc3:: with SMTP id x3mr1019412pjv.45.1578419983503;
-        Tue, 07 Jan 2020 09:59:43 -0800 (PST)
-Received: from ubuntu.netflix.com (166.sub-174-194-208.myvzw.com. [174.194.208.166])
-        by smtp.gmail.com with ESMTPSA id g7sm210324pfq.33.2020.01.07.09.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 09:59:42 -0800 (PST)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Sargun Dhillon <sargun@sargun.me>, tycho@tycho.ws,
-        jannh@google.com, cyphar@cyphar.com, christian.brauner@ubuntu.com,
-        oleg@redhat.com, luto@amacapital.net, viro@zeniv.linux.org.uk,
-        gpascutto@mozilla.com, ealvarez@mozilla.com, fweimer@redhat.com,
-        jld@mozilla.com, arnd@arndb.de
-Subject: [PATCH v9 4/4] test: Add test for pidfd getfd
-Date:   Tue,  7 Jan 2020 09:59:27 -0800
-Message-Id: <20200107175927.4558-5-sargun@sargun.me>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200107175927.4558-1-sargun@sargun.me>
-References: <20200107175927.4558-1-sargun@sargun.me>
+        Tue, 7 Jan 2020 13:00:16 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iot9J-0000p9-CV; Tue, 07 Jan 2020 18:00:13 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: remove redundant assignment to variable icid
+Date:   Tue,  7 Jan 2020 18:00:13 +0000
+Message-Id: <20200107180013.124501-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following tests:
-  * Fetch FD, and then compare via kcmp
-  * Make sure getfd can be blocked by blocking ptrace_may_access
-  * Making sure fetching bad FDs fails
-  * Make sure trying to set flags to non-zero results in an EINVAL
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+Variable icid is being rc is assigned with a value that is never
+read. The assignment is redundant and can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   2 +-
- tools/testing/selftests/pidfd/pidfd.h         |   9 +
- .../selftests/pidfd/pidfd_getfd_test.c        | 249 ++++++++++++++++++
- 4 files changed, 260 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
+ net/bluetooth/l2cap_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
-index 8d069490e17b..3a779c084d96 100644
---- a/tools/testing/selftests/pidfd/.gitignore
-+++ b/tools/testing/selftests/pidfd/.gitignore
-@@ -2,3 +2,4 @@ pidfd_open_test
- pidfd_poll_test
- pidfd_test
- pidfd_wait
-+pidfd_getfd_test
-diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-index 43db1b98e845..75a545861375 100644
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS += -g -I../../../../usr/include/ -pthread
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 1bca608e0170..195459a1e53e 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -5081,7 +5081,6 @@ static inline int l2cap_move_channel_req(struct l2cap_conn *conn,
+ 	chan->move_role = L2CAP_MOVE_ROLE_RESPONDER;
+ 	l2cap_move_setup(chan);
+ 	chan->move_id = req->dest_amp_id;
+-	icid = chan->dcid;
  
--TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait
-+TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-index c6bc68329f4b..d482515604db 100644
---- a/tools/testing/selftests/pidfd/pidfd.h
-+++ b/tools/testing/selftests/pidfd/pidfd.h
-@@ -36,6 +36,10 @@
- #define __NR_clone3 -1
- #endif
- 
-+#ifndef __NR_pidfd_getfd
-+#define __NR_pidfd_getfd -1
-+#endif
-+
- /*
-  * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
-  * That means, when it wraps around any pid < 300 will be skipped.
-@@ -84,4 +88,9 @@ static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
- 	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
- }
- 
-+static inline int sys_pidfd_getfd(int pidfd, int fd, int flags)
-+{
-+	return syscall(__NR_pidfd_getfd, pidfd, fd, flags);
-+}
-+
- #endif /* __PIDFD_H */
-diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-new file mode 100644
-index 000000000000..401a7c1d0312
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <linux/types.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <sys/socket.h>
-+#include <linux/kcmp.h>
-+
-+#include "pidfd.h"
-+#include "../kselftest.h"
-+#include "../kselftest_harness.h"
-+
-+/*
-+ * UNKNOWN_FD is an fd number that should never exist in the child, as it is
-+ * used to check the negative case.
-+ */
-+#define UNKNOWN_FD 111
-+#define UID_NOBODY 65535
-+
-+static int sys_kcmp(pid_t pid1, pid_t pid2, int type, unsigned long idx1,
-+		    unsigned long idx2)
-+{
-+	return syscall(__NR_kcmp, pid1, pid2, type, idx1, idx2);
-+}
-+
-+static int sys_memfd_create(const char *name, unsigned int flags)
-+{
-+	return syscall(__NR_memfd_create, name, flags);
-+}
-+
-+static int __child(int sk, int memfd)
-+{
-+	int ret;
-+	char buf;
-+
-+	/*
-+	 * Ensure we don't leave around a bunch of orphaned children if our
-+	 * tests fail.
-+	 */
-+	ret = prctl(PR_SET_PDEATHSIG, SIGKILL);
-+	if (ret) {
-+		fprintf(stderr, "%s: Child could not set DEATHSIG\n",
-+			strerror(errno));
-+		return -1;
-+	}
-+
-+	ret = send(sk, &memfd, sizeof(memfd), 0);
-+	if (ret != sizeof(memfd)) {
-+		fprintf(stderr, "%s: Child failed to send fd number\n",
-+			strerror(errno));
-+		return -1;
-+	}
-+
-+	/*
-+	 * The fixture setup is completed at this point. The tests will run.
-+	 *
-+	 * This blocking recv enables the parent to message the child.
-+	 * Either we will read 'P' off of the sk, indicating that we need
-+	 * to disable ptrace, or we will read a 0, indicating that the other
-+	 * side has closed the sk. This occurs during fixture teardown time,
-+	 * indicating that the child should exit.
-+	 */
-+	while ((ret = recv(sk, &buf, sizeof(buf), 0)) > 0) {
-+		if (buf == 'P') {
-+			ret = prctl(PR_SET_DUMPABLE, 0);
-+			if (ret < 0) {
-+				fprintf(stderr,
-+					"%s: Child failed to disable ptrace\n",
-+					strerror(errno));
-+				return -1;
-+			}
-+		} else {
-+			fprintf(stderr, "Child received unknown command %c\n",
-+				buf);
-+			return -1;
-+		}
-+		ret = send(sk, &buf, sizeof(buf), 0);
-+		if (ret != 1) {
-+			fprintf(stderr, "%s: Child failed to ack\n",
-+				strerror(errno));
-+			return -1;
-+		}
-+	}
-+	if (ret < 0) {
-+		fprintf(stderr, "%s: Child failed to read from socket\n",
-+			strerror(errno));
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int child(int sk)
-+{
-+	int memfd, ret;
-+
-+	memfd = sys_memfd_create("test", 0);
-+	if (memfd < 0) {
-+		fprintf(stderr, "%s: Child could not create memfd\n",
-+			strerror(errno));
-+		ret = -1;
-+	} else {
-+		ret = __child(sk, memfd);
-+		close(memfd);
-+	}
-+
-+	close(sk);
-+	return ret;
-+}
-+
-+FIXTURE(child)
-+{
-+	/*
-+	 * remote_fd is the number of the FD which we are trying to retrieve
-+	 * from the child.
-+	 */
-+	int remote_fd;
-+	/* pid points to the child which we are fetching FDs from */
-+	pid_t pid;
-+	/* pidfd is the pidfd of the child */
-+	int pidfd;
-+	/*
-+	 * sk is our side of the socketpair used to communicate with the child.
-+	 * When it is closed, the child will exit.
-+	 */
-+	int sk;
-+};
-+
-+FIXTURE_SETUP(child)
-+{
-+	int ret, sk_pair[2];
-+
-+	ASSERT_EQ(0, socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair)) {
-+		TH_LOG("%s: failed to create socketpair", strerror(errno));
-+	}
-+	self->sk = sk_pair[0];
-+
-+	self->pid = fork();
-+	ASSERT_GE(self->pid, 0);
-+
-+	if (self->pid == 0) {
-+		close(sk_pair[0]);
-+		if (child(sk_pair[1]))
-+			_exit(EXIT_FAILURE);
-+		_exit(EXIT_SUCCESS);
-+	}
-+
-+	close(sk_pair[1]);
-+
-+	self->pidfd = sys_pidfd_open(self->pid, 0);
-+	ASSERT_GE(self->pidfd, 0);
-+
-+	/*
-+	 * Wait for the child to complete setup. It'll send the remote memfd's
-+	 * number when ready.
-+	 */
-+	ret = recv(sk_pair[0], &self->remote_fd, sizeof(self->remote_fd), 0);
-+	ASSERT_EQ(sizeof(self->remote_fd), ret);
-+}
-+
-+FIXTURE_TEARDOWN(child)
-+{
-+	EXPECT_EQ(0, close(self->pidfd));
-+	EXPECT_EQ(0, close(self->sk));
-+
-+	EXPECT_EQ(0, wait_for_pid(self->pid));
-+}
-+
-+TEST_F(child, disable_ptrace)
-+{
-+	int uid, fd;
-+	char c;
-+
-+	/*
-+	 * Turn into nobody if we're root, to avoid CAP_SYS_PTRACE
-+	 *
-+	 * The tests should run in their own process, so even this test fails,
-+	 * it shouldn't result in subsequent tests failing.
-+	 */
-+	uid = getuid();
-+	if (uid == 0)
-+		ASSERT_EQ(0, seteuid(UID_NOBODY));
-+
-+	ASSERT_EQ(1, send(self->sk, "P", 1, 0));
-+	ASSERT_EQ(1, recv(self->sk, &c, 1, 0));
-+
-+	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-+	EXPECT_EQ(-1, fd);
-+	EXPECT_EQ(EPERM, errno);
-+
-+	if (uid == 0)
-+		ASSERT_EQ(0, seteuid(0));
-+}
-+
-+TEST_F(child, fetch_fd)
-+{
-+	int fd, ret;
-+
-+	fd = sys_pidfd_getfd(self->pidfd, self->remote_fd, 0);
-+	ASSERT_GE(fd, 0);
-+
-+	EXPECT_EQ(0, sys_kcmp(getpid(), self->pid, KCMP_FILE, fd, self->remote_fd));
-+
-+	ret = fcntl(fd, F_GETFD);
-+	ASSERT_GE(ret, 0);
-+	EXPECT_GE(ret & FD_CLOEXEC, 0);
-+
-+	close(fd);
-+}
-+
-+TEST_F(child, test_unknown_fd)
-+{
-+	int fd;
-+
-+	fd = sys_pidfd_getfd(self->pidfd, UNKNOWN_FD, 0);
-+	EXPECT_EQ(-1, fd) {
-+		TH_LOG("getfd succeeded while fetching unknown fd");
-+	};
-+	EXPECT_EQ(EBADF, errno) {
-+		TH_LOG("%s: getfd did not get EBADF", strerror(errno));
-+	}
-+}
-+
-+TEST(flags_set)
-+{
-+	ASSERT_EQ(-1, sys_pidfd_getfd(0, 0, 1));
-+	EXPECT_EQ(errno, EINVAL);
-+}
-+
-+#if __NR_pidfd_getfd == -1
-+int main(void)
-+{
-+	fprintf(stderr, "__NR_pidfd_getfd undefined. The pidfd_getfd syscall is unavailable. Test aborting\n");
-+	return KSFT_SKIP;
-+}
-+#else
-+TEST_HARNESS_MAIN
-+#endif
+ 	if (req->dest_amp_id == AMP_ID_BREDR) {
+ 		/* Moving to BR/EDR */
 -- 
-2.20.1
+2.24.0
 
