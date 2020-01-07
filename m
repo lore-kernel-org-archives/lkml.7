@@ -2,107 +2,100 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970B8C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211C8C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6956A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AFE208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBgQGkTj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NxDpUxb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728315AbgAGOSD (ORCPT
+        id S1728229AbgAGOVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:18:03 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34015 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGOSD (ORCPT
+        Tue, 7 Jan 2020 09:21:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37237 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGOVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:18:03 -0500
-Received: by mail-ed1-f68.google.com with SMTP id l8so50495004edw.1;
-        Tue, 07 Jan 2020 06:18:01 -0800 (PST)
+        Tue, 7 Jan 2020 09:21:23 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so41545918wru.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:21:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cKn214CEjBNG7kjYm64uHpt+0exTR9cqmigKTJuL7sc=;
-        b=NBgQGkTjIrxkrvtGKzY+LwM7PoXR1+Z4FDvYRNMxUc9sXB9Qj1PtFZw+XxwrxOlXpE
-         auCHUKXNXq8TfPhAIj1rX6Z32EJdyqWEc1OsD9efv7+IYrs6Iq9hzaEm8UKv9ukRa/Fk
-         8quiK/UFN9IefKKa61fUJM1Af9WBXrCQm91wSHP27u4TBZ5Jy8pt3+LkEVyUYVxvegHm
-         MQgrhLCOxpVY55eslwewDXwWFkE5/5h+iSYkHpRtUnyaV7tVki8ds3JPoZHZMtoB5pVy
-         gA1WtwllvYO3V7pA6nqb3xqABEDb+xzXpP2H+LeySncQA4yvZIJEZOThMEEHhzBOHrOv
-         Q4Yw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=azgP9PCCbsROjZ/Zv0Cietnsuop473LJEmV+uxcq2/Q=;
+        b=NxDpUxb8VwIteetS34QYQv+7Ifm+Vgr/QSMt8l1vjZGmQHeyjDs0Im3CvXbP173MX9
+         XCrDRyrfU6D1XY5Jm5Mju0iCP0LeFS74KyXXBpXBOspr8hxS9tCCAIGrnFKhk4y+jPqj
+         lC2Bkt9HWBZEXiKSgTPtw8WPVQwS1VmCbmtKItgUsIsJSGesCjrKAG67F24pczDSIB4V
+         88rS3U6NK7OwYSBH8vcxJ+PgMCiWjChWIKdvSySGU1n4H6aWakK7DLO8CQnA69kYX9sd
+         Hvp68g5tkuUVY3IJBX2o/stx9jTlnp9zgIQUSiKLrOs5CjMnUBBvyfmImZuWhXAGMDBo
+         epaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cKn214CEjBNG7kjYm64uHpt+0exTR9cqmigKTJuL7sc=;
-        b=A6qYUz+T3EScvvyNbWyf2dnCWZabOlmP5M1HOJJTQk0CZca3yMfs/0FdhKCPTOwoxv
-         zQVLqUjVOrSjwkgO/oIV2yI2zxYs3adEgkHnRpIvfd2GzE89tPsqGIQ5PJ7nmSFiW9lc
-         14P68x3JluvK4+6goqCchnNEP9JdIqa2V3c0KiCe2TGpbW3hfwYsJhM5WHsBddnEzNiI
-         Cnb8OnTRxdVuQKF2E9tag0yuQPx4xRyAxaoZbPMeoT8tn8pICYLtVMt27PtO+EpLhqbl
-         6rNcqdYT3QlHFMGdQZDGov/nNN24np6aI9cxyLHFoufPxyRI3bERLVF/BfFgxcRIbEnO
-         nJlQ==
-X-Gm-Message-State: APjAAAUi87wAs25ekmlL5/6FlJNQhba9Rd2KGQNKwtLs7UrJJetczQkr
-        R6DDclEiDG2VJo0PDf/uAdTLtDSm40rdf+AGU28=
-X-Google-Smtp-Source: APXvYqw/Y9vV9nQJHreGqJzWs/xT2A6EuhpCfFQ9oFLIVY4iT1hA01ZNvlNuSvDCq46b5FrIEMv7tnQ1St495dvKquA=
-X-Received: by 2002:a17:906:af6d:: with SMTP id os13mr2503286ejb.86.1578406681044;
- Tue, 07 Jan 2020 06:18:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=azgP9PCCbsROjZ/Zv0Cietnsuop473LJEmV+uxcq2/Q=;
+        b=ud+gEYeiNgI/Z0SGDytjqbGzLECupeIPupgjyJcLx9p1Lc7/Eh4jKbv3vqJPREGJim
+         F2Zab/caBNBzwRmJBpsasZfuIQLZ8BrSoRtOJlKesjOiQIhph7nahxM+QT/zcbwagFgA
+         Nn5bDVXbc6DkRBKHX2dPaE9MIgE7JHqJ2U30aJqRrDk0zfQih+k2CwX6/AzbGPdWA55+
+         zsS1npbR8tC1krdB7BGeKFdp2wqFHE47REJm0/3Sq5HA3Gw5mP4C0XFxCMNoWWiRfzmt
+         x9R5AgdV5hTB7UiEHjzfQdrCe0/psCsr4huxfrULrp8TLK6WuwuFSRH8lWLtIVN1pe7O
+         SoFg==
+X-Gm-Message-State: APjAAAUmnOWFY17JTa1tN3DiyEGbNSyUk4GT7J56SRmyTQ4OaVQM/2+l
+        QMSmsD2P1H7kC1Gex/FcpHkVP21vfCA=
+X-Google-Smtp-Source: APXvYqzNo1kOfNgyBHgzFUZVdegqI1QcWuFJbzR0+8/g+AShalBaRufT2SoZy1pZBCofT16eBQid4g==
+X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr104817988wrw.255.1578406881664;
+        Tue, 07 Jan 2020 06:21:21 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id a1sm27110377wmj.40.2020.01.07.06.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 06:21:21 -0800 (PST)
+Date:   Tue, 7 Jan 2020 14:21:35 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] mfd: tqmx86: remove set but not used variable 'i2c_ien'
+Message-ID: <20200107142135.GL14821@dell>
+References: <20200103120925.460-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-References: <20200107141454.44420-1-yuehaibing@huawei.com>
-In-Reply-To: <20200107141454.44420-1-yuehaibing@huawei.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 7 Jan 2020 16:17:50 +0200
-Message-ID: <CA+h21hqejk3kJ1RigKe31ZFo-qvqFYf8eyzV616S3BpkHz7Hvw@mail.gmail.com>
-Subject: Re: [PATCH net-next] enetc: Fix inconsistent IS_ERR and PTR_ERR
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103120925.460-1-yukuai3@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 at 16:16, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> The proper pointer to be passed as argument is hw
-> Detected using Coccinelle.
->
-> Fixes: 6517798dd343 ("enetc: Make MDIO accessors more generic and export to include/linux/fsl")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Fri, 03 Jan 2020, yu kuai wrote:
+
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/mfd/tqmx86.c: In function ‘tqmx86_probe’:
+> drivers/mfd/tqmx86.c:161:29: warning: variable ‘i2c_ien’
+> set but not used I[-Wunused-but-set-variable]
+> 
+> It is never used, and so can be removed.
+> 
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
 > ---
+>  drivers/mfd/tqmx86.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Applied, thanks.
 
-Thanks a lot!
-
->  drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-> index 87c0e96..ebc635f 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-> @@ -27,7 +27,7 @@ static int enetc_pci_mdio_probe(struct pci_dev *pdev,
->         }
->
->         hw = enetc_hw_alloc(dev, port_regs);
-> -       if (IS_ERR(enetc_hw_alloc)) {
-> +       if (IS_ERR(hw)) {
->                 err = PTR_ERR(hw);
->                 goto err_hw_alloc;
->         }
-> --
-> 2.7.4
->
->
-
--Vladimir
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
