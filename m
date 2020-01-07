@@ -2,129 +2,208 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C780DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9FC32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDA42072C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Tfyl7hLY"
+	by mail.kernel.org (Postfix) with ESMTP id F406220715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 02:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgAGCFd (ORCPT
+        id S1727479AbgAGCGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 21:05:33 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38625 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgAGCFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 21:05:32 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sG1K0wb1z9sPK;
-        Tue,  7 Jan 2020 13:05:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1578362729;
-        bh=pY6TIy9SR4tEyAS0HbPqGRNPZ2UwwqiyR4Kh28zeFFI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Tfyl7hLYmcqDio6TzmoNX4eEpU/VH1XedfybafyjFJyg/jxoC61dMnx7t5GnDfrfJ
-         Gr7//aHjlvnqj55C8bvTjCcqWFo+aSO1NPh7AsQPq5aFEIKTLm7yKV6qDAcnALHt8h
-         A7VXpu10GywS0S7g2Qj47S6T+C/eV1wQThf24GFD1DUv7X4l/x0a3RumaFeZnoadMp
-         qF7E7AAViYFuxl4ze6gkiOSgHcYuV3D520w4SgqTIh/zS3g1JU6Nt9kTdkUmsq7nrn
-         jzPazOZziHv4zPXU98iZXPnck+e4y7P+Z84onVCXahK4jbpT70RvV1V6lSPbpikXa9
-         V694qnRtkDCZA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Robert Richter <rric@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oprofile-list@lists.sf.net, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all architectures
-In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
-References: <20200102145552.1853992-1-arnd@arndb.de> <20200102145552.1853992-3-arnd@arndb.de>
-Date:   Tue, 07 Jan 2020 13:05:22 +1100
-Message-ID: <87woa410nx.fsf@mpe.ellerman.id.au>
+        Mon, 6 Jan 2020 21:06:31 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38564 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbgAGCGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 21:06:30 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id ABE66277412
+Message-ID: <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com>
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip
+ MIPI RX D-PHY yaml bindings
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Date:   Mon, 06 Jan 2020 23:06:12 -0300
+In-Reply-To: <20200107001055.GE22189@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+         <20191227200116.2612137-10-helen.koike@collabora.com>
+         <20200107001055.GE22189@pendragon.ideasonboard.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-> In order to avoid needless #ifdef CONFIG_COMPAT checks,
-> move the compat_ptr() definition to linux/compat.h
-> where it can be seen by any file regardless of the
-> architecture.
->
-> Only s390 needs a special definition, this can use the
-> self-#define trick we have elsewhere.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/include/asm/compat.h   | 17 -----------------
->  arch/mips/include/asm/compat.h    | 18 ------------------
->  arch/parisc/include/asm/compat.h  | 17 -----------------
->  arch/powerpc/include/asm/compat.h | 17 -----------------
->  arch/powerpc/oprofile/backtrace.c |  2 +-
+Hi Laurent,
 
-LGTM.
+Thanks a lot for reviewing this.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> Hi Helen,
+> 
+> Thank you for the patch.
+> 
+> On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > 
+> > This was tested and verified with:
+> > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
+> > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > 
+> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > 
+> > ---
+> > 
+> > Changes in v12:
+> > - The commit replaces the following commit in previous series named
+> > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > This new patch adds yaml binding and was verified with
+> > make dtbs_check and make dt_binding_check
+> > 
+> > Changes in v11: None
+> > Changes in v10:
+> > - unsquash
+> > 
+> > Changes in v9:
+> > - fix title division style
+> > - squash
+> > - move to staging
+> > 
+> > Changes in v8: None
+> > Changes in v7:
+> > - updated doc with new design and tested example
+> > 
+> >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> >  1 file changed, 75 insertions(+)
+> >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > 
+> > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
+> > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > new file mode 100644
+> > index 000000000000..af97f1b3e005
+> > --- /dev/null
+> > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > @@ -0,0 +1,75 @@
+> > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> 
+> Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
 
-One minor comment:
+The driver currently only supports RX0, but I think you are right,
+it should say RX here. This binding could be extended for RX1.
 
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 68f79d855c3d..11083d84eb23 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -958,4 +958,22 @@ static inline bool in_compat_syscall(void) { return false; }
->  
->  #endif /* CONFIG_COMPAT */
->  
-> +/*
-> + * A pointer passed in from user mode. This should not
-> + * be used for syscall parameters, just declare them
-> + * as pointers because the syscall entry code will have
-> + * appropriately converted them already.
-> + */
-> +#ifndef compat_ptr
-> +static inline void __user *compat_ptr(compat_uptr_t uptr)
-> +{
-> +	return (void __user *)(unsigned long)uptr;
-> +}
-> +#endif
-> +
-> +static inline compat_uptr_t ptr_to_compat(void __user *uptr)
-> +{
-> +	return (u32)(unsigned long)uptr;
-> +}
+> Looking at the PHY driver, it seems to handle all PHYs with a single
+> struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> 
 
-Is there a reason we cast to u32 directly instead of using compat_uptr_t?
+I am not following this. The driver handles just one PHY. Each PHY
+should have its own node.
 
-cheers
+> > +
+> > +maintainers:
+> > +  - Helen Koike <helen.koike@collabora.com>
+> > +  - Ezequiel Garcia <ezequiel@collabora.com>
+> > +
+> > +description: |
+> > +  The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
+> > +  the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: rockchip,rk3399-mipi-dphy
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: Mipi d-phy ref clock
+> > +      - description: Mipi d-phy rx0 cfg clock
+> 
+> s/Mipi d-phy/MIPI D-PHY/
+> 
+
+Yep.
+
+> > +      - description: Video in/out general register file clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: dphy-ref
+> > +      - const: dphy-cfg
+> > +      - const: grf
+> > +
+> > +  '#phy-cells':
+> > +    const: 0
+> > +
+> > +  power-domains:
+> > +    description: Video in/out power domain.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - clocks
+> > +  - clock-names
+> > +  - '#phy-cells'
+> > +  - power-domains
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +
+> > +    /*
+> > +     * MIPI RX D-PHY use registers in "general register files", it
+> > +     * should be a child of the GRF.
+> > +     *
+> > +     * grf: syscon@ff770000 {
+> > +     *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> > +     *  ...
+> 
+> missing
+> 
+> 	* };
+> 
+
+OK.
+
+> > +     */
+> > +
+> > +    #include <dt-bindings/clock/rk3399-cru.h>
+> > +    #include <dt-bindings/power/rk3399-power.h>
+> > +
+> > +    dphy: mipi-dphy {
+> > +        compatible = "rockchip,rk3399-mipi-dphy";
+> > +        clocks = <&cru SCLK_MIPIDPHY_REF>,
+> > +                 <&cru SCLK_DPHY_RX0_CFG>,
+> > +                 <&cru PCLK_VIO_GRF>;
+> > +        clock-names = "dphy-ref", "dphy-cfg", "grf";
+> > +        power-domains = <&power RK3399_PD_VIO>;
+> > +        #phy-cells = <0>;
+> > +    };
+
+
