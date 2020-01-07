@@ -2,181 +2,114 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68769C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3412077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:15:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C3xaj7U7";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="piQ4PgF3"
+	by mail.kernel.org (Postfix) with ESMTP id 3EA6720678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgAGKPl (ORCPT
+        id S1727774AbgAGKQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:15:41 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:45186 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgAGKPl (ORCPT
+        Tue, 7 Jan 2020 05:16:53 -0500
+Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:43278 "EHLO
+        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726558AbgAGKQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:15:41 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9AA49C0516;
-        Tue,  7 Jan 2020 10:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578392139; bh=iObhOSprcxxCk26t2mFFKfyP/I2aJh039jBnQnNRHTI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=C3xaj7U7WO8RUQ3o2BbfnNgUzBvpQXTk+encpKhWfua143KJokbf4HsgZZ3C2FUzv
-         wLaDTxU9nX61kcUv5EvdVvyEG5L9fP+QfxitVcOsglb6cKIBMGH80G2X5bmq5Qy+q7
-         fFCEA9v4ia18weVEf1btas2nCP8Os2gzaF++rkKF8NDfL3JYILvO0Rkn2TjBEjJJYQ
-         e1eNsCy5jjUkj0W2MvYVZizzWtbiIbqFTrwTDN+4rcZ0MO30SdaNu+jd14J9FYvTsi
-         +FH1lGN+w0rDBnPxHLM+2xvSf7xAAhkz8SOPp4B79qtMyjZCdk+X4lipeLlOWW2ORd
-         SCJ/EpVBGvouA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 2F169A0079;
-        Tue,  7 Jan 2020 10:15:39 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 Jan 2020 02:15:38 -0800
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 Jan 2020 02:15:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fec5HkQK4M9zrjOKFz6TcNxpxbyZPYOkeR8TUJB3GFNOcZdv/h5At34OwTLgLjZwq/t7dq1D4dPmpt1TOL/jiMn0QDyJiw9JVJ7DVA0PUDRfXAF4GNdlCty9vDDcUf4bMV9+5jAeWlmnfRKamrv87al9z/GgCN/dKtuYUCIgpoitCyW7Mz43PgFD645jUFoelNHhyn+4+oqgeT5Rz43kqSY8zhZRgbgGhpBiqRfRSlVQPcuaASnrvvVQfAEsVIpZ/euhYD4shje5dmVoE/bTXgatt45TNk4gKOhXyToiNWIyjN/GYcnL3UQf1D+Txd3EtuclyNWGfjgVpk1pSS0fCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iObhOSprcxxCk26t2mFFKfyP/I2aJh039jBnQnNRHTI=;
- b=dP7v+dDSeIvZyDzqM2I19o5Lg406IAfCbVBiBionMZRRCD6vAcdzYlyvWsikpR9ZxOEpAP3pVBdk6VItEajbTQh/qjlGnPx7VB4Sab3vpx4RM0aCha8ud+MNSeYA8u/erfMnAWXqc8MQ5omL0BqMeUmjSHC6KZVBdJf2zCtrdKqv4mNhEZ4x/pBGHCfwXgrnQYyW4/nfIDKTP2muDkrJLJm0lekplDoUjQEDQcvNnjnJbz4lFn7Byl6GwGFtjL+xY9Ev3rGg6eF6z3iJbnz0thbTAYrFbPtXjYo27sHNJYHGQqn4DyYcOSzMBo3KiYa3Y1PZ1y40D5th5Q+q6crQgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iObhOSprcxxCk26t2mFFKfyP/I2aJh039jBnQnNRHTI=;
- b=piQ4PgF3F7A2EaT0glhdVNm020ystVVX0N8Uj9mLwMhHcadC/py/SWc+YHED9qtHoHT6d2cML1+xRBFlKsCxt1BKQUctH9p2xJWg5e/Dby1ZCohpaxPjccf2qX+UwW3r87G2UQ7F5R+e/FaqA7sUQc72Ii/plUVU6bjkGmaDmSg=
-Received: from BN7PR12MB2802.namprd12.prod.outlook.com (20.176.27.97) by
- BN7PR12MB2771.namprd12.prod.outlook.com (20.176.176.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11; Tue, 7 Jan 2020 10:15:36 +0000
-Received: from BN7PR12MB2802.namprd12.prod.outlook.com
- ([fe80::e420:5711:3657:f3ca]) by BN7PR12MB2802.namprd12.prod.outlook.com
- ([fe80::e420:5711:3657:f3ca%3]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
- 10:15:35 +0000
-From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-To:     Ran Wang <ran.wang_1@nxp.com>, Felipe Balbi <balbi@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: Re: [PATCH] usb: dwc3: gadget: Fix controller get stuck when kicking
- extra transfer in wrong case
-Thread-Topic: [PATCH] usb: dwc3: gadget: Fix controller get stuck when kicking
- extra transfer in wrong case
-Thread-Index: AQHVxSp4HjqpGxpTOEWsDIhAyQCdSqfe/HYA
-Date:   Tue, 7 Jan 2020 10:15:35 +0000
-Message-ID: <9f9d0193-8fe6-33b3-4f5c-95a1181e6681@synopsys.com>
-References: <20200107071441.480-1-ran.wang_1@nxp.com>
-In-Reply-To: <20200107071441.480-1-ran.wang_1@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joglekar@synopsys.com; 
-x-originating-ip: [198.182.52.26]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 49bcadfc-e71c-491f-c7d3-08d7935a8983
-x-ms-traffictypediagnostic: BN7PR12MB2771:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN7PR12MB277194AB0EF1BC0457ADC0CAA43F0@BN7PR12MB2771.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 027578BB13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(81156014)(81166006)(4326008)(71200400001)(8676002)(6512007)(498600001)(107886003)(31686004)(966005)(31696002)(2616005)(6486002)(86362001)(76116006)(26005)(64756008)(186003)(66446008)(66476007)(6506007)(53546011)(66946007)(5660300002)(8936002)(66556008)(36756003)(91956017)(54906003)(2906002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN7PR12MB2771;H:BN7PR12MB2802.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JwfIGu8lafc5YHyVkttGOUQTuJVQxR/cBhidJnB9frt8NwSriJRBXP1u+wroeR1RaTuTsLJNwYVV/Tcq/ebA0VVjZ4VlgWVdNhYPUzGe3+pmSaWc37yHNNBx5MiV8P27MKujYd0gPs8ULn/UTAhMg5lZxBOz7Si/nPLT4+L2EIBzZfU1ptXe0YdkflMQdLGt0soQjO2a6DU46nrmkCfGVz5P/9GFpGtlTqlbrlRTD5VR6sbEY0P/2FLoLp4kCPZlxog1seIPOEchDPcebRDSB4ZJmxWCRntN6jHQTnPtsD4+cPf6C3BiuW9hlYteba1MNi1CFjCp8riYYq2bYK+62/07PohNpUZZtw5YcRZQI0w+uOnA8+uGuCVXmLhsEfqVmo0GHJrNH1TcJdtyQwGKY+t4V6sZ+rmMycxfufXmuJS/G1mOgniYc4JaUxFpQgRccOzT41czdsMu04CPjJnrgS+ti4gRfB0iE18NG3m7GzqRwvFK5l2oAiMtcPK+0M/RiyYE8M6SMLvIkH+08fmxkg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <24AC5196730C684B8E005D19D62EEF8C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 Jan 2020 05:16:53 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 492B19890A
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 10:16:50 +0000 (GMT)
+Received: (qmail 3988 invoked from network); 7 Jan 2020 10:16:49 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 Jan 2020 10:16:49 -0000
+Date:   Tue, 7 Jan 2020 10:16:46 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Hillf Danton <hdanton@sina.com>, Rik van Riel <riel@surriel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v3
+Message-ID: <20200107101646.GG3466@techsingularity.net>
+References: <20200106144250.GA3466@techsingularity.net>
+ <04033a63f11a9c59ebd2b099355915e4e889b772.camel@surriel.com>
+ <20200106163303.GC3466@techsingularity.net>
+ <20200107015111.4836-1-hdanton@sina.com>
+ <20200107091256.GE3466@techsingularity.net>
+ <CAKfTPtAMeta=jtTkTewdFN1UyqT+iyRhm9pfNDjkydfJQjaorQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49bcadfc-e71c-491f-c7d3-08d7935a8983
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 10:15:35.7210
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v3RLbsQnVG+2VIxFOR0/9Bbr91S3Tvcjg0fZbn5F0LMNY7u+lytmv6ofDPU0T7QtRCTZYeVXGD5UYakttYfckA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2771
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtAMeta=jtTkTewdFN1UyqT+iyRhm9pfNDjkydfJQjaorQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpPbiAxLzcvMjAyMCAxMjo0NCBQTSwgUmFuIFdhbmcgd3JvdGU6DQo+IEFjY29yZGluZyB0
-byBvcmlnaW5hbCBjb21taXQgYzk2ZTY3MjVkYjlkNmEgKCJ1c2I6IGR3YzM6IGdhZGdldDogQ29y
-cmVjdCB0aGUNCj4gbG9naWMgZm9yIHF1ZXVpbmcgc2dzIiksIHdlIHdvdWxkIG9ubHkga2ljayBv
-ZmYgYW5vdGhlciB0cmFuc2ZlciBpbiBjYXNlIG9mDQo+IHJlcS0+bnVtX3BlbmRpbmdfc2dzID4g
-MC4NCj4gDQpUaGUgY29tbWl0IDhjN2Q0YjdiM2Q0MyAoInVzYjogZHdjMzogZ2FkZ2V0OiBGaXgg
-bG9naWNhbCBjb25kaXRpb24iKSBmaXhlcyB0aGUgY29tbWl0IGYzOGUzNWRkODRlMiAodXNiOiBk
-d2MzOiBnYWRnZXQ6IHNwbGl0IGR3YzNfZ2FkZ2V0X2VwX2NsZWFudXBfY29tcGxldGVkX3JlcXVl
-c3RzKCkpLg0KDQo+IEhvd2V2ZXIsIGN1cnJlbnQgbG9naWMgd2lsbCBkbyB0aGlzIGFzIGxvbmcg
-YXMgcmVxLT5yZW1haW5pbmcgPiAwLCB0aGlzIHdpbGwNCj4gaW5jbHVkZSB0aGUgY2FzZSBvZiBu
-b24tc2dzIChib3RoIGR3YzNfZ2FkZ2V0X2VwX3JlcXVlc3RfY29tcGxldGVkKHJlcSkgYW5kDQo+
-IHJlcS0+bnVtX3BlbmRpbmdfc2dzIGFyZSAwKSB0aGF0IHdlIGRpZCBub3Qgd2FudCB0by4NCj4g
-DQo+IFdpdGhvdXQgdGhpcyBmaXgsIHdlIG9ic2VydmVkIGR3YzMgZ290IHN0dWNrIG9uIExheWVy
-c2NhcGUgcGxhZnRvcm1zIChzdWNoIGFzDQo+IExTMTA4OEFSREIpIHdoZW4gZW5hYmxpbmcgZ2Fk
-Z2V0IChtYXNzIHN0b3JhZ2UgZnVuY3Rpb24pIGFzIGJlbG93Og0KPg0KU2ltaWxhciBpc3N1ZSB3
-YXMgcmVwb3J0ZWQgYnkgVGhpbmggYWZ0ZXIgbXkgZml4LCBhbmQgaGUgaGFzIHN1Ym1pdHRlZCBh
-IHBhdGNoIGZvciB0aGUgc2FtZS4gWW91IGNhbiByZWZlciB0aGUgZGlzY3Vzc2lvbiBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMjkyMDg3Ly4NCiANCj4gWyAgIDI3LjkyMzk1
-OV0gTWFzcyBTdG9yYWdlIEZ1bmN0aW9uLCB2ZXJzaW9uOiAyMDA5LzA5LzExDQo+IFsgICAyNy45
-MjkxMTVdIExVTjogcmVtb3ZhYmxlIGZpbGU6IChubyBtZWRpdW0pDQo+IFsgICAyNy45MzM0MzJd
-IExVTjogZmlsZTogL3J1bi9tZWRpYS9zZGExLzQxOS90ZXN0DQo+IFsgICAyNy45Mzc5NjNdIE51
-bWJlciBvZiBMVU5zPTENCj4gWyAgIDI3Ljk0MTA0Ml0gZ19tYXNzX3N0b3JhZ2UgZ2FkZ2V0OiBN
-YXNzIFN0b3JhZ2UgR2FkZ2V0LCB2ZXJzaW9uOiAyMDA5LzA5LzExDQo+IFsgICAyNy45NDgwMTld
-IGdfbWFzc19zdG9yYWdlIGdhZGdldDogdXNlcnNwYWNlIGZhaWxlZCB0byBwcm92aWRlIGlTZXJp
-YWxOdW1iZXINCj4gWyAgIDI3Ljk1NTA2OV0gZ19tYXNzX3N0b3JhZ2UgZ2FkZ2V0OiBnX21hc3Nf
-c3RvcmFnZSByZWFkeQ0KPiBbICAgMjguNDExMTg4XSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6IHN1
-cGVyLXNwZWVkIGNvbmZpZyAjMTogTGludXggRmlsZS1CYWNrZWQgU3RvcmFnZQ0KPiBbICAgNDgu
-MzE5NzY2XSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6IHN1cGVyLXNwZWVkIGNvbmZpZyAjMTogTGlu
-dXggRmlsZS1CYWNrZWQgU3RvcmFnZQ0KPiBbICAgNjguMzIwNzk0XSBnX21hc3Nfc3RvcmFnZSBn
-YWRnZXQ6IHN1cGVyLXNwZWVkIGNvbmZpZyAjMTogTGludXggRmlsZS1CYWNrZWQgU3RvcmFnZQ0K
-PiBbICAgODguMzE5ODk4XSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6IHN1cGVyLXNwZWVkIGNvbmZp
-ZyAjMTogTGludXggRmlsZS1CYWNrZWQgU3RvcmFnZQ0KPiBbICAxMDguMzIwODA4XSBnX21hc3Nf
-c3RvcmFnZSBnYWRnZXQ6IHN1cGVyLXNwZWVkIGNvbmZpZyAjMTogTGludXggRmlsZS1CYWNrZWQg
-U3RvcmFnZQ0KPiBbICAxMjguMzIzNDE5XSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6IHN1cGVyLXNw
-ZWVkIGNvbmZpZyAjMTogTGludXggRmlsZS1CYWNrZWQgU3RvcmFnZQ0KPiBbICAxNDguMzIwODU3
-XSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6IHN1cGVyLXNwZWVkIGNvbmZpZyAjMTogTGludXggRmls
-ZS1CYWNrZWQgU3RvcmFnZQ0KPiBbICAxNDguMzYyMDIzXSBnX21hc3Nfc3RvcmFnZSBnYWRnZXQ6
-IHN1cGVyLXNwZWVkIGNvbmZpZyAjMDogdW5jb25maWd1cmVkDQo+IA0KPiBGaXhlczogOGM3ZDRi
-N2IzZDQzICgidXNiOiBkd2MzOiBnYWRnZXQ6IEZpeCBsb2dpY2FsIGNvbmRpdGlvbiIpDQo+IA0K
-PiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8
-cmFuLndhbmdfMUBueHAuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvdXNiL2R3YzMvZ2FkZ2V0LmMg
-fCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9kd2MzL2dhZGdldC5jIGIvZHJpdmVycy91
-c2IvZHdjMy9nYWRnZXQuYw0KPiBpbmRleCAwYzk2MGE5Li41YjBmMDJmIDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL3VzYi9kd2MzL2dhZGdldC5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2R3YzMvZ2Fk
-Z2V0LmMNCj4gQEAgLTI0OTEsNyArMjQ5MSw3IEBAIHN0YXRpYyBpbnQgZHdjM19nYWRnZXRfZXBf
-Y2xlYW51cF9jb21wbGV0ZWRfcmVxdWVzdChzdHJ1Y3QgZHdjM19lcCAqZGVwLA0KPiAgDQo+ICAJ
-cmVxLT5yZXF1ZXN0LmFjdHVhbCA9IHJlcS0+cmVxdWVzdC5sZW5ndGggLSByZXEtPnJlbWFpbmlu
-ZzsNCj4gIA0KPiAtCWlmICghZHdjM19nYWRnZXRfZXBfcmVxdWVzdF9jb21wbGV0ZWQocmVxKSB8
-fA0KPiArCWlmICghZHdjM19nYWRnZXRfZXBfcmVxdWVzdF9jb21wbGV0ZWQocmVxKSAmJg0KPiAg
-CQkJcmVxLT5udW1fcGVuZGluZ19zZ3MpIHsNCj4gIAkJX19kd2MzX2dhZGdldF9raWNrX3RyYW5z
-ZmVyKGRlcCk7DQo+ICAJCWdvdG8gb3V0Ow0KPiANCg0KVGhhbmtzICYgUmVnYXJkcywNCiBUZWph
-cyBKb2dsZWthcg0K
+On Tue, Jan 07, 2020 at 10:43:08AM +0100, Vincent Guittot wrote:
+> > > > > It's not directly related to the number of CPUs in the node. Are you
+> > > > > thinking of busiest->group_weight?
+> > > >
+> > > > I am, because as it is right now that if condition
+> > > > looks like it might never be true for imbalance_pct 115.
+> > > >
+> > > > Presumably you put that check there for a reason, and
+> > > > would like it to trigger when the amount by which a node
+> > > > is busy is less than 2 * (imbalance_pct - 100).
+> > >
+> > >
+> > > If three per cent can make any sense in helping determine utilisation
+> > > low then the busy load has to meet
+> > >
+> > >       busiest->sum_nr_running < max(3, cpus in the node / 32);
+> > >
+> >
+> > Why 3% and why would the low utilisation cut-off depend on the number of
+> 
+> But in the same way, why only 6 tasks ? which is the value with
+> default imbalance_pct ?
+
+I laid this out in another mail sent based on timing so I would repeat
+myself other than to say it's predictable across machines.
+
+> I expect a machine with 128 CPUs to have more bandwidth than a machine
+> with only 32 CPUs and as a result to allow more imbalance
+> 
+
+I would expect so too with the caveat that there can be more memory
+channels within a node so positioning does matter but we can't take
+everything into account without creating a convulated mess. Worse, we have
+no decent method for estimating bandwidth as it depends on the reference
+pattern and scheduler domains do not currently take memory channels into
+account. Maybe they should but that's a whole different discussion that
+we do not want to get into right now.
+
+> Maybe the number of running tasks (or idle cpus) is not the right
+> metrics to choose if we can allow a small degree of imbalance because
+> this doesn't take into account it wether the tasks are long running or
+> short running ones
+> 
+
+I think running tasks at least is the least bad metric. idle CPUs gets
+caught up in corner cases with bindings and util_avg can be skewed by
+outliers. Running tasks is a sensible starting point until there is a
+concrete use case that shows it is unworkable. Lets see what you think of
+the other untested patch I posted that takes the group weight and child
+domain weight into account.
+
+-- 
+Mel Gorman
+SUSE Labs
