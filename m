@@ -2,186 +2,97 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350F2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE9CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01058207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E93207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WFJcxeTL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x4W09e6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgAGLzb (ORCPT
+        id S1728037AbgAGLzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:55:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727806AbgAGLzb (ORCPT
+        Tue, 7 Jan 2020 06:55:33 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33020 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGLzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578398129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KKDZj81sAccgrzkhgIj794ifqolNRhLOvA0CIx37wWs=;
-        b=WFJcxeTLfbM3CgWgC55v3gvcfSIwpc/qCDiuBzQbAbe0VoBdCJpWs1y88gC1nPs/2zOftu
-        8VweNe97R7CRNHuR/Zc33qXPuDDGKBnQ9usdm4TS+dKXobofWav+/FdKrG2aun5fIX0aje
-        onRKeSek6TMdtTu07bzLH4JP3qXlfp0=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-z3vgXvPtMOaZXZ-35yh0yQ-1; Tue, 07 Jan 2020 06:55:28 -0500
-X-MC-Unique: z3vgXvPtMOaZXZ-35yh0yQ-1
-Received: by mail-qv1-f72.google.com with SMTP id j10so6404265qvi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 03:55:28 -0800 (PST)
+        Tue, 7 Jan 2020 06:55:32 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y6so46392672lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 03:55:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
+        b=x4W09e6W3tYzPFUA5L3cocu4C28m1vu8wvfPIVtcJZVrttySIpPpOBOxScCKjuNNRn
+         OyhMcUwnM45j1nxRiN5G0bCuRyxa4OO8QJEjgJm87+mAfYD5ZXWyADDY2k/7fKinA+yq
+         x46qgZYWT1cXuXTxyoTLqtgueith2idAaQl0QpKpm9DWWQXeyE7d7v7jS/oNr2UiSKNN
+         m6C7X0ok2d1rKs8X7I64wx/UnFvv/rjXO0HEkKEWuEkCZIwA3EBJDQUcZWPjo67sFJae
+         VO0hAUkUiwdg8Mxsg7FFAMxrzsisTkn3tAyhmQKML6FQVwKQY2O4oh24yPneCrUoCJYv
+         UMaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KKDZj81sAccgrzkhgIj794ifqolNRhLOvA0CIx37wWs=;
-        b=qVKHSIhzVHS94Sn9MjnWOvYfBu64tNRmEWZezyJheEw0Yb5Iqk66aHzayolO2h7jr1
-         M3HRZYWgXv/vjYMv6E3xa+ISjRyxbrWprEpeUVIqiKDUa1nSGuN+0lmdhvhQYpvwkMWG
-         LBr+in4PqiqDFrEK65pDpKUGqn/d/d2a55T8+EQi5VXii/wuSvnB5Due9hnA2cPtup+i
-         IOurPIdps21lXAxFLUcZ+5X9g51lWoYF0PSfV57p3r/qjGaUSdau87yEvkQam9mnnMJK
-         jyiB1dhbhuQSHeHppyJUGSqNRbkG7G9HqfQD1F/MCEFwEDa0JEvDazjsMw9KMMbi/Af/
-         E9AQ==
-X-Gm-Message-State: APjAAAXkz6/6K7qAC/oLO/XEsTl4YljJQMWiabwY7N5vXMbeZnW2twtA
-        Yvsv9PbUA7snNu01+ZFrIQwySo8EL+7OcTTrzHxSQHU8uBTaLN0Tmwrixf78WmqWCvQa7IB4ylJ
-        6xoTPHFxnAEHqbrpMnw4/a2Vf
-X-Received: by 2002:a37:a642:: with SMTP id p63mr80587784qke.85.1578398127872;
-        Tue, 07 Jan 2020 03:55:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyq1n8OiAxkRvySBU4BNoH32+bCXpIgv5dDJl00BVFh2v1+ue0mG4WwIqiHHC8FA0mwU5qoug==
-X-Received: by 2002:a37:a642:: with SMTP id p63mr80587764qke.85.1578398127536;
-        Tue, 07 Jan 2020 03:55:27 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id d71sm22259619qkg.4.2020.01.07.03.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:55:26 -0800 (PST)
-Date:   Tue, 7 Jan 2020 06:55:22 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-Message-ID: <20200107065434-mutt-send-email-mst@kernel.org>
-References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
- <20191218100926-mutt-send-email-mst@kernel.org>
- <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
- <20200106054041-mutt-send-email-mst@kernel.org>
- <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
- <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
+        b=Foaa8IVu08Fd+tOy7A1METksMP6+EP4XDBWtHTRe2vPm3siO+clmeX5grE1dA+BfVA
+         /O9TbAILllZ8NtchzxU8BYR0hq4yNNxTi3DrxUwQs0+C3wXJyFM+DDZANcwfnBp8ypRo
+         jkDnEMll4fPS7MJhnhJmkTLk7KasLexUos0OquQTKAQzlaZpSFfPuHW1zZI1VkxYYJ2R
+         6Z0HV2kwSMj+8WM42Jtu+XpLQ5w8WoWLTqsInOWBXsvSpba0FgHaWh6L15aKKiKj77jz
+         HuusPqoVGfbZmUULogsqSwtB3z9WtZ3On5FAE+AsF9/a0rW1YjubSgXlVjHFMZmqqkw7
+         qcOA==
+X-Gm-Message-State: APjAAAURcaAsgUOLXQgoyf/xVbdfUbWCwt2DsIac/Djh+ehZ/+NNumtg
+        rDaEc8G+6tnMm3CSh0sDtipOaMTuLCKjV2wrp96DXA==
+X-Google-Smtp-Source: APXvYqzkyD6g7/9CDAlHtA5mKWWnMz52PVnTB6MFjhAOLT8GCecy17Mok8VzpbjzK10JRhbJp55ZQJQKlRcjb1WeUVc=
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr60523035ljh.42.1578398130000;
+ Tue, 07 Jan 2020 03:55:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org> <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 12:55:19 +0100
+Message-ID: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
+Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:34:50PM +0100, Christian Borntraeger wrote:
-> 
-> 
-> On 07.01.20 10:39, Michael S. Tsirkin wrote:
-> > On Tue, Jan 07, 2020 at 09:59:16AM +0100, Christian Borntraeger wrote:
-> >>
-> >>
-> >> On 06.01.20 11:50, Michael S. Tsirkin wrote:
-> >>> On Wed, Dec 18, 2019 at 04:59:02PM +0100, Christian Borntraeger wrote:
-> >>>> On 18.12.19 16:10, Michael S. Tsirkin wrote:
-> >>>>> On Wed, Dec 18, 2019 at 03:43:43PM +0100, Christian Borntraeger wrote:
-> >>>>>> Michael,
-> >>>>>>
-> >>>>>> with 
-> >>>>>> commit db7286b100b503ef80612884453bed53d74c9a16 (refs/bisect/skip-db7286b100b503ef80612884453bed53d74c9a16)
-> >>>>>>     vhost: use batched version by default
-> >>>>>> plus
-> >>>>>> commit 6bd262d5eafcdf8cdfae491e2e748e4e434dcda6 (HEAD, refs/bisect/bad)
-> >>>>>>     Revert "vhost/net: add an option to test new code"
-> >>>>>> to make things compile (your next tree is not easily bisectable, can you fix that as well?).
-> >>>>>
-> >>>>> I'll try.
-> >>>>>
-> >>>>>>
-> >>>>>> I get random crashes in my s390 KVM guests after reboot.
-> >>>>>> Reverting both patches together with commit decd9b8 "vhost: use vhost_desc instead of vhost_log" to
-> >>>>>> make it compile again) on top of linux-next-1218 makes the problem go away.
-> >>>>>>
-> >>>>>> Looks like the batched version is not yet ready for prime time. Can you drop these patches until
-> >>>>>> we have fixed the issues?
-> >>>>>>
-> >>>>>> Christian
-> >>>>>>
-> >>>>>
-> >>>>> Will do, thanks for letting me know.
-> >>>>
-> >>>> I have confirmed with the initial reporter (internal test team) that <driver name='qemu'/> 
-> >>>> with a known to be broken linux next kernel also fixes the problem, so it is really the
-> >>>> vhost changes.
-> >>>
-> >>> OK I'm back and trying to make it more bisectable.
-> >>>
-> >>> I pushed a new tag "batch-v2".
-> >>> It's same code but with this bisect should get more information.
-> >>
-> >> I get the following with this tag
-> >>
-> >> drivers/vhost/net.c: In function ‘vhost_net_tx_get_vq_desc’:
-> >> drivers/vhost/net.c:574:7: error: implicit declaration of function ‘vhost_get_vq_desc_batch’; did you mean ‘vhost_get_vq_desc’? [-Werror=implicit-function-declaration]
-> >>   574 |   r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-> >>       |       ^~~~~~~~~~~~~~~~~~~~~~~
-> >>       |       vhost_get_vq_desc
-> >>
-> > 
-> > Not sure why but I pushed a wrong commit. Sorry. Should be good now.
-> > 
-> 
-> during bisect:
-> 
-> drivers/vhost/vhost.c: In function ‘vhost_get_vq_desc_batch’:
-> drivers/vhost/vhost.c:2634:8: error: ‘id’ undeclared (first use in this function); did you mean ‘i’?
->  2634 |  ret = id;
->       |        ^~
->       |        i
-> 
-> I changed that to i
-> 
-> 
-> The last step then gave me  (on commit 50297a8480b439efc5f3f23088cb2d90b799acef vhost: use batched version by default)
-> net enc1: Unexpected TXQ (0) queue failure: -5
-> in the guest.
-> 
-> bisect log so far:
-> [cborntra@m83lp52 linux]$ git bisect log
-> git bisect start
-> # bad: [3131e79bb9e9892a5a6bd33513de9bc90b20e867] vhost: use vhost_desc instead of vhost_log
-> git bisect bad 3131e79bb9e9892a5a6bd33513de9bc90b20e867
-> # good: [d1281e3a562ec6a08f944a876481dd043ba739b9] virtio-blk: remove VIRTIO_BLK_F_SCSI support
-> git bisect good d1281e3a562ec6a08f944a876481dd043ba739b9
-> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
-> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
-> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
-> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
-> # bad: [1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79] vhost: batching fetches
-> git bisect bad 1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79
-> 
-> 
+On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
 
-I pushed batched-v3 - same head but bisect should work now.
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
+>
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  [v3] Fixed the example dt node, inherited properties
 
--- 
-MST
+Once you are done with patches 1 & 2, can I merge these
+separately to the pinctrl tree?
 
+Yours,
+Linus Walleij
