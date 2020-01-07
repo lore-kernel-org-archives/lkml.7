@@ -2,84 +2,88 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFD3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E2C2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D778B2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgAGHW7 (ORCPT
+        id S1727413AbgAGHYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:22:59 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:47778 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgAGHW7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:22:59 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tn4AQGD_1578381775;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tn4AQGD_1578381775)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 07 Jan 2020 15:22:55 +0800
-Subject: Re: linux-next: build warning after merge of the tip tree
-To:     Ingo Molnar <mingo@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200107164317.51190747@canb.auug.org.au>
- <20200107071604.GA45744@gmail.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <399f0d7d-ffbd-3226-6b6b-8bb7daef2051@linux.alibaba.com>
-Date:   Tue, 7 Jan 2020 15:22:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Tue, 7 Jan 2020 02:24:16 -0500
+Received: from mga12.intel.com ([192.55.52.136]:3977 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgAGHYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 02:24:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 23:24:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
+   d="scan'208";a="395269223"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jan 2020 23:24:13 -0800
+Subject: Re: [PATCH v2] mmc: tegra: fix SDR50 tuning override
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <treding@nvidia.com>
+References: <b20c4847980c2c385ff0d7677fa5101c4d040749.1578314098.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <9ad68894-fe90-4fb1-47b9-2304dee5b902@intel.com>
+Date:   Tue, 7 Jan 2020 09:23:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200107071604.GA45744@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b20c4847980c2c385ff0d7677fa5101c4d040749.1578314098.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/01/20 2:36 pm, Michał Mirosław wrote:
+> Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+> broke SDR50 tuning override. Use correct NVQUIRK_ name.
+> 
+> Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+> Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
+You should have included Thierry's Reviewed-by and Tested-by
 
-On 2020/1/7 15:16, Ingo Molnar wrote:
-> * Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
->> Hi all,
->>
->> [This has been happening for a while, I just missed it :-( ]
->>
->> After merging the tip tree, today's linux-next build (x86_64 allnoconfig)
->> produced this warning:
->>
->> arch/x86/kernel/unwind_orc.c:210:12: warning: 'orc_sort_cmp' defined but not used [-Wunused-function]
->>    210 | static int orc_sort_cmp(const void *_a, const void *_b)
->>        |            ^~~~~~~~~~~~
->> arch/x86/kernel/unwind_orc.c:190:13: warning: 'orc_sort_swap' defined but not used [-Wunused-function]
->>    190 | static void orc_sort_swap(void *_a, void *_b, int size)
->>        |             ^~~~~~~~~~~~~
->>
->> Introduced by commit
->>
->>    f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting")
-> Now fixed via:
->
->    22a7fa8848c5: ("x86/unwind/orc: Fix !CONFIG_MODULES build warning")
->
-> Will push it out after some testing, should go out with the next
-> tip:auto-latest version.
-Thanks very much! sorry for trouble.
->
-> Thanks,
->
-> 	Ingo
+Otherwise:
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  v2: converted 'Depends-On' tag to proper 'Cc: stable' lines
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 7bc950520fd9..403ac44a7378 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -386,7 +386,7 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
+>  			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
+>  		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
+>  			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
+> -		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
+> +		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
+>  			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
+>  	}
+>  
+> 
 
