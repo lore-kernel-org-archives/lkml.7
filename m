@@ -2,77 +2,68 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC314C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B69C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D172077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00F72077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YAQSC9O3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Uy4pOGtC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgAGXPr (ORCPT
+        id S1727598AbgAGXQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:15:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:43650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgAGXPq (ORCPT
+        Tue, 7 Jan 2020 18:16:40 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57960 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgAGXQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:15:46 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007N9a7f042422;
-        Tue, 7 Jan 2020 23:15:27 GMT
+        Tue, 7 Jan 2020 18:16:40 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007N9Z3v015483;
+        Tue, 7 Jan 2020 23:16:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=WpsBbFX5r44G2/iXWy3Z8/bfxahWOQDAfZxzk6WB/Zg=;
- b=YAQSC9O3UeFeLreC1t7t1YB5cIL/Kimf3vX9z/bc4Gjw0ePD5kjKp5ENHmbOcUIwGTaQ
- xu5A3y5C7veYMqyyOHx76znLqVKFsfknzZTfKtZnTry5kF5rK+7A9NfWBVsZrsl7kfx2
- D7xD4a6k8Gkzfa3k6tZXSI6t5unm2gD2zSGX5/PjMKGrE+64nglNagYTEO/BqfheHMil
- fR8JBbz9z/4b3z+FEMB7IG+4k3B319IV+uT5WjDTPZfZx/HCGiTor+sDgIuoSYODgtHX
- 5XezPBdmeSxWRJ0RFshS3SPNeADi07HoO5bb04chMppLRLFLy0F8nLDickKvVqzNR5ID 2g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xaj4u0s82-1
+ in-reply-to; s=corp-2019-08-05;
+ bh=IGnUQkIqlonHOlUqU1WosXHkUGO7eZVXN+CSVmkG9ss=;
+ b=Uy4pOGtCNgTSoKLNAhpl+3m4T/1cnT3YDJBuuvQyIeom21xwfgycUWILjWNBtJWs5g4f
+ gCDI+T+lh/CXA5nfm3Up/p1vkBKoJoFXBAT+yG5eSA8ShHKU88xm6+tcucFfAO9ld6lw
+ 8bqV/ZoMNGX0W54p5BInxb80cSBg0U740wSFiSIXmzTO/DoOvuVtcopU/xA8na11AxPT
+ kSEoZMdBTc/gs1Zp9LIzjHofpv51ZqIlKAdQCWQxReuZ5SPDwyR9Xhu/22I4tkBuyXyN
+ /JZ8/aZt5qNrG60BFowRE6P4VPmKJ9tidTjoK3WjMaz5ZdxAOcLpG+f184iaTG7kVfNR Tw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xajnq0ma6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 23:15:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NE9M3074156;
-        Tue, 7 Jan 2020 23:15:27 GMT
+        Tue, 07 Jan 2020 23:16:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NE1ta086268;
+        Tue, 7 Jan 2020 23:16:28 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xcjve77yf-1
+        by userp3020.oracle.com with ESMTP id 2xcpcra74n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 23:15:26 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007NFOSG001342;
-        Tue, 7 Jan 2020 23:15:24 GMT
+        Tue, 07 Jan 2020 23:16:28 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007NGQqh001833;
+        Tue, 7 Jan 2020 23:16:26 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 15:15:24 -0800
-Date:   Tue, 7 Jan 2020 15:15:22 -0800
+        with ESMTP ; Tue, 07 Jan 2020 15:16:26 -0800
+Date:   Tue, 7 Jan 2020 15:16:23 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        David Sterba <dsterba@suse.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
-Message-ID: <20200107231522.GC472641@magnolia>
-References: <20191228143651.bjb4sjirn2q3xup4@pali>
- <517472d1-c686-2f18-4e0b-000cda7e88c7@redhat.com>
- <20200101181054.GB191637@mit.edu>
- <20200101183920.imncit5sllj46c22@pali>
- <20200102215754.GA1508646@magnolia>
- <20200102220800.nasrhtz23xkqxxkg@pali>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, agruenba@redhat.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ext4: remove unused variable 'mapping'
+Message-ID: <20200107231623.GF472665@magnolia>
+References: <20200107062355.40624-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102220800.nasrhtz23xkqxxkg@pali>
+In-Reply-To: <20200107062355.40624-1-yuehaibing@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
@@ -90,85 +81,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 11:08:00PM +0100, Pali Rohár wrote:
-> On Thursday 02 January 2020 13:57:54 Darrick J. Wong wrote:
-> > On Wed, Jan 01, 2020 at 07:39:20PM +0100, Pali Rohár wrote:
-> > > On Wednesday 01 January 2020 13:10:54 Theodore Y. Ts'o wrote:
-> > > > On Tue, Dec 31, 2019 at 04:54:18PM -0600, Eric Sandeen wrote:
-> > > > > > Because I was not able to find any documentation for it, what is format
-> > > > > > of passed buffer... null-term string? fixed-length? and in which
-> > > > > > encoding? utf-8? latin1? utf-16? or filesystem dependent?
-> > > > > 
-> > > > > It simply copies the bits from the memory location you pass in, it knows
-> > > > > nothing of encodings.
-> > > > > 
-> > > > > For the most part it's up to the filesystem's own utilities to do any
-> > > > > interpretation of the resulting bits on disk, null-terminating maximal-length
-> > > > > label strings, etc.
-> > > > 
-> > > > I'm not sure this is going to be the best API design choice.  The
-> > > > blkid library interprets the on disk format for each file syustem
-> > > > knowing what is the "native" format for that particular file system.
-> > > > This is mainly an issue only for the non-Linux file systems; for the
-> > > > Linux file system, the party line has historically been that we don't
-> > > > get involved with character encoding, but in practice, what that has
-> > > > evolved into is that userspace has standardized on UTF-8, and that's
-> > > > what we pass into the kernel from userspace by convention.
-> > > > 
-> > > > But the problem is that if the goal is to make FS_IOC_GETFSLABEL and
-> > > > FS_IOC_SETFSLABEL work without the calling program knowing what file
-> > > > system type a particular pathname happens to be, then it would be
-> > > > easist for the userspace program if it can expect that it can always
-> > > > pass in a null-terminated UTF-8 string, and get back a null-terminated
-> > > > UTF-8.  I bet that in practice, that is what most userspace programs
-> > > > are going to be do anyway, since it works that way for all other file
-> > > > system syscalls.
-> > 
-> > "Null terminated sequence of bytes*" is more or less what xfsprogs do,
-> > and it looks like btrfs does that as well.
-> > 
-> > (* with the idiotic exception that if the label is exactly 256 bytes long
-> > then the array is not required to have a null terminator, because btrfs
-> > encoded that quirk of their ondisk format into the API. <grumble>)
-> > 
-> > So for VFAT, I think you can use the same code that does the name
-> > encoding transformations for iocharset= to handle labels, right?
+On Tue, Jan 07, 2020 at 02:23:55PM +0800, YueHaibing wrote:
+> fs/ext4/inode.c: In function 'ext4_page_mkwrite':
+> fs/ext4/inode.c:5910:24: warning: unused variable 'mapping' [-Wunused-variable]
 > 
-> Yes I can! But I need to process also codepage= transformation (details
-> in email <20191228200523.eaxpwxkpswzuihow@pali>). And I already have
-> this implementation in progress.
-
-<nod>
-
-> > > > So for a file system which is a non-Linux-native file system, if it
-> > > > happens to store the its label using utf-16, or some other
-> > > > Windows-system-silliness, it would work a lot better if it assumed
-> > > > that it was passed in utf-8, and stored in the the Windows file system
-> > > > using whatever crazy encoding Windows wants to use.  Otherwise, why
-> > > > bother uplifting the ioctl to one which is file system independent, if
-> > > > the paramters are defined to be file system *dependent*?
-> > > 
-> > > Exactly. In another email I wrote that for those non-Linux-native
-> > > filesystem could be used encoding specified in iocharset= mount
-> > > parameter. I think it is better as usage of one fixing encoding (e.g.
-> > > UTF-8) if other filesystem strings are propagated to userspace in other
-> > > encoding (as specified by iocharset=).
-> > 
-> > I'm confused by this statement... but I think we're saying the same
-> > thing?
+> commit 4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
+> left behind this unused variable.
 > 
-> Theodore suggested to use UTF-8 encoding for FS_IOC_GETFSLABEL. And I
-> suggested to use iocharset= encoding for FS_IOC_GETFSLABEL. You said to
-> use for VFAT "same code that does the name encoding", so if I'm
-> understanding correctly, yes it is the same thing (as VFAT use
-> iocharset= and codepage= mount options for name encoding). Right?
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Right.
+Er, I had to rebase the branch this morning to remove the f2fs parts
+(there's a conflict and they never acked the patch) so I cleaned this up
+at the same time.
 
 --D
 
+> ---
+>  fs/ext4/inode.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 9a3e8d0..d0049fd 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5907,7 +5907,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  	vm_fault_t ret;
+>  	struct file *file = vma->vm_file;
+>  	struct inode *inode = file_inode(file);
+> -	struct address_space *mapping = inode->i_mapping;
+>  	handle_t *handle;
+>  	get_block_t *get_block;
+>  	int retries = 0;
 > -- 
-> Pali Rohár
-> pali.rohar@gmail.com
-
-
+> 2.7.4
+> 
+> 
