@@ -6,99 +6,180 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAD3C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4155C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336A1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB53C206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgAGVtz (ORCPT
+        id S1727414AbgAGVvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:49:55 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:36247 "EHLO
+        Tue, 7 Jan 2020 16:51:11 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:57577 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgAGVtz (ORCPT
+        with ESMTP id S1727135AbgAGVvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:49:55 -0500
+        Tue, 7 Jan 2020 16:51:10 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MhDIw-1jK8o71gSg-00eM6j; Tue, 07 Jan 2020 22:48:49 +0100
+ 1MJmbB-1j8wTR45Dl-00K4yP; Tue, 07 Jan 2020 22:50:41 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: gtm601: fix build warning
-Date:   Tue,  7 Jan 2020 22:48:35 +0100
-Message-Id: <20200107214846.1284981-1-arnd@arndb.de>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Manikanta Pubbisetty <mpubbise@codeaurora.org>,
+        John Crispin <john@phrozen.org>,
+        Sven Eckelmann <seckelmann@datto.com>,
+        Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        Anilkumar Kolli <akolli@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Ganesh Sesetti <gseset@codeaurora.org>,
+        Govindaraj Saminathan <gsamin@codeaurora.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Karthikeyan Periyasamy <periyasa@codeaurora.org>,
+        kbuild test robot <lkp@intel.com>,
+        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
+        Miles Hu <milehu@codeaurora.org>,
+        Muna Sinada <msinada@codeaurora.org>,
+        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
+        Rajkumar Manoharan <rmanohar@codeaurora.org>,
+        Sathishkumar Muruganandam <murugana@codeaurora.org>,
+        Shashidhar Lakkavalli <slakkavalli@datto.com>,
+        Sriram R <srirrama@codeaurora.org>,
+        Vasanthakumar Thiagarajan <vthiagar@codeaurora.org>,
+        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tamizh chelvam <tamizhr@codeaurora.org>,
+        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ath11k: fix debugfs build failure
+Date:   Tue,  7 Jan 2020 22:50:04 +0100
+Message-Id: <20200107215036.1333983-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:hgbuQXLAyzDG0JLdaoMrLoDWbahmQuVhsc4uo1Y42HSztF/U8X6
- ljgOSi6NbIyjXc8pJuuPyyWWjY072XKl1nZa7gRqaSj3b4pZgsBevH/oICmQTvNFF9RE+UY
- Yt/NlSvRPQ5SU/coEP7/isRi1nD3iTQ1/xutnEX1rWhdL8H9l3g4n8rxw3IdBgwzi/ZyyHL
- nU2NpbirZydu/iaPee/Kw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jDD5zrkTayQ=:EN/mtN5KHU2cVxtZeZDCMk
- xgZ8H2BYL/ixmxZ21NFKyG8bp3R+i/nAS3f2NjnUeasNXyDUXajUdENyH3nmi6yTtt3Dhvgre
- Poh/0wVsfsDZ4DK9V4TnRa6Z68admVkVOfm0g1ek52Tu0+bRvK7lcMxIYVEFf553fR0c23Bvs
- 86Gt00GpxtUp/oE7SckjPvm/uMZixOwkfIF4ZpGkWuvAuxdOaEPpdgm1nZuoVeDCGiydd+KOZ
- 5YfjJ1gm86kTl8lsA92siTw93yXTQ955iv8g0zqd7uw+bvH7aBsaKHD3zEs6sM3GnuWN3BAqL
- VRQbRvCmqm0ihoL8xVv3f/x4IeJOxSkt0ivi1akTjbnDTtvH/qQ6YlqGrgqMcmf5RD7jiIZ+l
- E7/fLjM1L/P6Gw3nbmsMw5MQ6TnjH/XX7pt8EgvrFcRS7uT7vXBolHHTcwTDt4SGCdl/JHw7e
- +oJ8ebXrMr+AP0RCNNANLnWpNuXAfMBnWXaumkfRKNRlpW72PdKAaPMoof/MxsdmSdCRuwQW2
- 8a/ESpXM4Enx7dQqwGZ7qmrQAr7j9/RPaLKmlxhbqqxxvtevQWwpIjEZv2i+CIM+aBalhIFzv
- 5VF69/WbcNqNGu/g0ANcsycf3hmgsb6p7KIqQHIQ95ifkcf7HWwbwf6Ej4iF/iqceGEVu370b
- yBEB/v9uLgQKHn2yMXUGpmltxwyQXGavNZqrNKey0t9cMhdqID8AGx+MYerkako8yxFKjyIUN
- OEn82awYzjE5t9T5Rd1L8qlkGeVaPelqx5rZGI8rQhCjeZz65uHTo0JXZHDIXTJ7s87lS3kIS
- FgidAOeuevJObQ50bHXv4L660UbaB6NlG1LAyBViHHO+b6q9gwVkwRvlgR+gGpsPxvqsgIW8l
- 6RkABryq024BZXlNUo7A==
+X-Provags-ID: V03:K1:1IwwBGhuOz0cd0fMgrQmU/t4gEgEbaY4kf54G9AmPByhjQQY7fh
+ QQff/ZJNDnmGx924TaQblUyv7rp3cQfsvSoH8yH7/yXdJR1ISoA/dR7lC8paPX8lGQAcWWZ
+ LHqBUDplT7XEGiO3wen35XFc1XN3SwaDPM9McT45/lQhibx/jMp5gZS6lq/Clz9Kv40V0ad
+ 42xWSqOCYKQpqsJnlflBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nUUMxddKHx0=:WTvF1Wfyj2/ouKy4oFxjNw
+ hYhq8wgb4UfSK0NVybZqABq/OCKo+QSD65xfbimTwoZkgEWSPHD30YGFwrA3ADZVtGBYwCSoN
+ JMDHy8rGgJv8gcUDWDkR42jx176v3QRRpj2r7plNJQI3WOO3XyY5i3e0oZLW46c02jdzFJhiZ
+ XOzZJLI2xPVvYmyRqBGHJO9JAaB6qazdzNAIO7cqrXiB0Cw6FYg3XIBB2/uA2HU44a8kuxoch
+ G7jF1sTwsZlWOrpLQqMfS800wdQkHNMeWp/OELaPXZwD5JTdda0xfiSG+Do0VgZxhHmkjgzTv
+ GqTmpfU/alK6h8WeQAW3E9AIpuKWMtTGu0+hovPlfdEJ+29HL5eBUK5F9GqlB4QwT1tn+3AZL
+ A2X2HkWXX7OMYdkN0ffXod/iGxsZuT4eZG01APUc5GKX+8invc8U07FRC8w83cRDdYoFx3LJv
+ ik8ZKoxDADlUY3niMFmNXpt66uJT19w5i2caMsAjiOK+udmbdo+5y4/tEyMi4URj+TXUcA7AY
+ 683/vRlsCokJTINAaizPjipJAfKL+kxsTvmxXoNEWT5wl0fbE51iNtnPqLa6vFZyVvuq/lYlG
+ sn3/gaWyRxRgBIB/H5NuLIhCmTGWb/EPMf/YQcsK48ZEgSXEWcnUgtzMMEDffc94JzToB+j2b
+ 23c2JhWhrYfRvYDU8ziN7twGCF2nuAFPotQyoFJbHuCjYeSzRrZKnLjZdsmAL+Eqfww+QHwTa
+ fjCPE3GH3SqM1noEi8zvojf5VnXYjxA9yCs8jwyYNmva++Ts5HI+RIJqHh58+fEzI3DtzEEFJ
+ HbplIo6Cq4kCf6Lj/SV0AwtiKYyRSPJ8TvsAGL8tVSo0DhvJISMplhpE0qC4cXeVageGUbKAg
+ OHrnrI0r9VGXgW/XnUGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver produces warnings without CONFIG_OF, and makes
-no sense without it either:
+When CONFIG_ATH11K_DEBUGFS is disabled, but CONFIG_MAC80211_DEBUGFS
+is turned on, the driver fails to build:
 
-sound/soc/codecs/gtm601.c:50:34: error: 'bm818_dai' defined but not used [-Werror=unused-variable]
- static struct snd_soc_dai_driver bm818_dai = {
-                                  ^~~~~~~~~
-sound/soc/codecs/gtm601.c:32:34: error: 'gtm601_dai' defined but not used [-Werror=unused-variable]
- static struct snd_soc_dai_driver gtm601_dai = {
-                                  ^~~~~~~~~~
+drivers/net/wireless/ath/ath11k/debugfs_sta.c: In function 'ath11k_dbg_sta_open_htt_peer_stats':
+drivers/net/wireless/ath/ath11k/debugfs_sta.c:416:4: error: 'struct ath11k' has no member named 'debug'
+  ar->debug.htt_stats.stats_req = stats_req;
+    ^~
 
-Remove the #ifdef check to avoid the warning.
+It appears that just using the former symbol is sufficient here,
+adding a Kconfig dependency takes care of the corner cases.
 
-Fixes: 057a317a8d94 ("ASoC: gtm601: add Broadmobi bm818 sound profile")
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/codecs/gtm601.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/wireless/ath/ath11k/Kconfig  |  2 +-
+ drivers/net/wireless/ath/ath11k/Makefile |  3 +--
+ drivers/net/wireless/ath/ath11k/debug.h  | 22 ++++++++++------------
+ drivers/net/wireless/ath/ath11k/mac.c    |  2 +-
+ 4 files changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/codecs/gtm601.c b/sound/soc/codecs/gtm601.c
-index 7f05ebcb88d1..ae9e1c70ca57 100644
---- a/sound/soc/codecs/gtm601.c
-+++ b/sound/soc/codecs/gtm601.c
-@@ -87,14 +87,12 @@ static int gtm601_platform_probe(struct platform_device *pdev)
- 			(struct snd_soc_dai_driver *)dai_driver, 1);
+diff --git a/drivers/net/wireless/ath/ath11k/Kconfig b/drivers/net/wireless/ath/ath11k/Kconfig
+index cfab4fb86aef..c88e16d4022b 100644
+--- a/drivers/net/wireless/ath/ath11k/Kconfig
++++ b/drivers/net/wireless/ath/ath11k/Kconfig
+@@ -22,7 +22,7 @@ config ATH11K_DEBUG
+ 
+ config ATH11K_DEBUGFS
+ 	bool "QCA ath11k debugfs support"
+-	depends on ATH11K && DEBUG_FS
++	depends on ATH11K && DEBUG_FS && MAC80211_DEBUGFS
+ 	---help---
+ 	  Enable ath11k debugfs support
+ 
+diff --git a/drivers/net/wireless/ath/ath11k/Makefile b/drivers/net/wireless/ath/ath11k/Makefile
+index a91d75c1cfeb..2761d07d938e 100644
+--- a/drivers/net/wireless/ath/ath11k/Makefile
++++ b/drivers/net/wireless/ath/ath11k/Makefile
+@@ -17,8 +17,7 @@ ath11k-y += core.o \
+ 	    ce.o \
+ 	    peer.o
+ 
+-ath11k-$(CONFIG_ATH11K_DEBUGFS) += debug_htt_stats.o
+-ath11k-$(CONFIG_MAC80211_DEBUGFS) += debugfs_sta.o
++ath11k-$(CONFIG_ATH11K_DEBUGFS) += debug_htt_stats.o debugfs_sta.o
+ ath11k-$(CONFIG_NL80211_TESTMODE) += testmode.o
+ ath11k-$(CONFIG_ATH11K_TRACING) += trace.o
+ 
+diff --git a/drivers/net/wireless/ath/ath11k/debug.h b/drivers/net/wireless/ath/ath11k/debug.h
+index a317a7bdb9a2..8e8d5588b541 100644
+--- a/drivers/net/wireless/ath/ath11k/debug.h
++++ b/drivers/net/wireless/ath/ath11k/debug.h
+@@ -172,6 +172,16 @@ static inline int ath11k_debug_is_extd_rx_stats_enabled(struct ath11k *ar)
+ {
+ 	return ar->debug.extd_rx_stats;
  }
++
++void ath11k_sta_add_debugfs(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
++			    struct ieee80211_sta *sta, struct dentry *dir);
++void
++ath11k_accumulate_per_peer_tx_stats(struct ath11k_sta *arsta,
++				    struct ath11k_per_peer_tx_stats *peer_stats,
++				    u8 legacy_rate_idx);
++void ath11k_update_per_peer_stats_from_txcompl(struct ath11k *ar,
++					       struct sk_buff *msdu,
++					       struct hal_tx_status *ts);
+ #else
+ static inline int ath11k_debug_soc_create(struct ath11k_base *ab)
+ {
+@@ -243,19 +253,7 @@ static inline bool ath11k_debug_is_pktlog_peer_valid(struct ath11k *ar, u8 *addr
+ {
+ 	return false;
+ }
+-#endif /* CONFIG_ATH11K_DEBUGFS */
  
--#if defined(CONFIG_OF)
- static const struct of_device_id gtm601_codec_of_match[] = {
- 	{ .compatible = "option,gtm601", .data = (void *)&gtm601_dai },
- 	{ .compatible = "broadmobi,bm818", .data = (void *)&bm818_dai },
- 	{},
+-#ifdef CONFIG_MAC80211_DEBUGFS
+-void ath11k_sta_add_debugfs(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+-			    struct ieee80211_sta *sta, struct dentry *dir);
+-void
+-ath11k_accumulate_per_peer_tx_stats(struct ath11k_sta *arsta,
+-				    struct ath11k_per_peer_tx_stats *peer_stats,
+-				    u8 legacy_rate_idx);
+-void ath11k_update_per_peer_stats_from_txcompl(struct ath11k *ar,
+-					       struct sk_buff *msdu,
+-					       struct hal_tx_status *ts);
+-#else /* !CONFIG_MAC80211_DEBUGFS */
+ static inline void
+ ath11k_accumulate_per_peer_tx_stats(struct ath11k_sta *arsta,
+ 				    struct ath11k_per_peer_tx_stats *peer_stats,
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index 556eef9881a7..0ed3e4d19f7a 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -5468,7 +5468,7 @@ static const struct ieee80211_ops ath11k_ops = {
+ 	.flush				= ath11k_mac_op_flush,
+ 	.sta_statistics			= ath11k_mac_op_sta_statistics,
+ 	CFG80211_TESTMODE_CMD(ath11k_tm_cmd)
+-#ifdef CONFIG_MAC80211_DEBUGFS
++#ifdef CONFIG_ATH11K_DEBUGFS
+ 	.sta_add_debugfs		= ath11k_sta_add_debugfs,
+ #endif
  };
- MODULE_DEVICE_TABLE(of, gtm601_codec_of_match);
--#endif
- 
- static struct platform_driver gtm601_codec_driver = {
- 	.driver = {
 -- 
 2.20.0
 
