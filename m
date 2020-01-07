@@ -2,118 +2,135 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6CBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB01C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D692077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="LNc1GFeE"
+	by mail.kernel.org (Postfix) with ESMTP id 46B942073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578385546;
+	bh=w7136eKZokixUOf4koTpCE3/5RMMLGcLq9FIkDE+Qw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dDaiC5SukXDALvzUx8fyk0tS4PXTfd5MhkuISozBcFFruvdhVcYKfp3fDTOfw1Ymn
+	 Y/VDnqzSDpqrrTZoFNk5Behem7Yfv7Zu782QPGCKKSpGL59TvvvB53DQQls8XekX/3
+	 YUeEIx8kXe4KysUDDfPEeGbxeeLNKrjiapuIyJ5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbgAGIVz (ORCPT
+        id S1727347AbgAGIZp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:21:55 -0500
-Received: from mail-mw2nam12on2083.outbound.protection.outlook.com ([40.107.244.83]:10069
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbgAGIVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:21:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MftLr5Q4E6e6FwDy2aMj3A2FAoLzZVLh8yeOU1c43GVBzTPFRvz6amsHu5Bsjn0L0CzVcDY3bGV31CnJ4agz5nbUG2AWj5ayNs4JxSBFFRhiQ1av/fspzmCpzWO80JckIFdorYSSDJSiLzVF/Zoeh+7WXMD9uyx4Y2YqIvbq2IMjvPZAVc36bpwMsDDVaslIP8DJz0y5KGii4q5zurMN6DLm4H/xWU4kshqy6pF6VnWWoQ0rYDssSoZ5zLDyqKN7J/6kArbxkOC0LT2SBf+CL8YMxKtg2pTo51YWcdP2YylYD4hTwGpO/nxrzPzcylgbDPNmr1JeFWuCA52VjFSSmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZTDomqYrN/WvPtLGjg+YTjp+hmq3bXyMaVRmPL8Oag4=;
- b=iwBfjzJEao4UTK9KwkHirGH6Bc0loBVKCDtJyqE+LyVgOi3sMyGtn1660I3E88Y/pecutmsGeQn4vA2Ms+SayfPFnfZCyYILa6bd3LbnENc9RbHJPFGTQdnOBvpBoEiWMYp0+PS/lUuiNIr372qTrBhj2ac5ir2UK5yP3VvoenwjrwgbhM9fckwCIlH9LR3RRbUtj+aBkiv9wt/XhuvirnFzc0jPXqJIC6JbLm3ANhL3l08R+aNwty19w2qcLXPICyskNHsUVNtDXN7DPeX2sAODNANpaRoJCbmAjoRG9ZoB2C5v7wKVzftb7FidwxlQ/RY9OkH+CEmTXqtnEZdPmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZTDomqYrN/WvPtLGjg+YTjp+hmq3bXyMaVRmPL8Oag4=;
- b=LNc1GFeETufYEfEmwsgnoBqcG+KPFSJiVTXLMz2ETDfN0HVYuEM/7zBlvlsWj9NmLpG7rAgrzYUaQdVqWMc1bnb2pC6iMQxBXMkjnOur2MnTTJav2RMf0Et3bfR4odL6lqpt89H8mmiT8fZ2fXCiLq8YRVaH8ES5B/PeHLzrD+I=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4161.namprd08.prod.outlook.com (52.132.222.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.10; Tue, 7 Jan 2020 08:21:49 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
- 08:21:49 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
-CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [EXT] [PATCH v2 1/2] scsi: ufs: pass device information to
- apply_dev_quirks
-Thread-Topic: [EXT] [PATCH v2 1/2] scsi: ufs: pass device information to
- apply_dev_quirks
-Thread-Index: AQHVxCgTBRnpUOS0L0KUX1EO/93sDKfe3j+g
-Date:   Tue, 7 Jan 2020 08:21:49 +0000
-Message-ID: <BN7PR08MB5684CE7F0A63F42FD75DC956DB3F0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1578270431-9873-1-git-send-email-stanley.chu@mediatek.com>
- <1578270431-9873-2-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1578270431-9873-2-git-send-email-stanley.chu@mediatek.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWJlNzc0NWMzLTMxMjYtMTFlYS04Yjg3LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxiZTc3NDVjNS0zMTI2LTExZWEtOGI4Ny1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjI2MCIgdD0iMTMyMjI4NTg5MDcyNDM2NzIzIiBoPSJIVmdheW94U0l0MFNHNDlOWnhYSXcxNkRtTGM9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.81.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7501044-ed05-4d17-3acc-08d7934aa4e2
-x-ms-traffictypediagnostic: BN7PR08MB4161:|BN7PR08MB4161:|BN7PR08MB4161:
-x-microsoft-antispam-prvs: <BN7PR08MB4161360B9094B0C45E2F0F2ADB3F0@BN7PR08MB4161.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 027578BB13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(366004)(396003)(346002)(199004)(189003)(5660300002)(2906002)(86362001)(558084003)(8936002)(7696005)(316002)(81166006)(81156014)(52536014)(55016002)(9686003)(66946007)(55236004)(6506007)(33656002)(478600001)(76116006)(66446008)(66556008)(66476007)(64756008)(186003)(54906003)(7416002)(110136005)(71200400001)(4326008)(26005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4161;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T2QJcEwxaXupX997mnRYsQ13prKsRh91oY9abxHX1swmbFvSItYoF3PhlBAzOBzkI5i1AXBpc8y7vpBPjuqa/54MGiLhKtSsworgggrfdyIo38UiRX8EhgHP7ym96aiQZC6XYmKXQzwhOOvdoKz/0uWmAPmF9cG45swrgsUEUmegAJxFbM510O/FGwru9edVAoHSdT3R3FCd/HLLNob7wU6fbzbQYjQfKSoOmOFcg0ljxLxMJIyyXwqyH1rvRByKR5BV4ib8Ld+GPzBrDkHD2Khp8OFa100tOjMBFYzDSoJ3xFK21bfFN0+8icXAe2o/d0wpb35qSBfRMPWTtnLYh4h4E6Sro45iwzsFBC5+ySr23sCjrvomEpQmH5kkoM8yPvMDSUtEuWekQwKmHZnp8kWdfcIVn5WgCMLOO5V1+3UdGhEkSi3J+6w+TP/5G78S
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jan 2020 03:25:45 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45904 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgAGIZo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:25:44 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so49605459edw.12;
+        Tue, 07 Jan 2020 00:25:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vT2NN+xI4BcelZZCoGioMbTizcdEYSLI6ni70MbnF8c=;
+        b=ZIzmmVIlTS9WEt4rJoZ85Xf5fPjZdF87B7kV/hX4D5K94C2l1i8pRYdmDQzKgH7hGW
+         m38GA6s9JAoGladP/P9jdGwMONnnyq7+yU4xXepGDlhEYpGeN7iF2/3W2NPx0H8zvbJU
+         KYrAsYwZX39weuXU1ce+5S/+sW+pbf01jXgQZxu6TL6EbjdZ1GL9HHR2A/U+nZRx8q3R
+         mdK0ZXg2Tf98/4t++O3/H//zIxfjvmY+dcQHO33IqX4zBlAL0L9efj9NEiCfn0Npn1Z+
+         x8UiciWKC6g1JVNVMK1Dn6gHh2YyHNJbo71IJx8yvzmDbHPv9uvoYymcG80oEVj4gEK0
+         ZDXA==
+X-Gm-Message-State: APjAAAWlf4w5AE74+Q6KniXGe27MJ2zFo//05Wf5Hju5EBkOxFqLjMyR
+        xpNyUkNwdqCSWQWYc3WlnlE=
+X-Google-Smtp-Source: APXvYqwRuI+Pu22h1HAS8nBuWY+NEdeOj5ioRnCb8N42vbhDOOIZ7fM0eRKg8UY44R4kju5amCGT3w==
+X-Received: by 2002:a05:6402:221c:: with SMTP id cq28mr63552685edb.110.1578385542439;
+        Tue, 07 Jan 2020 00:25:42 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id ba29sm7398179edb.47.2020.01.07.00.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 00:25:41 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:25:39 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Message-ID: <20200107082539.GA31827@pi3>
+References: <20191230172113.17222-1-krzk@kernel.org>
+ <20191230172113.17222-2-krzk@kernel.org>
+ <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7501044-ed05-4d17-3acc-08d7934aa4e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 08:21:49.7470
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ve5N0OXz5W37k6RuGE8caKMq/+NqxzQvYdngIlNp942onjX5G3JXmHHIW7ve8WbceEC6J1MH3HuWiz3h5kiPOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4161
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Reviewed-by: Avri Altman <avri.altman@wdc.com>
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+On Tue, Jan 07, 2020 at 08:26:45AM +0100, Uwe Kleine-König wrote:
+> Hello Krzysztof,
+> 
+> On Mon, Dec 30, 2019 at 06:21:13PM +0100, Krzysztof Kozlowski wrote:
+> > Some of the PWM drivers can be compile tested to increase build
+> > coverage.
+> > 
+> > The Meson PWM driver requires COMMON_CLK dependency.
+> 
+> I'm surprised that there are not more that need this. Is HAVE_CLK not
+> enough?
+
+Nope. E.g. for alpha architecture, HAVE_CLK is not set and without
+COMMON_CLK:
+
+drivers/pwm/pwm-meson.o: In function `meson_pwm_init_channels':
+(.text+0x244): undefined reference to `devm_clk_register'
+
+I guess other solution would be to add stubs for few clk functions...
+
+> Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
+> config (which does't have HAS_IOMEM) and they all compile fine.
+
+Because of !HAS_IOMEM, since some time ARCH=um does not support
+COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
+testing (and for regular build it is selected by ARCH).
+
+> 
+> > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
+> >  
+> >  config PWM_MXS
+> >  	tristate "Freescale MXS PWM support"
+> > -	depends on ARCH_MXS && OF
+> > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
+> >  	select STMP_DEVICE
+> >  	help
+> >  	  Generic PWM framework driver for Freescale MXS.
+> > @@ -328,7 +329,8 @@ config PWM_MXS
+> >  
+> >  config PWM_OMAP_DMTIMER
+> >  	tristate "OMAP Dual-Mode Timer PWM support"
+> > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
+> > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
+> > +	depends on OF
+> 
+> I'm surprised that OF isn't required for PWM_MXS but is is for
+> PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
+> pwm-omap-dmtimer.
+
+Since some time !OF has all necessary stubs so OF is actually needed
+only for binding, not compiling.
+
+Best regards,
+Krzysztof
+
