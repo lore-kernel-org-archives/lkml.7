@@ -2,110 +2,111 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E29EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F04C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2715120656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC07720656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:38:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JpEHXUhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgAGShL (ORCPT
+        id S1728519AbgAGSio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:37:11 -0500
-Received: from muru.com ([72.249.23.125]:50430 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbgAGShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:37:11 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 16E8B8022;
-        Tue,  7 Jan 2020 18:37:50 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:37:06 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: motorola-cpcap: Do not hardcode SPI mode flags
-Message-ID: <20200107183706.GH5885@atomide.com>
-References: <20191204231931.21378-1-linus.walleij@linaro.org>
- <20191219170409.GH35479@atomide.com>
- <CACRpkdYm2b7G6dvmY5VCSSQCK6DMEYMYRqnoMpH6jaumkQL3Xg@mail.gmail.com>
- <20200107182400.GG5885@atomide.com>
+        Tue, 7 Jan 2020 13:38:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15962 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgAGSin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:38:43 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e14d0030001>; Tue, 07 Jan 2020 10:37:55 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 10:38:42 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 10:38:42 -0800
+Received: from [10.26.11.139] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 18:38:40 +0000
+Subject: Re: [PATCH v3 09/13] dmaengine: tegra-apb: Remove runtime PM usage
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200106011708.7463-1-digetx@gmail.com>
+ <20200106011708.7463-10-digetx@gmail.com>
+ <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
+ <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
+Date:   Tue, 7 Jan 2020 18:38:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107182400.GG5885@atomide.com>
+In-Reply-To: <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578422275; bh=1vkKMIjMhiXQH/0LKlvaioSuV7wR0KaWYwmiXi110ng=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JpEHXUhwxDD57ebL8Vk3Fj6LL/ZZeLR8kkPdEbWH3mCnB2Qct+tiBOy5Hc29R4+6A
+         UDdkbrs8GpnvjqHdr7QjBUWZJz0ZZhfL3Bo4FTgw2BlxRuoBW1bML6YjtYMyZVTebd
+         oVz3uNg5LnikzYQNaV+u30O2HtwKRJw4F7HiUL10gv10Iwbxmk81bfsJprnlN/TZ0c
+         2zx+7X02oXd7CGaJ0bg/G0h4vwdwlwKAUFxNTbNWnw1eS0cqrvWtV70MmO4hD2sxP2
+         BpMVnSwD9T9Q9dc1g0Yibi+cc0EjJle6gVznV3x0RfZ/USMWyDa1sCd891QqWs+pjM
+         GibEYhE7xVfmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200107 18:24]:
-> * Linus Walleij <linus.walleij@linaro.org> [200107 09:58]:
-> > On Thu, Dec 19, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
-> > 
-> > > * Linus Walleij <linus.walleij@linaro.org> [700101 00:00]:
-> > > > The current use of mode flags to us SPI_MODE_0 and
-> > > > SPI_CS_HIGH is fragile: it overwrites anything already
-> > > > assigned by the SPI core. Change it thusly:
-> > > >
-> > > > - Just |= the SPI_MODE_0 so we keep other flags
-> > > > - Assign ^= SPI_CS_HIGH since we might be active high
-> > > >   already, and that is usually the case with GPIOs used
-> > > >   for chip select, even if they are in practice active low.
-> > > >
-> > > > Add a comment clarifying why ^= SPI_CS_HIGH is the right
-> > > > choice here.
-> > >
-> > > Looks like this breaks booting for droid4 with a cpcap
-> > > PMIC, probably as regulators won't work. There's no GPIO
-> > > controller involved in this case for the chip select, the
-> > > pins are directly controlled by the spi-omap2-mcspi.c
-> > > driver.
-> > >
-> > > From the pin muxing setup we see there's a pull-down on
-> > > mcspi1_cs0 pin meaning it's active high:
-> > >
-> > > /* 0x4a100138 mcspi1_cs0.mcspi1_cs0 ae23 */
-> > > OMAP4_IOPAD(0x138, PIN_INPUT_PULLDOWN | MUX_MODE0)
-> > >
-> > > My guess a similar issue is with similar patches for
-> > > all non-gpio spi controllers?
-> > >
-> > > Let me know if you want me to test some other changes,
-> > > or if this patch depends on some other changes.
-> > 
-> > So this must mean that something else is setting SPI_CS_HIGH
-> > for this driver, such as the device tree, right?
-> 
-> Hmm yes we have "spi-cs-high" property set in the dts.
-> 
-> But looking at drivers/spi/spi-omap2-mcspi.c, it also
-> provides an option to use a GPIO for chip select in
-> omap2_mcspi_setup(). That does not seem to be used though
-> based on a quick grep though.
-> 
-> > And the |= SPI_CS_HIGH assignment in the driver is just
-> > surplus and we should just delete this code instead.
-> > 
-> > Would that be right?
-> 
-> Sorry I don't know, maybe. If you have some test patch to
-> try I can easily test.
 
-Oh sorry, I guess you're suggesting we drop SPI_CS_HIGH from
-drivers/mfd/motorola-cpcap.c, and not from spi-omap2-mcspi.c..
-Too much glög over the holidays probably :)
+On 07/01/2020 17:12, Dmitry Osipenko wrote:
+> 07.01.2020 18:13, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 06/01/2020 01:17, Dmitry Osipenko wrote:
+>>> There is no benefit from runtime PM usage for the APB DMA driver becaus=
+e
+>>> it enables clock at the time of channel's allocation and thus clock sta=
+ys
+>>> enabled all the time in practice, secondly there is benefit from manual=
+ly
+>>> disabled clock because hardware auto-gates it during idle by itself.
+>>
+>> This assumes that the channel is allocated during a driver
+>> initialisation. That may not always be the case. I believe audio is one
+>> case where channels are requested at the start of audio playback.
+>=20
+> At least serial, I2C, SPI and T20 FUSE are permanently keeping channels
+> allocated, thus audio is an exception here. I don't think that it's
+> practical to assume that there is a real-world use-case where audio
+> driver is the only active DMA client.
+>=20
+> The benefits of gating the DMA clock are also dim, do you have any
+> power-consumption numbers that show that it's really worth to care about
+> the clock-gating?
 
-Anyways, removing SPI_CS_HIGH motorola-cpcap.c also causes
-mounting MMC to fail looks like. I wonder if we're missing
-of_property_read_bool() for spi-cs-high in spi-omap2-mcspi.c?
+No, but at the same time, I really don't see the point in this. In fact,
+I think it is a step backwards. If we wanted to only enable clocks while
+DMA channels are active we could. So I request you drop this.
 
-Regards,
+Jon
 
-Tony
+--=20
+nvpublic
