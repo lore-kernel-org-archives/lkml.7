@@ -2,91 +2,116 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A378C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904BBC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A70214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6934B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAGTaG (ORCPT
+        id S1728697AbgAGTal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:30:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35007 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgAGTaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:30:06 -0500
-Received: from ip-109-41-1-29.web.vodafone.de ([109.41.1.29] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iouYD-0004D8-2A; Tue, 07 Jan 2020 19:30:01 +0000
-Date:   Tue, 7 Jan 2020 20:30:03 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Amanieu d'Antras <amanieu@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        keescook@chromium.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
-Message-ID: <20200107193002.qr4c7oeb5qae4n6d@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
- <20200102172413.654385-3-amanieu@gmail.com>
- <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
- <20200106173953.GB9676@willie-the-truck>
- <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
- <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
- <20200107174508.GC32009@willie-the-truck>
+        Tue, 7 Jan 2020 14:30:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:33626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728307AbgAGTal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:30:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53C4330E;
+        Tue,  7 Jan 2020 11:30:40 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDE953F534;
+        Tue,  7 Jan 2020 11:30:37 -0800 (PST)
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+To:     Quentin Perret <qperret@google.com>,
+        Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200107134234.GA158998@google.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
+Date:   Tue, 7 Jan 2020 20:30:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200107134234.GA158998@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200107174508.GC32009@willie-the-truck>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 05:45:09PM +0000, Will Deacon wrote:
-> On Tue, Jan 07, 2020 at 10:02:27AM +0100, Christian Brauner wrote:
-> > [Cc Kees in case he knows something about where arch specific tests live
-> >  or whether we have a framework for this]
-> > 
-> > On Mon, Jan 06, 2020 at 07:03:32PM +0100, Amanieu d'Antras wrote:
-> > > On Mon, Jan 6, 2020 at 6:39 PM Will Deacon <will@kernel.org> wrote:
-> > > > I also ran the native and compat selftests but, unfortunately, they all
-> > > > pass even without this patch. Do you reckon it would be possible to update
-> > > > them to check the tls pointer?
-> > > 
-> > > Here's the program I used for testing on arm64. I considered adding it
-> > > to the selftests but there is no portable way of reading the TLS
-> > > register on all architectures.
-> > 
-> > I'm not saying you need to do this right now.
+On 07/01/2020 14:42, Quentin Perret wrote:
+> Hi Qais,
 > 
-> Agreed, these patches should be merged in their current state and my ack
-> stands for that.
+> On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
 
-Oh yeah, that's how I took your Ack.
-Thanks! :)
+[...]
 
+>> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+>> index e591d40fd645..19572dfc175b 100644
+>> --- a/kernel/sched/rt.c
+>> +++ b/kernel/sched/rt.c
+>> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
+>>   */
+>>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+>>  {
+>> +	/*
+>> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
+>> +	 * we apply any new value on the next wakeup, which is here.
+>> +	 */
+>> +	uclamp_rt_sync_default_util_min(p);
 > 
-> > It feels like we must've run into the "this is architecture
-> > specific"-and-we-want-to-test-this issue before... Do we have a place
-> > where architecture specific selftests live?
-> 
-> For arch-specific selftests there are tools/testing/selftests/$ARCH
-> directories, although in this case maybe it's better to have an #ifdef
-> in a header so that architectures with __builtin_thread_pointer can use
-> that.
+> The task has already been enqueued and sugov has been called by then I
+> think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
 
-Yeah, I think the #ifdef approach might make the most sense.
+That's probably better.
+Just to be sure ...we want this feature (an existing rt task gets its
+UCLAMP_MIN value set when the sysctl changes) because there could be rt
+tasks running before the sysctl is set?
 
-Christian
+>> +
+>>  	if (!task_running(rq, p) &&
+>>  	    !test_tsk_need_resched(rq->curr) &&
+>>  	    p->nr_cpus_allowed > 1 &&
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index 280a3c735935..337bf17b1a9d 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>>  #endif /* CONFIG_CPU_FREQ */
+>>  
+>>  #ifdef CONFIG_UCLAMP_TASK
+>> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
+>> +
+>>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>>  
+>>  static __always_inline
+>> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+>>  	return uclamp_util_with(rq, util, NULL);
+>>  }
+>>  #else /* CONFIG_UCLAMP_TASK */
+>> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
+
+-void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
++static inline void uclamp_rt_sync_default_util_min(struct task_struct
+*p) {}
+
+[...]
