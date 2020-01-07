@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB10EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD5BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCCF2187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A0F2187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430908;
-	bh=1Wx8C2XCvaYqkGNttzgM3mP6mB/ZBZD1qkXNpbJxbdI=;
+	s=default; t=1578430912;
+	bh=YfJojMYmFBRmvjmDVhNyyI6ol4s3eXlLwuaoetSSiGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rx5MPGbsl62fUJvdrDHSIGMzlcrN6OTXQLw5rkbvjIAz6qekcjOhnoR3AksS0rPWV
-	 HBw3LPJQgha/oo9z06gsIJAWIw03RPBpKAlca17w4DHGnclyW0Imbhvd7C8nFI1hBr
-	 7XzESl1EexA+3Uu1UwyaZr8JZb5XnHz6KnwNJUPU=
+	b=J+cdeNnKI+E7t2V4jkP3x4WHaqZ939/zlESSMvtJYwfKA45x5zvlHhdB2VEdQu6Ve
+	 +VvuNICqWy4ftgARDP7rr+YcY1+WAoUw8uN1/KDfre8AvJnkCxJEuwnNlDb65z4EnP
+	 7v9UCU/xDMwFrHCQI9mrK458jj+wjyadvohME3b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgAGVBr (ORCPT
+        id S1728637AbgAGVBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgAGVBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:41 -0500
+        id S1728198AbgAGVBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08026214D8;
-        Tue,  7 Jan 2020 21:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB44F214D8;
+        Tue,  7 Jan 2020 21:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430901;
-        bh=1Wx8C2XCvaYqkGNttzgM3mP6mB/ZBZD1qkXNpbJxbdI=;
+        s=default; t=1578430906;
+        bh=YfJojMYmFBRmvjmDVhNyyI6ol4s3eXlLwuaoetSSiGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmbnwgnZ+TpNSrSWnJyn1DEDfogNUdxjxCazMw4gwk6zCzpijGkg1n9HJzvi8Nj+u
-         FX891KTGA3lYUI4cK3W3o8LLj6EKF0Or8hty6sY/cvLCUuerRqdggzmCUdmmPiSp04
-         2zUJ9JDa5W6ud+e45hZJn4XbWtDwxdFjO6oWKDJE=
+        b=vNSkCxj9n5xYWUtG6DFdPjJdw1ZEecNFc3PZK+jhjLE1o979LLmrj6q/+/SLE8Xwp
+         9UMY0wGGMNfDajvInhuczovMlewB70Obwu04dGUqN4a+1DCuHRhV0STj6QXVYTbo38
+         BArFQxWt9I99Lso2a6naU2P9H7QK65t+/2RIWnRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 5.4 143/191] perf callchain: Fix segfault in thread__resolve_callchain_sample()
-Date:   Tue,  7 Jan 2020 21:54:23 +0100
-Message-Id: <20200107205340.628805216@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.4 145/191] of: overlay: add_changeset_property() memory leak
+Date:   Tue,  7 Jan 2020 21:54:25 +0100
+Message-Id: <20200107205340.734502711@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,38 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Frank Rowand <frank.rowand@sony.com>
 
-commit aceb98261ea7d9fe38f9c140c5531f0b13623832 upstream.
+commit 637392a8506a3a7dd24ab9094a14f7522adb73b4 upstream.
 
-Do not dereference 'chain' when it is NULL.
+No changeset entries are created for #address-cells and #size-cells
+properties, but the duplicated properties are never freed.  This
+results in a memory leak which is detected by kmemleak:
 
-  $ perf record -e intel_pt//u -e branch-misses:u uname
-  $ perf report --itrace=l --branch-history
-  perf: Segmentation fault
+ unreferenced object 0x85887180 (size 64):
+   backtrace:
+     kmem_cache_alloc_trace+0x1fb/0x1fc
+     __of_prop_dup+0x25/0x7c
+     add_changeset_property+0x17f/0x370
+     build_changeset_next_level+0x29/0x20c
+     of_overlay_fdt_apply+0x32b/0x6b4
+     ...
 
-Fixes: e9024d519d89 ("perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191114142538.4097-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 6f75118800ac ("of: overlay: validate overlay properties #address-cells and #size-cells")
+Reported-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Tested-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/machine.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/overlay.c |   37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2403,7 +2403,7 @@ static int thread__resolve_callchain_sam
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -305,7 +305,6 @@ static int add_changeset_property(struct
+ {
+ 	struct property *new_prop = NULL, *prop;
+ 	int ret = 0;
+-	bool check_for_non_overlay_node = false;
+ 
+ 	if (target->in_livetree)
+ 		if (!of_prop_cmp(overlay_prop->name, "name") ||
+@@ -318,6 +317,25 @@ static int add_changeset_property(struct
+ 	else
+ 		prop = NULL;
+ 
++	if (prop) {
++		if (!of_prop_cmp(prop->name, "#address-cells")) {
++			if (!of_prop_val_eq(prop, overlay_prop)) {
++				pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
++				       target->np);
++				ret = -EINVAL;
++			}
++			return ret;
++
++		} else if (!of_prop_cmp(prop->name, "#size-cells")) {
++			if (!of_prop_val_eq(prop, overlay_prop)) {
++				pr_err("ERROR: changing value of #size-cells is not allowed in %pOF\n",
++				       target->np);
++				ret = -EINVAL;
++			}
++			return ret;
++		}
++	}
++
+ 	if (is_symbols_prop) {
+ 		if (prop)
+ 			return -EINVAL;
+@@ -330,33 +348,18 @@ static int add_changeset_property(struct
+ 		return -ENOMEM;
+ 
+ 	if (!prop) {
+-		check_for_non_overlay_node = true;
+ 		if (!target->in_livetree) {
+ 			new_prop->next = target->np->deadprops;
+ 			target->np->deadprops = new_prop;
+ 		}
+ 		ret = of_changeset_add_property(&ovcs->cset, target->np,
+ 						new_prop);
+-	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
+-		if (!of_prop_val_eq(prop, new_prop)) {
+-			pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
+-			       target->np);
+-			ret = -EINVAL;
+-		}
+-	} else if (!of_prop_cmp(prop->name, "#size-cells")) {
+-		if (!of_prop_val_eq(prop, new_prop)) {
+-			pr_err("ERROR: changing value of #size-cells is not allowed in %pOF\n",
+-			       target->np);
+-			ret = -EINVAL;
+-		}
+ 	} else {
+-		check_for_non_overlay_node = true;
+ 		ret = of_changeset_update_property(&ovcs->cset, target->np,
+ 						   new_prop);
  	}
  
- check_calls:
--	if (callchain_param.order != ORDER_CALLEE) {
-+	if (chain && callchain_param.order != ORDER_CALLEE) {
- 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
- 					&cpumode, chain->nr - first_call);
- 		if (err)
+-	if (check_for_non_overlay_node &&
+-	    !of_node_check_flag(target->np, OF_OVERLAY))
++	if (!of_node_check_flag(target->np, OF_OVERLAY))
+ 		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
+ 		       target->np, new_prop->name);
+ 
 
 
