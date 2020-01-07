@@ -2,162 +2,149 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466FCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C054DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C76A20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A023220715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAGTJJ (ORCPT
+        id S1728721AbgAGTJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:09:09 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:49286 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgAGTJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:09:09 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iouDx-0005jg-Lf; Tue, 07 Jan 2020 12:09:07 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iouDv-0001Ks-UQ; Tue, 07 Jan 2020 12:09:03 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kit Chow <kchow@gigaio.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue,  7 Jan 2020 12:09:02 -0700
-Message-Id: <20200107190902.5093-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 7 Jan 2020 14:09:58 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:48114 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728617AbgAGTJ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:09:58 -0500
+Received: (qmail 7431 invoked by uid 2102); 7 Jan 2020 14:09:57 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 7 Jan 2020 14:09:57 -0500
+Date:   Tue, 7 Jan 2020 14:09:57 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        <ingrassia@epigenesys.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
+In-Reply-To: <CAAeHK+z5sY=CpPhO0QZGE_o1Bo8XA4PG4NT=mprO=9=Rg+1kkQ@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2001071407350.1567-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kchow@gigaio.com, benh@kernel.crashing.org, nicholas.johnson-opensource@outlook.com.au, mika.westerberg@linux.intel.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v4] PCI: Fix disabling of bridge BARs when assigning bus resources
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One odd quirk of PLX switches is that their upstream bridge port has
-256K of space allocated behind its BAR0 (most other bridge
-implementations do not report any BAR space). The lspci for such  device
-looks like:
+On Tue, 7 Jan 2020, Andrey Konovalov wrote:
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Physical Slot: 1
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
-      Kernel driver in use: pcieport
+> On Fri, Jan 3, 2020 at 6:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Fri, 3 Jan 2020, syzbot wrote:
+> >
+> > > Hello,
+> > >
+> > > syzbot has tested the proposed patch and the reproducer did not trigger
+> > > crash:
+> > >
+> > > Reported-and-tested-by:
+> > > syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com
+> > >
+> > > Tested on:
+> > >
+> > > commit:         ecdf2214 usb: gadget: add raw-gadget interface
+> > > git tree:       https://github.com/google/kasan.git
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=10e5f68920f13587ab12
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=177f06e1e00000
+> > >
+> > > Note: testing is done by a robot and is best-effort only.
+> >
+> > Andrey:
+> >
+> > Clearly something strange is going on here.  First, the patch should
+> > not have changed the behavior; all it did was add some log messages.
+> > Second, I don't see how the warning could have been triggered at all --
+> > it seems to be complaining that 2 != 2.
+> 
+> Hi Alan,
+> 
+> It looks like some kind of race in involved here.
+> 
+> There are a few indications of that: 1. there's no C reproducer
+> generated for this crash (usually happens because of timing
+> differences when executing syz repro vs C repro), 2. syz repro has
+> threaded, collide and repeat flags turned on (which means it gets
+> executed many times with some syscalls scheduled asynchronously).
+> 
+> This also explains the weirdness around the 2 != 2 check being failed.
+> First the comparison failed, then another thread updated one of the
+> numbers being compared, and then the printk statement got executed.
 
-It's not clear what the purpose of the memory at 0x90a00000 is, and
-currently the kernel never actually uses it for anything. In most cases,
-it's safely ignored and does not cause a problem.
+Okay, that's kind of what I thought.
 
-However, when the kernel assigns the resource addresses (with the
-pci=realloc command line parameter, for example) it can inadvertently
-disable the struct resource corresponding to the bar. When this happens,
-lspci will report this memory as ignored:
+> > Does the reproducer really work?
+> 
+> Yes, it worked for syzbot at the very least. It looks like your patch
+> introduced some delays which made the bug untriggerable by the same
+> reproducer. Since this is a race it might be quite difficult to
+> reproduce this manually (due to timing differences caused by a
+> different environment setup) as well unfortunately.
+> 
+> Perhaps giving a less invasive patch (that minimizes timing changes
+> introduced to the code that is suspected of being racy) to syzbot
+> could be used to debug this.
 
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+Maybe this patch will work better.  The timing change in the critical 
+path should be extremely small.
 
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however shows the bios-assigned address
-will still be programmed in the device's BAR registers.
+Alan Stern
 
-It's clearly a bug that the kernel's view of the registers differs from
-what's actually programmed in the BAR, but in most cases, this still
-won't result in a visibile issue because nothing uses the memory,
-so nothing is affected. However, a big problem shows up when an IOMMU
-is in use: the IOMMU will not reserve this space in the IOVA because the
-kernel no longer thinks the range is valid. (See
-dmar_init_reserved_ranges() for the Intel implementation of this.)
+#syz test: https://github.com/google/kasan.git ecdf2214
 
-Without the proper reserved range, we have a situation where a DMA
-mapping may occasionally allocate an IOVA which the PCI bus will actually
-route to a BAR in the PLX switch. This will result in some random DMA
-writes not actually writing to the RAM they are supposed to, or random
-DMA reads returning all FFs from the PLX BAR when it's supposed to have
-read from RAM.
+Index: usb-devel/drivers/usb/core/urb.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/urb.c
++++ usb-devel/drivers/usb/core/urb.c
+@@ -205,7 +205,7 @@ int usb_urb_ep_type_check(const struct u
+ 
+ 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
+ 	if (!ep)
+-		return -EINVAL;
++		return -EBADF;
+ 	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+ 		return -EINVAL;
+ 	return 0;
+@@ -356,6 +356,7 @@ int usb_submit_urb(struct urb *urb, gfp_
+ 	struct usb_host_endpoint	*ep;
+ 	int				is_out;
+ 	unsigned int			allowed;
++	int				c;
+ 
+ 	if (!urb || !urb->complete)
+ 		return -EINVAL;
+@@ -474,9 +475,10 @@ int usb_submit_urb(struct urb *urb, gfp_
+ 	 */
+ 
+ 	/* Check that the pipe's type matches the endpoint's type */
+-	if (usb_urb_ep_type_check(urb))
+-		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+-			usb_pipetype(urb->pipe), pipetypes[xfertype]);
++	c = usb_urb_ep_type_check(urb);
++	if (c)
++		dev_WARN(&dev->dev, "BOGUS urb xfer %d, pipe %x != type %x\n",
++			c, usb_pipetype(urb->pipe), pipetypes[xfertype]);
+ 
+ 	/* Check against a simple/standard policy */
+ 	allowed = (URB_NO_TRANSFER_DMA_MAP | URB_NO_INTERRUPT | URB_DIR_MASK |
 
-The problem is caused in pci_assign_unassigned_root_bus_resources().
-When any resource from a bridge device fails to get assigned, the code
-sets the resource's flags to zero. This makes sense for bridge resources,
-as they will be re-enabled later, but for regular BARs, it disables them
-permanently.
 
-The code in question seems to indent to check if "dev->subordinate" is
-zero to determine whether a device is a bridge, however this is not
-likely valid as there might be a bridge without a subordinate bus due to
-running out of bus numbers or other cases.
-
-To fix these issues we instead check that the idx is in the
-PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
-thus is sufficient for the "dev->subordinate" check and will also
-prevent the bug above from clobbering PLX devices' regular BARs.
-
-Reported-by: Kit Chow <kchow@gigaio.com>
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/setup-bus.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-This patch was last submitted back in June as part of a series. I've
-dropped the first patch in the series as a similar patch from Nicholas
-takes care of the bug.
-
-As a reminder, the previous discussion on this patch is here[1]. Per the
-feedback, I've updated the patch to remove the check on
-"dev->subordinate" entirely.
-
-The patch is based on v5.5-rc5 and a git branch is available here:
-
-https://github.com/sbates130272/linux-p2pmem pci_realloc_v4
-
-[1] https://lore.kernel.org/linux-pci/20190617135307.GA13533@google.com/
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f279826204eb..23f6c95f3fd7 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1803,11 +1803,15 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
- 	/* Restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
-
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
-+
-+		idx = res - &fail_res->dev->resource[0];
-+		if (idx >= PCI_BRIDGE_RESOURCES &&
-+		    idx <= PCI_BRIDGE_RESOURCE_END)
- 			res->flags = 0;
- 	}
- 	free_list(&fail_head);
---
-2.20.1
