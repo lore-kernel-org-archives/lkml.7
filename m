@@ -2,66 +2,150 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BEFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA79C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E664F20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D9920678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgAGKzC (ORCPT
+        id S1727868AbgAGK4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:55:02 -0500
-Received: from verein.lst.de ([213.95.11.211]:43807 "EHLO verein.lst.de"
+        Tue, 7 Jan 2020 05:56:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:55780 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgAGKzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:55:01 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DE1FD68AFE; Tue,  7 Jan 2020 11:54:58 +0100 (CET)
-Date:   Tue, 7 Jan 2020 11:54:58 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "Grimm, Jon" <jon.grimm@amd.com>, baekhw@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc] dma-mapping: preallocate unencrypted DMA atomic pool
-Message-ID: <20200107105458.GA3139@lst.de>
-References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <3213a6ac-5aad-62bc-bf95-fae8ba088b9e@arm.com>
+        id S1726690AbgAGK4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:56:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A884328;
+        Tue,  7 Jan 2020 02:56:23 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 644873F534;
+        Tue,  7 Jan 2020 02:56:20 -0800 (PST)
+Subject: Re: [PATCH net] Revert "net: stmmac: platform: Fix MDIO init for
+ platforms without PHY"
+To:     Sriram Dash <sriram.dash@samsung.com>,
+        'Florian Fainelli' <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org
+Cc:     'Jose Abreu' <Jose.Abreu@synopsys.com>,
+        'Jayati Sahu' <jayati.sahu@samsung.com>,
+        'Alexandre Torgue' <alexandre.torgue@st.com>,
+        tomeu.vizoso@collabora.com, rcsekar@samsung.com,
+        khilman@baylibre.com, mgalka@collabora.com,
+        linux-kernel@vger.kernel.org,
+        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>,
+        linux-stm32@st-md-mailman.stormreply.com, broonie@kernel.org,
+        pankaj.dubey@samsung.com,
+        'Maxime Coquelin' <mcoquelin.stm32@gmail.com>,
+        guillaume.tucker@collabora.com, enric.balletbo@collabora.com,
+        'Giuseppe Cavallaro' <peppe.cavallaro@st.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org, heiko@sntech.de
+References: <CGME20200107050854epcas1p3c1a66e67f14802322063f6c9747f1986@epcas1p3.samsung.com>
+ <20200107050846.16838-1-f.fainelli@gmail.com>
+ <011a01d5c51d$d7482290$85d867b0$@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <59cb4087-6a71-9684-c4cf-d203600b45a9@arm.com>
+Date:   Tue, 7 Jan 2020 10:56:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3213a6ac-5aad-62bc-bf95-fae8ba088b9e@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <011a01d5c51d$d7482290$85d867b0$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 05:34:00PM +0000, Robin Murphy wrote:
-> On 01/01/2020 1:54 am, David Rientjes via iommu wrote:
->> Christoph, Thomas, is something like this (without the diagnosic
->> information included in this patch) acceptable for these allocations?
->> Adding expansion support when the pool is half depleted wouldn't be *that*
->> hard.
+On 07/01/2020 5:46 am, Sriram Dash wrote:
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>> Subject: [PATCH net] Revert "net: stmmac: platform: Fix MDIO init for
+> platforms
+>> without PHY"
 >>
->> Or are there alternatives we should consider?  Thanks!
->
-> Are there any platforms which require both non-cacheable remapping *and* 
-> unencrypted remapping for distinct subsets of devices?
->
-> If not (and I'm assuming there aren't, because otherwise this patch is 
-> incomplete in covering only 2 of the 3 possible combinations), then 
-> couldn't we keep things simpler by just attributing both properties to the 
-> single "atomic pool" on the basis that one or the other will always be a 
-> no-op? In other words, basically just tweaking the existing "!coherent" 
-> tests to "!coherent || force_dma_unencrypted()" and doing 
-> set_dma_unencrypted() unconditionally in atomic_pool_init().
+>> This reverts commit d3e014ec7d5ebe9644b5486bc530b91e62bbf624 ("net:
+>> stmmac: platform: Fix MDIO init for platforms without PHY") because it
+> breaks
+>> existing systems with stmmac which do not have a MDIO bus sub-node nor a
+>> 'phy-handle' property declared in their Device Tree. On those systems, the
+>> stmmac MDIO bus is expected to be created and then scanned by
+>> of_mdiobus_register() to create PHY devices.
+>>
+>> While these systems should arguably make use of a more accurate Device
+> Tree
+>> reprensentation with the use of the MDIO bus sub-node an appropriate 'phy-
+>> handle', we cannot break them, therefore restore the behavior prior to the
+> said
+>> commit.
+>>
+>> Fixes: d3e014ec7d5e ("net: stmmac: platform: Fix MDIO init for platforms
+>> without PHY")
+>> Reported-by: Heiko Stuebner <heiko@sntech.de>
+>> Reported-by: kernelci.org bot <bot@kernelci.org>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Nacked-by: Sriram Dash <Sriram.dash@samsung.com>
+> 
+>> ---
+>> Heiko,
+>>
+>> I did not add the Tested-by because the patch is a little bit different
+> from what
+>> you tested, even if you most likely were not hitting the other part that I
+> was
+>> changing. Thanks!
+>>
+>>   drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> index cc8d7e7bf9ac..bedaff0c13bd 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> @@ -320,7 +320,7 @@ static int stmmac_mtl_setup(struct platform_device
+>> *pdev,  static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
+>>   			 struct device_node *np, struct device *dev)  {
+>> -	bool mdio = false;
+>> +	bool mdio = true;
+> 
+> 
+> This is breaking for the platforms with fixed-link.
+> stih418-b2199.dts and 169445.dts to name a few.
+> 
+> For the newer platforms, they should provide the mdio/ snps,dwmac-mdio
+> property in the device tree as we are checking the mdio/ snps,dwmac-mdio
+> property in the stmmac_platform driver for the mdio bus memory allocation.
+> For existing platforms, I agree we should not break them, but we should make
+> the code correct. And make the existing platforms adapt to the proper code.
+> There is a proposed solution.
+> https://lkml.org/lkml/2020/1/7/14
+> 
+> What do you think?
 
-I think that would make most sense.
+The binding says that the phy handle and mdio child node are optional, 
+so "update all of the DTBs!" is not a viable solution. I'm far from an 
+expert here, but AFAICS the fault of the current code is that it assumes 
+the lack of a phy handle implies a fixed link, so the obvious answer is 
+to actually check whether the "fixed-link" property is present.
+
+Robin.
+
+> 
+>>   	static const struct of_device_id need_mdio_ids[] = {
+>>   		{ .compatible = "snps,dwc-qos-ethernet-4.10" },
+>>   		{},
+>> --
+>> 2.19.1
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
