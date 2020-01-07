@@ -2,202 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF604C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B14C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF0A2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432082;
-	bh=c2hPFgjk4CWDasmc5+iGcU3CKmonvNZ9FSncLbPT0dU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=xBz33gvLzxHV1FAZoJms+Ai+Tod4oHRWegIzXi/HZl4A79otiQYxTnT5i4r9BVV8h
-	 8oMhIv6JtaZ8o6DZUs8JVghCOktznWhBfcUPLoo7UD9ghrR9QpgHdy55iax6PEYzlO
-	 0nkAD2xkat3DsBhQObQ2jRpCobRURP3MwwF/BH00=
+	by mail.kernel.org (Postfix) with ESMTP id 83C402081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAGVVW (ORCPT
+        id S1728881AbgAGVDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:21:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgAGVVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:21:20 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C532081E;
-        Tue,  7 Jan 2020 21:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578432079;
-        bh=c2hPFgjk4CWDasmc5+iGcU3CKmonvNZ9FSncLbPT0dU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=AuSCEO+Otv9HKtTDIVW5at4pAiMvjj5R1LSkBSXbx2WiAt5xa22UvqXISV3I/vskz
-         s8cb1JtbRqox9UMUWjGlYErt1N2HuflvEt4Iy25GSt9InHNd75DEORW9rqtjB9gncA
-         KppTkk3pLwKIZBhEm3kUn92HgJi4KmFNZT5lKxDg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4E1673522735; Tue,  7 Jan 2020 13:21:19 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:21:19 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH RESEND -rcu] kcsan: Prefer __always_inline for fast-path
-Message-ID: <20200107212119.GB13449@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200107163104.143542-1-elver@google.com>
+        Tue, 7 Jan 2020 16:03:12 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:33875 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgAGVDI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:08 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MK3eI-1j87qh1y5m-00LZCF; Tue, 07 Jan 2020 22:02:57 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Jason Dillaman <dillaman@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rbd: work around -Wuninitialized warning
+Date:   Tue,  7 Jan 2020 22:01:04 +0100
+Message-Id: <20200107210256.2426176-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107163104.143542-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:qiBbNdWqGEMMIERlxqJELgdKzb8bJCMzjAWQ9HTgak9Ff2vxvog
+ ZiKQ150VLDh9JWrAZooVqHelJQp11Bcb1+CNXSqkQDQ5sRKJxbgEOWMtteK73DtHqmRyONM
+ XuUfU69io62lViiPJ2aYJR+QXe300SyxvfaTS/q7SZo+/bVQOrCU4ddHNeGOxxBML+IUjtl
+ YruDPJn/MY3pY8Cm3Ekbw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hziPz/VrV88=:vbym4h2BXvC60iOZqV3c2h
+ O1BEGbiDBe0xht86RpkPm2j0b5Aq9nP58yihvmdmaAs52YAMUFSJQN6lDS5neHyMnJ8CwhTyp
+ q/rUixeG4V50J54isuCECu+RaMN07YIVtYmZvSEIi7x//EvUSwn6U0Lp2n0nVWL61KTKeUK5w
+ bL1Pi3P8Ox+LtG23J3WdbLl6E4SPfOLwY1ikjkvmalIdpPCNR7lAcTG3V69SGee1CyIvLD+47
+ k3ByUp5plwat6dkBTeybDsS7BeOlk+ifWhyhS4brik6DBWh9gkd1GdTGLwsW7db43hNj1lnIv
+ 0LM7pwxPT0QkX2dHM5R/yhB/YZFNz9Sjrys2YjpseeiESAvU/6bbOJtpakDVhHUODCv+08sN6
+ WXkkcXsNc3lBp8AIvhlpjYv2bUyMaLakFP+A+0TP5bvSd1bgdhpJFLxe15QA85rfnVhZI11vk
+ wqUOtz3j4YBROukCc3nky2cbvIrab/mS+eiZBdkbPLo6Zau/Z7mZR1ZWu8AOH+ra1mUCN0/MC
+ osU6Gm2s6foPtPQsSkeP5Eo7/xVdSfyYQz4eVc2pOCS7IBm+6PYaotTcweBIcKfDoemjlimBj
+ JwT1w1u0iW5U/+Cb0PSw2IEkxma7HutNJlAbKqOID4TwiKXfIOlK7umbn/NpWSlTgh8X7H0+U
+ upd5CbeWgqxJVNAI5bNOTL4WsTdDmcKUkxS1ezhMi/4WllLaHkV1A/KAZTsa6DIWXLwR6w0fu
+ anNIdc9Z35OIyHFmhn/4oEUM93rSg8co0ZrKCI9uXiEJzQU4mPH/ve3QLrQ5Hy5LO+9T3xqOF
+ +rOFy+C8Yi7a1h56k44qj5gbp1eBFwMVG33nWa6NciNxm3PYswLJ/eCpea1WdD6UkN76PQn2e
+ LkkHj/b+AE4EjXP1YI5g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 05:31:04PM +0100, Marco Elver wrote:
-> Prefer __always_inline for fast-path functions that are called outside
-> of user_access_save, to avoid generating UACCESS warnings when
-> optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
-> surprises with compiler versions that change the inlining heuristic even
-> when optimizing for performance.
-> 
-> Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> Rebased against -rcu/dev branch.
+gcc -O3 warns about a dummy variable that is passed
+down into rbd_img_fill_nodata without being initialized:
 
-Queued and pushed, thank you, Marco!
+drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+  fctx->iter = *fctx->pos;
 
-							Thanx, Paul
+Since this is a dummy, I assume the warning is harmless, but
+it's better to initialize it anyway and avoid the warning.
 
-> ---
->  kernel/kcsan/atomic.h   |  2 +-
->  kernel/kcsan/core.c     | 18 +++++++++---------
->  kernel/kcsan/encoding.h | 14 +++++++-------
->  3 files changed, 17 insertions(+), 17 deletions(-)
-> 
-> diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
-> index 576e03ddd6a3..a9c193053491 100644
-> --- a/kernel/kcsan/atomic.h
-> +++ b/kernel/kcsan/atomic.h
-> @@ -18,7 +18,7 @@
->   * than cast to volatile. Eventually, we hope to be able to remove this
->   * function.
->   */
-> -static inline bool kcsan_is_atomic(const volatile void *ptr)
-> +static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
->  {
->  	/* only jiffies for now */
->  	return ptr == &jiffies;
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index 3314fc29e236..4d4ab5c5dc53 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -78,10 +78,10 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
->   */
->  static DEFINE_PER_CPU(long, kcsan_skip);
->  
-> -static inline atomic_long_t *find_watchpoint(unsigned long addr,
-> -					     size_t size,
-> -					     bool expect_write,
-> -					     long *encoded_watchpoint)
-> +static __always_inline atomic_long_t *find_watchpoint(unsigned long addr,
-> +						      size_t size,
-> +						      bool expect_write,
-> +						      long *encoded_watchpoint)
->  {
->  	const int slot = watchpoint_slot(addr);
->  	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
-> @@ -146,7 +146,7 @@ insert_watchpoint(unsigned long addr, size_t size, bool is_write)
->   *	2. the thread that set up the watchpoint already removed it;
->   *	3. the watchpoint was removed and then re-used.
->   */
-> -static inline bool
-> +static __always_inline bool
->  try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
->  {
->  	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
-> @@ -160,7 +160,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
->  	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
->  }
->  
-> -static inline struct kcsan_ctx *get_ctx(void)
-> +static __always_inline struct kcsan_ctx *get_ctx(void)
->  {
->  	/*
->  	 * In interrupts, use raw_cpu_ptr to avoid unnecessary checks, that would
-> @@ -169,7 +169,7 @@ static inline struct kcsan_ctx *get_ctx(void)
->  	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
->  }
->  
-> -static inline bool is_atomic(const volatile void *ptr)
-> +static __always_inline bool is_atomic(const volatile void *ptr)
->  {
->  	struct kcsan_ctx *ctx = get_ctx();
->  
-> @@ -193,7 +193,7 @@ static inline bool is_atomic(const volatile void *ptr)
->  	return kcsan_is_atomic(ptr);
->  }
->  
-> -static inline bool should_watch(const volatile void *ptr, int type)
-> +static __always_inline bool should_watch(const volatile void *ptr, int type)
->  {
->  	/*
->  	 * Never set up watchpoints when memory operations are atomic.
-> @@ -226,7 +226,7 @@ static inline void reset_kcsan_skip(void)
->  	this_cpu_write(kcsan_skip, skip_count);
->  }
->  
-> -static inline bool kcsan_is_enabled(void)
-> +static __always_inline bool kcsan_is_enabled(void)
->  {
->  	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
->  }
-> diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
-> index b63890e86449..f03562aaf2eb 100644
-> --- a/kernel/kcsan/encoding.h
-> +++ b/kernel/kcsan/encoding.h
-> @@ -59,10 +59,10 @@ encode_watchpoint(unsigned long addr, size_t size, bool is_write)
->  		      (addr & WATCHPOINT_ADDR_MASK));
->  }
->  
-> -static inline bool decode_watchpoint(long watchpoint,
-> -				     unsigned long *addr_masked,
-> -				     size_t *size,
-> -				     bool *is_write)
-> +static __always_inline bool decode_watchpoint(long watchpoint,
-> +					      unsigned long *addr_masked,
-> +					      size_t *size,
-> +					      bool *is_write)
->  {
->  	if (watchpoint == INVALID_WATCHPOINT ||
->  	    watchpoint == CONSUMED_WATCHPOINT)
-> @@ -78,13 +78,13 @@ static inline bool decode_watchpoint(long watchpoint,
->  /*
->   * Return watchpoint slot for an address.
->   */
-> -static inline int watchpoint_slot(unsigned long addr)
-> +static __always_inline int watchpoint_slot(unsigned long addr)
->  {
->  	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
->  }
->  
-> -static inline bool matching_access(unsigned long addr1, size_t size1,
-> -				   unsigned long addr2, size_t size2)
-> +static __always_inline bool matching_access(unsigned long addr1, size_t size1,
-> +					    unsigned long addr2, size_t size2)
->  {
->  	unsigned long end_range1 = addr1 + size1 - 1;
->  	unsigned long end_range2 = addr2 + size2 - 1;
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/block/rbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 29be02838b67..070edc5983df 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+ 			       u64 off, u64 len)
+ {
+ 	struct ceph_file_extent ex = { off, len };
+-	union rbd_img_fill_iter dummy;
++	union rbd_img_fill_iter dummy = {};
+ 	struct rbd_img_fill_ctx fctx = {
+ 		.pos_type = OBJ_REQUEST_NODATA,
+ 		.pos = &dummy,
+-- 
+2.20.0
+
