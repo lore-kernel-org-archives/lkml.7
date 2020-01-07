@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D052C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42875C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11D620880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F1F2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431473;
-	bh=1GQWZNbTZ5SCFaCMF4eC+xm0QO816lskqthPyras80Q=;
+	s=default; t=1578431475;
+	bh=U1YS3RHoAnAMjr8JJZz4F/JAG1SODn7XzG/Pl+c24s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGlEKmhqMEqfCFALqHoV+2i35pZKsRFnbqOkabsGzeTNdTWtKAMv8GSlwGSycJHOa
-	 +L4RJx3PFy+7MoJYtNyMezxZHSIJdoAWPdM6dMTZTdfXgJVvasvS76l8KzqeyIhuyJ
-	 4ZZ1jQdd9zrNNt8d9HEsdrOJ+dgS6lqsMrmm+WgE=
+	b=bnVMbiMsSos/BLDi4dimOOKfBDSneJ2fu0piImROac3PJVZLBwSV7zcM50sGsrE0m
+	 ulENOcO4M9iVkOUHUE8gFw1fow+ufcepDy9Ls22AsqTn40yYghyTUYEBZbChY3vCfq
+	 zUuvaW4dZ6AFRvuswAbHIFfOMlan/MI1zRTW+OlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgAGVLL (ORCPT
+        id S1729761AbgAGVLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:11:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730037AbgAGVK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:59 -0500
+        id S1730051AbgAGVLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F49F20880;
-        Tue,  7 Jan 2020 21:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F4C208C4;
+        Tue,  7 Jan 2020 21:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431458;
-        bh=1GQWZNbTZ5SCFaCMF4eC+xm0QO816lskqthPyras80Q=;
+        s=default; t=1578431461;
+        bh=U1YS3RHoAnAMjr8JJZz4F/JAG1SODn7XzG/Pl+c24s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ny6z4YMRAEkehJEh4lMRPZ3oEo8oCtwnWyK9jlsRhqFHlzrkU2lqBbrtVo70Gi6vl
-         bCZi/UxWgn35bVd46q7tjnJyJ96VtnLJM1+J/ZQUdFQOLKPM+jGu+cCjWbCTas/UwN
-         NpM1LNl3uupE5Q0TxNHskM4bjbgUXpZ0paB2R/Oo=
+        b=Z+cP2m7THojaqi6/bvNQhpophNGl9R1sdtsboB4RZRfk1BCbWhhoBZxJCVdFQZmXy
+         RQfj9CeztxM4W7SPumsaMGVBc+lHANSbjrt1TnPi1ELV2K/lO25U9re31y/giWYq8U
+         gm4onpwbse6fsyjG+LDPyytf2kMGcAYLlZ9tEiNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.14 28/74] media: cec: avoid decrementing transmit_queue_sz if it is 0
-Date:   Tue,  7 Jan 2020 21:54:53 +0100
-Message-Id: <20200107205157.979093358@linuxfoundation.org>
+        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        Jinsuk Choi <jjinsuk.choi@lge.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 29/74] mm/zsmalloc.c: fix the migrated zspage statistics.
+Date:   Tue,  7 Jan 2020 21:54:54 +0100
+Message-Id: <20200107205200.152076190@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,63 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Chanho Min <chanho.min@lge.com>
 
-commit 95c29d46ab2a517e4c26d0a07300edca6768db17 upstream.
+commit ac8f05da5174c560de122c499ce5dfb5d0dfbee5 upstream.
 
-WARN if transmit_queue_sz is 0 but do not decrement it.
-The CEC adapter will become unresponsive if it goes below
-0 since then it thinks there are 4 billion messages in the
-queue.
+When zspage is migrated to the other zone, the zone page state should be
+updated as well, otherwise the NR_ZSPAGE for each zone shows wrong
+counts including proc/zoneinfo in practice.
 
-Obviously this should not happen, but a driver bug could
-cause this.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.12 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: http://lkml.kernel.org/r/1575434841-48009-1-git-send-email-chanho.min@lge.com
+Fixes: 91537fee0013 ("mm: add NR_ZSMALLOC to vmstat")
+Signed-off-by: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: <stable@vger.kernel.org>        [4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/cec/cec-adap.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ mm/zsmalloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -330,7 +330,8 @@ static void cec_data_cancel(struct cec_d
- 	} else {
- 		list_del_init(&data->list);
- 		if (!(data->msg.tx_status & CEC_TX_STATUS_OK))
--			data->adap->transmit_queue_sz--;
-+			if (!WARN_ON(!data->adap->transmit_queue_sz))
-+				data->adap->transmit_queue_sz--;
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -2088,6 +2088,11 @@ int zs_page_migrate(struct address_space
+ 		zs_pool_dec_isolated(pool);
  	}
  
- 	/* Mark it as an error */
-@@ -377,6 +378,14 @@ static void cec_flush(struct cec_adapter
- 		 * need to do anything special in that case.
- 		 */
- 	}
-+	/*
-+	 * If something went wrong and this counter isn't what it should
-+	 * be, then this will reset it back to 0. Warn if it is not 0,
-+	 * since it indicates a bug, either in this framework or in a
-+	 * CEC driver.
-+	 */
-+	if (WARN_ON(adap->transmit_queue_sz))
-+		adap->transmit_queue_sz = 0;
- }
- 
- /*
-@@ -465,7 +474,8 @@ int cec_thread_func(void *_adap)
- 		data = list_first_entry(&adap->transmit_queue,
- 					struct cec_data, list);
- 		list_del_init(&data->list);
--		adap->transmit_queue_sz--;
-+		if (!WARN_ON(!data->adap->transmit_queue_sz))
-+			adap->transmit_queue_sz--;
- 
- 		/* Make this the current transmitting message */
- 		adap->transmitting = data;
++	if (page_zone(newpage) != page_zone(page)) {
++		dec_zone_page_state(page, NR_ZSPAGES);
++		inc_zone_page_state(newpage, NR_ZSPAGES);
++	}
++
+ 	reset_page(page);
+ 	put_page(page);
+ 	page = newpage;
 
 
