@@ -2,151 +2,294 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF71C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2814C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C60A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:09:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HnbD9Tgp"
+	by mail.kernel.org (Postfix) with ESMTP id A36C7214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgAGRJB (ORCPT
+        id S1728464AbgAGRKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:09:01 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37117 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbgAGRJB (ORCPT
+        Tue, 7 Jan 2020 12:10:50 -0500
+Received: from mailoutvs62.siol.net ([185.57.226.253]:40806 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728266AbgAGRKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:09:01 -0500
-Received: by mail-qt1-f193.google.com with SMTP id w47so370875qtk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o8VDYNz3D8dzr8Paverc5SjU9MC05Ui8WU/rBztnqAI=;
-        b=HnbD9TgpM1gX8/yRRcibYGO3YaJoMfAeK9M7RCCQ0MlaLha3X6NaZSAWW3HgddClRb
-         n0qcgRfMHAYSdNg08AemgGd2qXtJtLTMOumHMhz+5a4acHL7osi0nrjKd3wRNdo3i4Ix
-         X/Z3F6AqBA+4Qt0LupTfAThBFaIGZpqMpEWjxy6Ps9eKd8Ur7scj6em3JSTDqOfdfhGG
-         uBDJSM+MRyFsqCzZMvt5HPR4WZ8E7eNDKTwW+TiZROg4Bd7ighfCaI4sP0Z6A8mI7B2c
-         xAIfHs2ji+odU9V+F9FZ5xtt8I+v2vLRgZHZxj74raQZh4XIuO0p4qmSxISS5x4QOOuG
-         JisA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o8VDYNz3D8dzr8Paverc5SjU9MC05Ui8WU/rBztnqAI=;
-        b=KmIXp5BnAOkj3bfrjiKycBOOb/l84ekODe+s5V1nGng6Hu43C6P1KY2N/Nt9zQ7see
-         c1RifSwP5iiogeaZxXkXYPmDCZNC8p4Pb2PHTBTyRAVtIYptfjQT5oO1P+f/NmKA9xYN
-         TRqlSmrdrmdjGmpZ8Wcng5tsEnln08UZw2SsGqfAjRzBN2kLr2el2lD76lQA4YK6rbY1
-         Ldal//1Kx+2/ZMKO6/Kmx5ByUug9uMjhb6jTuO1cuw32WXFNddau1HdTYHQiUOTWLSKW
-         DouOC+xLL+sHMOdscjz5YRwDfMR4A/AZTy4/czrNKnUbkE6I3zBurIszXl+6yaIGTA77
-         Mx/g==
-X-Gm-Message-State: APjAAAXF880DyisvXknFO/oB/JUV1Y8CdyRSTQnygXJCfuJo0AEkTnc9
-        OfpsVlUPRcpzpXua+EH+qiKbPmaG4I/SbpMHWHdDI/h7ZOU=
-X-Google-Smtp-Source: APXvYqzpUiVk7KT8Gp/mQaZeAy1KjNia+efSxzvYBnoxAmHInYKLRwGZcy/W2SG1L66erDvVET+jWUaqNY7zhusmYkY=
-X-Received: by 2002:ac8:71d7:: with SMTP id i23mr81437675qtp.50.1578416540765;
- Tue, 07 Jan 2020 09:02:20 -0800 (PST)
+        Tue, 7 Jan 2020 12:10:49 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id BFDFE5230E8;
+        Tue,  7 Jan 2020 18:10:44 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id c4f-rLiq8ZIz; Tue,  7 Jan 2020 18:10:44 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1CC93522F8A;
+        Tue,  7 Jan 2020 18:10:44 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id BE7DE522FC5;
+        Tue,  7 Jan 2020 18:10:42 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mchehab@kernel.org, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling matrix
+Date:   Tue, 07 Jan 2020 18:10:42 +0100
+Message-ID: <2627039.Y6S9NjorxK@jernej-laptop>
+In-Reply-To: <4ac91ed5-a220-6a04-b1da-de27a306f8f2@xs4all.nl>
+References: <20191213160428.54303-1-jernej.skrabec@siol.net> <20191213160428.54303-3-jernej.skrabec@siol.net> <4ac91ed5-a220-6a04-b1da-de27a306f8f2@xs4all.nl>
 MIME-Version: 1.0
-References: <00000000000053539a0599173973@google.com> <20191212105701.GB1476206@kroah.com>
- <CACT4Y+ZeR=z-3CSXFazmngUhs9DqfxgZLKBNhzvfg49Nrw=EzA@mail.gmail.com>
- <20191213093357.GB2135612@kroah.com> <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
- <20191213101021.GA2141429@kroah.com> <CACT4Y+ZW8oLfupDbQuk-Q-J=WtsXPEXTsqeZAPGhXXPu4gGrmg@mail.gmail.com>
- <20191213112648.GA2257852@kroah.com> <CACT4Y+aC+Phfj91wdWJPH+zKcHLXPXQE9Ycn--qKboFHPnMW+g@mail.gmail.com>
-In-Reply-To: <CACT4Y+aC+Phfj91wdWJPH+zKcHLXPXQE9Ycn--qKboFHPnMW+g@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 7 Jan 2020 18:02:09 +0100
-Message-ID: <CACT4Y+YigHSLOM-e1O0bxf_8D4jkM51jQW4ReWRZgcp9xfqp_w@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in mem_serial_out
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:48 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Fri, Dec 13, 2019 at 10:48 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Dec 13, 2019 at 11:39:54AM +0100, Dmitry Vyukov wrote:
-> > > On Fri, Dec 13, 2019 at 11:10 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > > > > You set up a dubious memory base for your uart and then get upset when
-> > > > > > > > you write to that location.
-> > > > > > > >
-> > > > > > > > I don't know what to really do about this, this is a root-only operation
-> > > > > > > > and you are expected to know what you are doing when you attempt this.
-> > > > > > >
-> > > > > > > Hi Greg,
-> > > > > > >
-> > > > > > > Thanks for looking into this!
-> > > > > > > Should we restrict the fuzzer from accessing /dev/ttyS* entirely?
-> > > > > >
-> > > > > > No, not at all.
-> > > > > >
-> > > > > > > Or only restrict TIOCSSERIAL on them? Something else?
-> > > > > >
-> > > > > > Try running not as root.  if you have CAP_SYS_ADMIN you can do a lot of
-> > > > > > pretty bad things with tty ports, as you see here.  There's a reason the
-> > > > > > LOCKDOWN_TIOCSSERIAL "security lockdown" check was added :)
-> > > > > >
-> > > > > > The TIOCSSERIAL ioctl is a nice one for a lot of things that are able to
-> > > > > > be done as a normal user (baud rate changes, etc.), but there are also
-> > > > > > things like setting io port memory locations that can cause random
-> > > > > > hardware accesses and kernel crashes, as you instantly found out here :)
-> > > > > >
-> > > > > > So restrict the fuzzer to only run as a "normal" user of the serial
-> > > > > > port, and if you find problems there, I'll be glad to look at them.
-> > > > >
-> > > > > Easier said than done. "normal user of the serial port" is not really
-> > > > > a thing in Linux, right? You either have CAP_SYS_ADMIN or not, that's
-> > > > > not per-device...
-> > > >
-> > > > Not true, there's lots of users of serial port devices that do not have
-> > > > CAP_SYS_ADMIN set.  That's why we have groups :)
-> > > >
-> > > > You can change the baud rate of your usb-serial device without root
-> > > > permissions, right?  That's a "normal" user right there.
-> > >
-> > > Yes, but this requires dropping CAP_SYS_ADMIN. And one can't drop
-> > > CAP_SYS_ADMIN only for ttyS. If it would be a separate capability, we
-> > > could drop just that, but not CAP_SYS_ADMIN.
-> >
-> > Ok, I think we are talking past each other here.  I am saying that it is
-> > fine to talk to a serial port without CAP_SYS_ADMIN.  That should be
-> > "safe" and not cause bad things to happen.
-> >
-> > But if you do have CAP_SYS_ADMIN, you can do a lot more "bad" things
-> > with a serial port (like setting memory addresses).
-> >
-> > Your tool always has this capability, which is fine, but does not mean
-> > that serial port accesses by everyone has to have that capability, which
-> > is what I thought you were saying.
->
-> I mean that I don't see a realistic way to apply your "Try running not
-> as root" suggestion.
-> We can drop root, but that will dramatic effect on lots of other
-> things that has nothing to do with serial console.
+Hi!
 
-I've disabled testing of TIOCSSERIAL in syzkaller:
-https://github.com/google/syzkaller/commit/af9047c60a3db32d5e43c29321f8f531db051a63
+Dne torek, 07. januar 2020 ob 16:01:16 CET je Hans Verkuil napisal(a):
+> On 12/13/19 5:04 PM, Jernej Skrabec wrote:
+> > HEVC frames may use scaling list feature. Add support for it.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
+> >  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
+> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
+> >  5 files changed, 81 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+> > c6ddd46eff82..bf68bc6b20c8 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > @@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[]
+> > = {> 
+> >  		.codec		= CEDRUS_CODEC_H265,
+> >  		.required	= true,
+> >  	
+> >  	},
+> > 
+> > +	{
+> > +		.cfg = {
+> > +			.id	= 
+V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
+> > +		},
+> > +		.codec		= CEDRUS_CODEC_H265,
+> > +		.required	= true,
+> 
+> Should this be true? This means that existing applications are now
+> suddenly required to always pass the scaling matrix for every buffer.
+> 
+> Especially since the commit log says: 'HEVC frames *may* use scaling list
+> feature', indicating that this is an optional feature.
 
-#syz invalid
+True. Can you fix this when applying if this is the only issue?
+
+Best regards,
+Jernej
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > +	},
+> > 
+> >  	{
+> >  	
+> >  		.cfg = {
+> >  		
+> >  			.id	= 
+V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> > 96765555ab8a..d945f4f0ff2d 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> > @@ -73,6 +73,7 @@ struct cedrus_h265_run {
+> > 
+> >  	const struct v4l2_ctrl_hevc_sps			*sps;
+> >  	const struct v4l2_ctrl_hevc_pps			*pps;
+> >  	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
+> > 
+> > +	const struct v4l2_ctrl_hevc_scaling_matrix	
+*scaling_matrix;
+> > 
+> >  };
+> >  
+> >  struct cedrus_run {
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+> > 4a2fc33a1d79..327ed6c264dc 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> > @@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
+> > 
+> >  			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
+> >  		
+> >  		run.h265.slice_params = cedrus_find_control_data(ctx,
+> >  		
+> >  			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
+> > 
+> > +		run.h265.scaling_matrix = cedrus_find_control_data(ctx,
+> > +			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
+> > 
+> >  		break;
+> >  	
+> >  	default:
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
+> > 6945dc74e1d7..888bfd5ca224 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > @@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct
+> > cedrus_dev *dev,> 
+> >  	}
+> >  
+> >  }
+> > 
+> > +static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
+> > +					   struct cedrus_run 
+*run)
+> > +{
+> > +	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
+> > +	struct cedrus_dev *dev = ctx->dev;
+> > +	u32 i, j, k, val;
+> > +
+> > +	scaling = run->h265.scaling_matrix;
+> > +
+> > +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
+> > +		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
+> > +		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
+> > +		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
+> > +		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
+> > +
+> > +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
+> > +		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
+> > +		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
+> > +		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
+> > +		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
+> > +
+> > +	cedrus_h265_sram_write_offset(dev,
+> > VE_DEC_H265_SRAM_OFFSET_SCALING_LISTS); +
+> > +	for (i = 0; i < 6; i++)
+> > +		for (j = 0; j < 8; j++)
+> > +			for (k = 0; k < 8; k += 4) {
+> > +				val = ((u32)scaling-
+>scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
+> > +				      ((u32)scaling-
+>scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
+> > +				      ((u32)scaling-
+>scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
+> > +				      scaling-
+>scaling_list_8x8[i][j + k * 8];
+> > +				cedrus_write(dev, 
+VE_DEC_H265_SRAM_DATA, val);
+> > +			}
+> > +
+> > +	for (i = 0; i < 2; i++)
+> > +		for (j = 0; j < 8; j++)
+> > +			for (k = 0; k < 8; k += 4) {
+> > +				val = ((u32)scaling-
+>scaling_list_32x32[i][j + (k + 3) * 8] << 24) |
+> > +				      ((u32)scaling-
+>scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
+> > +				      ((u32)scaling-
+>scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
+> > +				      scaling-
+>scaling_list_32x32[i][j + k * 8];
+> > +				cedrus_write(dev, 
+VE_DEC_H265_SRAM_DATA, val);
+> > +			}
+> > +
+> > +	for (i = 0; i < 6; i++)
+> > +		for (j = 0; j < 8; j++)
+> > +			for (k = 0; k < 8; k += 4) {
+> > +				val = ((u32)scaling-
+>scaling_list_16x16[i][j + (k + 3) * 8] << 24) |
+> > +				      ((u32)scaling-
+>scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
+> > +				      ((u32)scaling-
+>scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
+> > +				      scaling-
+>scaling_list_16x16[i][j + k * 8];
+> > +				cedrus_write(dev, 
+VE_DEC_H265_SRAM_DATA, val);
+> > +			}
+> > +
+> > +	for (i = 0; i < 6; i++)
+> > +		for (j = 0; j < 4; j++) {
+> > +			val = ((u32)scaling->scaling_list_4x4[i][j + 
+12] << 24) |
+> > +			      ((u32)scaling->scaling_list_4x4[i][j + 
+8] << 16) |
+> > +			      ((u32)scaling->scaling_list_4x4[i][j + 
+4] << 8) |
+> > +			      scaling->scaling_list_4x4[i][j];
+> > +			cedrus_write(dev, VE_DEC_H265_SRAM_DATA, 
+val);
+> > +		}
+> > +}
+> > +
+> > 
+> >  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> >  
+> >  			      struct cedrus_run *run)
+> >  
+> >  {
+> > 
+> > @@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> > 
+> >  	/* Scaling list. */
+> > 
+> > -	reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+> > +	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
+> > +		cedrus_h265_write_scaling_list(ctx, run);
+> > +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
+> > +	} else {
+> > +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+> > +	}
+> > 
+> >  	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
+> >  	
+> >  	/* Neightbor information address. */
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
+> > 7beb03d3bb39..0d9449fe2b28 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > @@ -492,6 +492,8 @@
+> > 
+> >  #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 
+0x64)
+> >  #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 
+0x68)
+> >  #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 
+0x6c)
+> > 
+> > +#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 + 
+0x78)
+> > +#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 + 
+0x7c)
+> > 
+> >  #define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 
+0x80)
+
+
+
+
