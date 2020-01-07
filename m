@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9110C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5888FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34BE206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191C7206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432323;
-	bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
+	s=default; t=1578432328;
+	bh=gqnYSfqwNrGV8LATruTeoQRmL9ZsDZDtSj1epvffWdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZ5PnQQHVYcTRVBuroKlG59IQaQZtqZlNkMwfGhU+nnSytljqcMWxkBoz+hXW+beI
-	 NopmElbJTiUn9chjmxFxz5m2hDph7T+OPnS+uPWLE3Aa/Y7t3QrxtikpNIZdzNeR3j
-	 4LELKA1BL0gYggh5CDMBEtwoKTVVyNKsOyfYUwWo=
+	b=je62G8JXWJ5ly0LQgz4EFdWS+G1LjcU3MyHlTNRdBfMiAhy7GfHv5kfOlJgtioABR
+	 ut6oXzTsWRf/3HLLIH9j4p+VdNal3W3Fa9vxcXi/2DjHbHXltrb0avgCMQGMrYgzer
+	 nLaZr85pmTN5J1HE/I8jipB66JGB3eiytgXPRgJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgAGVAH (ORCPT
+        id S1727792AbgAGU76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgAGVAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:03 -0500
+        id S1728213AbgAGU7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F77520880;
-        Tue,  7 Jan 2020 21:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA1320880;
+        Tue,  7 Jan 2020 20:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430802;
-        bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
+        s=default; t=1578430792;
+        bh=gqnYSfqwNrGV8LATruTeoQRmL9ZsDZDtSj1epvffWdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t7lRp223wrTv1e+fdkuCGCCScZFLRr9k+pSYtoNW4fhvzAybG8APGiIjBfqcHizXH
-         G1oXEFvLuw/Q89ZZJCRHj5Vr+k/jpASSFzuMQHwDrfJwnQiMfD7s/qhQLPgJfn+n0K
-         ERVFdIUHOaOqZcDAFv6eZPpiwA3YJU2Vj7MVhcLY=
+        b=GW61qwSKlcWTU0qtF3EeOBg10E+ri47b01Jcy5AY25+leD+RySiBA4BA73tyPy0Xw
+         Ck0rKo3TragiVkDGjXP+5oPnSMG/wI2kWezzBcowgdQrRRcxDsMdzlWT4CzgBlJnI3
+         fAttFQPMc5REiaAN2MAJuhUkicUpuesKq5BcR9gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 102/191] compat_ioctl: block: handle BLKREPORTZONE/BLKRESETZONE
-Date:   Tue,  7 Jan 2020 21:53:42 +0100
-Message-Id: <20200107205338.451108570@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 099/191] Btrfs: fix infinite loop during nocow writeback due to race
+Date:   Tue,  7 Jan 2020 21:53:39 +0100
+Message-Id: <20200107205338.288480960@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,34 +60,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 673bdf8ce0a387ef585c13b69a2676096c6edfe9 upstream.
+commit de7999afedff02c6631feab3ea726a0e8f8c3d40 upstream.
 
-These were added to blkdev_ioctl() but not blkdev_compat_ioctl,
-so add them now.
+When starting writeback for a range that covers part of a preallocated
+extent, due to a race with writeback for another range that also covers
+another part of the same preallocated extent, we can end up in an infinite
+loop.
 
-Cc: <stable@vger.kernel.org> # v4.10+
-Fixes: 3ed05a987e0f ("blk-zoned: implement ioctls")
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Consider the following example where for inode 280 we have two dirty
+ranges:
+
+  range A, from 294912 to 303103, 8192 bytes
+  range B, from 348160 to 438271, 90112 bytes
+
+and we have the following file extent item layout for our inode:
+
+  leaf 38895616 gen 24544 total ptrs 29 free space 13820 owner 5
+      (...)
+      item 27 key (280 108 200704) itemoff 14598 itemsize 53
+          extent data disk bytenr 0 nr 0 type 1 (regular)
+          extent data offset 0 nr 94208 ram 94208
+      item 28 key (280 108 294912) itemoff 14545 itemsize 53
+          extent data disk bytenr 10433052672 nr 81920 type 2 (prealloc)
+          extent data offset 0 nr 81920 ram 81920
+
+Then the following happens:
+
+1) Writeback starts for range B (from 348160 to 438271), execution of
+   run_delalloc_nocow() starts;
+
+2) The first iteration of run_delalloc_nocow()'s whil loop leaves us at
+   the extent item at slot 28, pointing to the prealloc extent item
+   covering the range from 294912 to 376831. This extent covers part of
+   our range;
+
+3) An ordered extent is created against that extent, covering the file
+   range from 348160 to 376831 (28672 bytes);
+
+4) We adjust 'cur_offset' to 376832 and move on to the next iteration of
+   the while loop;
+
+5) The call to btrfs_lookup_file_extent() leaves us at the same leaf,
+   pointing to slot 29, 1 slot after the last item (the extent item
+   we processed in the previous iteration);
+
+6) Because we are a slot beyond the last item, we call btrfs_next_leaf(),
+   which releases the search path before doing a another search for the
+   last key of the leaf (280 108 294912);
+
+7) Right after btrfs_next_leaf() released the path, and before it did
+   another search for the last key of the leaf, writeback for the range
+   A (from 294912 to 303103) completes (it was previously started at
+   some point);
+
+8) Upon completion of the ordered extent for range A, the prealloc extent
+   we previously found got split into two extent items, one covering the
+   range from 294912 to 303103 (8192 bytes), with a type of regular extent
+   (and no longer prealloc) and another covering the range from 303104 to
+   376831 (73728 bytes), with a type of prealloc and an offset of 8192
+   bytes. So our leaf now has the following layout:
+
+     leaf 38895616 gen 24544 total ptrs 31 free space 13664 owner 5
+         (...)
+         item 27 key (280 108 200704) itemoff 14598 itemsize 53
+             extent data disk bytenr 0 nr 0 type 1
+             extent data offset 0 nr 8192 ram 94208
+         item 28 key (280 108 208896) itemoff 14545 itemsize 53
+             extent data disk bytenr 10433142784 nr 86016 type 1
+             extent data offset 0 nr 86016 ram 86016
+         item 29 key (280 108 294912) itemoff 14492 itemsize 53
+             extent data disk bytenr 10433052672 nr 81920 type 1
+             extent data offset 0 nr 8192 ram 81920
+         item 30 key (280 108 303104) itemoff 14439 itemsize 53
+             extent data disk bytenr 10433052672 nr 81920 type 2
+             extent data offset 8192 nr 73728 ram 81920
+
+9) After btrfs_next_leaf() returns, we have our path pointing to that same
+   leaf and at slot 30, since it has a key we didn't have before and it's
+   the first key greater then the key that was previously the last key of
+   the leaf (key (280 108 294912));
+
+10) The extent item at slot 30 covers the range from 303104 to 376831
+    which is in our target range, so we process it, despite having already
+    created an ordered extent against this extent for the file range from
+    348160 to 376831. This is because we skip to the next extent item only
+    if its end is less than or equals to the start of our delalloc range,
+    and not less than or equals to the current offset ('cur_offset');
+
+11) As a result we compute 'num_bytes' as:
+
+    num_bytes = min(end + 1, extent_end) - cur_offset;
+              = min(438271 + 1, 376832) - 376832 = 0
+
+12) We then call create_io_em() for a 0 bytes range starting at offset
+    376832;
+
+13) Then create_io_em() enters an infinite loop because its calls to
+    btrfs_drop_extent_cache() do nothing due to the 0 length range
+    passed to it. So no existing extent maps that cover the offset
+    376832 get removed, and therefore calls to add_extent_mapping()
+    return -EEXIST, resulting in an infinite loop. This loop from
+    create_io_em() is the following:
+
+    do {
+        btrfs_drop_extent_cache(BTRFS_I(inode), em->start,
+                                em->start + em->len - 1, 0);
+        write_lock(&em_tree->lock);
+        ret = add_extent_mapping(em_tree, em, 1);
+        write_unlock(&em_tree->lock);
+        /*
+         * The caller has taken lock_extent(), who could race with us
+         * to add em?
+         */
+    } while (ret == -EEXIST);
+
+Also, each call to btrfs_drop_extent_cache() triggers a warning because
+the start offset passed to it (376832) is smaller then the end offset
+(376832 - 1) passed to it by -1, due to the 0 length:
+
+  [258532.052621] ------------[ cut here ]------------
+  [258532.052643] WARNING: CPU: 0 PID: 9987 at fs/btrfs/file.c:602 btrfs_drop_extent_cache+0x3f4/0x590 [btrfs]
+  (...)
+  [258532.052672] CPU: 0 PID: 9987 Comm: fsx Tainted: G        W         5.4.0-rc7-btrfs-next-64 #1
+  [258532.052673] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  [258532.052691] RIP: 0010:btrfs_drop_extent_cache+0x3f4/0x590 [btrfs]
+  (...)
+  [258532.052695] RSP: 0018:ffffb4be0153f860 EFLAGS: 00010287
+  [258532.052700] RAX: ffff975b445ee360 RBX: ffff975b44eb3e08 RCX: 0000000000000000
+  [258532.052700] RDX: 0000000000038fff RSI: 0000000000039000 RDI: ffff975b445ee308
+  [258532.052700] RBP: 0000000000038fff R08: 0000000000000000 R09: 0000000000000001
+  [258532.052701] R10: ffff975b513c5c10 R11: 00000000e3c0cfa9 R12: 0000000000039000
+  [258532.052703] R13: ffff975b445ee360 R14: 00000000ffffffef R15: ffff975b445ee308
+  [258532.052705] FS:  00007f86a821de80(0000) GS:ffff975b76a00000(0000) knlGS:0000000000000000
+  [258532.052707] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [258532.052708] CR2: 00007fdacf0f3ab4 CR3: 00000001f9d26002 CR4: 00000000003606f0
+  [258532.052712] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [258532.052717] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [258532.052717] Call Trace:
+  [258532.052718]  ? preempt_schedule_common+0x32/0x70
+  [258532.052722]  ? ___preempt_schedule+0x16/0x20
+  [258532.052741]  create_io_em+0xff/0x180 [btrfs]
+  [258532.052767]  run_delalloc_nocow+0x942/0xb10 [btrfs]
+  [258532.052791]  btrfs_run_delalloc_range+0x30b/0x520 [btrfs]
+  [258532.052812]  ? find_lock_delalloc_range+0x221/0x250 [btrfs]
+  [258532.052834]  writepage_delalloc+0xe4/0x140 [btrfs]
+  [258532.052855]  __extent_writepage+0x110/0x4e0 [btrfs]
+  [258532.052876]  extent_write_cache_pages+0x21c/0x480 [btrfs]
+  [258532.052906]  extent_writepages+0x52/0xb0 [btrfs]
+  [258532.052911]  do_writepages+0x23/0x80
+  [258532.052915]  __filemap_fdatawrite_range+0xd2/0x110
+  [258532.052938]  btrfs_fdatawrite_range+0x1b/0x50 [btrfs]
+  [258532.052954]  start_ordered_ops+0x57/0xa0 [btrfs]
+  [258532.052973]  ? btrfs_sync_file+0x225/0x490 [btrfs]
+  [258532.052988]  btrfs_sync_file+0x225/0x490 [btrfs]
+  [258532.052997]  __x64_sys_msync+0x199/0x200
+  [258532.053004]  do_syscall_64+0x5c/0x250
+  [258532.053007]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [258532.053010] RIP: 0033:0x7f86a7dfd760
+  (...)
+  [258532.053014] RSP: 002b:00007ffd99af0368 EFLAGS: 00000246 ORIG_RAX: 000000000000001a
+  [258532.053016] RAX: ffffffffffffffda RBX: 0000000000000ec9 RCX: 00007f86a7dfd760
+  [258532.053017] RDX: 0000000000000004 RSI: 000000000000836c RDI: 00007f86a8221000
+  [258532.053019] RBP: 0000000000021ec9 R08: 0000000000000003 R09: 00007f86a812037c
+  [258532.053020] R10: 0000000000000001 R11: 0000000000000246 R12: 00000000000074a3
+  [258532.053021] R13: 00007f86a8221000 R14: 000000000000836c R15: 0000000000000001
+  [258532.053032] irq event stamp: 1653450494
+  [258532.053035] hardirqs last  enabled at (1653450493): [<ffffffff9dec69f9>] _raw_spin_unlock_irq+0x29/0x50
+  [258532.053037] hardirqs last disabled at (1653450494): [<ffffffff9d4048ea>] trace_hardirqs_off_thunk+0x1a/0x20
+  [258532.053039] softirqs last  enabled at (1653449852): [<ffffffff9e200466>] __do_softirq+0x466/0x6bd
+  [258532.053042] softirqs last disabled at (1653449845): [<ffffffff9d4c8a0c>] irq_exit+0xec/0x120
+  [258532.053043] ---[ end trace 8476fce13d9ce20a ]---
+
+Which results in flooding dmesg/syslog since btrfs_drop_extent_cache()
+uses WARN_ON() and not WARN_ON_ONCE().
+
+So fix this issue by changing run_delalloc_nocow()'s loop to move to the
+next extent item when the current extent item ends at at offset less than
+or equals to the current offset instead of the start offset.
+
+Fixes: 80ff385665b7fc ("Btrfs: update nodatacow code v2")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/compat_ioctl.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/inode.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/block/compat_ioctl.c
-+++ b/block/compat_ioctl.c
-@@ -355,6 +355,8 @@ long compat_blkdev_ioctl(struct file *fi
- 	 * but we call blkdev_ioctl, which gets the lock for us
- 	 */
- 	case BLKRRPART:
-+	case BLKREPORTZONE:
-+	case BLKRESETZONE:
- 		return blkdev_ioctl(bdev, mode, cmd,
- 				(unsigned long)compat_ptr(arg));
- 	case BLKBSZSET_32:
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1439,10 +1439,10 @@ next_slot:
+ 			disk_num_bytes =
+ 				btrfs_file_extent_disk_num_bytes(leaf, fi);
+ 			/*
+-			 * If extent we got ends before our range starts, skip
+-			 * to next extent
++			 * If the extent we got ends before our current offset,
++			 * skip to the next extent.
+ 			 */
+-			if (extent_end <= start) {
++			if (extent_end <= cur_offset) {
+ 				path->slots[0]++;
+ 				goto next_slot;
+ 			}
 
 
