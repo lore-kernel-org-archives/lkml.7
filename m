@@ -2,152 +2,127 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322F6C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B447C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D78206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZNR7SZJg"
+	by mail.kernel.org (Postfix) with ESMTP id 3EBBD206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgAHG3G (ORCPT
+        id S1726462AbgAHG3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:29:06 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15810 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgAHG3G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:29:06 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1576800002>; Tue, 07 Jan 2020 22:28:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 22:29:05 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 22:29:05 -0800
-Received: from [10.24.44.157] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 06:28:59 +0000
-Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <tiwai@suse.com>, <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
-        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
- <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
- <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
-Date:   Wed, 8 Jan 2020 11:58:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578464897; bh=OHhIle+XKX/LTcA5mmunIMXF7a5LS6VUkkqyvI0+XNg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ZNR7SZJgFRYaRAx4eRFJT2uN5zQzJqxtOI2lcGNIlSwFBmAEIBNAWOaBMHMhyLs39
-         AYBer1uvKCm9U/ZUrwjhcjhAATw3Je5U+v7ubgsWf+mEAd9sC3SBG6IY/bvaXTTlra
-         Vc8vOpPasi+ZKzgw+3nhm0VZmYV5OZ89xt3Vi6as2nlt5/CIiMlhzhJrtlEn4eKsLC
-         eMObyYS7kHlRN6oTWH8yCSmnodXewyv7fsEDrzsrdBD0JAVIUwrqV6+iqhkiQcVzIP
-         hlLgZOiOtDl28knHeiGM7iEYvRGtjq9YyY403f4bVVEsdJ3TjVaSBrNbnU6TDZnUJ3
-         nXcH7t0bhalBQ==
+        Wed, 8 Jan 2020 01:29:42 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23681 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgAHG3l (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 01:29:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 22:29:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
+   d="scan'208";a="233506770"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jan 2020 22:29:39 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v3 1/4] perf util: Move block_pair_cmp to block-info
+Date:   Wed,  8 Jan 2020 07:03:51 +0800
+Message-Id: <20200107230354.30132-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+block_pair_cmp() is a function which is used to compare
+two blocks. Moving it from builtin-diff.c to block-info.c
+to let it can be used by other builtins.
 
-On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
->
-> On 1/7/20 9:34 PM, Sameer Pujar wrote:
->>
->> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
->>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
->>> are moved to Tegra PMC driver with pmc as clock provider and using pmc
->>> clock ids.
->>>
->>> New device tree uses clk_out_1 from pmc clock provider.
->>>
->>> So, this patch adds implementation for mclk fallback to extern1 when
->>> retrieving mclk returns -ENOENT to be backward compatible of new device
->>> tree with older kernels.
->>>
->>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
->>> =C2=A0 1 file changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c=20
->>> b/sound/soc/tegra/tegra_asoc_utils.c
->>> index 9cfebef74870..9a5f81039491 100644
->>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct=20
->>> tegra_asoc_utils_data *data,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_clk_get(dev, "m=
-clk");
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1)) {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->de=
-v, "Can't retrieve clk cdev1\n");
->>
->> This error print can be moved inside below if, when this actually=20
->> meant to be an error condition.
->>
-> Want to show error even if mclk retrieval returns ENOENT to clearly=20
-> indicate mclk does not exist along with message of falling back to=20
-> extern1.
+ v3:
+ ---
+ Separate it from original patch for good tracking.
 
-Yes, but falling back essentially means 'mclk' is not available and=20
-fallback print is not an error.
-Not a major issue though, you can consider updating. Otherwise LGTM.
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/builtin-diff.c    | 17 -----------------
+ tools/perf/util/block-info.c | 17 +++++++++++++++++
+ tools/perf/util/block-info.h |  2 ++
+ 3 files changed, 19 insertions(+), 17 deletions(-)
 
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(data->clk_cd=
-ev1);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PTR_ERR(data->clk_cdev1=
-) !=3D -ENOENT)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn PTR_ERR(data->clk_cdev1);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Fall back to extern1 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_cl=
-k_get(dev, "extern1");
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1)=
-) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-_err(data->dev, "Can't retrieve clk extern1\n");
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn PTR_ERR(data->clk_cdev1);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->dev, "Falling=
- back to extern1\n");
->>
->> This can be a info print?
->
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index f8b6ae557d8b..5ff1e21082cb 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -572,23 +572,6 @@ static void init_block_hist(struct block_hist *bh)
+ 	bh->valid = true;
+ }
+ 
+-static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
+-{
+-	struct block_info *bi_a = a->block_info;
+-	struct block_info *bi_b = b->block_info;
+-	int cmp;
+-
+-	if (!bi_a->sym || !bi_b->sym)
+-		return -1;
+-
+-	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
+-
+-	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
+-		return 0;
+-
+-	return -1;
+-}
+-
+ static struct hist_entry *get_block_pair(struct hist_entry *he,
+ 					 struct hists *hists_pair)
+ {
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index c4b030bf6ec2..f0f38bdd496a 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -475,3 +475,20 @@ float block_info__total_cycles_percent(struct hist_entry *he)
+ 
+ 	return 0.0;
+ }
++
++int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
++{
++	struct block_info *bi_a = a->block_info;
++	struct block_info *bi_b = b->block_info;
++	int cmp;
++
++	if (!bi_a->sym || !bi_b->sym)
++		return -1;
++
++	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
++
++	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
++		return 0;
++
++	return -1;
++}
+diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
+index bef0d75e9819..4fa91eeae92e 100644
+--- a/tools/perf/util/block-info.h
++++ b/tools/perf/util/block-info.h
+@@ -76,4 +76,6 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+ 
+ float block_info__total_cycles_percent(struct hist_entry *he);
+ 
++int block_pair_cmp(struct hist_entry *a, struct hist_entry *b);
++
+ #endif /* __PERF_BLOCK_H */
+-- 
+2.17.1
+
