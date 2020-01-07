@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C67BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F258C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5D82080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2662080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432274;
-	bh=xL/ur03nHOF22lDWxuQ0hELpl+Z554fazbk38WEz4Xc=;
+	s=default; t=1578432278;
+	bh=Lf0qSoNnd1NLsTNWmHjU1H+8nyTFwg5E/IYaE3vv60o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukxVzIbg/WV57CDTi9TfNhUugKNz2nxxYtW8YZKqILlPdT9j4/0E1ga4eyfHkq4+L
-	 RmKl8PnNfi+r9F+SuImRji/hMp/vaaTdh94Jrz0ahBQvTL56Tnn8IuktFjVdaSfFLQ
-	 dKne++nB4vIxMqujkb0MiRAb7tUKDrLYGVZbTlHY=
+	b=hWQ9NJBhd5ZhgQMIFJij6Mqp1L45KkXhF4I5tUT9wpYuDdEO4+qdMQwMntyLRo+wZ
+	 g3NBcCXvhwKYKXDyxGXnTF9YU8ui5AnLmVjeLHoaE+RNExTYVMMd76KGbNN5Hq1eKW
+	 v82I1Twlw4Qs+BK4rWTb+8pvAcsMpiJn5L4nTuSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgAGVAV (ORCPT
+        id S1729153AbgAGVYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:24:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbgAGVAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:13 -0500
+        id S1727361AbgAGVAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4DB321744;
-        Tue,  7 Jan 2020 21:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38ACC2081E;
+        Tue,  7 Jan 2020 21:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430812;
-        bh=xL/ur03nHOF22lDWxuQ0hELpl+Z554fazbk38WEz4Xc=;
+        s=default; t=1578430819;
+        bh=Lf0qSoNnd1NLsTNWmHjU1H+8nyTFwg5E/IYaE3vv60o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cru1ED8MLo++5fK3EczC4jGLHF9xFFm9EaETc5Etdz6UZHChRfB+L8G12Z9nLdv8N
-         gXFsNw9PqrZr6G5dFr/z1IDvmGZ9R6/Hif0CWbW69jwtDxKb1Mk4PlgbrxGFsnX6eo
-         kMkWcZHg/ZjuCNJM/L/0+HrB6ternCXkWZnfuLmg=
+        b=uapP214aa5LK2/U00rUYpr/3YHNEyqh/ErU8YkFaI8tdXxGw/NyMk246KU+h6A323
+         q02iR0Hy7AqI3l9XAnvJFm7txT8zgEEg7HA4ipivNBsEcxXzCfzs6IJc9wgG07slF0
+         E2Opvv/ZHHdMiXKsdtkSUscSNcrz0CF7U94yZGJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 106/191] ata: ahci_brcm: Fix AHCI resources management
-Date:   Tue,  7 Jan 2020 21:53:46 +0100
-Message-Id: <20200107205338.663065470@linuxfoundation.org>
+Subject: [PATCH 5.4 109/191] libata: Fix retrieving of active qcs
+Date:   Tue,  7 Jan 2020 21:53:49 +0100
+Message-Id: <20200107205338.819875029@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,224 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit c0cdf2ac4b5bf3e5ef2451ea29fb4104278cdabc upstream.
+commit 8385d756e114f2df8568e508902d5f9850817ffb upstream.
 
-The AHCI resources management within ahci_brcm.c is a little
-convoluted, largely because it historically had a dedicated clock that
-was managed within this file in the downstream tree. Once brough
-upstream though, the clock was left to be managed by libahci_platform.c
-which is entirely appropriate.
+ata_qc_complete_multiple() is called with a mask of the still active
+tags.
 
-This patch series ensures that the AHCI resources are fetched and
-enabled before any register access is done, thus avoiding bus errors on
-platforms which clock gate the controller by default.
+mv_sata doesn't have this information directly and instead calculates
+the still active tags from the started tags (ap->qc_active) and the
+finished tags as (ap->qc_active ^ done_mask)
 
-As a result we need to re-arrange the suspend() and resume() functions
-in order to avoid accessing registers after the clocks have been turned
-off respectively before the clocks have been turned on. Finally, we can
-refactor brcm_ahci_get_portmask() in order to fetch the number of ports
-from hpriv->mmio which is now accessible without jumping through hoops
-like we used to do.
+Since 28361c40368 the hw_tag and tag are no longer the same and the
+equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
+initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
+started and this will be in done_mask on completion. ap->qc_active ^
+done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
+the internal tag will never be reported as completed.
 
-The commit pointed in the Fixes tag is both old and new enough not to
-require major headaches for backporting of this patch.
+This is fixed by introducing ata_qc_get_active() which returns the
+active hardware tags and calling it where appropriate.
 
-Fixes: eba68f829794 ("ata: ahci_brcmstb: rename to support across Broadcom SoC's")
+This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
+problem. There is another case in sata_nv that most likely needs fixing
+as well, but this looks a little different, so I wasn't confident enough
+to change that.
+
+Fixes: 28361c403683 ("libata: add extra internal command")
 Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Tested-by: Pali Rohár <pali.rohar@gmail.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/ata/ahci_brcm.c |  105 ++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 76 insertions(+), 29 deletions(-)
+Add missing export of ata_qc_get_active(), as per Pali.
 
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -213,19 +213,12 @@ static void brcm_sata_phys_disable(struc
- 			brcm_sata_phy_disable(priv, i);
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
+---
+ drivers/ata/libata-core.c |   24 ++++++++++++++++++++++++
+ drivers/ata/sata_fsl.c    |    2 +-
+ drivers/ata/sata_mv.c     |    2 +-
+ drivers/ata/sata_nv.c     |    2 +-
+ include/linux/libata.h    |    1 +
+ 5 files changed, 28 insertions(+), 3 deletions(-)
+
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -5326,6 +5326,30 @@ void ata_qc_complete(struct ata_queued_c
  }
  
--static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
-+static u32 brcm_ahci_get_portmask(struct ahci_host_priv *hpriv,
- 				  struct brcm_ahci_priv *priv)
- {
--	void __iomem *ahci;
--	struct resource *res;
- 	u32 impl;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
--	ahci = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(ahci))
--		return 0;
--
--	impl = readl(ahci + HOST_PORTS_IMPL);
-+	impl = readl(hpriv->mmio + HOST_PORTS_IMPL);
- 
- 	if (fls(impl) > SATA_TOP_MAX_PHYS)
- 		dev_warn(priv->dev, "warning: more ports than PHYs (%#x)\n",
-@@ -233,9 +226,6 @@ static u32 brcm_ahci_get_portmask(struct
- 	else if (!impl)
- 		dev_info(priv->dev, "no ports found\n");
- 
--	devm_iounmap(&pdev->dev, ahci);
--	devm_release_mem_region(&pdev->dev, res->start, resource_size(res));
--
- 	return impl;
- }
- 
-@@ -347,11 +337,10 @@ static int brcm_ahci_suspend(struct devi
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
--	int ret;
- 
--	ret = ahci_platform_suspend(dev);
- 	brcm_sata_phys_disable(priv);
--	return ret;
+ /**
++ *	ata_qc_get_active - get bitmask of active qcs
++ *	@ap: port in question
++ *
++ *	LOCKING:
++ *	spin_lock_irqsave(host lock)
++ *
++ *	RETURNS:
++ *	Bitmask of active qcs
++ */
++u64 ata_qc_get_active(struct ata_port *ap)
++{
++	u64 qc_active = ap->qc_active;
 +
-+	return ahci_platform_suspend(dev);
- }
++	/* ATA_TAG_INTERNAL is sent to hw as tag 0 */
++	if (qc_active & (1ULL << ATA_TAG_INTERNAL)) {
++		qc_active |= (1 << 0);
++		qc_active &= ~(1ULL << ATA_TAG_INTERNAL);
++	}
++
++	return qc_active;
++}
++EXPORT_SYMBOL_GPL(ata_qc_get_active);
++
++/**
+  *	ata_qc_complete_multiple - Complete multiple qcs successfully
+  *	@ap: port in question
+  *	@qc_active: new qc_active mask
+--- a/drivers/ata/sata_fsl.c
++++ b/drivers/ata/sata_fsl.c
+@@ -1278,7 +1278,7 @@ static void sata_fsl_host_intr(struct at
+ 				     i, ioread32(hcr_base + CC),
+ 				     ioread32(hcr_base + CA));
+ 		}
+-		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
++		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+ 		return;
  
- static int brcm_ahci_resume(struct device *dev)
-@@ -359,11 +348,44 @@ static int brcm_ahci_resume(struct devic
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
-+	int ret;
-+
-+	/* Make sure clocks are turned on before re-configuration */
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		return ret;
- 
- 	brcm_sata_init(priv);
- 	brcm_sata_phys_enable(priv);
- 	brcm_sata_alpm_init(hpriv);
--	return ahci_platform_resume(dev);
-+
-+	/* Since we had to enable clocks earlier on, we cannot use
-+	 * ahci_platform_resume() as-is since a second call to
-+	 * ahci_platform_enable_resources() would bump up the resources
-+	 * (regulators, clocks, PHYs) count artificially so we copy the part
-+	 * after ahci_platform_enable_resources().
-+	 */
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
-+	ret = ahci_platform_resume_host(dev);
-+	if (ret)
-+		goto out_disable_platform_phys;
-+
-+	/* We resumed so update PM runtime state */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+	ahci_platform_disable_clks(hpriv);
-+	return ret;
- }
- #endif
- 
-@@ -416,38 +438,63 @@ static int brcm_ahci_probe(struct platfo
- 		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
+ 	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -2827,7 +2827,7 @@ static void mv_process_crpb_entries(stru
  	}
  
-+	hpriv = ahci_platform_get_resources(pdev, 0);
-+	if (IS_ERR(hpriv)) {
-+		ret = PTR_ERR(hpriv);
-+		goto out_reset;
-+	}
-+
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		goto out_reset;
-+
-+	/* Must be first so as to configure endianness including that
-+	 * of the standard AHCI register space.
-+	 */
- 	brcm_sata_init(priv);
+ 	if (work_done) {
+-		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
++		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
  
--	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
--	if (!priv->port_mask)
--		return -ENODEV;
-+	/* Initializes priv->port_mask which is used below */
-+	priv->port_mask = brcm_ahci_get_portmask(hpriv, priv);
-+	if (!priv->port_mask) {
-+		ret = -ENODEV;
-+		goto out_disable_clks;
-+	}
+ 		/* Update the software queue position index in hardware */
+ 		writelfl((pp->crpb_dma & EDMA_RSP_Q_BASE_LO_MASK) |
+--- a/drivers/ata/sata_nv.c
++++ b/drivers/ata/sata_nv.c
+@@ -984,7 +984,7 @@ static irqreturn_t nv_adma_interrupt(int
+ 					check_commands = 0;
+ 				check_commands &= ~(1 << pos);
+ 			}
+-			ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
++			ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+ 		}
+ 	}
  
-+	/* Must be done before ahci_platform_enable_phys() */
- 	brcm_sata_phys_enable(priv);
- 
--	hpriv = ahci_platform_get_resources(pdev, 0);
--	if (IS_ERR(hpriv))
--		return PTR_ERR(hpriv);
- 	hpriv->plat_data = priv;
- 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP;
- 
- 	brcm_sata_alpm_init(hpriv);
- 
--	ret = ahci_platform_enable_resources(hpriv);
--	if (ret)
--		return ret;
--
- 	if (priv->quirks & BRCM_AHCI_QUIRK_NO_NCQ)
- 		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
- 	hpriv->flags |= AHCI_HFLAG_NO_WRITE_TO_RO;
- 
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
- 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_brcm_port_info,
- 				      &ahci_platform_sht);
- 	if (ret)
--		return ret;
-+		goto out_disable_platform_phys;
- 
- 	dev_info(dev, "Broadcom AHCI SATA3 registered\n");
- 
- 	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+out_disable_clks:
-+	ahci_platform_disable_clks(hpriv);
-+out_reset:
-+	if (!IS_ERR_OR_NULL(priv->rcdev))
-+		reset_control_assert(priv->rcdev);
-+	return ret;
- }
- 
- static int brcm_ahci_remove(struct platform_device *pdev)
-@@ -457,12 +504,12 @@ static int brcm_ahci_remove(struct platf
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
- 	int ret;
- 
-+	brcm_sata_phys_disable(priv);
-+
- 	ret = ata_platform_remove_one(pdev);
- 	if (ret)
- 		return ret;
- 
--	brcm_sata_phys_disable(priv);
--
- 	return 0;
- }
- 
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1174,6 +1174,7 @@ extern unsigned int ata_do_dev_read_id(s
+ 					struct ata_taskfile *tf, u16 *id);
+ extern void ata_qc_complete(struct ata_queued_cmd *qc);
+ extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
++extern u64 ata_qc_get_active(struct ata_port *ap);
+ extern void ata_scsi_simulate(struct ata_device *dev, struct scsi_cmnd *cmd);
+ extern int ata_std_bios_param(struct scsi_device *sdev,
+ 			      struct block_device *bdev,
 
 
