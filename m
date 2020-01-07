@@ -2,102 +2,119 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2EFC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC87C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D992080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518622080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VTZpdd+y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sgrUNFm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgAGKjJ (ORCPT
+        id S1727862AbgAGKk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:39:09 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:33936 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726565AbgAGKjI (ORCPT
+        Tue, 7 Jan 2020 05:40:27 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50226 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgAGKk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:39:08 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C605340654;
-        Tue,  7 Jan 2020 10:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578393548; bh=A+ywmO99yzrq2CMIo8Wi3yih5b1nyenwQVJiw0NnKdI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VTZpdd+yfmuEzd2EtgkFSoef26hNiUXD5Hn7RxAeBdvKLvkj2TDOk1q6kiFNLn50v
-         k80aJHAVq7JLCx8HbrOqIu/NhU0xsHGrXC1fre/YysZ5RWHeyvPhnj/q2FBUAdFuGs
-         5aWdajqRvOE1R3YYw8ExZZ3aZmQQbp9AN4R0/ZaLsAF0ug6AZIdFxowEg0y+35eFzt
-         TXXcd9yVI29B2BlWklOU+XCfYuHNqs7+Wv5oXEa7MFQ7oxnvud06fzf7ySviEWhnzD
-         J5q0oNWi5U9sCruaxLuhDXkE5Ke11ZC5nvXZRmjNAvpz5ek7YIEGW2c1QzhlavRjrM
-         minxQRGhqcOcA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A6B26A005C;
-        Tue,  7 Jan 2020 10:39:05 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-doc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/3] Documentation: stmmac documentation improvements
-Date:   Tue,  7 Jan 2020 11:37:17 +0100
-Message-Id: <cover.1578392890.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 Jan 2020 05:40:27 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007AeDDY083271;
+        Tue, 7 Jan 2020 04:40:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578393613;
+        bh=zvIW8/BtCQ5x8IHunoGoJlqB0iUARRig1KyivGH+pl8=;
+        h=From:To:CC:Subject:Date;
+        b=sgrUNFm+HFtu/0WLloZ6J1rLTAV5L3JDioCr933elKSaMrlRtRKw+7c5XjElhOn45
+         DAD2DoaZ8bbnE32ekkkGGnnU3G6O1SC8Y7g07OXg/any2ItmU99pjFqjNHSR8eR+al
+         mY8GFQsCbvzQE5NYFxcWrV4VEJxK23NQ3Kw+m55Y=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007AeDEC012098
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 04:40:13 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 04:40:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 04:40:12 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Ae96n032006;
+        Tue, 7 Jan 2020 04:40:09 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <ulf.hansson@linaro.org>, <f.fainelli@gmail.com>,
+        <rjui@broadcom.com>, <sbranden@broadcom.com>,
+        <nsaenzjulienne@suse.de>
+CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] mmc: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 7 Jan 2020 12:40:40 +0200
+Message-ID: <20200107104040.14500-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Not sure if this should go for net-next or Documentation tree. ]
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-Converts stmmac documentation to RST format.
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-1) Adds missing entry of stmmac documentation to MAINTAINERS.
-
-2) Converts stmmac documentation to RST format and adds some new info.
-
-3) Adds the new RST file to the list of files.
-
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
+Hi,
 
-Jose Abreu (3):
-  MAINTAINERS: Add stmmac Ethernet driver documentation entry
-  Documentation: networking: Convert stmmac documentation to RST format
-  Documentation: networking: Add stmmac to device drivers list
+Changes since v1:
+- jump to err: instead of returning in case of EPROBE_DEFER
 
- Documentation/networking/device_drivers/index.rst  |   1 +
- .../networking/device_drivers/stmicro/stmmac.rst   | 697 +++++++++++++++++++++
- .../networking/device_drivers/stmicro/stmmac.txt   | 401 ------------
- MAINTAINERS                                        |   1 +
- 4 files changed, 699 insertions(+), 401 deletions(-)
- create mode 100644 Documentation/networking/device_drivers/stmicro/stmmac.rst
- delete mode 100644 Documentation/networking/device_drivers/stmicro/stmmac.txt
+Regards,
+Peter
 
+ drivers/mmc/host/bcm2835.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+index 99f61fd2a658..c3d949847cbd 100644
+--- a/drivers/mmc/host/bcm2835.c
++++ b/drivers/mmc/host/bcm2835.c
+@@ -1393,7 +1393,17 @@ static int bcm2835_probe(struct platform_device *pdev)
+ 	host->dma_chan = NULL;
+ 	host->dma_desc = NULL;
+ 
+-	host->dma_chan_rxtx = dma_request_slave_channel(dev, "rx-tx");
++	host->dma_chan_rxtx = dma_request_chan(dev, "rx-tx");
++	if (IS_ERR(host->dma_chan_rxtx)) {
++		ret = PTR_ERR(host->dma_chan_rxtx);
++		host->dma_chan_rxtx = NULL;
++
++		if (ret == -EPROBE_DEFER)
++			goto err;
++
++		/* Ignore errors to fall back to PIO mode */
++	}
++
+ 
+ 	clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(clk)) {
 -- 
-2.7.4
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
