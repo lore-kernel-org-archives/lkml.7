@@ -2,346 +2,187 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4DBC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05FA214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578415059;
-	bh=WeGdluQgbNifXIcTZEOneYUZCHV0JUafvBrW0LEXeYU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=mVXlXSSksC/FvBP46OEfSQW++lzYZJ/7D2B23oYqSAdW8lEUS2b1Sx7P1lAvvqbWv
-	 jy8JU5k/5eDmPUUyEOjKz/7/q62CyQ4DEhJIf0OfIGeKILXoi1VK2Wr4eHyJzDpWNN
-	 X+rkB83oykxWaONRnjCeOLunwEDiW+Sf3AiUVnAU=
+	by mail.kernel.org (Postfix) with ESMTP id C7A422080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Izu/226U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgAGQhi (ORCPT
+        id S1728389AbgAGQje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:37:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgAGQhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:37:37 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 148F52080A;
-        Tue,  7 Jan 2020 16:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578415056;
-        bh=WeGdluQgbNifXIcTZEOneYUZCHV0JUafvBrW0LEXeYU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AZDKjoxPEWuA9mR5C2ga6nJunW5R1VeVUDi1CHJiJpL6J2qtA8qjPPrxi//0bl+J3
-         TWPwmJ/WboG7dveyCvE5N5CTcgTBlDKQ2kjvCrP1jkcplWvWCwD9fxeoUhG/ja4ggT
-         NWRLHueWXwJg6qrsCrKzDdYaHtlfIXiogLBUTnO4=
-Message-ID: <1578415055.2816.2.camel@kernel.org>
-Subject: Re: [PATCH -tip] tracing: trigger: Replace unneeded RCU-list
- traversals
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Date:   Tue, 07 Jan 2020 10:37:35 -0600
-In-Reply-To: <157680910305.11685.15110237954275915782.stgit@devnote2>
-References: <157680910305.11685.15110237954275915782.stgit@devnote2>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jan 2020 11:39:34 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43351 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgAGQjd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:39:33 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so215310ljm.10;
+        Tue, 07 Jan 2020 08:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d1JorjA4nbH0lGG9FrDXthugW4FVJXUIKyRvstTpWmI=;
+        b=Izu/226Uj2nozL8PXSGlrXpf2hZRBRTxs5rZYwlzW6HhfKCuWO9e+AfMKdG2+mvSoF
+         WBDkzCkGmbuNM5N0wOKVBE+mSdLjHWhnINcwXRdq19861b5VHuBEBvJDmhoEAz42TRR1
+         IrRLoLImN3X+vHMxsr4nz1PuLeNilTSfj99oc3gBbs8xVGICaD+FggSNaxCP+4+ev6cY
+         78DVj4OPXggKK/CopKlmzev+qXCtbcahpYjv3WHqmUubvTN8Dzk/Ry3DPPEWkUOMLty3
+         0/wS9W7JMx76zBLurZ6e3RyPGwZZi4wkof0yXbgA8FONrLLT9hVNnpzuhX9pYvc8hCd9
+         9sMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d1JorjA4nbH0lGG9FrDXthugW4FVJXUIKyRvstTpWmI=;
+        b=aa+a3dvQG0xk18WMFWfm3kjeS2xI0kDRNkwgsVoHNP0ua+WYw8Gmkdxlf1uoPxEJZW
+         nDRK2tcflThfkfq6Po2w2lISlwTkP326hSGjb9hQxmRqbv4qlj7zfybz9lt2iwydlbbf
+         p5/oEf664hbrFswv6CLpSYNgnZwPdCV+vafHzQyTkqcluKpFNpNb4w5+zTZTj4mwLbLh
+         ueK902+CDJghgsgwtsiA4Ic1FDiiqPNK1ftjSP1Su8FluZnwy1Ku452Lp9gMCY1NLJ1o
+         fLOc/78LdNYHZ1mQd+uK/S7Y8/N2+J4utzp6O9yFSVfey1qLuYhmRQO+SQMBamdfGL2x
+         C9nw==
+X-Gm-Message-State: APjAAAUSVmQMy8tpZWKcn/C4GcRG6c2vphlNjPzATj7aTv2zfj6huUZU
+        p84A6tpf9ZPeEHYiNGrqYT6OGUn/
+X-Google-Smtp-Source: APXvYqxoZ5xmiwKrF/YUAXqOLZ0jl59xUJWsp4EMsAOVgddA0Tnrq4tuX5iXnkNYfFd2wrqPLUR6Tg==
+X-Received: by 2002:a2e:9008:: with SMTP id h8mr202232ljg.217.1578415170023;
+        Tue, 07 Jan 2020 08:39:30 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id a15sm100803lfi.60.2020.01.07.08.39.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 08:39:28 -0800 (PST)
+Subject: Re: [PATCH v3 0/9] NVIDIA Tegra I2C driver fixes and improvements
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200106010423.5890-1-digetx@gmail.com>
+ <20200107123837.GE1964183@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c830befd-ac96-04ca-4338-1ca33f0674c3@gmail.com>
+Date:   Tue, 7 Jan 2020 19:39:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200107123837.GE1964183@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+Hello Thierry,
 
-On Fri, 2019-12-20 at 11:31 +0900, Masami Hiramatsu wrote:
-> With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
-> when I ran ftracetest trigger testcases.
+07.01.2020 15:38, Thierry Reding пишет:
+> On Mon, Jan 06, 2020 at 04:04:14AM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This patchset adds support for atomic transfers which are required for
+>> shutting down machine properly. Secondly, a (not)suspending I2C and some
+>> other things are fixed/improved by this small series as well. Please review
+>> and apply, thanks in advance!
+>>
+>> Changelog:
+>>
+>> v3: The "Prevent interrupt triggering after transfer timeout" and "Support
+>>     atomic transfers" patches got extra very minor improvements. The
+>>     completion now is passed directly to tegra_i2c_poll_completion_timeout(),
+>>     for consistency.
+>>
+>>     Added two new patches that firm up DMA transfer handling:
+>>
+>>       i2c: tegra: Always terminate DMA transfer
+>>       i2c: tegra: Check DMA completion status in addition to left time
+>>
+>> v2: The series is renamed from "Tegra I2C: Support atomic transfers and
+>>     correct suspend/resume" to "NVIDIA Tegra I2C driver fixes and
+>>     improvements" because it now contains some more various changes.
+>>
+>>     New patches in v2:
+>>
+>>       i2c: tegra: Correct unwinding order on driver's probe error
+>>       i2c: tegra: Prevent interrupt triggering after transfer timeout
+>>       i2c: tegra: Use relaxed versions of readl/writel
+>>
+>>     The "Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN" got an
+>>     improved wording for the code's comment to I2C_PIO_MODE_PREFERRED_LEN.
+>>
+>>     The "Support atomic transfers" also got some very minor tuning, like
+>>     s/in_interrupt()/i2c_dev->is_curr_atomic_xfer/ in dvc_writel() that was
+>>     missed in v1.
+>>
+>> v1: The "i2c: tegra: Support atomic transfers" previously was sent out as
+>>     a separate patch, but later I spotted that suspend/resume doesn't
+>>     work properly. The "i2c: tegra: Fix suspending in active runtime PM
+>>     state" patch depends on the atomic patch because there is a need to
+>>     active IRQ-safe mode for the runtime PM by both patches.
+>>
+>>     I fixed a missed doc-comment of the newly added "is_curr_atomic_xfer"
+>>     structure field and added additional comment that explains why IRQ needs
+>>     to be disabled for the atomic transfer in the "Support atomic transfers"
+>>     patch.
+>>
+>>     Lastly, I added a minor "i2c: tegra: Rename .." patch that helps to
+>>     follow driver's code.
+>>
+>> Dmitry Osipenko (9):
+>>   i2c: tegra: Fix suspending in active runtime PM state
+>>   i2c: tegra: Properly disable runtime PM on driver's probe error
+>>   i2c: tegra: Prevent interrupt triggering after transfer timeout
+>>   i2c: tegra: Support atomic transfers
+>>   i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
+>>   i2c: tegra: Use relaxed versions of readl/writel
+>>   clk: tegra: Fix double-free in tegra_clk_init()
+>>   i2c: tegra: Always terminate DMA transfer
+>>   i2c: tegra: Check DMA completion status in addition to left time
+>>
+>>  drivers/clk/tegra/clk.c        |   4 +-
+>>  drivers/i2c/busses/i2c-tegra.c | 216 ++++++++++++++++++++++-----------
+>>  2 files changed, 147 insertions(+), 73 deletions(-)
 > 
-> -----
->   # dmesg -c > /dev/null
->   # ./ftracetest test.d/trigger
->   ...
->   # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d "
-> "
->   kernel/trace/trace_events_hist.c:6070
->   kernel/trace/trace_events_hist.c:1760
->   kernel/trace/trace_events_hist.c:5911
->   kernel/trace/trace_events_trigger.c:504
->   kernel/trace/trace_events_hist.c:1810
->   kernel/trace/trace_events_hist.c:3158
->   kernel/trace/trace_events_hist.c:3105
->   kernel/trace/trace_events_hist.c:5518
->   kernel/trace/trace_events_hist.c:5998
->   kernel/trace/trace_events_hist.c:6019
->   kernel/trace/trace_events_hist.c:6044
->   kernel/trace/trace_events_trigger.c:1500
->   kernel/trace/trace_events_trigger.c:1540
->   kernel/trace/trace_events_trigger.c:539
->   kernel/trace/trace_events_trigger.c:584
-> -----
-> 
-> I investigated those warnings and found that the RCU-list
-> traversals in event trigger and hist didn't need to use
-> RCU version because those were called only under event_mutex.
-> 
-> I also checked other RCU-list traversals related to event
-> trigger list, and found that most of them were called from
-> event_hist_trigger_func() or hist_unregister_trigger() or
-> register/unregister functions except for a few cases.
-> 
-> Replace these unneeded RCU-list traversals with normal list
-> traversal macro and lockdep_assert_held() to check the
-> event_mutex is held.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> I'm still a bit on the fence about that second patch because I don't
+> think force-suspend is the right thing to do.
 
-This patch looks fine to me, thanks for the fixes.
+Technically the force-suspend does absolutely the right thing. That's
+what other drivers do, including some of the Tegra drivers. Personally
+I'm feeling confident that it should be correct. Of course it would be
+better to get a confirmation, unfortunately Rafael didn't answer
+anything yet. We can always make another patch if it will turn out that
+something is wrong.
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+> You should probably split the clk subsystem patch out of this series so
+> that it can be picked up into the clk tree (or I can pick it up into the
+> Tegra tree).
 
-> ---
->  kernel/trace/trace_events_hist.c    |   41
-> ++++++++++++++++++++++++++---------
->  kernel/trace/trace_events_trigger.c |   20 +++++++++++++----
->  2 files changed, 45 insertions(+), 16 deletions(-)
+I made a mistake during rebase and didn't notice that, the clk patch is
+already applied to the clk tree by Stephen Boyd. I'll fix the rebase and
+send out v4, thanks!
+
+> Other than that, I ran this through the testfarm and didn't see any
+> regressions:
 > 
-> diff --git a/kernel/trace/trace_events_hist.c
-> b/kernel/trace/trace_events_hist.c
-> index 23b0195ac977..844f8325077f 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -1753,11 +1753,13 @@ static struct hist_field *find_var(struct
-> hist_trigger_data *hist_data,
->  	struct event_trigger_data *test;
->  	struct hist_field *hist_field;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	hist_field = find_var_field(hist_data, var_name);
->  	if (hist_field)
->  		return hist_field;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			test_data = test->private_data;
->  			hist_field = find_var_field(test_data,
-> var_name);
-> @@ -1807,7 +1809,9 @@ static struct hist_field *find_file_var(struct
-> trace_event_file *file,
->  	struct event_trigger_data *test;
->  	struct hist_field *hist_field;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			test_data = test->private_data;
->  			hist_field = find_var_field(test_data,
-> var_name);
-> @@ -3102,7 +3106,9 @@ static char *find_trigger_filter(struct
-> hist_trigger_data *hist_data,
->  {
->  	struct event_trigger_data *test;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (test->private_data == hist_data)
->  				return test->filter_str;
-> @@ -3153,9 +3159,11 @@ find_compatible_hist(struct hist_trigger_data
-> *target_hist_data,
->  	struct event_trigger_data *test;
->  	unsigned int n_keys;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	n_keys = target_hist_data->n_fields - target_hist_data-
-> >n_vals;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			hist_data = test->private_data;
->  
-> @@ -5515,7 +5523,7 @@ static int hist_show(struct seq_file *m, void
-> *v)
->  		goto out_unlock;
->  	}
->  
-> -	list_for_each_entry_rcu(data, &event_file->triggers, list) {
-> +	list_for_each_entry(data, &event_file->triggers, list) {
->  		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
->  			hist_trigger_show(m, data, n++);
->  	}
-> @@ -5908,7 +5916,9 @@ static int hist_register_trigger(char *glob,
-> struct event_trigger_ops *ops,
->  	if (hist_data->attrs->name && !named_data)
->  		goto new;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (!hist_trigger_match(data, test,
-> named_data, false))
->  				continue;
-> @@ -5992,10 +6002,12 @@ static bool have_hist_trigger_match(struct
-> event_trigger_data *data,
->  	struct event_trigger_data *test, *named_data = NULL;
->  	bool match = false;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	if (hist_data->attrs->name)
->  		named_data = find_named_trigger(hist_data->attrs-
-> >name);
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (hist_trigger_match(data, test,
-> named_data, false)) {
->  				match = true;
-> @@ -6013,10 +6025,12 @@ static bool hist_trigger_check_refs(struct
-> event_trigger_data *data,
->  	struct hist_trigger_data *hist_data = data->private_data;
->  	struct event_trigger_data *test, *named_data = NULL;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	if (hist_data->attrs->name)
->  		named_data = find_named_trigger(hist_data->attrs-
-> >name);
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (!hist_trigger_match(data, test,
-> named_data, false))
->  				continue;
-> @@ -6038,10 +6052,12 @@ static void hist_unregister_trigger(char
-> *glob, struct event_trigger_ops *ops,
->  	struct event_trigger_data *test, *named_data = NULL;
->  	bool unregistered = false;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	if (hist_data->attrs->name)
->  		named_data = find_named_trigger(hist_data->attrs-
-> >name);
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (!hist_trigger_match(data, test,
-> named_data, false))
->  				continue;
-> @@ -6067,7 +6083,9 @@ static bool hist_file_check_refs(struct
-> trace_event_file *file)
->  	struct hist_trigger_data *hist_data;
->  	struct event_trigger_data *test;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			hist_data = test->private_data;
->  			if (check_var_refs(hist_data))
-> @@ -6310,7 +6328,8 @@ hist_enable_trigger(struct event_trigger_data
-> *data, void *rec,
->  	struct enable_trigger_data *enable_data = data-
-> >private_data;
->  	struct event_trigger_data *test;
->  
-> -	list_for_each_entry_rcu(test, &enable_data->file->triggers,
-> list) {
-> +	list_for_each_entry_rcu(test, &enable_data->file->triggers,
-> list,
-> +				lockdep_is_held(&event_mutex)) {
->  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
->  			if (enable_data->enable)
->  				test->paused = false;
-> diff --git a/kernel/trace/trace_events_trigger.c
-> b/kernel/trace/trace_events_trigger.c
-> index 2cd53ca21b51..40106fff06a4 100644
-> --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -501,7 +501,9 @@ void update_cond_flag(struct trace_event_file
-> *file)
->  	struct event_trigger_data *data;
->  	bool set_cond = false;
->  
-> -	list_for_each_entry_rcu(data, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(data, &file->triggers, list) {
->  		if (data->filter || event_command_post_trigger(data-
-> >cmd_ops) ||
->  		    event_command_needs_rec(data->cmd_ops)) {
->  			set_cond = true;
-> @@ -536,7 +538,9 @@ static int register_trigger(char *glob, struct
-> event_trigger_ops *ops,
->  	struct event_trigger_data *test;
->  	int ret = 0;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		if (test->cmd_ops->trigger_type == data->cmd_ops-
-> >trigger_type) {
->  			ret = -EEXIST;
->  			goto out;
-> @@ -581,7 +585,9 @@ static void unregister_trigger(char *glob, struct
-> event_trigger_ops *ops,
->  	struct event_trigger_data *data;
->  	bool unregistered = false;
->  
-> -	list_for_each_entry_rcu(data, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(data, &file->triggers, list) {
->  		if (data->cmd_ops->trigger_type == test->cmd_ops-
-> >trigger_type) {
->  			unregistered = true;
->  			list_del_rcu(&data->list);
-> @@ -1497,7 +1503,9 @@ int event_enable_register_trigger(char *glob,
->  	struct event_trigger_data *test;
->  	int ret = 0;
->  
-> -	list_for_each_entry_rcu(test, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(test, &file->triggers, list) {
->  		test_enable_data = test->private_data;
->  		if (test_enable_data &&
->  		    (test->cmd_ops->trigger_type ==
-> @@ -1537,7 +1545,9 @@ void event_enable_unregister_trigger(char
-> *glob,
->  	struct event_trigger_data *data;
->  	bool unregistered = false;
->  
-> -	list_for_each_entry_rcu(data, &file->triggers, list) {
-> +	lockdep_assert_held(&event_mutex);
-> +
-> +	list_for_each_entry(data, &file->triggers, list) {
->  		enable_data = data->private_data;
->  		if (enable_data &&
->  		    (data->cmd_ops->trigger_type ==
+>     Test results:
+>       13 builds: 13 pass, 0 fail
+>       11 boots:  11 pass, 0 fail
+>       38 tests:  38 pass, 0 fail
 > 
+>     Linux version: 5.5.0-rc5-g258d134300af
+>     Boards tested: tegra20-ventana, tegra30-cardhu-a04, tegra124-jetson-tk1,
+>                    tegra186-p2771-0000, tegra194-p2972-0000,
+>                    tegra210-p2371-2180
+> 
+> I'll reply to the individual patches with a Tested-by for patchwork to
+> pick up.
+
+Thanks!
+
