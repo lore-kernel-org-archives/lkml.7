@@ -2,220 +2,180 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0934AC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DB0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C441E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9CA207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="FJbXwlcC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATkBGevd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgAGIaC (ORCPT
+        id S1727629AbgAGIbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:30:02 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:38780 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgAGIaB (ORCPT
+        Tue, 7 Jan 2020 03:31:17 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50002 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727167AbgAGIbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:30:01 -0500
-X-Greylist: delayed 308 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 03:29:59 EST
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 9B2E62E12D7;
-        Tue,  7 Jan 2020 11:24:49 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id LSUJrHcg5s-OnPmhG6S;
-        Tue, 07 Jan 2020 11:24:49 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1578385489; bh=amHGw551aXYgpduMpWoLaSTOVPA3lpbL4Xgfo74IJig=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=FJbXwlcCEB4AnEKJOUVo14DxScHcGHY+IluuIVQybbuM+wKe6qQN9pCvHvA0gtvUt
-         RzOMDcWu6qMvzFljHIZFEn7aBSX9dD3Xox/5cGCGtsCE3sw6TQJ4Fgeq1cXOPT53Dp
-         nqlQ09p++3R3VTFcf9YJTUdy6WnWeX1Rs+04icks=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:6407::1:5])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id hHwwf5o8nZ-OmVO8eOS;
-        Tue, 07 Jan 2020 11:24:49 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/rmap: fix reusing mergeable anon_vma as parent when
- fork
-To:     "lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "richardw.yang" <richardw.yang@linux.intel.com>,
-        "kirill.shutemov" <kirill.shutemov@linux.intel.com>
-References: <157830736034.8148.7070851958306750616.stgit@buzz>
- <CALYGNiMUQ2=OjF4G3jQYZMXja5mGinXB8M1YRCe8kctCzQoWHw@mail.gmail.com>
- <2020010710441027026650@gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <f008876f-c163-e77d-d8e6-4722ba69e9f0@yandex-team.ru>
-Date:   Tue, 7 Jan 2020 11:24:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 03:31:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578385876;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vF6sDbkc+WEm8XglHdUKDkPI3i4BPn8PiMseQ0QvR8o=;
+        b=ATkBGevdHF68SFb3kVeSSpt4S3vcDwjQeBFhLGoFB5Py39I3GdGKTrDHnIi39Ko17WBMlu
+        PIediQfsu2PiOsSkMil8RyizaNEvs18+htygO8Nthc2GAiUUVu2fqUx3BMs2HySpnBK/A6
+        IPtQYykVowxDxcWS8PfYoLAAKaJc03M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-0qH6OMJ0PnqNauFDKp8scQ-1; Tue, 07 Jan 2020 03:31:14 -0500
+X-MC-Unique: 0qH6OMJ0PnqNauFDKp8scQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B10F1807465;
+        Tue,  7 Jan 2020 08:31:13 +0000 (UTC)
+Received: from [10.72.12.248] (ovpn-12-248.pek2.redhat.com [10.72.12.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FE3F85EE6;
+        Tue,  7 Jan 2020 08:31:07 +0000 (UTC)
+Subject: Re: [PATCH v2] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Alistair Delva <adelva@google.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200105132120.92370-1-mst@redhat.com>
+ <2d7053b5-295c-4051-a722-7656350bdb74@redhat.com>
+ <20200106074426-mutt-send-email-mst@kernel.org>
+ <eab75b06-453d-2e17-1e77-439a66c3c86a@redhat.com>
+ <20200107020303-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6febe3fd-f243-13d2-b3cf-efd172f229c7@redhat.com>
+Date:   Tue, 7 Jan 2020 16:31:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <2020010710441027026650@gmail.com>
+In-Reply-To: <20200107020303-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 05.44, lixinhai.lxh@gmail.com wrote:
-> On 2020-01-07 at 04:35 Konstantin Khlebnikov wrote:
->> On Mon, Jan 6, 2020 at 1:42 PM Konstantin Khlebnikov
->> <khlebnikov@yandex-team.ru> wrote:
+
+On 2020/1/7 =E4=B8=8B=E5=8D=883:06, Michael S. Tsirkin wrote:
+> On Tue, Jan 07, 2020 at 10:29:08AM +0800, Jason Wang wrote:
+>> On 2020/1/6 =E4=B8=8B=E5=8D=888:54, Michael S. Tsirkin wrote:
+>>> On Mon, Jan 06, 2020 at 10:47:35AM +0800, Jason Wang wrote:
+>>>> On 2020/1/5 =E4=B8=8B=E5=8D=889:22, Michael S. Tsirkin wrote:
+>>>>> The only way for guest to control offloads (as enabled by
+>>>>> VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
+>>>>> through CTRL_VQ. So it does not make sense to
+>>>>> acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
+>>>>> VIRTIO_NET_F_CTRL_VQ.
+>>>>>
+>>>>> The spec does not outlaw devices with such a configuration, so we h=
+ave
+>>>>> to support it. Simply clear VIRTIO_NET_F_CTRL_GUEST_OFFLOADS.
+>>>>> Note that Linux is still crashing if it tries to
+>>>>> change the offloads when there's no control vq.
+>>>>> That needs to be fixed by another patch.
+>>>>>
+>>>>> Reported-by: Alistair Delva <adelva@google.com>
+>>>>> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+>>>>> Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if =
+possible on XDP set")
+>>>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>>>>> ---
+>>>>>
+>>>>> Same patch as v1 but update documentation so it's clear it's not
+>>>>> enough to fix the crash.
+>>>>>
+>>>>>     drivers/net/virtio_net.c | 9 +++++++++
+>>>>>     1 file changed, 9 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+>>>>> index 4d7d5434cc5d..7b8805b47f0d 100644
+>>>>> --- a/drivers/net/virtio_net.c
+>>>>> +++ b/drivers/net/virtio_net.c
+>>>>> @@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_de=
+vice *vdev)
+>>>>>     	if (!virtnet_validate_features(vdev))
+>>>>>     		return -EINVAL;
+>>>>> +	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
+>>>>> +	 * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
+>>>>> +	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
+>>>>> +	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
+>>>>> +	 * not the former.
+>>>>> +	 */
+>>>>> +	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
+>>>>> +			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
+>>>> If it's just because a bug of spec, should we simply fix the bug and=
+ fail
+>>>> the negotiation in virtnet_validate_feature()?
+>>> One man's bug is another man's feature: arguably leaving the features
+>>> independent in the spec might allow reuse of the feature bit without
+>>> breaking guests.
 >>>
->>> This fixes couple misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
->>> mergeable anon_vma as parent when fork").
+>>> And even if we say it's a bug we can't simply fix the bug in the
+>>> spec: changing the text for a future version does not change the fact
+>>> that devices behaving according to the spec exist.
 >>>
->>> First problem caused by initialization order in dup_mmap(): vma->vm_prev
->>> is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
->>> previous VMA in parent mm. This is fixed by rearrangement in dup_mmap().
->>>
->>> If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
->>> before all patches in child process related VMAs: DST1 DST2 .. DSTn will
->>> use different anon-vmas: ANON1 ANON2 .. ANONn. Before this patch only DST1
->>> will fork new ANON1 and following DST2 .. DSTn will share parent's ANON0.
->>> With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
->>>
->>> Also this patch moves sharing logic out of anon_vma_clone() into more
->>> specific anon_vma_fork() because this supposed to work only at fork().
->>> Function anon_vma_clone() is more generic is also used at splitting VMAs.
->>>
->>> Second problem is hidden behind first one: assumption "Parent has vm_prev,
->>> which implies we have vm_prev" is wrong if first VMA in parent mm has set
->>> flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
->>> because in current code 'prev' actually is same as 'pprev'. To avoid that
->>> this patch just checks pointer and compares vm_start to verify relation
->>> between previous VMAs in parent and child.
->>>
->>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>> Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
+>>>> Otherwise there would be inconsistency in handling feature dependenc=
+ies for
+>>>> ctrl vq.
+>>>>
+>>>> Thanks
+>>> That's a cosmetic problem ATM. It might be a good idea to generally
+>>> change our handling of dependencies, and clear feature bits instead o=
+f
+>>> failing probe on a mismatch.
 >>
->> Oops, I've forgot to mention that Li Xinhai <lixinhai.lxh@gmail.com>
->> found and reported this suspicious code. Sorry.
+>> Something like I proposed in the past ? [1]
 >>
->> Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
->> Link: https://lore.kernel.org/linux-mm/CALYGNiNzz+dxHX0g5-gNypUQc3B=8_Scp53-NTOh=zWsdUuHAw@mail.gmail.com/T/#t
->>
-> 
-> Can we change the interface
-> int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma),
-> to
-> int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma, struct vm_area_struct *pcvma),
-> and 'pcvma' means previous child vma.
-> so highlight the use of that vma, and the current code sequence for linking 'tmp' vma
-> in dup_mmap() is not changed(in case some code would have dependency on that
-> linking sequence)
+>> [1] https://lore.kernel.org/patchwork/patch/519074/
+>
+> No that still fails probe.
+>
+> I am asking whether it's more future proof to fail probe
+> on feature combinations disallowed by spec, or to clear bits
+> to get to an expected combination.
 
-There should be no dependency on linking sequence.
-But we could generalize sharing: cloned vma could share prev anon-vma
-(or any other actually) if anon_vma->parent == src->anon_vma.
-This is more clear than sharing only between related vmas.
 
-> 
-> Another issue is for linking the avc for the reused anon_vma. anon_vma_clone()
-> use the iteration
-> list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma),
-> to link avc for child vma, and it is unable to reach the resued anon_vma because
-> that is from the previous vma not from parent vma. So, in anon_vma_fork(),
-> we need to setup the avc link for vma->anon.
+Sorry wrong link.
 
-Oh, yes. That's another example where current code miraculously stays correct.
+It should be: https://lkml.org/lkml/2014/11/17/82
 
-> 
->>> ---
->>>    kernel/fork.c |    4 ++--
->>>    mm/rmap.c     |   25 ++++++++++++-------------
->>>    2 files changed, 14 insertions(+), 15 deletions(-)
+
+>
+> In any case, we should probably document in the spec how
+> drivers behave on such combinations.
+
+
+Yes.
+
+Thanks
+
+
+>
+>
+>>>    It's worth thinking  - at the spec level -
+>>> how we can best make the configuration extensible.
+>>> But that's not something spec should worry about.
 >>>
->>> diff --git a/kernel/fork.c b/kernel/fork.c
->>> index 2508a4f238a3..04ee5e243f65 100644
->>> --- a/kernel/fork.c
->>> +++ b/kernel/fork.c
->>> @@ -548,6 +548,8 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>                   if (retval)
->>>                           goto fail_nomem_policy;
->>>                   tmp->vm_mm = mm;
->>> +               tmp->vm_prev = prev;    /* anon_vma_fork use this */
->>> +               tmp->vm_next = NULL;
->>>                   retval = dup_userfaultfd(tmp, &uf);
->>>                   if (retval)
->>>                           goto fail_nomem_anon_vma_fork;
->>> @@ -559,7 +561,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>                   } else if (anon_vma_fork(tmp, mpnt))
->>>                           goto fail_nomem_anon_vma_fork;
->>>                   tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
->>> -               tmp->vm_next = tmp->vm_prev = NULL;
->>>                   file = tmp->vm_file;
->>>                   if (file) {
->>>                           struct inode *inode = file_inode(file);
->>> @@ -592,7 +593,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>                    */
->>>                   *pprev = tmp;
->>>                   pprev = &tmp->vm_next;
->>> -               tmp->vm_prev = prev;
->>>                   prev = tmp;
 >>>
->>>                   __vma_link_rb(mm, tmp, rb_link, rb_parent);
->>> diff --git a/mm/rmap.c b/mm/rmap.c
->>> index b3e381919835..77b3aa38d5c2 100644
->>> --- a/mm/rmap.c
->>> +++ b/mm/rmap.c
->>> @@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>>    {
->>>           struct anon_vma_chain *avc, *pavc;
->>>           struct anon_vma *root = NULL;
->>> -       struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
->>> -
->>> -       /*
->>> -        * If parent share anon_vma with its vm_prev, keep this sharing in in
->>> -        * child.
->>> -        *
->>> -        * 1. Parent has vm_prev, which implies we have vm_prev.
->>> -        * 2. Parent and its vm_prev have the same anon_vma.
->>> -        */
->>> -       if (!dst->anon_vma && src->anon_vma &&
->>> -           pprev && pprev->anon_vma == src->anon_vma)
->>> -               dst->anon_vma = prev->anon_vma;
->>> -
->>>
->>>           list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->>>                   struct anon_vma *anon_vma;
->>> @@ -334,6 +321,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>>     */
->>>    int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->>>    {
->>> +       struct vm_area_struct *prev = vma->vm_prev, *pprev = pvma->vm_prev;
->>>           struct anon_vma_chain *avc;
->>>           struct anon_vma *anon_vma;
->>>           int error;
->>> @@ -345,6 +333,17 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->>>           /* Drop inherited anon_vma, we'll reuse existing or allocate new. */
->>>           vma->anon_vma = NULL;
->>>
->>> +       /*
->>> +        * If parent shares anon_vma with its vm_prev, keep this sharing.
->>> +        *
->>> +        * Previous VMA could be missing or not match previuos in parent
->>> +        * if VM_DONTCOPY is set: compare vm_start to avoid this case.
->>> +        */
->>> +       if (pvma->anon_vma && pprev && prev &&
->>> +           pprev->anon_vma == pvma->anon_vma &&
->>> +           pprev->vm_start == prev->vm_start)
->>> +               vma->anon_vma = prev->anon_vma;
->>> +
->>>           /*
->>>            * First, attach the new VMA to the parent VMA's anon_vmas,
->>>            * so rmap can find non-COWed pages in child processes.
->>>
->> >
+>>>>> +
+>>>>>     	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
+>>>>>     		int mtu =3D virtio_cread16(vdev,
+>>>>>     					 offsetof(struct virtio_net_config,
+
