@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E77C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E1DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C3220880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69602081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432483;
-	bh=2ELgMWu3X5VHs9aQWl60YfTlsvdPjjVBVl51OAFztvw=;
+	s=default; t=1578432491;
+	bh=aBwBqSzxGxhNrT1YnWU+12cijlj0os4qRgHbt6kJyqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDqf83masI8JQGEkNb8z3IjPNejbPpjEc8eJUTA5iEBb39gN7IyxtFmW9Do4yLLYb
-	 5AMzWvWP5Ik3ludwF9jwK3dzThej6TIJFe4uf/cdTOxYPa6jgGm0M/dgcMkP/sYcGs
-	 VFQwt6+msSwPYWY+icgUvwxaaJXJCybiCaiO2uUY=
+	b=rZhhpKwU6P5N24eh1idbMcvTwgPlkIQm995aqmG61jtUrZUH4MFwfMV55/I50lr+h
+	 pChbo0MdUTa57IIPGBQjwj8EiBIjM5TlW21B/AJsB7IiiqTgeiSqJURoXvXjbR2GmA
+	 51+j7deyWyUA/TePaN20Fq1/rZ2b8NmkanJwh7Mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbgAGU5L (ORCPT
+        id S1727425AbgAGU5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727402AbgAGU5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:04 -0500
+        id S1727359AbgAGU47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F041420880;
-        Tue,  7 Jan 2020 20:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20722214D8;
+        Tue,  7 Jan 2020 20:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430623;
-        bh=2ELgMWu3X5VHs9aQWl60YfTlsvdPjjVBVl51OAFztvw=;
+        s=default; t=1578430618;
+        bh=aBwBqSzxGxhNrT1YnWU+12cijlj0os4qRgHbt6kJyqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQIiJrQQ1+D1boPrEqoa0gr5x/pAdUNW3MlZCPOpcgOM9/6MbEhAxDo0RNP7YPWwH
-         RF1llE5e+xjzAmHusFXvnp0vpb2c0s7YVk48O5GnaMfZYW7bX/IAxlh2R/48oDGePQ
-         PEFFHp88fM7e3+ITaq4tuZ5BmVGO81mi6v+JSjnU=
+        b=xzlyffdf5f5e4UZccIikFl/UDcNE7swkd9VGpngYffO+oP4PY7XIGZOXfldEmeh+c
+         kOkTnikgXMwBGvDgmbiUXxiKwoXls0r0vFnu95PbrArYyt2GN/oqWNkuo6qXOR3tKP
+         UeFvzbak/WO46wRr46bV1h9rzvNuTpHNHyjxE4YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Krishna Kant <krishna.kant@purestorage.com>,
-        Alexei Potashnik <alexei@purestorage.com>,
-        Quinn Tran <qutran@marvell.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
         Himanshu Madhani <hmadhani@marvell.com>,
         Hannes Reinecke <hare@suse.de>,
         Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/191] scsi: qla2xxx: Send Notify ACK after N2N PLOGI
-Date:   Tue,  7 Jan 2020 21:52:29 +0100
-Message-Id: <20200107205334.560228200@linuxfoundation.org>
+Subject: [PATCH 5.4 027/191] scsi: qla2xxx: Fix PLOGI payload and ELS IOCB dump length
+Date:   Tue,  7 Jan 2020 21:52:27 +0100
+Message-Id: <20200107205334.454832749@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -68,20 +65,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 5e6b01d84b9d20bcd77fc7c4733a2a4149bf220a ]
+[ Upstream commit 0334cdea1fba36fad8bdf9516f267ce01de625f7 ]
 
-qlt_handle_login schedules session for deletion even if a login is in
-progress. That causes login bouncing, i.e. a few logins are made before it
-settles down.
+The size of the buffer is hardcoded as 0x70 or 112 bytes, while the size of
+ELS IOCB is 0x40 and the size of PLOGI payload returned by Get Parameters
+command is 0x74.
 
-Complete the first login by sending Notify Acknowledge IOCB via
-qlt_plogi_ack_unref if the session is pending login completion.
-
-Fixes: 9cd883f07a54 ("scsi: qla2xxx: Fix session cleanup for N2N")
-Cc: Krishna Kant <krishna.kant@purestorage.com>
-Cc: Alexei Potashnik <alexei@purestorage.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-11-r.bolshakov@yadro.com
-Acked-by: Quinn Tran <qutran@marvell.com>
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-9-r.bolshakov@yadro.com
 Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
@@ -89,21 +80,33 @@ Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_iocb.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index 18522ac79d9e..74a378a91b71 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -4803,6 +4803,7 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
+diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
+index 44dc97cebb06..bdf1994251b9 100644
+--- a/drivers/scsi/qla2xxx/qla_iocb.c
++++ b/drivers/scsi/qla2xxx/qla_iocb.c
+@@ -2684,7 +2684,8 @@ qla24xx_els_logo_iocb(srb_t *sp, struct els_entry_24xx *els_iocb)
+ 		ql_dbg(ql_dbg_io + ql_dbg_buffer, vha, 0x3073,
+ 		    "PLOGI ELS IOCB:\n");
+ 		ql_dump_buffer(ql_log_info, vha, 0x0109,
+-		    (uint8_t *)els_iocb, 0x70);
++		    (uint8_t *)els_iocb,
++		    sizeof(*els_iocb));
+ 	} else {
+ 		els_iocb->control_flags = 1 << 13;
+ 		els_iocb->tx_byte_count =
+@@ -2850,7 +2851,8 @@ qla24xx_els_dcmd2_iocb(scsi_qla_host_t *vha, int els_opcode,
  
- 	switch (sess->disc_state) {
- 	case DSC_DELETED:
-+	case DSC_LOGIN_PEND:
- 		qlt_plogi_ack_unref(vha, pla);
- 		break;
+ 	ql_dbg(ql_dbg_disc + ql_dbg_buffer, vha, 0x3073, "PLOGI buffer:\n");
+ 	ql_dump_buffer(ql_dbg_disc + ql_dbg_buffer, vha, 0x0109,
+-	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld, 0x70);
++	    (uint8_t *)elsio->u.els_plogi.els_plogi_pyld,
++	    sizeof(*elsio->u.els_plogi.els_plogi_pyld));
  
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS) {
 -- 
 2.20.1
 
