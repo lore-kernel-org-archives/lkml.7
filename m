@@ -2,139 +2,146 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB6C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA21C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266B52073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7243C2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gyTzWYfW"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HgavD/C6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgAGRNf (ORCPT
+        id S1728372AbgAGRQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:13:35 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:58861 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgAGRNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:13:34 -0500
-Received: from [IPv6:2601:646:8600:3281:3840:b5ed:cfa7:59d] ([IPv6:2601:646:8600:3281:3840:b5ed:cfa7:59d])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 007HDBBO3393366
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 7 Jan 2020 09:13:12 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 007HDBBO3393366
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019122001; t=1578417193;
-        bh=Dmfwf3/FN4yxJW+5Klfjy5Ddt88R5IwzSu4HDodXyPc=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=gyTzWYfWMQzL1pFR9lx10vccAIf8YZTZjeBZX0C5ViA0KHJl9yJzwUfGqufrZYknP
-         hRjDkJeSkc3hEU1cF7cAKdHQp1D7jl7+61siTYUITng8B8gDpwOT1QUjpyOK8HIYZG
-         pkUUb77eD589CA2xy6oh63Dv8EomXeseRqxofhBtR0EfcdeaEYlFIN4mQ1U9yUOAS4
-         +MvJSkd7S1lwmpYnhk2PUNlQytJMYHIt00/dSMLMc1uee0bmM1eWKHYvt1JMDRYrBh
-         CQGtNq7uPC5BhtU5D72/DBvdis/s1yhOU+WkJoh+STBk7Gdr4nYmAOO154bR37fRpr
-         v5RXdXA7VmZEA==
-Date:   Tue, 07 Jan 2020 09:13:03 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
-References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-2-masahiroy@kernel.org> <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
+        Tue, 7 Jan 2020 12:16:06 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32018 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728262AbgAGRQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:16:06 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007H3kew001693;
+        Tue, 7 Jan 2020 18:15:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=ZdllE0Z52H4x4guhjbA8dQk3Mh5olK1KPHIfgCgmdic=;
+ b=HgavD/C6uGnl1U0aWLn+F2XXveASexh0qsxQwqzTfILkv4s7dTPS3wJ7bJWSh30iurFc
+ 2cyCo7fHS5bGx16UpGNPedY6X0L6KRStaBMHLLCniSkoHFCZGzKJjqc9sKRfP9fCSaFI
+ 9U8cwTlMur71kI2a1PmK7LvJGmkNdQdDtKnmTeYqVazThi4IQi2Fq6Zdtrf9WmoB4Yhb
+ nREmzBkgQEhyqPtPtGG3T6+UX3GkP88IGE9bwJvZtxTjdXjTXpuqvCFodnVGwej8idVA
+ QuGt2iF4nH1Qa4queQizpckiFbYv7wj0YKALXI4G36IDEL4EnCZtt/C0TPfI+PO76nx1 oQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2xakkaqn9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 18:15:53 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 56183100034;
+        Tue,  7 Jan 2020 18:15:50 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 455CE21F729;
+        Tue,  7 Jan 2020 18:15:50 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 18:15:49 +0100
+Subject: Re: [PATCH v2] iio: adc: stm32-adc: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <jic23@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20200107114125.6095-1-peter.ujfalusi@ti.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <5146b085-d92d-7230-9a05-87926711dafa@st.com>
+Date:   Tue, 7 Jan 2020 18:15:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 01/13] initramfs: replace klibcdirs in Makefile with FORCE
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-From:   hpa@zytor.com
-Message-ID: <6D307942-FAB0-48A7-8441-01AECB94D69E@zytor.com>
+In-Reply-To: <20200107114125.6095-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-07_05:2020-01-07,2020-01-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On January 7, 2020 2:46:29 AM PST, Masahiro Yamada <masahiroy@kernel=2Eorg>=
- wrote:
->(+CC: Ben Hutchings, H=2E Peter Anvin)
->
->On Sun, Jan 5, 2020 at 12:03 AM Masahiro Yamada <masahiroy@kernel=2Eorg>
->wrote:
->>
->> 'klibcdirs' was added by commit d39a206bc35d ("kbuild: rebuild
->initramfs
->> if content of initramfs changes")=2E If this is just a matter of
->forcing
->> execution of the recipe line, we can replace it with FORCE=2E
->>
->> I do not understand the purpose of
->>
->>    $(deps_initramfs): klibcdirs
->
->
->Perhaps, the 'klibcdirs' target might be intended
->to control the directory descending
->in case klibc is dropped in the kernel tree=2E
->
->Anyway, klibc is built independently
->of Linux kernel, and this 'klibcdirs' target
->is just a no-op stub as far as the kernel tree is concerned=2E
->
->Clean it up=2E
->
->
->> Remove it=2E
->>
->> Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
->> ---
->>
->> Changes in v2:
->>   - New patch (I forgot to submit this in v1 series)
->>
->>  usr/Makefile | 6 +-----
->>  1 file changed, 1 insertion(+), 5 deletions(-)
->>
->> diff --git a/usr/Makefile b/usr/Makefile
->> index e6f7cb2f81db=2E=2E55c942da01cd 100644
->> --- a/usr/Makefile
->> +++ b/usr/Makefile
->> @@ -3,9 +3,6 @@
->>  # kbuild file for usr/ - including initramfs image
->>  #
->>
->> -klibcdirs:;
->> -PHONY +=3D klibcdirs
->> -
->>  suffix_y =3D $(subst $\",,$(CONFIG_INITRAMFS_COMPRESSION))
->>  datafile_y =3D initramfs_data=2Ecpio$(suffix_y)
->>  datafile_d_y =3D =2E$(datafile_y)=2Ed
->> @@ -50,13 +47,12 @@ targets :=3D $(datafile_y)
->>  # do not try to update files included in initramfs
->>  $(deps_initramfs): ;
->>
->> -$(deps_initramfs): klibcdirs
->>  # We rebuild initramfs_data=2Ecpio if:
->>  # 1) Any included file is newer than initramfs_data=2Ecpio
->>  # 2) There are changes in which files are included (added or
->deleted)
->>  # 3) If gen_init_cpio are newer than initramfs_data=2Ecpio
->>  # 4) Arguments to gen_initramfs=2Esh changes
->> -$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs)
->klibcdirs
->> +$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) FORCE
->>         $(Q)$(initramfs) -l $(ramfs-input) > $(obj)/$(datafile_d_y)
->>         $(call if_changed,initfs)
->>
->> --
->> 2=2E17=2E1
->>
+On 1/7/20 12:41 PM, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+> 
+> Changes since v1:
+> - Fall back to IRQ mode only in case of ENODEV
+> 
+> Regards,
+> Peter
 
-Yes, it is/was a hook for the klibc integration tree=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Hi Peter,
+
+Thanks for the patch,
+
+In case you send another version... I've just a minor suggestion
+regarding the comment (see after). Apart from that, you can add my:
+
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+
+Best Regards,
+Fabrice
+
+> 
+>  drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 3b291d72701c..df5f5d61f9f9 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1746,9 +1746,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+>  	struct dma_slave_config config;
+>  	int ret;
+>  
+> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+> -	if (!adc->dma_chan)
+> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+> +	if (IS_ERR(adc->dma_chan)) {
+> +		ret = PTR_ERR(adc->dma_chan);
+> +		if (ret != -ENODEV) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(&indio_dev->dev,
+> +					"DMA channel request failed with %d\n",
+> +					ret);
+> +			return ret;
+> +		}
+> +
+> +		/* Ignore errors to fall back to IRQ mode */
+		               ^
+		          error
+alternate suggestion:
+		/* DMA is optional: fall back to IRQ mode */
+
+> +		adc->dma_chan = NULL;
+>  		return 0;
+> +	}
+>  
+>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>  					 STM32_DMA_BUFFER_SIZE,
+> 
