@@ -2,104 +2,105 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557CAC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969BBC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA282080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA62206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432773;
+	bh=NKq/ShjDukyYkHHXytvAGFQmdmj1FmVZVGP2CEl4g08=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=cgxJeJr6GoGTrRj6VymqyXjWiI4wizbM8RLaVX4ONQXIVc1e9qkq1yKI1pKw8AdqE
+	 qNavAP991ENVdQhzZBUlhC5lPdHO0/IoiD5sOve1YPwTi/XBfIS7UTuJMX5ccAK5K5
+	 juSl7/Pf7HnEivxmtIc3hGAUl34VmuyW2vZtBMSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgAGVcF (ORCPT
+        id S1727502AbgAGVcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:32:05 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:52919 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgAGVcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:32:04 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MryCb-1jRWuS0SDV-00nw7r; Tue, 07 Jan 2020 22:31:29 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Shile Zhang <shile.zhang@linux.alibaba.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86: orc: fix unused-function warning
-Date:   Tue,  7 Jan 2020 22:31:20 +0100
-Message-Id: <20200107213127.209139-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 16:32:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbgAGVcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:32:51 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A95206F0;
+        Tue,  7 Jan 2020 21:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578432770;
+        bh=NKq/ShjDukyYkHHXytvAGFQmdmj1FmVZVGP2CEl4g08=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TIWQtPwo83QIR4B+6NO13f0GHH3ZcvmB2Ii3csb3mV4s4/7tujZLSKEJ0eToItHlC
+         7D3oduy2WB67GgcjgEMmL2JxixGSrhMPhTaz8pqmOnzC3t/nZG1A7TtuXwb8OXgd/1
+         ZRxJw4Ps7/7CLxxFmV1jgrcRQi8c/nQI6QRjSrEI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B86473522735; Tue,  7 Jan 2020 13:32:50 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:32:50 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     corbet@lwn.net, madhuparnabhowmik04@gmail.com, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH v3 0/7] Fix trivial nits in RCU docs
+Message-ID: <20200107213250.GE13449@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200106200802.26994-1-sj38.park@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:XOliWfarmDdbXwOaX1cryXLanvy/Ux9O/pAvX/PsYzyLh/YhekX
- 0sdfbcoHMf3m7sQj66aLv5lggIX2YMEEy+7zP5aCm/tOBl9pdz1SNKTLNP2Dui24NRmPpK2
- RU0MxkbUAehWuziErddaKeUlbl5nMp6UPzaiEd/zQmkfNp1cfs6pu+GJyukt4E6Ywa92F70
- awHWEeVxBPSJsek9fvBqA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kZj9Nx193zs=:l0CPDOzFFkf3BIxQnkgcY5
- oOIMt9bCH9EnzVSc+sV38WRJ3ESdn1wapQA+LBJ0pxQlu49YmWMslf9WVV23fDp/VzPmLMYXF
- O2g8Q9Wl77JVINvy2+TyhVQpuwkIadZ+j2BQAuixGwswutfKOJFEuojhT3krnY6FUJUz91TEY
- KzIqHCF891u3mC5OJjBfnFt10iYZMpRrrcmzoh8WFsERQ97RWiJCWYFOJ5KmnZzevrJ3m1/2Y
- j2jT/4nvSloHcHksI5Fkxi1fwtznzI+w8OuX/J40SLruT1HF/FLCHLGpUyJCpS5YfsKfsgV4n
- W/y8Z3C3xSxIRYleEwuX8+Ei4bhjisqe4HVZNN1uvvj68eigPePCLVMwpAa1PL4NM1O66Ro1V
- HAp+uHzKxcAGyaLpNX6jcgkyXEmTzTpXovoSZ8P4vlRTaGdfLF5YgK6JCRxYFk5Sj2UCYQUl2
- 3mavlJgR0lrllI0AfUGKQsVwF6CP1bWY0/BUHp7A04R5/l6BiEt1A30PLFH8LH+mIijCUQ+EK
- eam2cRFuDmoKQngmN2zpN86lpE5496UkwAnX5vhIfAzQxj6WS/95kptMRKLjfa2LbvPcpLUK8
- JM73VjnNxaGbJAojt1zzmSxh/9j6F3j3iZL/CU2mkkH/5df9n0BOuQ18wrIoDfXk3kSypARAk
- Nw/wFKAJJP5Y6UeCIKrApDCkEwqS8C9xOQ3I6xyPXZu4k0L6t6W8Zv4pdCLct/wSHM6b/wJOf
- V9jOXWeRLPuqVJ8vPYYgbzrxIrYyMMiimnV72Ft3bJsUjqBEWCZoNwh8gBlQEsBe9gfqsRVp2
- CObKuxpLvKtK04juyXQ1XKZWh+wvg3g0claAWO0sL/WPbJXpCLonrfsZVDx2GfYpkrwp4YO4y
- 7OpbdLhLQzXW2QFw8ERw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106200802.26994-1-sj38.park@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orc unwinder contains a new warning:
+On Mon, Jan 06, 2020 at 09:07:55PM +0100, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This patchset fixes trivial nits in the RCU documentations.
+> 
+> It is based on the latest dev branch of Paul's linux-rcu git repository.
+> The Complete git tree is also available at
+> https://github.com/sjp38/linux/tree/patches/rcu/docs/2019-12-31/v3.
 
-arch/x86/kernel/unwind_orc.c:210:12: error: 'orc_sort_cmp' defined but not used [-Werror=unused-function]
- static int orc_sort_cmp(const void *_a, const void *_b)
-            ^~~~~~~~~~~~
-arch/x86/kernel/unwind_orc.c:190:13: error: 'orc_sort_swap' defined but not used [-Werror=unused-function]
- static void orc_sort_swap(void *_a, void *_b, int size)
-             ^~~~~~~~~~~~~
+I have queued these for further review and testing, thank you!
 
-Move the #ifdef to hide the now unused functions.
+							Thanx, Paul
 
-Fixes: f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/x86/kernel/unwind_orc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index abdf8911a1fb..538152cca46b 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -187,6 +187,7 @@ static struct orc_entry *orc_find(unsigned long ip)
- 	return orc_ftrace_find(ip);
- }
- 
-+#ifdef CONFIG_MODULES
- static void orc_sort_swap(void *_a, void *_b, int size)
- {
- 	struct orc_entry *orc_a, *orc_b;
-@@ -229,7 +230,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
- 	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
- }
- 
--#ifdef CONFIG_MODULES
- void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 			void *_orc, size_t orc_size)
- {
--- 
-2.20.0
-
+> Changes from v2
+> (https://lore.kernel.org/linux-doc/20200106191852.22973-1-sjpark@amazon.de/)
+>  - Apply author email (sjpark@amazon.de) correctly
+> 
+> Changes from v1
+> (https://lore.kernel.org/linux-doc/20191231151549.12797-1-sjpark@amazon.de/)
+>  - Add 'Reviewed-by' from Madhuparna
+>  - Fix wrong author email address
+>  - Rebased on latest dev branch of Paul's linux-rcu git repository.
+> 
+> SeongJae Park (7):
+>   doc/RCU/Design: Remove remaining HTML tags in ReST files
+>   doc/RCU/listRCU: Fix typos in a example code snippets
+>   doc/RCU/listRCU: Update example function name
+>   doc/RCU/rcu: Use ':ref:' for links to other docs
+>   doc/RCU/rcu: Use absolute paths for non-rst files
+>   doc/RCU/rcu: Use https instead of http if possible
+>   rcu: Fix typos in beginning comments
+> 
+>  .../Tree-RCU-Memory-Ordering.rst               |  8 ++++----
+>  Documentation/RCU/listRCU.rst                  | 10 +++++-----
+>  Documentation/RCU/rcu.rst                      | 18 +++++++++---------
+>  kernel/rcu/srcutree.c                          |  2 +-
+>  kernel/rcu/tree.c                              |  4 ++--
+>  5 files changed, 21 insertions(+), 21 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
