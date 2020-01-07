@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DE0C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1A221744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BA624676
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430740;
-	bh=aWycraDdsslyDR3Yr4H3z8S0kZAHv+9ESZLp2ssFPU0=;
+	s=default; t=1578430749;
+	bh=+8/l5PDbTPjHpcojaSQlovgVrTLf3sxj8sgQ4f4RTCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w2su+1uQTvgaYk29R3rDHFhBr9AkvRZnxb7kR+NGqMNhPyr0WOZX/bHr4Jy6ftPHH
-	 d5Pvb76C52VRyA56+RF2CpCWEvXO8TU5zkE1964XAQZTJCWC4kzHHWbt5p/nKPFa2G
-	 cArq0/zZ389P9Dum6u7ebPGFmFDZ2A1KF9szcpt8=
+	b=U+acwZSg475pkfiLwNRtw9ETn4yh2+qA9TqIYPHvfiEYYDXGe0ZWDgO2BMZLl6VF+
+	 tOjVePRoVNCF/JRQv02rJ/ek1tUfdcOge4peOYJNToRRE6OxCS/6WLRrZrTuo0m9jm
+	 DXSuuBDYZ53ih0rvyJAFwZRt9srrNKIrc/Zrx8Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgAGU67 (ORCPT
+        id S1728072AbgAGU7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59214 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbgAGU65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:57 -0500
+        id S1728036AbgAGU7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E59F214D8;
-        Tue,  7 Jan 2020 20:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B19A2087F;
+        Tue,  7 Jan 2020 20:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430737;
-        bh=aWycraDdsslyDR3Yr4H3z8S0kZAHv+9ESZLp2ssFPU0=;
+        s=default; t=1578430744;
+        bh=+8/l5PDbTPjHpcojaSQlovgVrTLf3sxj8sgQ4f4RTCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNgBz/jHAo5ChuiKj58Zzr32MtoyvLttOqcyqRPsZfKUzlMlMdBMxINnJcDohqquz
-         HgN9VEhRbqF1qobID207CnYwPHd8Z5ikQrxmasTcxZ82sRkF+zbebsXR0fcLeM0ZRo
-         AEL2MTt9nuGtE6owGNcagNBvkeAd8+cBcTtZZAV4=
+        b=xd/I2THQfD9fwWq2l0VueCBWyySIJ5qh/674ou4KpZKnl0eqCh0l0rN8zZu9VSU10
+         vZEvBNSSNzj6o+sdQX2b+AKBJWqap/Rnxx66DrQXxVo7ryRTHPz31xMmeCTZ0joGxd
+         AUBFhLLs1JULdhrj7F6+95Z1UohgxF8nOkJUpZpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 074/191] drm/amdgpu/smu: add metrics table lock for navi (v2)
-Date:   Tue,  7 Jan 2020 21:53:14 +0100
-Message-Id: <20200107205336.942915805@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH 5.4 077/191] MIPS: BPF: eBPF JIT: check for MIPS ISA compliance in Kconfig
+Date:   Tue,  7 Jan 2020 21:53:17 +0100
+Message-Id: <20200107205337.103399328@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,47 +68,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit e0e384c398d4638e54b6d2098f0ceaafdab870ee upstream.
+commit f596cf0d8062cb5d0a4513a8b3afca318c13be10 upstream.
 
-To protect access to the metrics table.
+It is completely wrong to check for compile-time MIPS ISA revision in
+the body of bpf_int_jit_compile() as it may lead to get MIPS JIT fully
+omitted by the CC while the rest system will think that the JIT is
+actually present and works [1].
+We can check if the selected CPU really supports MIPS eBPF JIT at
+configure time and avoid such situations when kernel can be built
+without both JIT and interpreter, but with CONFIG_BPF_SYSCALL=y.
 
-v2: unlock on error
+[1] https://lore.kernel.org/linux-mips/09d713a59665d745e21d021deeaebe0a@dlink.ru/
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/900
-Reviewed-by: Kevin Wang <kevin1.wang@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32 architecture.")
+Cc: <stable@vger.kernel.org> # v5.2+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Hassan Naveed <hnaveed@wavecomp.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/Kconfig        |    2 +-
+ arch/mips/net/ebpf_jit.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -547,17 +547,20 @@ static int navi10_get_metrics_table(stru
- 	struct smu_table_context *smu_table= &smu->smu_table;
- 	int ret = 0;
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -46,7 +46,7 @@ config MIPS
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
+ 	select HAVE_ASM_MODVERSIONS
+-	select HAVE_EBPF_JIT if (64BIT && !CPU_MICROMIPS)
++	select HAVE_EBPF_JIT if 64BIT && !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+ 	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_C_RECORDMCOUNT
+--- a/arch/mips/net/ebpf_jit.c
++++ b/arch/mips/net/ebpf_jit.c
+@@ -1803,7 +1803,7 @@ struct bpf_prog *bpf_int_jit_compile(str
+ 	unsigned int image_size;
+ 	u8 *image_ptr;
  
-+	mutex_lock(&smu->metrics_lock);
- 	if (!smu_table->metrics_time || time_after(jiffies, smu_table->metrics_time + msecs_to_jiffies(100))) {
- 		ret = smu_update_table(smu, SMU_TABLE_SMU_METRICS, 0,
- 				(void *)smu_table->metrics_table, false);
- 		if (ret) {
- 			pr_info("Failed to export SMU metrics table!\n");
-+			mutex_unlock(&smu->metrics_lock);
- 			return ret;
- 		}
- 		smu_table->metrics_time = jiffies;
- 	}
+-	if (!prog->jit_requested || MIPS_ISA_REV < 2)
++	if (!prog->jit_requested)
+ 		return prog;
  
- 	memcpy(metrics_table, smu_table->metrics_table, sizeof(SmuMetrics_t));
-+	mutex_unlock(&smu->metrics_lock);
- 
- 	return ret;
- }
+ 	tmp = bpf_jit_blind_constants(prog);
 
 
