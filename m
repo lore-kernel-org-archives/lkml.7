@@ -2,102 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2672DC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE5FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD272081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83842087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jj1iEWw2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAG+hGH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgAGNJu (ORCPT
+        id S1728200AbgAGNKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:09:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35600 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727834AbgAGNJt (ORCPT
+        Tue, 7 Jan 2020 08:10:03 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37812 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgAGNKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:09:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ldmliGj77Bk3OVBj9ERxJRO2ubWIHjpdcz6AoITqvp0=; b=jj1iEWw24sTXo/D0Mh2CfthJN
-        GT12pVWKqZnm/w288YM76uZfrCuqW86k7ylN7c3P1uSVcez0cHu9cBPUejMb8W5/2q5F89ayIsaeG
-        CH4TZRUn6b8L8gcVNsnpcfcUb50aHxve+/FnmfE33g8FoYMfGag2tTClFAHEEOIoXBfkPVQ+pDXXt
-        nOA9wnLSoCAQwk7+VxpoQXA8rqE1pyd7PB10j1MlFNeOqQzCb7rJLANpxwTck4TQJobHc9Yc6xcar
-        aaV7kzztv88ewDtRG2v9tWEDFsvKlNM552GSM/NUhIBUpnr41/Wu2VI+RU8MHdzhYDbHrOajqQPGB
-        Cqesm/gvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iooc9-0003DI-4k; Tue, 07 Jan 2020 13:09:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9FF74305EDF;
-        Tue,  7 Jan 2020 14:08:06 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2967220D3D423; Tue,  7 Jan 2020 14:09:39 +0100 (CET)
-Date:   Tue, 7 Jan 2020 14:09:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] locking/qspinlock: Fix inaccessible URL of MCS lock paper
-Message-ID: <20200107130939.GV2871@hirez.programming.kicks-ass.net>
-References: <20191223022532.14864-1-longman@redhat.com>
- <20200107125824.GA2844@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107125824.GA2844@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 7 Jan 2020 08:10:02 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so28581777pfn.4;
+        Tue, 07 Jan 2020 05:10:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MynZ1SAOGTU0nRDuQMo0BN+WB3hB2dVTwjekB0beWeg=;
+        b=CAG+hGH+HLYjugqNRJ5nwUnqrtR/ShgD/WaMHtGal6Hb50pSfE7rapvmRZaszmVLWo
+         3ZH4OQ/Ut7qHc+EjjkcYwV1Ot73EfLQp1U/gJ+5lVauptS9nG/3DT76/s39rwSk4dvP0
+         YeRN1fUGDcZtsFVeBoZubap4Msg0wz2/6hYAvXcLY60WpEJvHTomJcFN3U5uisRSt0qk
+         EXunpRffn2Uy6S774+MZlCLwGCVzVpAd4j60L0E/QrKtDjzcH1Wy0v72WDaEYLDrPTRk
+         XwhxUnsPeJbCN6lN+XNkKxhJLHE9qN1ne/ZNx00g7FHqhPBI9gLNrqzsLnLTyBO7jaLX
+         UoKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MynZ1SAOGTU0nRDuQMo0BN+WB3hB2dVTwjekB0beWeg=;
+        b=C5Qynd+DgZRO/cxId1IqADL64Kh4S/e/FlLLN+iGH7EVLeJlG5ecWYPSlYNJSnOgph
+         EVeDWssXSVoK5pLBxnwohT7jZ21f56BcboriqfC8OszB4zOMY6umQ/KdZMW+8aaNs4m9
+         NNd/Q5vdI6vlc++wZQzk5IJ0+BhamSS8UeBHJBckQy05ewEUXCViwOK+CfMnA93WxAWh
+         A+OKjJF5qGz9fOoc6H9mihBVtnH0SKZmxmRPo/k+cIbqwmCNvanAFSFQU6r5MJp+BnJG
+         wn5biplcaYuUmxUNb5BjpOYiyp6hWvcuecCwrPZbGLkdlMg52JuvmLCw779tEm5fbGmh
+         Uhzw==
+X-Gm-Message-State: APjAAAVVT8o7eqSu5YFOhrQHLa2fXZVtDCo5UfMCPeAEk4OXOcP6yAZT
+        cLGibGAYUrN1dEgjYnt1ae8=
+X-Google-Smtp-Source: APXvYqwQ4W0C7Jsq93dvxAKcJKEK9yPMyLQjdDmq1H/LycAYLDF051OolFCdns6C1W8REMVwtP8o+g==
+X-Received: by 2002:a62:ac08:: with SMTP id v8mr116710991pfe.83.1578402601964;
+        Tue, 07 Jan 2020 05:10:01 -0800 (PST)
+Received: from localhost.corp.microsoft.com ([167.220.255.5])
+        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.09.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 05:10:01 -0800 (PST)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jgg@ziepe.ca,
+        dave.hansen@linux.intel.com, richardw.yang@linux.intel.com,
+        namit@vmware.com, Tianyu.Lan@microsoft.com, david@redhat.com,
+        christophe.leroy@c-s.fr, michael.h.kelley@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, vkuznets@redhat.com, eric.devolder@oracle.com
+Subject: [RFC PATCH V2 00/10] x86/Hyper-V: Add Dynamic memory hot-remove function
+Date:   Tue,  7 Jan 2020 21:09:40 +0800
+Message-Id: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:58:24PM +0100, Peter Zijlstra wrote:
-> On Sun, Dec 22, 2019 at 09:25:32PM -0500, Waiman Long wrote:
-> > It turns out that the URL of the MCS lock paper listed in the source
-> > code is no longer accessible. I did got question about where the paper
-> > was. This patch updates the URL to one that is still accessible.
-> > 
-> > Signed-off-by: Waiman Long <longman@redhat.com>
-> > ---
-> >  kernel/locking/qspinlock.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> > index 2473f10c6956..1d008d2333c0 100644
-> > --- a/kernel/locking/qspinlock.c
-> > +++ b/kernel/locking/qspinlock.c
-> > @@ -34,7 +34,7 @@
-> >   * MCS lock. The paper below provides a good description for this kind
-> >   * of lock.
-> >   *
-> > - * http://www.cise.ufl.edu/tr/DOC/REP-1992-71.pdf
-> > + * https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
-> 
-> Do we want to stick a copy of the paper in our bugzilla and link that
-> instead? ISTR we do something similar elsewhere, but I'm having trouble
-> finding it.
-> 
-> Thomas, Konstantin?
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Boris provided an example from commit:
+Hyper-V provides dynamic memory hot add/remove function.
+Memory hot-add has already enabled in Hyper-V balloon driver.
+Now add memory hot-remove function.
 
-  018ebca8bd70 ("x86/cpufeatures: Enable a new AVX512 CPU feature")
+This patchset is based on the David Hildenbrand's "virtio-mem:
+paravirtualized memory" RFC V4 version and use new interface
+offline_and_remove_memory().
+https://lkml.org/lkml/2019/12/12/681
 
-That puts a copy of the relevant Intel document here:
+Change since V1:
+	- Split patch into small patch for review.
+	- Convert ha_lock from spin lock to mutex.
+	- Add a common work to handle all mem hot plug and
+	balloon msg
+	- Use offline_and_remove_memory() to offline and remove
+	memory.
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=204215
+Tianyu Lan (10):
+  mm/resource: Move child to new resource when release mem region.
+  mm: expose is_mem_section_removable() symbol
+  x86/Hyper-V/Balloon: Replace hot-add and balloon up works with a
+    common work
+  x86/Hyper-V/Balloon: Convert spin lock ha_lock to mutex
+  x86/Hyper-V/Balloon: Avoid releasing ha_lock when traverse
+    ha_region_list
+  x86/Hyper-V/Balloon: Enable mem hot-remove capability
+  x86/Hyper-V/Balloon: Handle mem hot-remove request
+  x86/Hyper-V/Balloon: Handle request with non-aligned page number
+  x86/Hyper-V/Balloon: Hot add mem in the gaps of hot add region
+  x86/Hyper-V: Workaround Hyper-V unballoon msg bug
+
+ drivers/hv/hv_balloon.c | 754 ++++++++++++++++++++++++++++++++++++++++--------
+ kernel/resource.c       |  38 ++-
+ mm/memory_hotplug.c     |   1 +
+ 3 files changed, 673 insertions(+), 120 deletions(-)
+
+-- 
+2.14.5
+
