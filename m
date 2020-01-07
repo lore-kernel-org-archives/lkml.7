@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1861DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04986C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65BF2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF962080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432500;
-	bh=qXkXWon+vpJ0+yvohpa9KFWplyMU9gRUZh3Nw3PpWAw=;
+	s=default; t=1578432506;
+	bh=UEpYZBGqNQReg916eMUc/K4UbcdQlGQLzBjcf9djdHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qc/SSXBernYed1YVvhXBxfjUqsWegimzizdGZT12duKqB6/xgrTHFb+0Vmi+/16eb
-	 fklHrF/IFm/G0U8ldxNrQ0R9aRgVT9Uu8dQl9Z9Ws9Ax6YSMx2EswxtoI1o77slw96
-	 606C4v9O5dCH1QJ9XtOjp8QCNwQ6sw2x18wkHZEc=
+	b=nwSCLkUEZPseovN0KEJLDMsAoGqbSH1zU+HUI6Mf5pFV1sRLy+3/0HBTrZNVGcFus
+	 T/e2YAqqseLjeG7aVxKPlTMlBqffUGEfMkedoSISkcmK5G94/aFkapJJGIa4YPnwqO
+	 ZOGr1GKF/d0IOAQgvcErK1WYsSVb9X66B/DR+Io8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgAGU4s (ORCPT
+        id S1727259AbgAGU4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbgAGU4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:44 -0500
+        id S1727225AbgAGU4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F6524677;
-        Tue,  7 Jan 2020 20:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E1124656;
+        Tue,  7 Jan 2020 20:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430603;
-        bh=qXkXWon+vpJ0+yvohpa9KFWplyMU9gRUZh3Nw3PpWAw=;
+        s=default; t=1578430596;
+        bh=UEpYZBGqNQReg916eMUc/K4UbcdQlGQLzBjcf9djdHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ua7+nq5MfKKHabLF0RG7slyAjX5K1Tme9RTbdhTtwb+mth6QDkVoyNH8Jx6bpXAfC
-         rAXwApAXuWuLqZETibG/R0aFF8Stq51YjzRSkuX8i3BtojmLDddXqI0Zmvrpk0bbQM
-         NDo/sRDHch49fLmcwLwGlDsat5n1rvvujgZz2k8o=
+        b=1awwPcJNUdBRwCLm0mDuXJihzf8J8Hg3ky7/yyPmBcxc47W66hKHIbJd3paQUJXnE
+         T/Y3xYB/ADMZ+oV6tClyYrwl08UCnC9DXGlVHHQTvXYW4Vr1vDUlROS4BEychJ0x18
+         RzT/OKfJ5R29nc4cKuuzKXHlUNp1YTiRUmP6GlLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, David Galiffi <David.Galiffi@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 013/191] nvme/pci: Fix read queue count
-Date:   Tue,  7 Jan 2020 21:52:13 +0100
-Message-Id: <20200107205333.718077864@linuxfoundation.org>
+Subject: [PATCH 5.4 008/191] drm/amd/display: Fixed kernel panic when booting with DP-to-HDMI dongle
+Date:   Tue,  7 Jan 2020 21:52:08 +0100
+Message-Id: <20200107205333.454512056@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,47 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: David Galiffi <David.Galiffi@amd.com>
 
-[ Upstream commit 7e4c6b9a5d22485acf009b3c3510a370f096dd54 ]
+[ Upstream commit a51d9f8fe756beac51ce26ef54195da00a260d13 ]
 
-If nvme.write_queues equals the number of CPUs, the driver had decreased
-the number of interrupts available such that there could only be one read
-queue even if the controller could support more. Remove the interrupt
-count reduction in this case. The driver wouldn't request more IRQs than
-it wants queues anyway.
+[Why]
+In dc_link_is_dp_sink_present, if dal_ddc_open fails, then
+dal_gpio_destroy_ddc is called, destroying pin_data and pin_clock. They
+are created only on dc_construct, and next aux access will cause a panic.
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+[How]
+Instead of calling dal_gpio_destroy_ddc, call dal_ddc_close.
+
+Signed-off-by: David Galiffi <David.Galiffi@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 29d7427c2b19..14d513087a14 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2060,7 +2060,6 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
- 		.priv		= dev,
- 	};
- 	unsigned int irq_queues, this_p_queues;
--	unsigned int nr_cpus = num_possible_cpus();
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 067f5579f452..793aa8e8ec9a 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -373,7 +373,7 @@ bool dc_link_is_dp_sink_present(struct dc_link *link)
  
- 	/*
- 	 * Poll queues don't need interrupts, but we need at least one IO
-@@ -2071,10 +2070,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
- 		this_p_queues = nr_io_queues - 1;
- 		irq_queues = 1;
- 	} else {
--		if (nr_cpus < nr_io_queues - this_p_queues)
--			irq_queues = nr_cpus + 1;
--		else
--			irq_queues = nr_io_queues - this_p_queues + 1;
-+		irq_queues = nr_io_queues - this_p_queues + 1;
+ 	if (GPIO_RESULT_OK != dal_ddc_open(
+ 		ddc, GPIO_MODE_INPUT, GPIO_DDC_CONFIG_TYPE_MODE_I2C)) {
+-		dal_gpio_destroy_ddc(&ddc);
++		dal_ddc_close(ddc);
+ 
+ 		return present;
  	}
- 	dev->io_queues[HCTX_TYPE_POLL] = this_p_queues;
- 
 -- 
 2.20.1
 
