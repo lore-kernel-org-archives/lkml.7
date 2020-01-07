@@ -2,107 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B463C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F4C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0C8206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8CE206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578436104;
+	bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lIlBjIYKiF6tBx5AvQAlcTgKFYh9zCeZb3xVH8wWk9zYQCCZq4IhE6mC+805bJSMs
+	 T/9w6JgZnxnAgkSUrVEdHL8bQ+VP3fb+WmEyhIuy07GHJOJXevVKGiE2dB6+VSebFq
+	 PwILtrZzM4VeV3pdvr2n5603Iv43CHrQpFKn9dqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgAGW2P (ORCPT
+        id S1727501AbgAGW2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:28:15 -0500
-Received: from mga17.intel.com ([192.55.52.151]:42133 "EHLO mga17.intel.com"
+        Tue, 7 Jan 2020 17:28:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgAGW2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:28:15 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 14:28:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
-   d="scan'208";a="211328975"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 07 Jan 2020 14:28:14 -0800
-Date:   Tue, 7 Jan 2020 14:28:14 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-Message-ID: <20200107222813.GB16987@linux.intel.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
- <20200106233846.GC12879@linux.intel.com>
- <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
+        id S1727185AbgAGW2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:28:23 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC02206DB;
+        Tue,  7 Jan 2020 22:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578436102;
+        bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YmOBvRNwxn2p4VVNlN1mtPMiHLf88IILl9CU5zsl8oDc2tEKa1JDkDCVyO4Wy/9qd
+         Yw8vOC7S8QS09Rv6JU0fD4t8I+ojDUHRjDHedmMf3Oi43gBxQs2Q98Q6n0QgUy6HIQ
+         OHTtvmHiGFEn6GyDZhW85HM98ibHSVCqqa6rv8CU=
+Received: by mail-qk1-f173.google.com with SMTP id j9so974861qkk.1;
+        Tue, 07 Jan 2020 14:28:22 -0800 (PST)
+X-Gm-Message-State: APjAAAUUPFkS4VB8XamxNWD0SFRN8E3eurzfYZcpjgmEGoKdeSKNT4lp
+        wdzDakFT/C+P8mgo3YdO96Mkk/qWL+mHr6irjg==
+X-Google-Smtp-Source: APXvYqxoOQxfocQW4kA6khk+aHJU2pwVfyqaD/KAMlGk5ufz1LIdR6mv3ZWKi1+rUBmcLJKspMa+7b9aCsoIRm4X5cM=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr1635519qkn.254.1578436101562;
+ Tue, 07 Jan 2020 14:28:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-9-srinivas.kandagatla@linaro.org> <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
+ <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
+In-Reply-To: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 Jan 2020 16:28:09 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
+Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
+Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
-> On 1/6/20 5:38 PM, Sean Christopherson wrote:
-> > On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
-> >> On 1/6/20 4:49 PM, Sean Christopherson wrote:
-> >>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
-> >>> on a future processor, i.e. x86_phys_bits==52.
+On Tue, Jan 7, 2020 at 4:17 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 07/01/2020 09:47, Linus Walleij wrote:
+> > On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >
+> >> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+> >> gpio controller to control 5 gpios on the chip. This patch adds
+> >> required device tree bindings for it.
 > >>
-> >> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
-> >> always be a reduction in physical addressing (so I'm told).
-> > 
-> > Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
-> > that reducing the PA space is optional.  Section 7.10.2 is especially
-> > clear on this:
-> > 
-> >   In implementations where the physical address size of the processor is
-> >   reduced when memory encryption features are enabled, software must
-> >   ensure it is executing from addresses where these upper physical address
-> >   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
-> 
-> It's probably not likely, but given what is stated, I can modify my patch
-> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
-> 
-> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
-> 	    boot_cpu_data.x86_phys_bits < 52) {
-> 
-> > 
-> > But, hopefully the other approach I have in mind actually works, as it's
-> > significantly less special-case code and would naturally handle either
-> > case, i.e. make this a moot point.
-> 
-> I'll hold off on the above and wait for your patch.
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Tell me if you want me to merge this patch through the GPIO tree.
+> >
+> Yes that would be great!. gpio bindings and gpio driver can go via gpio
+> tree as there is no compile time dependency. Also Mark has already
+> merged the audio codec side of it.
 
-Sorry for the delay, this is a bigger mess than originally thought.  Or
-I'm completely misunderstanding the issue, which is also a distinct
-possibility :-)
+But there is a dependency because dt_binding_check is now broken as
+the codec schema references this GPIO schema. Not much to do about
+this now other than get the GPIO schema into -next.
 
-Due to KVM activating its L1TF mitigation irrespective of whether the CPU
-is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
-to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
-uses those first five reserved PA bits to store the MMIO GFN.  Setting
-BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
-a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
-
-The only sane approach I can think of is to activate the L1TF mitigation
-based on whether the CPU is vulnerable to L1TF, as opposed to activating
-the mitigation purely based on the max PA of the CPU.  Since all CPUs that
-support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
-should never be active at the same time.
-
-Patch should be incoming soon...
+Rob
