@@ -2,238 +2,144 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6A2C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E675CC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5F5207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4wvNto8"
+	by mail.kernel.org (Postfix) with ESMTP id C6D872087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgAGIPo (ORCPT
+        id S1727647AbgAGIQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:15:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51758 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726485AbgAGIPo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:15:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578384942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tQRGzBqBQsXxOuL/NbiqXr/q4VMtf5bvXfYxY/rMILs=;
-        b=Q4wvNto8Dwg1jnPgTBCRlDLnhkT720tVpC6ekbTSBoD2ZKkN2BKE5yYVxDRhj68QJmNoOV
-        vblObCp9/oH6EjpNnKNXCM8ruIn5wq3kGIHEJ5WRdWh08yY0FkB49g7RnkOHhxyORTeysr
-        +H/r0DzkNtLkrgyDk+gaT6wRJ8GC21g=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-FCCAJwvwMIWCbkgPDdZUww-1; Tue, 07 Jan 2020 03:15:41 -0500
-X-MC-Unique: FCCAJwvwMIWCbkgPDdZUww-1
-Received: by mail-wr1-f71.google.com with SMTP id r2so26105013wrp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 00:15:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tQRGzBqBQsXxOuL/NbiqXr/q4VMtf5bvXfYxY/rMILs=;
-        b=fU/Eo/K9AT2o59Su/HX4qkgJ1S5kTQVJdN94vM3Pf77EPBqrpUluQ/5bL0fG6NUAuM
-         W1vsfviZ4Fw8NVGRG8FF+4t7KR5MAqYfvaz+aXLv21En7W46Rl6EuO4s6og6rrXKqlLa
-         vO6prqwH44hUUAFkY2ds0JtvZ4B5DCUSMQfsKINeBH9NFAiXM2pauj3Qu3y6P4uLSjXr
-         r0/ZXvCJPdKYGiwDOb4ehbeDvHk6u/GwV4QlJ2IttMJW6ddfs//CWL02gLi6KdUO/Oqq
-         CLrS5owqpJ7QT++UjzCMOy2EQ25YuRDfWTsbI9dFxtepwW07PgoqAE5JQJyrHP3+r7VQ
-         O9wg==
-X-Gm-Message-State: APjAAAXtlD8sDHuH/QAz+DyH9T7BwO/SITeNFBF6lK6dg3uEFYLILPA4
-        I73T3OiXLf5vQWLob4gTtFnWXjTKvdsbo/qVmuw4AsjU8UkdISVvppZLXGxKPD8rPOpc+8au+qb
-        fjxWaO6DyMdKhWnNMl9bSjXLB
-X-Received: by 2002:a5d:5267:: with SMTP id l7mr114892515wrc.84.1578384940077;
-        Tue, 07 Jan 2020 00:15:40 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy9DHrTW+DUcTH1LaiheNkopWqanGcM3GMd4Lf0wM/9aq/WXTFlIAO5KdOmvRM+5ycJvQu6rQ==
-X-Received: by 2002:a5d:5267:: with SMTP id l7mr114892476wrc.84.1578384939771;
-        Tue, 07 Jan 2020 00:15:39 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
-        by smtp.gmail.com with ESMTPSA id k16sm78641877wru.0.2020.01.07.00.15.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 00:15:38 -0800 (PST)
-Subject: Re: [RFC PATCH v9 0/8] Enable ptp_kvm for arm64
-To:     Jianyong Wu <Jianyong.Wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <HE1PR0801MB1676CFC9A06B6CE800052A99F43C0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bf333cdc-3455-7c64-89c2-014639614904@redhat.com>
-Date:   Tue, 7 Jan 2020 09:15:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 7 Jan 2020 03:16:50 -0500
+Received: from mout.perfora.net ([74.208.4.197]:51591 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbgAGIQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:16:49 -0500
+Received: from marcel-pc.toradex.int ([31.10.206.124]) by mrelay.perfora.net
+ (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id 1M8gu5-1ikb5n0Gif-004m1X;
+ Tue, 07 Jan 2020 09:11:38 +0100
+Message-ID: <40295d6f803a76ed169506e2417357cccea4958f.camel@ziswiler.com>
+Subject: Re: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     Thierry Reding <treding@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pci@vger.kernel.org
+Date:   Tue, 07 Jan 2020 09:11:35 +0100
+In-Reply-To: <20200102123822.GA1924669@ulmo>
+References: <20191230005209.1546434-1-marcel@ziswiler.com>
+         <20200102123822.GA1924669@ulmo>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <HE1PR0801MB1676CFC9A06B6CE800052A99F43C0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:PLPrRRMEyaBZaBDxY0OoJwssd+Z8aTY0h4imk7UzoXeYSK62VgJ
+ Kfb49CXps328d0mFyTYU8mSijJag1G4KZxpu329IMIUf02kfq85b2kdXX9pDES3jrO1CUjW
+ pxyAkfsan/sOBmOkDLCW35c+uPGYYlY0sLofapyp8VPp19Lq2nmtgsrG0R2rjYKflIJJ1tD
+ g6SncQJMcZSEzkV2Dl6lA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qDq291wX9xo=:L4w7V7AUqB3ZJhP38cuvwt
+ FG3fNY3BmKhOTYp9vtUB1K4G8MBj8pxFrep0yZKhx0mbREr3/cdxEecae+wsY63+mhq4QtgQa
+ K8x3S3nMO+uu4ZzZ2RHjpWBL5qkTuznCdwSj5dYQ+g8IFBre5szfPeDHT9joKBDzm5vT/oDAR
+ a8aMiVUSkBrt9MTBGkyUMeno+aby8w+wkrFOt15VFqCjQ0boV8TagH5P1NWg/vNjkpBNbV5XD
+ NeRD1HRjFZjyi5Kv0S5lg4kJZOxyi5s51oZ56FgW3U2q4Y6bZEw02UKAHN1uDMPphoc9Y5+0W
+ tAewOoZiEuLVItvq+JUEp+P6DvQKg7rvzAZSsoUUGx57t1t59I3IK9tuc1+BzrkghHMuh8u7i
+ aRMl1n99hFPaf5L8iBkE47yIdYzvAldlRM72RUd5Y7X0L9aT8OErPHAQungWOWYgxsflI/b74
+ UOuL5spvs8HgvTykUOi0J3B2AwtsUjYa+nQ8ZMLmaacZBBholZSRJJK/vHVQE7cQjtySVs5cC
+ ZJR+3OLfUqGaBtCyyNzvvnknsR4Tu93SQE6RS3z/Zqf84RnlMzpgqmB6aAxUY/odVqqm2kERk
+ y0PosJtyLnxxBbUM5FCmm8H9Sly2gk9uGwPbtKCH/Dgsn30brYeLDhZibclwgcV9+VLN56N6R
+ fXfv2XmPX6hKWd9x4pUHqlxu9RoWSBElmc49Vn4fB0/W3qHpkYLXCHo/ST0LpRKkT2AX6iu4b
+ /8M/1bSJHtBbXbTIBiLRl0guL1JO65U+9ZC/1ByF56J4ZzCNemKf0gmLBHOCWu3wHZ2huVUKO
+ BQKRoP8R9EqUmu4X4CttgGqmOmkbZCKWpsthaMNPN0tokRPOWVaitcyXFGLIZhBxUm/INibme
+ h9B6K/z4VO4GGFAPP2g33wj8odmq4enRQfXZpIX5I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/01/20 10:38, Jianyong Wu wrote:
-> Ping ...
-> Any comments to this patch set?
+Hi Thierry
 
-Marc, Will, can you ack it?  Since the sticky point was the detection of
-the clocksource and it was solved by Thomas's patch, I don't have any
-more problems including it.
-
-Thanks,
-
-Paolo
-
->> -----Original Message-----
->> From: Jianyong Wu <jianyong.wu@arm.com>
->> Sent: Tuesday, December 10, 2019 11:40 AM
->> To: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
->> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
->> maz@kernel.org; richardcochran@gmail.com; Mark Rutland
->> <Mark.Rutland@arm.com>; will@kernel.org; Suzuki Poulose
->> <Suzuki.Poulose@arm.com>; Steven Price <Steven.Price@arm.com>
->> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org; Steve Capper
->> <Steve.Capper@arm.com>; Kaly Xin (Arm Technology China)
->> <Kaly.Xin@arm.com>; Justin He (Arm Technology China)
->> <Justin.He@arm.com>; Jianyong Wu (Arm Technology China)
->> <Jianyong.Wu@arm.com>; nd <nd@arm.com>
->> Subject: [RFC PATCH v9 0/8] Enable ptp_kvm for arm64
->>
->> kvm ptp targets to provide high precision time sync between guest and host
->> in virtualization environment. Here, we enable kvm ptp for arm64.
->> This patch set base on [1][2][3]
->>
->> change log:
->>
->> from v8 to v9:
->> 	(1) move ptp_kvm.h to driver/ptp/
->> 	(2) replace license declaration of ptp_kvm.h the same with other
->> header files in the same directory.
->>
->> from v7 to v8:
->>         (1) separate adding clocksource id for arm_arch_counter as a single patch.
->>         (2) update commit message for patch 4/8.
->>         (3) refine patch 7/8 and patch 8/8 to make them more independent.
->>
->> from v6 to v7:
->>         (1) include the omitted clocksource_id.h in last version.
->>         (2) reorder the header file in patch.
->>         (3) refine some words in commit message to make it more impersonal.
->>
->> from v5 to v6:
->>         (1) apply Mark's patch[4] to get SMCCC conduit.
->>         (2) add mechanism to recognize current clocksource by add
->> clocksouce_id value into struct clocksource instead of method in patch-v5.
->>         (3) rename kvm_arch_ptp_get_clock_fn into
->> kvm_arch_ptp_get_crosststamp.
->>
->> from v4 to v5:
->>         (1) remove hvc delay compensasion as it should leave to userspace.
->>         (2) check current clocksource in hvc call service.
->>         (3) expose current clocksource by adding it to system_time_snapshot.
->>         (4) add helper to check if clocksource is arm_arch_counter.
->>         (5) rename kvm_ptp.c to ptp_kvm_common.c
->>
->> from v3 to v4:
->>         (1) fix clocksource of ptp_kvm to arch_sys_counter.
->>         (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
->>         (3) subtract cntvoff before return cycles from host.
->>         (4) use ktime_get_snapshot instead of getnstimeofday and
->> get_current_counterval to return time and counter value.
->>         (5) split ktime and counter into two 32-bit block respectively to avoid
->> Y2038-safe issue.
->>         (6) set time compensation to device time as half of the delay of hvc call.
->>         (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for arm64.
->>
->> from v2 to v3:
->>         (1) fix some issues in commit log.
->>         (2) add some receivers in send list.
->>
->> from v1 to v2:
->>         (1) move arch-specific code from arch/ to driver/ptp/
->>         (2) offer mechanism to inform userspace if ptp_kvm service is available.
->>         (3) separate ptp_kvm code for arm64 into hypervisor part and guest part.
->>         (4) add API to expose monotonic clock and counter value.
->>         (5) refine code: remove no necessary part and reconsitution.
->>
->> [1]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
->> commit/?h=kvm/hvc&id=125ea89e4a21e2fc5235410f966a996a1a7148bf
->> [2]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
->> commit/?h=kvm/hvc&id=464f5a1741e5959c3e4d2be1966ae0093b4dce06
->> [3]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
->> commit/?h=kvm/hvc&id=6597490e005d0eeca8ed8c1c1d7b4318ee014681
->> [4]https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/
->> commit/?h=for-next/smccc-conduit-
->> cleanup&id=6b7fe77c334ae59fed9500140e08f4f896b36871
->>
->> Jianyong Wu (6):
->>   psci: let arm_smccc_1_1_invoke available by modules
->>   ptp: Reorganize ptp_kvm modules to make it arch-independent.
->>   clocksource: Add clocksource id for arm arch counter
->>   psci: Add hvc call service for ptp_kvm.
->>   ptp: arm64: Enable ptp_kvm for arm64
->>   kvm: arm64: Add capability check extension for ptp_kvm
->>
->> Mark Rutland (1):
->>   arm/arm64: smccc/psci: add arm_smccc_1_1_get_conduit()
->>
->> Thomas Gleixner (1):
->>   time: Add mechanism to recognize clocksource in time_get_snapshot
->>
->>  drivers/clocksource/arm_arch_timer.c        | 24 ++++++
->>  drivers/firmware/psci/psci.c                | 16 ++++
->>  drivers/ptp/Kconfig                         |  2 +-
->>  drivers/ptp/Makefile                        |  1 +
->>  drivers/ptp/ptp_kvm.h                       | 11 +++
->>  drivers/ptp/ptp_kvm_arm64.c                 | 53 +++++++++++++
->>  drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 77 +++++-------------
->>  drivers/ptp/ptp_kvm_x86.c                   | 87 +++++++++++++++++++++
->>  include/linux/arm-smccc.h                   | 30 ++++++-
->>  include/linux/clocksource.h                 |  6 ++
->>  include/linux/clocksource_ids.h             | 13 +++
->>  include/linux/timekeeping.h                 | 12 +--
->>  include/uapi/linux/kvm.h                    |  1 +
->>  kernel/time/clocksource.c                   |  3 +
->>  kernel/time/timekeeping.c                   |  1 +
->>  virt/kvm/arm/arm.c                          |  1 +
->>  virt/kvm/arm/psci.c                         | 22 ++++++
->>  17 files changed, 294 insertions(+), 66 deletions(-)  create mode 100644
->> drivers/ptp/ptp_kvm.h  create mode 100644 drivers/ptp/ptp_kvm_arm64.c
->> rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)  create
->> mode 100644 drivers/ptp/ptp_kvm_x86.c  create mode 100644
->> include/linux/clocksource_ids.h
->>
->> --
->> 2.17.1
+On Thu, 2020-01-02 at 13:38 +0100, Thierry Reding wrote:
+> On Mon, Dec 30, 2019 at 01:52:09AM +0100, Marcel Ziswiler wrote:
+> > Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the
+> > tegra20
+> > SoC struct where it erroneously got added by commit adb2653b3d2e
+> > ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
+> > This fixes the AFI_PEX2_CTRL reg offset being uninitialised
+> > subsequently failing to bring up the third PCIe port.
+> > 
+> > Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+> > 
+> > ---
+> > 
+> >  drivers/pci/controller/pci-tegra.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> Hi Marcel,
+> 
+> the recipient list looks somewhat odd. Mailing lists typically go
+> into
+> the Cc: line and subsystem maintainers into the To: line. That way
+> you
+> increase chances of people's filters catching important emails.
+
+I'm using U-Boot's patman with the same LKML configuration since years
+and nobody ever complained. I adjusted this now, thanks!
+
+> You may also want to fix up the subject line to use the more standard
+> "PCI: tegra: " prefix. Also, maybe capitalize "fix" -> "Fix" to match
+> standard formatting rules for commit messages. In the subject and the
+> commit message, also, please spell "tegra20" and "tegra30" as
+> "Tegra20"
+> and "Tegra30", which can help when searching logs.
+
+While this whole capitalisation is utterly stupid and I remember in the
+old days we kinda agreed to just lower case (don't know when/why this
+suddenly changed) but this anyway should not matter if doing proper
+case insensitive searching (;-p). Anyway, I will also adhere to this in
+a v2, thanks!
+
+> With the above fixed, this looks good, so:
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+
+Thanks, Thierry.
+
+Cheers
+
+Marcel
+
+> > diff --git a/drivers/pci/controller/pci-tegra.c
+> > b/drivers/pci/controller/pci-tegra.c
+> > index 090b632965e2..ac93f5a0398e 100644
+> > --- a/drivers/pci/controller/pci-tegra.c
+> > +++ b/drivers/pci/controller/pci-tegra.c
+> > @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc
+> > tegra20_pcie = {
+> >  	.num_ports = 2,
+> >  	.ports = tegra20_pcie_ports,
+> >  	.msi_base_shift = 0,
+> > -	.afi_pex2_ctrl = 0x128,
+> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
+> > @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc
+> > tegra30_pcie = {
+> >  	.num_ports = 3,
+> >  	.ports = tegra30_pcie_ports,
+> >  	.msi_base_shift = 8,
+> > +	.afi_pex2_ctrl = 0x128,
+> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
+> > -- 
+> > 2.24.1
 
