@@ -2,147 +2,76 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F93C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C615FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF962073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53D2206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgAGGEJ (ORCPT
+        id S1727176AbgAGGGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:04:09 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42121 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgAGGEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:04:09 -0500
-Received: by mail-io1-f71.google.com with SMTP id e7so32539282iog.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 22:04:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=MpBXCcCu6Jkfd1WtSRJVeNF1LvLtwS/lptU4QXrTk+E=;
-        b=iftL51VY20FEkjPKJkYSq+/dJU5ptRQl0FBgxPwqsHT9GWjw6TnwyMy+ettIr8nXeZ
-         HHUKQPe/BCuEKOKxZQSczD1395+a5BBxpcn6zwO8JZlbQgstybb1qJ6XcSmB1A/C4/TD
-         nQd8VXrHU7vRS+q9pLKY0ndDQwzszWygnkDV/jQ3sTEBnsqyH7p51WhI67dv8yfcOsZw
-         ElmzhyNDXdLs6moG1BcYA7WYzQ/HnFgpD2PiV2zy30Phagdx9DRbipDVehKB1glsED/G
-         EvlRBiidLzjK70bU1Bdm6ZKEy7+SR7NarhoLvZL6ZGQyikxaMH7/jHo/N2V9E2dpWeAI
-         wH2w==
-X-Gm-Message-State: APjAAAVmZUCGdsks0Ir9yJmH9tg8c/RqmbCeBdrJAGrhC3UzuVi/X3+k
-        n0/OxLf8iahDUC9n2VziqdGe5PcEI7Xe7Jsv0u1mHv9J8oix
-X-Google-Smtp-Source: APXvYqzJzNdE6kTaG7j29Oo9KVQ0AI3berNT+GPIjNiZvx/RP1u/97tGFBy8QcVLOu4JD1yhUOrzwEg0JigHTiFug58N7pRtHGSw
-MIME-Version: 1.0
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr69528220ioh.254.1578377048547;
- Mon, 06 Jan 2020 22:04:08 -0800 (PST)
-Date:   Mon, 06 Jan 2020 22:04:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004ceb27059b868b57@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in cfg80211_wext_siwfrag
-From:   syzbot <syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 7 Jan 2020 01:06:11 -0500
+Received: from mga01.intel.com ([192.55.52.88]:58926 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgAGGGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 01:06:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 22:06:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,404,1571727600"; 
+   d="scan'208";a="211024777"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga007.jf.intel.com with ESMTP; 06 Jan 2020 22:06:08 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     sfr@canb.auug.org.au, kishon@ti.com
+Cc:     linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1] phy: intel-lgm-emmc: Fix warning by adding missing MODULE_LICENSE
+Date:   Tue,  7 Jan 2020 14:06:06 +0800
+Message-Id: <20200107060606.28028-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-syzbot found the following crash on:
+Fix below build warning
 
-HEAD commit:    d89091a4 macb: Don't unregister clks unconditionally
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=130a0915e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=e8a797964a4180eb57d5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15c85915e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c02bc1e00000
+   WARNING: modpost: missing MODULE_LICENSE() in
+   drivers/phy/intel/phy-intel-emmc.o
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
+Introduced by commit
 
-device veth1_vlan entered promiscuous mode
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD a066f067 P4D a066f067 PUD 958e3067 PMD 0
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9308 Comm: syz-executor762 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc90001d37a78 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8882186a6540 RCX: ffffffff876a3fd1
-RDX: 1ffffffff1148afc RSI: 0000000000000004 RDI: ffff8882186a6540
-RBP: ffffc90001d37ab8 R08: ffff88809f9ba580 R09: ffffed1015d0703d
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffffffff88a45660
-R13: ffff8880a7aed000 R14: ffffc90001d37bb0 R15: 0000000000000000
-FS:  0000000001a01880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a5220000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  rdev_set_wiphy_params net/wireless/rdev-ops.h:542 [inline]
-  cfg80211_wext_siwfrag+0x279/0x910 net/wireless/wext-compat.c:307
-  ioctl_standard_call+0xca/0x1d0 net/wireless/wext-core.c:1015
-  wireless_process_ioctl.constprop.0+0x236/0x2b0 net/wireless/wext-core.c:953
-  wext_ioctl_dispatch net/wireless/wext-core.c:986 [inline]
-  wext_ioctl_dispatch net/wireless/wext-core.c:974 [inline]
-  wext_handle_ioctl+0x106/0x1c0 net/wireless/wext-core.c:1047
-  sock_ioctl+0x47d/0x790 net/socket.c:1112
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4423f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd5699e578 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004423f9
-RDX: 0000000020000040 RSI: 0800000000008b24 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000025 R09: 0000000000000025
-R10: 0000000000000025 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403970 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: 0000000000000000
----[ end trace d5d5f75393c2f62d ]---
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc90001d37a78 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8882186a6540 RCX: ffffffff876a3fd1
-RDX: 1ffffffff1148afc RSI: 0000000000000004 RDI: ffff8882186a6540
-RBP: ffffc90001d37ab8 R08: ffff88809f9ba580 R09: ffffed1015d0703d
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffffffff88a45660
-R13: ffff8880a7aed000 R14: ffffc90001d37bb0 R15: 0000000000000000
-FS:  0000000001a01880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a5220000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+   95f1061f715e ("phy: intel-lgm-emmc: Add support for eMMC PHY")
 
+by adding missing MODULE_LICENSE.
 
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/phy/intel/phy-intel-emmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
+index 1a358e7fd236..703aeb122541 100644
+--- a/drivers/phy/intel/phy-intel-emmc.c
++++ b/drivers/phy/intel/phy-intel-emmc.c
+@@ -281,3 +281,4 @@ module_platform_driver(intel_emmc_driver);
+ 
+ MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
+ MODULE_DESCRIPTION("Intel eMMC PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
+
