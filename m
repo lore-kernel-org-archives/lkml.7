@@ -2,92 +2,111 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6230C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879CCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E1E2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7F62072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K7AU7/n5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgAGSV3 (ORCPT
+        id S1728534AbgAGSWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:21:29 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:48194 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgAGSV3 (ORCPT
+        Tue, 7 Jan 2020 13:22:33 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51906 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgAGSWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:21:29 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id C5AF020033;
-        Tue,  7 Jan 2020 19:21:25 +0100 (CET)
-Date:   Tue, 7 Jan 2020 19:21:24 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        boris.brezillon@bootlin.com, airlied@linux.ie,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        peda@axentia.se, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Immutable branch between MFD and DRM due for the v5.6
- merge window
-Message-ID: <20200107182124.GB20555@ravnborg.org>
-References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
- <20200107101748.GC14821@dell>
+        Tue, 7 Jan 2020 13:22:32 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d73so575195wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=WVCuuhbpIvW4AupYDvTbsRpjCbqFr6QbBg3JWUP7xik=;
+        b=K7AU7/n5223YDYE2iaWkl1blioVVg9SLao6fF7DsweNWA6JGCSiKkx0N8e0tf9uWQr
+         4Ihbf2gb+hGW+csWVXpI9VInkHgYU77v/ajfY2MsXmm9Yp05YgYOUjEnke8/MWH+85fQ
+         mapthOJ1m8xt95YSDjqG3HF5j87nFlsZ1uVQM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=WVCuuhbpIvW4AupYDvTbsRpjCbqFr6QbBg3JWUP7xik=;
+        b=Ow2/l3abDGXePtcyjYM4lsbGTuAYovwhGBPozz1HQqijSVsO3PU3Dnv/eoeOaXCRpZ
+         ajERLGXAfgUIbLmqWOXal1mCrLx1BwrfnplXC4nVL6MBhEAYej2oJhr+71c4Os4TXfX1
+         vrBf38SoUaQGx/WKD/f8L5GKfb62wUZvaCQzCssmuaDESUDlqMwq+5AN4gyfUhmy74ug
+         4HCfAgUYN6HFXwM00y42jb9kg9NqNxBdHDh9Dix13T2PoO2GNYvNwzj3nWV9q3qFBoHJ
+         ckr2z53inRCvN0V06wof/QyfFKgm0dGcUo3h1blbFmhNAOsFrJWyF2fOuCAuMnmjETv8
+         sbVA==
+X-Gm-Message-State: APjAAAVbUR3GDyhxqrj+24PpXxAxkPR26vzWjTBufJhisGEiRYlawewt
+        lgF3p4+81Lt7dztI1glhHsoExQx6UHidpQPFFcxmmYIot5yvjleK7nNJoOA63wLyjgWeBxfe1eI
+        xwxIEo9P9FvpOOaR5QS8obJwP5tYGIn/iMrGqnGvHNIdaw6xgnozpB7B+Z1BDlGVkVfXy3f67s1
+        07oys=
+X-Google-Smtp-Source: APXvYqyM26q6BufeUMyTP8sXY9m5zfj9JZqZtrSOU/J40+gNvNd+xwDVvj4/Eas53jGm5Op/26Bkzw==
+X-Received: by 2002:a7b:cf39:: with SMTP id m25mr371888wmg.146.1578421350648;
+        Tue, 07 Jan 2020 10:22:30 -0800 (PST)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id k11sm532495wmc.20.2020.01.07.10.22.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 10:22:30 -0800 (PST)
+Subject: Re: [PATCH -next] scsi: lpfc: Make lpfc_defer_acc_rsp static
+To:     YueHaibing <yuehaibing@huawei.com>, dick.kennedy@broadcom.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200107014956.41748-1-yuehaibing@huawei.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <591891cb-81fd-777a-3a21-3fd24c8f7cc2@broadcom.com>
+Date:   Tue, 7 Jan 2020 10:22:26 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107101748.GC14821@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=htO-QbRAU_hgi8wv2wEA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+In-Reply-To: <20200107014956.41748-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maarten.
 
-On Tue, Jan 07, 2020 at 10:17:48AM +0000, Lee Jones wrote:
-> The MFD parts for testing:
-> 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> 
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-drm-v5.6
-> 
-> for you to fetch changes up to 10f9167664362bac6f44813687cf52fec9d15845:
-> 
->   mfd: atmel-hlcdc: Return in case of error (2020-01-07 10:08:58 +0000)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD and DRM due for the v5.6 merge window
-> 
-> ----------------------------------------------------------------
-> Claudiu Beznea (2):
->       mfd: atmel-hlcdc: Add struct device member to struct atmel_hlcdc_regmap
->       mfd: atmel-hlcdc: Return in case of error
-> 
->  drivers/mfd/atmel-hlcdc.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
 
-Can we get this into drm-misc-next?
+On 1/6/2020 5:49 PM, YueHaibing wrote:
+> Fix sparse warning:
+>
+> drivers/scsi/lpfc/lpfc_nportdisc.c:344:1: warning:
+>   symbol 'lpfc_defer_acc_rsp' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_nportdisc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+> index 1c46e3a..a024e5a 100644
+> --- a/drivers/scsi/lpfc/lpfc_nportdisc.c
+> +++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+> @@ -340,7 +340,7 @@ lpfc_defer_pt2pt_acc(struct lpfc_hba *phba, LPFC_MBOXQ_t *link_mbox)
+>    * This routine is only called if we are SLI4, acting in target
+>    * mode and the remote NPort issues the PLOGI after link up.
+>    **/
+> -void
+> +static void
+>   lpfc_defer_acc_rsp(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+>   {
+>   	struct lpfc_vport *vport = pmb->vport;
 
-I am not familiar with the process how to do this, and hope you can
-help.
+Yep. Looks good.  Thank You
 
-Thanks in advance,
+Reviewed-by: James Smart <james.smart@broadcom.com>
 
-	Sam
+-- james
+
