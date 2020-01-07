@@ -2,117 +2,108 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C43C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD61C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFA52072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q57iKVYV"
+	by mail.kernel.org (Postfix) with ESMTP id 6D18420848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgAGSzj (ORCPT
+        id S1728693AbgAGS6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:55:39 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51326 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGSzh (ORCPT
+        Tue, 7 Jan 2020 13:58:04 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:46796 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728550AbgAGS6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:55:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d73so673879wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:55:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=gdW12zHykwT9gXQ2GutX9cXAWDnAxLstuAPg8msRCNo=;
-        b=Q57iKVYVmYZRnAIEMlGhCUBR3dOB6QHScJxSyRgZtl+1+k0rbltUro8ovHrSt5eIJb
-         nvsH1rNsY8+f3A5KuKFD/v9k+59v1HM9Bngq9/oybxnoI0DLd2Zd8lO2JNoIyhWHd4p7
-         RA+jOX7KffLx9NcI1I4SawOJLsEl4pEHWsGN0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=gdW12zHykwT9gXQ2GutX9cXAWDnAxLstuAPg8msRCNo=;
-        b=N8YdldyPPu7ifp9z/BYNN0OkifT6h0Svnl3eyLhN/Fsh9WOZq5BGvd5TwjMpGfL7ZW
-         900ZoGuCPBuO2HKmuyTp8AT8KTQXjluejNuV18e0h0dvkjXHzOcR22ytFeoBgwge6JtO
-         jX1Mr5fKnurQlxjSG+IOQNqanamD3mbmd2yUZaJSUKu4Nt9/V8v5fvcTS7FukSczkAgM
-         cOZJClG0sateH+TG8k1qYCBGZvHs/GMItBysWqqb66MEQ50jPJzTP9TC/p7Uu7eiVyfw
-         76mgAvhNVQbeX9yXEOXEtUEnDXdm8PWVOASYAoKr5Qm9vByTghQH1q9vlWw2rJycLyeo
-         k2uQ==
-X-Gm-Message-State: APjAAAXw2GC9A5xPAPIFubsHArfNS4oXVfMZL+XLn5ZN+TtUosfrbLq4
-        J9rJngkcCKiGI4jXCHRU0ubqUw==
-X-Google-Smtp-Source: APXvYqwgcvkyjoG1ZSHDuX6NjkGZEW/hWJo5H1F7/tqLVY1GuGlZN/QCIS9gB70daEzeriWuXlv8VQ==
-X-Received: by 2002:a05:600c:294:: with SMTP id 20mr433999wmk.97.1578423333414;
-        Tue, 07 Jan 2020 10:55:33 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id g25sm30992623wmh.3.2020.01.07.10.55.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 10:55:32 -0800 (PST)
-Subject: Re: EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>,
-        Lei Wang <lewan@microsoft.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        LKML <linux-kernel@vger.kernel.org>, shiping.linux@gmail.com
-References: <bdb29d6d-bc63-cf68-0e32-556740537cd8@broadcom.com>
- <20200107184926.GL29542@zn.tnic>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <f56605f8-e49f-6b99-5735-b4bec75af9fd@broadcom.com>
-Date:   Tue, 7 Jan 2020 10:55:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200107184926.GL29542@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 7 Jan 2020 13:58:04 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <rjones@gateworks.com>)
+        id 1iou3F-0006Mw-Ke; Tue, 07 Jan 2020 18:58:01 +0000
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH v6 0/5] ARM: dts: imx: Add GW59xx Gateworks specials
+Date:   Tue,  7 Jan 2020 10:57:48 -0800
+Message-Id: <20200107185753.28308-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lei/Shiping,
+This series adds board support for the GW59xx Gateworks Ventana family
+specials.
 
-On 2020-01-07 10:49 a.m., Borislav Petkov wrote:
-> On Tue, Jan 07, 2020 at 09:57:26AM -0800, Scott Branden wrote:
->> Hello EDAC Maintainers,
->>
->> Could somebody have a look at the DMC520 patch series that has been waiting
->> for a response since November:
->> https://patchwork.kernel.org/patch/11248785/
-> Well, the dt bindings stuff is still being discussed:
->
-> https://patchwork.kernel.org/patch/11248783/
->
-> Also, looking at this again, the patch authorship looks really fishy:
->
-> Sender is
->
-> From: Shiping Ji <shiping.linux@gmail.com>
->
-> however, he doesn't have his SOB in there and previous iterations were
-> done with Lei Wang whose SOB *is* there so I dunno what's going on.
->
-> *Especially* if Lei Wang is being added as a maintainer of that driver
-> by the second patch but he's not sending this driver himself. If this
-> driver is going to be orphaned the moment it lands upstream, I'm not
-> going to take it.
-Shiping/Lei could you please provide appropriate signed-off-by?
-Also, if you do not have an appropriate maintainer for the driver
-we have Yuqing Shen who can be maintainer of this driver.
->
-> So at least those two things need to be fixed/clarified first.
->
-> HTH.
->
+Changes in v2:
+ - Generalized node names
+ - Removed unnecessary labels
+ - Expanded patch subject
+ - Removed undocumented compatible string in dts
+
+Changes in v3:
+ - Fixed a conflict in arch/arm/boot/dts/Makefile
+
+Changes in v4:
+ - Clarified authorship
+ - Added dt-bindings compatible entries
+
+Changes in v5:
+ - Added documentation schema permutations for all gateworks ventana boards
+ - Added back compatible strings from dts removed in v2
+
+Changes in v6:
+ - Reorganized dt-bindings schema into new items entry
+
+Robert Jones (4):
+  dt-bindings: arm: fsl: Add Gateworks Ventana i.MX6DL/Q compatibles
+  ARM: dts: imx: Add GW5907 board support
+  ARM: dts: imx: Add GW5913 board support
+  ARM: dts: imx: Add GW5912 board support
+
+Tim Harvey (1):
+  ARM: dts: imx: Add GW5910 board support
+
+ Documentation/devicetree/bindings/arm/fsl.yaml |  37 ++
+ arch/arm/boot/dts/Makefile                     |   8 +
+ arch/arm/boot/dts/imx6dl-gw5907.dts            |  14 +
+ arch/arm/boot/dts/imx6dl-gw5910.dts            |  14 +
+ arch/arm/boot/dts/imx6dl-gw5912.dts            |  13 +
+ arch/arm/boot/dts/imx6dl-gw5913.dts            |  14 +
+ arch/arm/boot/dts/imx6q-gw5907.dts             |  14 +
+ arch/arm/boot/dts/imx6q-gw5910.dts             |  14 +
+ arch/arm/boot/dts/imx6q-gw5912.dts             |  13 +
+ arch/arm/boot/dts/imx6q-gw5913.dts             |  14 +
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi          | 399 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5910.dtsi          | 491 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5912.dtsi          | 461 +++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5913.dtsi          | 348 ++++++++++++++++++
+ 14 files changed, 1854 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5910.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5912.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5913.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5910.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5912.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5913.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5912.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+
+-- 
+2.9.2
 
