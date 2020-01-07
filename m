@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2503EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDDFC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB7B42072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3612077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431824;
-	bh=GGD7cMCYVXparBQreXzD6AIEl/w57wcCsy3znaKzyhc=;
+	s=default; t=1578431829;
+	bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cs6jlzj/47qNp+6QD604y2WXuS+o6rfA4Bs96vDJsU0I9hvAHcgh7egwoO0MBJ1aY
-	 zHIKAE27+542JAKTtUPXhz6HjlZXM8OV/azhFOTKCTDTaiucfa79QDpyoxbZ8pogyG
-	 5E0lbu4Kta1ilR4ECz8cEvGGrbUS4vJYOtB4YQqo=
+	b=1P5bmECAF1AT7DJ8VX9N5xG3I6BYGwIHtpSxW1lSGLomkrzETl2/3VsdtSaIepONy
+	 7IQ2TFJJosn4SVhv9CYh1iCGeTixG8lKzJCIoVrw2LGfPl+0DkDNx19BrTe11aVtc6
+	 yZ2blB9nOyUmZaUCuFZm9iSUToDYx4RW88UWST8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgAGVRD (ORCPT
+        id S1729583AbgAGVRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:17:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:17:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbgAGVG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:28 -0500
+        id S1728481AbgAGVGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7BA12087F;
-        Tue,  7 Jan 2020 21:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8372F2080A;
+        Tue,  7 Jan 2020 21:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431187;
-        bh=GGD7cMCYVXparBQreXzD6AIEl/w57wcCsy3znaKzyhc=;
+        s=default; t=1578431185;
+        bh=QsJ20k1VVZJ10/BTHoJeI+2CvvnJtI6kiGbeTCKQi6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KAWtDEsVmUaOPkI0nF+TBmZq6ui3ig5sjjYOaVo3Sc4un0jiwphpPJMfGM85m53XO
-         fYvuRSo/mqcmTScEPauwXE8nnC3JCiFSln4CZb69CUTE/nmpVyZ5JLoM/tQWteDf8g
-         2HX3qPz13FATe9nmYZ1/iYByrCCtQudhj3iDdagQ=
+        b=NTWSMu+T8uG+uIa5H0PYfzetWlmLOWZagS79flcVlnPtn0vXsDGU/Tm19cK91Yamb
+         11Do0MVTD7fE+COrwvFQjAXVE4OgKQKF12oE2mB5TrKlkh99lc1SbiR4V4hy7LQtgx
+         gYaB0X3CfMB1jaOdTI2t5hwhqTSvDDVkvLHtbwvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 069/115] tracing: Fix lock inversion in trace_event_enable_tgid_record()
-Date:   Tue,  7 Jan 2020 21:54:39 +0100
-Message-Id: <20200107205303.812869492@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Tommi T. Rantala" <tommi.t.rantala@nokia.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH 4.19 068/115] rseq/selftests: Fix: Namespace gettid() for compatibility with glibc 2.30
+Date:   Tue,  7 Jan 2020 21:54:38 +0100
+Message-Id: <20200107205303.746563145@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,117 +67,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prateek Sood <prsood@codeaurora.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit 3a53acf1d9bea11b57c1f6205e3fe73f9d8a3688 upstream.
+commit 8df34c56321479bfa1ec732c675b686c2b4df412 upstream.
 
-       Task T2                             Task T3
-trace_options_core_write()            subsystem_open()
+glibc 2.30 introduces gettid() in public headers, which clashes with
+the internal static definition within rseq selftests.
 
- mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
+Rename gettid() to rseq_gettid() to eliminate this symbol name clash.
 
- set_tracer_flag()
-
-   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
-
-    mutex_lock(event_mutex)
-
-This gives a circular dependency deadlock between trace_types_lock and
-event_mutex. To fix this invert the usage of trace_types_lock and
-event_mutex in trace_options_core_write(). This keeps the sequence of
-lock usage consistent.
-
-Link: http://lkml.kernel.org/r/0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com
-
-Cc: stable@vger.kernel.org
-Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-by: Tommi T. Rantala <tommi.t.rantala@nokia.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Tommi T. Rantala <tommi.t.rantala@nokia.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: <stable@vger.kernel.org>	# v4.18+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c        |    8 ++++++++
- kernel/trace/trace_events.c |    8 ++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ tools/testing/selftests/rseq/param_test.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4370,6 +4370,10 @@ int trace_keep_overwrite(struct tracer *
+--- a/tools/testing/selftests/rseq/param_test.c
++++ b/tools/testing/selftests/rseq/param_test.c
+@@ -15,7 +15,7 @@
+ #include <errno.h>
+ #include <stddef.h>
  
- int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+-static inline pid_t gettid(void)
++static inline pid_t rseq_gettid(void)
  {
-+	if ((mask == TRACE_ITER_RECORD_TGID) ||
-+	    (mask == TRACE_ITER_RECORD_CMD))
-+		lockdep_assert_held(&event_mutex);
-+
- 	/* do nothing if flag is already set */
- 	if (!!(tr->trace_flags & mask) == !!enabled)
- 		return 0;
-@@ -4435,6 +4439,7 @@ static int trace_set_options(struct trac
- 		cmp += 2;
+ 	return syscall(__NR_gettid);
+ }
+@@ -373,11 +373,12 @@ void *test_percpu_spinlock_thread(void *
+ 		rseq_percpu_unlock(&data->lock, cpu);
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -454,11 +455,12 @@ void *test_percpu_inc_thread(void *arg)
+ 		} while (rseq_unlikely(ret));
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -605,7 +607,7 @@ void *test_percpu_list_thread(void *arg)
  	}
  
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
  
- 	ret = match_string(trace_options, -1, cmp);
-@@ -4445,6 +4450,7 @@ static int trace_set_options(struct trac
- 		ret = set_tracer_flag(tr, 1 << ret, !neg);
+@@ -796,7 +798,7 @@ void *test_percpu_buffer_thread(void *ar
+ 	}
  
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
  
- 	/*
- 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
-@@ -7457,9 +7463,11 @@ trace_options_core_write(struct file *fi
- 	if (val != 0 && val != 1)
- 		return -EINVAL;
+@@ -1011,7 +1013,7 @@ void *test_percpu_memcpy_buffer_thread(v
+ 	}
  
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 	ret = set_tracer_flag(tr, 1 << index, val);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
  
- 	if (ret < 0)
- 		return ret;
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -327,7 +327,8 @@ void trace_event_enable_cmd_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
-@@ -341,7 +342,6 @@ void trace_event_enable_cmd_record(bool
- 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- void trace_event_enable_tgid_record(bool enable)
-@@ -349,7 +349,8 @@ void trace_event_enable_tgid_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
- 			continue;
-@@ -363,7 +364,6 @@ void trace_event_enable_tgid_record(bool
- 				  &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- static int __ftrace_event_enable_disable(struct trace_event_file *file,
 
 
