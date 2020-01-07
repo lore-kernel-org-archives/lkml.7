@@ -2,91 +2,119 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77F2C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15B4C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1E32081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C682080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtI5LJo3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KDLRNbfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgAGJs1 (ORCPT
+        id S1727809AbgAGJsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:48:27 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40161 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgAGJs1 (ORCPT
+        Tue, 7 Jan 2020 04:48:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56802 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbgAGJsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:48:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id i23so38423726lfo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:48:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
-        b=qtI5LJo3/WvWrVIOP518oxDc3sCuQZBRfr9C5k+6doCxp3MzxLMN6EKtFZgGos+b45
-         LkDrzheTzcH8ElGC1D31coYR3J0ag0BydTOCnkr0keaP+7TP+453ZoSSijAkFO2Jn1ns
-         DNdC6m9acz9YM+LvrQD5aWwTHN9J/0xtaN/wa6UdUP77zaUcnKO8GMK4A0X+UZtyuYfn
-         Dojan9A7M8+5unJ7aoUrDc47Ap1APgA/gtyvSA7dLOqWIWFwN1g/8EJ7ozI0vLP2h50c
-         GKOWEwNT6+mgWVJ7cN5Kj5Q8b64XwtQVqTm3ZukPYVhj6NAOIjZbqLym6VSOgAH+u1qH
-         GQ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
-        b=CyX0tEZxM10gsoNK2ONWpAoYJdSAlP8lAQVU/QtzslJK60LTk44RuPEy/gkIwEw7xt
-         0OEPes4RHr0i+XWIGsDrBc8X08NzopKS2iJzah4ZN7+woG8oTSgEOdjbhfxXAv9lHm00
-         uuU+CJVLU+KDfOkA/emzLLU1hljP3lDGA9p+AlRkiSqPhv8DUKvSTi7ZOM8ZaZ9vi87C
-         hGDoTPJ5+/UuvD9WvfSRvJXzwOxmQ/UU836KQyHbf/wOuzK3o0vL3drOyCb6DqmEXbQ6
-         xNJByQGowVcVC6uv93pLDLN3qQDSpvMKbKW/1/lMInxdofVtfafpR73DfpybiWK6AD+x
-         HYog==
-X-Gm-Message-State: APjAAAVP60IS+Ej9xmMKbHSsKjqo+eyXFkA0xst3+/8DdLVifsvoT/oJ
-        4AyY2+uJe2vutlBg8cx2Aa1laHEITDqyQzldgI/rUA==
-X-Google-Smtp-Source: APXvYqwJ4NEleHWVj49bXWx9f2Reukpm63SdKPnvrbrbdsGZZiFUSvBsk8NVHRhgjrknGj8ifWCADNENNBxCswle48I=
-X-Received: by 2002:a19:c648:: with SMTP id w69mr58882108lff.44.1578390504987;
- Tue, 07 Jan 2020 01:48:24 -0800 (PST)
+        Tue, 7 Jan 2020 04:48:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IWusUDmSIL/SB7RdbIQ699smqvgNkC7EH2eXRvFyN1c=; b=KDLRNbfURfqAdTtFDPk0X9ytm
+        epPWwWBRm7xJe7Rm31wFHqQNpguFuh4ELVCVUp38z7vZtHx/Z93vJvRLRHnXNuTzRLIKUScxHfy/v
+        U7N0u6aZDnm6cEPG4fU8M7Wn/9HGw8XD4NtnBLP7AfoEf5r3+3ofsWzwBzIaaqRFqjbMAxCKf8Cuh
+        4NdQlTC3EFmMFdeVtJvq/DUA72P5Bc8k1BZN9lOCRQhgXZfgxnQE2U1PR1qC8QDkGu17pT6q5Uu+w
+        0xwdtMUOg/gX0acaa53dos8UQ1/ePBHqiEa2akjxZZpH98ZJIv0ryPlnSyycEPcFA7Nucy2AZadIC
+        njzG+n1nw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iolSx-0000tV-9v; Tue, 07 Jan 2020 09:47:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F1B93025C3;
+        Tue,  7 Jan 2020 10:46:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 90E112B5FB0B3; Tue,  7 Jan 2020 10:47:56 +0100 (CET)
+Date:   Tue, 7 Jan 2020 10:47:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Li Guanglei <guangleix.li@gmail.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        guanglei.li@unisoc.com
+Subject: Re: [PATCH v01] sched/core: uclamp: fix rq.uclamp memory size of
+ initialization
+Message-ID: <20200107094756.GW2844@hirez.programming.kicks-ass.net>
+References: <1577259844-12677-1-git-send-email-guangleix.li@gmail.com>
+ <20191229221119.oaxrygmi37cnzqas@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org> <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 10:48:14 +0100
-Message-ID: <CACRpkdaoU9B+981iF4wvLgY-QNNnsNUE=CYVmfX8zNtUuOtKfQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191229221119.oaxrygmi37cnzqas@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+On Sun, Dec 29, 2019 at 10:11:20PM +0000, Qais Yousef wrote:
+> On 12/25/19 15:44, Li Guanglei wrote:
+> > From: Li Guanglei <guanglei.li@unisoc.com>
+> > 
+> > uclamp_rq for each clamp id(UCLAMP_CNT) should be initialized when call
+> 
+> s/clamp id(UCLAMP_CNT)/UCLAMP_CNT/
+> 
+> > init_uclamp.
+> > 
+> > Signed-off-by: Li Guanglei <guanglei.li@unisoc.com>
+> 
+> This need fixes tag
+> 
+> Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcountinga")
+> 
+> Otherwise this looks good to me.
+> 
+> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 
-> This patch adds support to wcd934x gpio block found in
-> WCD9340/WC9341 Audio codecs.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Thanks! It now looks something like so:
 
-I think I reviewed an earlier version of the patch set yesterday,
-the comments are still valid for this version.
+---
+Subject: sched/core: Fix size of rq::uclamp initialization
+From: Li Guanglei <guanglei.li@unisoc.com>
+Date: Wed, 25 Dec 2019 15:44:04 +0800
 
-Sorry for lag in my reviews :/
+rq::uclamp is an array of struct uclamp_rq, make sure we clear the
+whole thing.
 
-Yours,
-Linus Walleij
+Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcountinga")
+Signed-off-by: Li Guanglei <guanglei.li@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+Link: https://lkml.kernel.org/r/1577259844-12677-1-git-send-email-guangleix.li@gmail.com
+---
+ kernel/sched/core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1253,7 +1253,8 @@ static void __init init_uclamp(void)
+ 	mutex_init(&uclamp_mutex);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
++		memset(&cpu_rq(cpu)->uclamp, 0,
++				sizeof(struct uclamp_rq)*UCLAMP_CNT);
+ 		cpu_rq(cpu)->uclamp_flags = 0;
+ 	}
+ 
