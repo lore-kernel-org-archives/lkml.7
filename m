@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A889EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDA6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693E52081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF8C2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431134;
-	bh=X/6xvICbw8hI0o2RYXjRcQM+iteqfLO9+pizoBcrLNY=;
+	s=default; t=1578431140;
+	bh=7kPznYzqtayJVQHLaku8IUSKqBs1rqufABhn1E8deZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMrCdKS8GJQXg1Uq6YR4NrdIkkBVGOw/PihwTKuIIi1OWF465GuOvjy+TY5k9bX0F
-	 O5YVIpn8M/eGJD2eC26H3bTOGJPuNgNE2GAfnGkBL9xy3ggMD9HufsPUOI183h4Aob
-	 d8s2DnJlfwjRvFetstQPTeHz4QmupGZXDsIVnRII=
+	b=cDbK5tf314LjRt3ILbkeEEdi6k5Y4xqZVBF39QrAv5A9Bm8voewZJCMz08lPku5eg
+	 sgbHpzLnFAnvMbtH+mSHQ1LC21LMNCh326DzDRH2ycws8McqZPICGjV/qoIZIkv8ZO
+	 X3Njo4e/Opj7v0Ln4/WvEXQCTvZ3jHtOYBlUFBek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgAGVFc (ORCPT
+        id S1729271AbgAGVFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51714 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbgAGVFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:22 -0500
+        id S1729231AbgAGVF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A3A620678;
-        Tue,  7 Jan 2020 21:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 586AA2081E;
+        Tue,  7 Jan 2020 21:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431121;
-        bh=X/6xvICbw8hI0o2RYXjRcQM+iteqfLO9+pizoBcrLNY=;
+        s=default; t=1578431128;
+        bh=7kPznYzqtayJVQHLaku8IUSKqBs1rqufABhn1E8deZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nemj3vooMIMPc6gVkWJBurGwAg8sHzbyPxHAVRx8hilTotuss1FWOzuD55d1I0lVJ
-         ubPBJG4WiPssHKaWP4zKvJk9arUVD3apkSDumlCK3pcnwLN4nTDhD7oeyS+6y0IpLn
-         t4OYja0T/QJzDqXPMIiMBBX2o/FSmRkRdyLE28l0=
+        b=NqcwXwE6OuaQf4hpm0dubuQ+orxz2wf/QfcPfP1pgFWgBJsLVMboGhsnxQNZ/IGb3
+         Kl38GfRhHJGOc9G01G8wl5mok6Nra3wMiubGNwLOBPNVfA15jKFfgh5GBRNGw1K8ne
+         M+kyC3RSNx17g9pUai851jPwfYn1bNrNryJ14tQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Florian Westphal <fw@strlen.de>,
-        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/115] netfilter: nft_tproxy: Fix port selector on Big Endian
-Date:   Tue,  7 Jan 2020 21:54:11 +0100
-Message-Id: <20200107205301.834289203@linuxfoundation.org>
+Subject: [PATCH 4.19 009/115] PM / devfreq: Dont fail devfreq_dev_release if not in list
+Date:   Tue,  7 Jan 2020 21:53:39 +0100
+Message-Id: <20200107205245.424260862@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -62,46 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 8cb4ec44de42b99b92399b4d1daf3dc430ed0186 ]
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
 
-On Big Endian architectures, u16 port value was extracted from the wrong
-parts of u32 sreg_port, just like commit 10596608c4d62 ("netfilter:
-nf_tables: fix mismatch in big-endian system") describes.
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
 
-Fixes: 4ed8eb6570a49 ("netfilter: nf_tables: Add native tproxy support")
-Signed-off-by: Phil Sutter <phil@nwl.cc>
-Acked-by: Florian Westphal <fw@strlen.de>
-Acked-by: Máté Eckl <ecklm94@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tproxy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/net/netfilter/nft_tproxy.c b/net/netfilter/nft_tproxy.c
-index f92a82c73880..95980154ef02 100644
---- a/net/netfilter/nft_tproxy.c
-+++ b/net/netfilter/nft_tproxy.c
-@@ -50,7 +50,7 @@ static void nft_tproxy_eval_v4(const struct nft_expr *expr,
- 	taddr = nf_tproxy_laddr4(skb, taddr, iph->daddr);
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index a47e76a62287..69bbb1e9ab23 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -575,11 +575,6 @@ static void devfreq_dev_release(struct device *dev)
+ 	struct devfreq *devfreq = to_devfreq(dev);
  
- 	if (priv->sreg_port)
--		tport = regs->data[priv->sreg_port];
-+		tport = nft_reg_load16(&regs->data[priv->sreg_port]);
- 	if (!tport)
- 		tport = hp->dest;
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
  
-@@ -117,7 +117,7 @@ static void nft_tproxy_eval_v6(const struct nft_expr *expr,
- 	taddr = *nf_tproxy_laddr6(skb, &taddr, &iph->daddr);
- 
- 	if (priv->sreg_port)
--		tport = regs->data[priv->sreg_port];
-+		tport = nft_reg_load16(&regs->data[priv->sreg_port]);
- 	if (!tport)
- 		tport = hp->dest;
- 
+@@ -634,6 +629,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
 -- 
 2.20.1
 
