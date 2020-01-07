@@ -7,112 +7,104 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF341C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3B0C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5F12075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7CE206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QSGhNupf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XwggVHZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgAGGOw (ORCPT
+        id S1727262AbgAGGPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:14:52 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38333 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAGGOv (ORCPT
+        Tue, 7 Jan 2020 01:15:52 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34298 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgAGGPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:14:51 -0500
-Received: by mail-pl1-f193.google.com with SMTP id f20so22784078plj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 22:14:51 -0800 (PST)
+        Tue, 7 Jan 2020 01:15:52 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s94so4983896pjc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 22:15:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=c6QXHS052iNsuIcjpN4bnLChFsKKhsioLgwWXnYkKvQ=;
-        b=QSGhNupfONtSc/6jcEnspB0SQLN2n42PJgRuFT0ph2HgXETbOsw/xTm5Z0F4JhqlaT
-         e+VUjqYCghs86YIo3TVviF3cifm5oPLD2zbe9zQaKLSPO7lExFgMeEyQcFaa63HodSyA
-         9VNEDvwkiXOyqMyo7K4f/MGpWFYzgxF5vXYNa+Td2OCk39s7mLQou9QTwE/u4IsM8rTY
-         +WUzQGR6FYYkiw6S5qJo4SmWohqyxc00m23mdm0irmwYaOhbIrV5xnxwG7uqVuiJiyoe
-         D0UD1DtYa6XYwlUcUNv4i6wH9cTu9VJnCAaPfa15+/UdEyGOZiH/Q00OUr1zJQx3RAvm
-         8MGA==
+        bh=MBx9eiA7wdbP2nqN4M3UGU6OsOENkr/rr6Is0HWpxds=;
+        b=XwggVHZcy506JAqUq09CKNV1Rb6ZxjlDDbchXEKlCSq2v9z6sbN7x9ChC7vhJu5tJN
+         VF1NLx39RLNhMmGlyM6FY/sPShVoMT4z6umO7Bjp5uPp7iEzh2WtgatpVi3LEGnDMEwc
+         abNdlnv5rG5VoFcD7GmuLivlrvsZ/ZZZWcLxMEp26QOJRRKy1j1uIgZtf7+OUlx5BEHl
+         1Tvxq/ysrSQAsOrz9WVci7aUjB6VPcCYsvYrjoXX9zJo//iK8GRU8Dg5a9cNy8jcirfG
+         0H602t4Y18Dq2X+DstmoGCaERbSZcP90Lx4CwtW80u739330aoV2aIgnkfPDhO5LF2bL
+         +zQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c6QXHS052iNsuIcjpN4bnLChFsKKhsioLgwWXnYkKvQ=;
-        b=RW+eBYIgMQu3SG7zqHctcS7YnEFZeL4JZa2dGjvrmqN+4x0uMI/kI0K4s+YenntzQk
-         V+oulTpoFnVhat5HLu0balq6Nom/34oHcYbpgwQt+LKyoFS8X3HHGXPwiaHBTpv5mpcI
-         3vRwQ/ilAHZoZNFANxAY1n66RbgZZjGNECgZAnS3VRVdGGj01GJzBVCxPk8MHDcTyi4J
-         Oe9VgPQ0o9CLkhOUQoHy0r2zbOrWQKRYyIOE+D4U7jNCLS7ZlFJ+xsp9ncUbvAwVeUbb
-         MMdFS782D8tpAtetjhnDe9l0kzhGmksI/QT4ES5hknoJNK39WH97XaAUhkIaMGbLJX/i
-         DeLw==
-X-Gm-Message-State: APjAAAXj2RMz+PnoYvsLMQ719+eR2WW45BIip5jL5HeGTYfOf11W36EG
-        wnB3F3vYc3l3UGQ9nLzNOgb2sQ==
-X-Google-Smtp-Source: APXvYqxdQ1ykKFXcMVH1BRiUcRNji3NKUHPQtynSOTPjo/KB8eiFeY14gaDELdnrqKQc8w2SPofJNg==
-X-Received: by 2002:a17:902:a70d:: with SMTP id w13mr110125921plq.172.1578377690462;
-        Mon, 06 Jan 2020 22:14:50 -0800 (PST)
+        bh=MBx9eiA7wdbP2nqN4M3UGU6OsOENkr/rr6Is0HWpxds=;
+        b=ZI6papXFVoQGHq0q0MOZpKUSMHniXt6QTJ+zBILr9Se/Xf6YGAhxmZ2GZp02+y+2Bg
+         84lnU/CLiSMu6MJyWyz3LXN1Pug4I7Bs67DXFksLouD2VYBW0KD0P20IVE+CGnhaHtLr
+         C0VthTtgkUd1zMtfyK3OFNZaPjSzf+07rQcfsucROGKMIZ82d0uWEAOeVZ5QewJ9v2co
+         oXMFwFRD7zCsSIA0N7vuNm2e1WvFkzDvp5Chr631+kms5/nHuFpDEeVomf35gpG8KqK1
+         hHfeJa2rD70D9Bijk/uWxQ0debtJ0SoA31Y1ocYqR3xkwkqiJm/fCJYMao/95oIb6QZU
+         W/Vg==
+X-Gm-Message-State: APjAAAX4U0YlcmCuO0E83nScWY1JTxjnI2JR6qntPX3lruUs9xyH0Biw
+        xRyJtK+FoBRJpwNSUyJ2FDe1VQ==
+X-Google-Smtp-Source: APXvYqwyDYa50TpzPvKGvUa/ah7QsaRLTzy0lR6hpMbfVCtnPhOf1OCj7psBYGjh7/IeGvosgHflQA==
+X-Received: by 2002:a17:90a:cb83:: with SMTP id a3mr46740958pju.80.1578377751772;
+        Mon, 06 Jan 2020 22:15:51 -0800 (PST)
 Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b128sm75178035pga.43.2020.01.06.22.14.49
+        by smtp.gmail.com with ESMTPSA id q7sm26643097pjd.3.2020.01.06.22.15.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 22:14:49 -0800 (PST)
-Date:   Mon, 6 Jan 2020 22:14:47 -0800
+        Mon, 06 Jan 2020 22:15:51 -0800 (PST)
+Date:   Mon, 6 Jan 2020 22:15:48 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 2/2] tty: serial: Kconfig: Allow SERIAL_QCOM_GENI_CONSOLE
- to be enabled if SERIAL_QCOM_GENI is a module
-Message-ID: <20200107061447.GB716784@yoga>
-References: <20200107010311.58584-1-john.stultz@linaro.org>
- <20200107010311.58584-2-john.stultz@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, okukatla@codeaurora.org,
+        jcrouse@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] interconnect: Check for valid path in icc_set_bw()
+Message-ID: <20200107061548.GC716784@yoga>
+References: <20200106172746.19803-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107010311.58584-2-john.stultz@linaro.org>
+In-Reply-To: <20200106172746.19803-1-georgi.djakov@linaro.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06 Jan 17:03 PST 2020, John Stultz wrote:
+On Mon 06 Jan 09:27 PST 2020, Georgi Djakov wrote:
 
-> In order to support having SERIAL_QCOM_GENI as a module while
-> also still preserving serial console support, tweak the
-> Kconfig requirements to not require =y
+> Use IS_ERR() to ensure that the path passed to icc_set_bw() is valid.
 > 
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Alistair Delva <adelva@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-serial@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  drivers/tty/serial/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v2:
+> - Use WARN_ON() instead of pr_err() (Bjorn)
 > 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 99f5da3bf913..4ca799198e88 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -975,7 +975,7 @@ config SERIAL_QCOM_GENI
+>  drivers/interconnect/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 63c164264b73..d2ba5ae7d25b 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -495,9 +495,12 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+>  	size_t i;
+>  	int ret;
 >  
->  config SERIAL_QCOM_GENI_CONSOLE
->  	bool "QCOM GENI Serial Console support"
-> -	depends on SERIAL_QCOM_GENI=y
-> +	depends on SERIAL_QCOM_GENI
->  	select SERIAL_CORE_CONSOLE
->  	select SERIAL_EARLYCON
->  	help
-> -- 
-> 2.17.1
-> 
+> -	if (!path || !path->num_nodes)
+> +	if (!path)
+>  		return 0;
+>  
+> +	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&icc_lock);
+>  
+>  	old_avg = path->reqs[0].avg_bw;
