@@ -2,118 +2,187 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B69C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5986FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00F72077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2432D207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Uy4pOGtC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQsoySUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgAGXQk (ORCPT
+        id S1727639AbgAGXRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:16:40 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57960 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgAGXQk (ORCPT
+        Tue, 7 Jan 2020 18:17:05 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40900 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgAGXRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:16:40 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007N9Z3v015483;
-        Tue, 7 Jan 2020 23:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=IGnUQkIqlonHOlUqU1WosXHkUGO7eZVXN+CSVmkG9ss=;
- b=Uy4pOGtCNgTSoKLNAhpl+3m4T/1cnT3YDJBuuvQyIeom21xwfgycUWILjWNBtJWs5g4f
- gCDI+T+lh/CXA5nfm3Up/p1vkBKoJoFXBAT+yG5eSA8ShHKU88xm6+tcucFfAO9ld6lw
- 8bqV/ZoMNGX0W54p5BInxb80cSBg0U740wSFiSIXmzTO/DoOvuVtcopU/xA8na11AxPT
- kSEoZMdBTc/gs1Zp9LIzjHofpv51ZqIlKAdQCWQxReuZ5SPDwyR9Xhu/22I4tkBuyXyN
- /JZ8/aZt5qNrG60BFowRE6P4VPmKJ9tidTjoK3WjMaz5ZdxAOcLpG+f184iaTG7kVfNR Tw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xajnq0ma6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 23:16:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007NE1ta086268;
-        Tue, 7 Jan 2020 23:16:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2xcpcra74n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 23:16:28 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007NGQqh001833;
-        Tue, 7 Jan 2020 23:16:26 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jan 2020 15:16:26 -0800
-Date:   Tue, 7 Jan 2020 15:16:23 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, agruenba@redhat.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ext4: remove unused variable 'mapping'
-Message-ID: <20200107231623.GF472665@magnolia>
-References: <20200107062355.40624-1-yuehaibing@huawei.com>
+        Tue, 7 Jan 2020 18:17:05 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so996086lfo.7;
+        Tue, 07 Jan 2020 15:17:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z3UtITc4zK9Gssc2kyYRqxkunqDolPS6OQRkM0QUDtY=;
+        b=EQsoySUSRqREURbglDkMpdKVjg7eKOdVdnGQceh4ZMZckD9eTKjPsdhL+J6E+QZ69N
+         QyuynbapDeAO0nc3e4xnbjaxGiBgLXE71h2iL85U+G/ycdrz7H07Cpj/yPyaeO3F+4Rt
+         /WUO85IAyOKH3NhVnNdAFoYsmqcpbDBBJUvv6NXa8C9yHLjXJEyPnNQFBfAau/Nu7bzs
+         qlAckR03wlON54gxxfPHou2/3MmBavmx5cb2wBQadXgAQxQImuvPEqfkM8/Bq1T+JqXI
+         5ZvOuE41iPq+wKT4RMc9Myu3ablGDLJJSXQAPUanLqQn3HaTArsHCA9VKrfDVSKnDFy2
+         OWew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z3UtITc4zK9Gssc2kyYRqxkunqDolPS6OQRkM0QUDtY=;
+        b=kp8jjM1+S13xUS+Wfr8vOi9/uZRUsvLUzzSJPknjunRkhChKLoohRl8Pdab92ce3rN
+         +2UTtzEacWG0+n5bTsGyY4X5NoOLA+mhh6dH8rZyDQkriWdL7sjd/SR2oWDhWtbY//rv
+         ZDaZ34pVXFrQ2KsymkHA38JsHd5j/cbvbUKfbKlCTkR6Rfw1IKFfbi3rcOc/yEpV52Sg
+         cPxVpGPAVJdY3abSPjtlep54d4/8dJebL7BlCHsFd+5025DPqwZ/dLQTwMJ0aIhG1kXp
+         f+REIFodGNPlwZct08C81pbHI1SfXzI7ulxaXYIjef8Y1PSGt1NHnXkuvWaedrSCZwWD
+         lHKg==
+X-Gm-Message-State: APjAAAWNmDaeZLagUmFytqfklg0PR/OVbGVgANkZNyNzk3+6NTQ1Ab3v
+        Lw+vo7J3FCWrRLrsWkd9sF/VGEIV
+X-Google-Smtp-Source: APXvYqxZMJb5KnSBEXAC4K7LWG92+6r0yVQIv2mY1VHq/LxhTXrOjzLw0n/qj2BPsGoqosGpf6xGxA==
+X-Received: by 2002:a19:9157:: with SMTP id y23mr1176014lfj.74.1578439021866;
+        Tue, 07 Jan 2020 15:17:01 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t27sm407149ljd.26.2020.01.07.15.17.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 15:17:01 -0800 (PST)
+Subject: Re: [PATCH v6 00/12] NVIDIA Tegra20 CPUFreq driver major update
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191218202142.11717-1-digetx@gmail.com>
+Message-ID: <ff3006a1-b5b1-5854-3a2c-67278e53b6dd@gmail.com>
+Date:   Wed, 8 Jan 2020 02:17:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107062355.40624-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001070185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001070185
+In-Reply-To: <20191218202142.11717-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:23:55PM +0800, YueHaibing wrote:
-> fs/ext4/inode.c: In function 'ext4_page_mkwrite':
-> fs/ext4/inode.c:5910:24: warning: unused variable 'mapping' [-Wunused-variable]
+18.12.2019 23:21, Dmitry Osipenko пишет:
+> Hello,
 > 
-> commit 4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
-> left behind this unused variable.
+> This series moves intermediate-clk handling from tegra20-cpufreq into
+> tegra-clk driver. This allows us to switch to generic cpufreq-dt driver
+> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+> of the box. All boards need to adopt CPU OPPs in their device-trees in
+> order to get cpufreq support.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Changelog:
+> 
+> v6: - Dropped "cpufreq: dt-platdev: Blacklist NVIDIA Tegra20 and Tegra30 SoCs"
+>       patch from the series since Viresh picked up that patch separately.
+> 
+>     - Added two new patches to this series:
+> 
+>         ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
+>         ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
+> 
+>       Previously these patches were sent out separately from this series,
+>       but it should be more consistent to include them into the series since
+>       they directly relate to enabling of the cpufreq driver on Tegra30.
+> 
+> v5: - The "Use generic cpufreq-dt driver (Tegra30 supported now)" patch
+>       is separated now into two patches by factoring out the blacklisting
+>       of cpufreq-dt-platdev into a standalone patch. This is done in a
+>       response to request from Jon Hunter to fix the warning splats during
+>       boot that are coming from OPP core because OPPs are unavailable. The
+>       OPPs will become available once tegra20-cpufreq driver will be updated
+>       to support the cpufreq-dt.
+> 
+> v4: - Updated CCLK diagram in the "Add custom CCLK implementation" patch.
+> 
+>     - <linux/cpu.h> is now included in the "Use generic cpufreq-dt driver"
+>       patch, for consistency.
+> 
+>     - Returned value of get_cpu_device() is now checked in the "Use generic
+>       cpufreq-dt driver" patch, for consistency as well.
+> 
+> v3: - The "Add custom CCLK implementation" patch was updated in accordance
+>       to the comments from Peter De Schrijver. We will not use the clock
+>       skipper.
+> 
+>     - Re added OPPs for T30 Beaver board because Thierry has that board ;)
+> 
+>     - Added r-b for the "DT binding" patch from Rob Herring.
+> 
+> v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh Kumar
+>       in a review comment to v1.
+> 
+>     - Added acks from Viresh Kumar.
+> 
+>     - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
+>       Nicolas told me on IRC that it works fine.
+> 
+>     - Fixed compilation of the "Add custom CCLK implementation" patch. The
+>       error happened because v1 was based on top of yet unreviewed/unapplied
+>       patch "clk: tegra: divider: Support enable-bit for Super clocks".
+>       Thanks to Peter Geis for reporting the problem.
+> 
+>     - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
+>       that's what NVIDIA uses in the testing farm.
+> 
+> Dmitry Osipenko (12):
+>   clk: tegra: Add custom CCLK implementation
+>   clk: tegra: pll: Add pre/post rate-change hooks
+>   clk: tegra: cclk: Add helpers for handling PLLX rate changes
+>   clk: tegra20: Use custom CCLK implementation
+>   clk: tegra30: Use custom CCLK implementation
+>   ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
+>   ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
+>   dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+>   cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
+>     now)
+>   ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
+>   ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
+>   ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
+> 
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        |  56 +++++
+>  arch/arm/boot/dts/tegra30-beaver.dts          |  40 +++-
+>  arch/arm/mach-tegra/sleep-tegra30.S           |  18 +-
+>  arch/arm/mach-tegra/tegra.c                   |   4 +
+>  drivers/clk/tegra/Makefile                    |   1 +
+>  drivers/clk/tegra/clk-pll.c                   |  12 +-
+>  drivers/clk/tegra/clk-tegra-super-cclk.c      | 212 +++++++++++++++++
+>  drivers/clk/tegra/clk-tegra20.c               |   7 +-
+>  drivers/clk/tegra/clk-tegra30.c               |   6 +-
+>  drivers/clk/tegra/clk.h                       |  19 +-
+>  drivers/cpufreq/Kconfig.arm                   |   6 +-
+>  drivers/cpufreq/tegra20-cpufreq.c             | 217 +++++-------------
+>  12 files changed, 418 insertions(+), 180 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>  create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
+> 
 
-Er, I had to rebase the branch this morning to remove the f2fs parts
-(there's a conflict and they never acked the patch) so I cleaned this up
-at the same time.
+Hello Peter,
 
---D
-
-> ---
->  fs/ext4/inode.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 9a3e8d0..d0049fd 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5907,7 +5907,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
->  	vm_fault_t ret;
->  	struct file *file = vma->vm_file;
->  	struct inode *inode = file_inode(file);
-> -	struct address_space *mapping = inode->i_mapping;
->  	handle_t *handle;
->  	get_block_t *get_block;
->  	int retries = 0;
-> -- 
-> 2.7.4
-> 
-> 
+Could you please take a look at the patches and ACK them if they are
+okay to you?
