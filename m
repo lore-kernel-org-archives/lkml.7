@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA8C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8333DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848102081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584BA24672
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430597;
-	bh=5BDH2OtEN2ptYmOVRek6RZcBR+CsB+tafPzud33I/ks=;
+	s=default; t=1578430602;
+	bh=NCtaa7kgR2xrGcKG+Q0wYaoTdA2BTNNwnmJcvzCZ/1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvwPfABITdzzE5qft56Uwm42Nmo9JTZ/pDVeGhb6lz2+gbHq7phYv7YkKmHRBHQT8
-	 kDzoWsYtF+SXoQpkrulFlU6YG5J35F2FvpYT8U7YmCLb9OhcaAsfc0TQaMYfFf1ld6
-	 omJ0yf9MwunS6bV7DWNzbFIWEzcobehTKX+mBz58=
+	b=StJMP8erFgryViicKWzvq3S4a2/6Eajb9f8hhXmI5/DSnWTFdlfl+Qh2aD4bn5A16
+	 VMwsHCICVMU+pgdqYv50n2x74nHViFX9oT33N2DN3mtFqj9ZyQ+4syS5MKwzKBGCMG
+	 Kr57FpQaQUS6jZh78X/pU/OGI6P66gNvQ8zm8dm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgAGU4g (ORCPT
+        id S1727249AbgAGU4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:56:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgAGU4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:32 -0500
+        id S1727176AbgAGU4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0872081E;
-        Tue,  7 Jan 2020 20:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DC72081E;
+        Tue,  7 Jan 2020 20:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430591;
-        bh=5BDH2OtEN2ptYmOVRek6RZcBR+CsB+tafPzud33I/ks=;
+        s=default; t=1578430594;
+        bh=NCtaa7kgR2xrGcKG+Q0wYaoTdA2BTNNwnmJcvzCZ/1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G24lTAjoiW8X6ohWNf3KXN/7dLG0Lj/HVa8ZNvbwobpg/zkJfMsWGFTrcetd8+jpH
-         R9GEn7q1nx12ZbJvyUQVLajCEd1YY37xcR6IAO6abEwAc6ICAluOqzpOP+eLxid2RE
-         yveYLOwm1FpOixV5oVuh7y0lBUL6i13QgmpnWwXI=
+        b=0kl/0hfFkGqycFS/gZne6vgtV0SSNy74aAPpZqwTwSZSUGh/P0rg4K7aoXjK6tTsf
+         HdmFHoMEjCtNPrxNL1mrta3QvIVl9tC5huQO5i9mokSepwglsRONI+7BQIuSnsoENT
+         eShtaN30oPYWmDOVHmgXSCVq3GzOu3NDxJeicZeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+        stable@vger.kernel.org, Nikola Cornij <nikola.cornij@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/191] drm/amdgpu: add cache flush workaround to gfx8 emit_fence
-Date:   Tue,  7 Jan 2020 21:52:06 +0100
-Message-Id: <20200107205333.346955333@linuxfoundation.org>
+Subject: [PATCH 5.4 007/191] drm/amd/display: Map DSC resources 1-to-1 if numbers of OPPs and DSCs are equal
+Date:   Tue,  7 Jan 2020 21:52:07 +0100
+Message-Id: <20200107205333.399399339@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,69 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+From: Nikola Cornij <nikola.cornij@amd.com>
 
-[ Upstream commit bf26da927a1cd57c9deb2db29ae8cf276ba8b17b ]
+[ Upstream commit a1fc44b609b4e9c0941f0e4a1fc69d367af5ab69 ]
 
-The same workaround is used for gfx7.
-Both PAL and Mesa use it for gfx8 too, so port this commit to
-gfx_v8_0_ring_emit_fence_gfx.
+[why]
+On ASICs where number of DSCs is the same as OPPs there's no need
+for DSC resource management. Mappping 1-to-1 fixes mode-set- or S3-
+-related issues for such platforms.
 
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+[how]
+Map DSC resources 1-to-1 to pipes only if number of OPPs is the same
+as number of DSCs. This will still keep other ASICs working.
+A follow-up patch to fix mode-set issues on those ASICs will be
+required if testing shows issues with mode set.
+
+Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c   | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index 87dd55e9d72b..cc88ba76a8d4 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -6184,7 +6184,23 @@ static void gfx_v8_0_ring_emit_fence_gfx(struct amdgpu_ring *ring, u64 addr,
- 	bool write64bit = flags & AMDGPU_FENCE_FLAG_64BIT;
- 	bool int_sel = flags & AMDGPU_FENCE_FLAG_INT;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index 78b2cc2e122f..3b7769a3e67e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -1419,13 +1419,20 @@ enum dc_status dcn20_build_mapped_resource(const struct dc *dc, struct dc_state
  
--	/* EVENT_WRITE_EOP - flush caches, send int */
-+	/* Workaround for cache flush problems. First send a dummy EOP
-+	 * event down the pipe with seq one below.
-+	 */
-+	amdgpu_ring_write(ring, PACKET3(PACKET3_EVENT_WRITE_EOP, 4));
-+	amdgpu_ring_write(ring, (EOP_TCL1_ACTION_EN |
-+				 EOP_TC_ACTION_EN |
-+				 EOP_TC_WB_ACTION_EN |
-+				 EVENT_TYPE(CACHE_FLUSH_AND_INV_TS_EVENT) |
-+				 EVENT_INDEX(5)));
-+	amdgpu_ring_write(ring, addr & 0xfffffffc);
-+	amdgpu_ring_write(ring, (upper_32_bits(addr) & 0xffff) |
-+				DATA_SEL(1) | INT_SEL(0));
-+	amdgpu_ring_write(ring, lower_32_bits(seq - 1));
-+	amdgpu_ring_write(ring, upper_32_bits(seq - 1));
+ static void acquire_dsc(struct resource_context *res_ctx,
+ 			const struct resource_pool *pool,
+-			struct display_stream_compressor **dsc)
++			struct display_stream_compressor **dsc,
++			int pipe_idx)
+ {
+ 	int i;
+ 
+ 	ASSERT(*dsc == NULL);
+ 	*dsc = NULL;
+ 
++	if (pool->res_cap->num_dsc == pool->res_cap->num_opp) {
++		*dsc = pool->dscs[pipe_idx];
++		res_ctx->is_dsc_acquired[pipe_idx] = true;
++		return;
++	}
 +
-+	/* Then send the real EOP event down the pipe:
-+	 * EVENT_WRITE_EOP - flush caches, send int */
- 	amdgpu_ring_write(ring, PACKET3(PACKET3_EVENT_WRITE_EOP, 4));
- 	amdgpu_ring_write(ring, (EOP_TCL1_ACTION_EN |
- 				 EOP_TC_ACTION_EN |
-@@ -6926,7 +6942,7 @@ static const struct amdgpu_ring_funcs gfx_v8_0_ring_funcs_gfx = {
- 		5 +  /* COND_EXEC */
- 		7 +  /* PIPELINE_SYNC */
- 		VI_FLUSH_GPU_TLB_NUM_WREG * 5 + 9 + /* VM_FLUSH */
--		8 +  /* FENCE for VM_FLUSH */
-+		12 +  /* FENCE for VM_FLUSH */
- 		20 + /* GDS switch */
- 		4 + /* double SWITCH_BUFFER,
- 		       the first COND_EXEC jump to the place just
-@@ -6938,7 +6954,7 @@ static const struct amdgpu_ring_funcs gfx_v8_0_ring_funcs_gfx = {
- 		31 + /*	DE_META */
- 		3 + /* CNTX_CTRL */
- 		5 + /* HDP_INVL */
--		8 + 8 + /* FENCE x2 */
-+		12 + 12 + /* FENCE x2 */
- 		2, /* SWITCH_BUFFER */
- 	.emit_ib_size =	4, /* gfx_v8_0_ring_emit_ib_gfx */
- 	.emit_ib = gfx_v8_0_ring_emit_ib_gfx,
+ 	/* Find first free DSC */
+ 	for (i = 0; i < pool->res_cap->num_dsc; i++)
+ 		if (!res_ctx->is_dsc_acquired[i]) {
+@@ -1468,7 +1475,7 @@ static enum dc_status add_dsc_to_stream_resource(struct dc *dc,
+ 		if (pipe_ctx->stream != dc_stream)
+ 			continue;
+ 
+-		acquire_dsc(&dc_ctx->res_ctx, pool, &pipe_ctx->stream_res.dsc);
++		acquire_dsc(&dc_ctx->res_ctx, pool, &pipe_ctx->stream_res.dsc, i);
+ 
+ 		/* The number of DSCs can be less than the number of pipes */
+ 		if (!pipe_ctx->stream_res.dsc) {
+@@ -1669,7 +1676,7 @@ static bool dcn20_split_stream_for_odm(
+ 	next_odm_pipe->stream_res.opp = pool->opps[next_odm_pipe->pipe_idx];
+ #ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
+ 	if (next_odm_pipe->stream->timing.flags.DSC == 1) {
+-		acquire_dsc(res_ctx, pool, &next_odm_pipe->stream_res.dsc);
++		acquire_dsc(res_ctx, pool, &next_odm_pipe->stream_res.dsc, next_odm_pipe->pipe_idx);
+ 		ASSERT(next_odm_pipe->stream_res.dsc);
+ 		if (next_odm_pipe->stream_res.dsc == NULL)
+ 			return false;
 -- 
 2.20.1
 
