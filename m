@@ -2,125 +2,59 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736FFC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90374C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464B220678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431768;
-	bh=X4Kz08PeDi2lyAuZNarTXBb78qVLzfibOtCxFYo5TjE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgLoJDSfIxNIvGQJqXQequps+hSW/HSIME+gaN1iYsr8btiGuSsNee8Z9BMoG9bq4
-	 rvZfadxabeOpzz/ttrs4bhUfxOXc6T2fZQHR8QYh4fzPtTS9/WwXQp/oJmYkWB4R8Q
-	 gcsTcgJJhNWA7jjz/unOLosA36VjIUBFsB05mhlU=
+	by mail.kernel.org (Postfix) with ESMTP id 693AA20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgAGVQD (ORCPT
+        id S1729897AbgAGVQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbgAGVH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FADD2077B;
-        Tue,  7 Jan 2020 21:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431245;
-        bh=X4Kz08PeDi2lyAuZNarTXBb78qVLzfibOtCxFYo5TjE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFMrgk/wB/mJsSBAFY31mIWxCpUO0d0JqOT2wBARb4TYXCfxDtDD8FChMZ1EjgKFZ
-         nXCw0jlMohZLeVY6jxo31Zba5mx/jVR58oy8reAHXw0jRBLVB1EjoKXWjMoTIzpbXa
-         BY93LWoRLh78unsX8I/uNh/89UjXc5qAkOl6rqF0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 4.19 094/115] tty: serial: msm_serial: Fix lockup for sysrq and oops
-Date:   Tue,  7 Jan 2020 21:55:04 +0100
-Message-Id: <20200107205307.042257446@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-References: <20200107205240.283674026@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 7 Jan 2020 16:16:13 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:38140 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727762AbgAGVQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:16:12 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2B11C15A15DD4;
+        Tue,  7 Jan 2020 13:16:11 -0800 (PST)
+Date:   Tue, 07 Jan 2020 13:16:10 -0800 (PST)
+Message-Id: <20200107.131610.393612253415658528.davem@davemloft.net>
+To:     bjorn.andersson@linaro.org
+Cc:     aneela@codeaurora.org, clew@codeaurora.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] net: qrtr: Implement outgoing flow control
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200107054713.3909260-3-bjorn.andersson@linaro.org>
+References: <20200107054713.3909260-1-bjorn.andersson@linaro.org>
+        <20200107054713.3909260-3-bjorn.andersson@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jan 2020 13:16:11 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Mon,  6 Jan 2020 21:47:10 -0800
 
-commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e upstream.
+>  static void __qrtr_node_release(struct kref *kref)
+>  {
+> +	struct radix_tree_iter iter;
+>  	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
+> +	void __rcu **slot;
 
-As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
-has mentioned the uart driver might cause recursive locking between
-normal printing and the kernel debugging facilities (e.g. sysrq and
-oops).  In the commit it gave out suggestion for fixing recursive
-locking issue: "The solution is to avoid locking in the sysrq case
-and trylock in the oops_in_progress case."
+Reverse christmas tree here, please.
 
-This patch follows the suggestion (also used the exactly same code with
-other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
-issue, this can avoid stuck caused by deadlock and print out log for
-sysrq and oops.
-
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/tty/serial/msm_serial.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -1580,6 +1580,7 @@ static void __msm_console_write(struct u
- 	int num_newlines = 0;
- 	bool replaced = false;
- 	void __iomem *tf;
-+	int locked = 1;
- 
- 	if (is_uartdm)
- 		tf = port->membase + UARTDM_TF;
-@@ -1592,7 +1593,13 @@ static void __msm_console_write(struct u
- 			num_newlines++;
- 	count += num_newlines;
- 
--	spin_lock(&port->lock);
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock(&port->lock);
-+	else
-+		spin_lock(&port->lock);
-+
- 	if (is_uartdm)
- 		msm_reset_dm_count(port, count);
- 
-@@ -1628,7 +1635,9 @@ static void __msm_console_write(struct u
- 		iowrite32_rep(tf, buf, 1);
- 		i += num_chars;
- 	}
--	spin_unlock(&port->lock);
-+
-+	if (locked)
-+		spin_unlock(&port->lock);
- }
- 
- static void msm_console_write(struct console *co, const char *s,
-
-
+Thank you.
