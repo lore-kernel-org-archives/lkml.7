@@ -2,171 +2,123 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F23C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD0FC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9EC2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783AB2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lOLqqmhS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tb/pEh7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgAGLvg (ORCPT
+        id S1727999AbgAGLwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:51:36 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16259 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgAGLvg (ORCPT
+        Tue, 7 Jan 2020 06:52:06 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54588 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgAGLwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:51:36 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1470970000>; Tue, 07 Jan 2020 03:50:47 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 03:51:35 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 03:51:35 -0800
-Received: from [10.26.11.139] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 11:51:33 +0000
-From:   Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] phy: core: Add consumer device link support
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191104143713.11137-1-alexandre.torgue@st.com>
-Message-ID: <146b2971-d51a-164c-aea8-9b6b4ff5f420@nvidia.com>
-Date:   Tue, 7 Jan 2020 11:51:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 06:52:06 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b19so18581088wmj.4;
+        Tue, 07 Jan 2020 03:52:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1IdCp+152V00WOErsRkB6rIy+yW5jX9FlF/zgyki7Lc=;
+        b=Tb/pEh7m9Jj4VrIvPmRy9mhjGxM/6ucedJ+SjAZKLVTQBNGwyEcvjeiVJ7FMwZFYSb
+         SMi7DjXMxrWfJFtvgdk7/2HrKdgjskBKFNWFkvBgr6hn68LuztLJ5rW4IpvZvuAzo1z1
+         7Q4IK2JBNJZjyVzNS3DiIgaepKAFc2y5p5UTGbUjFyw+K7XmxR+9hmxSH7LLUHaL5MqZ
+         uMAb30l1cgvfGDS+SNahOyWU27KpSkmjZo8UYvSpGBj4E0F5aJRjKTx5bDVdsIPlYc68
+         olmu6TY09muhPu3kSdCGyvSdEUxYQsBttyMf59RyVC3iRtO5L4Ea1KIgEEY+TG53OUG4
+         3jBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1IdCp+152V00WOErsRkB6rIy+yW5jX9FlF/zgyki7Lc=;
+        b=RLxQv55bnMfQetXQofgl9dZXzvUXTuhIh8qf6/TIOQPZY4juLTI2Oy2KWN3exs/d+y
+         9U0o4sGYJuOQ0fslqVsEpLej/Hovt0KwXnCHh5kXl4WmrWbhxbKETYvH/8k16WaDPMl+
+         c3YFoA0tjX6cKxqhgB3f/3wMcwszFqjXp6awCARESDh/eAk0tSGiCHohJoFnxGkHHgMm
+         qdRQuovGOO070PazpIFvoZd2Ja0kysrurvihuPQS9O0FVHhzCQF2CVJtC1siyIhG7WNK
+         7xCFmFIZvV9zNXDDS81QWlYxRvM8fUfFAmm22sk4l3zLDbjoNmb5m/tKOSV8eH+8z4XP
+         DZYA==
+X-Gm-Message-State: APjAAAWIo4+Gr5cXW/KSyCXl2YHW39J4+VQihOgj2ynnQiglW0F7Tgec
+        S4Z4XpUbHEcoiTCtcw6plMA=
+X-Google-Smtp-Source: APXvYqzGkqsU4rE5bx3mL5nGETgA3WSI91fdY+KKbLOlbZK81M5sfoX009kOMr39/exXSQAOF7iU+g==
+X-Received: by 2002:a7b:c190:: with SMTP id y16mr40399910wmi.107.1578397924103;
+        Tue, 07 Jan 2020 03:52:04 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id s10sm76968698wrw.12.2020.01.07.03.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 03:52:03 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:52:02 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, tytso@mit.edu
+Subject: Re: [PATCH v9 10/13] exfat: add nls operations
+Message-ID: <20200107115202.shjpp6g3gsrhhkuy@pali>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+ <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+ <20200102082036.29643-11-namjae.jeon@samsung.com>
+ <20200105165115.37dyrcwtgf6zgc6r@pali>
+ <85woa4jrl2.fsf@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104143713.11137-1-alexandre.torgue@st.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578397847; bh=w732UG42NDGrozK5jikFXG1HubiPs32gMkkg0N1evz4=;
-        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lOLqqmhSpXpca397Ft27DSG4j7J38rn8PWXyZy/3uzRilSBIhqTcX7buXfnn0K9OJ
-         v2wicIhp/PddrhvKc3jprCeIO2qOw/mijcv6aNOY54Q2j9rZqsv5zSHADC/rrlhRSn
-         HOUqeIjJfytHCcOHolztY4JQZUaKk5dgq0YOhf/rV1umDGb+GHlcXSCpZf07ifKlx4
-         YOP8XppX14oTp2nTCrKHKsGz9/kqc4snNPAYgp+XOFvaTlAZnugF+tDh8VbR6j1G1J
-         smJSoAwfK3JNih3qOBgIMQePSGHZkBz0iqVtzf6y8vvDsnKCL5HEo+dyzDPD+Q2xPe
-         EwQUPwsPf6Y/Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <85woa4jrl2.fsf@collabora.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/11/2019 14:37, Alexandre Torgue wrote:
-> In order to enforce suspend/resume ordering, this commit creates link
-> between phy consumers and phy devices. This link avoids to suspend phy
-> before phy consumers.
+On Monday 06 January 2020 14:46:33 Gabriel Krisman Bertazi wrote:
+> Pali Rohár <pali.rohar@gmail.com> writes:
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > What do you think what should kernel's exfat driver do in this case?
+> >
+> > To prevent such thing we need to use some kind of Unicode normalization
+> > form here.
+> >
+> > CCing Gabriel as he was implementing some Unicode normalization for ext4
+> > driver and maybe should bring some light to new exfat driver too.
+> 
+> We have an in-kernel implementation of the canonical decomposition
+> normalization (NFD) in fs/unicode, which is what we use for f2fs and
+> ext4.  It is heated argument what is the best form for filesystem usage,
+> and from what I researched, every proprietary filesystem does a
+> different (and crazy in their unique way) thing.
+> 
+> For exfat, even though the specification is quite liberal, I think the
+> reasonable answer is to follow closely whatever behavior the Windows
+> implementation has, whether it does normalization at all or not. Even if
+> it is just an in-memory format used internally for lookups, assuming a
+> different format or treating differently invalid file names can result
+> in awkward results in a filesystem created on another operating system,
+> like filename collisions or false misses in lookups.
+> 
 
-With next-20200106 we are seeing a boot regression on Tegra124 Jetson
-TK1 board. Bisect is pointing to this commit and reverting this on top
-of -next fixes the problem.
+Hi Gabriel! Thank you for your input. AFAIK Windows exfat implementation
+does not do any Unicode normalization and allow to store any sequence of
+16bit numbers excluding some "bad chars" as filename (so including also
+unpaired half of UTF-16 surrogate pair) if such upper cased filename
+(according to upcase table stored in FS) does not conflict with another
+upper cased filename already stored in directory.
 
-The bootlog is showing the following crash on boot ...
-
-[    1.730024] 8<--- cut here ---
-[    1.733079] Unable to handle kernel paging request at virtual address fffffe7f
-[    1.740318] pgd = (ptrval)
-[    1.743021] [fffffe7f] *pgd=affff841, *pte=00000000, *ppte=00000000
-[    1.749304] Internal error: Oops: 27 [#1] SMP ARM
-[    1.754001] Modules linked in:
-[    1.757057] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc4-next-20200106-g9eb1b48ca4ce #1
-[    1.765654] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[    1.771919] PC is at device_link_add+0x68/0x4d4
-[    1.776444] LR is at device_link_add+0x68/0x4d4
-[    1.780967] pc : [<c09832e4>]    lr : [<c09832e4>]    psr: 60000013
-[    1.787223] sp : ee0e1d60  ip : 60000013  fp : 00000005
-[    1.792439] r10: 00000000  r9 : 00000000  r8 : eefedd88
-[    1.797657] r7 : ee269c10  r6 : fffffdfb  r5 : 00000001  r4 : 00000001
-[    1.804173] r3 : ee0d8000  r2 : 00000000  r1 : 00000000  r0 : c1858f88
-[    1.810691] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[    1.817815] Control: 10c5387d  Table: 8020406a  DAC: 00000051
-[    1.823552] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-[    1.829549] Stack: (0xee0e1d60 to 0xee0e2000)
-[    1.833904] 1d60: eefedd88 00000040 c07087a0 fffffdfb ee269c10 ee737640 00000000 eefedd88
-[    1.842073] 1d80: 00000000 00000000 00000005 c0707d34 00000000 ee3c8a00 ee7375c0 ee269c10
-[    1.850242] 1da0: eefedd88 c0a0bd2c c1704e48 ee269c10 ee269c00 ee3c8a00 00000000 c0a0c4a8
-[    1.858409] 1dc0: ee269c10 c1704e48 c186603c 00000000 c186603c 00000000 00000000 bc98ab22
-[    1.866577] 1de0: ffffffff ee269c10 00000000 c186603c ee269c00 c186603c 00000000 00000000
-[    1.874744] 1e00: c1656690 c0a0ffe0 00000000 bc98ab22 ee269c10 ee269c10 00000000 c186603c
-[    1.882913] 1e20: 00000000 c186603c 00000000 c09887e0 c18ff9dc ee269c10 c18ff9e0 c0986860
-[    1.891082] 1e40: ee269c10 c186603c c186603c c1704e48 00000000 c15003f0 c15c3854 c0986af0
-[    1.899249] 1e60: c15c3854 c0d128b4 c10e48ec ee269c10 00000000 c186603c c1704e48 00000000
-[    1.907416] 1e80: c15003f0 c15c3854 c1656690 c0986da0 00000000 c186603c ee269c10 c0986e28
-[    1.915583] 1ea0: 00000000 c186603c c0986da8 c0984ba0 c15003f0 ee20c058 ee242334 bc98ab22
-[    1.923752] 1ec0: c18588c8 c186603c ee737200 c18588c8 00000000 c0985b94 c133ef10 ffffe000
-[    1.931919] 1ee0: c186603c c186603c c18aaf80 ffffe000 c158b72c c09878ac c1704e48 c18aaf80
-[    1.940088] 1f00: ffffe000 c0302f80 00000168 c0367d84 c143e5b4 c1371000 00000000 00000006
-[    1.948255] 1f20: 00000006 c125b1b4 00000000 c1704e48 c126f324 c125b228 00000000 efffec88
-[    1.956424] 1f40: 00000000 bc98ab22 00000000 c18b6bc0 c18b6bc0 bc98ab22 c18b6bc0 c18b6bc0
-[    1.964591] 1f60: 00000007 c15c3834 00000169 c1500f28 00000006 00000006 00000000 c15003f0
-[    1.972758] 1f80: 00000000 00000000 c0ef1cdc 00000000 00000000 00000000 00000000 00000000
-[    1.980924] 1fa0: 00000000 c0ef1ce4 00000000 c03010e8 00000000 00000000 00000000 00000000
-[    1.989092] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    1.997260] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[    2.005440] [<c09832e4>] (device_link_add) from [<c0707d34>] (devm_of_phy_get+0x6c/0xb0)
-[    2.013528] [<c0707d34>] (devm_of_phy_get) from [<c0a0bd2c>] (ahci_platform_get_phy+0x28/0xd0)
-[    2.022134] [<c0a0bd2c>] (ahci_platform_get_phy) from [<c0a0c4a8>] (ahci_platform_get_resources+0x384/0x468)
-[    2.031952] [<c0a0c4a8>] (ahci_platform_get_resources) from [<c0a0ffe0>] (tegra_ahci_probe+0x14/0x650)
-[    2.041254] [<c0a0ffe0>] (tegra_ahci_probe) from [<c09887e0>] (platform_drv_probe+0x48/0x98)
-[    2.049686] [<c09887e0>] (platform_drv_probe) from [<c0986860>] (really_probe+0x234/0x34c)
-[    2.057944] [<c0986860>] (really_probe) from [<c0986af0>] (driver_probe_device+0x60/0x168)
-[    2.066202] [<c0986af0>] (driver_probe_device) from [<c0986da0>] (device_driver_attach+0x58/0x60)
-[    2.075064] [<c0986da0>] (device_driver_attach) from [<c0986e28>] (__driver_attach+0x80/0xbc)
-[    2.083582] [<c0986e28>] (__driver_attach) from [<c0984ba0>] (bus_for_each_dev+0x74/0xb4)
-[    2.091751] [<c0984ba0>] (bus_for_each_dev) from [<c0985b94>] (bus_add_driver+0x164/0x1e8)
-[    2.100008] [<c0985b94>] (bus_add_driver) from [<c09878ac>] (driver_register+0x7c/0x114)
-[    2.108094] [<c09878ac>] (driver_register) from [<c0302f80>] (do_one_initcall+0x54/0x22c)
-[    2.116271] [<c0302f80>] (do_one_initcall) from [<c1500f28>] (kernel_init_freeable+0x14c/0x1b0)
-[    2.124967] [<c1500f28>] (kernel_init_freeable) from [<c0ef1ce4>] (kernel_init+0x8/0x10c)
-[    2.133139] [<c0ef1ce4>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-[    2.140697] Exception stack(0xee0e1fb0 to 0xee0e1ff8)
-[    2.145743] 1fa0:                                     00000000 00000000 00000000 00000000
-[    2.153910] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.162076] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    2.168686] Code: e59f0470 03844040 eb15cb16 eb004c8a (e5d63084) 
-[    2.174824] ---[ end trace fddbf111e88ec722 ]---
-
-
-I believe that there is a bug in this patch and the following fixed it for me ...
-
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 8dfb4868c8c3..2eb28cc2d2dc 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -799,6 +799,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
-                devres_add(dev, ptr);
-        } else {
-                devres_free(ptr);
-+               return phy;
-        }
- 
-        link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-
-Cheers
-Jon
+So based on your suggestion, I understood that we should not do any
+Unicode Normalization even just for comparing filenames if it exists.
 
 -- 
-nvpublic
+Pali Rohár
+pali.rohar@gmail.com
