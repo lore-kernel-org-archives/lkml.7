@@ -2,128 +2,213 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B61C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EBDC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5814C2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A7D24679
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UjOs0ZWt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="euYlXmko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgAGK2Z (ORCPT
+        id S1727818AbgAGK3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:28:25 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10430 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGK2Z (ORCPT
+        Tue, 7 Jan 2020 05:29:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31362 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726558AbgAGK3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:28:25 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e145d180000>; Tue, 07 Jan 2020 02:27:36 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 02:28:24 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 02:28:24 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 10:28:23 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 10:28:23 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e145d460001>; Tue, 07 Jan 2020 02:28:23 -0800
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <broonie@kernel.org>
-CC:     <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH] regmap: add iopoll-like atomic polling macro
-Date:   Tue, 7 Jan 2020 15:58:09 +0530
-Message-ID: <1578392889-16587-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 Jan 2020 05:29:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578392943;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=b2VwNThOs8k0NyMyNmUvb48wtNrxq1mFSjsrYrQY1ik=;
+        b=euYlXmkoitJwDf4Pe4wQwi2Az5iWEfJnFACH45uIkVHqPJpFJ1ZAsZ5WMiBDVuOZVgxuw+
+        t7GiEmOJ8SpBKcbVyCkDSHpLYaVRLAr65MQbhsTd9Oj8HEf0frbV5Te2SvcS7cfluUMY+V
+        1TCkw/hjivjUyA1yiVUjUEuc/3u/3js=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-V6iqviFPO0mjNsLigzBYYQ-1; Tue, 07 Jan 2020 05:28:56 -0500
+X-MC-Unique: V6iqviFPO0mjNsLigzBYYQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1881A800D53;
+        Tue,  7 Jan 2020 10:28:54 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D54A7DB53;
+        Tue,  7 Jan 2020 10:28:50 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 11:28:48 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2] perf parse: Copy string to perf_evsel_config_term
+Message-ID: <20200107102848.GF290055@krava>
+References: <20200107031828.23103-1-leo.yan@linaro.org>
+ <20200107091609.GB290055@krava>
+ <20200107100906.GA23348@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578392856; bh=S+Ht3MbadCSLbxXXJdn3e/AfaXQFOU7+B9gzKSIzMZI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=UjOs0ZWtDhZsHs9ih5QZRIdJwuuO/L+L47nIIcNmPCk86liAs2iR4ntfb+tq7gr5Z
-         bZ81NNQf3u59bZTV5OoZAOcPITbklP8aTCC49//H5TRx/dXcuUO8O2Linq/6Weprc7
-         UuP1kNd7gF643vqUqkN5ABmzFrDsUSu5gAW1KupDgJsfuEE2Xp48kJ58weux3/KpV/
-         ntsQHSRHkSqH60BWlL5w+K2sBi1rBC7EOC6EY8gqnbKjlWyqvMsZvJNv9OGB65KRuh
-         sAUINbr5mdJyebFfWNg9j9+3zx1WKzZb/c6G3+7DLevwEpSmKugg38KCjYJcwSFLrh
-         abnPOoBYXwkMg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107100906.GA23348@leoy-ThinkPad-X240s>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a macro 'regmap_read_poll_timeout_atomic' that works
-similar to 'readx_poll_timeout_atomic' defined in linux/iopoll.h; This
-is atomic version of already available 'regmap_read_poll_timeout' macro.
+On Tue, Jan 07, 2020 at 06:09:06PM +0800, Leo Yan wrote:
+> On Tue, Jan 07, 2020 at 10:16:09AM +0100, Jiri Olsa wrote:
+> 
+> [...]
+> 
+> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > > index ed7c008b9c8b..49b26504bee3 100644
+> > > --- a/tools/perf/util/parse-events.c
+> > > +++ b/tools/perf/util/parse-events.c
+> > > @@ -1220,7 +1220,6 @@ static int get_config_terms(struct list_head *head_config,
+> > >  			    struct list_head *head_terms __maybe_unused)
+> > >  {
+> > >  #define ADD_CONFIG_TERM(__type, __name, __val)			\
+> > > -do {								\
+> > >  	struct perf_evsel_config_term *__t;			\
+> > >  								\
+> > >  	__t = zalloc(sizeof(*__t));				\
+> > > @@ -1229,9 +1228,23 @@ do {								\
+> > >  								\
+> > >  	INIT_LIST_HEAD(&__t->list);				\
+> > >  	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
+> > > -	__t->val.__name = __val;				\
+> > >  	__t->weak	= term->weak;				\
+> > > -	list_add_tail(&__t->list, head_terms);			\
+> > > +	list_add_tail(&__t->list, head_terms)
+> > > +
+> > > +#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
+> > > +do {								\
+> > > +	ADD_CONFIG_TERM(__type, __name, __val);			\
+> > > +	__t->val.__name = __val;				\
+> > > +} while (0)
+> > > +
+> > > +#define ADD_CONFIG_TERM_STR(__type, __name, __val)		\
+> > > +do {								\
+> > > +	ADD_CONFIG_TERM(__type, __name, __val);			\
+> > > +	__t->val.__name = strdup(__val);			\
+> > > +	if (!__t->val.__name) {					\
+> > > +		zfree(&__t);					\
+> > > +		return -ENOMEM;					\
+> > > +	}							\
+> > >  } while (0)
+> > 
+> > hum, I did not check yesterday how we release perf_evsel_config_term
+> > objects, but looks like now we need to release those pointers in here:
+> >   perf_evsel__free_config_terms
+> 
+> My bad!  I did some check for releasing but missed this function.
+> 
+> Will spin a new patch for this.  Since '__t->val' is an union type, so
+> for the releasing, I think we need to use below code.
+> 
+> Please let me know if this is okay for you?
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a69e64236120..fc659cdbd3ce 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1264,7 +1264,19 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+>         struct perf_evsel_config_term *term, *h;
+>  
+>         list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+> +               int type = term->type;
+> +
+>                 list_del_init(&term->list);
+> +
+> +               if (type == PARSE_EVENTS__TERM_TYPE_CALLGRAPH)
+> +                       zfree(&term->val.callgraph);
+> +
+> +               if (type == PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE)
+> +                       zfree(&term->val.branch);
+> +
+> +               if (type == PARSE_EVENTS__TERM_TYPE_DRV_CFG)
+> +                       zfree(&term->val.drv_cfg);
+> +
+>                 free(term);
+>         }
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+we would need to update perf_evsel__free_config_terms all the time
+we add new term.. which does not happen too often, but that's another
+reason we will probably forget that ;-)
+
+I wonder we could make it generic with the 'char*' pointer in
+the val union like in the below.. totaly untested
+
+also we might not need to pass __name to ADD_CONFIG_TERM_STR
+and ADD_CONFIG_TERM any more and just initialize 'str' pointer
+
+jirka
+
+
 ---
- include/linux/regmap.h | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index dfe493a..09d79ea 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -145,6 +145,47 @@ struct reg_sequence {
- })
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a69e64236120..ab9925cc1aa7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1265,6 +1265,8 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
  
- /**
-+ * regmap_read_poll_timeout_atomic - Poll until a condition is met or a timeout occurs
-+ *
-+ * @map: Regmap to read from
-+ * @addr: Address to poll
-+ * @val: Unsigned integer variable to read the value into
-+ * @cond: Break condition (usually involving @val)
-+ * @delay_us: Time to udelay between reads in us (0 tight-loops).
-+ *            Should be less than ~10us since udelay is used
-+ *            (see Documentation/timers/timers-howto.rst).
-+ * @timeout_us: Timeout in us, 0 means never timeout
-+ *
-+ * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_read
-+ * error return value in case of a error read. In the two former cases,
-+ * the last read value at @addr is stored in @val.
-+ *
-+ * This is modelled after the readx_poll_timeout_atomic macros in linux/iopoll.h.
-+ */
-+#define regmap_read_poll_timeout_atomic(map, addr, val, cond, delay_us, timeout_us) \
-+({ \
-+	u64 __timeout_us = (timeout_us); \
-+	unsigned long __delay_us = (delay_us); \
-+	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
-+	int __ret; \
-+	for (;;) { \
-+		__ret = regmap_read((map), (addr), &(val)); \
-+		if (__ret) \
-+			break; \
-+		if (cond) \
-+			break; \
-+		if ((__timeout_us) && \
-+		    ktime_compare(ktime_get(), __timeout) > 0) { \
-+			__ret = regmap_read((map), (addr), &(val)); \
-+			break; \
-+		} \
-+		if (__delay_us) \
-+			udelay(__delay_us); \
-+	} \
-+	__ret ?: ((cond) ? 0 : -ETIMEDOUT); \
-+})
-+
-+/**
-  * regmap_field_read_poll_timeout - Poll until a condition is met or timeout
-  *
-  * @field: Regmap field to read from
--- 
-2.7.4
+ 	list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+ 		list_del_init(&term->list);
++		if (term->free_str)
++			free(term->val.str);
+ 		free(term);
+ 	}
+ }
+diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
+index 1f8d2fe0b66e..dfc28738e071 100644
+--- a/tools/perf/util/evsel_config.h
++++ b/tools/perf/util/evsel_config.h
+@@ -32,6 +32,7 @@ enum evsel_term_type {
+ struct perf_evsel_config_term {
+ 	struct list_head      list;
+ 	enum evsel_term_type  type;
++	bool		      free_str;
+ 	union {
+ 		u64	      period;
+ 		u64	      freq;
+@@ -48,6 +49,7 @@ struct perf_evsel_config_term {
+ 		bool	      aux_output;
+ 		u32	      aux_sample_size;
+ 		u64	      cfg_chg;
++		char	      *str;
+ 	} val;
+ 	bool weak;
+ };
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 49b26504bee3..83fb149b9485 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1245,6 +1245,7 @@ do {								\
+ 		zfree(&__t);					\
+ 		return -ENOMEM;					\
+ 	}							\
++	__t->free_str = true;					\
+ } while (0)
+ 
+ 	struct parse_events_term *term;
 
