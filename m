@@ -2,179 +2,272 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CDCC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7392AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233B92075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7E62075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i21aNB1q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urVe8hnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgAGGsQ (ORCPT
+        id S1727148AbgAGGu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:48:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46562 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAGGsQ (ORCPT
+        Tue, 7 Jan 2020 01:50:29 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37704 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGGu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:48:16 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0076ljZb049917;
-        Tue, 7 Jan 2020 00:47:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578379665;
-        bh=ODJ0NEYqrokHx/XZRr/mSRy9p7wnelQTyTQlEpgfxH4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i21aNB1qs9sdXY54gDqh6MG8zV4rcKAjiHzA9EMtNipbZbsJRgqHWqw/deDRJEDMd
-         xCXx4e41TXY+ClHHc4irVRTxHO8g96+vKgo6RBPPjt8ZB+jXcgk/zlovDEICyQ2B5w
-         ElVly+gQRAci5vAHiRsFEgL6/4dmF2Oat8pH/FVc=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0076ljgs110930
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 00:47:45 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 00:47:43 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 00:47:43 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0076leCl053362;
-        Tue, 7 Jan 2020 00:47:41 -0600
-Subject: Re: [PATCH] drm: replace IS_ERR and PTR_ERR with PTR_ERR_OR_ZERO
-To:     yu kuai <yukuai3@huawei.com>
-CC:     Maxime Ripard <mripard@kernel.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <wens@csie.org>, <jernej.skrabec@siol.net>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>
-References: <20191225132042.5491-1-yukuai3@huawei.com>
- <20191227115401.agumkfuiwexl2wmx@hendrix.home>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <ec4d34d6-7c58-ea1e-cc9c-c2df0baaf23b@ti.com>
-Date:   Tue, 7 Jan 2020 08:47:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 01:50:28 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so38092700lfc.4;
+        Mon, 06 Jan 2020 22:50:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gGLRu/EujULvPOdtHeUTKiJhqL4e8NxjG+jiJ59KRgs=;
+        b=urVe8hnvMKBduBTTNMuI7mD4RpydSQiXGs05+EjOZK59PXi3PzWHGVxbWN4VNucp5H
+         qoTI2erwQcSYCnomhimK8tPT1pk7SnYKmwTWbOmpTYfC/4qlvP968LDbSfkU22WPw6Ot
+         23r794pD0gi4QQ1MWMEhs0fhf67/LctYhwMjkLfeibfEPsCyCZPui/9Wltadt/Uji4yA
+         RSSCCrd+O7MTHBrKq7FTg1oSrkSnCoz1ot0u0Y4NDdi2vLduLAQ6jyfJSLrhe/SCAiyz
+         do2wVrRkKmG4L1VdnBCx9i8Qr4FeuejKrwlIW+1vmmmy2wk2LDAmpxMb58mDn4coOXgb
+         UaSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gGLRu/EujULvPOdtHeUTKiJhqL4e8NxjG+jiJ59KRgs=;
+        b=iCougFpthpLI+mDqggt+9hYMsYJgo+TM0rGr+8OoyUa74eaZrL7jC9GB+aYjFDhLhg
+         vIaEQT1YrNmp6j2xvQR1WYPWp1LXe/TcIaBcIdSFvkuOt89zl4OBNglMIpiMf2Ekv0Bo
+         6l2E69pYchYrFGcNMSEeA96LmtUHH/Sv3DyEHqA2tF2Pi64iG6N267RS7S8RINHGSdLz
+         By3ujdgkh7/SJ7Fs4YbJGp4PESnLUyGGRSXKWXU0Tf5dYP+N6zKLsi1Tef6NIXFWEmfJ
+         SfDCMoimz6/1yivamnB7zTMztIlc7UK5FHDj3DFbFQk9bojWohOOZH+ughTyJi3oyubC
+         Gzmw==
+X-Gm-Message-State: APjAAAW1RvmVy7NQpXsv1z3jPw4Z9C18BYQe2TAYWYFAs9+0KUhuv+1z
+        tqGDWjM1gVH7qyXZqjyVrRjVeOF9mI5ye3Ss+/E=
+X-Google-Smtp-Source: APXvYqzMl46Pyjk62Rn0sY34/z8PedBA97jNIEoF/k1w0o5KOoRAV6A2q/BMdauMFw1j6xW66TVM1CCZvuGGalH5dA4=
+X-Received: by 2002:ac2:51a4:: with SMTP id f4mr62104449lfk.76.1578379824299;
+ Mon, 06 Jan 2020 22:50:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191227115401.agumkfuiwexl2wmx@hendrix.home>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-3-brianvv@google.com>
+ <a2ce5033-fa75-c17b-ee97-8a7dcb67ab61@fb.com>
+In-Reply-To: <a2ce5033-fa75-c17b-ee97-8a7dcb67ab61@fb.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Tue, 7 Jan 2020 00:50:12 -0600
+Message-ID: <CABCgpaV47WD7wYG85pinv80JaNP7ZzqWM7JMnpKuJJaaadKR_w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 02/11] bpf: add generic support for lookup and
+ lookup_and_delete batch ops
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/12/2019 13:54, Maxime Ripard wrote:
-> On Wed, Dec 25, 2019 at 09:20:42PM +0800, yu kuai wrote:
->> no functional change, just to make the code simpler
->>
->> Signed-off-by: yu kuai <yukuai3@huawei.com>
->> ---
->>   drivers/gpu/drm/omapdrm/dss/hdmi4.c         | 5 +----
->>   drivers/gpu/drm/omapdrm/dss/hdmi4_core.c    | 6 ++----
->>   drivers/gpu/drm/omapdrm/dss/hdmi5_core.c    | 4 +---
->>   drivers/gpu/drm/omapdrm/dss/hdmi_phy.c      | 4 +---
->>   drivers/gpu/drm/sun4i/sun4i_dotclock.c      | 4 +---
->>   drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c      | 4 +---
->>   drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 4 +---
->>   drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c  | 5 +----
->>   drivers/gpu/drm/tegra/drm.c                 | 4 +---
->>   drivers/gpu/drm/tegra/gem.c                 | 4 +---
->>   10 files changed, 11 insertions(+), 33 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
->> index 0f557fad4513..eb71baedf19e 100644
->> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
->> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
->> @@ -587,10 +587,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
->>   		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
->>   		&pdata, sizeof(pdata));
->>
->> -	if (IS_ERR(hdmi->audio_pdev))
->> -		return PTR_ERR(hdmi->audio_pdev);
->> -
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
->>   }
->>
->>   /* -----------------------------------------------------------------------------
->> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
->> index ea5d5c228534..fdd73fb73653 100644
->> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
->> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
->> @@ -924,8 +924,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
->>
->>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
->>   	core->base = devm_ioremap_resource(&pdev->dev, res);
->> -	if (IS_ERR(core->base))
->> -		return PTR_ERR(core->base);
->> -
->> -	return 0;
->> +
->> +	return PTR_ERR_OR_ZERO(core->base);
->>   }
->> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
->> index ff4d35c8771f..30454bc9de78 100644
->> --- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
->> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
->> @@ -908,8 +908,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
->>
->>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
->>   	core->base = devm_ioremap_resource(&pdev->dev, res);
->> -	if (IS_ERR(core->base))
->> -		return PTR_ERR(core->base);
->>
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(core->base);
->>   }
->> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
->> index 00bbf24488c1..bbc02d5aa8fb 100644
->> --- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
->> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
->> @@ -191,8 +191,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
->>
->>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
->>   	phy->base = devm_ioremap_resource(&pdev->dev, res);
->> -	if (IS_ERR(phy->base))
->> -		return PTR_ERR(phy->base);
->>
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(phy->base);
->>   }
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
->> index 417ade3d2565..84c04d8192b3 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
->> @@ -191,10 +191,8 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
->>   	dclk->hw.init = &init;
->>
->>   	tcon->dclk = clk_register(dev, &dclk->hw);
->> -	if (IS_ERR(tcon->dclk))
->> -		return PTR_ERR(tcon->dclk);
->>
->> -	return 0;
->> +	return PTR_ERR_OR_ZERO(tcon->dclk);
-> 
-> This has been submitted a couple of times already. It's harder to
-> maintain and not easier to read.
-> 
-> Please remove sun4i from your patch
+On Fri, Dec 13, 2019 at 11:26 AM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 12/11/19 2:33 PM, Brian Vazquez wrote:
+> > This commit introduces generic support for the bpf_map_lookup_batch and
+> > bpf_map_lookup_and_delete_batch ops. This implementation can be used by
+> > almost all the bpf maps since its core implementation is relying on the
+> > existing map_get_next_key, map_lookup_elem and map_delete_elem
+> > functions. The bpf syscall subcommands introduced are:
+> >
+> >    BPF_MAP_LOOKUP_BATCH
+> >    BPF_MAP_LOOKUP_AND_DELETE_BATCH
+> >
+> > The UAPI attribute is:
+> >
+> >    struct { /* struct used by BPF_MAP_*_BATCH commands */
+> >           __aligned_u64   in_batch;       /* start batch,
+> >                                            * NULL to start from beginning
+> >                                            */
+> >           __aligned_u64   out_batch;      /* output: next start batch */
+> >           __aligned_u64   keys;
+> >           __aligned_u64   values;
+> >           __u32           count;          /* input/output:
+> >                                            * input: # of key/value
+> >                                            * elements
+> >                                            * output: # of filled elements
+> >                                            */
+> >           __u32           map_fd;
+> >           __u64           elem_flags;
+> >           __u64           flags;
+> >    } batch;
+> >
+> > in_batch/out_batch are opaque values use to communicate between
+> > user/kernel space, in_batch/out_batch must be of key_size length.
+> >
+> > To start iterating from the beginning in_batch must be null,
+> > count is the # of key/value elements to retrieve. Note that the 'keys'
+> > buffer must be a buffer of key_size * count size and the 'values' buffer
+> > must be value_size * count, where value_size must be aligned to 8 bytes
+> > by userspace if it's dealing with percpu maps. 'count' will contain the
+> > number of keys/values successfully retrieved. Note that 'count' is an
+> > input/output variable and it can contain a lower value after a call.
+> >
+> > If there's no more entries to retrieve, ENOENT will be returned. If error
+> > is ENOENT, count might be > 0 in case it copied some values but there were
+> > no more entries to retrieve.
+> >
+> > Note that if the return code is an error and not -EFAULT,
+> > count indicates the number of elements successfully processed.
+> >
+> > Suggested-by: Stanislav Fomichev <sdf@google.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > ---
+> >   include/linux/bpf.h      |  11 +++
+> >   include/uapi/linux/bpf.h |  19 +++++
+> >   kernel/bpf/syscall.c     | 172 +++++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 202 insertions(+)
+> [...]
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index 2530266fa6477..708aa89fe2308 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -1206,6 +1206,120 @@ static int map_get_next_key(union bpf_attr *attr)
+> >       return err;
+> >   }
+> >
+> > +#define MAP_LOOKUP_RETRIES 3
+> > +
+> > +static int __generic_map_lookup_batch(struct bpf_map *map,
+> > +                                   const union bpf_attr *attr,
+> > +                                   union bpf_attr __user *uattr,
+> > +                                   bool do_delete)
+> > +{
+> > +     void __user *ubatch = u64_to_user_ptr(attr->batch.in_batch);
+> > +     void __user *uobatch = u64_to_user_ptr(attr->batch.out_batch);
+> > +     void __user *values = u64_to_user_ptr(attr->batch.values);
+> > +     void __user *keys = u64_to_user_ptr(attr->batch.keys);
+> > +     void *buf, *prev_key, *key, *value;
+> > +     u32 value_size, cp, max_count;
+> > +     bool first_key = false;
+> > +     int err, retry = MAP_LOOKUP_RETRIES;
+>
+> Could you try to use reverse Christmas tree style declaration here?
 
-Nack for the omapdrm parts too, for the same reasons.
+ACK
+>
+> > +
+> > +     if (attr->batch.elem_flags & ~BPF_F_LOCK)
+> > +             return -EINVAL;
+> > +
+> > +     if ((attr->batch.elem_flags & BPF_F_LOCK) &&
+> > +         !map_value_has_spin_lock(map))
+> > +             return -EINVAL;
+> > +
+> > +     value_size = bpf_map_value_size(map);
+> > +
+> > +     max_count = attr->batch.count;
+> > +     if (!max_count)
+> > +             return 0;
+> > +
+> > +     buf = kmalloc(map->key_size + value_size, GFP_USER | __GFP_NOWARN);
+> > +     if (!buf)
+> > +             return -ENOMEM;
+> > +
+> > +     err = -EFAULT;
+> > +     first_key = false;
+> > +     if (ubatch && copy_from_user(buf, ubatch, map->key_size))
+> > +             goto free_buf;
+> > +     key = buf;
+> > +     value = key + map->key_size;
+> > +     if (!ubatch) {
+> > +             prev_key = NULL;
+> > +             first_key = true;
+> > +     }
+> > +
+> > +     for (cp = 0; cp < max_count;) {
+> > +             if (cp || first_key) {
+> > +                     rcu_read_lock();
+> > +                     err = map->ops->map_get_next_key(map, prev_key, key);
+> > +                     rcu_read_unlock();
+> > +                     if (err)
+> > +                             break;
+> > +             }
+> > +             err = bpf_map_copy_value(map, key, value,
+> > +                                      attr->batch.elem_flags, do_delete);
+> > +
+> > +             if (err == -ENOENT) {
+> > +                     if (retry) {
+> > +                             retry--;
+> > +                             continue;
+> > +                     }
+> > +                     err = -EINTR;
+> > +                     break;
+> > +             }
+> > +
+> > +             if (err)
+> > +                     goto free_buf;
+> > +
+> > +             if (copy_to_user(keys + cp * map->key_size, key,
+> > +                              map->key_size)) {
+> > +                     err = -EFAULT;
+> > +                     goto free_buf;
+> > +             }
+> > +             if (copy_to_user(values + cp * value_size, value, value_size)) {
+> > +                     err = -EFAULT;
+> > +                     goto free_buf;
+> > +             }
+> > +
+> > +             prev_key = key;
+> > +             retry = MAP_LOOKUP_RETRIES;
+> > +             cp++;
+> > +     }
+> > +
+> > +     if (!err) {
+> > +             rcu_read_lock();
+> > +             err = map->ops->map_get_next_key(map, prev_key, key);
+> > +             rcu_read_unlock();
+> > +     }
+> > +
+> > +     if (err)
+> > +             memset(key, 0, map->key_size);
+>
+> So if any error happens due to above map_get_next_key() or earlier
+> error, the next "batch" returned to user could be "0". What should
+> user space handle this? Ultimately, the user space needs to start
+> from the beginning again?
+>
+> What I mean is here how we could design an interface so user
+> space, if no -EFAULT error, can successfully get all elements
+> without duplication.
+>
+> One way to do here is just return -EFAULT if we cannot get
+> proper next key. But maybe we could have better mechanism
+> when we try to implement what user space codes will look like.
 
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I was thinking that instead of using the "next key" as a token we
+could use the last value successfully copied as the token, that way
+user space code would always be able to start/retry from the last
+processed entry. Do you think this would work?
+>
+> > +
+> > +     if ((copy_to_user(&uattr->batch.count, &cp, sizeof(cp)) ||
+> > +                 (copy_to_user(uobatch, key, map->key_size))))
+> > +             err = -EFAULT;
+> > +
+> > +free_buf:
+> > +     kfree(buf);
+> > +     return err;
+> > +}
+> > +
+> [...]
