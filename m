@@ -2,91 +2,313 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3CBC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75D6C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03A22080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWxVd634"
+	by mail.kernel.org (Postfix) with ESMTP id 85CB12080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578388507;
+	bh=J5yVv0sDGRmXyQNx12OtdbFdAKgWsK9r2cHnDtTZTbQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mYidns/1s9TlNZ/Rom0I4pK9SIO7P1b+SWk7v0BPA/OYxwIQUIzFr1GG48BUbI5nW
+	 WznNOS4j59Ow8VNcxZ1S2yy/QxBAbsXHcva+CznGg0ELku9uZS4UAs4IrO2ezGvKsK
+	 rYeAEIpNagD2wyqFl86x4U+z61E+vIyaOyBLt9j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgAGJO6 (ORCPT
+        id S1727733AbgAGJPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:14:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42089 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726690AbgAGJO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:14:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578388496;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QrOfLC4L42KHgQ57s05Fzzw7KEtckHfa0upM6Qa2qkU=;
-        b=gWxVd634xvVM1vb+uREyNagK4KB4rypMsONbESqbgFqoU4N7uMcDj+GfbG4xb39YSEf053
-        6dy11yLxlBigwhV/WeRYLTdi9GCxgegJBweB1Gf/5/fmBWSjbEwB4v/4TXYyLSndsuVU7A
-        eaGEOKP8s0EFIZwloj+UtqCSJxZqXgU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-uu_9g6DMP7WzveXObbLVcw-1; Tue, 07 Jan 2020 04:14:53 -0500
-X-MC-Unique: uu_9g6DMP7WzveXObbLVcw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 7 Jan 2020 04:15:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727662AbgAGJPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:15:06 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AF97107ACE6;
-        Tue,  7 Jan 2020 09:14:52 +0000 (UTC)
-Received: from gondolin (ovpn-117-222.ams2.redhat.com [10.36.117.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7358586C41;
-        Tue,  7 Jan 2020 09:14:48 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:14:45 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        kernel-janitors@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] vfio/spapr_tce: use mmgrab
-Message-ID: <20200107101445.7f3f1480.cohuck@redhat.com>
-In-Reply-To: <1577634178-22530-4-git-send-email-Julia.Lawall@inria.fr>
-References: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr>
-        <1577634178-22530-4-git-send-email-Julia.Lawall@inria.fr>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 89AD32073D;
+        Tue,  7 Jan 2020 09:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578388504;
+        bh=J5yVv0sDGRmXyQNx12OtdbFdAKgWsK9r2cHnDtTZTbQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SMyb1KVYwH/ZxfXK8AHVo4pLyzDS83Ry13+npb+E9ZpChE+1Ajx+Uf9LXwegjrJkQ
+         zP0wd6cQo4WVB/v2X07Jip2tdI7SZigzN6y3K1uIMkevhg01+YMtj8PwLCremKUFC3
+         fhJ70NYpQjaOIVtWK4u0e0cSre+gHOpmoiTmGRSI=
+Date:   Tue, 7 Jan 2020 18:15:00 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH -tip] tracing: trigger: Replace unneeded RCU-list
+ traversals
+Message-Id: <20200107181500.ab67908c26604400d25df9b9@kernel.org>
+In-Reply-To: <157680910305.11685.15110237954275915782.stgit@devnote2>
+References: <157680910305.11685.15110237954275915782.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Dec 2019 16:42:57 +0100
-Julia Lawall <Julia.Lawall@inria.fr> wrote:
+Hi Tom, 
 
-> Mmgrab was introduced in commit f1f1007644ff ("mm: add new mmgrab()
-> helper") and most of the kernel was updated to use it. Update a
-> remaining file.
+Could you review this fix? 
+
+On Fri, 20 Dec 2019 11:31:43 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
+> when I ran ftracetest trigger testcases.
 > 
-> The semantic patch that makes this change is as follows:
-> (http://coccinelle.lip6.fr/)
+> -----
+>   # dmesg -c > /dev/null
+>   # ./ftracetest test.d/trigger
+>   ...
+>   # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d " "
+>   kernel/trace/trace_events_hist.c:6070
+>   kernel/trace/trace_events_hist.c:1760
+>   kernel/trace/trace_events_hist.c:5911
+>   kernel/trace/trace_events_trigger.c:504
+>   kernel/trace/trace_events_hist.c:1810
+>   kernel/trace/trace_events_hist.c:3158
+>   kernel/trace/trace_events_hist.c:3105
+>   kernel/trace/trace_events_hist.c:5518
+>   kernel/trace/trace_events_hist.c:5998
+>   kernel/trace/trace_events_hist.c:6019
+>   kernel/trace/trace_events_hist.c:6044
+>   kernel/trace/trace_events_trigger.c:1500
+>   kernel/trace/trace_events_trigger.c:1540
+>   kernel/trace/trace_events_trigger.c:539
+>   kernel/trace/trace_events_trigger.c:584
+> -----
 > 
-> <smpl>
-> @@ expression e; @@
-> - atomic_inc(&e->mm_count);
-> + mmgrab(e);
-> </smpl>
+> I investigated those warnings and found that the RCU-list
+> traversals in event trigger and hist didn't need to use
+> RCU version because those were called only under event_mutex.
 > 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> I also checked other RCU-list traversals related to event
+> trigger list, and found that most of them were called from
+> event_hist_trigger_func() or hist_unregister_trigger() or
+> register/unregister functions except for a few cases.
 > 
+> Replace these unneeded RCU-list traversals with normal list
+> traversal macro and lockdep_assert_held() to check the
+> event_mutex is held.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > ---
->  drivers/vfio/vfio_iommu_spapr_tce.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/trace/trace_events_hist.c    |   41 ++++++++++++++++++++++++++---------
+>  kernel/trace/trace_events_trigger.c |   20 +++++++++++++----
+>  2 files changed, 45 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 23b0195ac977..844f8325077f 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1753,11 +1753,13 @@ static struct hist_field *find_var(struct hist_trigger_data *hist_data,
+>  	struct event_trigger_data *test;
+>  	struct hist_field *hist_field;
+>  
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	hist_field = find_var_field(hist_data, var_name);
+>  	if (hist_field)
+>  		return hist_field;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			test_data = test->private_data;
+>  			hist_field = find_var_field(test_data, var_name);
+> @@ -1807,7 +1809,9 @@ static struct hist_field *find_file_var(struct trace_event_file *file,
+>  	struct event_trigger_data *test;
+>  	struct hist_field *hist_field;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			test_data = test->private_data;
+>  			hist_field = find_var_field(test_data, var_name);
+> @@ -3102,7 +3106,9 @@ static char *find_trigger_filter(struct hist_trigger_data *hist_data,
+>  {
+>  	struct event_trigger_data *test;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (test->private_data == hist_data)
+>  				return test->filter_str;
+> @@ -3153,9 +3159,11 @@ find_compatible_hist(struct hist_trigger_data *target_hist_data,
+>  	struct event_trigger_data *test;
+>  	unsigned int n_keys;
+>  
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	n_keys = target_hist_data->n_fields - target_hist_data->n_vals;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			hist_data = test->private_data;
+>  
+> @@ -5515,7 +5523,7 @@ static int hist_show(struct seq_file *m, void *v)
+>  		goto out_unlock;
+>  	}
+>  
+> -	list_for_each_entry_rcu(data, &event_file->triggers, list) {
+> +	list_for_each_entry(data, &event_file->triggers, list) {
+>  		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
+>  			hist_trigger_show(m, data, n++);
+>  	}
+> @@ -5908,7 +5916,9 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
+>  	if (hist_data->attrs->name && !named_data)
+>  		goto new;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (!hist_trigger_match(data, test, named_data, false))
+>  				continue;
+> @@ -5992,10 +6002,12 @@ static bool have_hist_trigger_match(struct event_trigger_data *data,
+>  	struct event_trigger_data *test, *named_data = NULL;
+>  	bool match = false;
+>  
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	if (hist_data->attrs->name)
+>  		named_data = find_named_trigger(hist_data->attrs->name);
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (hist_trigger_match(data, test, named_data, false)) {
+>  				match = true;
+> @@ -6013,10 +6025,12 @@ static bool hist_trigger_check_refs(struct event_trigger_data *data,
+>  	struct hist_trigger_data *hist_data = data->private_data;
+>  	struct event_trigger_data *test, *named_data = NULL;
+>  
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	if (hist_data->attrs->name)
+>  		named_data = find_named_trigger(hist_data->attrs->name);
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (!hist_trigger_match(data, test, named_data, false))
+>  				continue;
+> @@ -6038,10 +6052,12 @@ static void hist_unregister_trigger(char *glob, struct event_trigger_ops *ops,
+>  	struct event_trigger_data *test, *named_data = NULL;
+>  	bool unregistered = false;
+>  
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	if (hist_data->attrs->name)
+>  		named_data = find_named_trigger(hist_data->attrs->name);
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (!hist_trigger_match(data, test, named_data, false))
+>  				continue;
+> @@ -6067,7 +6083,9 @@ static bool hist_file_check_refs(struct trace_event_file *file)
+>  	struct hist_trigger_data *hist_data;
+>  	struct event_trigger_data *test;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			hist_data = test->private_data;
+>  			if (check_var_refs(hist_data))
+> @@ -6310,7 +6328,8 @@ hist_enable_trigger(struct event_trigger_data *data, void *rec,
+>  	struct enable_trigger_data *enable_data = data->private_data;
+>  	struct event_trigger_data *test;
+>  
+> -	list_for_each_entry_rcu(test, &enable_data->file->triggers, list) {
+> +	list_for_each_entry_rcu(test, &enable_data->file->triggers, list,
+> +				lockdep_is_held(&event_mutex)) {
+>  		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+>  			if (enable_data->enable)
+>  				test->paused = false;
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index 2cd53ca21b51..40106fff06a4 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -501,7 +501,9 @@ void update_cond_flag(struct trace_event_file *file)
+>  	struct event_trigger_data *data;
+>  	bool set_cond = false;
+>  
+> -	list_for_each_entry_rcu(data, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(data, &file->triggers, list) {
+>  		if (data->filter || event_command_post_trigger(data->cmd_ops) ||
+>  		    event_command_needs_rec(data->cmd_ops)) {
+>  			set_cond = true;
+> @@ -536,7 +538,9 @@ static int register_trigger(char *glob, struct event_trigger_ops *ops,
+>  	struct event_trigger_data *test;
+>  	int ret = 0;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		if (test->cmd_ops->trigger_type == data->cmd_ops->trigger_type) {
+>  			ret = -EEXIST;
+>  			goto out;
+> @@ -581,7 +585,9 @@ static void unregister_trigger(char *glob, struct event_trigger_ops *ops,
+>  	struct event_trigger_data *data;
+>  	bool unregistered = false;
+>  
+> -	list_for_each_entry_rcu(data, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(data, &file->triggers, list) {
+>  		if (data->cmd_ops->trigger_type == test->cmd_ops->trigger_type) {
+>  			unregistered = true;
+>  			list_del_rcu(&data->list);
+> @@ -1497,7 +1503,9 @@ int event_enable_register_trigger(char *glob,
+>  	struct event_trigger_data *test;
+>  	int ret = 0;
+>  
+> -	list_for_each_entry_rcu(test, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(test, &file->triggers, list) {
+>  		test_enable_data = test->private_data;
+>  		if (test_enable_data &&
+>  		    (test->cmd_ops->trigger_type ==
+> @@ -1537,7 +1545,9 @@ void event_enable_unregister_trigger(char *glob,
+>  	struct event_trigger_data *data;
+>  	bool unregistered = false;
+>  
+> -	list_for_each_entry_rcu(data, &file->triggers, list) {
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	list_for_each_entry(data, &file->triggers, list) {
+>  		enable_data = data->private_data;
+>  		if (enable_data &&
+>  		    (data->cmd_ops->trigger_type ==
+> 
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
