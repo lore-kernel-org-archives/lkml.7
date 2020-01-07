@@ -2,92 +2,118 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB0C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB47C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E2E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D432077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOVlIFa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgAGJkW (ORCPT
+        id S1727589AbgAGJkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:40:22 -0500
-Received: from mga03.intel.com ([134.134.136.65]:8931 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgAGJkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:40:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 01:40:21 -0800
-X-IronPort-AV: E=Sophos;i="5.69,405,1571727600"; 
-   d="scan'208";a="215493331"
-Received: from twgeistx-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.50.72])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 01:40:18 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Maxime Ripard <maxime@cerno.tech>, Julia.Lawall@lip6.fr,
-        Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Tue, 7 Jan 2020 04:40:39 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45758 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGJki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:40:38 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so53080593wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zxP1CIfvaIesWXzyg7PNCDmPXdQ++BEJZih1OlkgT3U=;
+        b=ZOVlIFa3JnmWxNCkjntBBFNr53FtLCWDaRMwhIpLfRBJs/g+6R8pLh2s8Iu0wab9V9
+         c0kC92BIeTpXGobrqEeHPLQkcrEaSsjq5hQDh+Qg+Ic1IZ3UuIf+Ir3g1jjRlJn/UmuP
+         lfyvw7rrtxib9c4i03gF7aGAbxGgU0nbtTnAqyI+JFULP8ULd9HUK2ZscUXHJpx+n3Sm
+         8QHD9v0VD5hO2I+CEld/mg1rwtaCXDl8ZIAcfOzgpnquQlyTUS0JetwBJlScIHiad+AT
+         8t64QWM1HNZ2TkrArbMukLTtwN1B5m6TigLGfFPxtbhjlj0LiRX+IQLL6xBNGrKYRg7R
+         u0Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zxP1CIfvaIesWXzyg7PNCDmPXdQ++BEJZih1OlkgT3U=;
+        b=geSeBLlmP8RUvSYDkfvAWJRmIuL0QCt/STgM7mk/uDfM6EI2H/9ihTDvhRT9sG04Y5
+         mzdCco/rTIypbyyXf7+RmUGpdtsMukURIuVl0A4rFnuLx7mE/A8MhL3XNaNq/ZsFWb7G
+         9iep8FNKqoOXsfshUYi6TYH4yM1bANEuZGCpuPefN7dirl81vI2u/Hc+zGQHom9iU1JL
+         sVIHcAQU3fk9fSQ5ztJ5ZBofa8gZ+wx4MpVeDnA9KJURsp0MySKBK9rUg/Xap72rnxZu
+         e7p+8g0Gq96WvExM7g7aqOWqI2pJZhWftumyWPg6DWKi5Zsbp5FyXJ2XTrkFeeOLJrx5
+         OHxg==
+X-Gm-Message-State: APjAAAXog0ctDfOddfLtDioPcw7IaXfHge/y1TkCAihNeJhPh1UxWa6/
+        24AcuTuA9WGN8SH8kudAtGs=
+X-Google-Smtp-Source: APXvYqwXNPvgLzkgar2pDgkr1t6+3H3cW27VHe0neAduCU+OXso4v6jqKdUwWfmtxdHl3s3tqD0bRw==
+X-Received: by 2002:a5d:480f:: with SMTP id l15mr108461433wrq.305.1578390035937;
+        Tue, 07 Jan 2020 01:40:35 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id t81sm26701607wmg.6.2020.01.07.01.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:40:34 -0800 (PST)
+Date:   Tue, 7 Jan 2020 10:40:33 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH] coccinnelle: Remove ptr_ret script
-In-Reply-To: <20200107073629.325249-1-maxime@cerno.tech>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <20200107094033.GA1964183@ulmo>
 References: <20200107073629.325249-1-maxime@cerno.tech>
-Date:   Tue, 07 Jan 2020 11:40:31 +0200
-Message-ID: <8736crli40.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+In-Reply-To: <20200107073629.325249-1-maxime@cerno.tech>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Jan 2020, Maxime Ripard <maxime@cerno.tech> wrote:
+
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jan 07, 2020 at 08:36:29AM +0100, Maxime Ripard wrote:
 > The ptr_ret script script addresses a number of situations where we end up
 > testing an error pointer, and if it's an error returning it, or return 0
 > otherwise to transform it into a PTR_ERR_OR_ZERO call.
->
+>=20
 > So it will convert a block like this:
->
+>=20
 > if (IS_ERR(err))
 >     return PTR_ERR(err);
->
+>=20
 > return 0;
->
+>=20
 > into
->
+>=20
 > return PTR_ERR_OR_ZERO(err);
->
+>=20
 > While this is technically correct, it has a number of drawbacks. First, it
-> merges the error and success path, which will make it harder for a reviewer
+> merges the error and success path, which will make it harder for a review=
+er
 > or reader to grasp.
->
+>=20
 > It's also more difficult to extend if we were to add some code between the
 > error check and the function return, making the author essentially revert
 > that patch before adding new lines, while it would have been a trivial
 > addition otherwise for the rewiever.
->
+>=20
 > Therefore, since that script is only about cosmetic in the first place,
 > let's remove it since it's not worth it.
-
-I guess Julia's patch [1] never got merged then?
-
-Reaffirming my ack on the removal, regardless of whose patch it is,
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
-
-[1] http://lore.kernel.org/r/1574179017-23787-1-git-send-email-Julia.Lawall@lip6.fr
-
-
->
+>=20
 > Cc: Jani Nikula <jani.nikula@linux.intel.com>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
@@ -97,110 +123,27 @@ Acked-by: Jani Nikula <jani.nikula@intel.com>
 >  scripts/coccinelle/api/ptr_ret.cocci | 97 ----------------------------
 >  1 file changed, 97 deletions(-)
 >  delete mode 100644 scripts/coccinelle/api/ptr_ret.cocci
->
-> diff --git a/scripts/coccinelle/api/ptr_ret.cocci b/scripts/coccinelle/api/ptr_ret.cocci
-> deleted file mode 100644
-> index e76cd5d90a8a..000000000000
-> --- a/scripts/coccinelle/api/ptr_ret.cocci
-> +++ /dev/null
-> @@ -1,97 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -///
-> -/// Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-> -///
-> -// Confidence: High
-> -// Copyright: (C) 2012 Julia Lawall, INRIA/LIP6.
-> -// Copyright: (C) 2012 Gilles Muller, INRIA/LiP6.
-> -// URL: http://coccinelle.lip6.fr/
-> -// Options: --no-includes --include-headers
-> -//
-> -// Keywords: ERR_PTR, PTR_ERR, PTR_ERR_OR_ZERO
-> -// Version min: 2.6.39
-> -//
-> -
-> -virtual context
-> -virtual patch
-> -virtual org
-> -virtual report
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
-> -+ return PTR_ERR_OR_ZERO(ptr);
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
-> -+ return PTR_ERR_OR_ZERO(ptr);
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- (IS_ERR(ptr) ? PTR_ERR(ptr) : 0)
-> -+ PTR_ERR_OR_ZERO(ptr)
-> -
-> -@r1 depends on !patch@
-> -expression ptr;
-> -position p1;
-> -@@
-> -
-> -* if@p1 (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
-> -
-> -@r2 depends on !patch@
-> -expression ptr;
-> -position p2;
-> -@@
-> -
-> -* if@p2 (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
-> -
-> -@r3 depends on !patch@
-> -expression ptr;
-> -position p3;
-> -@@
-> -
-> -* IS_ERR@p3(ptr) ? PTR_ERR(ptr) : 0
-> -
-> -@script:python depends on org@
-> -p << r1.p1;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -
-> -@script:python depends on org@
-> -p << r2.p2;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on org@
-> -p << r3.p3;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r1.p1;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r2.p2;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r3.p3;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4UUg4ACgkQ3SOs138+
+s6EekA/9HAPffRsd3afUYPbgxxX1reZMTCSGN2KVhyrHkCUEAOk2H1ZTec12OZ8F
+yvs+PWDcT7j75QTHUSgEMswx9il6rjN3VcT2OUq3EazQUOLJ/ezPHpFXarmMv/pb
+05zEsNtmegA+ZeuP6+Xms5br35z7Q9mwBC1on9LuSwEzYzDiYORxD1JM9C4oOCtn
+pq/4/CXq0oDaHCq3H+g0/wPjyX68fCwDUiJaJJMyAu56qUCZKsghsVZZVHa6BJGA
+hvnHixOoK9tBWKXDoqEcp5GZuZaRKQ6N8MrSjZYfsozqPB+oNCMk3+072ggZzXgB
+TMw5QHOe388eA7afYvAosBU2FrJ1Q6ldWWtMHXlGxFoOSwGv1yhx45ImY8HmUktj
+uciuPrcYzfXdNMmwRA/AwQQiy1XHn3l+Ys+b3nKfp5xtKSvANwHhdEgAYUufYNS4
+LdlKvISonOLFcdPWXBhGzFyqHU9Kwrr839FBW3p6txpPD/wisWh1Hjgk0sa9o8Kg
+2O7fVtiF9YnZDOkeFRjJncLsI/U6papicwsk1JTkGmgz6wtevxB47cmxaDLiuadC
+9oAVv5yTl9aM4aXEoaNGTP8SlKciSTX8+X2DoBsFJrnr1aumBGXb5bOYZWOpJ/Li
+21pSPMQkRBfwTtmR03ytQP+ddM2SuKvCHFrXX7PDjSqL8iPrUMs=
+=pKJF
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
