@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34350C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D88C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31442077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DDB2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431578;
-	bh=UqSgkSoypGxpx/dHNDDedIwHHPBiqT261SUJweTrzec=;
+	s=default; t=1578431579;
+	bh=y4u0GGqzvmPD1hulz4bMt4c5qg6Q6An5RCpTRMXvP6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdnyEsi2zZWnClDUVc6qIlqt8mT3n5BZzwPgi7+PgNqCed/SAHMGuz8GjEq0NDpmb
-	 t0tX+OeOPm3JeissLUsZvth1ZkJCMYHwdhX+M6cNdz/2LWTCPe2EtSag0HeR57j/PX
-	 o6IxmFdkIBCvelK7VoBpluSGBJNsgqzWDSmfwYvo=
+	b=zapbT4GUwvFrjNsNaXHXQve2LgaE6OtIz+kcgNH41jjx+hpjo/TaxJdWe1OcWlaXN
+	 riXlhmHl3zDMj4FdTGvyqCfQMuXpzXbSCsBSxm0rbZnilbOxwwE3gxXdgfjahTUcMc
+	 9DRLgVRKSUH9AnfW+4Z74TY0q+juYZdhA2qJyUHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgAGVKk (ORCPT
+        id S1729799AbgAGVKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37392 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:10:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729834AbgAGVKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:32 -0500
+        id S1729818AbgAGVKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DCF2072A;
-        Tue,  7 Jan 2020 21:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E12324677;
+        Tue,  7 Jan 2020 21:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431432;
-        bh=UqSgkSoypGxpx/dHNDDedIwHHPBiqT261SUJweTrzec=;
+        s=default; t=1578431429;
+        bh=y4u0GGqzvmPD1hulz4bMt4c5qg6Q6An5RCpTRMXvP6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ao3MlVlRJY4M9fGXHXzIu054KhbCOKPIsfBjI9U8ruz4NnARUtu9PPMq6oFULYfPw
-         c2ucYcRlwKQta5m5xyidNMYc5QGoWXULN7jzAvZC0QmTHiSiDrCxoon+Dqp4houhuS
-         iPdHfnpSpPSniic6lkmW2nn6ekAbSrkmDw9Nt5Rg=
+        b=NFnzPk7JmnCS3Zdedkw0kHEbLpZpe8Y+/frNXy221Vqh+yned+KTiFvXvVF0jjZaB
+         TSlHqn/rw8kw4fQ/5oANPdkJ3YeCtvHpB8ZPojw3MfJZyXwM/3kiRK6bP8KlBuA7lJ
+         FnawWSigW9b+xI5mcjJsrnE74ZV+9gW0BtB9KBkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.14 27/74] media: cec: CEC 2.0-only bcast messages were ignored
-Date:   Tue,  7 Jan 2020 21:54:52 +0100
-Message-Id: <20200107205157.081526932@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 53/74] Bluetooth: delete a stray unlock
+Date:   Tue,  7 Jan 2020 21:55:18 +0100
+Message-Id: <20200107205219.485951844@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit cec935ce69fc386f13959578deb40963ebbb85c3 upstream.
+commit df66499a1fab340c167250a5743931dc50d5f0fa upstream.
 
-Some messages are allowed to be a broadcast message in CEC 2.0
-only, and should be ignored by CEC 1.4 devices.
+We used to take a lock in amp_physical_cfm() but then we moved it to
+the caller function.  Unfortunately the unlock on this error path was
+overlooked so it leads to a double unlock.
 
-Unfortunately, the check was wrong, causing such messages to be
-marked as invalid under CEC 2.0.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: a514b17fab51 ("Bluetooth: Refactor locking in amp_physical_cfm")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/cec/cec-adap.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/bluetooth/l2cap_core.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1031,11 +1031,11 @@ void cec_received_msg_ts(struct cec_adap
- 			valid_la = false;
- 		else if (!cec_msg_is_broadcast(msg) && !(dir_fl & DIRECTED))
- 			valid_la = false;
--		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST1_4))
-+		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST))
- 			valid_la = false;
- 		else if (cec_msg_is_broadcast(msg) &&
--			 adap->log_addrs.cec_version >= CEC_OP_CEC_VERSION_2_0 &&
--			 !(dir_fl & BCAST2_0))
-+			 adap->log_addrs.cec_version < CEC_OP_CEC_VERSION_2_0 &&
-+			 !(dir_fl & BCAST1_4))
- 			valid_la = false;
- 	}
- 	if (valid_la && min_len) {
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4918,10 +4918,8 @@ void __l2cap_physical_cfm(struct l2cap_c
+ 	BT_DBG("chan %p, result %d, local_amp_id %d, remote_amp_id %d",
+ 	       chan, result, local_amp_id, remote_amp_id);
+ 
+-	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED) {
+-		l2cap_chan_unlock(chan);
++	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED)
+ 		return;
+-	}
+ 
+ 	if (chan->state != BT_CONNECTED) {
+ 		l2cap_do_create(chan, result, local_amp_id, remote_amp_id);
 
 
