@@ -2,52 +2,52 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DE0C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585BA21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1A221744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430737;
-	bh=LFTsL0gQv5oUy2k6OyDP+i/BkUvMFpAPZ2KuUBvWIlY=;
+	s=default; t=1578430740;
+	bh=aWycraDdsslyDR3Yr4H3z8S0kZAHv+9ESZLp2ssFPU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=agB4vmwB8EZuPth7bmQTVYmM3fr/OMJNziXPCCh2oBKIZ12fmiQ3GQ6E4EtdMlBUD
-	 Ai3VaDFOJa57E/nDx03wN23wjAdvSfOmCEySs+eR+wYpInJJDHArzak/5J+jk96mI2
-	 j368i9FYDBl+rZNUL+Nl4NiHQhG34SMXRMQjl0Qo=
+	b=w2su+1uQTvgaYk29R3rDHFhBr9AkvRZnxb7kR+NGqMNhPyr0WOZX/bHr4Jy6ftPHH
+	 d5Pvb76C52VRyA56+RF2CpCWEvXO8TU5zkE1964XAQZTJCWC4kzHHWbt5p/nKPFa2G
+	 cArq0/zZ389P9Dum6u7ebPGFmFDZ2A1KF9szcpt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgAGU64 (ORCPT
+        id S1728015AbgAGU67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbgAGU6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:53 -0500
+        id S1727988AbgAGU65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB010208C4;
-        Tue,  7 Jan 2020 20:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E59F214D8;
+        Tue,  7 Jan 2020 20:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430732;
-        bh=LFTsL0gQv5oUy2k6OyDP+i/BkUvMFpAPZ2KuUBvWIlY=;
+        s=default; t=1578430737;
+        bh=aWycraDdsslyDR3Yr4H3z8S0kZAHv+9ESZLp2ssFPU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dKTBFGKvyGhH8jG0LTM3l/VxkV11N5yXSAg2WsUAT7idsPmn8HGipJlBsaeXQN5KJ
-         tarcRpg4EiYp7fgDpjMGSO74uDUGFW5kzv338jb7iQE4euPDl2dJJvCUBQdnCTMbFn
-         Zp85HFJcEmVv/Q2JtdKhE4x1w3U1mnl7fUIcyNG4=
+        b=DNgBz/jHAo5ChuiKj58Zzr32MtoyvLttOqcyqRPsZfKUzlMlMdBMxINnJcDohqquz
+         HgN9VEhRbqF1qobID207CnYwPHd8Z5ikQrxmasTcxZ82sRkF+zbebsXR0fcLeM0ZRo
+         AEL2MTt9nuGtE6owGNcagNBvkeAd8+cBcTtZZAV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/191] s390/cpum_sf: Avoid SBD overflow condition in irq handler
-Date:   Tue,  7 Jan 2020 21:52:46 +0100
-Message-Id: <20200107205335.458784414@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 074/191] drm/amdgpu/smu: add metrics table lock for navi (v2)
+Date:   Tue,  7 Jan 2020 21:53:14 +0100
+Message-Id: <20200107205336.942915805@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,77 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
+commit e0e384c398d4638e54b6d2098f0ceaafdab870ee upstream.
 
-The s390 CPU Measurement sampling facility has an overflow condition
-which fires when all entries in a SBD are used.
-The measurement alert interrupt is triggered and reads out all samples
-in this SDB. It then tests the successor SDB, if this SBD is not full,
-the interrupt handler does not read any samples at all from this SDB
-The design waits for the hardware to fill this SBD and then trigger
-another meassurement alert interrupt.
+To protect access to the metrics table.
 
-This scheme works nicely until
-an perf_event_overflow() function call discards the sample due to
-a too high sampling rate.
-The interrupt handler has logic to read out a partially filled SDB
-when the perf event overflow condition in linux common code is met.
-This causes the CPUM sampling measurement hardware and the PMU
-device driver to operate on the same SBD's trailer entry.
-This should not happen.
+v2: unlock on error
 
-This can be seen here using this trace:
-   cpumsf_pmu_add: tear:0xb5286000
-   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
-   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
-        above shows 1. interrupt
-   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
-   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
-        above shows 2. interrupt
-	... this goes on fine until...
-   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
-   perf_push_sample1: overflow
-      one or more samples read from the IRQ handler are rejected by
-      perf_event_overflow() and the IRQ handler advances to the next SDB
-      and modifies the trailer entry of a partially filled SDB.
-   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
-      timestamp: 14:32:52.519953
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/900
+Reviewed-by: Kevin Wang <kevin1.wang@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Next time the IRQ handler is called for this SDB the trailer entry shows
-an overflow count of 19 missed entries.
-   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
-      timestamp: 14:32:52.970058
-
-Remove access to a follow on SDB when event overflow happened.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/gpu/drm/amd/powerplay/navi10_ppt.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 47515c96032e..fdb8083e7870 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1313,12 +1313,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 		 */
- 		if (flush_all && done)
- 			break;
--
--		/* If an event overflow happened, discard samples by
--		 * processing any remaining sample-data-blocks.
--		 */
--		if (event_overflow)
--			flush_all = 1;
+--- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
+@@ -547,17 +547,20 @@ static int navi10_get_metrics_table(stru
+ 	struct smu_table_context *smu_table= &smu->smu_table;
+ 	int ret = 0;
+ 
++	mutex_lock(&smu->metrics_lock);
+ 	if (!smu_table->metrics_time || time_after(jiffies, smu_table->metrics_time + msecs_to_jiffies(100))) {
+ 		ret = smu_update_table(smu, SMU_TABLE_SMU_METRICS, 0,
+ 				(void *)smu_table->metrics_table, false);
+ 		if (ret) {
+ 			pr_info("Failed to export SMU metrics table!\n");
++			mutex_unlock(&smu->metrics_lock);
+ 			return ret;
+ 		}
+ 		smu_table->metrics_time = jiffies;
  	}
  
- 	/* Account sample overflows in the event hardware structure */
--- 
-2.20.1
-
+ 	memcpy(metrics_table, smu_table->metrics_table, sizeof(SmuMetrics_t));
++	mutex_unlock(&smu->metrics_lock);
+ 
+ 	return ret;
+ }
 
 
