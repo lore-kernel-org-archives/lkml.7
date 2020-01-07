@@ -2,98 +2,114 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD17C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FD7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB1C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9902072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lu63eo78"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FlGvyvi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgAGMaA (ORCPT
+        id S1727965AbgAGMbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:30:00 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:50072 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGM37 (ORCPT
+        Tue, 7 Jan 2020 07:31:19 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35604 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgAGMbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:29:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IWIyXi1gVFEl0mksTr1DghHX8bjTId6K8sb/e1hCsoI=; b=Lu63eo78KESL7seVds7fAyKJU
-        nlnGG6LCkIvdUqHTKiAhrR9RCnOqOvH+xAtR3788pxZOW2kPyIXRpRYYlfkLWJSQH1lUg3SW1qmiD
-        SAsdb+SlfsvRg+8f9eYqw3PjBBn/BCGwIAA/NP3ub43a8YbyEuXXECkis77vD8lH10q92+5cXG5Zr
-        piAN/YWa/i9y63EE74bS1wEtyt+4XCNJi7YJYJscf11lTUQUosDE9/s+RzNJxrdOwCDImAB34YTcW
-        VKZRXYDKWF60DvfjKGiHDAfnWbm7Fv47W9YIMnbHSZppZySMgSVy575Em6c1gqEP+S8plC/D6UAK5
-        tZ4EnShVw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ionzW-0006QS-EV; Tue, 07 Jan 2020 12:29:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0742A300693;
-        Tue,  7 Jan 2020 13:28:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8FA8A2B48237D; Tue,  7 Jan 2020 13:29:43 +0100 (CET)
-Date:   Tue, 7 Jan 2020 13:29:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains v2
-Message-ID: <20200107122943.GW2827@hirez.programming.kicks-ass.net>
-References: <20191220084252.GL3178@techsingularity.net>
- <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
- <20200103143051.GA3027@techsingularity.net>
- <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
- <20200106145225.GB3466@techsingularity.net>
- <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
- <20200107095655.GF3466@techsingularity.net>
- <20200107112255.GV2827@hirez.programming.kicks-ass.net>
- <20200107114211.GH3466@techsingularity.net>
+        Tue, 7 Jan 2020 07:31:18 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 15so38764609lfr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:31:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9EebLSaihLU2tARTr8IPQ7uxTqO1LTm4gAhmzGy3UgE=;
+        b=FlGvyvi2QPBrqo2r4Jue30+UaktwLcp+KLUSPcvRGN/2BaMLLxQCzspsz8Eq3GmLzd
+         Nrv0IdyDSVVeZeRJza4UCzrDBLsJO3WK4lS8sWpZsaGTKZYL+exCo2xkiSf4lMrGxS3V
+         O/HXc2S8gz3bmtLmHzxaW/sJdAR+nUuSDVQSB2asPTwuEA0IbNHvqBPIchofCxdcHcKS
+         OEEy/3pGWuFBbaL7Ok/BcVMSr/M6v3ePO5J4A8TwSB4RBOQCo4bFWBIWtLcYJ9N6M89O
+         Dyi019Lv6vQkQdGdoa8pwBQzbkx7n8LfuHI9rALcG/Fr6NzydOKxKMgMB7a4JajaCs9Y
+         ydvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9EebLSaihLU2tARTr8IPQ7uxTqO1LTm4gAhmzGy3UgE=;
+        b=JQX3e0YOmkdAD7Zkkh5J2jAGYXjaCGBys/dGlGbOU06K7EvFhdvuM/aYdn7c/g2mhs
+         9vOK8mqSbYRFKrUGzpuIAmsZwbU5+zkosPWdsj0V4LNP04vTEJCRCZPvQpxBlw8aMxO1
+         G/Rj6gr6TkU7wlC3azS18qnG7yDTZy0xzErBHj18CnfUMlW7svhjHmtM5Y4Z6aJ1zOPO
+         dJekI9wjfio3GCoMHyLlC6pUdU+YsAqBBUWHWDJzRo1L4GgSlTqVNFaxAk7KyE/MCW+4
+         pK/xlxtG9GHFt1WGclvuj4WZZtPm1biQ1LhFSwrZsT/YDW3bbhHv6TmyLxbvk8c+7EQb
+         j/Zw==
+X-Gm-Message-State: APjAAAXJXTycsFXzNhlixMXkw6qnMZbJ85ZXyn6jJdqFVWJhQ2p3m43H
+        HPn6SrQ+iXjObO/kP++6/dcp09c4RNsKaGPBQr4Qhg==
+X-Google-Smtp-Source: APXvYqyBuRwxF96vFYNvlrUvjUjmWThDAJPetB+s1J0E1Mz7v2ejmMMutsemtESFHjYL7jQnTSsmSoWiKAwaDs6P7Qs=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58501816lfi.93.1578400276043;
+ Tue, 07 Jan 2020 04:31:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107114211.GH3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191129191023.2209-1-miquel.raynal@bootlin.com> <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+In-Reply-To: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 13:31:04 +0100
+Message-ID: <CACRpkdYsE8e4LfYkiaYyqdcPsgg6r4pqzHKwqUBveoLou_hSnw@mail.gmail.com>
+Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:42:11AM +0000, Mel Gorman wrote:
-> On Tue, Jan 07, 2020 at 12:22:55PM +0100, Peter Zijlstra wrote:
+On Mon, Dec 16, 2019 at 10:51 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Nov 29, 2019 at 9:13 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> > > +		/* Consider allowing a small imbalance between NUMA groups */
-> > > +		if (env->sd->flags & SD_NUMA) {
-> > > +			struct sched_domain *child = env->sd->child;
-> > 
-> > This assumes sd-child exists, which should be true for NUMA domains I
-> > suppose.
-> > 
-> 
-> I would be stunned if it was not. What sort of NUMA domain would not have
-> child domains? Does a memory-only NUMA node with no CPUs even generate
-> a scheduler domain? If it does, then I guess the check is necessary.
+> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > functions but can also manage the intensity on each of its ports with
+> > PWM. Each output is independent and may be tuned with 16 values (4
+> > bits per output). The period is always 32kHz, only the duty-cycle may
+> > be changed. One can use any output as GPIO or PWM.
+>
+> Thanks for an update!
+>
+> Still I think it's wrong approach. What should be done is:
+>  - adding a pin configuration type of PWM (when, for example, argument
+> defines duty cycle and period)
+>  - conversion to pin control of this driver
+>  - enabling pin configuration PWM for it.
+>
+> For now it looks like a custom way of doing it.
+> If GPIO maintainers are okay with it, I'll not object, just want to
+> have than something like TODO updated for the matter.
 
-I think it's fine, it was just my paranoia triggering. At the very least
-we'll have the single CPU domain there.
+Yeah well that is a possible way, it pretty much lies with the PWM
+maintainer, I have one guiding stanza "rough consensus and running
+code". Making big upfront code conversions just to get a small piece
+of hardware going is just too much from me as subsystem maintainer,
+a dual sub-system driver is perfectly fine in my opinion.
+
+That said contributors are encouraged to extend scope and be
+ambitious and set precedents for others to follow by going the extra
+mile.
+
+(That sounds like corporate management!)
+
+But that must be voluntary work outside the scope of just hardware
+enablement.
+
+Yours,
+Linus Walleij
