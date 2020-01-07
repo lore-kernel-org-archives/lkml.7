@@ -2,82 +2,133 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CC1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C230FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7393C20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967A520848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZLFFRMIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgAGTnC (ORCPT
+        id S1728699AbgAGTn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:43:02 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54502 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgAGTnC (ORCPT
+        Tue, 7 Jan 2020 14:43:56 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:34212 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728457AbgAGTnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:43:02 -0500
-Received: by mail-io1-f71.google.com with SMTP id u6so516966iog.21
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:43:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zJNitKAgVyD6L05mimG8VM/c6DYKBTWRutBYb9hJfsg=;
-        b=BUFpmCFGjKa5xAkkFreeM3zC5wSFUWNV8rliwvbmVaB/ZpTQRktErqNW9z6Uwe/ChB
-         LysG3ABkq2eMFVmOZxJUTr3jsXvEPVwKK/F4K76GTBE94ritXBHo6bgpCG6GwMCjO82J
-         HnDZ6yZJoBHZRpJK43KP2iPWm2JyVcGEraYsQ41zXVNTRu/APQVTQm2l9A9j1c/iETPJ
-         +uokorV3P0ARkUEcp+N4WjdHdnEhz9X5pwrxnRfQWUhXU7zMVPbMglYtioABww4UAyCH
-         ItHInRyEgS/lwaLHS5Pk6OZy7SPrUD7TMu5iOzFo/iMGfqr8B9FYRyN2JxCjAEHLuRac
-         VVuw==
-X-Gm-Message-State: APjAAAXHJA7yfdp1we6ovsRMGSg/JLMQs0zuYx8eotSCSYkrvkkKBaSR
-        4H89B01SkgILqkCEK354HL/YackQmqY3haOAlRpK79r0Vu3g
-X-Google-Smtp-Source: APXvYqxzHYUUKPkOmQcPvEfIBx0vVL1cBuV0YQ2jq2bdAO99TQxTbcUhwD9QCib5JPi2GrYjV7Q7faGDMF0Lr3JsMKGszJFwr3Zv
-MIME-Version: 1.0
-X-Received: by 2002:a92:c9cc:: with SMTP id k12mr674567ilq.269.1578426181701;
- Tue, 07 Jan 2020 11:43:01 -0800 (PST)
-Date:   Tue, 07 Jan 2020 11:43:01 -0800
-In-Reply-To: <0000000000001483d7059b8eed67@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dd593e059b91fbff@google.com>
-Subject: Re: general protection fault in hash_mac4_uadt
-From:   syzbot <syzbot+cabfabc5c6bf63369d04@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        info@metux.net, jeremy@azazel.net, kadlec@blackhole.kfki.hu,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 7 Jan 2020 14:43:55 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A6CBD20B479A;
+        Tue,  7 Jan 2020 11:43:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A6CBD20B479A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1578426234;
+        bh=yA5LFjSLBWVUP9TbZOq+D/2tmitmwjc/aS91KwfLW6Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZLFFRMIhtrM0dtheX1wT/8OLGYBWwcScPXgBiIpgLm2I0onLHlwuo5o5p7jJmIxql
+         N0wLB85js/eg5T/7HST8Ui+ZZS1wROO7siJsssn5EVcAU4lGe6mMDTIcuvoj0wkkQW
+         MjMJDkjJ9BMG+iaevZLcLUUzy/JiE4T6iBkX7/I4=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH 2/4] KEYS: Call the IMA hook to measure keys
+Date:   Tue,  7 Jan 2020 11:43:48 -0800
+Message-Id: <20200107194350.3782-3-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200107194350.3782-1-nramas@linux.microsoft.com>
+References: <20200107194350.3782-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Call the IMA hook from key_create_or_update() function to measure
+the payload when a new key is created or an existing key is updated.
 
-commit 23c42a403a9cfdbad6004a556c927be7dd61a8ee
-Author: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Date:   Sat Oct 27 13:07:40 2018 +0000
+This patch adds the call to the IMA hook from key_create_or_update()
+function to measure the key on key create or update.
 
-     netfilter: ipset: Introduction of new commands and protocol version 7
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reported-by: kbuild test robot <lkp@intel.com> # ima_asymmetric_keys.c
+is built as a kernel module when it is actually not.
+Fixes: cb1aa3823c92 ("KEYS: Call the IMA hook to measure keys")
+---
+ include/linux/ima.h | 14 ++++++++++++++
+ security/keys/key.c | 10 ++++++++++
+ 2 files changed, 24 insertions(+)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b9d5fee00000
-start commit:   c101fffc Merge tag 'mlx5-fixes-2020-01-06' of git://git.ke..
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15b9d5fee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b9d5fee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=cabfabc5c6bf63369d04
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14896eb9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139ed115e00000
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 6d904754d858..f4644c54f648 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -101,6 +101,20 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
+ {}
+ #endif
+ 
++#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
++extern void ima_post_key_create_or_update(struct key *keyring,
++					  struct key *key,
++					  const void *payload, size_t plen,
++					  unsigned long flags, bool create);
++#else
++static inline void ima_post_key_create_or_update(struct key *keyring,
++						 struct key *key,
++						 const void *payload,
++						 size_t plen,
++						 unsigned long flags,
++						 bool create) {}
++#endif  /* CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS */
++
+ #ifdef CONFIG_IMA_APPRAISE
+ extern bool is_ima_appraise_enabled(void);
+ extern void ima_inode_post_setattr(struct dentry *dentry);
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 764f4c57913e..718bf7217420 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -13,6 +13,7 @@
+ #include <linux/security.h>
+ #include <linux/workqueue.h>
+ #include <linux/random.h>
++#include <linux/ima.h>
+ #include <linux/err.h>
+ #include "internal.h"
+ 
+@@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+ 		goto error_link_end;
+ 	}
+ 
++	ima_post_key_create_or_update(keyring, key, payload, plen,
++				      flags, true);
++
+ 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
+ 
+ error_link_end:
+@@ -965,6 +969,12 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+ 	}
+ 
+ 	key_ref = __key_update(key_ref, &prep);
++
++	if (!IS_ERR(key_ref))
++		ima_post_key_create_or_update(keyring, key,
++					      payload, plen,
++					      flags, false);
++
+ 	goto error_free_prep;
+ }
+ EXPORT_SYMBOL(key_create_or_update);
+-- 
+2.17.1
 
-Reported-by: syzbot+cabfabc5c6bf63369d04@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and  
-protocol version 7")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
