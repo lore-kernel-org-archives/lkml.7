@@ -2,177 +2,91 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DCEC33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3982FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B3A21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578416012;
-	bh=5pGZzG2R2Yg9BvXiJJcmzkQkuLAOfS9PEHpiBXb0Uls=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TFoMC5jxWRzp5mrRI42/MexBIx86femaIoJhE4jbM8Rf7KC1CByLkh69LkShR70c7
-	 9zXELBhvQlWFp+C6ToZW9cEWfGmZz7LyhCx+MP+tR4sDSioWmSwhoGYv19hPDgOgjn
-	 KiVmzUmdg+fQKPfUl2bBWU2kZjdi4XD1Huo0ybgk=
+	by mail.kernel.org (Postfix) with ESMTP id E8B3624656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ykqA+fap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgAGQxb (ORCPT
+        id S1728476AbgAGQxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:53:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbgAGQxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:53:30 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B395D2073D;
-        Tue,  7 Jan 2020 16:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578416009;
-        bh=5pGZzG2R2Yg9BvXiJJcmzkQkuLAOfS9PEHpiBXb0Uls=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q+mZvp8DRBQ+NGLFMRHq+ToaCPgY0sfmDNR9VpdaiZ9T2V/2nT/SeANXkK/wLMDoP
-         zenjraQPO9M07VwPEmNNuyRUDTXxaFInE+OA1UUiQvrcd9MJ0C7xFDpFQN49dMy/gI
-         GDlqwuMx3bvmjp+6UgH+xyziWuKaIO8OxKhrqNsk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jiri Slaby <jirislaby@gmail.com>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT 00/13] iomap: Constify ioreadX() iomem argument
-Date:   Tue,  7 Jan 2020 17:52:57 +0100
-Message-Id: <1578415992-24054-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 7 Jan 2020 11:53:35 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33086 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgAGQxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:53:34 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007GrVCC021331;
+        Tue, 7 Jan 2020 10:53:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578416011;
+        bh=ijxKYPu7aitvqea0/41zctHTvqZLXaM+vZDKrOkjRsQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ykqA+fap61DZYsXo07WKHpClVOPNL9neXBRncMFLINcuPdiv7MgVq7vts1HNv5bNM
+         g36WbCu01UBSCG+v4aTcXVf6P8vOTLR1+kH5oh6LEJuMFd8qCmpIkonEWA0k+W3VTv
+         n7bi/kHuYnhqrUMz5Brode7Jw+/h7EtW+FMcvV4I=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007GrVur112005
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 10:53:31 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 10:53:30 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 10:53:30 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007GrUni017504;
+        Tue, 7 Jan 2020 10:53:30 -0600
+Subject: Re: [PATCH v2 1/3] power_supply: Add additional health properties to
+ the header
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191029200201.24483-1-dmurphy@ti.com>
+ <20191219171910.wbx4ry6hgip6g4fm@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <852a3e66-3773-0bfe-33b9-87cc514a4a11@ti.com>
+Date:   Tue, 7 Jan 2020 10:50:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191219171910.wbx4ry6hgip6g4fm@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sebastian
 
-The ioread8/16/32() and others have inconsistent interface among the
-architectures: some taking address as const, some not.
+On 12/19/19 11:19 AM, Sebastian Reichel wrote:
+> Hi Dan,
+>
+> On Tue, Oct 29, 2019 at 03:01:59PM -0500, Dan Murphy wrote:
+>> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> This needs to update /sys/class/power_supply/<supply_name>/health
+> entry in Documentation/ABI/testing/sysfs-class-power. Also it needs
 
-It seems there is nothing really stopping all of them to take
-pointer to const.
+I noticed "Over Current" was missing from the ABI doc.  Do you want that 
+addition in a separate patch or can I add it in my update?
 
-Patchset was really tested on all affected architectures.
-Build testing is in progress - I hope auto-builders will point any issues.
+Dan
 
-
-Todo
-====
-Convert also string versions (ioread16_rep() etc) if this aproach looks OK.
-
-
-Merging
-=======
-The first 5 patches - iomap, alpha, sh, parisc and powerpc - should probably go
-via one tree, or even squashed into one.
-
-All other can go separately after these get merged.
-
-Best regards,
-Krzysztof
-
-
-Krzysztof Kozlowski (13):
-  iomap: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  alpha: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  sh: Constify ioreadX() iomem argument (as in generic implementation)
-  parisc: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  powerpc: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  arc: Constify ioreadX() iomem argument (as in generic implementation)
-  drm/mgag200: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  drm/nouveau: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  media: fsl-viu: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  net: wireless: ath5k: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  net: wireless: rtl818x: Constify ioreadX() iomem argument (as in
-    generic implementation)
-  ntb: intel: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  virtio: pci: Constify ioreadX() iomem argument (as in generic
-    implementation)
-
- arch/alpha/include/asm/core_apecs.h                |  6 +--
- arch/alpha/include/asm/core_cia.h                  |  6 +--
- arch/alpha/include/asm/core_lca.h                  |  6 +--
- arch/alpha/include/asm/core_marvel.h               |  4 +-
- arch/alpha/include/asm/core_mcpcia.h               |  6 +--
- arch/alpha/include/asm/core_t2.h                   |  2 +-
- arch/alpha/include/asm/io.h                        | 12 +++---
- arch/alpha/include/asm/io_trivial.h                | 16 ++++----
- arch/alpha/include/asm/jensen.h                    |  2 +-
- arch/alpha/include/asm/machvec.h                   |  6 +--
- arch/alpha/kernel/core_marvel.c                    |  2 +-
- arch/alpha/kernel/io.c                             |  6 +--
- arch/arc/plat-axs10x/axs10x.c                      |  4 +-
- arch/parisc/include/asm/io.h                       |  4 +-
- arch/parisc/lib/iomap.c                            | 48 +++++++++++-----------
- arch/powerpc/kernel/iomap.c                        | 22 +++++-----
- arch/sh/kernel/iomap.c                             | 10 ++---
- drivers/gpu/drm/mgag200/mgag200_drv.h              |  4 +-
- drivers/gpu/drm/nouveau/nouveau_bo.c               |  2 +-
- drivers/media/platform/fsl-viu.c                   |  2 +-
- drivers/net/wireless/ath/ath5k/ahb.c               | 10 ++---
- .../net/wireless/realtek/rtl818x/rtl8180/rtl8180.h |  6 +--
- drivers/ntb/hw/intel/ntb_hw_gen1.c                 |  2 +-
- drivers/ntb/hw/intel/ntb_hw_gen3.h                 |  2 +-
- drivers/ntb/hw/intel/ntb_hw_intel.h                |  2 +-
- drivers/virtio/virtio_pci_modern.c                 |  6 +--
- include/asm-generic/iomap.h                        | 22 +++++-----
- include/linux/io-64-nonatomic-hi-lo.h              |  4 +-
- include/linux/io-64-nonatomic-lo-hi.h              |  4 +-
- lib/iomap.c                                        | 18 ++++----
- 30 files changed, 123 insertions(+), 123 deletions(-)
-
--- 
-2.7.4
+<snip>
 
