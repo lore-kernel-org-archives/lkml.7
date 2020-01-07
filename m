@@ -2,119 +2,124 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A34C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFC1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B4E20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E313208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wFzZCC2h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkQzotOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgAGTNe (ORCPT
+        id S1728821AbgAGTPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:13:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42226 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbgAGTNe (ORCPT
+        Tue, 7 Jan 2020 14:15:12 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34675 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbgAGTPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:13:34 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so321291pfz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:13:34 -0800 (PST)
+        Tue, 7 Jan 2020 14:15:12 -0500
+Received: by mail-io1-f68.google.com with SMTP id z193so539853iof.1;
+        Tue, 07 Jan 2020 11:15:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=6RBmiJn3vvepXtqRcMGLSKLPe+MyPC3dovzqBwEizXA=;
-        b=wFzZCC2hB33q5nY3rpG9BYRlJ/DYhNrwDyCwXgKONEPUKS3BXUkldZiReSMok1g6v9
-         fWKk3uH02Nhtz7bLWpvywVrDn74I5xa2e+HMjMvAQBQqBk2JzcCCfXxuV/+pta4RicV9
-         9+/Uk/RapzTX40UqT/ywy5aGPY0ZiidgpkqtUUFHJXA+p5+syoJfCyqjGWFWUCK/EP5a
-         bLB5Mz9BSZiYjVA6QDtUroljmr8EB2fYBv8md/VRlfgPmdv2JHJLD3MpcqlUklE2FBk2
-         9e/tBHYTzeVxbN1+/N4vrbGU8/9d5G16pWwvC/FNYDEcymXw7awACZ+MmJRgmFwD3uR6
-         CXuQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yl2wbUAzHAKbcOb1Vl7UvKqELmoqXyVI0Xh3B+s9l6w=;
+        b=rkQzotOI2WHHWwl7HXrjtEqiFBUizAnXJy0V8EQAuovXuZcIet+WvPqNR5SjCRKpX3
+         RBOmcSr49Rvp4qGRrH8iXEmGIh1XxFKeoUYJC3G0jk3Ln6y1IfZjD6/eLB3cwp6f9L8B
+         V5xp35Kp4/+p+M+E/8RZ7RVnE289Ouaw8GJ/JTCsju3xsMP9NfaE8X4KXapOYPEOFbx9
+         8c1UEuszme5mHl5SDsWoFPTH89wgrj0jW9rjSb06Enjkys1L2KrVbLlRB6qEJiCUkvjm
+         jTv08XipmW3TZppSYqz1ljOQawAKLULX/rRIeXP6mAV1b6DoU12kV8x5Uzfj0ZhR0DV6
+         WhCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6RBmiJn3vvepXtqRcMGLSKLPe+MyPC3dovzqBwEizXA=;
-        b=W0b2KN8CnNijm9xLxw1nI780TktxDcyLajXIlYudDQOH92NaesKiV8cZO1Jc0KGDsi
-         B8z8WFyl/uZ42/caHDji+JY5yMVvcvvYpHOK0K8Xc+DtSouZ6/6NW1aQMa3sHch3+WLZ
-         sp08AgFMivBPRlfcZMc7D5tJzwNtSJDPUddL61k43cC/JikO8AnEaUwoy0owyGOiQ2cr
-         DFr0FIyG0P829vDqIXOF2P8CBS8wbTyAcl5nU+iwzdmi6BaHswqdYNdLfChUosl1tIxX
-         SBtfxJ4ibm9DHi/+FDrzkgU+qfbkBPfzpEZWDmnKsDJRAxXSWh0jSf/J00JaJgdBK9I5
-         PpZw==
-X-Gm-Message-State: APjAAAUSE26mTS7KAnKo5p/T1m0phqVpO5gtizasfn7Qfo5g42qfo7Ft
-        QnyHBKNQGkc5Kql7xpk2SKBZoW6Xt1Y=
-X-Google-Smtp-Source: APXvYqwbkBG/N2jhyFRdAjvg2n/kSukzsNcutGD97tUBd4I9jnC9OLL5RLn4BeXSX8pova0uoKEnmQ==
-X-Received: by 2002:a62:e80b:: with SMTP id c11mr830599pfi.28.1578424413489;
-        Tue, 07 Jan 2020 11:13:33 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id x132sm296324pfc.148.2020.01.07.11.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 11:13:33 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2] reset: qcom-aoss: Allow CONFIG_RESET_QCOM_AOSS to be a tristate
-Date:   Tue,  7 Jan 2020 19:13:31 +0000
-Message-Id: <20200107191331.8930-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yl2wbUAzHAKbcOb1Vl7UvKqELmoqXyVI0Xh3B+s9l6w=;
+        b=j5QiUShOfDHIRnT9AKN1VJ+RPrMDSwRcB7Xy6rZQezNLQkngJWPZhyymAbOaLJx3iA
+         Wr0Vn9RscRWCmFzPEchSq+wL+PRpywbOKuAyXuhj0o2xL9tQBSDJgkQBdun0rArpx7p4
+         fmAQgNfp/jXABGvRxh+9qjhEG9NIe0hEuHOJpz+HYKURf3pI2OZJ7CWVifgNOfb1/2r+
+         bAgBDQAQXgDQv4j6idLYP/P0Hu/W9c/2e9VxMFSLInxMeICbC1edAt5GYMaDySeiXjcP
+         8B8KT6M8Df5+7AMYxvOeiB3OAyP8PE6gS7UM8Q4uWmh6R0ca90O80lDAnA3wlZ+cZeL/
+         mrpg==
+X-Gm-Message-State: APjAAAWWvI0TZUFyjMqa0s7dRD/ankYDFiHSiQ8xBIdLFdhS7qNNlp9P
+        stmD1dEj6srUe7qWW+OrcSUm0/Fg3q3S2epWh1n0wfONJ3A=
+X-Google-Smtp-Source: APXvYqz9PvnXo6JBf/ETXrEq1+jj6hv8iMvI1zUApsw3LhkJjvDhAUAxswe1B7GebdiWNs1qbym12yJE7R7vujQvTMM=
+X-Received: by 2002:a6b:c8c8:: with SMTP id y191mr430846iof.104.1578424511057;
+ Tue, 07 Jan 2020 11:15:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20200106203700.21009-1-tony@atomide.com> <CAOesGMiNbyUXwPFsG-ipTn-xfEs+A2hG8Q8MTcSLz5794GCv0g@mail.gmail.com>
+In-Reply-To: <CAOesGMiNbyUXwPFsG-ipTn-xfEs+A2hG8Q8MTcSLz5794GCv0g@mail.gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Wed, 8 Jan 2020 03:14:59 +0800
+Message-ID: <CAEExFWuQuTHNsjABpSBAa46NzftHS0+nLLG=qdEcaeatLZFLeQ@mail.gmail.com>
+Subject: Re: [PATCH] clocksource: timer-ti-dm: Fix regression
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow CONFIG_RESET_QCOM_AOSS to be set as as =m
-to allow for the driver to be loaded from a modules.
+On Tue, Jan 7, 2020 at 5:07 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Mon, Jan 6, 2020 at 12:37 PM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
+> > platform_get_irq") caused a regression where we now try to access
+> > uninitialized data for timer:
+> >
+> > drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+> > drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
+> > uninitialized in this function [-Wmaybe-uninitialized]
+> >
+> > On boot we now get:
+> >
+> > Unable to handle kernel NULL pointer dereference at virtual address
+> > 00000004
+> > ...
+> > (omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
+> > (platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
+> > (really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
+> >
+> > Let's fix the issue by moving platform_get_irq to happen after timer has
+> > been allocated.
+> >
+> > Fixes: 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
+> > Cc: Yangtao Li <tiny.windzz@gmail.com>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+>
+> Acked-by: Olof Johansson <olof@lixom.net>
 
-Also replaces the builtin_platform_driver() line with
-module_platform_driver()
+Acked-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Alistair Delva <adelva@google.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2: Fix builtin_platform_driver line in driver code
----
- drivers/reset/Kconfig           | 2 +-
- drivers/reset/reset-qcom-aoss.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I am sorry. I will pay attention next time.
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 3ad7817ce1f0..45e70524af36 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -99,7 +99,7 @@ config RESET_PISTACHIO
- 	  This enables the reset driver for ImgTec Pistachio SoCs.
- 
- config RESET_QCOM_AOSS
--	bool "Qcom AOSS Reset Driver"
-+	tristate "Qcom AOSS Reset Driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	help
- 	  This enables the AOSS (always on subsystem) reset driver
-diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-index 36db96750450..76367f17fc73 100644
---- a/drivers/reset/reset-qcom-aoss.c
-+++ b/drivers/reset/reset-qcom-aoss.c
-@@ -127,7 +127,7 @@ static struct platform_driver qcom_aoss_reset_driver = {
- 	},
- };
- 
--builtin_platform_driver(qcom_aoss_reset_driver);
-+module_platform_driver(qcom_aoss_reset_driver);
- 
- MODULE_DESCRIPTION("Qualcomm AOSS Reset Driver");
- MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
+>
+> > ---
+> >
+> > I did not notice simlar issue with other patches in the series, but
+> > please do double check Yangtao.
+>
+> Yeah, this even seems to be caught at build (but our builds have been
+> so noisy with warnings lately that they're hard to spot):
+>
+> /build/drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+> /build/drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may
+> be used uninitialized in this function [-Wmaybe-uninitialized]
+>   798 |  timer->irq = platform_get_irq(pdev, 0);
+>       |  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+>
+> -Olof
