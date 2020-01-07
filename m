@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4264AC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B249C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107D42080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D0D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432374;
-	bh=NVsxMQ3v1I6dMBoAALMMlLOJsLnNwpJXcr0Inp9m5/Y=;
+	s=default; t=1578432376;
+	bh=vCIHg4nrV33PHnHUdiahTM63gn1eC2OQrBoSflm+lEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otDEtYw9YKM/T5E4yEHZDkEVDzZGNin3rH+zBw4Cu/W6GoMojrfaeJLV3MLLgEPr5
-	 RBW1mSCNTAzQOzA632h9VQYXhR/Y6mn6D3mqbmYoL9OITTWFaKPgr5Zh0g9l6BSuhl
-	 Tf65oU2gKN2dZAj4om0MvqUPKL1DlWRnlPvyc2FY=
+	b=ymmnt6aYEFA6x6L6Mhflayo8JgFkKIYaVjiE6a7Vo8HDyt2qTg93lFqpTS3JrQA7s
+	 FCj3hiPrndweT0CbQ8mxD0XoDRCTiJJmw3acgdl/53rMC3IQy1/oTqks0DhJhgrPPe
+	 xnbY6rUv/8CWEkifL7we+c3Ver8FQdoWUpSuXiJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAGV0N (ORCPT
+        id S1728049AbgAGU7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:26:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgAGU7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:09 -0500
+        id S1727582AbgAGU7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9411C2187F;
-        Tue,  7 Jan 2020 20:59:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C5E21744;
+        Tue,  7 Jan 2020 20:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430749;
-        bh=NVsxMQ3v1I6dMBoAALMMlLOJsLnNwpJXcr0Inp9m5/Y=;
+        s=default; t=1578430741;
+        bh=vCIHg4nrV33PHnHUdiahTM63gn1eC2OQrBoSflm+lEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+IfHh2GEGHgEGfTcXqvRh9lfvsGaWHnc9CJfuxCEHJkpdZGlSCEEytojoJB/44rY
-         eNtco2aMOsbanxQnBCxukl/LPvup9NuAHD7Xk0pB7gPjMviXIo1jghTr7Mn3Hs5A4Z
-         N9iJhReI1LpdlHSl/jw8NFEKJq/tmsNdgPK7Q0k8=
+        b=XE0fMj9GPucGYOqbV42hvUywagg9WEeVCGw3q9SvVGjmHcS6eKIEsaYkguR5CHIdP
+         739AgbqOGWQerSgddUKux/PtCo+0IriRZahGhZG4epgCYZtjYY/YcF+ve3x8BRM7Iw
+         JXihfkezJ8cS/MpFCK3aYcMh4VED+kZAEHoLV7oo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 079/191] media: pulse8-cec: fix lost cec_transmit_attempt_done() call
-Date:   Tue,  7 Jan 2020 21:53:19 +0100
-Message-Id: <20200107205337.211266540@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Tony Ambardar <itugrok@yahoo.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH 5.4 076/191] MIPS: BPF: Disable MIPS32 eBPF JIT
+Date:   Tue,  7 Jan 2020 21:53:16 +0100
+Message-Id: <20200107205337.048444554@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,81 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Paul Burton <paulburton@kernel.org>
 
-commit e5a52a1d15c79bb48a430fb263852263ec1d3f11 upstream.
+commit f8fffebdea752a25757b906f3dffecf1a59a6194 upstream.
 
-The periodic PING command could interfere with the result of
-a CEC transmit, causing a lost cec_transmit_attempt_done()
-call.
+Commit 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32
+architecture.") enabled our eBPF JIT for MIPS32 kernels, whereas it has
+previously only been availailable for MIPS64. It was my understanding at
+the time that the BPF test suite was passing & JITing a comparable
+number of tests to our cBPF JIT [1], but it turns out that was not the
+case.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The eBPF JIT has a number of problems on MIPS32:
+
+- Most notably various code paths still result in emission of MIPS64
+  instructions which will cause reserved instruction exceptions & kernel
+  panics when run on MIPS32 CPUs.
+
+- The eBPF JIT doesn't account for differences between the O32 ABI used
+  by MIPS32 kernels versus the N64 ABI used by MIPS64 kernels. Notably
+  arguments beyond the first 4 are passed on the stack in O32, and this
+  is entirely unhandled when JITing a BPF_CALL instruction. Stack space
+  must be reserved for arguments even if they all fit in registers, and
+  the callee is free to assume that stack space has been reserved for
+  its use - with the eBPF JIT this is not the case, so calling any
+  function can result in clobbering values on the stack & unpredictable
+  behaviour. Function arguments in eBPF are always 64-bit values which
+  is also entirely unhandled - the JIT still uses a single (32-bit)
+  register per argument. As a result all function arguments are always
+  passed incorrectly when JITing a BPF_CALL instruction, leading to
+  kernel crashes or strange behavior.
+
+- The JIT attempts to bail our on use of ALU64 instructions or 64-bit
+  memory access instructions. The code doing this at the start of
+  build_one_insn() incorrectly checks whether BPF_OP() equals BPF_DW,
+  when it should really be checking BPF_SIZE() & only doing so when
+  BPF_CLASS() is one of BPF_{LD,LDX,ST,STX}. This results in false
+  positives that cause more bailouts than intended, and that in turns
+  hides some of the problems described above.
+
+- The kernel's cBPF->eBPF translation makes heavy use of 64-bit eBPF
+  instructions that the MIPS32 eBPF JIT bails out on, leading to most
+  cBPF programs not being JITed at all.
+
+Until these problems are resolved, revert the enabling of the eBPF JIT
+on MIPS32 done by commit 716850ab104d ("MIPS: eBPF: Initial eBPF support
+for MIPS32 architecture.").
+
+Note that this does not undo the changes made to the eBPF JIT by that
+commit, since they are a useful starting point to providing MIPS32
+support - they're just not nearly complete.
+
+[1] https://lore.kernel.org/linux-mips/MWHPR2201MB13583388481F01A422CE7D66D4410@MWHPR2201MB1358.namprd22.prod.outlook.com/
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32 architecture.")
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Hassan Naveed <hnaveed@wavecomp.com>
+Cc: Tony Ambardar <itugrok@yahoo.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v5.2+
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/pulse8-cec/pulse8-cec.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/mips/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/pulse8-cec/pulse8-cec.c
-+++ b/drivers/media/usb/pulse8-cec/pulse8-cec.c
-@@ -116,6 +116,7 @@ struct pulse8 {
- 	unsigned int vers;
- 	struct completion cmd_done;
- 	struct work_struct work;
-+	u8 work_result;
- 	struct delayed_work ping_eeprom_work;
- 	struct cec_msg rx_msg;
- 	u8 data[DATA_SIZE];
-@@ -137,8 +138,10 @@ static void pulse8_irq_work_handler(stru
- {
- 	struct pulse8 *pulse8 =
- 		container_of(work, struct pulse8, work);
-+	u8 result = pulse8->work_result;
- 
--	switch (pulse8->data[0] & 0x3f) {
-+	pulse8->work_result = 0;
-+	switch (result & 0x3f) {
- 	case MSGCODE_FRAME_DATA:
- 		cec_received_msg(pulse8->adap, &pulse8->rx_msg);
- 		break;
-@@ -172,12 +175,12 @@ static irqreturn_t pulse8_interrupt(stru
- 		pulse8->escape = false;
- 	} else if (data == MSGEND) {
- 		struct cec_msg *msg = &pulse8->rx_msg;
-+		u8 msgcode = pulse8->buf[0];
- 
- 		if (debug)
- 			dev_info(pulse8->dev, "received: %*ph\n",
- 				 pulse8->idx, pulse8->buf);
--		pulse8->data[0] = pulse8->buf[0];
--		switch (pulse8->buf[0] & 0x3f) {
-+		switch (msgcode & 0x3f) {
- 		case MSGCODE_FRAME_START:
- 			msg->len = 1;
- 			msg->msg[0] = pulse8->buf[1];
-@@ -186,14 +189,20 @@ static irqreturn_t pulse8_interrupt(stru
- 			if (msg->len == CEC_MAX_MSG_SIZE)
- 				break;
- 			msg->msg[msg->len++] = pulse8->buf[1];
--			if (pulse8->buf[0] & MSGCODE_FRAME_EOM)
-+			if (msgcode & MSGCODE_FRAME_EOM) {
-+				WARN_ON(pulse8->work_result);
-+				pulse8->work_result = msgcode;
- 				schedule_work(&pulse8->work);
-+				break;
-+			}
- 			break;
- 		case MSGCODE_TRANSMIT_SUCCEEDED:
- 		case MSGCODE_TRANSMIT_FAILED_LINE:
- 		case MSGCODE_TRANSMIT_FAILED_ACK:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_DATA:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_LINE:
-+			WARN_ON(pulse8->work_result);
-+			pulse8->work_result = msgcode;
- 			schedule_work(&pulse8->work);
- 			break;
- 		case MSGCODE_HIGH_ERROR:
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -46,7 +46,7 @@ config MIPS
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
+ 	select HAVE_ASM_MODVERSIONS
+-	select HAVE_EBPF_JIT if (!CPU_MICROMIPS)
++	select HAVE_EBPF_JIT if (64BIT && !CPU_MICROMIPS)
+ 	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_C_RECORDMCOUNT
 
 
