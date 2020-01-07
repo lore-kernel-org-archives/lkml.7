@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C82BC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521C7C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C78E20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F51214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430635;
-	bh=p1rGLFK9qunlmcmVU7tHPH/Z4aLEBBljlgHChee25wE=;
+	s=default; t=1578430638;
+	bh=TcsprVe1IdveFCzA/IRQMOseJaWh4UkmVgXoo9tnPXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVHlgdUnnwI+92tckKQh+Ecef6BUrVEqCF1Fq1DLyiZsdvIYoaJ71ozBlUzw3Zkpy
-	 v7PX2VRFOLGxo9ujUjHneBJ0ggrvR6Gbx3Ju/z1YmEPeplq4RezLmYqU+r5WJiuouO
-	 jHfyLRJc2D0fRwQI5CnZwqetDFVFkrwWmFgZTMHo=
+	b=HJRfjCqo1XyDUMZFXpOMyjNyEUiXFNc4Oi4ncK3RjXJWWXiUcBZ/61AnPvVhUBL/I
+	 4gXp3CbKt/koUFBHvy3LNeDfdH4PO2ge0MaxrUjfzPKJmrrNA5/0YkuUGnSFJuXjsg
+	 EZ177XPW5mI8+hgtlp/cjL9ganw6LqYfDMu36DV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgAGU5O (ORCPT
+        id S1727521AbgAGU5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbgAGU5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:08 -0500
+        id S1727468AbgAGU5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CDF2087F;
-        Tue,  7 Jan 2020 20:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40420214D8;
+        Tue,  7 Jan 2020 20:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430628;
-        bh=p1rGLFK9qunlmcmVU7tHPH/Z4aLEBBljlgHChee25wE=;
+        s=default; t=1578430630;
+        bh=TcsprVe1IdveFCzA/IRQMOseJaWh4UkmVgXoo9tnPXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qUIW0mo1XcrLm/swUge2W4/EuXt8qAKulFUlAbcS0y0GrHJx4Fn1xQHbbzMvG6dRJ
-         U19V6H1mEVjgH7snKcD1B3Q1COCd+iof7n7tu8CdXmFfAtENlVxzPr1f45pwnEfh10
-         RcAuzHHuOJ80V+uXDh+N1avIm3ciiJOB8CSMA0Z0=
+        b=Q1pM9kskZPzuCzrtTFWTdYRnwTgTyhYvJJu2+ktKCSEgc7jQeNBDuUex/qR9rkK2u
+         66JKWWyLCBKgQBTgPn7llZy0E1vSy4xUCfHxgd12BruxqZKxfU1zAPx/kN9cOrsc23
+         iPyQ4xx4VfIavmBfSWBSRw5oete3KEufv8qeha9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Ladislav Michl <ladis@linux-mips.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/191] scsi: qla2xxx: Ignore PORT UPDATE after N2N PLOGI
-Date:   Tue,  7 Jan 2020 21:52:31 +0100
-Message-Id: <20200107205334.665313334@linuxfoundation.org>
+Subject: [PATCH 5.4 014/191] iio: st_accel: Fix unused variable warning
+Date:   Tue,  7 Jan 2020 21:52:14 +0100
+Message-Id: <20200107205333.770282694@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -63,57 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Bolshakov <r.bolshakov@yadro.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit af22f0c7b052c5c203207f1e5ebd6aa65f87c538 ]
+[ Upstream commit 0163c1c521ff8b09cd8ca395003cc00178161d77 ]
 
-PORT UPDATE asynchronous event is generated on the host that issues PLOGI
-ELS (in the case of higher WWPN). In that case, the event shouldn't be
-handled as it sets unwanted DPC flags (i.e. LOOP_RESYNC_NEEDED) that
-trigger link flap.
+drivers/iio/accel/st_accel_core.c:1005:44: warning:
+ mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
 
-Ignore the event if the host has higher WWPN, but handle otherwise.
+Using stub helper while CONFIG_ACPI is disabled to fix it.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-13-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Tested-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Suggested-by: Ladislav Michl <ladis@linux-mips.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/accel/st_accel_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 4d90cf101f5f..eac76e934cbe 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -3920,6 +3920,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 					vha->d_id.b24 = 0;
- 					vha->d_id.b.al_pa = 1;
- 					ha->flags.n2n_bigger = 1;
-+					ha->flags.n2n_ae = 0;
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 2e37f8a6d8cf..be661396095c 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -993,6 +993,7 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
+ #define ST_ACCEL_TRIGGER_OPS NULL
+ #endif
  
- 					id.b.al_pa = 2;
- 					ql_dbg(ql_dbg_async, vha, 0x5075,
-@@ -3930,6 +3931,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 					    "Format 1: Remote login - Waiting for WWPN %8phC.\n",
- 					    rptid_entry->u.f1.port_name);
- 					ha->flags.n2n_bigger = 0;
-+					ha->flags.n2n_ae = 1;
- 				}
- 				qla24xx_post_newsess_work(vha, &id,
- 				    rptid_entry->u.f1.port_name,
-@@ -3941,7 +3943,6 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
- 			/* if our portname is higher then initiate N2N login */
++#ifdef CONFIG_ACPI
+ static const struct iio_mount_matrix *
+ get_mount_matrix(const struct iio_dev *indio_dev,
+ 		 const struct iio_chan_spec *chan)
+@@ -1013,7 +1014,6 @@ static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
+ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+ 				  struct iio_chan_spec *channels)
+ {
+-#ifdef CONFIG_ACPI
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
+ 	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	struct acpi_device *adev;
+@@ -1141,10 +1141,14 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+ out:
+ 	kfree(buffer.pointer);
+ 	return ret;
++}
+ #else /* !CONFIG_ACPI */
++static int apply_acpi_orientation(struct iio_dev *indio_dev,
++				  struct iio_chan_spec *channels)
++{
+ 	return 0;
+-#endif
+ }
++#endif
  
- 			set_bit(N2N_LOGIN_NEEDED, &vha->dpc_flags);
--			ha->flags.n2n_ae = 1;
- 			return;
- 			break;
- 		case TOPO_FL:
+ /*
+  * st_accel_get_settings() - get sensor settings from device name
 -- 
 2.20.1
 
