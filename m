@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E1EC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5C0C33CA2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C061D20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7A820656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMwImYyr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yafxffao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgAGSbL (ORCPT
+        id S1728659AbgAGSbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:31:11 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39244 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgAGSbL (ORCPT
+        Tue, 7 Jan 2020 13:31:15 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32820 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727925AbgAGSbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:31:11 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 20so594310wmj.4;
-        Tue, 07 Jan 2020 10:31:09 -0800 (PST)
+        Tue, 7 Jan 2020 13:31:14 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so14782951wmd.0;
+        Tue, 07 Jan 2020 10:31:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hYKj/+nVSNkFF8hiZbulRw4b+kXEYHe/NgI/gzd5MSY=;
-        b=MMwImYyrVDmD8Ux7KbUpIHXEyZX6nB9MQmJUG1wsRBsuQ8gKgd27orsaS86P4Ou/Nn
-         MeBO3pfTh7YB89pK2I/0uTVZ0XX0kugebZ2mkLwKCgavj4DrlIq6em7iKe8l0jSJ7GDF
-         qSzV/BJroRBIpeBtyX9+SDhWldZpbjThdPcr0+2L3zqbBoQeALCMSd9wBVHDWA81TKLu
-         5l5EKvxYbAz5elbSiSkIeV2/0lQAbVW4QDm5C+ZBkf4iFHS4msyx/o/NRpzQeNqd1WJX
-         sDZuXLP14E6xkVuzMp/xKjLxBZNJ3mYseHpDeTxOIKYPEPnxPdtCaF+r/k4o0Z1JB867
-         lhNw==
+        bh=0F4Kd5Ywhqg4TZ9Cg5D+47SboN/4h4Ft84pZMAsNlKo=;
+        b=YafxffaoqkeQGIPgQKSLZv7Ponlme3Bk0WVdm20udVQUIgs0xAsxF0mmMa7fZd4G5K
+         Uhb0TxGXUnj4YS5k5vnpcqgKb9J3R5CIDOG4pS6bxXNa8guBkL7GqiluFnnuOI4epULH
+         VU5cW5Cnk0UL8VtrLN3KQaQQU3um2nv3/K/ZfwbvUnIMGSg7Hb8MMyc4lFU9ekUO/wUE
+         2o3lkceF2HTYw3oBjPZjqDjeXpd9BRPrZhTCf6Sm3oox7oCLbI9Kcx+ROSjdGHQLtNSi
+         EHH8UYd4qf+w1JYsZabXeRDAa4AsDjSF+syE3hs/pR0XOT5LXhWFJ9rHHcDqrLS/cswu
+         GcRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hYKj/+nVSNkFF8hiZbulRw4b+kXEYHe/NgI/gzd5MSY=;
-        b=R1uL0xYrd6Ag0wcFPCB9N3aTETzlAWSPismZDQow54zlpiAPBjufd/fdTNfTvwTC0s
-         rgLzwssaNepVu4MaENgamBuPCNaw5EyXiNve5vTSEFB9yuUFKklrVKJsXaf5hgIeLbuW
-         bHHb+gqHERWNa6k1kU6mxeaCP6354EZrQkBO1JZ/uMgjRs6LIbGt7szqqXLDeObPSNon
-         S5ABNaVORpn2hEHoD7gIscnGwhQ/mh1Wxe89ydFy8DrhtTldKnVLx2tSK+kqSlVn9SgY
-         ztWzcT+VMuqRyqky4VfEGXc3Rf9F+vh5icT6VxXasGTh2JQrr6fsuc98lSDs+0RI7REK
-         x+Dg==
-X-Gm-Message-State: APjAAAU7VDaTXa5DzjPs7OTPBbvCpwS8VX2FzF81a90bowZYL/wSEsOI
-        bT/E9vuNCSKfxydf8mk/yJbyVNkK
-X-Google-Smtp-Source: APXvYqyIl1DYZZmNJSTwnw6RcIIPbzyvahakbyePNgeB/AA+sPOB5csF4biu20RxiCAcDMNh+1I9Zg==
-X-Received: by 2002:a1c:8055:: with SMTP id b82mr350762wmd.127.1578421868590;
-        Tue, 07 Jan 2020 10:31:08 -0800 (PST)
+        bh=0F4Kd5Ywhqg4TZ9Cg5D+47SboN/4h4Ft84pZMAsNlKo=;
+        b=F4OM55/02TCqr1CWQ8h2n03IpiULDmxLJZEZDfuykWFHwUnPPcLNpFBtlO5T4PPiBE
+         snBEis+PF/YYtWiZ/0FWWo5Pn4CDTCiMUOhC5p22WlJB2uhZLa1c7MCV7P8UjIZtMymO
+         Hjx4k0AWTiexwBH08jQRPMfOMf8OsknlgVz3Bkvl+g39GCaGu2ESj96I8y85oHkJoWqQ
+         QDvOiXzVuLfD8iEi0IqV9XlF9FVt/MCOYJDAq22VGvFCNKRnLNqGx46roTtNWHC/iKpZ
+         1mX0FOXXrb9mHSjdLf4eE1hM8Da+tGd4BnVp+eyvIVu4JTZDnfePBcZhw/SUuJb9a9Lq
+         ZFKA==
+X-Gm-Message-State: APjAAAWcx+YIlSLxLwN65/rM+R1fgGXvTf/8HBORjKFmMNU/xZm0t0fr
+        TP8vazfxU0rNI+h1N8IHvRerMBgU
+X-Google-Smtp-Source: APXvYqxGPnpDm3ovMwAlFLSA5Y2lqNnDLtsjmBX4mk+5yIqPHrHdUCu55+wEtDsvnBpPB5ovF5GVXw==
+X-Received: by 2002:a1c:f001:: with SMTP id a1mr382380wmb.76.1578421871534;
+        Tue, 07 Jan 2020 10:31:11 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r6sm842764wrq.92.2020.01.07.10.31.05
+        by smtp.gmail.com with ESMTPSA id r6sm842764wrq.92.2020.01.07.10.31.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 10:31:08 -0800 (PST)
+        Tue, 07 Jan 2020 10:31:10 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     bcm-kernel-feedback-list@broadcom.com,
@@ -69,9 +69,9 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         Parallel ATA drivers)),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS)
-Subject: [PATCH v3 2/3] ata: ahci_brcm: Perform reset after obtaining resources
-Date:   Tue,  7 Jan 2020 10:30:21 -0800
-Message-Id: <20200107183022.26224-3-f.fainelli@gmail.com>
+Subject: [PATCH v3 3/3] ata: ahci_brcm: BCM7216 reset is self de-asserting
+Date:   Tue,  7 Jan 2020 10:30:22 -0800
+Message-Id: <20200107183022.26224-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200107183022.26224-1-f.fainelli@gmail.com>
 References: <20200107183022.26224-1-f.fainelli@gmail.com>
@@ -80,50 +80,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resources such as clocks, PHYs, regulators are likely to get a probe
-deferral return code, which could lead to the AHCI controller being
-reset a few times until it gets successfully probed. Since this is
-typically the most time consuming operation, move it after the resources
-have been acquired.
+The BCM7216 reset controller line is self-deasserting, unlike other
+platforms, so make use of reset_control_reset() instead of
+reset_control_deassert().
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/ata/ahci_brcm.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/ata/ahci_brcm.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 718516fe6997..c229fea39a47 100644
+index c229fea39a47..62c948e56beb 100644
 --- a/drivers/ata/ahci_brcm.c
 +++ b/drivers/ata/ahci_brcm.c
-@@ -456,15 +456,9 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
+@@ -352,7 +352,10 @@ static int brcm_ahci_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	return reset_control_assert(priv->rcdev);
++	if (priv->version != BRCM_SATA_BCM7216)
++		ret = reset_control_assert(priv->rcdev);
++
++	return ret;
+ }
+ 
+ static int brcm_ahci_resume(struct device *dev)
+@@ -362,7 +365,10 @@ static int brcm_ahci_resume(struct device *dev)
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
+ 	int ret = 0;
  
 -	ret = reset_control_deassert(priv->rcdev);
--	if (ret)
--		return ret;
--
- 	hpriv = ahci_platform_get_resources(pdev, 0);
--	if (IS_ERR(hpriv)) {
--		ret = PTR_ERR(hpriv);
--		goto out_reset;
--	}
-+	if (IS_ERR(hpriv))
-+		return PTR_ERR(hpriv);
++	if (priv->version == BRCM_SATA_BCM7216)
++		ret = reset_control_reset(priv->rcdev);
++	else
++		ret = reset_control_deassert(priv->rcdev);
+ 	if (ret)
+ 		return ret;
  
- 	hpriv->plat_data = priv;
- 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP | AHCI_HFLAG_NO_WRITE_TO_RO;
-@@ -481,6 +475,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+@@ -475,7 +481,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
  		break;
  	}
  
-+	ret = reset_control_deassert(priv->rcdev);
-+	if (ret)
-+		return ret;
-+
- 	ret = ahci_platform_enable_clks(hpriv);
+-	ret = reset_control_deassert(priv->rcdev);
++	if (priv->version == BRCM_SATA_BCM7216)
++		ret = reset_control_reset(priv->rcdev);
++	else
++		ret = reset_control_deassert(priv->rcdev);
  	if (ret)
- 		goto out_reset;
+ 		return ret;
+ 
+@@ -520,7 +529,8 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ out_disable_clks:
+ 	ahci_platform_disable_clks(hpriv);
+ out_reset:
+-	reset_control_assert(priv->rcdev);
++	if (priv->version != BRCM_SATA_BCM7216)
++		reset_control_assert(priv->rcdev);
+ 	return ret;
+ }
+ 
 -- 
 2.17.1
 
