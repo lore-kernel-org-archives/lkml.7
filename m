@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DFEC33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14E9C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CB7208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9411F20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430624;
-	bh=UK7zvFuwT4nHkVVu7h+EziwchvrSTVowkisJx0hoD5g=;
+	s=default; t=1578430629;
+	bh=EEWf92paQeWatAARwqxwbuW4tXFAiCDjh9sBkB1fywg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWUrfS/ye2u8vPFthoYD64gPjD9eV4v6gTWCSQofSfiLxWyX0+iFc7Rpb/LDOWrHq
-	 fL42gmEu81efdBxT7VkFx/eTq6vL8DLlcg4PkJZYyKUY2Zdmo5XSNGwm8VUd5YQ8Bc
-	 MmuWcosSOzZqBUUAdDQpKlNhY3vLAqqaMG3tw+Pc=
+	b=mY4o8phaKMdIvL87sQxHY+YjItltfI6aRTmvPWihFTenAl8d3e3pK7/25C4zkZY2I
+	 cibGFK+puyz5O7U+wambSLsNmBXZNlZBOaoR0FKt7ysMY+xzELy+ONhypi8bL23qkb
+	 0zv56yxCJKfCcHi8qev/37YKQ1GesIVg6sYDROts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgAGU5C (ORCPT
+        id S1727448AbgAGU5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53166 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgAGU45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:57 -0500
+        id S1727376AbgAGU5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31AA214D8;
-        Tue,  7 Jan 2020 20:56:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B0621744;
+        Tue,  7 Jan 2020 20:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430616;
-        bh=UK7zvFuwT4nHkVVu7h+EziwchvrSTVowkisJx0hoD5g=;
+        s=default; t=1578430621;
+        bh=EEWf92paQeWatAARwqxwbuW4tXFAiCDjh9sBkB1fywg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBiumg8OrWyi6/Tcmt0AO5FJ4dZ1AftPOCyhS23hLZGG9FnbXiNyjb10UXBpMFYPo
-         quPaWW8IL1DWWJm4TP1DMfB8DthZSbAKK0yhti2uHuj4Jty2/XZAMaU7cFx5y8Y+LR
-         Q81YYcHeEUqLhTIZzk4KS2hxAsOcr0NH6M9hUdUk=
+        b=0ioMARYD+XbHMiOKXaKBwa0mREHn2pl6yNoWHELM1NHea7NxMv29/iRXw1v6lZpgN
+         w1C93slDf/XbbOUfYpaLKC8Eh9//0mtbdpRh20lLtl538NF4wvoXLd55Em6C8XwBop
+         HAn/WlfSIIEbPzPleIEv762XWFRVdLmyG56ia7Sw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvel.com>,
-        Hannes Reinecke <hare@suse.de>,
         Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
         Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/191] scsi: qla2xxx: Dont call qlt_async_event twice
-Date:   Tue,  7 Jan 2020 21:52:26 +0100
-Message-Id: <20200107205334.400880662@linuxfoundation.org>
+Subject: [PATCH 5.4 028/191] scsi: qla2xxx: Configure local loop for N2N target
+Date:   Tue,  7 Jan 2020 21:52:28 +0100
+Message-Id: <20200107205334.507262764@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -66,47 +65,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit 2c2f4bed9b6299e6430a65a29b5d27b8763fdf25 ]
+[ Upstream commit fd1de5830a5abaf444cc4312871e02c41e24fdc1 ]
 
-MBA_PORT_UPDATE generates duplicate log lines in target mode because
-qlt_async_event is called twice. Drop the calls within the case as the
-function will be called right after the switch statement.
+qla2x00_configure_local_loop initializes PLOGI payload for PLOGI ELS using
+Get Parameters mailbox command.
 
-Cc: Quinn Tran <qutran@marvell.com>
-Link: https://lore.kernel.org/r/20191125165702.1013-8-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvel.com>
+In the case when the driver is running in target mode, the topology is N2N
+and the target port has higher WWPN, LOCAL_LOOP_UPDATE bit is cleared too
+early and PLOGI payload is not initialized by the Get Parameters
+command. That causes a failure of ELS IOCB carrying the PLOGI with 0x15 aka
+Data Underrun error.
+
+LOCAL_LOOP_UPDATE has to be set to initialize PLOGI payload.
+
+Fixes: 48acad099074 ("scsi: qla2xxx: Fix N2N link re-connect")
+Link: https://lore.kernel.org/r/20191125165702.1013-10-r.bolshakov@yadro.com
+Acked-by: Quinn Tran <qutran@marvell.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 9204e8467a4e..b3766b1879e3 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1061,8 +1061,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
- 			ql_dbg(ql_dbg_async, vha, 0x5011,
- 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
- 			    mb[1], mb[2], mb[3]);
--
--			qlt_async_event(mb[0], vha, mb);
- 			break;
- 		}
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 5d31e3d52b6b..4e424f1ce5de 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4927,14 +4927,8 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
+ 		set_bit(RSCN_UPDATE, &flags);
+ 		clear_bit(LOCAL_LOOP_UPDATE, &flags);
  
-@@ -1079,8 +1077,6 @@ qla2x00_async_event(scsi_qla_host_t *vha, struct rsp_que *rsp, uint16_t *mb)
- 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
- 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
- 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
--
--		qlt_async_event(mb[0], vha, mb);
- 		break;
- 
- 	case MBA_RSCN_UPDATE:		/* State Change Registration */
+-	} else if (ha->current_topology == ISP_CFG_N) {
+-		clear_bit(RSCN_UPDATE, &flags);
+-		if (qla_tgt_mode_enabled(vha)) {
+-			/* allow the other side to start the login */
+-			clear_bit(LOCAL_LOOP_UPDATE, &flags);
+-			set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
+-		}
+-	} else if (ha->current_topology == ISP_CFG_NL) {
++	} else if (ha->current_topology == ISP_CFG_NL ||
++		   ha->current_topology == ISP_CFG_N) {
+ 		clear_bit(RSCN_UPDATE, &flags);
+ 		set_bit(LOCAL_LOOP_UPDATE, &flags);
+ 	} else if (!vha->flags.online ||
 -- 
 2.20.1
 
