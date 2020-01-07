@@ -2,135 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB01C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3996C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B942073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578385546;
-	bh=w7136eKZokixUOf4koTpCE3/5RMMLGcLq9FIkDE+Qw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dDaiC5SukXDALvzUx8fyk0tS4PXTfd5MhkuISozBcFFruvdhVcYKfp3fDTOfw1Ymn
-	 Y/VDnqzSDpqrrTZoFNk5Behem7Yfv7Zu782QPGCKKSpGL59TvvvB53DQQls8XekX/3
-	 YUeEIx8kXe4KysUDDfPEeGbxeeLNKrjiapuIyJ5Q=
+	by mail.kernel.org (Postfix) with ESMTP id C7152207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bzrYxlco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgAGIZp convert rfc822-to-8bit (ORCPT
+        id S1727616AbgAGIZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:25:45 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45904 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGIZo (ORCPT
+        Tue, 7 Jan 2020 03:25:59 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45587 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgAGIZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:25:44 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so49605459edw.12;
-        Tue, 07 Jan 2020 00:25:43 -0800 (PST)
+        Tue, 7 Jan 2020 03:25:59 -0500
+Received: by mail-qt1-f194.google.com with SMTP id l12so44653657qtq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 00:25:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P1qNd7psLj1vN7YrSNjPLisR1SYB4sdk/yxx7a4dqv0=;
+        b=bzrYxlco4uNeu7RE3s8e2uVp04X/ylErL+05vS7qIpO+v/86iOTebSWfPL5kFVs1ee
+         vQlUC/RCwSEJjK/JplOZO0A1p5YdUhdaUBPkIhp6gWYMNeosBUUwPH+/Uch6kg19MaeN
+         mqHSzPq1GskwNO05/rUG2U+JMl2Y9BrePYB+scQSMkzxn9cjXxvsSEUwPFMFzFbw5QEz
+         L3UFTxDcGYy6VZkM5z+aWtlCpDKj2o95XuLrHr8mJu5Q1RGEnFSlQv2Buz3+x8z4A1Wl
+         0C8JA879OWzxmHzfBCefMKAyftykJuQYapTgBDT2/VtRyGBBdLuy+EgGLy+/CX5vle8o
+         USDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vT2NN+xI4BcelZZCoGioMbTizcdEYSLI6ni70MbnF8c=;
-        b=ZIzmmVIlTS9WEt4rJoZ85Xf5fPjZdF87B7kV/hX4D5K94C2l1i8pRYdmDQzKgH7hGW
-         m38GA6s9JAoGladP/P9jdGwMONnnyq7+yU4xXepGDlhEYpGeN7iF2/3W2NPx0H8zvbJU
-         KYrAsYwZX39weuXU1ce+5S/+sW+pbf01jXgQZxu6TL6EbjdZ1GL9HHR2A/U+nZRx8q3R
-         mdK0ZXg2Tf98/4t++O3/H//zIxfjvmY+dcQHO33IqX4zBlAL0L9efj9NEiCfn0Npn1Z+
-         x8UiciWKC6g1JVNVMK1Dn6gHh2YyHNJbo71IJx8yvzmDbHPv9uvoYymcG80oEVj4gEK0
-         ZDXA==
-X-Gm-Message-State: APjAAAWlf4w5AE74+Q6KniXGe27MJ2zFo//05Wf5Hju5EBkOxFqLjMyR
-        xpNyUkNwdqCSWQWYc3WlnlE=
-X-Google-Smtp-Source: APXvYqwRuI+Pu22h1HAS8nBuWY+NEdeOj5ioRnCb8N42vbhDOOIZ7fM0eRKg8UY44R4kju5amCGT3w==
-X-Received: by 2002:a05:6402:221c:: with SMTP id cq28mr63552685edb.110.1578385542439;
-        Tue, 07 Jan 2020 00:25:42 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id ba29sm7398179edb.47.2020.01.07.00.25.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 00:25:41 -0800 (PST)
-Date:   Tue, 7 Jan 2020 09:25:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107082539.GA31827@pi3>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P1qNd7psLj1vN7YrSNjPLisR1SYB4sdk/yxx7a4dqv0=;
+        b=sAWOGngMYy7UzrMcpKE4Tpz8noHwmhxfitg6wLdqTzZW8cz6yaIfKiQVW6JAqiEJIq
+         VsSE2g/UIbIsiHScnkzARr8M8D55q+FDqTDV09pWv4CDhRDMLmdF3qUJZfsNQRYbwk89
+         RW41d39Uneqz2rVYLgjUsPeDwx5wQ3NfHr8cG3NyJrNDIqByWhq8xgF4IaMyxtnNCEVP
+         N1CsiDFsEYjLQQd3hcBSpoSkhLrUzKYKFYADXcDezwz/Ipdg1JaFWucYbaGYCA7MywXq
+         tKEiZv3TCkWHMKiOTrWTmutUuxkU7+/as3rPoRgPgJRXKbEiDhrVqOMnrO57lquEvQU/
+         HkFw==
+X-Gm-Message-State: APjAAAVMEdZn3c2eJXZSGOffU+KEDNnkEaRfYBw1kP7eVIv0NOhI/Jqt
+        MehBt244ghlVJNOcB26kOpcga3fzJo3WHI4RV8GyRQ==
+X-Google-Smtp-Source: APXvYqzjhkSvCozGISHl98iBSuMlg0RKAZKkYeLKPjudgFxA5+wsaLdBqZ41PxHunEVSDcVUly1rZyC2ez3w7BJow5U=
+X-Received: by 2002:ac8:6784:: with SMTP id b4mr75846060qtp.27.1578385558120;
+ Tue, 07 Jan 2020 00:25:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
+References: <20191215183047.9414-1-digetx@gmail.com> <CACRpkdYAKS50-CNmE0nRNQanFxKejoHrwxho3fZXROoLZUb4+Q@mail.gmail.com>
+In-Reply-To: <CACRpkdYAKS50-CNmE0nRNQanFxKejoHrwxho3fZXROoLZUb4+Q@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 7 Jan 2020 09:25:47 +0100
+Message-ID: <CAMpxmJVi1hy6a72M7rAHP0AXW1Z4cGp8H0O6ayLMwFm9UL3WPQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 08:26:45AM +0100, Uwe Kleine-König wrote:
-> Hello Krzysztof,
-> 
-> On Mon, Dec 30, 2019 at 06:21:13PM +0100, Krzysztof Kozlowski wrote:
-> > Some of the PWM drivers can be compile tested to increase build
-> > coverage.
-> > 
-> > The Meson PWM driver requires COMMON_CLK dependency.
-> 
-> I'm surprised that there are not more that need this. Is HAVE_CLK not
-> enough?
+pon., 6 sty 2020 o 23:59 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Sun, Dec 15, 2019 at 7:31 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> > I was investigating why CPU hangs during of GPIO driver suspend and in
+> > the end it turned out that it is a Broadcom WiFi driver problem because
+> > it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and th=
+is
+> > may cause a bit weird CPU hang on writing to INT_ENB register during of
+> > GPIO driver suspend. Meanwhile I also noticed that a few things could b=
+e
+> > improved in the driver, that's what this small series addresses.
+> >
+> > Dmitry Osipenko (3):
+> >   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
+> >   gpio: tegra: Properly handle irq_set_irq_wake() error
+> >   gpio: tegra: Use NOIRQ phase for suspend/resume
+>
+> All three patches applied with Thierry's review/test tag.
+>
+> Yours,
+> Linus Walleij
 
-Nope. E.g. for alpha architecture, HAVE_CLK is not set and without
-COMMON_CLK:
+Ugh, I now noticed I responded to Thierry only after applying this to my tr=
+ee.
 
-drivers/pwm/pwm-meson.o: In function `meson_pwm_init_channels':
-(.text+0x244): undefined reference to `devm_clk_register'
+Anyway, it shouldn't be a problem. I'll take more care next time.
 
-I guess other solution would be to add stubs for few clk functions...
-
-> Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> config (which does't have HAS_IOMEM) and they all compile fine.
-
-Because of !HAS_IOMEM, since some time ARCH=um does not support
-COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-testing (and for regular build it is selected by ARCH).
-
-> 
-> > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
-> >  
-> >  config PWM_MXS
-> >  	tristate "Freescale MXS PWM support"
-> > -	depends on ARCH_MXS && OF
-> > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
-> >  	select STMP_DEVICE
-> >  	help
-> >  	  Generic PWM framework driver for Freescale MXS.
-> > @@ -328,7 +329,8 @@ config PWM_MXS
-> >  
-> >  config PWM_OMAP_DMTIMER
-> >  	tristate "OMAP Dual-Mode Timer PWM support"
-> > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-> > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-> > +	depends on OF
-> 
-> I'm surprised that OF isn't required for PWM_MXS but is is for
-> PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
-> pwm-omap-dmtimer.
-
-Since some time !OF has all necessary stubs so OF is actually needed
-only for binding, not compiling.
-
-Best regards,
-Krzysztof
-
+Bart
