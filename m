@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814F3C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBDC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AED20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B942E2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431271;
-	bh=MM79NCL25bbH0nHMP9HiLQXuyGVNFpLsvMEYvLn9qm0=;
+	s=default; t=1578431273;
+	bh=W+ewjJ2Jn42luW3zaCJNXkWRnC/jh25sJQvQGYDWDnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUXHyfyZyQkYl8gDoE+WLiFxKa6eXMgG3/6Uivt5mwtNZk4ENKmXrlbGke3E0K91k
-	 L/xZTBTgqcDw6BDS7xdQOappvcU4uBJesExdGmoKT5qNBxgWCOd9DUkuLHmbanE35A
-	 X9M8Qoxp5N6RNmHHsaLyRzhgHNQ4tBEWO0StQTE0=
+	b=BfIZ525xlyyVCrdi/SZKHAY+nLOMqyjgsqiGg4OR0lgFUC9FOULbWG21UpJB1WmQR
+	 ePr9mc/W6c50s3s0owivamc9RpOUFkKllXMPTU/8Omczis0olPZ831ft9H6CTToiZf
+	 3z77UQ0XeOn9AAp4QDh0iPTJtAhEo+rXqUekmIRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgAGVHt (ORCPT
+        id S1729587AbgAGVHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59124 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:07:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbgAGVHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:45 -0500
+        id S1728208AbgAGVHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27462077B;
-        Tue,  7 Jan 2020 21:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4E522077B;
+        Tue,  7 Jan 2020 21:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431265;
-        bh=MM79NCL25bbH0nHMP9HiLQXuyGVNFpLsvMEYvLn9qm0=;
+        s=default; t=1578431270;
+        bh=W+ewjJ2Jn42luW3zaCJNXkWRnC/jh25sJQvQGYDWDnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bm+NgRDDRj4IGBFqIkAbe4ua6MHJF5YJHa9AwmqAy0RVB2aTzPoimsKQJ1K4+vocz
-         +AeNRimWgxDH0yn+Vyrp3OTYe8cJFPGA7+jys9aCyUUmYZd0QgD15JUB4lrdm3tMOx
-         LCUQda2img5Q655uMI47RAGhxNVV3Rbv2VnRnhgk=
+        b=WGXoSGflreA51mro/Hp8IGrU1EDbFnFhc+ZXirl+5rKA7pkbRUVdYgrN4woxNvXGn
+         w5Zhf5cy6w0aihUUjPXWQ53m1SX1//qYibdtM3BZExdiSaggXSK/mrkQ4K96wZBdaP
+         RXHXJeRiZi6wP2IDHti/TT6BuQFajW1qQkIS++Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/115] selftests: rtnetlink: add addresses with fixed life time
-Date:   Tue,  7 Jan 2020 21:55:11 +0100
-Message-Id: <20200107205308.139779209@linuxfoundation.org>
+Subject: [PATCH 4.19 103/115] coresight: etb10: Do not call smp_processor_id from preemptible
+Date:   Tue,  7 Jan 2020 21:55:13 +0100
+Message-Id: <20200107205308.383005810@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,63 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 3cfa148826e3c666da1cc2a43fbe8689e2650636 ]
+[ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
 
-This exercises kernel code path that deal with addresses that have
-a limited lifetime.
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-Without previous fix, this triggers following crash on net-next:
- BUG: KASAN: null-ptr-deref in check_lifetime+0x403/0x670
- Read of size 8 at addr 0000000000000010 by task kworker [..]
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
+
+Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.6+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/rtnetlink.sh | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/hwtracing/coresight/coresight-etb10.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selftests/net/rtnetlink.sh
-index e101af52d1d6..ff665de788ef 100755
---- a/tools/testing/selftests/net/rtnetlink.sh
-+++ b/tools/testing/selftests/net/rtnetlink.sh
-@@ -234,6 +234,26 @@ kci_test_route_get()
- 	echo "PASS: route get"
- }
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index 0dad8626bcfb..0a59bf3af40b 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -275,9 +275,7 @@ static void *etb_alloc_buffer(struct coresight_device *csdev, int cpu,
+ 	int node;
+ 	struct cs_buffers *buf;
  
-+kci_test_addrlft()
-+{
-+	for i in $(seq 10 100) ;do
-+		lft=$(((RANDOM%3) + 1))
-+		ip addr add 10.23.11.$i/32 dev "$devdummy" preferred_lft $lft valid_lft $((lft+1))
-+		check_err $?
-+	done
-+
-+	sleep 5
-+
-+	ip addr show dev "$devdummy" | grep "10.23.11."
-+	if [ $? -eq 0 ]; then
-+		echo "FAIL: preferred_lft addresses remaining"
-+		check_err 1
-+		return
-+	fi
-+
-+	echo "PASS: preferred_lft addresses have expired"
-+}
-+
- kci_test_addrlabel()
- {
- 	ret=0
-@@ -965,6 +985,7 @@ kci_test_rtnl()
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
  
- 	kci_test_polrouting
- 	kci_test_route_get
-+	kci_test_addrlft
- 	kci_test_tc
- 	kci_test_gre
- 	kci_test_gretap
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+ 	if (!buf)
 -- 
 2.20.1
 
