@@ -2,144 +2,203 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370C1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDED7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9352077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97786207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:36:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="H6NGKtDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgAGXbE (ORCPT
+        id S1727267AbgAGXgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:31:04 -0500
-Received: from mga12.intel.com ([192.55.52.136]:33852 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgAGXbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:31:03 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 15:31:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
-   d="scan'208";a="370772634"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 15:31:02 -0800
-Date:   Tue, 7 Jan 2020 15:31:02 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-Message-ID: <20200107233102.GC16987@linux.intel.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
- <20200106233846.GC12879@linux.intel.com>
- <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
- <20200107222813.GB16987@linux.intel.com>
- <298352c6-7670-2929-9621-1124775bfaed@amd.com>
+        Tue, 7 Jan 2020 18:36:41 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:61641 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgAGXgl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:36:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1578440200; x=1609976200;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=My8oU4ytBcdcQ+UejUzlcPtOhmb8DAm8xNHPkmPJYvQ=;
+  b=H6NGKtDKdgb6PmM+a20b1C8P6fI+DOJhCNmucoNel5EbQnlMQg6s9FUc
+   wYzTeMabb0+vz9Q2QCj28sv/07pqVqn5l8bhPCL7mVYU7lG50e/I//kUy
+   orrReDXFgd9d/vJyDu/hQ8JfBeiL2tIh3o+VsS4SD0hG4Awsl8mEBp5mE
+   U=;
+IronPort-SDR: sD0hFGoR+riFpzTxnD5uoaQgk4FuSlaIatLnlspL6yw4MTCBhzx49SWPF1KM3u++pTozpnXqG6
+ 46roJ3NRDYOg==
+X-IronPort-AV: E=Sophos;i="5.69,407,1571702400"; 
+   d="scan'208";a="11930335"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 07 Jan 2020 23:36:36 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 378EFA24D9;
+        Tue,  7 Jan 2020 23:36:35 +0000 (UTC)
+Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 Jan 2020 23:36:25 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 Jan 2020 23:36:24 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Tue, 7 Jan 2020 23:36:24 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id D304340E0B; Tue,  7 Jan 2020 23:36:24 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 23:36:24 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.co>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>,
+        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>
+CC:     <anchalag@amazon.com>
+Subject: [RFC PATCH V2 00/11] Enable PM hibernation on guest VMs
+Message-ID: <20200107233624.GA16802@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <298352c6-7670-2929-9621-1124775bfaed@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 04:54:34PM -0600, Tom Lendacky wrote:
-> On 1/7/20 4:28 PM, Sean Christopherson wrote:
-> > On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
-> >> On 1/6/20 5:38 PM, Sean Christopherson wrote:
-> >>> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
-> >>>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
-> >>>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
-> >>>>> on a future processor, i.e. x86_phys_bits==52.
-> >>>>
-> >>>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
-> >>>> always be a reduction in physical addressing (so I'm told).
-> >>>
-> >>> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
-> >>> that reducing the PA space is optional.  Section 7.10.2 is especially
-> >>> clear on this:
-> >>>
-> >>>   In implementations where the physical address size of the processor is
-> >>>   reduced when memory encryption features are enabled, software must
-> >>>   ensure it is executing from addresses where these upper physical address
-> >>>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
-> >>
-> >> It's probably not likely, but given what is stated, I can modify my patch
-> >> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
-> >>
-> >> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
-> >> 	    boot_cpu_data.x86_phys_bits < 52) {
-> >>
-> >>>
-> >>> But, hopefully the other approach I have in mind actually works, as it's
-> >>> significantly less special-case code and would naturally handle either
-> >>> case, i.e. make this a moot point.
-> >>
-> >> I'll hold off on the above and wait for your patch.
-> > 
-> > Sorry for the delay, this is a bigger mess than originally thought.  Or
-> > I'm completely misunderstanding the issue, which is also a distinct
-> > possibility :-)
-> > 
-> > Due to KVM activating its L1TF mitigation irrespective of whether the CPU
-> > is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
-> > to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
-> > uses those first five reserved PA bits to store the MMIO GFN.  Setting
-> > BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
-> > a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
-> 
-> The L1TF mitigation only gets applied when:
->   boot_cpu_data.x86_cache_bits < 52 - shadow_nonpresent_or_rsvd_mask_len
-> 
->   and with shadow_nonpresent_or_rsvd_mask_len = 5, that means that means
->   boot_cpu_data.x86_cache_bits < 47.
-> 
-> On AMD processors that support memory encryption, the x86_cache_bits value
-> is not adjusted, just the x86_phys_bits. So for AMD processors that have
-> memory encryption support, this value will be at least 48 and therefore
-> not activate the L1TF mitigation.
+Hello,
+I am sending out a V2 version of series of patches that implements guest 
+PM hibernation.
+These guests are running on xen hypervisor. The patches had been tested
+against mainstream kernel. EC2 instance hibernation feature is provided 
+to the AWS EC2 customers. PM hibernation uses swap space carved out within 
+the guest[or can be a separate partition], where hibernation image is 
+stored and restored from.
 
-Ah.  Hrm.  I'd prefer to clean that code up to make the interactions more
-explicit, but may be we can separate that out.
+Why is guest hibenration needed:
+Doing guest hibernation does not involve any support from hypervisor and this
+way guest has complete control over its state. Infrastructure restrictions like
+saving up guest state etc can be overcome by guest initiated hibernation.
 
-> > The only sane approach I can think of is to activate the L1TF mitigation
-> > based on whether the CPU is vulnerable to L1TF, as opposed to activating> the mitigation purely based on the max PA of the CPU.  Since all CPUs that
-> > support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
-> > should never be active at the same time.
-> 
-> There is still the issue of setting a single bit that can conflict with
-> the C-bit. As it is today, if the C-bit were to be defined as bit 51, then
-> KVM would not take a nested page fault and MMIO would be broken.
+This series includes some improvements over RFC series sent last year:
+https://lists.xenproject.org/archives/html/xen-devel/2018-06/msg00823.html
 
-Wouldn't Paolo's patch to use the raw "cpuid_eax(0x80000008) & 0xff" for
-shadow_phys_bits fix that particular collision by causing
-kvm_set_mmio_spte_mask() to clear the present bit?  Or am I misundertanding
-how the PA reduction interacts with the C-Bit?
+Any comments or suggestions are welcome.
 
-AIUI, using phys_bits=48, then the standard scenario is Cbit=47 and some
-additional bits 46:M are reserved.  Applying that logic to phys_bits=52,
-then Cbit=51 and bits 50:M are reserved, so there's a collision but it's
-mostly benign because shadow_phys_bits==52, which triggers this:
+Changelog v2:
+1. Removed timeout/request present on the ring in xen-blkfront during blkfront freeze
+2. Fixed restoring of PIRQs which was apparently working for 4.9 kernels but not for
+newer kernel. [Legacy irqs were no longer restored after hibernation introduced with
+this commit "020db9d3c1dc0"]
+3. Merged couple of related patches to make the code more coherent and readable
+4. Code refactoring
+5. Sched clock fix when hibernating guest is under heavy CPU load
+Note: Under very rare circumstances we see resume failures with KASLR enabled only
+on xen instances.  We are roughly seeing 3% failures [>1000 runs] when testing with
+various instance sizes and some workload running on each instance. I am currently
+investigating the issue as to confirm if its a xen issue or kernel issue.
+However, it should not hold back anyone from reviewing/accepting these patches.
 
-	if (IS_ENABLED(CONFIG_X86_64) && shadow_phys_bits == 52)
-		mask &= ~1ull;
+Testing done:
+All the testing is done using amazon linux images w/t stock upstream kernel
+installed. All testing is done for multiple hibernation cycle.
 
-In other words, Paolo's patch fixes the fatal bug, but unnecessarily
-disables optimized MMIO page faults.  To remedy that, your idea is to rely
-on the (undocumented?) behavior that there are always additional reserved
-bits between Cbit and the reduced x86_phys_bits.
+i. multiple loops[~100] of hibernation in disk mode <reboot> w/t 5.4 guest kernel + 4.11 xen
+ii. Hibernation tested with memory stress tester running in background on smaller and
+larger instance sizes on EC2.[>500 runs]
+iii. Testing is also done on physical host machine[Ubuntu18.04/4.15 kernel/stock xen-4.6]
+running amazon linux 2 OS as guest VM with multiple queues.
+iv. Ran dd to write a large file with bs=1k and hibernated multiple times
+
+Testing How to:
+---------------
+Example:
+Set up a file-backed swap space. Swap file size>=Total memory on the system
+sudo dd if=/dev/zero of=/swap bs=$(( 1024 * 1024 )) count=4096 # 4096MiB
+sudo chmod 600 /swap
+sudo mkswap /swap
+sudo swapon /swap
+
+Update resume device/resume offset in grub if using swap file:
+resume=/dev/xvda1 resume_offset=200704
+
+Execute:
+--------
+sudo pm-hibernate
+OR
+echo disk > /sys/power/state && echo reboot > /sys/power/disk
+
+Compute resume offset code:
+"
+#!/usr/bin/env python
+import sys
+import array
+import fcntl
+
+#swap file
+f = open(sys.argv[1], 'r')
+buf = array.array('L', [0])
+
+#FIBMAP
+ret = fcntl.ioctl(f.fileno(), 0x01, buf)
+print buf[0]
+"
+
+Aleksei Besogonov (1):
+  PM / hibernate: update the resume offset on SNAPSHOT_SET_SWAP_AREA
+
+Anchal Agarwal (2):
+  x86/xen: Introduce new function to map HYPERVISOR_shared_info on
+    Resume
+  xen: Clear IRQD_IRQ_STARTED flag during shutdown PIRQs
+
+Eduardo Valentin (1):
+  x86: tsc: avoid system instability in hibernation
+
+Munehisa Kamata (7):
+  xen/manage: keep track of the on-going suspend mode
+  xenbus: add freeze/thaw/restore callbacks support
+  x86/xen: add system core suspend and resume callbacks
+  xen-netfront: add callbacks for PM suspend and hibernation support
+  xen-blkfront: add callbacks for PM suspend and hibernation
+  x86/xen: save and restore steal clock during hibernation
+  x86/xen: close event channels for PIRQs in system core suspend
+    callback
+
+ arch/x86/kernel/tsc.c             |  29 ++++++++++
+ arch/x86/xen/enlighten_hvm.c      |   8 +++
+ arch/x86/xen/suspend.c            |  66 +++++++++++++++++++++
+ arch/x86/xen/time.c               |   3 +
+ arch/x86/xen/xen-ops.h            |   1 +
+ drivers/block/xen-blkfront.c      | 119 +++++++++++++++++++++++++++++++++++---
+ drivers/net/xen-netfront.c        |  98 ++++++++++++++++++++++++++++++-
+ drivers/xen/events/events_base.c  |  13 +++++
+ drivers/xen/manage.c              |  73 +++++++++++++++++++++++
+ drivers/xen/time.c                |  28 ++++++++-
+ drivers/xen/xenbus/xenbus_probe.c |  99 +++++++++++++++++++++++++------
+ include/linux/irq.h               |   1 +
+ include/linux/sched/clock.h       |   5 ++
+ include/xen/events.h              |   1 +
+ include/xen/xen-ops.h             |   8 +++
+ include/xen/xenbus.h              |   3 +
+ kernel/irq/chip.c                 |   3 +-
+ kernel/power/user.c               |   6 +-
+ kernel/sched/clock.c              |   4 +-
+ 19 files changed, 537 insertions(+), 31 deletions(-)
+
+-- 
+2.15.3.AMZN
+
