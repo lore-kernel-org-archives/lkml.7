@@ -2,175 +2,70 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB81DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D11C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C1C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430EB207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:21:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kpMZwwj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgAGNU0 (ORCPT
+        id S1728095AbgAGNVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:20:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44320 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGNU0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:20:26 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 75A0B2909E6
-Message-ID: <657de953782be2514849bc8bd12a3fbcb6794427.camel@collabora.com>
-Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip
- MIPI RX D-PHY yaml bindings
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
-Date:   Tue, 07 Jan 2020 10:20:10 -0300
-In-Reply-To: <2549505.MsbA2le1sL@diego>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
-         <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com>
-         <20200107023721.GG22189@pendragon.ideasonboard.com>
-         <2549505.MsbA2le1sL@diego>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 7 Jan 2020 08:21:55 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:50584 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbgAGNVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:21:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CrkNjGazMW+zoOdGlarP5I4eBBOORn1ZisIsMHSTOR8=; b=kpMZwwj+gfZ7Ut8xreJoKRuJxE
+        qI/81PKNiiLyo+J4nuq5VkeUfwJMKcK/phV4qUNMGN09W4sSUttlRz1dMqvDqNlxQrbCvNK3Z/Jxz
+        eyo4StP9zAU1MpxiTi/QXuVMYhwcIWeks1/aEeNqWbWbfCjsURkRAMteEDszISNSCwP0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ioonu-0007uq-JR; Tue, 07 Jan 2020 14:21:50 +0100
+Date:   Tue, 7 Jan 2020 14:21:50 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zero19850401@gmail.com" <zero19850401@gmail.com>
+Subject: Re: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
+Message-ID: <20200107132150.GB23819@lunn.ch>
+References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko, Laurent,
+> diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+> index 72868a28b621..ab4e45199df9 100644
+> --- a/drivers/net/ethernet/freescale/gianfar.c
+> +++ b/drivers/net/ethernet/freescale/gianfar.c
+> @@ -833,6 +833,7 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
+>  
+>  	/* Find the TBI PHY.  If it's not there, we don't support SGMII */
+>  	priv->tbi_node = of_parse_phandle(np, "tbi-handle", 0);
+> +	priv->dma_endian_le = of_property_read_bool(np, "fsl,dma-endian-le");
 
-On Tue, 2020-01-07 at 10:28 +0100, Heiko Stübner wrote:
-> Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
-> > On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
-> > > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
-> > > > Hi Helen,
-> > > > 
-> > > > Thank you for the patch.
-> > > > 
-> > > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
-> > > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
-> > > > > 
-> > > > > This was tested and verified with:
-> > > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-
-> > > > > dphy.yaml  Documentation/devicetree/bindings/phy/
-> > > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > 
-> > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > > > 
-> > > > > ---
-> > > > > 
-> > > > > Changes in v12:
-> > > > > - The commit replaces the following commit in previous series named
-> > > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-> > > > > This new patch adds yaml binding and was verified with
-> > > > > make dtbs_check and make dt_binding_check
-> > > > > 
-> > > > > Changes in v11: None
-> > > > > Changes in v10:
-> > > > > - unsquash
-> > > > > 
-> > > > > Changes in v9:
-> > > > > - fix title division style
-> > > > > - squash
-> > > > > - move to staging
-> > > > > 
-> > > > > Changes in v8: None
-> > > > > Changes in v7:
-> > > > > - updated doc with new design and tested example
-> > > > > 
-> > > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
-> > > > >  1 file changed, 75 insertions(+)
-> > > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > 
-> > > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > b/drivers/staging/media/phy-
-> > > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..af97f1b3e005
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > > @@ -0,0 +1,75 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
-> > > > 
-> > > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
-> > > 
-> > > The driver currently only supports RX0, but I think you are right,
-> > > it should say RX here. This binding could be extended for RX1.
-> > > 
-> > > > Looking at the PHY driver, it seems to handle all PHYs with a single
-> > > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
-> > > 
-> > > I am not following this. The driver handles just one PHY. Each PHY
-> > > should have its own node.
-> > 
-> > Looking at the registers, it seems that the different PHYs are
-> > intertwined and we would could have trouble handling the different PHYs
-> > with different DT nodes and thus struct device instances.
-> 
-> I have to confess to not following _ALL_ of the threads, so may say
-> something stupid, but I don't think the PHYs are intertwined so much.
-> 
-> Where RX0 is controlled from the "General Register Files" alone
-> [register dumping ground for soc designers], the TX1RX1-phy
-> actually gets controlled from inside the dsi1 register area it seems.
-> 
-> So in my previous (still unsucessful) tests, I was rolling with something like
-> https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
-> 
-> With the actual "logic" picked from the vendor kernel, that just double-
-> maps the dsi1-registers in both dsi and dphy driver, which was strange.
-> 
-> 
+Hi Johnson
 
-Describing each PHY in its own device node (as we currently do)
-results in:
+You need to document this new property in the binding.
 
-        mipi_dphy_tx1rx1: mipi-dphy-tx1rx1@ff968000 {
-                compatible = "rockchip,rk3399-mipi-dphy";
-                reg = <0x0 0xff968000 0x0 0x8000>;
-                rockchip,grf = <&grf>;
-        };
-
-        grf: syscon@ff770000 {
-                mipi_dphy_rx0: mipi-dphy-rx0 {
-                        compatible = "rockchip,rk3399-mipi-dphy";
-                };
-        };
-
-Which is mildly ugly, as it uses two mechanism to describe
-the GRF resource. In addition, the driver will then _infer_
-which device node is RX0 and which is TX1RX1, from this.
-
-Perhaps Laurent's proposal, describing each PHY explicitly,
-would be cleaner?
-
-Thanks,
-Ezequiel
-
-
-
+Thanks
+	Andrew
