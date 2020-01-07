@@ -2,116 +2,154 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E25C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2271C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBBF2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16F22077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fcWTO7BL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MKjc8aAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgAGKgz (ORCPT
+        id S1727799AbgAGKij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:36:55 -0500
-Received: from mail-eopbgr40127.outbound.protection.outlook.com ([40.107.4.127]:28800
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726565AbgAGKgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:36:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kyGLYbZ6MXqxLfSq0jMciEp4Sphxk7IDVEKXTVhX8sr2oDzQECcKA33fJQjzZLceM1A5JlQuyd56VcK2hE9AyC8PT+9Njo+HwLWoQY+wK4fh0mmiM7w8ySNx/P1FmOz8+kSb1OFURNOpkXy6yrYFtdhK1upOTgC697B1zFijAfsHOkRILyflCgNbcTiXgDn9n7uU8IjzEQcgzTxpFeovajtjnbyBh2vjLjJgg5xJJP+0s/fUyup4mPggKVBnNfDb/Zi5xy5KC4FrI313n/IXwh2rVujgvt4fMT2GRTR5aFNIqsju7VKjiPCtcmF+LyV1K5aNjwFkjU+iCUSx/IcxBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTMGa+tZMotaA4nyahaS3i2Jf6sk/eQx4lwkL+MbWEU=;
- b=oPuiLCq4OyHi0OX/AjLGEO8/CxQI597WQoULB/ehuPmyfcxnjUw0Xi8fY8Z8y81k49vETQxXBDv8WcYdFBm6YlN9OV7wyVSck7DISU5cp3HQGEGqSCWb1zdaUEo5WXgLd7gCljGnGXaOYhsUNJp5+QLX0yYqUJzmsf8sGj5hdRZY4FE66ObZ5cesjINl+H5l7H9kpGFbroa/jviTf44lj2N3Sb+FlBOd1x9lnz3nN7VrVos1sSDhboKGBK4++CzrUcm4ClQy5kpRvPDf/ZBy25rhAjzJ2ovPT9YPdH5joJQn1Hh+B6Tnj/8A+2SaNTwwLlFUPjkSweWiUTj7NC001w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTMGa+tZMotaA4nyahaS3i2Jf6sk/eQx4lwkL+MbWEU=;
- b=fcWTO7BLtMC+0JR7foB67Avg2zWVK2GEwTfYEcP6vzBr//YyCOe7jOcik6S+m3vvGZRfmt0UAte07HAQldp883wDQx9bKw6qY9jiqAyq3zn73Xb5PNWQXyWeuSQ1tawh/67zi1LmR10gVIK93f9T8dt+NCV5FIAAbIM6JoQBm0s=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.15; Tue, 7 Jan 2020 10:36:50 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2602.015; Tue, 7 Jan 2020
- 10:36:50 +0000
-Received: from [192.168.13.3] (213.112.138.4) by AM6PR10CA0013.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11 via Frontend Transport; Tue, 7 Jan 2020 10:36:50 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Luca Ceresoli <luca@lucaceresoli.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-Thread-Topic: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-Thread-Index: AQHVxGXNDNQyASjxnESfoQNX0mbuZqffA+4A
-Date:   Tue, 7 Jan 2020 10:36:50 +0000
-Message-ID: <18dfcdd7-4ca8-cd4d-de18-ae3931d31782@axentia.se>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200106074905.14438-1-luca@lucaceresoli.net>
-In-Reply-To: <20200106074905.14438-1-luca@lucaceresoli.net>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: AM6PR10CA0013.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:209:89::26) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0a110c6f-eda9-416f-b492-08d7935d812f
-x-ms-traffictypediagnostic: DB3PR0202MB3435:
-x-microsoft-antispam-prvs: <DB3PR0202MB3435E88F82B13559AF8B32DFBC3F0@DB3PR0202MB3435.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 027578BB13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(189003)(199004)(52116002)(81166006)(53546011)(4744005)(54906003)(81156014)(31686004)(36756003)(110136005)(16526019)(2616005)(956004)(6486002)(8676002)(8936002)(31696002)(2906002)(186003)(5660300002)(86362001)(71200400001)(66476007)(66946007)(16576012)(66446008)(26005)(4326008)(508600001)(66556008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eKWMcAfYqL1STWJdy1mnHefASDrzpX+2n52HRsPWGvhck4/f19skOnHlpV1eUwx7DENf8MPZjnZOtzlSp12IB2FhBMkpE6FvPt7ECG8gRMyjzIVWlJVAbZRwmhGC3ZBvxFx3LKFIzpucRF9HoNnlLZ4FYagOrlicl9f5YuIxUtSO3sgQuty+WOUb9RL3a/o2KzBHAioca2dDsJnOCCDQzCyinGZS/M3+uMet/DSlMqSuJiTgZPIioZovUq40de2WNao2QlLzMPb283NthnBt5rUhz8fgDwbcYFUZ74UxeV4XqtvouFmHo7r8dGzClVb15s7sR8ObKD2pCW/Yq6g+Ck9ExtnNRLzl2+z1IA0d72dkbQFIYpqeYq77gNRhy6j8jtToNOvtzyw9H6gW5k8pDxsMlB/siYE/XNS4FEHvIe3qTE/pMKymijMdx6ex2A+X
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EEA0F610040C55459313E8BC691C8F15@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 Jan 2020 05:38:39 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56494 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGKij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:38:39 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007AcTBQ052064;
+        Tue, 7 Jan 2020 04:38:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578393509;
+        bh=BSpms8vYzmAl/YFEGgI8wzX4uGpMNJOd+zSnFgxFaP0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MKjc8aAF40U5qjbdM4l/1SABZ0JniIFWxtHuneoS4v0G7TPEk0yLjiPYPP36egmvR
+         ja1LaMDtkIm4jF81pIDJpn4/wHbw8TX78YJZ+w0Jr3G+t6LIusO81C2Iy7/mxq0ewj
+         tCHIdn1VvkIz+qwHIec8EhRlRho2N/kIyP3sfgm4=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007AcTZo112928
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 04:38:29 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 04:38:28 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 04:38:28 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007AcPAU005113;
+        Tue, 7 Jan 2020 04:38:27 -0600
+Subject: Re: [PATCH] media: stm32-dcmi: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191217104135.23554-1-peter.ujfalusi@ti.com>
+ <84946ffd-8e90-7b6a-6667-a10e27d31655@st.com>
+ <8229c7ed-b513-6bf8-5684-60d87a92d41f@st.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <a4682783-e966-6176-4ab5-cc9345e3508f@ti.com>
+Date:   Tue, 7 Jan 2020 12:38:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a110c6f-eda9-416f-b492-08d7935d812f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 10:36:50.6162
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v9btLOmHN/GTNEuLoHo2ci2tZEYqGRtEcrOKVwWRXozWrSbFeMimsNLXS1OIkqGg
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
+In-Reply-To: <8229c7ed-b513-6bf8-5684-60d87a92d41f@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAyMC0wMS0wNiAwODo0OSwgTHVjYSBDZXJlc29saSB3cm90ZToNCj4gU29tZSBvZiB0aGUg
-c2VjdGlvbiBuYW1lcyBhcmUgbm90IHZlcnkgY2xlYXIuIFJlYWRpbmcgdGhvc2UgbmFtZXMgaW4g
-dGhlDQo+IGluZGV4LnJzdCBwYWdlIGRvZXMgbm90IGhlbHAgbXVjaCBpbiBncmFzcGluZyB3aGF0
-IHRoZSBjb250ZW50IGlzIHN1cHBvc2VkDQo+IHRvIGJlLg0KPiANCj4gUmVuYW1lIHRob3NlIHNl
-Y3Rpb25zIHRvIGNsYXJpZnkgdGhlaXIgY29udGVudCwgZXNwZWNpYWxseSB3aGVuIHJlYWRpbmcN
-Cj4gdGhlIGluZGV4IHBhZ2UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWNhIENlcmVzb2xpIDxs
-dWNhQGx1Y2FjZXJlc29saS5uZXQ+DQoNCkFja2VkLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo=
+Hi Hugues,
+
+On 07/01/2020 11.46, Hugues FRUCHET wrote:
+> Hi Peter,
+> 
+> If not too late, could you change trace to only trig error trace when
+> error is not "probe defered" ? See below:
+> 
+> -	chan = dma_request_slave_channel(&pdev->dev, "tx");
+> -	if (!chan) {
+> -		dev_info(&pdev->dev, "Unable to request DMA channel, defer probing\n");
+> -		return -EPROBE_DEFER;
+> +	chan = dma_request_chan(&pdev->dev, "tx");
+> +	if (IS_ERR(chan)) {
+> +		if (PTR_ERR(chan) != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Unable to request DMA channel\n");
+> +		return PTR_ERR(chan);
+
+Sure, I don't know how I missed it.
+
+Regards,
+- Péter
+
+> 
+> Best regards,
+> Hugues.
+> 
+> On 12/18/19 11:52 AM, Hugues FRUCHET wrote:
+>> Thanks for patching Peter,
+>>
+>> No regression observed on my side.
+>>
+>> Acked-by: Hugues Fruchet <hugues.fruchet@st.com>
+>>
+>> Best regards,
+>> Hugues.
+>>
+>> On 12/17/19 11:41 AM, Peter Ujfalusi wrote:
+>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>>> eating up the error code.
+>>>
+>>> By using dma_request_chan() directly the driver can support deferred
+>>> probing against DMA.
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>   drivers/media/platform/stm32/stm32-dcmi.c | 6 +++---
+>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c 
+>>> b/drivers/media/platform/stm32/stm32-dcmi.c
+>>> index 9392e3409fba..55351872b0c7 100644
+>>> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+>>> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+>>> @@ -1910,10 +1910,10 @@ static int dcmi_probe(struct platform_device 
+>>> *pdev)
+>>>           return PTR_ERR(mclk);
+>>>       }
+>>> -    chan = dma_request_slave_channel(&pdev->dev, "tx");
+>>> -    if (!chan) {
+>>> +    chan = dma_request_chan(&pdev->dev, "tx");
+>>> +    if (IS_ERR(chan)) {
+>>>           dev_info(&pdev->dev, "Unable to request DMA channel, defer 
+>>> probing\n");
+>>> -        return -EPROBE_DEFER;
+>>> +        return PTR_ERR(chan);
+>>>       }
+>>>       spin_lock_init(&dcmi->irqlock);
+>> >
+
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
