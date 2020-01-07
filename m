@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0654C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14288C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9299D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79772072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432001;
-	bh=LtnLZqxqa9KVYGO9KsosNrdJ2myMos+6/nDOCSbmJqE=;
+	s=default; t=1578432008;
+	bh=K6qFoREykGJFoc/Aoj3Zglo1X/aJfmJ1fO2jT4Fg6RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4eQHcPhWJEdgPpCqjkXsj86hqHEsVyu8T9OysnNqFpsrjOJ0+vtLhsslQ6iyDxJ8
-	 4ZzqcuXqFx3NwcqFpRtwCJ6SQQ+ZNQq9zLGqWMN79TavfWlCHq3Qzpf8jLP0XimGoA
-	 zZU+5MgTr8S5KilZGkAPLeiJyFnSfhVK339GPAtM=
+	b=ZHH3OK3lbx6tP9GbUO3+baaSmbrlB35F8HHT9CNkXCbEU+z8sleWlhhIPVXdDk0st
+	 zzUFHvLkUQJBpLhTfodG1pgkIl9to/Vz54JbSJGoqA+84wXs/teOU7Uq4L4qZBPgHF
+	 SfYZjGnCE08e1dQmJkKcqUx0/Y1p2tlT7dH/e16c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgAGVUA (ORCPT
+        id S1728724AbgAGVEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:20:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49746 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:04:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbgAGVEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:04:45 -0500
+        id S1728793AbgAGVEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:04:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEC8B2081E;
-        Tue,  7 Jan 2020 21:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25429214D8;
+        Tue,  7 Jan 2020 21:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431085;
-        bh=LtnLZqxqa9KVYGO9KsosNrdJ2myMos+6/nDOCSbmJqE=;
+        s=default; t=1578431075;
+        bh=K6qFoREykGJFoc/Aoj3Zglo1X/aJfmJ1fO2jT4Fg6RA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lr+kKQo7rSpOxQbrT7poe69f9rdvNBWAfhwKm6bCwlNklFT5d4QxzjgER54YgU9CD
-         JBxEZq2XCI89IMsD+UKbdTSsThd1q39fszJusXnp4HUsilGr533uOGELW+ihUfFdF9
-         xjin2aAnAdXtMxsNIzTGk0lHBuaJBBCBa0GUnrwY=
+        b=bt58oaiLyWfAugV9fmVcQpUVPr1he6JiyIpf5+WA/bf7JjtBcACPSQpj0lZc9X9uD
+         rweWfiB72VuHtJJch6mvXltPW4r+O8nuIHSjQUq6d2DBFldV/TrRS7XAo6c2Cxe1yK
+         1f+x1zxYClssWSOHMOAZZwMRV4T8cJZ2RO5Hb4F0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/115] md: raid1: check rdev before reference in raid1_sync_request func
-Date:   Tue,  7 Jan 2020 21:53:57 +0100
-Message-Id: <20200107205300.426308790@linuxfoundation.org>
+Subject: [PATCH 4.19 006/115] iio: adc: max9611: Fix too short conversion time delay
+Date:   Tue,  7 Jan 2020 21:53:36 +0100
+Message-Id: <20200107205243.776152935@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,32 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 028288df635f5a9addd48ac4677b720192747944 ]
+[ Upstream commit 9fd229c478fbf77c41c8528aa757ef14210365f6 ]
 
-In raid1_sync_request func, rdev should be checked before reference.
+As of commit b9ddd5091160793e ("iio: adc: max9611: Fix temperature
+reading in probe"), max9611 initialization sometimes fails on the
+Salvator-X(S) development board with:
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+    max9611 4-007f: Invalid value received from ADC 0x8000: aborting
+    max9611: probe of 4-007f failed with error -5
+
+The max9611 driver tests communications with the chip by reading the die
+temperature during the probe function, which returns an invalid value.
+
+According to the datasheet, the typical ADC conversion time is 2 ms, but
+no minimum or maximum values are provided.  Maxim Technical Support
+confirmed this was tested with temperature Ta=25 degreeC, and promised
+to inform me if a maximum/minimum value is available (they didn't get
+back to me, so I assume it is not).
+
+However, the driver assumes a 1 ms conversion time.  Usually the
+usleep_range() call returns after more than 1.8 ms, hence it succeeds.
+When it returns earlier, the data register may be read too early, and
+the previous measurement value will be returned.  After boot, this is
+the temperature POR (power-on reset) value, causing the failure above.
+
+Fix this by increasing the delay from 1000-2000 µs to 3000-3300 µs.
+
+Note that this issue has always been present, but it was exposed by the
+aformentioned commit.
+
+Fixes: 69780a3bbc0b1e7e ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/max9611.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 6800dcd50a11..abcb4c3a76c1 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -2756,7 +2756,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				write_targets++;
- 			}
- 		}
--		if (bio->bi_end_io) {
-+		if (rdev && bio->bi_end_io) {
- 			atomic_inc(&rdev->nr_pending);
- 			bio->bi_iter.bi_sector = sector_nr + rdev->data_offset;
- 			bio_set_dev(bio, rdev->bdev);
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index 0884435eec68..9f1a5ef0b444 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -92,6 +92,12 @@
+ #define MAX9611_TEMP_SCALE_NUM		1000000
+ #define MAX9611_TEMP_SCALE_DIV		2083
+ 
++/*
++ * Conversion time is 2 ms (typically) at Ta=25 degreeC
++ * No maximum value is known, so play it safe.
++ */
++#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
++
+ struct max9611_dev {
+ 	struct device *dev;
+ 	struct i2c_client *i2c_client;
+@@ -239,11 +245,9 @@ static int max9611_read_single(struct max9611_dev *max9611,
+ 		return ret;
+ 	}
+ 
+-	/*
+-	 * need a delay here to make register configuration
+-	 * stabilize. 1 msec at least, from empirical testing.
+-	 */
+-	usleep_range(1000, 2000);
++	/* need a delay here to make register configuration stabilize. */
++
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	ret = i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
+ 	if (ret < 0) {
+@@ -510,7 +514,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 			MAX9611_REG_CTRL2, 0);
+ 		return ret;
+ 	}
+-	usleep_range(1000, 2000);
++	usleep_range(MAX9611_CONV_TIME_US_RANGE);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
