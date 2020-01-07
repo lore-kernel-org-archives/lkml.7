@@ -2,107 +2,80 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF7EC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92DAC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D040E2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578389638;
-	bh=0RwFzwAEmrIP5sG0tKGrxv2D/cxDWEkx4BvAxCF7YcY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q47DbYkLSztk3ktUKNb3VhPLoPfljFChJGBmKI7PsZ8766QU6S7++lRdUcKH3qmVU
-	 Bp36sRrIulMkxU+38LUpS9jqQgFjHjWxPXWz4qcjOe0lPwDTJeWMO8JGTyr28CvwTB
-	 oRL8IZmkOmCrcwW+E3GKHeU/ZVJzj4MClK4YEhDU=
+	by mail.kernel.org (Postfix) with ESMTP id B6A3A21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgAGJd6 (ORCPT
+        id S1727828AbgAGJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:33:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 04:34:30 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33204 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgAGJd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:33:57 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9B7206DB;
-        Tue,  7 Jan 2020 09:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578389637;
-        bh=0RwFzwAEmrIP5sG0tKGrxv2D/cxDWEkx4BvAxCF7YcY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H4MhWpEv9OaFCgT3pOtwNa8691FoPe9u0TYSCg/+0HvXNb3xrg8Z0UMTp3WlgCN9V
-         sZneQrxj1cZTzcdnNMP4HyRW3GUYvhQYxpSdzhrj9w+ugT+W+e09aturGqr6jVjdnQ
-         EuPegGrp4+ChfhOaNGONnb4I074kMSLOP/LCXt6g=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iolFL-000143-D1; Tue, 07 Jan 2020 09:33:55 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 07 Jan 2020 09:33:55 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jianyong Wu <Jianyong.Wu@arm.com>, netdev@vger.kernel.org,
-        yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v9 0/8] Enable ptp_kvm for arm64
-In-Reply-To: <bf333cdc-3455-7c64-89c2-014639614904@redhat.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <HE1PR0801MB1676CFC9A06B6CE800052A99F43C0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <bf333cdc-3455-7c64-89c2-014639614904@redhat.com>
-Message-ID: <7a589be6dc0d5562caf8c8f795b31efc@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: pbonzini@redhat.com, Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1727427AbgAGJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:34:29 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D91CC1A020C;
+        Tue,  7 Jan 2020 10:34:27 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2651A1A0342;
+        Tue,  7 Jan 2020 10:34:12 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 364B0402C4;
+        Tue,  7 Jan 2020 16:56:55 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, bjorn.andersson@linaro.org, olof@lixom.net,
+        maxime@cerno.tech, leonard.crestez@nxp.com, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, ping.bai@nxp.com, abel.vesa@nxp.com,
+        nsekhar@ti.com, t-kristo@ti.com, peng.fan@nxp.com,
+        yuehaibing@huawei.com, aisheng.dong@nxp.com, sfr@canb.auug.org.au,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/5] clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
+Date:   Tue,  7 Jan 2020 16:53:13 +0800
+Message-Id: <1578387197-5750-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-07 08:15, Paolo Bonzini wrote:
-> On 06/01/20 10:38, Jianyong Wu wrote:
->> Ping ...
->> Any comments to this patch set?
-> 
-> Marc, Will, can you ack it?  Since the sticky point was the detection 
-> of
-> the clocksource and it was solved by Thomas's patch, I don't have any
-> more problems including it.
+Some of i.MX SoCs' clock driver use platform driver model,
+and they need to call imx_obtain_fixed_clk_hw() API, so
+imx_obtain_fixed_clk_hw() API should NOT be in .init section.
 
-Boo. I had forgotten about this series. :-(
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+New patch.
+---
+ drivers/clk/imx/clk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Going back to it, there is a few ugly points in the arm-specific code
-(I'm OK with the generic changes though).
-
-Another thing is that the whole series depends on three patches that 
-have
-never been posted to any list, hence never reviewed.
-
-Jianyong: Please repost this series *with* the dependencies so that they
-can be reviewed, once you've addressed my comments on two of the 
-patches.
-
-Thanks,
-
-         M.
+diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
+index cfc05e4..e61d6d7 100644
+--- a/drivers/clk/imx/clk.c
++++ b/drivers/clk/imx/clk.c
+@@ -94,8 +94,8 @@ struct clk_hw * __init imx_obtain_fixed_clock_hw(
+ 	return __clk_get_hw(clk);
+ }
+ 
+-struct clk_hw * __init imx_obtain_fixed_clk_hw(struct device_node *np,
+-					       const char *name)
++struct clk_hw *imx_obtain_fixed_clk_hw(struct device_node *np,
++					const char *name)
+ {
+ 	struct clk *clk;
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
