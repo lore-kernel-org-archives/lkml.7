@@ -2,80 +2,177 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2CBC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C51C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8D1206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169612187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:36:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="hbOsyfYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgAGOgJ (ORCPT
+        id S1728344AbgAGOgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:36:09 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:54866 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGOgJ (ORCPT
+        Tue, 7 Jan 2020 09:36:19 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35605 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgAGOgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:36:09 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iopxh-0006QC-FH; Tue, 07 Jan 2020 14:36:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Gary R Hook <gary.hook@amd.com>,
-        Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        tee-dev@lists.linaro.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] tee: fix memory allocation failure checks on drv_data and amdtee
-Date:   Tue,  7 Jan 2020 14:36:01 +0000
-Message-Id: <20200107143601.105321-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 7 Jan 2020 09:36:19 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so54168726wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:36:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:openpgp:autocrypt:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=73LjBmiEkGIYm4Th768t00zd9pN6SU7FcL2GNuvIly4=;
+        b=hbOsyfYA8mfDEbvNDDbXegn+/ld528lPjXtjdqGd41D4mcJ0gkwLBBw5hvfLRrhsgo
+         8ZzZWm1f+RV0eZ8M6Q2mCxJHlBC0cq6NX/3LrqHTV4FT+n34tC7O8mPhsHllnz6SdCtx
+         /Mrc7W+LTHNhr8/oEznNXCrGRfpaK2da5HTfWVFURHiPUP/vP7WOLy5LlXy6Q4JluxXK
+         6C1P53AeTBTKy33pwuREr9wbuh3n+s8WioevHzeIxkW1TzqTceTTxpiKVXASPOYXDVPo
+         wXuhR27QqTxmWTknQ04V3dMPgrOT/k//ok/pCcpyXaGpFyLMrmg6drtDba63rviX4T3Y
+         Qg0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:openpgp:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=73LjBmiEkGIYm4Th768t00zd9pN6SU7FcL2GNuvIly4=;
+        b=ZUB2d67n8En7p1W7V+9kMg/vsWnTyyFqZQoQxC+LHzS9RkEgr93vCCBOOkTKSUmM3q
+         xreXkR59Lb3kR/ow274cTKl1S6n3+5lt/QAWQF6VebV3gF+VwJ3QfyTL9TBbHrdsPSG3
+         jseez4P0v9A+P/fZunqtLxcReJl3ADnH9P7NQHe5s7Ze9KloWj8XUEAKVmMSRsorK2id
+         7RbI1cn0t51laHAb3k+WH08CbrlSAg5qciezrSc9BVYDVjZpN7JSi70bvo1LZvRunYxT
+         CoekPq5rZMpiilxEcakTpGSnnlS1HN0GW/knO/BVizkToI1t8Ilyu/Ucx3TqKrV6q9AI
+         svgw==
+X-Gm-Message-State: APjAAAVTMKRlqxHDsadPshCCMWtiajg/JWgjUp9d+eLirYg/jVKVSLy9
+        WIxproJHnqd5lqJoxu/LPvGmCOLNwUUHYlb6K7Yo4UTwdMlzz1JyE5b30vwUEO61VrskQGK0lfl
+        oLGunZQs53FuYr7JRfR259gKTcywKuWYj7IH5UKjAfI5ZcHtVyNg0Nj8CyQSshu3PAlVolYz9BX
+        6sbS4IBkpMLA==
+X-Google-Smtp-Source: APXvYqx8EK4r2U+w5EdthGweQWs26preoOTiuOyCt7mCGziquf9Axoe9nbyDgelNKewOnUQ75OdmaQ==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr110415159wrw.289.1578407776410;
+        Tue, 07 Jan 2020 06:36:16 -0800 (PST)
+Received: from [172.20.1.104] ([217.38.71.146])
+        by smtp.gmail.com with ESMTPSA id a5sm27168885wmb.37.2020.01.07.06.36.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Jan 2020 06:36:15 -0800 (PST)
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200107130308.20242-1-mrostecki@opensuse.org>
+ <20200107130308.20242-3-mrostecki@opensuse.org>
+From:   Quentin Monnet <quentin.monnet@netronome.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
+ mQINBFnqRlsBEADfkCdH/bkkfjbglpUeGssNbYr/TD4aopXiDZ0dL2EwafFImsGOWmCIIva2
+ MofTQHQ0tFbwY3Ir74exzU9X0aUqrtHirQHLkKeMwExgDxJYysYsZGfM5WfW7j8X4aVwYtfs
+ AVRXxAOy6/bw1Mccq8ZMTYKhdCgS3BfC7qK+VYC4bhM2AOWxSQWlH5WKQaRbqGOVLyq8Jlxk
+ 2FGLThUsPRlXKz4nl+GabKCX6x3rioSuNoHoWdoPDKsRgYGbP9LKRRQy3ZeJha4x+apy8rAM
+ jcGHppIrciyfH38+LdV1FVi6sCx8sRKX++ypQc3fa6O7d7mKLr6uy16xS9U7zauLu1FYLy2U
+ N/F1c4F+bOlPMndxEzNc/XqMOM9JZu1XLluqbi2C6JWGy0IYfoyirddKpwzEtKIwiDBI08JJ
+ Cv4jtTWKeX8pjTmstay0yWbe0sTINPh+iDw+ybMwgXhr4A/jZ1wcKmPCFOpb7U3JYC+ysD6m
+ 6+O/eOs21wVag/LnnMuOKHZa2oNsi6Zl0Cs6C7Vve87jtj+3xgeZ8NLvYyWrQhIHRu1tUeuf
+ T8qdexDphTguMGJbA8iOrncHXjpxWhMWykIyN4TYrNwnyhqP9UgqRPLwJt5qB1FVfjfAlaPV
+ sfsxuOEwvuIt19B/3pAP0nbevNymR3QpMPRl4m3zXCy+KPaSSQARAQABtC1RdWVudGluIE1v
+ bm5ldCA8cXVlbnRpbi5tb25uZXRAbmV0cm9ub21lLmNvbT6JAj0EEwEIACcFAlnqRlsCGyMF
+ CQlmAYAFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQNvcEyYwwfB7tChAAqFWG30+DG3Sx
+ B7lfPaqs47oW98s5tTMprA+0QMqUX2lzHX7xWb5v8qCpuujdiII6RU0ZhwNKh/SMJ7rbYlxK
+ qCOw54kMI+IU7UtWCej+Ps3LKyG54L5HkBpbdM8BLJJXZvnMqfNWx9tMISHkd/LwogvCMZrP
+ TAFkPf286tZCIz0EtGY/v6YANpEXXrCzboWEiIccXRmbgBF4VK/frSveuS7OHKCu66VVbK7h
+ kyTgBsbfyQi7R0Z6w6sgy+boe7E71DmCnBn57py5OocViHEXRgO/SR7uUK3lZZ5zy3+rWpX5
+ nCCo0C1qZFxp65TWU6s8Xt0Jq+Fs7Kg/drI7b5/Z+TqJiZVrTfwTflqPRmiuJ8lPd+dvuflY
+ JH0ftAWmN3sT7cTYH54+HBIo1vm5UDvKWatTNBmkwPh6d3cZGALZvwL6lo0KQHXZhCVdljdQ
+ rwWdE25aCQkhKyaCFFuxr3moFR0KKLQxNykrVTJIRuBS8sCyxvWcZYB8tA5gQ/DqNKBdDrT8
+ F9z2QvNE5LGhWDGddEU4nynm2bZXHYVs2uZfbdZpSY31cwVS/Arz13Dq+McMdeqC9J2wVcyL
+ DJPLwAg18Dr5bwA8SXgILp0QcYWtdTVPl+0s82h+ckfYPOmkOLMgRmkbtqPhAD95vRD7wMnm
+ ilTVmCi6+ND98YblbzL64YG5Ag0EWepGWwEQAM45/7CeXSDAnk5UMXPVqIxF8yCRzVe+UE0R
+ QQsdNwBIVdpXvLxkVwmeu1I4aVvNt3Hp2eiZJjVndIzKtVEoyi5nMvgwMVs8ZKCgWuwYwBzU
+ Vs9eKABnT0WilzH3gA5t9LuumekaZS7z8IfeBlZkGXEiaugnSAESkytBvHRRlQ8b1qnXha3g
+ XtxyEqobKO2+dI0hq0CyUnGXT40Pe2woVPm50qD4HYZKzF5ltkl/PgRNHo4gfGq9D7dW2OlL
+ 5I9qp+zNYj1G1e/ytPWuFzYJVT30MvaKwaNdurBiLc9VlWXbp53R95elThbrhEfUqWbAZH7b
+ ALWfAotD07AN1msGFCES7Zes2AfAHESI8UhVPfJcwLPlz/Rz7/K6zj5U6WvH6aj4OddQFvN/
+ icvzlXna5HljDZ+kRkVtn+9zrTMEmgay8SDtWliyR8i7fvnHTLny5tRnE5lMNPRxO7wBwIWX
+ TVCoBnnI62tnFdTDnZ6C3rOxVF6FxUJUAcn+cImb7Vs7M5uv8GufnXNUlsvsNS6kFTO8eOjh
+ 4fe5IYLzvX9uHeYkkjCNVeUH5NUsk4NGOhAeCS6gkLRA/3u507UqCPFvVXJYLSjifnr92irt
+ 0hXm89Ms5fyYeXppnO3l+UMKLkFUTu6T1BrDbZSiHXQoqrvU9b1mWF0CBM6aAYFGeDdIVe4x
+ ABEBAAGJAiUEGAEIAA8FAlnqRlsCGwwFCQlmAYAACgkQNvcEyYwwfB4QwhAAqBTOgI9k8MoM
+ gVA9SZj92vYet9gWOVa2Inj/HEjz37tztnywYVKRCRfCTG5VNRv1LOiCP1kIl/+crVHm8g78
+ iYc5GgBKj9O9RvDm43NTDrH2uzz3n66SRJhXOHgcvaNE5ViOMABU+/pzlg34L/m4LA8SfwUG
+ ducP39DPbF4J0OqpDmmAWNYyHh/aWf/hRBFkyM2VuizN9cOS641jrhTO/HlfTlYjIb4Ccu9Y
+ S24xLj3kkhbFVnOUZh8celJ31T9GwCK69DXNwlDZdri4Bh0N8DtRfrhkHj9JRBAun5mdwF4m
+ yLTMSs4Jwa7MaIwwb1h3d75Ws7oAmv7y0+RgZXbAk2XN32VM7emkKoPgOx6Q5o8giPRX8mpc
+ PiYojrO4B4vaeKAmsmVer/Sb5y9EoD7+D7WygJu2bDrqOm7U7vOQybzZPBLqXYxl/F5vOobC
+ 5rQZgudR5bI8uQM0DpYb+Pwk3bMEUZQ4t497aq2vyMLRi483eqT0eG1QBE4O8dFNYdK5XUIz
+ oHhplrRgXwPBSOkMMlLKu+FJsmYVFeLAJ81sfmFuTTliRb3Fl2Q27cEr7kNKlsz/t6vLSEN2
+ j8x+tWD8x53SEOSn94g2AyJA9Txh2xBhWGuZ9CpBuXjtPrnRSd8xdrw36AL53goTt/NiLHUd
+ RHhSHGnKaQ6MfrTge5Q0h5A=
+Subject: Re: [PATCH bpf-next v2 2/2] bpftool: Add misc secion and probe for
+ large INSN limit
+Message-ID: <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
+Date:   Tue, 7 Jan 2020 14:36:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200107130308.20242-3-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Nit: typo in subject ("secion").
 
-Currently the memory allocation failure checks on drv_data and
-amdtee are using IS_ERR rather than checking for a null pointer.
-Fix these checks to use the conventional null pointer check.
+2020-01-07 14:03 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> Introduce a new probe section (misc) for probes not related to concrete
+> map types, program types, functions or kernel configuration. Introduce a
+> probe for large INSN limit as the first one in that section.
+> 
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> ---
+>  tools/bpf/bpftool/feature.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
+> index 03bdc5b3ac49..d8ce93092c45 100644
+> --- a/tools/bpf/bpftool/feature.c
+> +++ b/tools/bpf/bpftool/feature.c
+> @@ -572,6 +572,18 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
+>  		printf("\n");
+>  }
+>  
+> +static void
+> +probe_large_insn_limit(const char *define_prefix, __u32 ifindex)
+> +{
+> +	bool res;
+> +
+> +	res = bpf_probe_large_insn_limit(ifindex);
+> +	print_bool_feature("have_large_insn_limit",
+> +			   "Large complexity and program size limit",
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/tee/amdtee/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I am not sure we should mention "complexity" here. Although it is
+related to program size in the kernel commit you describe, the probe
+that is run is only on instruction number. This can make a difference
+for offloaded programs: When you probe a device, if kernel has commit
+c04c0d2b968a and supports up to 1M instructions, but hardware supports
+no more than 4k instructions, you may still benefit from the new value
+for BPF_COMPLEXITY_LIMIT_INSNS for complexity, but not for the total
+number of available instructions. In that case the probe will fail, and
+the message on complexity would not be accurate.
 
-diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-index 9d0cee1c837f..5fda810c79dc 100644
---- a/drivers/tee/amdtee/core.c
-+++ b/drivers/tee/amdtee/core.c
-@@ -444,11 +444,11 @@ static int __init amdtee_driver_init(void)
- 		goto err_fail;
- 
- 	drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
--	if (IS_ERR(drv_data))
-+	if (!drv_data)
- 		return -ENOMEM;
- 
- 	amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
--	if (IS_ERR(amdtee)) {
-+	if (!amdtee) {
- 		rc = -ENOMEM;
- 		goto err_kfree_drv_data;
- 	}
--- 
-2.24.0
+Looks good otherwise, thanks Michal!
 
+Quentin
