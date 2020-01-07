@@ -2,148 +2,81 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80219C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200EBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD1C2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:08:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hijSl3ni"
+	by mail.kernel.org (Postfix) with ESMTP id D42C22080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578438669;
+	bh=tuPmCu90zgY/Lg0Zip32BcqyCPU+otfTFLuVtgPx5L8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pFAwdLsR2yehMwTpztJFWlnbslBC2/jr/Ho4tZ7gH9FlGl//g/+BNVlgsa8ZFn3FH
+	 IcdqNpNpqmoJb0toMjG+jqaxaHCbuJBOIN4BMv4GLN8eoLS6oqKzyTGwo8A7m0z/id
+	 YesmJaD5gA1F/LzL6LswGmAU3Hud+SMmkyGqW7AU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgAGXI2 (ORCPT
+        id S1727324AbgAGXLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:08:28 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36011 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbgAGXI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:08:28 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so1045920oic.3;
-        Tue, 07 Jan 2020 15:08:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Me8p44OHEqgPZhBG5+FV+ac90SFtMdoqaV35MndRxEM=;
-        b=hijSl3niO27gP0mmOWLLGPyLQ/8rPj0i20vGWj9ly71XDolju6F7wLF7A7Ik+ZC83h
-         swkbBGXVTGn9gohkiEboOfEH020Ec5WdI4pmvCQq6/KxbtL9k43I6iOKdp88GFDWd4FX
-         QhuxWOKC/SPlfIm3xI2cHzUnH9XnPsz0QGbgRtUCSjKdIb08ounyAllVl1fohUuTMMSJ
-         0lhEH4CxBSi55Gw2A4at7k9eWixIHo5IjWtFRMTIgb8bRxW8GMednbYcF4isUZzKSojO
-         j/MB7dluxUvu8kwKmqwfLSdlmDw+D5noZVHBpWR+uUfp+Mp+uKOBPYQPLwn1B4GaT/bv
-         rJ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Me8p44OHEqgPZhBG5+FV+ac90SFtMdoqaV35MndRxEM=;
-        b=DMV8GCbvYIkg2Feil2hzwmi9yqbRT6pu4KTYxsBOkygRb/ll27A7LTA9yM/5ocESoe
-         lklVhlBftwMSqtJzDImM2HMIGdp+Af5iGeuKjhc2pJH3mx7HF3tyRM7ZrhKI+ul15sf+
-         moUxERa50JBdZE62AoXqg7lfGJ+EvZLnE4ek0t8tmM/6gGBQ0uWNeTNxfryw4IVrNLVp
-         TUp4bEz3ptpYwUMlYMZbLJHm3u0YP0d5w9raXx8cPUBn/BZGCs9trbwEDMUNktQd1mbl
-         ATO6/Oh9lJ1p3E1hoJlWqsZK1rx5GzIg/owo/V5HbuTQBVlG5m19YtxzHX+b8uru4W11
-         BLaQ==
-X-Gm-Message-State: APjAAAWbMB/GBTy6dmy/a9D2p3GfLYj6H134kUw0hBAurkUs5Tu0GRNb
-        4f+MCQlYAMHcTreyDmo3MXc=
-X-Google-Smtp-Source: APXvYqzsCDZaKQuQmzyP3J+5LbIO/RG9HR1AzTfJ4Td96j2kx5cdk1Ti8pUR43TlXjf3SWeN1DPymA==
-X-Received: by 2002:a54:4896:: with SMTP id r22mr760564oic.30.1578438507108;
-        Tue, 07 Jan 2020 15:08:27 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n25sm454794oic.6.2020.01.07.15.08.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 15:08:26 -0800 (PST)
-Date:   Tue, 7 Jan 2020 16:08:25 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.14 65/74] coresight: tmc-etf: Do not call
- smp_processor_id from preemptible
-Message-ID: <20200107230825.GA26430@ubuntu-m2-xlarge-x86>
-References: <20200107205135.369001641@linuxfoundation.org>
- <20200107205228.054429793@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107205228.054429793@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 7 Jan 2020 18:11:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727074AbgAGXLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:11:09 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64DE020715;
+        Tue,  7 Jan 2020 23:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578438668;
+        bh=tuPmCu90zgY/Lg0Zip32BcqyCPU+otfTFLuVtgPx5L8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2OkV4fnXvCtPmGfWJeH/yCkLdg6koye0+5LS0pSQR8Tmlg3VTaikg40tSihpVlBbJ
+         XezwkOOTfmdti9PMWVuMkuG3YFJ+EuBsBlOsQ+HuVF046/mHCIlj0i91d0h/T1R7nF
+         O0nlk1Cuq9bjcqXEMrapD2RRSuBFItWQXlat7oKE=
+Date:   Tue, 7 Jan 2020 15:11:07 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>
+Subject: Re: linux-next: build warning after merge of the akpm tree
+Message-Id: <20200107151107.1ffae482a8663ada2bbc3bd3@linux-foundation.org>
+In-Reply-To: <20200106170744.5b6ca678@canb.auug.org.au>
+References: <20200106170744.5b6ca678@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:55:30PM +0100, Greg Kroah-Hartman wrote:
-> From: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> [ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
-> 
-> During a perf session we try to allocate buffers on the "node" associated
-> with the CPU the event is bound to. If it is not bound to a CPU, we
-> use the current CPU node, using smp_processor_id(). However this is unsafe
-> in a pre-emptible context and could generate the splats as below :
-> 
->  BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
->  caller is tmc_alloc_etf_buffer+0x5c/0x60
->  CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
->  Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
->  Call trace:
->   dump_backtrace+0x0/0x150
->   show_stack+0x14/0x20
->   dump_stack+0x9c/0xc4
->   debug_smp_processor_id+0x10c/0x110
->   tmc_alloc_etf_buffer+0x5c/0x60
->   etm_setup_aux+0x1c4/0x230
->   rb_alloc_aux+0x1b8/0x2b8
->   perf_mmap+0x35c/0x478
->   mmap_region+0x34c/0x4f0
->   do_mmap+0x2d8/0x418
->   vm_mmap_pgoff+0xd0/0xf8
->   ksys_mmap_pgoff+0x88/0xf8
->   __arm64_sys_mmap+0x28/0x38
->   el0_svc_handler+0xd8/0x138
->   el0_svc+0x8/0xc
-> 
-> Use NUMA_NO_NODE hint instead of using the current node for events
-> not bound to CPUs.
-> 
-> Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: stable <stable@vger.kernel.org> # 4.7+
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> index 336194d059fe..329a201c0c19 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-> @@ -308,9 +308,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
->  	int node;
->  	struct cs_buffers *buf;
->  
-> -	if (cpu == -1)
-> -		cpu = smp_processor_id();
-> -	node = cpu_to_node(cpu);
-> +	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
+On Mon, 6 Jan 2020 17:07:44 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-This breaks the build on 4.14 (and I believe 4.19 from the looks of it)
-because the event variable is not available without
-commit a0f08a6a9fee ("coresight: Communicate perf event to sink buffer
-allocation functions") from upstream. I am not sure how this should be
-fixed (either backporting the above commit or changing this one somehow)
-but it should be dropped in the meantime.
+> Hi all,
+> 
+> After merging the akpm tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+> 
+> arch/x86/mm/dump_pagetables.c: In function 'ptdump_walk_pgd_level_core':
+> arch/x86/mm/dump_pagetables.c:403:1: warning: the frame size of 2128 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+>   403 | }
+>       | ^
+> 
+> Introduced by commit
+> 
+>   710fae4f03f2 ("x86: mm: convert dump_pagetables to use walk_page_range")
+> 
 
-Cheers,
-Nathan
+(gdb) p sizeof(struct mm_struct)
+$1 = 1664
+
+yup, that'll do it.
+
+
