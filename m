@@ -7,40 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D778C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8553BC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2074E20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E7B206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aTl4/mfP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ae8TzZVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgAGEOl (ORCPT
+        id S1727750AbgAGEOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:14:41 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11413 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbgAGEOj (ORCPT
+        Mon, 6 Jan 2020 23:14:49 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6537 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727624AbgAGEOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 23:14:39 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e14057f0000>; Mon, 06 Jan 2020 20:13:51 -0800
+        Mon, 6 Jan 2020 23:14:40 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e14059e0001>; Mon, 06 Jan 2020 20:14:22 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Jan 2020 20:14:38 -0800
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jan 2020 20:14:39 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Jan 2020 20:14:38 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+        by hqpgpgate101.nvidia.com on Mon, 06 Jan 2020 20:14:39 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
  2020 04:14:38 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 04:14:37 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 04:14:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 7 Jan 2020 04:14:38 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.88]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1405ac0004>; Mon, 06 Jan 2020 20:14:37 -0800
+        id <B5e1405ad0002>; Mon, 06 Jan 2020 20:14:38 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <broonie@kernel.org>,
@@ -54,9 +51,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <markz@nvidia.com>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 16/19] arm64: tegra: Add clock-cells property to Tegra PMC node
-Date:   Mon, 6 Jan 2020 20:14:15 -0800
-Message-ID: <1578370458-3686-17-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v6 17/19] ARM: tegra: Update sound node clocks in device tree
+Date:   Mon, 6 Jan 2020 20:14:16 -0800
+Message-ID: <1578370458-3686-18-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
 References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
@@ -64,95 +61,262 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578370431; bh=uAY6/g1qyuBMNIyQdm/BfCz69EbNXBXHlTGpzX8helM=;
+        t=1578370462; bh=ekcYmWvun57mjyxyJX4HRUgfPkxc76U8AYz7oc6nWLE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=aTl4/mfPscGKjOuY2wuDr2sPNCasMhSO7kczfHFIOW+HRBdT1/KEt56Qka6EJxqpB
-         sEv2e70Qisumktil1oos3k2y+qK9FmhP293zLCBKXJyIVZvQpxUNhmo4P3L2wQjEy6
-         akw4hi0NpVD7qbml4wgOe7qvh27iTcz2pL7HrLTd1MZRzc5zZpvkRR+sVyoV39ZJiP
-         S3szT8lEd2FGklBUWYEuhGMfqVKVI1lRBN5tnIy9d9pAWtaYyr611194kf6nk30yBk
-         /5mTOMqfWPlq1FyOoj3BBIq4AB44XSCibHQeS8ligH/MxJQZxw0X4MOnce7A9XbAB1
-         63CDngjsn8EAA==
+        b=ae8TzZVoMKVf4w8k3xzKjvqkXkaYD5n++e29L5cCaTiz95pPM8FJGcmODoSPHZy83
+         taay3GVBqEmHsBU/UzWoCijieM/0ysmIWSat5QIiy/kL7E8xRXI9fwqe+ODOwte8s5
+         GBT6LI72Jk+ncM6YjCEKfV8JLarJeh0cBVK37lBaRn9biVST0MGySpSZPZUN0ZCg80
+         JL+br745cUfIc++O2s8oM/zWbv0NPEU9qbzGsEC37M/mVsPIRTg3hKPaahGLevy+nd
+         VIdzwxoY8AYDNKYJ4gdJJl+/O9GXVAkxZXUE0fyk3MahaeET/jkQa5nnUaR/KO/HXY
+         6t05f4B3TGXiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra132 and Tegra210 PMC block has clk_out_1, clk_out_2, clk_out_3,
-and a blink clock as a part of PMC.
+clk_out_1, clk_out_2, and clk_out_3 are part of Tegra PMC block
+and are moved from clock driver to pmc driver with pmc as clock
+provider.
 
-These clocks are moved from clock driver to pmc driver with pmc as a
-clock provider.
+clk_out_1 is dedicated for audio mclk on Tegra30 through Tegra210.
 
-Clock ids for these clocks are defined in pmc dt-bindings.
-
-This patch updated device tree to include pmc dt-binding and adds
-#clock-cells property with one clock specifier to pmc node.
+This patch updates device tree sound node to use clk_out_1 from
+pmc provider as mclk and uses assigned-clock properties to specify
+clock parents for clk_out_1 and extern1.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 +++-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/tegra114-dalmore.dts      | 8 +++++++-
+ arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 8 +++++++-
+ arch/arm/boot/dts/tegra124-apalis.dtsi      | 8 +++++++-
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts   | 8 +++++++-
+ arch/arm/boot/dts/tegra124-nyan.dtsi        | 8 +++++++-
+ arch/arm/boot/dts/tegra124-venice2.dts      | 8 +++++++-
+ arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi  | 8 +++++++-
+ arch/arm/boot/dts/tegra30-apalis.dtsi       | 8 +++++++-
+ arch/arm/boot/dts/tegra30-beaver.dts        | 8 +++++++-
+ arch/arm/boot/dts/tegra30-cardhu.dtsi       | 8 +++++++-
+ arch/arm/boot/dts/tegra30-colibri.dtsi      | 8 +++++++-
+ 11 files changed, 77 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 631a7f77c386..79b1e3b01096 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/tegra124-soctherm.h>
-+#include <dt-bindings/soc/tegra-pmc.h>
+diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
+index 97a5c3504bbe..d3e032e7d21a 100644
+--- a/arch/arm/boot/dts/tegra114-dalmore.dts
++++ b/arch/arm/boot/dts/tegra114-dalmore.dts
+@@ -1296,7 +1296,13 @@
  
- / {
- 	compatible = "nvidia,tegra132", "nvidia,tegra124";
-@@ -577,11 +578,12 @@
- 		clock-names = "rtc";
+ 		clocks = <&tegra_car TEGRA114_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA114_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA114_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA114_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA114_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA114_CLK_EXTERN1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
+index 0462ed2dd8b8..de499f736bda 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
+@@ -2009,8 +2009,14 @@
+ 		nvidia,audio-codec = <&sgtl5000>;
+ 		clocks = <&tegra_car TEGRA124_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA124_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA124_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA124_CLK_EXTERN1>;
  	};
  
--	pmc@7000e400 {
-+	tegra_pmc: pmc@7000e400 {
- 		compatible = "nvidia,tegra124-pmc";
- 		reg = <0x0 0x7000e400 0x0 0x400>;
- 		clocks = <&tegra_car TEGRA124_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
-+		#clock-cells = <1>;
+ 	thermal-zones {
+diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
+index d1e8593ef0d9..d70a86da4ee4 100644
+--- a/arch/arm/boot/dts/tegra124-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
+@@ -2001,8 +2001,14 @@
+ 		nvidia,audio-codec = <&sgtl5000>;
+ 		clocks = <&tegra_car TEGRA124_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA124_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA124_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA124_CLK_EXTERN1>;
  	};
  
- 	fuse@7000f800 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 48c63256ba7f..3e73b76249f9 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/reset/tegra210-car.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/tegra124-soctherm.h>
-+#include <dt-bindings/soc/tegra-pmc.h>
+ 	thermal-zones {
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index d5fd642f8b77..aaf8f6a56ca8 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -2058,8 +2058,14 @@
  
- / {
- 	compatible = "nvidia,tegra210";
-@@ -770,16 +771,17 @@
- 		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
- 		reg = <0x0 0x7000e000 0x0 0x100>;
- 		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&pmc>;
-+		interrupt-parent = <&tegra_pmc>;
- 		clocks = <&tegra_car TEGRA210_CLK_RTC>;
- 		clock-names = "rtc";
+ 		clocks = <&tegra_car TEGRA124_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA124_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA124_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA124_CLK_EXTERN1>;
  	};
  
--	pmc: pmc@7000e400 {
-+	tegra_pmc: pmc@7000e400 {
- 		compatible = "nvidia,tegra210-pmc";
- 		reg = <0x0 0x7000e400 0x0 0x400>;
- 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
-+		#clock-cells = <1>;
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
+ 	thermal-zones {
+diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
+index 3b10f475037f..9b1af50cd4b8 100644
+--- a/arch/arm/boot/dts/tegra124-nyan.dtsi
++++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+@@ -788,9 +788,15 @@
+ 
+ 		clocks = <&tegra_car TEGRA124_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA124_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 
++		assigned-clocks = <&tegra_car TEGRA124_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA124_CLK_EXTERN1>;
++
+ 		nvidia,hp-det-gpios = <&gpio TEGRA_GPIO(I, 7) GPIO_ACTIVE_HIGH>;
+ 		nvidia,mic-det-gpios =
+ 				<&gpio TEGRA_GPIO(R, 7) GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+index 7309393bfced..8c2ee6e7d6f1 100644
+--- a/arch/arm/boot/dts/tegra124-venice2.dts
++++ b/arch/arm/boot/dts/tegra124-venice2.dts
+@@ -1266,8 +1266,14 @@
+ 
+ 		clocks = <&tegra_car TEGRA124_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA124_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA124_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA124_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA124_CLK_EXTERN1>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+index 8b7a827d604d..387b17458e22 100644
+--- a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+@@ -1189,7 +1189,13 @@
+ 		nvidia,audio-codec = <&sgtl5000>;
+ 		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA30_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index c18f6f61d764..6648506f3aa4 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -1171,7 +1171,13 @@
+ 		nvidia,audio-codec = <&sgtl5000>;
+ 		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA30_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
+index a3b0f3555cd2..45ef6002b225 100644
+--- a/arch/arm/boot/dts/tegra30-beaver.dts
++++ b/arch/arm/boot/dts/tegra30-beaver.dts
+@@ -2111,7 +2111,13 @@
+ 
+ 		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA30_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+index 7ce61edd52f5..4b4f49a49394 100644
+--- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
++++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+@@ -619,8 +619,14 @@
+ 
+ 		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA30_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 	};
+ 
+ 	gpio-keys {
+diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
+index 1f9198bb24ff..adba554381c7 100644
+--- a/arch/arm/boot/dts/tegra30-colibri.dtsi
++++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
+@@ -1030,8 +1030,14 @@
+ 		nvidia,audio-codec = <&sgtl5000>;
+ 		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
+ 			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
+-			 <&tegra_car TEGRA30_CLK_EXTERN1>;
++			 <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
+ 		clock-names = "pll_a", "pll_a_out0", "mclk";
++
++		assigned-clocks = <&tegra_car TEGRA30_CLK_EXTERN1>,
++				  <&tegra_pmc TEGRA_PMC_CLK_OUT_1>;
++
++		assigned-clock-parents = <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
++					 <&tegra_car TEGRA30_CLK_EXTERN1>;
+ 	};
+ };
  
 -- 
 2.7.4
