@@ -2,103 +2,108 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F4C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73D5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8CE206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578436104;
-	bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lIlBjIYKiF6tBx5AvQAlcTgKFYh9zCeZb3xVH8wWk9zYQCCZq4IhE6mC+805bJSMs
-	 T/9w6JgZnxnAgkSUrVEdHL8bQ+VP3fb+WmEyhIuy07GHJOJXevVKGiE2dB6+VSebFq
-	 PwILtrZzM4VeV3pdvr2n5603Iv43CHrQpFKn9dqo=
+	by mail.kernel.org (Postfix) with ESMTP id 76AB520715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Q6/aPnnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgAGW2X (ORCPT
+        id S1727533AbgAGW2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgAGW2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:28:23 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC02206DB;
-        Tue,  7 Jan 2020 22:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578436102;
-        bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YmOBvRNwxn2p4VVNlN1mtPMiHLf88IILl9CU5zsl8oDc2tEKa1JDkDCVyO4Wy/9qd
-         Yw8vOC7S8QS09Rv6JU0fD4t8I+ojDUHRjDHedmMf3Oi43gBxQs2Q98Q6n0QgUy6HIQ
-         OHTtvmHiGFEn6GyDZhW85HM98ibHSVCqqa6rv8CU=
-Received: by mail-qk1-f173.google.com with SMTP id j9so974861qkk.1;
-        Tue, 07 Jan 2020 14:28:22 -0800 (PST)
-X-Gm-Message-State: APjAAAUUPFkS4VB8XamxNWD0SFRN8E3eurzfYZcpjgmEGoKdeSKNT4lp
-        wdzDakFT/C+P8mgo3YdO96Mkk/qWL+mHr6irjg==
-X-Google-Smtp-Source: APXvYqxoOQxfocQW4kA6khk+aHJU2pwVfyqaD/KAMlGk5ufz1LIdR6mv3ZWKi1+rUBmcLJKspMa+7b9aCsoIRm4X5cM=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr1635519qkn.254.1578436101562;
- Tue, 07 Jan 2020 14:28:21 -0800 (PST)
+        Tue, 7 Jan 2020 17:28:43 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:56292 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbgAGW2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:28:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1578436122; x=1609972122;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=LRlH58C5d9znngWjy3uFjBYUUg3z1df7ROpFmuAf/5I=;
+  b=Q6/aPnnxSPTPnSfAD99eyG+MjbhfASL9H/FxhnVHsfPRudgRXOZDKHhi
+   unltp/QlHC3iwC2NU9fpk1L9y689Rne6usDbPTRFgnZk/zEI38LBpUPiR
+   RjKabfMFZ0xW2L2EUtxeQ8lzMhLtvgu2qqD6kA8YGTn3xAu+6SVrYqIzq
+   4=;
+IronPort-SDR: AuEZdKRYI4+iXdoh0i3w2sfARMEul7xPeRcjEbLLek8onVu1cfXFFoT3v42WGaiCke9l94gYS5
+ IjN8tJYTPPEA==
+X-IronPort-AV: E=Sophos;i="5.69,407,1571702400"; 
+   d="scan'208";a="8909129"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Jan 2020 22:28:31 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id 88523A2269;
+        Tue,  7 Jan 2020 22:28:30 +0000 (UTC)
+Received: from EX13D11UWB002.ant.amazon.com (10.43.161.20) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 Jan 2020 22:28:29 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13D11UWB002.ant.amazon.com (10.43.161.20) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 Jan 2020 22:28:29 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
+ Tue, 7 Jan 2020 22:28:29 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "Sangaraju, Someswarudu" <ssomesh@amazon.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "hch@lst.de" <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>
+Subject: Re: [resend v1 5/5] drivers/scsi/sd.c: Convert to use
+ disk_set_capacity
+Thread-Topic: [resend v1 5/5] drivers/scsi/sd.c: Convert to use
+ disk_set_capacity
+Thread-Index: AQHVxQ2ElvRRrRbcTUG70jpk0aWGbqffyXeA
+Date:   Tue, 7 Jan 2020 22:28:29 +0000
+Message-ID: <bc0575f1bb565f3955a411032f97163b2a5bd832.camel@amazon.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+         <20200102075315.22652-6-sblbir@amazon.com> <yq1blrg2agh.fsf@oracle.com>
+In-Reply-To: <yq1blrg2agh.fsf@oracle.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.109]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A767107664C5A648B65DC44D45C2A332@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-9-srinivas.kandagatla@linaro.org> <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
- <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
-In-Reply-To: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jan 2020 16:28:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
-Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 4:17 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 07/01/2020 09:47, Linus Walleij wrote:
-> > On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >
-> >> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-> >> gpio controller to control 5 gpios on the chip. This patch adds
-> >> required device tree bindings for it.
-> >>
-> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >> Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Tell me if you want me to merge this patch through the GPIO tree.
-> >
-> Yes that would be great!. gpio bindings and gpio driver can go via gpio
-> tree as there is no compile time dependency. Also Mark has already
-> merged the audio codec side of it.
-
-But there is a dependency because dt_binding_check is now broken as
-the codec schema references this GPIO schema. Not much to do about
-this now other than get the GPIO schema into -next.
-
-Rob
+T24gTW9uLCAyMDIwLTAxLTA2IGF0IDIyOjQ4IC0wNTAwLCBNYXJ0aW4gSy4gUGV0ZXJzZW4gd3Jv
+dGU6DQo+IEJhbGJpciwNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS9zZC5jIGIv
+ZHJpdmVycy9zY3NpL3NkLmMNCj4gPiBpbmRleCA1YWZiMDA0NmIxMmEuLjFhM2JlMzBiNmI3OCAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvc2QuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc2Nz
+aS9zZC5jDQo+ID4gQEAgLTMxODQsNyArMzE4NCw3IEBAIHN0YXRpYyBpbnQgc2RfcmV2YWxpZGF0
+ZV9kaXNrKHN0cnVjdCBnZW5kaXNrICpkaXNrKQ0KPiA+ICANCj4gPiAgCXNka3AtPmZpcnN0X3Nj
+YW4gPSAwOw0KPiA+ICANCj4gPiAtCXNldF9jYXBhY2l0eShkaXNrLCBsb2dpY2FsX3RvX3NlY3Rv
+cnMoc2RwLCBzZGtwLT5jYXBhY2l0eSkpOw0KPiA+ICsJZGlza19zZXRfY2FwYWNpdHkoZGlzaywg
+bG9naWNhbF90b19zZWN0b3JzKHNkcCwgc2RrcC0+Y2FwYWNpdHkpKTsNCj4gPiAgCXNkX2NvbmZp
+Z193cml0ZV9zYW1lKHNka3ApOw0KPiA+ICAJa2ZyZWUoYnVmZmVyKTsNCj4gDQo+IFdlIGFscmVh
+ZHkgZW1pdCBhbiBTREVWX0VWVF9DQVBBQ0lUWV9DSEFOR0VfUkVQT1JURUQgZXZlbnQgaWYgZGV2
+aWNlDQo+IGNhcGFjaXR5IGNoYW5nZXMuIEhvd2V2ZXIsIHRoaXMgZXZlbnQgZG9lcyBub3QgYXV0
+b21hdGljYWxseSBjYXVzZQ0KPiByZXZhbGlkYXRpb24uDQo+IA0KDQpUaGUgcHJvcG9zZWQgaWRl
+YSBpcyB0byBub3QgcmVpbmZvcmNlIHJldmFsaWRhdGlvbiwgdW5sZXNzIGV4cGxpY3RseSBzcGVj
+aWZpZWQNCihpbiB0aGUgdGhyZWFkIGJlZm9yZSBCb2IgTGl1IGhhZCBzdWdnZXN0aW9ucykuIFRo
+ZSBnb2FsIGlzIHRvIG5vdGlmeSB1c2VyDQpzcGFjZSBvZiBjaGFuZ2VzIHZpYSBSRVNJWkUuIFND
+U0kgc2QgY2FuIG9wdCBvdXQgb2YgdGhpcyBJT1csIEkgY2FuIHJlbW92ZQ0KdGhpcyBpZiB5b3Ug
+ZmVlbCBTREVWX0VWVF9DQVBBQ0lUWV9DSEFOR0VfUkVQT1JURUQgaXMgc3VmZmljaWVudCBmb3Ig
+Y3VycmVudA0KdXNlIGNhc2VzLg0KDQpCYWxiaXIgU2luZ2guDQo=
