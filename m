@@ -2,151 +2,158 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1CC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620B8C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF8A2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B2c24VEr"
+	by mail.kernel.org (Postfix) with ESMTP id 31D512077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432075;
+	bh=BDI6/WTSkk2GpBJxGXBqEQbdfqRIM0rGrvfopXGfmMc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WiD2klIzdl1PtF1fDgx43KXWlZe6JOKuvQhon1/TbhC2hArwJ1WIZxJJsWiYJCyoU
+	 yEFnBgcpPsmf58Lh24VG/jUhIYtn2x1wbL9NzS9vI/BGIvsW+hMfJ71fVMm5Osfgun
+	 SmXAZ+XB1woo+9BVwHKgF38qZ9eeJRHsisdvCbw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgAGVVJ (ORCPT
+        id S1728916AbgAGVDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:21:09 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44736 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgAGVVF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:21:05 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p6so464256vsj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:21:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xSRU4qb0ZOTzAyNx1lTLU2yX2h3B/4YPYeMRUYoNUNw=;
-        b=B2c24VErfFgKcj+Y8pK4fduvG+1fQI+hXYgNkXJGbBRFwaKnQ/dBzAG8TezMb3/Q9Q
-         m6031Hs6rCtZUh7bmDnZFhiSnSqShiG0SN6iRp876eP4eOImfeY0uKJ9ZWeLETLyWqfs
-         ZvEaJ5UebA6DyfgEHhVXrAEmr3UFLR1V8Z7y4lbVghEPUprT3u9Ns75q6VXY3IBNTYmA
-         rzqG9reCI0/e6EHRkRd7LSyHIGjW03TyI6y8ltFpSP5HkFFf9fyin3FuJdsuef5nzQ4Q
-         QIreO53IIKEtcmoXxH6F+iIuZEQXYkKGC4vyb6gpMMULXGdvg7fWB2J2Zgp84mdF7ZPM
-         ofag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xSRU4qb0ZOTzAyNx1lTLU2yX2h3B/4YPYeMRUYoNUNw=;
-        b=WDC9iGj7Kv3Wc54kVt2Akbn7aZ20yPuo1j7kbh85Tt8IR6UDbJpe6IcauU/ZgQE4KO
-         manrzBLTigVqY11PUmEbFZVVgB4jJqmIa2ipIRa8CH8sIWFd/ta2ncGrYl4C7SAK6RYR
-         xIvKGf4tZ22S0FI/yvUjzoaBp61jY7VPZkDpMbwUAMXsew9xity83qoIWldCt6eR1z/0
-         hbj6ZtBNnQRuU+E02DG91py0Wlwy/DPmS8LjHIPRgk1IJtDDOt45a1tn/eLc6lvyxCyd
-         M5JdxuFgh5d0wwGU8h16JosU+8KwKNVYnD4VYL6Z616CagbKyzk12tlpwVbdnP6QwshX
-         +R2A==
-X-Gm-Message-State: APjAAAXVHB1s5HhLr9q83U3VL0aR8rq4Y8MOPgdd64aAiuS3SIjMdvis
-        Azh1hRg76pPahVufUKdBctEj40Vi7IDhVglE50ksjQ==
-X-Google-Smtp-Source: APXvYqyENOKFRASsBlhAPSr8XO5DU0ppABR3JIJu+k4Fe6D6fkhlIMmdJuGT0juY1Iv+IXC4K3kUX9+MYDhqzMADc7Y=
-X-Received: by 2002:a67:6f46:: with SMTP id k67mr906097vsc.2.1578432064703;
- Tue, 07 Jan 2020 13:21:04 -0800 (PST)
+        Tue, 7 Jan 2020 16:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728724AbgAGVD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126C82077B;
+        Tue,  7 Jan 2020 21:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431005;
+        bh=BDI6/WTSkk2GpBJxGXBqEQbdfqRIM0rGrvfopXGfmMc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kKStGFheJ//jkRIFQVpX4ISKqIM/UMlKBdnMqnFjbkF7qty8mppt0/2YQFHgYhFtq
+         MNV7E13rOQ181kvnH2rSuW785Rfb2NsyYPP2SHGF4LraHF5QbCv5wJMnytxvGA0/y8
+         gx5l0PX8EbQIR4ZLfa5NqIroqcE+Rcdrfuwg/uP4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 186/191] perf/x86/intel/bts: Fix the use of page_private()
+Date:   Tue,  7 Jan 2020 21:55:06 +0100
+Message-Id: <20200107205342.943849559@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+References: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191216213901.106941-1-bgardon@google.com> <20191216213901.106941-9-bgardon@google.com>
- <20200107154227.tvex5natt7a64nzj@kamzik.brq.redhat.com>
-In-Reply-To: <20200107154227.tvex5natt7a64nzj@kamzik.brq.redhat.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Tue, 7 Jan 2020 13:20:53 -0800
-Message-ID: <CANgfPd9VxvJYAw_cqG9X2GUAkZ9vumF8mZ1+P==mJoZgShR_rg@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] KVM: selftests: Move large memslots above KVM
- internal memslots in _vm_create
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Peter Xu <peterx@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Would it be viable to allocate at 4G be default and then add another
-interface for allocations at low memory addresses? For most tests, I
-don't think there's any value to having the backing paddrs below 3G.
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-On Tue, Jan 7, 2020 at 7:42 AM Andrew Jones <drjones@redhat.com> wrote:
->
-> On Mon, Dec 16, 2019 at 01:39:01PM -0800, Ben Gardon wrote:
-> > KVM creates internal memslots between 3 and 4 GiB paddrs on the first
-> > vCPU creation. If memslot 0 is large enough it collides with these
-> > memslots an causes vCPU creation to fail. When requesting more than 3G,
-> > start memslot 0 at 4G in _vm_create.
-> >
-> > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > ---
-> >  tools/testing/selftests/kvm/lib/kvm_util.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > index 41cf45416060f..886d58e6cac39 100644
-> > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> > @@ -113,6 +113,8 @@ const char * const vm_guest_mode_string[] = {
-> >  _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
-> >              "Missing new mode strings?");
-> >
-> > +#define KVM_INTERNAL_MEMSLOTS_START_PADDR (3UL << 30)
-> > +#define KVM_INTERNAL_MEMSLOTS_END_PADDR (4UL << 30)
-> >  /*
-> >   * VM Create
-> >   *
-> > @@ -128,13 +130,16 @@ _Static_assert(sizeof(vm_guest_mode_string)/sizeof(char *) == NUM_VM_MODES,
-> >   *
-> >   * Creates a VM with the mode specified by mode (e.g. VM_MODE_P52V48_4K).
-> >   * When phy_pages is non-zero, a memory region of phy_pages physical pages
-> > - * is created and mapped starting at guest physical address 0.  The file
-> > - * descriptor to control the created VM is created with the permissions
-> > - * given by perm (e.g. O_RDWR).
-> > + * is created. If phy_pages is less that 3G, it is mapped starting at guest
-> > + * physical address 0. If phy_pages is greater than 3G it is mapped starting
-> > + * 4G into the guest physical address space to avoid KVM internal memslots
-> > + * which map the region between 3G and 4G. The file descriptor to control the
-> > + * created VM is created with the permissions given by perm (e.g. O_RDWR).
-> >   */
-> >  struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
-> >  {
-> >       struct kvm_vm *vm;
-> > +     uint64_t guest_paddr = 0;
-> >
-> >       DEBUG("Testing guest mode: %s\n", vm_guest_mode_string(mode));
-> >
-> > @@ -227,9 +232,11 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
-> >
-> >       /* Allocate and setup memory for guest. */
-> >       vm->vpages_mapped = sparsebit_alloc();
-> > +     if (guest_paddr + phy_pages > KVM_INTERNAL_MEMSLOTS_START_PADDR)
-> > +             guest_paddr = KVM_INTERNAL_MEMSLOTS_END_PADDR;
-> >       if (phy_pages != 0)
-> >               vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> > -                                         0, 0, phy_pages, 0);
-> > +                                         guest_paddr, 0, phy_pages, 0);
-> >
-> >       return vm;
-> >  }
-> > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
->
-> I feel like this function is becoming too magic and it'll be more
-> complicated for tests that need to add additional memory regions
-> to know what physical addresses are available. Maybe we should assert
-> if we can't allocate more than 3G at offset zero and also provide
-> another interface for allocating at an offset input by the user,
-> as long as the offset is 4G or above (asserting when it isn't)?
->
-> Thanks,
-> drew
->
+[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
+
+Commit
+
+  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+
+brought in a warning with the BTS buffer initialization
+that is easily tripped with (assuming KPTI is disabled):
+
+instantly throwing:
+
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
+> Modules linked in:
+> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
+> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
+> Call Trace:
+>  rb_alloc_aux+0x339/0x550
+>  perf_mmap+0x607/0xc70
+>  mmap_region+0x76b/0xbd0
+...
+
+It appears to assume (for lost raisins) that PagePrivate() is set,
+while later it actually tests for PagePrivate() before using
+page_private().
+
+Make it consistent and always check PagePrivate() before using
+page_private().
+
+Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 5ee3fed881d3..741540d849f3 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -63,9 +63,17 @@ struct bts_buffer {
+ 
+ static struct pmu bts_pmu;
+ 
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
++
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
+ }
+ 
+ static void *
+@@ -83,9 +91,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -109,7 +115,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+-- 
+2.20.1
+
+
+
