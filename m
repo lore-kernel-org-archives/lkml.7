@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D458EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD87C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4372081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402C02080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432220;
-	bh=ghJPWWuvqI+2W+7yB5CB5Xw2G0Ec0DSRSw0S2VlnfGc=;
+	s=default; t=1578432223;
+	bh=SkUyblwU99iMDKO/k+Wj2C3RYecw+KxgIPrwyZ+Sh90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsS0YGrmzzUzI3epcQ21nkU2jtZAlvi+CVdeVZJ3U92TqSuoEHOXdnWqSJH/V4gat
-	 HgWXpS1MAfgUirNIij5FqIVwQ+JAH0+kZaKRJPwJQDjrYd2GUQL62z4NOvszKRmmkX
-	 x+JlKmbbjbbgeGW9wE3gd1/pvn4psWIIKgNHyIhw=
+	b=lBE0zgi1kVukqo76+8fckoB8AD/3iNfywLA3dA5DG3xxDbPcv5IZmrUq5KI9lJ+g2
+	 viilCj963FS00qAgIDstqGelKJV2bniCyuilW6yhV02GmV/POMl9HDZkLqXlXaw7B9
+	 Nt58zYBgcKptlW8h/nclrsscuh39O/J57zxrHlE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgAGVBP (ORCPT
+        id S1728705AbgAGVXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:23:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgAGVBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:00 -0500
+        id S1728515AbgAGVBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B06D021744;
-        Tue,  7 Jan 2020 21:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4118F24672;
+        Tue,  7 Jan 2020 21:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430860;
-        bh=ghJPWWuvqI+2W+7yB5CB5Xw2G0Ec0DSRSw0S2VlnfGc=;
+        s=default; t=1578430874;
+        bh=SkUyblwU99iMDKO/k+Wj2C3RYecw+KxgIPrwyZ+Sh90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3a71wNqP4FKYb30vhBZ5xFe05xen1sQDC2TyFBGX4RzXD8ejyn3X9OoHqjbgqk5N
-         6ShPbOxNouJgv7RYu3tEvKI1jkUemHQKvrFk9MxrDCalluP/56mQALZ4GgICY/+UT7
-         Nz5Tl3t1piIjS01evoz4/vV6dOwdzE05WEV+7eoA=
+        b=Bage4CU+UYCi0YMjJhNWBhehanUbVrkAddaVebJsqm98WSBajsdv5STGtoKzvh77K
+         SQJg63/EhpQFI4ndQvDzVCKhUpAbqyx+Iaz71Em9rpwVHd5KQ6D12vIwFjDBwTmE6C
+         fhe2UnZ2qq2pl7ibIOC7eE3GF5bd54/ZI/Xjwmhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
-        Nikolay Merinov <n.merinov@inango-systems.com>,
-        Ariel Gilman <a.gilman@inango-systems.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 089/191] pstore/ram: Write new dumps to start of recycled zones
-Date:   Tue,  7 Jan 2020 21:53:29 +0100
-Message-Id: <20200107205337.761682618@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: [PATCH 5.4 133/191] drm/msm: include linux/sched/task.h
+Date:   Tue,  7 Jan 2020 21:54:13 +0100
+Message-Id: <20200107205340.088032750@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,49 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9e5f1c19800b808a37fb9815a26d382132c26c3d upstream.
+commit 70082a52f96a45650dfc3d8cdcd2c42bdac9f6f0 upstream.
 
-The ram_core.c routines treat przs as circular buffers. When writing a
-new crash dump, the old buffer needs to be cleared so that the new dump
-doesn't end up in the wrong place (i.e. at the end).
+Without this header file, compile-testing may run into a missing
+declaration:
 
-The solution to this problem is to reset the circular buffer state before
-writing a new Oops dump.
+drivers/gpu/drm/msm/msm_gpu.c:444:4: error: implicit declaration of function 'put_task_struct' [-Werror,-Wimplicit-function-declaration]
 
-Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
-Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
-Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
-Link: https://lore.kernel.org/r/20191223133816.28155-1-n.merinov@inango-systems.com
-Fixes: 896fc1f0c4c6 ("pstore/ram: Switch to persistent_ram routines")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 482f96324a4e ("drm/msm: Fix task dump in gpu recovery")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/ram.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/msm/msm_gpu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -407,6 +407,17 @@ static int notrace ramoops_pstore_write(
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -16,6 +16,7 @@
+ #include <linux/pm_opp.h>
+ #include <linux/devfreq.h>
+ #include <linux/devcoredump.h>
++#include <linux/sched/task.h>
  
- 	prz = cxt->dprzs[cxt->dump_write_cnt];
- 
-+	/*
-+	 * Since this is a new crash dump, we need to reset the buffer in
-+	 * case it still has an old dump present. Without this, the new dump
-+	 * will get appended, which would seriously confuse anything trying
-+	 * to check dump file contents. Specifically, ramoops_read_kmsg_hdr()
-+	 * expects to find a dump header in the beginning of buffer data, so
-+	 * we must to reset the buffer values, in order to ensure that the
-+	 * header will be written to the beginning of the buffer.
-+	 */
-+	persistent_ram_zap(prz);
-+
- 	/* Build header and append record contents. */
- 	hlen = ramoops_write_kmsg_hdr(prz, record);
- 	if (!hlen)
+ /*
+  * Power Management:
 
 
