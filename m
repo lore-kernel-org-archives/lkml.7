@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066B2C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B7BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32BF20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5EE20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432345;
-	bh=oSVw/i/5zpP39arLMUvAIPUk4ziO5aQIjG1jYWIsv74=;
+	s=default; t=1578432352;
+	bh=S4gT98fNZToNWWvwEhgB78y4k0uhF3XFVxP70zJy0gU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYYdqFrIJJMt5FBjoB1Ydqs8qsHbkDGxMPnq8PcEUpq1MVOS4L6L7u9au8VBD6KQS
-	 iKdNYFv/JSQF8PzVl3MQxd1/v4RbNOc8cWajV7FXRt2csNs0jCJhi1oSp0UxT5osKu
-	 SxqWLKkMvvTDiPj/YnBj4XFh9bX1qrg4Ks0IlBZA=
+	b=r/CEvgrQ8ERy4f3wD6T2DjnMk7GVdeVYWUDIhbXWCOuYj+3rh/jlGnaTPCXrQJPfI
+	 8y8gPjtpB8soKMeFIDb0ra2Zy46nfQCGiIPS80b/4BVJMxb3X+pco7b41cUfBoIkfS
+	 njH0e4o4I9Ryq73lXpbmw5ppPMJJIgJGb9RE3WIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgAGVZo (ORCPT
+        id S1728517AbgAGVZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:25:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgAGU7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:41 -0500
+        id S1727324AbgAGU7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36C582081E;
-        Tue,  7 Jan 2020 20:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AC542081E;
+        Tue,  7 Jan 2020 20:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430780;
-        bh=oSVw/i/5zpP39arLMUvAIPUk4ziO5aQIjG1jYWIsv74=;
+        s=default; t=1578430775;
+        bh=S4gT98fNZToNWWvwEhgB78y4k0uhF3XFVxP70zJy0gU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wuauVopSBOE0aiHQCbgCgBnWjl4hudZ4eCx9fohhcyq+BlQkWum3hn7+FE/+knU6d
-         /ZUMoSl8cvLSZ37bh/I32SQ6qLGWYrJl020l3ITgZIPlzfFjsx3AFps2zl7YbXoDZn
-         rcDs9tuPVAhZMLAEqaRekKGxcgdShlM7yA0UWyD4=
+        b=NnyJDDq9E9lIbaJSke6FYgwPVpHctmTplFV/WKwyCbWlbEFcbfkrjC+0QqUs9c3oj
+         NdE2Sp0irdjYqjivaKsv+Iu3Qu+zGq9dmIpxtob4YXSu0Uys1+tWv08zVCm7lU1nnz
+         dT0kRUG3NIXGnvgGiP/oUPXagxTdRZJlmLeKe1Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 094/191] seccomp: Check that seccomp_notif is zeroed out by the user
-Date:   Tue,  7 Jan 2020 21:53:34 +0100
-Message-Id: <20200107205338.024294053@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 5.4 092/191] locks: print unsigned ino in /proc/locks
+Date:   Tue,  7 Jan 2020 21:53:32 +0100
+Message-Id: <20200107205337.919473322@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,46 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sargun Dhillon <sargun@sargun.me>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 2882d53c9c6f3b8311d225062522f03772cf0179 upstream.
+commit 98ca480a8f22fdbd768e3dad07024c8d4856576c upstream.
 
-This patch is a small change in enforcement of the uapi for
-SECCOMP_IOCTL_NOTIF_RECV ioctl. Specifically, the datastructure which
-is passed (seccomp_notif) must be zeroed out. Previously any of its
-members could be set to nonsense values, and we would ignore it.
+An ino is unsigned, so display it as such in /proc/locks.
 
-This ensures all fields are set to their zero value.
-
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-Acked-by: Tycho Andersen <tycho@tycho.ws>
-Link: https://lore.kernel.org/r/20191229062451.9467-2-sargun@sargun.me
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
 Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/seccomp.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/locks.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -1015,6 +1015,13 @@ static long seccomp_notify_recv(struct s
- 	struct seccomp_notif unotif;
- 	ssize_t ret;
- 
-+	/* Verify that we're not given garbage to keep struct extensible. */
-+	ret = check_zeroed_user(buf, sizeof(unotif));
-+	if (ret < 0)
-+		return ret;
-+	if (!ret)
-+		return -EINVAL;
-+
- 	memset(&unotif, 0, sizeof(unotif));
- 
- 	ret = down_interruptible(&filter->notif->request);
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -2853,7 +2853,7 @@ static void lock_get_status(struct seq_f
+ 	}
+ 	if (inode) {
+ 		/* userspace relies on this representation of dev_t */
+-		seq_printf(f, "%d %02x:%02x:%ld ", fl_pid,
++		seq_printf(f, "%d %02x:%02x:%lu ", fl_pid,
+ 				MAJOR(inode->i_sb->s_dev),
+ 				MINOR(inode->i_sb->s_dev), inode->i_ino);
+ 	} else {
 
 
