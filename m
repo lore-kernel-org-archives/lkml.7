@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320C0C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40B7C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA1E20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9464D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431174;
-	bh=s4dJlHfvG3lTvGvTHMdUwLLQc2nWQ+zsBKgEgl7p50k=;
+	s=default; t=1578431177;
+	bh=Gp/vD1HcvuFOrxXK0RGDEN6nK/NDqbHsH7zaBdF7heY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XF+297nA2OXo0WwIueSW6IEPgZxKQt+d0yLfIon4e3y/BDdTxQrt16yh2k70Z4c7V
-	 aGUUyElmvYMgvT1e1/TC722RUyd3Yf5ARW0cAQV07Zd0/frFONpkrJVNeducnHboHp
-	 xW0gyYFRDII4trdsXaNSA0kzVqXAL8xzO0Anw+zw=
+	b=r/2weUckNyx3Vlo/O7y1fBdn8hgOO8dB7Q+wNnDQLde3aQeCe4XMYLa82Bdi4UDqC
+	 3Gi1kF8OKFSseGKHcatgNXSAcNps64qGbq7RxZbavyO3ra2iJYiPvtj+Bu7SrBgGD6
+	 WWjOolzOGVObqaRqqu3zw79VvzMalgrpHsnPy5ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgAGVGM (ORCPT
+        id S1729366AbgAGVGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbgAGVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:10 -0500
+        id S1729363AbgAGVGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9FE20678;
-        Tue,  7 Jan 2020 21:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530332077B;
+        Tue,  7 Jan 2020 21:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431170;
-        bh=s4dJlHfvG3lTvGvTHMdUwLLQc2nWQ+zsBKgEgl7p50k=;
+        s=default; t=1578431172;
+        bh=Gp/vD1HcvuFOrxXK0RGDEN6nK/NDqbHsH7zaBdF7heY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdemxxQi2IskTBrceczBOPeik8wVEsqdWtqf8Vj8HhqpoTDVyJ+449ZmhERbaBXwE
-         flMsc1GcbRvSNgRImzs6N7xrlwqwW2c8H2YYrUzOez1zpPqH/VORUb88smkKmxsK65
-         Xl5Jstdx51ovcc3929yZJikGIlpQMOLUKgdktUIM=
+        b=P+fsEd3MyDe356BcZCNDcZ0JLI3VDgPrLy92wMnqPKRfxteqj7u2Dd4c2Vdk7Ppr9
+         F6kaC0FaMvMQx5RykH530MResWCNqItQewDonEL4Rmi7nSk+MLrWjzlIz3q++XMub8
+         UhDnz2BsnHf7qvP3ZIIzg5V09Ziukj5EJBpciaVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 045/115] ALSA: hda/realtek - Add headset Mic no shutup for ALC283
-Date:   Tue,  7 Jan 2020 21:54:15 +0100
-Message-Id: <20200107205302.088634775@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 063/115] ata: ahci_brcm: Add missing clock management during recovery
+Date:   Tue,  7 Jan 2020 21:54:33 +0100
+Message-Id: <20200107205303.419870315@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,32 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 66c5d718e5a6f80153b5e8d6ad8ba8e9c3320839 upstream.
+commit bf0e5013bc2dcac205417e1252205dca39dfc005 upstream.
 
-Chrome machine had humming noise from external speaker plugin at
-codec D3 state.
+The downstream implementation of ahci_brcm.c did contain clock
+management recovery, but until recently, did that outside of the
+libahci_platform helpers and this was unintentionally stripped out while
+forward porting the patch upstream.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/2692449396954c6c968f5b75e2660358@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Add the missing clock management during recovery and sleep for 10
+milliseconds per the design team recommendations to ensure the SATA PHY
+controller and AFE have been fully quiesced.
+
+Fixes: eb73390ae241 ("ata: ahci_brcm: Recover from failures to identify devices")
+Cc: stable@vger.kernel.org
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/ata/ahci_brcm.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -513,6 +513,7 @@ static void alc_shutup_pins(struct hda_c
- 	struct alc_spec *spec = codec->spec;
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -284,6 +284,13 @@ static unsigned int brcm_ahci_read_id(st
+ 	/* Perform the SATA PHY reset sequence */
+ 	brcm_sata_phy_disable(priv, ap->port_no);
  
- 	switch (codec->core.vendor_id) {
-+	case 0x10ec0283:
- 	case 0x10ec0286:
- 	case 0x10ec0288:
- 	case 0x10ec0298:
++	/* Reset the SATA clock */
++	ahci_platform_disable_clks(hpriv);
++	msleep(10);
++
++	ahci_platform_enable_clks(hpriv);
++	msleep(10);
++
+ 	/* Bring the PHY back on */
+ 	brcm_sata_phy_enable(priv, ap->port_no);
+ 
 
 
