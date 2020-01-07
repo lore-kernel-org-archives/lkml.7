@@ -2,116 +2,206 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4725C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B52C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3EB20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B872073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgAGWCK (ORCPT
+        id S1727349AbgAGWEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:02:10 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:45299 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgAGWCJ (ORCPT
+        Tue, 7 Jan 2020 17:04:08 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49178 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgAGWEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:02:09 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mnq0I-1jV62E0WDK-00pJRv; Tue, 07 Jan 2020 23:02:08 +0100
-Received: by mail-qk1-f174.google.com with SMTP id c17so870958qkg.7;
-        Tue, 07 Jan 2020 14:02:07 -0800 (PST)
-X-Gm-Message-State: APjAAAVmyp6DYZFpIooyRX9xZdKLs52EKWz3pfwPDoteYdmaGUU3lebv
-        ScR+3OB84OyVfxU4b2CdI5fATdk7QjwnFVXLwS8=
-X-Google-Smtp-Source: APXvYqxUa5xLov61G7xm+YWKKvTkhYFC6JphHNq61xoPNx93avyQNM5C0YyDy1+zQvWClcWhfIrpGJ17Carlg/CFYCg=
-X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr1513012qka.286.1578434526938;
- Tue, 07 Jan 2020 14:02:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20200107200659.3538375-1-arnd@arndb.de> <20200107124417.5239a6cf@cakuba.netronome.com>
-In-Reply-To: <20200107124417.5239a6cf@cakuba.netronome.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Jan 2020 23:01:50 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
-Message-ID: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
-Subject: Re: [PATCH] netronome: fix ipv6 link error
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <simon.horman@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        oss-drivers@netronome.com, Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Tue, 7 Jan 2020 17:04:08 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id E9BE52927FC
+Message-ID: <4d5a896ee0f40908365800dcd0554eb39c5d68c1.camel@collabora.com>
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip
+ MIPI RX D-PHY yaml bindings
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Date:   Tue, 07 Jan 2020 19:03:54 -0300
+In-Reply-To: <2299954.gvZHxIxoM0@diego>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+         <2549505.MsbA2le1sL@diego>
+         <657de953782be2514849bc8bd12a3fbcb6794427.camel@collabora.com>
+         <2299954.gvZHxIxoM0@diego>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rzlzUU8mzkmleUvVMkVLWK0UMnNe01XsywHdmS48EjSFO8XTmXF
- f2u8Nv4DBDqci4s9VP9LxPmPZmMnFqwb1V2ebGOrvJv3L8jO/XXs7vf5AhdbLJn3vFJOui2
- hE9XALeDuvTGn2v3N7Kc5O64dUuTLsjnkhaKxfM6z9sIzeqMH5hh69MgBaTla+nqiQ/bPCD
- DV5hPs64dkcMoBO8kZIZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mIzPHufBjyk=:kN0xZSMR54Jg0jHTlHowia
- NqrF6MUpCluK4yjnsWfPLfy/+WLOFzAsbGA52X4aCDWzOaOQWxcB0JGi2OrbyXhVGroRR/79E
- /Mnzw3dcox/WElhgPWwOsl6Xfl78lYQ+SbLdb5YOCZ0W+4eZZMf29QT/zXl9EhpQQLsrljLX3
- DsP/9wk6wnewDYjoarYzJzOQ8DXKorYrUotcBAlWXmnqDhGWwSfR+QV3aAh/ag6PqEkt3GEG5
- AT1DcujCVZt+UeC2FKgdQnbv4hmlzumoIxhpc/AhROKf8M7nMV3cDwQfvy8vTyTA+9D7i6izt
- 6dvEsQfdclPtZaB1ausqkmyw94iUSoj7rXQI6rbdTGsbkZSgTeLlDVCWjvKCbtIFRkPMSRaSD
- IUAM++sLQa1sMK7U1QPaYizxc9rwj7rC+8edhl7Rl/Ony7v/5h2dAyxWQEeJF4lpnGL2o3Ku5
- UPsrJdKLldcQFlxyvRkJgzKIeRMn3MIEA7OKB4qAP05JsrbIkoURNi/Py2K345/fe1ux/rJXk
- 7PHCRHXaXDKJ9JljEAWxibhGBUULWfxpTq/UAe7qUQb/lAzv5N9KSEZIgAgXS+hHtEy6pNIKo
- AZg3RdLMhMOn2ryocjAc2+I57O0gx/qCunbGGygCfjvtgdqBLDJ9vDJNYU/p836IZDjkWQLas
- qUAEUiVhheraSebD3BfcTIHnbw27/dDmHYmSfZPxNb4qmjJelnl5aRMILbuqgmxePpa3JY0X1
- dgo/p/Z+AydsAOGJN+4HA1jayZ3LsWE0y1bLpi8AVjY2snCdeO7LxNlTy49J16N6qsRxUDOGA
- 71gFXIQrJ6u58UA0uMuTVPfM6+LjDsWs5h6/HPKZro61Zu/h/qgJtabwbwbdgeUzk2RAKjOO1
- OLVZka63q2Ffcb24jbWQ==
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 9:44 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Tue,  7 Jan 2020 21:06:40 +0100, Arnd Bergmann wrote:
-> > When the driver is built-in but ipv6 is a module, the flower
-> > support produces a link error:
-> >
-> > drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.o: In function `nfp_tunnel_keep_alive_v6':
-> > tunnel_conf.c:(.text+0x2aa8): undefined reference to `nd_tbl'
->
-> Damn, I guess the v2 of that patch set did not solve _all_ v6 linking
-> issues :/ Thanks for the patch.
->
-> > Add a Kconfig dependency to avoid that configuration.
-> >
-> > Fixes: 9ea9bfa12240 ("nfp: flower: support ipv6 tunnel keep-alive messages from fw")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/net/ethernet/netronome/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/net/ethernet/netronome/Kconfig b/drivers/net/ethernet/netronome/Kconfig
-> > index bac5be4d4f43..dcb02ce28460 100644
-> > --- a/drivers/net/ethernet/netronome/Kconfig
-> > +++ b/drivers/net/ethernet/netronome/Kconfig
-> > @@ -31,6 +31,7 @@ config NFP_APP_FLOWER
-> >       bool "NFP4000/NFP6000 TC Flower offload support"
-> >       depends on NFP
-> >       depends on NET_SWITCHDEV
-> > +     depends on IPV6 != m || NFP =m
->
-> Could we perhaps do the more standard:
->
->         depends on IPV6 || IPV6=n
+On Tue, 2020-01-07 at 22:30 +0100, Heiko Stübner wrote:
+> Hi Ezequiel,
+> 
+> Am Dienstag, 7. Januar 2020, 14:20:10 CET schrieb Ezequiel Garcia:
+> > Hi Heiko, Laurent,
+> > 
+> > On Tue, 2020-01-07 at 10:28 +0100, Heiko Stübner wrote:
+> > > Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
+> > > > On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> > > > > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > > > > > Hi Helen,
+> > > > > > 
+> > > > > > Thank you for the patch.
+> > > > > > 
+> > > > > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > > > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > > > > > 
+> > > > > > > This was tested and verified with:
+> > > > > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-
+> > > > > > > dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > > > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > 
+> > > > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > > > > > 
+> > > > > > > ---
+> > > > > > > 
+> > > > > > > Changes in v12:
+> > > > > > > - The commit replaces the following commit in previous series named
+> > > > > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > > > > > This new patch adds yaml binding and was verified with
+> > > > > > > make dtbs_check and make dt_binding_check
+> > > > > > > 
+> > > > > > > Changes in v11: None
+> > > > > > > Changes in v10:
+> > > > > > > - unsquash
+> > > > > > > 
+> > > > > > > Changes in v9:
+> > > > > > > - fix title division style
+> > > > > > > - squash
+> > > > > > > - move to staging
+> > > > > > > 
+> > > > > > > Changes in v8: None
+> > > > > > > Changes in v7:
+> > > > > > > - updated doc with new design and tested example
+> > > > > > > 
+> > > > > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > > > > > >  1 file changed, 75 insertions(+)
+> > > > > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > 
+> > > > > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > b/drivers/staging/media/phy-
+> > > > > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..af97f1b3e005
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > @@ -0,0 +1,75 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > > > > > 
+> > > > > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
+> > > > > 
+> > > > > The driver currently only supports RX0, but I think you are right,
+> > > > > it should say RX here. This binding could be extended for RX1.
+> > > > > 
+> > > > > > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > > > > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> > > > > 
+> > > > > I am not following this. The driver handles just one PHY. Each PHY
+> > > > > should have its own node.
+> > > > 
+> > > > Looking at the registers, it seems that the different PHYs are
+> > > > intertwined and we would could have trouble handling the different PHYs
+> > > > with different DT nodes and thus struct device instances.
+> > > 
+> > > I have to confess to not following _ALL_ of the threads, so may say
+> > > something stupid, but I don't think the PHYs are intertwined so much.
+> > > 
+> > > Where RX0 is controlled from the "General Register Files" alone
+> > > [register dumping ground for soc designers], the TX1RX1-phy
+> > > actually gets controlled from inside the dsi1 register area it seems.
+> > > 
+> > > So in my previous (still unsucessful) tests, I was rolling with something like
+> > > https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
+> > > 
+> > > With the actual "logic" picked from the vendor kernel, that just double-
+> > > maps the dsi1-registers in both dsi and dphy driver, which was strange.
+> > > 
+> > > 
+> > 
+> > Describing each PHY in its own device node (as we currently do)
+> > results in:
+> > 
+> >         mipi_dphy_tx1rx1: mipi-dphy-tx1rx1@ff968000 {
+> >                 compatible = "rockchip,rk3399-mipi-dphy";
+> >                 reg = <0x0 0xff968000 0x0 0x8000>;
+> >                 rockchip,grf = <&grf>;
+> >         };
+> 
+> 0xff968000 actually really is the dsi1 controller, so we'll already
+> have a node for that area. That is the reason I went that way to make
+> the rockchip-dsi optionally also behave as phy-provider.
+> 
+> So when it's used in combination with drm and a panel or so it will
+> behave as dsi controller, but when requested via the phy-framework
+> it will expose the dphy functionality.
+> 
 
-That would have to be on CONFIG_NFP instead of CONFIG_NFP_APP_FLOWER
-then, making the entire driver a module if IPV6=m but always allowing
-CONFIG_NFP_APP_FLOWER.
+Hm, and will this driver also support RX1?
 
-> The whitespace around = and != seems a little random as is..
+> 
+> >         grf: syscon@ff770000 {
+> >                 mipi_dphy_rx0: mipi-dphy-rx0 {
+> >                         compatible = "rockchip,rk3399-mipi-dphy";
+> >                 };
+> >         };
+> > 
+> > Which is mildly ugly, as it uses two mechanism to describe
+> > the GRF resource. In addition, the driver will then _infer_
+> > which device node is RX0 and which is TX1RX1, from this.
+> > 
+> > Perhaps Laurent's proposal, describing each PHY explicitly,
+> > would be cleaner?
+> 
+> so I really think we shouldn't merge these two things together,
+> especially to not break the dsi1 controller part.
+> 
 
-Yep, my mistake. I can send a fixed version, please let me know which
-version you want, or fix it up yourself if you find that easier.
+I don't think it would necesarily break the dsi1 controller part.
 
-     Arnd
+You can declare both device nodes as sharing the address region,
+and then the driver can request the I/O resource only when it needs to,
+i.e. in the PHY .init hook.
+
+It's not super nice, but there's no real reason two devices
+can't share an I/O memory resource.
+
+I like this approach because it exposes the different PHYs
+explicitly, instead of implicitly.
+
+Thanks,
+Ezequiel
+
+
