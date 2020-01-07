@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E95C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92584C33CA2
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D4D20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FD324679
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z2ca2j5z"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kEQh4tg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgAGEPY (ORCPT
+        id S1727637AbgAGEOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:15:24 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4700 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbgAGEOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Jan 2020 23:14:34 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1405980000>; Mon, 06 Jan 2020 20:14:16 -0800
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6500 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbgAGEO3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 23:14:29 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e14058f0000>; Mon, 06 Jan 2020 20:14:07 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Jan 2020 20:14:33 -0800
+  Mon, 06 Jan 2020 20:14:24 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Jan 2020 20:14:33 -0800
+        by hqpgpgate102.nvidia.com on Mon, 06 Jan 2020 20:14:24 -0800
 Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 04:14:32 +0000
+ 2020 04:14:23 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 04:14:32 +0000
+ Transport; Tue, 7 Jan 2020 04:14:23 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.88]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1405a80000>; Mon, 06 Jan 2020 20:14:32 -0800
+        id <B5e14059f0001>; Mon, 06 Jan 2020 20:14:23 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <broonie@kernel.org>,
@@ -51,9 +51,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <markz@nvidia.com>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 11/19] ASoC: tegra: Use device managed resource APIs to get the clock
-Date:   Mon, 6 Jan 2020 20:14:10 -0800
-Message-ID: <1578370458-3686-12-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v6 02/19] clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
+Date:   Mon, 6 Jan 2020 20:14:01 -0800
+Message-ID: <1578370458-3686-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
 References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
@@ -61,594 +61,225 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578370456; bh=0DVJiafuwHduTjjkyj9Zl0wZlJ8ZyCV3mtVc9PuYgZ0=;
+        t=1578370447; bh=dpCKHZkUeHoGdxVWrCoIUS9pzAgDFVOXow9W7hsrOUM=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Z2ca2j5zfL/d7qucOoeURWVGP5somWEFIIoZz8np28stqqGYMVhWnDJbh0BMbK55h
-         Hu5/6O9lPLSkBYL9lulS/RdIRnUfgJu3ua9YI3q2OR+pqHsh9xrctenqtoHfWLSwTR
-         1+/izfDcTsKpQKRmAhI7WnD3Xkk2ZtZKNsc5wURbykf//19KuhCK/rgc5O5w7F/n4r
-         n8Bos/OSWgbPdMtjrtENXm36rmGZjiwDy/RFPDkiItt6OQdjJk1M52/5usbOWfahtp
-         JvVndTS+pWwpIBC7lRR9p5QYyreKTaLIL09qmvoYiK49rWLST3pH+kNxv8lF/AMHJN
-         FHQS83JuHyJng==
+        b=kEQh4tg2c5u8pY2fHdabONlMl//W9rRp/wyxMW963qJ9ZJ5/5I30pYjIki1fR1bHF
+         xLlh/IljjGG60okVWmTit5ClNLb4QBXZNEz8or6CZRhl5Ksd2zGOhMoDefDXdvK5Ik
+         ovTYzYMgkhQsOV56EUh2o2CAPTNc7JawLlVQVb9O6nW7OUJdKq4iyKnecsqnhziQ1w
+         uQbEg52ZV19Zny94xVbmgCj2fUe2wD5W3npBP55D6BX03vYG83gjpmzQxO3KVrfr3L
+         ZXmRSWSIjmQDSWuvl2NC2STwKLgBy3VzhY6uRMm26WPPTrF9ARTF4U3oywRWD/D3PX
+         /w3eJiV9IlHhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tegra_asoc_utils uses clk_get() and clk_put() to get the clock
-and to free them explicitly.
+Tegra has no CLK_M_DIV2 and CLK_M_DIV4 clocks from CLK_M and instead
+it has OSC_DIV2 and OSC_DIV4 clocks from OSC pads.
 
-This patch updates it to use device managed resource API
-devm_clk_get() so the clock will be automatically released and freed
-when the device is unbound and removes tegra_asoc_utils_fini() as
-its no longer needed.
+This patch removes CLK_M_DIV2 and CLK_M_DIV4 fixed clocks and adds
+OSC_DIV2 and OSC_DIV4 fixed clocks with OSC as parent for Tegra30
+through Tegra210 clock drivers.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- sound/soc/tegra/tegra_alc5632.c    |  7 +------
- sound/soc/tegra/tegra_asoc_utils.c | 34 +++++++---------------------------
- sound/soc/tegra/tegra_asoc_utils.h |  1 -
- sound/soc/tegra/tegra_max98090.c   | 22 ++++++----------------
- sound/soc/tegra/tegra_rt5640.c     | 22 ++++++----------------
- sound/soc/tegra/tegra_rt5677.c     |  7 +------
- sound/soc/tegra/tegra_sgtl5000.c   |  7 +------
- sound/soc/tegra/tegra_wm8753.c     | 22 ++++++----------------
- sound/soc/tegra/tegra_wm8903.c     | 22 ++++++----------------
- sound/soc/tegra/tegra_wm9712.c     |  8 ++------
- sound/soc/tegra/trimslice.c        | 18 ++++--------------
- 11 files changed, 40 insertions(+), 130 deletions(-)
+ drivers/clk/tegra/clk-id.h          |  4 ++--
+ drivers/clk/tegra/clk-tegra-fixed.c | 32 ++++++++++++++++----------------
+ drivers/clk/tegra/clk-tegra114.c    | 19 ++++---------------
+ drivers/clk/tegra/clk-tegra124.c    |  8 ++++----
+ drivers/clk/tegra/clk-tegra210.c    |  8 ++++----
+ drivers/clk/tegra/clk-tegra30.c     |  8 ++++----
+ 6 files changed, 34 insertions(+), 45 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra_alc5632.c b/sound/soc/tegra/tegra_alc5632.c
-index 9e8b1497efd3..50a6d2ff4442 100644
---- a/sound/soc/tegra/tegra_alc5632.c
-+++ b/sound/soc/tegra/tegra_alc5632.c
-@@ -205,13 +205,11 @@ static int tegra_alc5632_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		goto err_put_cpu_of_node;
+diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
+index c4faebd32760..1bf21766d3e8 100644
+--- a/drivers/clk/tegra/clk-id.h
++++ b/drivers/clk/tegra/clk-id.h
+@@ -44,8 +44,8 @@ enum clk_id {
+ 	tegra_clk_clk72Mhz,
+ 	tegra_clk_clk72Mhz_8,
+ 	tegra_clk_clk_m,
+-	tegra_clk_clk_m_div2,
+-	tegra_clk_clk_m_div4,
++	tegra_clk_osc_div2,
++	tegra_clk_osc_div4,
+ 	tegra_clk_clk_out_1,
+ 	tegra_clk_clk_out_1_mux,
+ 	tegra_clk_clk_out_2,
+diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
+index 7c6c8abfcde6..8304f8cf9dd2 100644
+--- a/drivers/clk/tegra/clk-tegra-fixed.c
++++ b/drivers/clk/tegra/clk-tegra-fixed.c
+@@ -56,6 +56,22 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+ 					0, 1, clk_m_div);
+ 	*dt_clk = clk;
+ 
++	/* osc_div2 */
++	dt_clk = tegra_lookup_dt_id(tegra_clk_osc_div2, clks);
++	if (dt_clk) {
++		clk = clk_register_fixed_factor(NULL, "osc_div2", "osc",
++						0, 1, 2);
++		*dt_clk = clk;
++	}
++
++	/* osc_div4 */
++	dt_clk = tegra_lookup_dt_id(tegra_clk_osc_div4, clks);
++	if (dt_clk) {
++		clk = clk_register_fixed_factor(NULL, "osc_div4", "osc",
++						0, 1, 4);
++		*dt_clk = clk;
++	}
++
+ 	/* pll_ref */
+ 	val = (val >> OSC_CTRL_PLL_REF_DIV_SHIFT) & 3;
+ 	pll_ref_div = 1 << val;
+@@ -84,22 +100,6 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
+ 		clk = clk_register_fixed_rate(NULL, "clk_32k", NULL, 0, 32768);
+ 		*dt_clk = clk;
  	}
- 
- 	return 0;
- 
--err_fini_utils:
--	tegra_asoc_utils_fini(&alc5632->util_data);
- err_put_cpu_of_node:
- 	of_node_put(tegra_alc5632_dai.cpus->of_node);
- 	tegra_alc5632_dai.cpus->of_node = NULL;
-@@ -226,12 +224,9 @@ static int tegra_alc5632_probe(struct platform_device *pdev)
- static int tegra_alc5632_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_alc5632 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
 -
- 	of_node_put(tegra_alc5632_dai.cpus->of_node);
- 	tegra_alc5632_dai.cpus->of_node = NULL;
- 	tegra_alc5632_dai.platforms->of_node = NULL;
-diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
-index 536a578e9512..0d2271952555 100644
---- a/sound/soc/tegra/tegra_asoc_utils.c
-+++ b/sound/soc/tegra/tegra_asoc_utils.c
-@@ -175,52 +175,32 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
- 		return -EINVAL;
- 	}
- 
--	data->clk_pll_a = clk_get(dev, "pll_a");
-+	data->clk_pll_a = devm_clk_get(dev, "pll_a");
- 	if (IS_ERR(data->clk_pll_a)) {
- 		dev_err(data->dev, "Can't retrieve clk pll_a\n");
--		ret = PTR_ERR(data->clk_pll_a);
--		goto err;
-+		return PTR_ERR(data->clk_pll_a);
- 	}
- 
--	data->clk_pll_a_out0 = clk_get(dev, "pll_a_out0");
-+	data->clk_pll_a_out0 = devm_clk_get(dev, "pll_a_out0");
- 	if (IS_ERR(data->clk_pll_a_out0)) {
- 		dev_err(data->dev, "Can't retrieve clk pll_a_out0\n");
--		ret = PTR_ERR(data->clk_pll_a_out0);
--		goto err_put_pll_a;
-+		return PTR_ERR(data->clk_pll_a_out0);
- 	}
- 
--	data->clk_cdev1 = clk_get(dev, "mclk");
-+	data->clk_cdev1 = devm_clk_get(dev, "mclk");
- 	if (IS_ERR(data->clk_cdev1)) {
- 		dev_err(data->dev, "Can't retrieve clk cdev1\n");
--		ret = PTR_ERR(data->clk_cdev1);
--		goto err_put_pll_a_out0;
-+		return PTR_ERR(data->clk_cdev1);
- 	}
- 
- 	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
- 	if (ret)
--		goto err_put_cdev1;
-+		return ret;
- 
- 	return 0;
+-	/* clk_m_div2 */
+-	dt_clk = tegra_lookup_dt_id(tegra_clk_clk_m_div2, tegra_clks);
+-	if (dt_clk) {
+-		clk = clk_register_fixed_factor(NULL, "clk_m_div2", "clk_m",
+-					CLK_SET_RATE_PARENT, 1, 2);
+-		*dt_clk = clk;
+-	}
 -
--err_put_cdev1:
--	clk_put(data->clk_cdev1);
--err_put_pll_a_out0:
--	clk_put(data->clk_pll_a_out0);
--err_put_pll_a:
--	clk_put(data->clk_pll_a);
--err:
--	return ret;
- }
- EXPORT_SYMBOL_GPL(tegra_asoc_utils_init);
- 
--void tegra_asoc_utils_fini(struct tegra_asoc_utils_data *data)
--{
--	clk_put(data->clk_cdev1);
--	clk_put(data->clk_pll_a_out0);
--	clk_put(data->clk_pll_a);
--}
--EXPORT_SYMBOL_GPL(tegra_asoc_utils_fini);
--
- MODULE_AUTHOR("Stephen Warren <swarren@nvidia.com>");
- MODULE_DESCRIPTION("Tegra ASoC utility code");
- MODULE_LICENSE("GPL");
-diff --git a/sound/soc/tegra/tegra_asoc_utils.h b/sound/soc/tegra/tegra_asoc_utils.h
-index 0c13818dee75..a34439587d59 100644
---- a/sound/soc/tegra/tegra_asoc_utils.h
-+++ b/sound/soc/tegra/tegra_asoc_utils.h
-@@ -34,6 +34,5 @@ int tegra_asoc_utils_set_rate(struct tegra_asoc_utils_data *data, int srate,
- int tegra_asoc_utils_set_ac97_rate(struct tegra_asoc_utils_data *data);
- int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
- 			  struct device *dev);
--void tegra_asoc_utils_fini(struct tegra_asoc_utils_data *data);
- 
- #endif
-diff --git a/sound/soc/tegra/tegra_max98090.c b/sound/soc/tegra/tegra_max98090.c
-index 4954a33ff46b..f554a3d4571f 100644
---- a/sound/soc/tegra/tegra_max98090.c
-+++ b/sound/soc/tegra/tegra_max98090.c
-@@ -218,19 +218,18 @@ static int tegra_max98090_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	tegra_max98090_dai.codecs->of_node = of_parse_phandle(np,
- 			"nvidia,audio-codec", 0);
- 	if (!tegra_max98090_dai.codecs->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,audio-codec' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_max98090_dai.cpus->of_node = of_parse_phandle(np,
-@@ -238,40 +237,31 @@ static int tegra_max98090_probe(struct platform_device *pdev)
- 	if (!tegra_max98090_dai.cpus->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_max98090_dai.platforms->of_node = tegra_max98090_dai.cpus->of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		return ret;
- 	}
- 
- 	return 0;
--
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
--err:
--	return ret;
+-	/* clk_m_div4 */
+-	dt_clk = tegra_lookup_dt_id(tegra_clk_clk_m_div4, tegra_clks);
+-	if (dt_clk) {
+-		clk = clk_register_fixed_factor(NULL, "clk_m_div4", "clk_m",
+-					CLK_SET_RATE_PARENT, 1, 4);
+-		*dt_clk = clk;
+-	}
  }
  
- static int tegra_max98090_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_max98090 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
+ void tegra_clk_osc_resume(void __iomem *clk_base)
+diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+index 4efcaaf51b3a..9d2ca387114c 100644
+--- a/drivers/clk/tegra/clk-tegra114.c
++++ b/drivers/clk/tegra/clk-tegra114.c
+@@ -735,8 +735,8 @@ static struct tegra_clk tegra114_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_fuse_burn] = { .dt_id = TEGRA114_CLK_FUSE_BURN, .present = true },
+ 	[tegra_clk_clk_32k] = { .dt_id = TEGRA114_CLK_CLK_32K, .present = true },
+ 	[tegra_clk_clk_m] = { .dt_id = TEGRA114_CLK_CLK_M, .present = true },
+-	[tegra_clk_clk_m_div2] = { .dt_id = TEGRA114_CLK_CLK_M_DIV2, .present = true },
+-	[tegra_clk_clk_m_div4] = { .dt_id = TEGRA114_CLK_CLK_M_DIV4, .present = true },
++	[tegra_clk_osc_div2] = { .dt_id = TEGRA114_CLK_OSC_DIV2, .present = true },
++	[tegra_clk_osc_div4] = { .dt_id = TEGRA114_CLK_OSC_DIV4, .present = true },
+ 	[tegra_clk_pll_ref] = { .dt_id = TEGRA114_CLK_PLL_REF, .present = true },
+ 	[tegra_clk_pll_c] = { .dt_id = TEGRA114_CLK_PLL_C, .present = true },
+ 	[tegra_clk_pll_c_out1] = { .dt_id = TEGRA114_CLK_PLL_C_OUT1, .present = true },
+@@ -815,8 +815,8 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "clk_m", .dt_id = TEGRA114_CLK_CLK_M },
+ 	{ .con_id = "pll_ref", .dt_id = TEGRA114_CLK_PLL_REF },
+ 	{ .con_id = "clk_32k", .dt_id = TEGRA114_CLK_CLK_32K },
+-	{ .con_id = "clk_m_div2", .dt_id = TEGRA114_CLK_CLK_M_DIV2 },
+-	{ .con_id = "clk_m_div4", .dt_id = TEGRA114_CLK_CLK_M_DIV4 },
++	{ .con_id = "osc_div2", .dt_id = TEGRA114_CLK_OSC_DIV2 },
++	{ .con_id = "osc_div4", .dt_id = TEGRA114_CLK_OSC_DIV4 },
+ 	{ .con_id = "pll_c", .dt_id = TEGRA114_CLK_PLL_C },
+ 	{ .con_id = "pll_c_out1", .dt_id = TEGRA114_CLK_PLL_C_OUT1 },
+ 	{ .con_id = "pll_c2", .dt_id = TEGRA114_CLK_PLL_C2 },
+@@ -900,17 +900,6 @@ static void __init tegra114_fixed_clk_init(void __iomem *clk_base)
+ 	/* clk_32k */
+ 	clk = clk_register_fixed_rate(NULL, "clk_32k", NULL, 0, 32768);
+ 	clks[TEGRA114_CLK_CLK_32K] = clk;
 -
- 	return 0;
+-	/* clk_m_div2 */
+-	clk = clk_register_fixed_factor(NULL, "clk_m_div2", "clk_m",
+-					CLK_SET_RATE_PARENT, 1, 2);
+-	clks[TEGRA114_CLK_CLK_M_DIV2] = clk;
+-
+-	/* clk_m_div4 */
+-	clk = clk_register_fixed_factor(NULL, "clk_m_div4", "clk_m",
+-					CLK_SET_RATE_PARENT, 1, 4);
+-	clks[TEGRA114_CLK_CLK_M_DIV4] = clk;
+-
  }
  
-diff --git a/sound/soc/tegra/tegra_rt5640.c b/sound/soc/tegra/tegra_rt5640.c
-index d46915a3ec4c..5c695dfea009 100644
---- a/sound/soc/tegra/tegra_rt5640.c
-+++ b/sound/soc/tegra/tegra_rt5640.c
-@@ -164,19 +164,18 @@ static int tegra_rt5640_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	tegra_rt5640_dai.codecs->of_node = of_parse_phandle(np,
- 			"nvidia,audio-codec", 0);
- 	if (!tegra_rt5640_dai.codecs->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,audio-codec' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_rt5640_dai.cpus->of_node = of_parse_phandle(np,
-@@ -184,40 +183,31 @@ static int tegra_rt5640_probe(struct platform_device *pdev)
- 	if (!tegra_rt5640_dai.cpus->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_rt5640_dai.platforms->of_node = tegra_rt5640_dai.cpus->of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		return ret;
- 	}
- 
- 	return 0;
--
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
--err:
--	return ret;
- }
- 
- static int tegra_rt5640_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_rt5640 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	return 0;
- }
- 
-diff --git a/sound/soc/tegra/tegra_rt5677.c b/sound/soc/tegra/tegra_rt5677.c
-index 81cb6cc6236e..fb86f76728b3 100644
---- a/sound/soc/tegra/tegra_rt5677.c
-+++ b/sound/soc/tegra/tegra_rt5677.c
-@@ -270,13 +270,11 @@ static int tegra_rt5677_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		goto err_put_cpu_of_node;
- 	}
- 
- 	return 0;
- 
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
- err_put_cpu_of_node:
- 	of_node_put(tegra_rt5677_dai.cpus->of_node);
- 	tegra_rt5677_dai.cpus->of_node = NULL;
-@@ -291,12 +289,9 @@ static int tegra_rt5677_probe(struct platform_device *pdev)
- static int tegra_rt5677_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_rt5677 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	tegra_rt5677_dai.platforms->of_node = NULL;
- 	of_node_put(tegra_rt5677_dai.codecs->of_node);
- 	tegra_rt5677_dai.codecs->of_node = NULL;
-diff --git a/sound/soc/tegra/tegra_sgtl5000.c b/sound/soc/tegra/tegra_sgtl5000.c
-index e13b81d29cf3..586f56f435f4 100644
---- a/sound/soc/tegra/tegra_sgtl5000.c
-+++ b/sound/soc/tegra/tegra_sgtl5000.c
-@@ -156,13 +156,11 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		goto err_put_cpu_of_node;
- 	}
- 
- 	return 0;
- 
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
- err_put_cpu_of_node:
- 	of_node_put(tegra_sgtl5000_dai.cpus->of_node);
- 	tegra_sgtl5000_dai.cpus->of_node = NULL;
-@@ -177,13 +175,10 @@ static int tegra_sgtl5000_driver_probe(struct platform_device *pdev)
- static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_sgtl5000 *machine = snd_soc_card_get_drvdata(card);
- 	int ret;
- 
- 	ret = snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	of_node_put(tegra_sgtl5000_dai.cpus->of_node);
- 	tegra_sgtl5000_dai.cpus->of_node = NULL;
- 	tegra_sgtl5000_dai.platforms->of_node = NULL;
-diff --git a/sound/soc/tegra/tegra_wm8753.c b/sound/soc/tegra/tegra_wm8753.c
-index f6dd790dad71..f76cfdc963ed 100644
---- a/sound/soc/tegra/tegra_wm8753.c
-+++ b/sound/soc/tegra/tegra_wm8753.c
-@@ -127,19 +127,18 @@ static int tegra_wm8753_driver_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	tegra_wm8753_dai.codecs->of_node = of_parse_phandle(np,
- 			"nvidia,audio-codec", 0);
- 	if (!tegra_wm8753_dai.codecs->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,audio-codec' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_wm8753_dai.cpus->of_node = of_parse_phandle(np,
-@@ -147,40 +146,31 @@ static int tegra_wm8753_driver_probe(struct platform_device *pdev)
- 	if (!tegra_wm8753_dai.cpus->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_wm8753_dai.platforms->of_node = tegra_wm8753_dai.cpus->of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		return ret;
- 	}
- 
- 	return 0;
--
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
--err:
--	return ret;
- }
- 
- static int tegra_wm8753_driver_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_wm8753 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	return 0;
- }
- 
-diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
-index f08d3489c3cf..f5f78c3512cd 100644
---- a/sound/soc/tegra/tegra_wm8903.c
-+++ b/sound/soc/tegra/tegra_wm8903.c
-@@ -301,19 +301,18 @@ static int tegra_wm8903_driver_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	tegra_wm8903_dai.codecs->of_node = of_parse_phandle(np,
- 						"nvidia,audio-codec", 0);
- 	if (!tegra_wm8903_dai.codecs->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,audio-codec' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_wm8903_dai.cpus->of_node = of_parse_phandle(np,
-@@ -321,40 +320,31 @@ static int tegra_wm8903_driver_probe(struct platform_device *pdev)
- 	if (!tegra_wm8903_dai.cpus->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	tegra_wm8903_dai.platforms->of_node = tegra_wm8903_dai.cpus->of_node;
- 
- 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		return ret;
- 	}
- 
- 	return 0;
--
--err_fini_utils:
--	tegra_asoc_utils_fini(&machine->util_data);
--err:
--	return ret;
- }
- 
- static int tegra_wm8903_driver_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	return 0;
- }
- 
-diff --git a/sound/soc/tegra/tegra_wm9712.c b/sound/soc/tegra/tegra_wm9712.c
-index b85bd9f89073..726edfa21a29 100644
---- a/sound/soc/tegra/tegra_wm9712.c
-+++ b/sound/soc/tegra/tegra_wm9712.c
-@@ -113,19 +113,17 @@ static int tegra_wm9712_driver_probe(struct platform_device *pdev)
- 
- 	ret = tegra_asoc_utils_set_ac97_rate(&machine->util_data);
- 	if (ret)
--		goto asoc_utils_fini;
-+		goto codec_unregister;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto asoc_utils_fini;
-+		goto codec_unregister;
- 	}
- 
- 	return 0;
- 
--asoc_utils_fini:
--	tegra_asoc_utils_fini(&machine->util_data);
- codec_unregister:
- 	platform_device_del(machine->codec);
- codec_put:
-@@ -140,8 +138,6 @@ static int tegra_wm9712_driver_remove(struct platform_device *pdev)
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&machine->util_data);
--
- 	platform_device_unregister(machine->codec);
- 
- 	return 0;
-diff --git a/sound/soc/tegra/trimslice.c b/sound/soc/tegra/trimslice.c
-index 3f67ddd13674..e51c67092c8f 100644
---- a/sound/soc/tegra/trimslice.c
-+++ b/sound/soc/tegra/trimslice.c
-@@ -125,8 +125,7 @@ static int tegra_snd_trimslice_probe(struct platform_device *pdev)
- 	if (!trimslice_tlv320aic23_dai.codecs->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,audio-codec' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	trimslice_tlv320aic23_dai.cpus->of_node = of_parse_phandle(np,
-@@ -134,8 +133,7 @@ static int tegra_snd_trimslice_probe(struct platform_device *pdev)
- 	if (!trimslice_tlv320aic23_dai.cpus->of_node) {
- 		dev_err(&pdev->dev,
- 			"Property 'nvidia,i2s-controller' missing or invalid\n");
--		ret = -EINVAL;
--		goto err;
-+		return -EINVAL;
- 	}
- 
- 	trimslice_tlv320aic23_dai.platforms->of_node =
-@@ -143,32 +141,24 @@ static int tegra_snd_trimslice_probe(struct platform_device *pdev)
- 
- 	ret = tegra_asoc_utils_init(&trimslice->util_data, &pdev->dev);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
- 			ret);
--		goto err_fini_utils;
-+		return ret;
- 	}
- 
- 	return 0;
--
--err_fini_utils:
--	tegra_asoc_utils_fini(&trimslice->util_data);
--err:
--	return ret;
- }
- 
- static int tegra_snd_trimslice_remove(struct platform_device *pdev)
- {
- 	struct snd_soc_card *card = platform_get_drvdata(pdev);
--	struct tegra_trimslice *trimslice = snd_soc_card_get_drvdata(card);
- 
- 	snd_soc_unregister_card(card);
- 
--	tegra_asoc_utils_fini(&trimslice->util_data);
--
- 	return 0;
- }
- 
+ static void __init tegra114_pll_init(void __iomem *clk_base,
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
+index b3110d5b5a6c..15f42718f4cb 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -860,8 +860,8 @@ static struct tegra_clk tegra124_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_fuse_burn] = { .dt_id = TEGRA124_CLK_FUSE_BURN, .present = true },
+ 	[tegra_clk_clk_32k] = { .dt_id = TEGRA124_CLK_CLK_32K, .present = true },
+ 	[tegra_clk_clk_m] = { .dt_id = TEGRA124_CLK_CLK_M, .present = true },
+-	[tegra_clk_clk_m_div2] = { .dt_id = TEGRA124_CLK_CLK_M_DIV2, .present = true },
+-	[tegra_clk_clk_m_div4] = { .dt_id = TEGRA124_CLK_CLK_M_DIV4, .present = true },
++	[tegra_clk_osc_div2] = { .dt_id = TEGRA124_CLK_OSC_DIV2, .present = true },
++	[tegra_clk_osc_div4] = { .dt_id = TEGRA124_CLK_OSC_DIV4, .present = true },
+ 	[tegra_clk_pll_ref] = { .dt_id = TEGRA124_CLK_PLL_REF, .present = true },
+ 	[tegra_clk_pll_c] = { .dt_id = TEGRA124_CLK_PLL_C, .present = true },
+ 	[tegra_clk_pll_c_out1] = { .dt_id = TEGRA124_CLK_PLL_C_OUT1, .present = true },
+@@ -941,8 +941,8 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "clk_m", .dt_id = TEGRA124_CLK_CLK_M },
+ 	{ .con_id = "pll_ref", .dt_id = TEGRA124_CLK_PLL_REF },
+ 	{ .con_id = "clk_32k", .dt_id = TEGRA124_CLK_CLK_32K },
+-	{ .con_id = "clk_m_div2", .dt_id = TEGRA124_CLK_CLK_M_DIV2 },
+-	{ .con_id = "clk_m_div4", .dt_id = TEGRA124_CLK_CLK_M_DIV4 },
++	{ .con_id = "osc_div2", .dt_id = TEGRA124_CLK_OSC_DIV2 },
++	{ .con_id = "osc_div4", .dt_id = TEGRA124_CLK_OSC_DIV4 },
+ 	{ .con_id = "pll_c", .dt_id = TEGRA124_CLK_PLL_C },
+ 	{ .con_id = "pll_c_out1", .dt_id = TEGRA124_CLK_PLL_C_OUT1 },
+ 	{ .con_id = "pll_c2", .dt_id = TEGRA124_CLK_PLL_C2 },
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 762cd186f714..5687fcda620e 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2371,8 +2371,8 @@ static struct tegra_clk tegra210_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_fuse_burn] = { .dt_id = TEGRA210_CLK_FUSE_BURN, .present = true },
+ 	[tegra_clk_clk_32k] = { .dt_id = TEGRA210_CLK_CLK_32K, .present = true },
+ 	[tegra_clk_clk_m] = { .dt_id = TEGRA210_CLK_CLK_M, .present = true },
+-	[tegra_clk_clk_m_div2] = { .dt_id = TEGRA210_CLK_CLK_M_DIV2, .present = true },
+-	[tegra_clk_clk_m_div4] = { .dt_id = TEGRA210_CLK_CLK_M_DIV4, .present = true },
++	[tegra_clk_osc_div2] = { .dt_id = TEGRA210_CLK_OSC_DIV2, .present = true },
++	[tegra_clk_osc_div4] = { .dt_id = TEGRA210_CLK_OSC_DIV4, .present = true },
+ 	[tegra_clk_pll_ref] = { .dt_id = TEGRA210_CLK_PLL_REF, .present = true },
+ 	[tegra_clk_pll_c] = { .dt_id = TEGRA210_CLK_PLL_C, .present = true },
+ 	[tegra_clk_pll_c_out1] = { .dt_id = TEGRA210_CLK_PLL_C_OUT1, .present = true },
+@@ -2497,8 +2497,8 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "clk_m", .dt_id = TEGRA210_CLK_CLK_M },
+ 	{ .con_id = "pll_ref", .dt_id = TEGRA210_CLK_PLL_REF },
+ 	{ .con_id = "clk_32k", .dt_id = TEGRA210_CLK_CLK_32K },
+-	{ .con_id = "clk_m_div2", .dt_id = TEGRA210_CLK_CLK_M_DIV2 },
+-	{ .con_id = "clk_m_div4", .dt_id = TEGRA210_CLK_CLK_M_DIV4 },
++	{ .con_id = "osc_div2", .dt_id = TEGRA210_CLK_OSC_DIV2 },
++	{ .con_id = "osc_div4", .dt_id = TEGRA210_CLK_OSC_DIV4 },
+ 	{ .con_id = "pll_c", .dt_id = TEGRA210_CLK_PLL_C },
+ 	{ .con_id = "pll_c_out1", .dt_id = TEGRA210_CLK_PLL_C_OUT1 },
+ 	{ .con_id = "pll_c2", .dt_id = TEGRA210_CLK_PLL_C2 },
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index c8bc18e4d7e5..1322188edb72 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -581,8 +581,8 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "twd", .dt_id = TEGRA30_CLK_TWD },
+ 	{ .con_id = "emc", .dt_id = TEGRA30_CLK_EMC },
+ 	{ .con_id = "clk_32k", .dt_id = TEGRA30_CLK_CLK_32K },
+-	{ .con_id = "clk_m_div2", .dt_id = TEGRA30_CLK_CLK_M_DIV2 },
+-	{ .con_id = "clk_m_div4", .dt_id = TEGRA30_CLK_CLK_M_DIV4 },
++	{ .con_id = "osc_div2", .dt_id = TEGRA30_CLK_OSC_DIV2 },
++	{ .con_id = "osc_div4", .dt_id = TEGRA30_CLK_OSC_DIV4 },
+ 	{ .con_id = "cml0", .dt_id = TEGRA30_CLK_CML0 },
+ 	{ .con_id = "cml1", .dt_id = TEGRA30_CLK_CML1 },
+ 	{ .con_id = "clk_m", .dt_id = TEGRA30_CLK_CLK_M },
+@@ -683,8 +683,8 @@ static struct tegra_devclk devclks[] __initdata = {
+ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_clk_32k] = { .dt_id = TEGRA30_CLK_CLK_32K, .present = true },
+ 	[tegra_clk_clk_m] = { .dt_id = TEGRA30_CLK_CLK_M, .present = true },
+-	[tegra_clk_clk_m_div2] = { .dt_id = TEGRA30_CLK_CLK_M_DIV2, .present = true },
+-	[tegra_clk_clk_m_div4] = { .dt_id = TEGRA30_CLK_CLK_M_DIV4, .present = true },
++	[tegra_clk_osc_div2] = { .dt_id = TEGRA30_CLK_OSC_DIV2, .present = true },
++	[tegra_clk_osc_div4] = { .dt_id = TEGRA30_CLK_OSC_DIV4, .present = true },
+ 	[tegra_clk_pll_ref] = { .dt_id = TEGRA30_CLK_PLL_REF, .present = true },
+ 	[tegra_clk_spdif_in_sync] = { .dt_id = TEGRA30_CLK_SPDIF_IN_SYNC, .present = true },
+ 	[tegra_clk_i2s0_sync] = { .dt_id = TEGRA30_CLK_I2S0_SYNC, .present = true },
 -- 
 2.7.4
 
