@@ -2,107 +2,139 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170A7C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB6C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0D22073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266B52073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQMxTCND"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gyTzWYfW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgAGRMv (ORCPT
+        id S1728423AbgAGRNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:12:51 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45482 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgAGRMu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:12:50 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so242380lfa.12;
-        Tue, 07 Jan 2020 09:12:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b6uJhncOje5k5j8JgdUT1915LVoXHzLCLy0HXT+ESDM=;
-        b=eQMxTCNDkkImyT+meRspXjEYMXtYGwHD7PHKqBo5qAwqFLLVzwJUONW9pfx3FCT4Sa
-         WaXhx149BGna7obIB2c2YwTzRvDksikbr4O+G2Ejom7S9a7Fl1DCA/HRL/ZhJmdFZHb3
-         nD05sPWfvpx+voYWKVlj0olYdVhSJARwZPr26OC7QphjWTDyAT2YLdp6q2fBwlA8K9vu
-         E9Ap1tyCrTxBSK+oQOzHUxQ52jsVT2sZppUcK38j1x1f0pMULVnoEtRdSZhUz3sFhJCh
-         w3t35zT5KWh2w0qQL5CmP83ncs4/hUrEdmjmjJgSCn1Uv+Q6j5Sh6JS7rpNcjfrLN70g
-         ruKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b6uJhncOje5k5j8JgdUT1915LVoXHzLCLy0HXT+ESDM=;
-        b=U9rX/VVoDIShLuGSEJqL6sfQLlF6eHRZx3Dt7I9+cHBhMwXYEr9QCUjnbz9WyfK2wQ
-         lsp9CpdFCgScLn333WqGTolE7xlj8C6eeeSLKZ6ohnkkJ0B3bpzfpyeQiFho9ccHy3m4
-         3FN6hwKw+2zJ/Ls/D3sMgTFZv/cuGKJdvsLpHhcZoqRFcd78FUCXgFDkBsyS/eA1hnmX
-         u7SiGjRjWywIDIH5ww67dOxqqg1pEtobaJw+/58LZLWE3RXqisNo7eVS5fTsnuzD5kTo
-         Fek/qvc3Wsh+6z0sJc5vC90mjfPi2JnxA1tNBiw+tsxQLMhszTL3QzsDbsLAnkXJe4Ce
-         aXLg==
-X-Gm-Message-State: APjAAAVuIEUTtbWDSKuGZeC7Ax8MBQjwqDr105cSAt1hY4BSs0esainQ
-        rAQc8/yBbb0bA2FtBmIpJHQF4vQu
-X-Google-Smtp-Source: APXvYqzdR/1BR2kEg1yM42XI/RhYE+PLQISkZSqmtH+r8XiHq2qd76cVOX8mwyovljS/xvEG57CvBg==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr273096lfn.113.1578417167078;
-        Tue, 07 Jan 2020 09:12:47 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id i4sm134431lji.0.2020.01.07.09.12.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 09:12:45 -0800 (PST)
-Subject: Re: [PATCH v3 09/13] dmaengine: tegra-apb: Remove runtime PM usage
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200106011708.7463-1-digetx@gmail.com>
- <20200106011708.7463-10-digetx@gmail.com>
- <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
-Date:   Tue, 7 Jan 2020 20:12:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 7 Jan 2020 12:13:35 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:58861 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728211AbgAGRNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:13:34 -0500
+Received: from [IPv6:2601:646:8600:3281:3840:b5ed:cfa7:59d] ([IPv6:2601:646:8600:3281:3840:b5ed:cfa7:59d])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 007HDBBO3393366
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 7 Jan 2020 09:13:12 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 007HDBBO3393366
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019122001; t=1578417193;
+        bh=Dmfwf3/FN4yxJW+5Klfjy5Ddt88R5IwzSu4HDodXyPc=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=gyTzWYfWMQzL1pFR9lx10vccAIf8YZTZjeBZX0C5ViA0KHJl9yJzwUfGqufrZYknP
+         hRjDkJeSkc3hEU1cF7cAKdHQp1D7jl7+61siTYUITng8B8gDpwOT1QUjpyOK8HIYZG
+         pkUUb77eD589CA2xy6oh63Dv8EomXeseRqxofhBtR0EfcdeaEYlFIN4mQ1U9yUOAS4
+         +MvJSkd7S1lwmpYnhk2PUNlQytJMYHIt00/dSMLMc1uee0bmM1eWKHYvt1JMDRYrBh
+         CQGtNq7uPC5BhtU5D72/DBvdis/s1yhOU+WkJoh+STBk7Gdr4nYmAOO154bR37fRpr
+         v5RXdXA7VmZEA==
+Date:   Tue, 07 Jan 2020 09:13:03 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
+References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-2-masahiroy@kernel.org> <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 01/13] initramfs: replace klibcdirs in Makefile with FORCE
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+From:   hpa@zytor.com
+Message-ID: <6D307942-FAB0-48A7-8441-01AECB94D69E@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jon,
+On January 7, 2020 2:46:29 AM PST, Masahiro Yamada <masahiroy@kernel=2Eorg>=
+ wrote:
+>(+CC: Ben Hutchings, H=2E Peter Anvin)
+>
+>On Sun, Jan 5, 2020 at 12:03 AM Masahiro Yamada <masahiroy@kernel=2Eorg>
+>wrote:
+>>
+>> 'klibcdirs' was added by commit d39a206bc35d ("kbuild: rebuild
+>initramfs
+>> if content of initramfs changes")=2E If this is just a matter of
+>forcing
+>> execution of the recipe line, we can replace it with FORCE=2E
+>>
+>> I do not understand the purpose of
+>>
+>>    $(deps_initramfs): klibcdirs
+>
+>
+>Perhaps, the 'klibcdirs' target might be intended
+>to control the directory descending
+>in case klibc is dropped in the kernel tree=2E
+>
+>Anyway, klibc is built independently
+>of Linux kernel, and this 'klibcdirs' target
+>is just a no-op stub as far as the kernel tree is concerned=2E
+>
+>Clean it up=2E
+>
+>
+>> Remove it=2E
+>>
+>> Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
+>> ---
+>>
+>> Changes in v2:
+>>   - New patch (I forgot to submit this in v1 series)
+>>
+>>  usr/Makefile | 6 +-----
+>>  1 file changed, 1 insertion(+), 5 deletions(-)
+>>
+>> diff --git a/usr/Makefile b/usr/Makefile
+>> index e6f7cb2f81db=2E=2E55c942da01cd 100644
+>> --- a/usr/Makefile
+>> +++ b/usr/Makefile
+>> @@ -3,9 +3,6 @@
+>>  # kbuild file for usr/ - including initramfs image
+>>  #
+>>
+>> -klibcdirs:;
+>> -PHONY +=3D klibcdirs
+>> -
+>>  suffix_y =3D $(subst $\",,$(CONFIG_INITRAMFS_COMPRESSION))
+>>  datafile_y =3D initramfs_data=2Ecpio$(suffix_y)
+>>  datafile_d_y =3D =2E$(datafile_y)=2Ed
+>> @@ -50,13 +47,12 @@ targets :=3D $(datafile_y)
+>>  # do not try to update files included in initramfs
+>>  $(deps_initramfs): ;
+>>
+>> -$(deps_initramfs): klibcdirs
+>>  # We rebuild initramfs_data=2Ecpio if:
+>>  # 1) Any included file is newer than initramfs_data=2Ecpio
+>>  # 2) There are changes in which files are included (added or
+>deleted)
+>>  # 3) If gen_init_cpio are newer than initramfs_data=2Ecpio
+>>  # 4) Arguments to gen_initramfs=2Esh changes
+>> -$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs)
+>klibcdirs
+>> +$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) FORCE
+>>         $(Q)$(initramfs) -l $(ramfs-input) > $(obj)/$(datafile_d_y)
+>>         $(call if_changed,initfs)
+>>
+>> --
+>> 2=2E17=2E1
+>>
 
-07.01.2020 18:13, Jon Hunter пишет:
-> 
-> On 06/01/2020 01:17, Dmitry Osipenko wrote:
->> There is no benefit from runtime PM usage for the APB DMA driver because
->> it enables clock at the time of channel's allocation and thus clock stays
->> enabled all the time in practice, secondly there is benefit from manually
->> disabled clock because hardware auto-gates it during idle by itself.
-> 
-> This assumes that the channel is allocated during a driver
-> initialisation. That may not always be the case. I believe audio is one
-> case where channels are requested at the start of audio playback.
-
-At least serial, I2C, SPI and T20 FUSE are permanently keeping channels
-allocated, thus audio is an exception here. I don't think that it's
-practical to assume that there is a real-world use-case where audio
-driver is the only active DMA client.
-
-The benefits of gating the DMA clock are also dim, do you have any
-power-consumption numbers that show that it's really worth to care about
-the clock-gating?
+Yes, it is/was a hook for the klibc integration tree=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
