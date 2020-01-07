@@ -6,31 +6,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F663C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F56EC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600FF222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23332222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgAGRsZ (ORCPT
+        id S1728637AbgAGRs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:48:25 -0500
-Received: from sauhun.de ([88.99.104.3]:53380 "EHLO pokefinder.org"
+        Tue, 7 Jan 2020 12:48:27 -0500
+Received: from sauhun.de ([88.99.104.3]:53374 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbgAGRsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:48:21 -0500
+        id S1728553AbgAGRsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:48:23 -0500
 Received: from localhost (p5486CF8B.dip0.t-ipconnect.de [84.134.207.139])
-        by pokefinder.org (Postfix) with ESMTPSA id E5A752C3946;
-        Tue,  7 Jan 2020 18:48:19 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id A6D5A2C3949;
+        Tue,  7 Jan 2020 18:48:21 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/12] i2c: i2c-core-acpi: convert to use i2c_new_client_device()
-Date:   Tue,  7 Jan 2020 18:47:42 +0100
-Message-Id: <20200107174748.9616-9-wsa+renesas@sang-engineering.com>
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/12] docs: i2c: use the new API in 'instantiating-devices.rst'
+Date:   Tue,  7 Jan 2020 18:47:45 +0100
+Message-Id: <20200107174748.9616-12-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
 References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
@@ -41,59 +39,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move away from the deprecated API and return the shiny new ERRPTR where
-useful.
+i2c_new_device is deprecated, use i2c_new_client_device.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
-Build tested only.
+ Documentation/i2c/instantiating-devices.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- drivers/i2c/i2c-core-acpi.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 62a1c92ab803..8f3dbc97a057 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -225,7 +225,7 @@ static void i2c_acpi_register_device(struct i2c_adapter *adapter,
- 	adev->power.flags.ignore_parent = true;
- 	acpi_device_set_enumerated(adev);
+diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
+index 875ebe9e78e3..b7b90b1b82f9 100644
+--- a/Documentation/i2c/instantiating-devices.rst
++++ b/Documentation/i2c/instantiating-devices.rst
+@@ -98,7 +98,7 @@ tuner, a video decoder, an audio decoder, etc. usually connected to the
+ main chip by the means of an I2C bus. You won't know the number of the I2C
+ bus in advance, so the method 1 described above can't be used. Instead,
+ you can instantiate your I2C devices explicitly. This is done by filling
+-a struct i2c_board_info and calling i2c_new_device().
++a struct i2c_board_info and calling i2c_new_client_device().
  
--	if (!i2c_new_device(adapter, info)) {
-+	if (IS_ERR(i2c_new_client_device(adapter, info))) {
- 		adev->power.flags.ignore_parent = false;
- 		dev_err(&adapter->dev,
- 			"failed to add I2C device %s from ACPI\n",
-@@ -451,7 +451,8 @@ struct notifier_block i2c_acpi_notifier = {
-  * resources, in that case this function can be used to create an i2c-client
-  * for other I2cSerialBus resources in the Current Resource Settings table.
-  *
-- * Also see i2c_new_device, which this function calls to create the i2c-client.
-+ * Also see i2c_new_client_device, which this function calls to create the
-+ * i2c-client.
-  *
-  * Returns a pointer to the new i2c-client, or error pointer in case of failure.
-  * Specifically, -EPROBE_DEFER is returned if the adapter is not found.
-@@ -461,7 +462,6 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- {
- 	struct i2c_acpi_lookup lookup;
- 	struct i2c_adapter *adapter;
--	struct i2c_client *client;
- 	struct acpi_device *adev;
- 	LIST_HEAD(resource_list);
- 	int ret;
-@@ -489,11 +489,7 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 	if (!adapter)
- 		return ERR_PTR(-EPROBE_DEFER);
+ Example (from the sfe4001 network driver)::
  
--	client = i2c_new_device(adapter, info);
--	if (!client)
--		return ERR_PTR(-ENODEV);
--
--	return client;
-+	return i2c_new_client_device(adapter, info);
- }
- EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
+@@ -110,7 +110,7 @@ Example (from the sfe4001 network driver)::
+   {
+ 	(...)
+ 	efx->board_info.hwmon_client =
+-		i2c_new_device(&efx->i2c_adap, &sfe4001_hwmon_info);
++		i2c_new_client_device(&efx->i2c_adap, &sfe4001_hwmon_info);
+ 
+ 	(...)
+   }
+@@ -123,7 +123,7 @@ present or not (for example for an optional feature which is not present
+ on cheap variants of a board but you have no way to tell them apart), or
+ it may have different addresses from one board to the next (manufacturer
+ changing its design without notice). In this case, you can call
+-i2c_new_scanned_device() instead of i2c_new_device().
++i2c_new_scanned_device() instead of i2c_new_client_device().
+ 
+ Example (from the nxp OHCI driver)::
+ 
+@@ -152,7 +152,7 @@ simply gives up.
+ 
+ The driver which instantiated the I2C device is responsible for destroying
+ it on cleanup. This is done by calling i2c_unregister_device() on the
+-pointer that was earlier returned by i2c_new_device() or
++pointer that was earlier returned by i2c_new_client_device() or
+ i2c_new_scanned_device().
+ 
  
 -- 
 2.20.1
