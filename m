@@ -6,100 +6,104 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6A5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A48C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D931620715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049FB2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgAGJC4 (ORCPT
+        id S1727656AbgAGJDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:02:56 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46478 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgAGJCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:02:55 -0500
-Received: from ip-109-41-1-227.web.vodafone.de ([109.41.1.227] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ioklG-0004Nl-2G; Tue, 07 Jan 2020 09:02:50 +0000
-Date:   Tue, 7 Jan 2020 10:02:27 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Amanieu d'Antras <amanieu@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        keescook@chromium.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
-Message-ID: <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
- <20200102172413.654385-3-amanieu@gmail.com>
- <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
- <20200106173953.GB9676@willie-the-truck>
- <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
+        Tue, 7 Jan 2020 04:03:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35500 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgAGJDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:03:22 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9BD62B18F;
+        Tue,  7 Jan 2020 09:03:20 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 10:03:19 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jann Horn <jannh@google.com>, bpf@vger.kernel.org,
+        live-patching@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: BPF tracing trampoline synchronization between update/freeing
+ and execution?
+Message-ID: <20200107090319.ggggnpkqfqdmldfy@pathway.suse.cz>
+References: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
+ <20200106165654.GP2844@hirez.programming.kicks-ass.net>
+ <20200107082842.5w6zjgxy56wiftmm@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200107082842.5w6zjgxy56wiftmm@pathway.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Kees in case he knows something about where arch specific tests live
- or whether we have a framework for this]
+On Tue 2020-01-07 09:28:42, Petr Mladek wrote:
+> On Mon 2020-01-06 17:56:54, Peter Zijlstra wrote:
+> > On Mon, Jan 06, 2020 at 05:39:30PM +0100, Jann Horn wrote:
+> > > Hi!
+> > > 
+> > > I was chatting with kpsingh about BPF trampolines, and I noticed that
+> > > it looks like BPF trampolines (as of current bpf-next/master) seem to
+> > > be missing synchronization between trampoline code updates and
+> > > trampoline execution. Or maybe I'm missing something?
+> > > 
+> > > If I understand correctly, trampolines are executed directly from the
+> > > fentry placeholders at the start of arbitrary kernel functions, so
+> > > they can run without any locks held. So for example, if task A starts
+> > > executing a trampoline on entry to sys_open(), then gets preempted in
+> > > the middle of the trampoline, and then task B quickly calls
+> > > BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
+> > > task A will end up executing the middle of newly-written machine code,
+> > > which can probably end up crashing the kernel somehow?
+> > > 
+> > > I think that at least to synchronize trampoline text freeing with
+> > > concurrent trampoline execution, it is necessary to do something
+> > > similar to what the livepatching code does with klp_check_stack(), and
+> > > then either use a callback from the scheduler to periodically re-check
+> > > tasks that were in the trampoline or let the trampoline tail-call into
+> > > a cleanup helper that is part of normal kernel text. And you'd
+> > > probably have to gate BPF trampolines on
+> > > CONFIG_HAVE_RELIABLE_STACKTRACE.
+> > 
+> > ftrace uses synchronize_rcu_tasks() to flip between trampolines iirc.
+> 
+> ftrace calls also schedule_on_each_cpu(ftrace_sync) to handle
+> situations where RCU is not watching, see rcu_is_watching().
+> 
+> The following is called in ftrace_shutdown():
+> 
+> 	schedule_on_each_cpu(ftrace_sync);
+> 
+> 	if (IS_ENABLED(CONFIG_PREEMPTION))
+> 		synchronize_rcu_tasks();
+> 
+> 	arch_ftrace_trampoline_free(ops);
 
-On Mon, Jan 06, 2020 at 07:03:32PM +0100, Amanieu d'Antras wrote:
-> On Mon, Jan 6, 2020 at 6:39 PM Will Deacon <will@kernel.org> wrote:
-> > I also ran the native and compat selftests but, unfortunately, they all
-> > pass even without this patch. Do you reckon it would be possible to update
-> > them to check the tls pointer?
-> 
-> Here's the program I used for testing on arm64. I considered adding it
-> to the selftests but there is no portable way of reading the TLS
-> register on all architectures.
+Just to be sure. IMHO, the above should be enough to decide when
+a ftrace-like trampoline could be freed. But it is not enough
+to decide whether any task is still in the middle of the BPF
+program that the trampoline jumped to.
 
-I'm not saying you need to do this right now.
-It feels like we must've run into the "this is architecture
-specific"-and-we-want-to-test-this issue before... Do we have a place
-where architecture specific selftests live?
+You will likely need something more complicated to decide when it is safe
+to free the BPF program itself. The stack check probably won't help.
+I guess that the stack will be marked as unsafe in BPF program because
+there will be no data for ORC unwinder. But some simple reference
+counting might do the job.
 
-> 
-> #include <sys/syscall.h>
-> #include <unistd.h>
-> #include <stdio.h>
-> #include <stdint.h>
-> 
-> #define __NR_clone3 435
-> struct clone_args {
->     uint64_t flags;
->     uint64_t pidfd;
->     uint64_t child_tid;
->     uint64_t parent_tid;
->     uint64_t exit_signal;
->     uint64_t stack;
->     uint64_t stack_size;
->     uint64_t tls;
-> };
-> 
-> #define USE_CLONE3
-> 
-> int main() {
->     printf("Before fork: tp = %p\n", __builtin_thread_pointer());
-> #ifdef USE_CLONE3
->     struct clone_args args = {
->         .flags = CLONE_SETTLS,
->         .tls = (uint64_t)__builtin_thread_pointer(),
->     };
->     int ret = syscall(__NR_clone3, &args, sizeof(args));
-> #else
->     int ret = syscall(__NR_clone, CLONE_SETTLS, 0, 0,
-> __builtin_thread_pointer(), 0);
-> #endif
->     printf("Fork returned %d, tp = %p\n", ret, __builtin_thread_pointer());
-> }
+Best Regards,
+Petr
