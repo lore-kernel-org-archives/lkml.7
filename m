@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73150C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E552072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508D12072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431872;
-	bh=V1Q3Xuf3lHcY7QWN+8zhItJkKgV8hQvAWN7NdTrbQeQ=;
+	s=default; t=1578431877;
+	bh=McbvTobzyC0pAT1LhARxNTpZOgqqYc8/Yj0GOxRKUzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=utBoLlhidPXmcBJKyNvx+6gTfDFXZOOv9fBFmlnsl2laa47StlMMeQfRi6y5+nDqj
-	 QNhnLXPt0TJq47UB2///isuC4gtl8VcTxOteR9apaB73Z3+ENKw5xOwObncnay3bAQ
-	 U2Ym54NzYzCvBLuw13QmbD81eVi/sQLJ2zHAYdeQ=
+	b=BScgjjxmOge5mYan5QGk8RVJ9poS7CHqL525BV4C2UPFrdwj7LGugq/E5pHq+MlMF
+	 E34FcyZ+zFE/szrKSBFVPlepfXdC3NcQLhd0mwyN+sqWUKnKlYyRnIFFD7qfd1fo54
+	 33k+t9/SvqzDPXSQBTYTY4OiuDu7UcpH4XPnbd28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgAGVRv (ORCPT
+        id S1728549AbgAGVR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:17:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52460 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:17:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgAGVFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:36 -0500
+        id S1729246AbgAGVFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7DB2081E;
-        Tue,  7 Jan 2020 21:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B96CC20880;
+        Tue,  7 Jan 2020 21:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431136;
-        bh=V1Q3Xuf3lHcY7QWN+8zhItJkKgV8hQvAWN7NdTrbQeQ=;
+        s=default; t=1578431131;
+        bh=McbvTobzyC0pAT1LhARxNTpZOgqqYc8/Yj0GOxRKUzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1u6ojmKIBVd1lhLhLoes5yurgXlSw7FamyNSOJsnMqSUl5Fu3O006FTRKoqOrRle
-         3IWaWHqz54uSuGDr+bS+Jdff9pZ3xR6PXjWhmqfPnIQZrLJp2t+0Po4oVSkczTmujU
-         hdeI9HEf9DTfTFQD3nYED0FMRasAO8d1nA044MEo=
+        b=cuRf82hWEKdF4q1XgQjJGlgtisYoX1nvdwcZHp67ToFTypNmQ9tWXWv3hu+cYimrQ
+         0Oj6K3n37Be+CxnyDc6ztAudsulm/9YxD2tvvip+Lv/nIPt8TDRPSsxCuB8YhZX1VU
+         wXPFfxwSowCVvW2HeqSZoUkspa1ww1Y7OHFuBa3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/115] RDMA/cma: add missed unregister_pernet_subsys in init failure
-Date:   Tue,  7 Jan 2020 21:53:42 +0100
-Message-Id: <20200107205247.577554699@linuxfoundation.org>
+Subject: [PATCH 4.19 010/115] afs: Fix afs_find_server lookups for ipv4 peers
+Date:   Tue,  7 Jan 2020 21:53:40 +0100
+Message-Id: <20200107205246.338082294@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,36 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Marc Dionne <marc.dionne@auristor.com>
 
-[ Upstream commit 44a7b6759000ac51b92715579a7bba9e3f9245c2 ]
+[ Upstream commit 9bd0160d12370a076e44f8d1320cde9c83f2c647 ]
 
-The driver forgets to call unregister_pernet_subsys() in the error path
-of cma_init().
-Add the missed call to fix it.
+afs_find_server tries to find a server that has an address that
+matches the transport address of an rxrpc peer.  The code assumes
+that the transport address is always ipv6, with ipv4 represented
+as ipv4 mapped addresses, but that's not the case.  If the transport
+family is AF_INET, srx->transport.sin6.sin6_addr.s6_addr32[] will
+be beyond the actual ipv4 address and will always be 0, and all
+ipv4 addresses will be seen as matching.
 
-Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network namespaces")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Link: https://lore.kernel.org/r/20191206012426.12744-1-hslester96@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+As a result, the first ipv4 address seen on any server will be
+considered a match, and the server returned may be the wrong one.
+
+One of the consequences is that callbacks received over ipv4 will
+only be correctly applied for the server that happens to have the
+first ipv4 address on the fs_addresses4 list.  Callbacks over ipv4
+from all other servers are dropped, causing the client to serve stale
+data.
+
+This is fixed by looking at the transport family, and comparing ipv4
+addresses based on a sockaddr_in structure rather than a sockaddr_in6.
+
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/afs/server.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 1f373ba573b6..319bfef00a4a 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -4658,6 +4658,7 @@ static int __init cma_init(void)
- err:
- 	unregister_netdevice_notifier(&cma_nb);
- 	ib_sa_unregister_client(&sa_client);
-+	unregister_pernet_subsys(&cma_pernet_operations);
- err_wq:
- 	destroy_workqueue(cma_wq);
- 	return ret;
+diff --git a/fs/afs/server.c b/fs/afs/server.c
+index 1d329e6981d5..2c7f6211c360 100644
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -34,18 +34,11 @@ static void afs_dec_servers_outstanding(struct afs_net *net)
+ struct afs_server *afs_find_server(struct afs_net *net,
+ 				   const struct sockaddr_rxrpc *srx)
+ {
+-	const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 	const struct afs_addr_list *alist;
+ 	struct afs_server *server = NULL;
+ 	unsigned int i;
+-	bool ipv6 = true;
+ 	int seq = 0, diff;
+ 
+-	if (srx->transport.sin6.sin6_addr.s6_addr32[0] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[1] == 0 ||
+-	    srx->transport.sin6.sin6_addr.s6_addr32[2] == htonl(0xffff))
+-		ipv6 = false;
+-
+ 	rcu_read_lock();
+ 
+ 	do {
+@@ -54,7 +47,8 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 		server = NULL;
+ 		read_seqbegin_or_lock(&net->fs_addr_lock, &seq);
+ 
+-		if (ipv6) {
++		if (srx->transport.family == AF_INET6) {
++			const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses6, addr6_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = alist->nr_ipv4; i < alist->nr_addrs; i++) {
+@@ -70,15 +64,16 @@ struct afs_server *afs_find_server(struct afs_net *net,
+ 				}
+ 			}
+ 		} else {
++			const struct sockaddr_in *a = &srx->transport.sin, *b;
+ 			hlist_for_each_entry_rcu(server, &net->fs_addresses4, addr4_link) {
+ 				alist = rcu_dereference(server->addresses);
+ 				for (i = 0; i < alist->nr_ipv4; i++) {
+-					b = &alist->addrs[i].transport.sin6;
+-					diff = ((u16 __force)a->sin6_port -
+-						(u16 __force)b->sin6_port);
++					b = &alist->addrs[i].transport.sin;
++					diff = ((u16 __force)a->sin_port -
++						(u16 __force)b->sin_port);
+ 					if (diff == 0)
+-						diff = ((u32 __force)a->sin6_addr.s6_addr32[3] -
+-							(u32 __force)b->sin6_addr.s6_addr32[3]);
++						diff = ((u32 __force)a->sin_addr.s_addr -
++							(u32 __force)b->sin_addr.s_addr);
+ 					if (diff == 0)
+ 						goto found;
+ 				}
 -- 
 2.20.1
 
