@@ -2,181 +2,312 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B3DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE68AC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34630206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578380482;
-	bh=atyeyYGT5jcZ0qw968QE6bC4vhzHSBeJkqKe40lWcgw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gm9bAvX1Xdk7ZHe0R3BIcQdt1D8742SDXPjaAPmOvelOvF76BBHv7BdwwEImfVxkq
-	 hsZMvvkeOKP8HUUdPHORRZO3sN665YDTHJH9yMMFnwnWxhq8ATXMw+Zmq7RJlDgz8A
-	 RmUFD/UifiO37muvZrIQ5WCiVEnmPDJsthlYNcT8=
+	by mail.kernel.org (Postfix) with ESMTP id 9ED96207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGnb+cbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbgAGHBV (ORCPT
+        id S1727298AbgAGHCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:01:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgAGHBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:01:21 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFB1C207E0;
-        Tue,  7 Jan 2020 07:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578380480;
-        bh=atyeyYGT5jcZ0qw968QE6bC4vhzHSBeJkqKe40lWcgw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yRlWLe9tvzeqTyU1nAkpz6Gkhk4nPMcY/UbD3NnJGpF5g1n2mhMgnAGxjcJsLud9k
-         FCzRz6EHMOBWx4MFyorXoJSRuKSeMNon/6lBmN1ce4AqmIKMe89FvvEg+e1Gipjn1O
-         ePyakwDZ4Iqpjw5JgTkMGCbjiCr8RVq7VIK7U1s8=
-Received: by wens.tw (Postfix, from userid 1000)
-        id AF3315FBD4; Tue,  7 Jan 2020 15:01:16 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] drm/sun4i: tcon: Set RGB DCLK min. divider based on hardware model
-Date:   Tue,  7 Jan 2020 15:01:13 +0800
-Message-Id: <20200107070113.28951-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Jan 2020 02:02:20 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41514 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGHCT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 02:02:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so53569686ljc.8;
+        Mon, 06 Jan 2020 23:02:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=otoI+u7orc5dRlizjzTthDQTWcCumvJBfaQq5FSxrGU=;
+        b=VGnb+cbEYS1htdtN7ueHhtCNl5FNlEVcRv31h+gdRjUHQVlAovKIqRnRaAYVbYUS6O
+         g8pWMoWmy13CTP5jMRWB2U6EVgKtSjzjN6kxODYyyBLShG1JoOQBYNGcRLsgKfu2BC1T
+         CeKXhli/JFwleWQG5L8wxM+dBU3HOPJlGZpd2ZLuDPL2G5Vhai+qbD28RxHv+/wMC25r
+         iePX6Lfconq76GqXZcoAUlgaDF5GDMEOhV/Z99QqLldMQah2U6W2QVYFxtvlhsC+ilNo
+         0X5dIoPFkgjKOATodsYiMUV9MnYyd3YWCSkyMyQw2BN31QK9NihaZtqwjHOelo2mcwgm
+         DV3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=otoI+u7orc5dRlizjzTthDQTWcCumvJBfaQq5FSxrGU=;
+        b=nuXY6hg03hsdew9yqb7MJs0xBf1F6w7CuGF2QYnRNaxFf3TtFivIwJib5xCXcNhVcX
+         HoF8kUiJCw2XNWTlQEifVGIwJK9FPwqsgtDHOap2YCMqvE7NUteVguE0RcJ3AOVh7DSj
+         8q/H2kyWE01xN00w0TGf3cnLs6QJeEWg5tQE1TqY+HraQyJA4e+elt8j7Qyn48MQyV+q
+         EszZuSYQLUVWpaS/14uUT5JVVSYp5b3lYSVcMwnczDoHbiE729sBU0ah/h2Tw2RxtuuG
+         EoPPPWF61rk81+22GEceCILLZqZa1KQ7L9n+n8wnx3wfN+OrV6fhvFX14SeutAQS9WSH
+         c4og==
+X-Gm-Message-State: APjAAAWAe8oaTxpMsVzdBbjau5JV48nhNIHpIJ6627sbPTZQtSeW2I3N
+        VpHhnCWZ8OUf+JlmwnA+W89BPGZPLKkHFXZbrrCceQ==
+X-Google-Smtp-Source: APXvYqzXPmBqodoErMJZqJFDV5mPw27PaZ4GJyNSdHdme4355OC8ntuo4ejjWgUJqqxcnW6sqVVqL0PIBRTtCWwVV/g=
+X-Received: by 2002:a2e:858b:: with SMTP id b11mr56964986lji.135.1578380537246;
+ Mon, 06 Jan 2020 23:02:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-7-brianvv@google.com>
+ <a33dab7b-0f46-c29f-0db1-a5539c433b3d@fb.com>
+In-Reply-To: <a33dab7b-0f46-c29f-0db1-a5539c433b3d@fb.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Tue, 7 Jan 2020 01:02:05 -0600
+Message-ID: <CABCgpaVC-gCf58VmCx2XwwHoZ2FXHmtBfqzqJoPeeg2Q=DvRzg@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 06/11] bpf: add batch ops to all htab bpf map
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Fri, Dec 13, 2019 at 12:58 PM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 12/11/19 2:33 PM, Brian Vazquez wrote:
+> > From: Yonghong Song <yhs@fb.com>
+> >
+> > htab can't use generic batch support due some problematic behaviours
+> > inherent to the data structre, i.e. while iterating the bpf map  a
+> > concurrent program might delete the next entry that batch was about to
+> > use, in that case there's no easy solution to retrieve the next entry,
+> > the issue has been discussed multiple times (see [1] and [2]).
+> >
+> > The only way hmap can be traversed without the problem previously
+> > exposed is by making sure that the map is traversing entire buckets.
+> > This commit implements those strict requirements for hmap, the
+> > implementation follows the same interaction that generic support with
+> > some exceptions:
+> >
+> >   - If keys/values buffer are not big enough to traverse a bucket,
+> >     ENOSPC will be returned.
+> >   - out_batch contains the value of the next bucket in the iteration, not
+> >     the next key, but this is transparent for the user since the user
+> >     should never use out_batch for other than bpf batch syscalls.
+> >
+> > Note that only lookup and lookup_and_delete batch ops require the hmap
+> > specific implementation, update/delete batch ops can be the generic
+> > ones.
+> >
+> > [1] https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+> > [2] https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+> >
+> > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > ---
+> >   kernel/bpf/hashtab.c | 242 +++++++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 242 insertions(+)
+> >
+> > diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+> > index 22066a62c8c97..fac107bdaf9ec 100644
+> > --- a/kernel/bpf/hashtab.c
+> > +++ b/kernel/bpf/hashtab.c
+> > @@ -17,6 +17,17 @@
+> >       (BPF_F_NO_PREALLOC | BPF_F_NO_COMMON_LRU | BPF_F_NUMA_NODE |    \
+> >        BPF_F_ACCESS_MASK | BPF_F_ZERO_SEED)
+> >
+> > +#define BATCH_OPS(_name)                     \
+> > +     .map_lookup_batch =                     \
+> > +     _name##_map_lookup_batch,               \
+> > +     .map_lookup_and_delete_batch =          \
+> > +     _name##_map_lookup_and_delete_batch,    \
+> > +     .map_update_batch =                     \
+> > +     generic_map_update_batch,               \
+> > +     .map_delete_batch =                     \
+> > +     generic_map_delete_batch
+> > +
+> > +
+> >   struct bucket {
+> >       struct hlist_nulls_head head;
+> >       raw_spinlock_t lock;
+> > @@ -1232,6 +1243,233 @@ static void htab_map_seq_show_elem(struct bpf_map *map, void *key,
+> >       rcu_read_unlock();
+> >   }
+> >
+> > +static int
+> > +__htab_map_lookup_and_delete_batch(struct bpf_map *map,
+> > +                                const union bpf_attr *attr,
+> > +                                union bpf_attr __user *uattr,
+> > +                                bool do_delete, bool is_lru_map,
+> > +                                bool is_percpu)
+> > +{
+> > +     struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+> > +     u32 bucket_cnt, total, key_size, value_size, roundup_key_size;
+> > +     void *keys = NULL, *values = NULL, *value, *dst_key, *dst_val;
+> > +     void __user *uvalues = u64_to_user_ptr(attr->batch.values);
+> > +     void __user *ukeys = u64_to_user_ptr(attr->batch.keys);
+> > +     void *ubatch = u64_to_user_ptr(attr->batch.in_batch);
+> > +     u64 elem_map_flags, map_flags;
+> > +     struct hlist_nulls_head *head;
+> > +     u32 batch, max_count, size;
+> > +     struct hlist_nulls_node *n;
+> > +     unsigned long flags;
+> > +     struct htab_elem *l;
+> > +     struct bucket *b;
+> > +     int ret = 0;
+> > +
+> > +     max_count = attr->batch.count;
+> > +     if (!max_count)
+> > +             return 0;
+> > +
+> > +     elem_map_flags = attr->batch.elem_flags;
+> > +     if ((elem_map_flags & ~BPF_F_LOCK) ||
+> > +         ((elem_map_flags & BPF_F_LOCK) && !map_value_has_spin_lock(map)))
+> > +             return -EINVAL;
+> > +
+> > +     map_flags = attr->batch.flags;
+> > +     if (map_flags)
+> > +             return -EINVAL;
+> > +
+> > +     batch = 0;
+> > +     if (ubatch && copy_from_user(&batch, ubatch, sizeof(batch)))
+> > +             return -EFAULT;
+> > +
+> > +     if (batch >= htab->n_buckets)
+> > +             return -ENOENT;
+> > +
+> > +     /* We cannot do copy_from_user or copy_to_user inside
+> > +      * the rcu_read_lock. Allocate enough space here.
+> > +      */
+> > +     key_size = htab->map.key_size;
+> > +     roundup_key_size = round_up(htab->map.key_size, 8);
+> > +     value_size = htab->map.value_size;
+> > +     size = round_up(value_size, 8);
+> > +     if (is_percpu)
+> > +             value_size = size * num_possible_cpus();
+> > +     keys = kvmalloc(key_size, GFP_USER | __GFP_NOWARN);
+> > +     values = kvmalloc(value_size, GFP_USER | __GFP_NOWARN);
+> > +     if (!keys || !values) {
+> > +             ret = -ENOMEM;
+> > +             goto out;
+> > +     }
+> > +
+> > +     dst_key = keys;
+> > +     dst_val = values;
+> > +     total = 0;
+> > +
+> > +     preempt_disable();
+> > +     this_cpu_inc(bpf_prog_active);
+> > +     rcu_read_lock();
+> > +
+> > +again:
+> > +     b = &htab->buckets[batch];
+> > +     head = &b->head;
+> > +     raw_spin_lock_irqsave(&b->lock, flags);
+> > +
+> > +     bucket_cnt = 0;
+> > +     hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+> > +             bucket_cnt++;
+> > +
+> > +     if (bucket_cnt > (max_count - total)) {
+> > +             if (total == 0)
+> > +                     ret = -ENOSPC;
+> > +             goto after_loop;
+> > +     }
+> > +
+> > +     hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+> > +             memcpy(dst_key, l->key, key_size);
+> > +
+> > +             if (is_percpu) {
+> > +                     int off = 0, cpu;
+> > +                     void __percpu *pptr;
+> > +
+> > +                     pptr = htab_elem_get_ptr(l, map->key_size);
+> > +                     for_each_possible_cpu(cpu) {
+> > +                             bpf_long_memcpy(dst_val + off,
+> > +                                             per_cpu_ptr(pptr, cpu), size);
+> > +                             off += size;
+> > +                     }
+> > +             } else {
+> > +                     value = l->key + roundup_key_size;
+> > +                     if (elem_map_flags & BPF_F_LOCK)
+> > +                             copy_map_value_locked(map, dst_val, value,
+> > +                                                   true);
+> > +                     else
+> > +                             copy_map_value(map, dst_val, value);
+> > +                     check_and_init_map_lock(map, dst_val);
+> > +             }
+> > +             if (do_delete) {
+> > +                     hlist_nulls_del_rcu(&l->hash_node);
+> > +                     if (is_lru_map)
+> > +                             bpf_lru_push_free(&htab->lru, &l->lru_node);
+> > +                     else
+> > +                             free_htab_elem(htab, l);
+> > +             }
+> > +             if (copy_to_user(ukeys + total * key_size, keys, key_size) ||
+> > +                copy_to_user(uvalues + total * value_size, values,
+> > +                value_size)) {
+>
+> We cannot do copy_to_user inside atomic region where irq is disabled
+> with raw_spin_lock_irqsave(). We could do the following:
+>     . we kalloc memory before preempt_disable() with the current count
+>       of bucket size.
+>     . inside the raw_spin_lock_irqsave() region, we can do copy to kernel
+>       memory.
+>     . inside the raw_spin_lock_irqsave() region, if the bucket size
+>       changes, we can have a few retries to increase allocation size
+>       before giving up.
+> Do you think this may work?
 
-In commit 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK
-to 1.") it was assumed that all TCON variants support a minimum divider
-of 1 if only DCLK was used.
+Yes, it does.
 
-However, the oldest generation of hardware only supports minimum divider
-of 4 if only DCLK is used. If a divider of 1 was used on this old
-hardware, some scrolling artifact would appear. A divider of 2 seemed
-OK, but a divider of 3 had artifacts as well.
+What should be the initial value for the allocated memory
+max_entries/2? Do you see any issue if we just kalloc the entire
+buffer?
 
-Set the minimum divider when outputing to parallel RGB based on the
-hardware model, with a minimum of 4 for the oldest (A10/A10s/A13/A20)
-hardware, and a minimum of 1 for the rest. A value is not set for the
-TCON variants lacking channel 0.
-
-This fixes the scrolling artifacts seen on my A13 tablet.
-
-Fixes: 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.")
-Cc: <stable@vger.kernel.org> # 5.4.x
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 15 ++++++++++++---
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 42651d737c55..c81cdce6ed55 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -489,7 +489,7 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
- 
- 	WARN_ON(!tcon->quirks->has_channel_0);
- 
--	tcon->dclk_min_div = 1;
-+	tcon->dclk_min_div = tcon->quirks->dclk_min_div;
- 	tcon->dclk_max_div = 127;
- 	sun4i_tcon0_mode_set_common(tcon, mode);
- 
-@@ -1426,12 +1426,14 @@ static int sun8i_r40_tcon_tv_set_mux(struct sun4i_tcon *tcon,
- static const struct sun4i_tcon_quirks sun4i_a10_quirks = {
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
-+	.dclk_min_div		= 4,
- 	.set_mux		= sun4i_a10_tcon_set_mux,
- };
- 
- static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
-+	.dclk_min_div		= 4,
- 	.set_mux		= sun5i_a13_tcon_set_mux,
- };
- 
-@@ -1440,6 +1442,7 @@ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
- 	.has_channel_1		= true,
- 	.has_lvds_alt		= true,
- 	.needs_de_be_mux	= true,
-+	.dclk_min_div		= 1,
- 	.set_mux		= sun6i_tcon_set_mux,
- };
- 
-@@ -1447,11 +1450,13 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.needs_de_be_mux	= true,
-+	.dclk_min_div		= 1,
- };
- 
- static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
-+	.dclk_min_div		= 4,
- 	/* Same display pipeline structure as A10 */
- 	.set_mux		= sun4i_a10_tcon_set_mux,
- };
-@@ -1459,11 +1464,13 @@ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
- static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 	.has_channel_0		= true,
- 	.has_lvds_alt		= true,
-+	.dclk_min_div		= 1,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
- 	.supports_lvds		= true,
- 	.has_channel_0		= true,
-+	.dclk_min_div		= 1,
- };
- 
- static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
-@@ -1477,11 +1484,13 @@ static const struct sun4i_tcon_quirks sun8i_r40_tv_quirks = {
- 
- static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
- 	.has_channel_0		= true,
-+	.dclk_min_div		= 1,
- };
- 
- static const struct sun4i_tcon_quirks sun9i_a80_tcon_lcd_quirks = {
--	.has_channel_0	= true,
--	.needs_edp_reset = true,
-+	.has_channel_0		= true,
-+	.needs_edp_reset	= true,
-+	.dclk_min_div		= 1,
- };
- 
- static const struct sun4i_tcon_quirks sun9i_a80_tcon_tv_quirks = {
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index f9f1fe80b206..a62ec826ae71 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -224,6 +224,7 @@ struct sun4i_tcon_quirks {
- 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
- 	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
- 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
-+	u8	dclk_min_div;	/* minimum divider for TCON0 DCLK */
- 
- 	/* callback to handle tcon muxing options */
- 	int	(*set_mux)(struct sun4i_tcon *, const struct drm_encoder *);
--- 
-2.24.1
-
+>
+> > +                     ret = -EFAULT;
+> > +                     goto after_loop;
+> > +             }
+> > +             total++;
+> > +     }
+> > +
+> > +     batch++;
+> > +     if (batch >= htab->n_buckets) {
+> > +             ret = -ENOENT;
+> > +             goto after_loop;
+> > +     }
+> > +
+> > +     raw_spin_unlock_irqrestore(&b->lock, flags);
+> > +     goto again;
+> > +
+> > +after_loop:
+> > +     raw_spin_unlock_irqrestore(&b->lock, flags);
+> > +
+> > +     rcu_read_unlock();
+> > +     this_cpu_dec(bpf_prog_active);
+> > +     preempt_enable();
+> > +
+> > +     if (ret && ret != -ENOENT)
+> > +             goto out;
+> > +
+> > +     /* copy data back to user */
+> > +     ubatch = u64_to_user_ptr(attr->batch.out_batch);
+> > +     if (copy_to_user(ubatch, &batch, sizeof(batch)) ||
+> > +         put_user(total, &uattr->batch.count))
+> > +             ret = -EFAULT;
+> > +
+> > +out:
+> > +     kvfree(keys);
+> > +     kvfree(values);
+> > +     return ret;
+> > +}
+> > +
+> [...]
