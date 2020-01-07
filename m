@@ -2,182 +2,129 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B79C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F62C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0CE2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WbQMl8Q5"
+	by mail.kernel.org (Postfix) with ESMTP id E6C9C2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgAGLch (ORCPT
+        id S1727884AbgAGLd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:32:37 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:54700 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgAGLch (ORCPT
+        Tue, 7 Jan 2020 06:33:59 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58727 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGLd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:32:37 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200107113235euoutp01acf5f678fb578f63347aef5c48228dd1~nl3yGW_O80160301603euoutp01W
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 11:32:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200107113235euoutp01acf5f678fb578f63347aef5c48228dd1~nl3yGW_O80160301603euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578396755;
-        bh=ZpHmTs0uJvuMs8mkZW+0snMhdt1maNdaJnzN8zhd98g=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=WbQMl8Q51QXJ9l2O+g2qHLVVKQVuPVCfJqlojrf1a/T1cNiYKob6sMd9xnLAXc+Wu
-         bnwHnwvunqKv+YrQMWCrA2mQkwbRIOPc3WUL3klXRw9p06dPqqEVwq3S6a9G3dkYPj
-         BvdbKDBPbcO2RdVQabVQH0mU04bwTK8FC3PYNdOM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200107113235eucas1p143fb5cd1bb80064e2c5254f5a3ff2f8e~nl3xvyytl2625126251eucas1p1-;
-        Tue,  7 Jan 2020 11:32:35 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 60.E4.61286.35C641E5; Tue,  7
-        Jan 2020 11:32:35 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200107113234eucas1p270ac654ada73edf9301acee9ab431b13~nl3xJnWjD3226932269eucas1p2c;
-        Tue,  7 Jan 2020 11:32:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200107113234eusmtrp1a7fa29f00f05fe903095d0d78f0d99e9~nl3xI9vli2458124581eusmtrp1D;
-        Tue,  7 Jan 2020 11:32:34 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-04-5e146c53c1e8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CE.DC.08375.25C641E5; Tue,  7
-        Jan 2020 11:32:34 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200107113234eusmtip15edd9f58d885624922c8e37789999248~nl3wuYE0y0293302933eusmtip1Y;
-        Tue,  7 Jan 2020 11:32:33 +0000 (GMT)
-Subject: Re: [PATCH] usb: dwc3: use proper initializers for property entries
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <f2f41b28-2ca5-7fad-5b19-2ad51c689e5a@samsung.com>
-Date:   Tue, 7 Jan 2020 12:32:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.3.1
+        Tue, 7 Jan 2020 06:33:58 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ion7T-0002sF-BX; Tue, 07 Jan 2020 12:33:55 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ion7S-0007gx-AY; Tue, 07 Jan 2020 12:33:54 +0100
+Date:   Tue, 7 Jan 2020 12:33:54 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
+        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
+Message-ID: <20200107113354.ggq6zarewq5ip354@pengutronix.de>
+References: <20191230172113.17222-1-krzk@kernel.org>
+ <20191230172113.17222-2-krzk@kernel.org>
+ <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
+ <20200107082539.GA31827@pi3>
+ <20200107104234.wq74fska3szrg4ii@pengutronix.de>
+ <20200107110359.GA32423@pi3>
 MIME-Version: 1.0
-In-Reply-To: <2a8a5e6b-9372-978e-03d0-350ab65a2d0a@redhat.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djP87rBOSJxBtMusVgca3vCbnF40QtG
-        i+bF69ks3hyfzmRxedccNotFy1qZLeZ+mcrswO6xc9Zddo9NqzrZPPbPXcPu8X7fVTaPz5vk
-        AlijuGxSUnMyy1KL9O0SuDIedL1iKlgmUnH/9C2mBsZewS5GTg4JAROJZ8uXsHYxcnEICaxg
-        lGjY2sgC4XxhlGj+f5MNwvnMKDGlcwIzTMvfzi6oluWMEqum/4Fy3jJKbFx+kAWkSljAR+Lc
-        vY2MIAkRgUWMEs8vNbKBJJgF8iQOn7/DCmKzCRhKdL3tAovzCthJbJw9hRHEZhFQkTg/5Qc7
-        iC0qECvxf+ZWJogaQYmTM5+ALeAEqj/xfgUTxEx5ieats5khbHGJW0/mM0Gcuo5dYsedmi5G
-        DiDbRaJ7BjtEWFji1fEtULaMxOnJPWA/Swg0M0o8PLeWHcLpYZS43DSDEaLKWuLOuV9sIIOY
-        BTQl1u/Shwg7Smx7d5MdYj6fxI23ghAn8ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCo
-        NAvJY7OQPDMLyTOzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpecn7uJEZiETv87/mkH
-        49dLSYcYBTgYlXh4J8gIxwmxJpYVV+YeYpTgYFYS4dXSEYkT4k1JrKxKLcqPLyrNSS0+xCjN
-        waIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgbFZc5vZvf0nD/Z+el/L8lVt3oz9NXpT1iT/
-        9l8eMvVXqFATo4JJlXTSp2hrltfeEbX8/CIfRDiYAhrZtwctf9M2a/uGq7Od2c0EnCWZGoSS
-        uRjSZh7Z/NfFe02mV8/l34GpjmVuaw5M6v5tyu7pfd+5+5fm5h6Wvlopp5vPK+5JenJ12qu8
-        VmIpzkg01GIuKk4EAFA5+5g+AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsVy+t/xu7pBOSJxBjdfS1oca3vCbnF40QtG
-        i+bF69ks3hyfzmRxedccNotFy1qZLeZ+mcrswO6xc9Zddo9NqzrZPPbPXcPu8X7fVTaPz5vk
-        Alij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DIe
-        dL1iKlgmUnH/9C2mBsZewS5GTg4JAROJv51drF2MXBxCAksZJZZcPsQGkZCRODmtgRXCFpb4
-        c62LDaLoNaPEzmOfwBLCAj4S5+5tZARJiAgsYpS49u86WIJZIE/i3d4N7BAdWxglln/cywiS
-        YBMwlOh62wW2glfATmLj7ClgcRYBFYnzU36wg9iiArES2zc/ZIaoEZQ4OfMJC4jNCVR/4v0K
-        JogFZhLzoGqYBeQlmrfOhrLFJW49mc80gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GJD
-        veLE3OLSvHS95PzcTYzAyNt27OfmHYyXNgYfYhTgYFTi4Z0gIxwnxJpYVlyZe4hRgoNZSYRX
-        S0ckTog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgUkhryTe0NTQ3MLS0NzY3NjMQkmct0Pg
-        YIyQQHpiSWp2ampBahFMHxMHp1QDo2x3xMGzPkdTWB+G37d89c/6d/gE17c6cu7/j7XvbZxa
-        //bwJKcdy0+2Ln+WZyqdwxFWqy7IVrBVadG9/ZmO9tOW1H2urXzm1vmL39V1ifLRP/2ch888
-        VdGK5Fb7OSn1bbd/t6sRW9yfWdYF2o9fMc84UXbr4K3MVfcXBjXydUS4b1+hFxf7QImlOCPR
-        UIu5qDgRAM32K3PSAgAA
-X-CMS-MailID: 20200107113234eucas1p270ac654ada73edf9301acee9ab431b13
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191215164117eucas1p159471bd0b90b76b6ff64f26f17a6580e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191215164117eucas1p159471bd0b90b76b6ff64f26f17a6580e
-References: <20191213174623.GA20267@dtor-ws>
-        <CGME20191215164117eucas1p159471bd0b90b76b6ff64f26f17a6580e@eucas1p1.samsung.com>
-        <2a8a5e6b-9372-978e-03d0-350ab65a2d0a@redhat.com>
+In-Reply-To: <20200107110359.GA32423@pi3>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Tue, Jan 07, 2020 at 12:03:59PM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-K�nig wrote:
+> > > I guess other solution would be to add stubs for few clk functions...
+> > > 
+> > > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
+> > > > config (which does't have HAS_IOMEM) and they all compile fine.
+> > > 
+> > > Because of !HAS_IOMEM, since some time ARCH=um does not support
+> > > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
+> > > testing (and for regular build it is selected by ARCH).
+> > 
+> > Hehe, I didn't notice because for testing I just dropped the "depends on
+> > ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
+> > compile fine on UML.
+> > 
+> > Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
+> > !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
+> > later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
+> > == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
+> > revert bc083a64b6c0 today? (And if not, a comment about why near the
+> > "depends on !UML" in init/Kconfig would be great.)
+> > 
+> > Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
+> > though the compile testers won't notice it missing. Or should HAS_IOMEM
+> > be dropped?
+> 
+> I think yes, it can be dropped, but this would require:
+> 1. Fixing any dependencies on HAS_IOMEM, e.g.:
+>     WARNING: unmet direct dependencies detected for MFD_SYSCON
+>       Depends on [n]: HAS_IOMEM [=n]
+>       Selected by [y]:
+>       - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
 
-On 15.12.2019 17:41, Hans de Goede wrote:
-> Hi,
->
-> On 13-12-2019 18:46, Dmitry Torokhov wrote:
->> We should not be reaching into property entries and initialize them by
->> hand, but rather use proper initializer macros. This way we can alter
->> internal representation of property entries with no visible changes to
->> their users.
->>
->> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> ---
->>
->> It would be good if this could go through Rafael's tree as it is needed
->> for the rest of my software_node/property_entry rework patch series
->> which I would love not to delay till 5.6.
->
-> Patch looks good to me:
->
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
+I don't understand that warning. What did you modify to trigger that?
+Probably related to the big "if HAS_IOMEM" in drivers/mfd/Kconfig?!
 
-This patch is instantly needed as the issue it fixes is again triggered 
-in current (20200107) linux-next by commit e6bff4665c59 "software node: 
-replace is_array with is_inline".
+> 2. Checking if all of stubs are implemented (not only IOMEM but maybe
+>    DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
+>    need devm_ioremap_resource() and others.
 
-Felipe: could You ack it, so it could be merged via Rafael's tree 
-together with related device property changes?
+A problem is that it's unclear (to me at least) what the presence of
+HAS_IOMEM actually implies. I thought it's about ioremap + readl +
+writel (including their respective variants). Does it really include dma
+stuff, too?
 
->>
->>   drivers/usb/dwc3/host.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
->> index 5567ed2cddbec..fa252870c926f 100644
->> --- a/drivers/usb/dwc3/host.c
->> +++ b/drivers/usb/dwc3/host.c
->> @@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
->>       memset(props, 0, sizeof(struct property_entry) * 
->> ARRAY_SIZE(props));
->>         if (dwc->usb3_lpm_capable)
->> -        props[prop_idx++].name = "usb3-lpm-capable";
->> +        props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
->>         if (dwc->usb2_lpm_disable)
->> -        props[prop_idx++].name = "usb2-lpm-disable";
->> +        props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
->>         /**
->>        * WORKAROUND: dwc3 revisions <=3.00a have a limitation
->> @@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
->>        * This following flag tells XHCI to do just that.
->>        */
->>       if (dwc->revision <= DWC3_REVISION_300A)
->> -        props[prop_idx++].name = "quirk-broken-port-ped";
->> +        props[prop_idx++] = 
->> PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
->>         if (prop_idx) {
->>           ret = platform_device_add_properties(xhci, props);
->>
->
+> Quick test shows mentioned "unmet direct dependencies" and:
+>     phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
+>     dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
+
+dma_pgprot seems to depend on HAS_DMA though, not HAS_IOMEM.
+
+(Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
+NO_DMA has three different definitions. Two of them (in
+drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
+unrelated.)
+
 Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Uwe
 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
