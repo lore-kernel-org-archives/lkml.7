@@ -2,239 +2,99 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65992C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D06C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CF02080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCCC207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578393124;
+	bh=Oz9BvFAQdAQ0RedV8tb0hXkG5Z2Qpy+Sw8N8TDpP54U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1CO9TjdUYOzSjM1DSZLyupVoHSzPwZ0zlSOrKRRwJNRpVkYC2u8Un9F1baGATnq6E
+	 sJ5dUHhQCoan53wTMvUITy9ig+mr/Jo2QdiizSCZLF3Arhl6tO0d/DMGWuuhPDI8gJ
+	 qUFthMErTE2KR7taRtUBpKzELa0jh1RgsL9+G4Bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgAGKbG (ORCPT
+        id S1727836AbgAGKcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:31:06 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727722AbgAGKbG (ORCPT
+        Tue, 7 Jan 2020 05:32:03 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39236 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGKcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:31:06 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007AKcGF101074;
-        Tue, 7 Jan 2020 05:30:57 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xb8s9jgs9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 05:30:56 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 007AUmIv000752;
-        Tue, 7 Jan 2020 10:30:56 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04dal.us.ibm.com with ESMTP id 2xajb6gsb6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 10:30:55 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007AUs1K24052158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jan 2020 10:30:54 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28403124058;
-        Tue,  7 Jan 2020 10:30:54 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA721124052;
-        Tue,  7 Jan 2020 10:30:52 +0000 (GMT)
-Received: from [9.152.98.193] (unknown [9.152.98.193])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Jan 2020 10:30:52 +0000 (GMT)
-Subject: Re: [PATCH v3 6/6] btrfs: Use larger zlib buffer for s390 hardware
- compression
-To:     Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>
-Cc:     Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
- <20200103223334.20669-7-zaslonko@linux.ibm.com>
- <d9aa84d2-3274-9310-234f-b91e07c9fc0e@toxicpanda.com>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Message-ID: <ad15739f-db2a-3b2a-1097-d80feadcfd40@linux.ibm.com>
-Date:   Tue, 7 Jan 2020 11:30:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 7 Jan 2020 05:32:02 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y1so38479516lfb.6;
+        Tue, 07 Jan 2020 02:32:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9E2KDCByWOknOsVNn8KPZIFGxXDqcek2mHsdVguQL8I=;
+        b=mPPeJz08QIZuOxdWYEG4octLskrR4olS6GscDie896g76J3nXLcgXT1drZ0KeRXb5g
+         cBMJ7qryxgFBzYAzULItqVcgklM1CNkrZvLoyI/jrwC65H3dDs9142so4mpCCB5+jGyU
+         obzd48dohkiLYgVkB1h54qqebkAVkbTSKHcmj0CSVfWW0XDKb2xM5EWGyFtabPguprKk
+         xnGlS3AmAnpdvQZMO7zkui3yzhipHlKF1plqPhlGljViBCJFkqkJZbiqVyMWEAxRHLcx
+         kPkpbhPtrNEWzDJwxvmKgTTNA2BXAnGlTDgI+qni9c5Aeh13BX42g6vK4ws7RXD4Q/dV
+         UlUQ==
+X-Gm-Message-State: APjAAAU7tA24lzN509rI+daWbyAPKnwUTcLzs5izY73i7xU+Wn2WMaTS
+        5TYWTOwRfbj6JkNQViuGnFw=
+X-Google-Smtp-Source: APXvYqwlm/6jpYNpmjVkNQRL7cF+uIW3YJNyP2AXWNJ3o6yCtii8lNqxdybvu0qoh7/mKSyzX3ktyQ==
+X-Received: by 2002:ac2:46dc:: with SMTP id p28mr59480699lfo.23.1578393120629;
+        Tue, 07 Jan 2020 02:32:00 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id b17sm30541803ljd.5.2020.01.07.02.31.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 02:31:59 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iom9f-0005G9-Ru; Tue, 07 Jan 2020 11:32:07 +0100
+Date:   Tue, 7 Jan 2020 11:32:07 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Brant Merryman <Brant.Merryman@silabs.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>
+Subject: Re: [PATCH] USB: serial: cp210x: Enables usb generic functions for
+ throttle/unthrottle to prevent USB data loss.
+Message-ID: <20200107103207.GC30908@localhost>
+References: <D6486D05-4E0F-4CDF-B178-C386A9075032@silabs.com>
 MIME-Version: 1.0
-In-Reply-To: <d9aa84d2-3274-9310-234f-b91e07c9fc0e@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-07_02:2020-01-06,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001070086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D6486D05-4E0F-4CDF-B178-C386A9075032@silabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Dec 18, 2019 at 06:55:04PM +0000, Brant Merryman wrote:
+> USB: serial: cp210x: Enables usb generic functions for
+>  throttle/unthrottle to prevent USB data loss.
 
-On 06.01.2020 17:40, Josef Bacik wrote:
-> On 1/3/20 5:33 PM, Mikhail Zaslonko wrote:
->> In order to benefit from s390 zlib hardware compression support,
->> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
->> s390 zlib hardware support is enabled on the machine). This brings up
->> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
->> buffer and much more compared to the software zlib processing in btrfs.
->> In case of memory pressure fall back to a single page buffer during
->> workspace allocation.
->>
->> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
->> ---
->>   fs/btrfs/compression.c |   2 +-
->>   fs/btrfs/zlib.c        | 128 ++++++++++++++++++++++++++++++-----------
->>   2 files changed, 94 insertions(+), 36 deletions(-)
->>
->> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
->> index ee834ef7beb4..6bd0e75a822c 100644
->> --- a/fs/btrfs/compression.c
->> +++ b/fs/btrfs/compression.c
->> @@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
->>       /* copy bytes from the working buffer into the pages */
->>       while (working_bytes > 0) {
->>           bytes = min_t(unsigned long, bvec.bv_len,
->> -                PAGE_SIZE - buf_offset);
->> +                PAGE_SIZE - (buf_offset % PAGE_SIZE));
->>           bytes = min(bytes, working_bytes);
->>             kaddr = kmap_atomic(bvec.bv_page);
->> diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
->> index a6c90a003c12..159486801631 100644
->> --- a/fs/btrfs/zlib.c
->> +++ b/fs/btrfs/zlib.c
->> @@ -20,9 +20,12 @@
->>   #include <linux/refcount.h>
->>   #include "compression.h"
->>   +#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
->> +
->>   struct workspace {
->>       z_stream strm;
->>       char *buf;
->> +    unsigned long buf_size;
->>       struct list_head list;
->>       int level;
->>   };
->> @@ -61,7 +64,17 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
->>               zlib_inflate_workspacesize());
->>       workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
->>       workspace->level = level;
->> -    workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
->> +    workspace->buf = NULL;
->> +    if (zlib_deflate_dfltcc_enabled()) {
->> +        workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
->> +                     __GFP_NOMEMALLOC | __GFP_NORETRY |
->> +                     __GFP_NOWARN | GFP_NOIO);
->> +        workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
->> +    }
->> +    if (!workspace->buf) {
->> +        workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
->> +        workspace->buf_size = PAGE_SIZE;
->> +    }
->>       if (!workspace->strm.workspace || !workspace->buf)
->>           goto fail;
->>   @@ -78,6 +91,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
->>           unsigned long *total_in, unsigned long *total_out)
->>   {
->>       struct workspace *workspace = list_entry(ws, struct workspace, list);
->> +    int i;
->>       int ret;
->>       char *data_in;
->>       char *cpage_out;
->> @@ -85,6 +99,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
->>       struct page *in_page = NULL;
->>       struct page *out_page = NULL;
->>       unsigned long bytes_left;
->> +    unsigned long in_buf_pages;
->>       unsigned long len = *total_out;
->>       unsigned long nr_dest_pages = *out_pages;
->>       const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
->> @@ -102,9 +117,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
->>       workspace->strm.total_in = 0;
->>       workspace->strm.total_out = 0;
->>   -    in_page = find_get_page(mapping, start >> PAGE_SHIFT);
->> -    data_in = kmap(in_page);
->> -
->>       out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
->>       if (out_page == NULL) {
->>           ret = -ENOMEM;
->> @@ -114,12 +126,48 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
->>       pages[0] = out_page;
->>       nr_pages = 1;
->>   -    workspace->strm.next_in = data_in;
->> +    workspace->strm.next_in = workspace->buf;
->> +    workspace->strm.avail_in = 0;
->>       workspace->strm.next_out = cpage_out;
->>       workspace->strm.avail_out = PAGE_SIZE;
->> -    workspace->strm.avail_in = min(len, PAGE_SIZE);
->>         while (workspace->strm.total_in < len) {
->> +        /* get next input pages and copy the contents to
->> +         * the workspace buffer if required
->> +         */
->> +        if (workspace->strm.avail_in == 0) {
->> +            bytes_left = len - workspace->strm.total_in;
->> +            in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
->> +                       workspace->buf_size / PAGE_SIZE);
->> +            if (in_buf_pages > 1) {
->> +                for (i = 0; i < in_buf_pages; i++) {
->> +                    if (in_page) {
->> +                        kunmap(in_page);
->> +                        put_page(in_page);
->> +                    }
->> +                    in_page = find_get_page(mapping,
->> +                                start >> PAGE_SHIFT);
->> +                    data_in = kmap(in_page);
->> +                    memcpy(workspace->buf + i*PAGE_SIZE,
->> +                           data_in, PAGE_SIZE);
->> +                    start += PAGE_SIZE;
->> +                }
-> 
-> Is there a reason to leave the last in_page mapped here?  I realize we'll clean it up further down, but since we're copying everything into the buf anyway why not just map->copy->unmap for everything?
+Please resubmit this with a short summary (Subject, < 80 chars) and
+separate commit message (body). Try to explain why this is needed a bit
+more verbosely.
 
-The idea was not to copy the last data chunk if it fits in a single page, thus using the same code flow as for a PAGE_SIZE buffer (the ELSE branch below). 
+> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+> ---
 
-> 
->> +                workspace->strm.next_in = workspace->buf;
->> +            } else {
->> +                if (in_page) {
->> +                    kunmap(in_page);
->> +                    put_page(in_page);
->> +                }
->> +                in_page = find_get_page(mapping,
->> +                            start >> PAGE_SHIFT);
->> +                data_in = kmap(in_page);
->> +                start += PAGE_SIZE;
->> +                workspace->strm.next_in = data_in;
->> +            }
->> +            workspace->strm.avail_in = min(bytes_left,
->> +                               workspace->buf_size);
->> +        }
->> +
->>           ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
->>           if (ret != Z_OK) {
->>               pr_debug("BTRFS: deflate in loop returned %d\n",
->> @@ -136,6 +184,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
->>               ret = -E2BIG;
->>               goto out;
->>           }
->> +
-> 
-> Extra newline.  Thanks,
-> 
-> Josef
+Also always include a changelog here (after "---") when you update
+patches, and indicate the patch revision in the Subject prefix (e.g.
+this should have been "[PATCH v2]".
+
+Since the two patches you sent are related, you should submit them in a
+series. Take a look at git-format-patch and git-send-email for one way
+of doing that, more details can be found in:
+
+	Documentation/process/submitting-patches.rst
+
+Let's get you up to speed on the process now, so that we don't have to
+deal with that bit for your future contributions.
+
+Johan
