@@ -2,93 +2,101 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C0FC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959BDC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619B620715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6975924656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV6E/rmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgAGObM (ORCPT
+        id S1728250AbgAGOdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:31:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58340 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbgAGObL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:31:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A9C43AC50;
-        Tue,  7 Jan 2020 14:31:09 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5F62EDA78B; Tue,  7 Jan 2020 15:30:59 +0100 (CET)
-Date:   Tue, 7 Jan 2020 15:30:59 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Eduard Shishkin <edward6@linux.ibm.com>
-Cc:     dsterba@suse.cz, Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] btrfs: Use larger zlib buffer for s390 hardware
- compression
-Message-ID: <20200107143058.GU3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Eduard Shishkin <edward6@linux.ibm.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
- <20200103223334.20669-7-zaslonko@linux.ibm.com>
- <20200106184305.GT3929@suse.cz>
- <664c2bbd-e06f-a4b3-fe21-982954b6330c@linux.ibm.com>
+        Tue, 7 Jan 2020 09:33:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46005 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727559AbgAGOdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:33:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578407620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LIlISc+oFNSUFYsXBbt0s1bPhdRwU0QuyhBE/WUY0LY=;
+        b=QV6E/rmv7bRlaG12RqFhExv4otSpYPlN/IzQcVsvpJsvtozAyBCI41uSHvi9aHt/xFl9yl
+        RYr9Ph3nYZFMimWNjF+BfGsXMfFtnH+Id4SQJhcfIqIVsVBlyllAP9oKbutkGALYWQkAS1
+        wiUtRDfTI4IoJnST870S6SU7Z2RCpFI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-6Vq-6UJKNv-K3h_GhMjWMg-1; Tue, 07 Jan 2020 09:33:37 -0500
+X-MC-Unique: 6Vq-6UJKNv-K3h_GhMjWMg-1
+Received: by mail-qv1-f70.google.com with SMTP id k2so3894qvu.22
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:33:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LIlISc+oFNSUFYsXBbt0s1bPhdRwU0QuyhBE/WUY0LY=;
+        b=kqehBnHbHmdWLlgrlHkeNHcPX80p0YMVxegmsV33VIPUcZP7QkEwawbjH9KwfhOIyE
+         jxvbHBDKsH+RuIuyp2q4dydbVD5ZwRnIfl59ZIL4xaGhxu/IYAfq5b0l5g3ffjWJ5qs1
+         jQnICaaiQcsyow+amhL7EvRB1voT/CxH9vigDoqBug0QMixRgyNcVhH7dHD6AEmlOH2g
+         SvsobiU9+E0gnvV98mRsTdZknRbZVISdrnROIW+ESNS8PCPk4Gp2wSt4EhFU4kGEVT5z
+         YMsoNb+bBksJ/lzUoSGdZ3XiGm3qsJlmgfFSk2+yNgKStpu6HUYQJoEFDQGlXhNAsCKa
+         EX7A==
+X-Gm-Message-State: APjAAAUwnvYZiLnM6EHDiysFmatCJorgvU2CC6WJkRyk8vJvPSZcxsoq
+        DDlUNtAgssoRr8T0PF501suChva3abzRf7roge6lf44H3O78XmELuimdBV6k3DHA2EMXmZlDPNl
+        Uc0G+WW8Or3idDtCm5ci6xEDB
+X-Received: by 2002:a05:620a:1663:: with SMTP id d3mr89412683qko.204.1578407617059;
+        Tue, 07 Jan 2020 06:33:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwIGMDr1WALhNYI3XjsUL6aYAw4TNtgyas8iR6yCDYV5GmJoDkDtGiffkZzxsW1v0I7msmFFA==
+X-Received: by 2002:a05:620a:1663:: with SMTP id d3mr89412659qko.204.1578407616724;
+        Tue, 07 Jan 2020 06:33:36 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id a19sm22455306qka.75.2020.01.07.06.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 06:33:35 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:33:34 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Andrew Jones <drjones@redhat.com>
+Subject: Re: [PATCH v3 1/8] KVM: selftests: Create a demand paging test
+Message-ID: <20200107143334.GF219677@xz-x1>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-2-bgardon@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <664c2bbd-e06f-a4b3-fe21-982954b6330c@linux.ibm.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20191216213901.106941-2-bgardon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:18:06AM +0100, Eduard Shishkin wrote:
-> >> @@ -61,7 +64,17 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
-> >>   			zlib_inflate_workspacesize());
-> >>   	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
-> >>   	workspace->level = level;
-> >> -	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> >> +	workspace->buf = NULL;
-> >> +	if (zlib_deflate_dfltcc_enabled()) {
-> >> +		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
-> >> +					 __GFP_NOMEMALLOC | __GFP_NORETRY |
-> >> +					 __GFP_NOWARN | GFP_NOIO);
-> > Why do you use this wild GFP flag combination? I can understand NOWARN,
-> > but why the others?
+On Mon, Dec 16, 2019 at 01:38:54PM -0800, Ben Gardon wrote:
+> While userfaultfd, KVM's demand paging implementation, is not specific
+> to KVM, having a benchmark for its performance will be useful for
+> guiding performance improvements to KVM. As a first step towards creating
+> a userfaultfd demand paging test, create a simple memory access test,
+> based on dirty_log_test.
 > 
-> This addresses the following complaint about order 2 allocation with 
-> GFP_KERNEL:
-> https://lkml.org/lkml/2019/11/26/417
-> 
-> Below a fallback to a single page is implemented, as it was suggested.
-> So, the initial (more costly) allocation should be made with minimal 
-> aggression
-> to allow the allocator fail. Otherwise, that fallback simply doesn't 
-> make sense.
-> Hence, such a combination.
+> Signed-off-by: Ben Gardon <bgardon@google.com>
 
-I see, please add a comment explaining that.
+It's fine to start with x86-only for this test, but imho it would be
+better to mention that in cover letter, or reply to reviewer comments
+on that you removed aarch64 from previous post.
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+
+-- 
+Peter Xu
+
