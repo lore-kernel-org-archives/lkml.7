@@ -2,98 +2,121 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DATE_IN_PAST_24_48,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864EDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCBDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4712072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E9D21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGEAhmyM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSbUYHzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgAGSxY (ORCPT
+        id S1728662AbgAGSzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:53:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44597 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGSxY (ORCPT
+        Tue, 7 Jan 2020 13:55:37 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54621 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbgAGSzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:53:24 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so588596wrm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:53:23 -0800 (PST)
+        Tue, 7 Jan 2020 13:55:37 -0500
+Received: by mail-pj1-f65.google.com with SMTP id kx11so168487pjb.4;
+        Tue, 07 Jan 2020 10:55:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AvZJ720Ntxy1DpN4pN2aoXoPdDhQLkYtp2DhP6432eg=;
-        b=mGEAhmyMJYGS9+pP7bsiOUUuI6die/6Q1s0PvPAEO4jfmAfmjoN4c+SQ3JofHfoWRt
-         Mj+u5dItf1FA78RRRFhExIxMkm6qBWnPLf5d++6MmsSPO8EorQE4Ev6jE//L+TmwXaEA
-         paNPLiiXlC1eD+dgg8+ZOKn/wfB2uC6Mdxat47lx9HoWQhgMtPdGIGTEA56nUB4C22bZ
-         WHXXRNoZ9a7LSo23UP/pgd0tCuHBJS8GZs5DNUQq5GyyrnjOGDIVYOQlQy5OI7Om+srJ
-         Y0N9LKLsY8vD0gkATgHgfL+UTFjmn1GIiP+EfxQH/UjZyrkpHqGuZQpZ1NJLG9fZaaac
-         6KgA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=r+GrzXgHoS6CEBkNptSroylQzjagajtMKMDuMBvJayw=;
+        b=nSbUYHzYcwazJCMli6B1MtzcmfIPediX75Bl4MxjgBOUO/CxrK9HhCXrD37Ca/1w49
+         c6UKiZQTwRSMytmOVzQnp1lm5KW4IWmHreoA/t6pgVI+7YwoIMmwFDz0cZXdH8pPq3ho
+         PQ7dAhi9/Iev0f2ZZItbiSPhixD4V1f8EOat7LM3K6Pvfh6wYGXUi9RA3DuM8spGR/75
+         s3Z9EUXt53HbiBjpkhyjplRrkS/HNNFdOK8pbpu7a8dbbKJpP1u38y2u2LD93nwvBrbC
+         RoJVGFvnzlqY0ILcXfRI4Z9hioo0JZwNmuytgZ9/MxMoJTA08r7MBAqgli8mMqO9lbqQ
+         np/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AvZJ720Ntxy1DpN4pN2aoXoPdDhQLkYtp2DhP6432eg=;
-        b=AuHQ7BX75/a2l+maBNg49HwWGXrtjkyjy1KMTV1vdgeuE2udojxmEXl8//+4wjDP0n
-         vrN4kAz69BHIZYP00ddXvM60Xm2cS6S00LQHjocWB2b9uD7GuCow5RixOEi+XpkEfd20
-         b70fjoKTIv2GuzE4XVi+XI00qpJBOnuxDWp1tJD0p9vWApTAZ/No0g8gCcogL3bE2L+D
-         I5yFw5APn3HdJuT1GKBeTe3JB5c5T/RJBGxX9v/tzvvEW3azsPo5p+0wjQDOPncPT6y5
-         QWS9CmtrofZP5h9KT9lHAWXhCxfxJGIEJMLCIkq9107e4ZvOWuvbAZuPTDMe30MsGipS
-         bZpQ==
-X-Gm-Message-State: APjAAAXlL/I9N+AU7ziGpIUmS3TvJ2bSsgOKBA9lSNITGj8WRN+uF5M/
-        A7k9WZviDevkCh6wdGTaBDEKvkPl2VC9+Q==
-X-Google-Smtp-Source: APXvYqxFMSeCXRVjzVK6jaCYJ3GI7y8f1VONnxmyvQ8OoCjcpXw1xZWfW+baMarGWBn2HXWh+RB/1w==
-X-Received: by 2002:a5d:4a91:: with SMTP id o17mr566255wrq.232.1578423202808;
-        Tue, 07 Jan 2020 10:53:22 -0800 (PST)
-Received: from localhost.localdomain ([37.152.140.242])
-        by smtp.gmail.com with ESMTPSA id v17sm862423wrt.91.2020.01.07.10.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 10:53:22 -0800 (PST)
-From:   carlosteniswarrior@gmail.com
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Carlos Guerrero Alvarez <carlosteniswarrior@gmail.com>
-Subject: [PATCH] Init: fixed an error caused by using __initdata instead of __initconst
-Date:   Mon,  6 Jan 2020 02:02:17 +0000
-Message-Id: <20200106020217.13234-1-carlosteniswarrior@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=r+GrzXgHoS6CEBkNptSroylQzjagajtMKMDuMBvJayw=;
+        b=hvAvtXtuY+bM6ZC5W4S0aYlow48YETv9Tr2x0M9/4c4R9hDNih8cUGOfNnYuBYech2
+         AEznQyQwuvbWiux8ayVXsqmyumWST41veiaP1pdAa1eBEK01ECFai31+VlJZLqF36pBu
+         x2+JMvDrxismdnUnKWjS5Bgiwg8KQuuixoS0mS07MMDoktvqhK8BzlXvBZuwt7wR+wzo
+         2YtOgGRoqD//LCRtElOCYu4SQqlDnlCtVXRn7htPums+bXgJGh5g2balxREXWM6iW8gf
+         hfZeP3A6QBrS9jXB0PQ+KbhTzWxKFRtAdO5bLFzT7SFD1fgebW894Ey/iGNzjBrnRhsA
+         ejhg==
+X-Gm-Message-State: APjAAAVcd0qWvFhAqWjbMUIvYXRcoTtF3a66Y12iL0mnBNzFbs/U02S8
+        uX6yvPkZ0TBz7OC98WPWZqM=
+X-Google-Smtp-Source: APXvYqyGiHWa+GRx3474WSDW+p/qBGM+QnaUXP1i0F3KALfloYuNrIXg7QKcZgmP3sJqR5kS4V6i2w==
+X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr1082793plb.309.1578423336209;
+        Tue, 07 Jan 2020 10:55:36 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:200::c4b1])
+        by smtp.gmail.com with ESMTPSA id u18sm474443pgi.44.2020.01.07.10.55.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Jan 2020 10:55:35 -0800 (PST)
+Date:   Tue, 7 Jan 2020 10:55:33 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Justin Capella <justincapella@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+        linux-security-module@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Halcrow <mhalcrow@google.com>
+Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
+Message-ID: <20200107185532.4zax5j5ln456u7rj@ast-mbp>
+References: <CAMrEMU8Vsn8rfULqf1gfuYL_-ybqzit29CLYReskaZ8XUroZww@mail.gmail.com>
+ <768BAF04-BEBF-489A-8737-B645816B262A@amacapital.net>
+ <20200106221317.wpwut2rgw23tdaoo@ast-mbp>
+ <20200107091132.GR2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107091132.GR2844@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlos Guerrero Alvarez <carlosteniswarrior@gmail.com>
+On Tue, Jan 07, 2020 at 10:11:32AM +0100, Peter Zijlstra wrote:
+> On Mon, Jan 06, 2020 at 02:13:18PM -0800, Alexei Starovoitov wrote:
+> > On Sun, Jan 05, 2020 at 10:33:54AM +0900, Andy Lutomirski wrote:
+> > > 
+> > > >> On Jan 4, 2020, at 8:03 PM, Justin Capella <justincapella@gmail.com> wrote:
+> > > > ﻿
+> > > > I'm rather ignorant about this topic but it would make sense to check prior to making executable from a security standpoint wouldn't it? (In support of the (set_memory_ro + set_memory_x)
+> > > > 
+> > > 
+> > > Maybe, depends if it’s structured in a way that’s actually helpful from a security perspective.
+> > > 
+> > > It doesn’t help that set_memory_x and friends are not optimized at all. These functions are very, very, very slow and adversely affect all CPUs.
+> > 
+> > That was one of the reason it wasn't done in the first.
+> > Also ftrace trampoline break w^x as well.
+> 
+> Didn't I fix that?
 
-Fixed an error.
-
-Signed-off-by: Carlos Guerrero Alvarez <carlosteniswarrior@gmail.com>
----
- init/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/init/main.c b/init/main.c
-index 2cd736059416..bcf8aa4f7cab 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -979,7 +979,7 @@ static initcall_entry_t *initcall_levels[] __initdata = {
- };
- 
- /* Keep these in sync with initcalls in include/linux/init.h */
--static const char *initcall_level_names[] __initdata = {
-+static const char *initcall_level_names[] __initconst = {
- 	"pure",
- 	"core",
- 	"postcore",
--- 
-2.24.0
-
+yes. in the tip. many months ago. that's why up-thread I was saying that I'm
+waiting for all text_poke[_bp] patches to land upstream and do the same thing
+for bpf trampoline and bpf dispatcher (which has the same issue).
