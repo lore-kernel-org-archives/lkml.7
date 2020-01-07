@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D95C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41EBC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1024676
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BFD2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431290;
-	bh=kQ+stVW+RZUX7+jj/wl1c4/c/pQ7UdeqlaKbJVcIxkY=;
+	s=default; t=1578431293;
+	bh=ew4jIEUK7j/B+m1UPNg6uj3DPDsqc4L+nA+pQ/IsTtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wam8RRtUIM4LOl4Jb6MonO/Vba9Cd4PdoSeM44bvMCniPKkOxqtI2aglEMv2HC6sA
-	 AVsa9URWrpQMdnmQXz3jgexyOp6TN+xM1tb9Q/3K6kjbvSU2M22a5mif9X+iFRSzUU
-	 Y8jOQTjbznX2AOZhqaKq+6JbsUfQpnC/9tIthsPA=
+	b=JD0YQKk0q/2Sl46YKm9REn1O31WmBXa+VH79UODYVkao3/MI7VcRZunu9YFuhE1JT
+	 3Tc3ehAMeXJE15OctmJ5Hbzt8wUlM2HWMQAvjtjZdMY8BLaRLLjTAJnYWsWX9IObqs
+	 rJ1uuZ4HcIE0MHAGG5jiYnntGWzFbaSlci4k0Bbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgAGVIH (ORCPT
+        id S1729663AbgAGVIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729324AbgAGVIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:05 -0500
+        id S1729633AbgAGVII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 440DA2072A;
-        Tue,  7 Jan 2020 21:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC302072A;
+        Tue,  7 Jan 2020 21:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431284;
-        bh=kQ+stVW+RZUX7+jj/wl1c4/c/pQ7UdeqlaKbJVcIxkY=;
+        s=default; t=1578431287;
+        bh=ew4jIEUK7j/B+m1UPNg6uj3DPDsqc4L+nA+pQ/IsTtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QTb5US5EhKgv0Hmgb1IydJ15XS1jLdHpQF0/ioVHaA463ZNP9n5UlvAgSXcWurFRA
-         gkcG/Y7HOi8MlJziBg6pNeVgfmg7m2HmYAhPwumGxxeC9ApgGw7twHOF8VSZ2qiv5M
-         +Lh0Ejihn7jBa8t2ctAcr19wNcAY5Era+oIUsL7s=
+        b=unfo8WQEFKQeBrxo7uIkpi5gkZB65IX8V5gBFXkfeGUpT7km/wThNHDvKAU36EGys
+         0AEBm0Ho81UStp8IYfn4n9NTk7VfIF6O8QOcUmIRVy73YwIePQst5BWlbDOvF2wZmy
+         p+KQqB/9n9/7pUBCiAmPkXu0RG6Ra9VTTH1fftwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/115] ath9k_htc: Discard undersized packets
-Date:   Tue,  7 Jan 2020 21:55:19 +0100
-Message-Id: <20200107205309.387693386@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 110/115] xfs: periodically yield scrub threads to the scheduler
+Date:   Tue,  7 Jan 2020 21:55:20 +0100
+Message-Id: <20200107205309.669826267@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,122 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit cd486e627e67ee9ab66914d36d3127ef057cc010 ]
+[ Upstream commit 5d1116d4c6af3e580f1ed0382ca5a94bd65a34cf ]
 
-Sometimes the hardware will push small packets that trigger a WARN_ON
-in mac80211. Discard them early to avoid this issue.
+Christoph Hellwig complained about the following soft lockup warning
+when running scrub after generic/175 when preemption is disabled and
+slub debugging is enabled:
 
-This patch ports 2 patches from ath9k to ath9k_htc.
-commit 3c0efb745a172bfe96459e20cbd37b0c945d5f8d "ath9k: discard
-undersized packets".
-commit df5c4150501ee7e86383be88f6490d970adcf157 "ath9k: correctly
-handle short radar pulses".
+watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [xfs_scrub:161]
+Modules linked in:
+irq event stamp: 41692326
+hardirqs last  enabled at (41692325): [<ffffffff8232c3b7>] _raw_0
+hardirqs last disabled at (41692326): [<ffffffff81001c5a>] trace0
+softirqs last  enabled at (41684994): [<ffffffff8260031f>] __do_e
+softirqs last disabled at (41684987): [<ffffffff81127d8c>] irq_e0
+CPU: 3 PID: 16189 Comm: xfs_scrub Not tainted 5.4.0-rc3+ #30
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.124
+RIP: 0010:_raw_spin_unlock_irqrestore+0x39/0x40
+Code: 89 f3 be 01 00 00 00 e8 d5 3a e5 fe 48 89 ef e8 ed 87 e5 f2
+RSP: 0018:ffffc9000233f970 EFLAGS: 00000286 ORIG_RAX: ffffffffff3
+RAX: ffff88813b398040 RBX: 0000000000000286 RCX: 0000000000000006
+RDX: 0000000000000006 RSI: ffff88813b3988c0 RDI: ffff88813b398040
+RBP: ffff888137958640 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffea00042b0c00
+R13: 0000000000000001 R14: ffff88810ac32308 R15: ffff8881376fc040
+FS:  00007f6113dea700(0000) GS:ffff88813bb80000(0000) knlGS:00000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6113de8ff8 CR3: 000000012f290000 CR4: 00000000000006e0
+Call Trace:
+ free_debug_processing+0x1dd/0x240
+ __slab_free+0x231/0x410
+ kmem_cache_free+0x30e/0x360
+ xchk_ag_btcur_free+0x76/0xb0
+ xchk_ag_free+0x10/0x80
+ xchk_bmap_iextent_xref.isra.14+0xd9/0x120
+ xchk_bmap_iextent+0x187/0x210
+ xchk_bmap+0x2e0/0x3b0
+ xfs_scrub_metadata+0x2e7/0x500
+ xfs_ioc_scrub_metadata+0x4a/0xa0
+ xfs_file_ioctl+0x58a/0xcd0
+ do_vfs_ioctl+0xa0/0x6f0
+ ksys_ioctl+0x5b/0x90
+ __x64_sys_ioctl+0x11/0x20
+ do_syscall_64+0x4b/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-[  112.835889] ------------[ cut here ]------------
-[  112.835971] WARNING: CPU: 5 PID: 0 at net/mac80211/rx.c:804 ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.835973] Modules linked in: ath9k_htc ath9k_common ath9k_hw ath mac80211 cfg80211 libarc4 nouveau snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec video snd_hda_core ttm snd_hwdep drm_kms_helper snd_pcm crct10dif_pclmul snd_seq_midi drm snd_seq_midi_event crc32_pclmul snd_rawmidi ghash_clmulni_intel snd_seq aesni_intel aes_x86_64 crypto_simd cryptd snd_seq_device glue_helper snd_timer sch_fq_codel i2c_algo_bit fb_sys_fops snd input_leds syscopyarea sysfillrect sysimgblt intel_cstate mei_me intel_rapl_perf soundcore mxm_wmi lpc_ich mei kvm_intel kvm mac_hid irqbypass parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear e1000e ahci libahci wmi
-[  112.836022] CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.3.0-wt #1
-[  112.836023] Hardware name: MouseComputer Co.,Ltd. X99-S01/X99-S01, BIOS 1.0C-W7 04/01/2015
-[  112.836056] RIP: 0010:ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.836059] Code: 00 00 66 41 89 86 b0 00 00 00 e9 c8 fa ff ff 4c 89 b5 40 ff ff ff 49 89 c6 e9 c9 fa ff ff 48 c7 c7 e0 a2 a5 c0 e8 47 41 b0 e9 <0f> 0b 48 89 df e8 5a 94 2d ea e9 02 f9 ff ff 41 39 c1 44 89 85 60
-[  112.836060] RSP: 0018:ffffaa6180220da8 EFLAGS: 00010286
-[  112.836062] RAX: 0000000000000024 RBX: ffff909a20eeda00 RCX: 0000000000000000
-[  112.836064] RDX: 0000000000000000 RSI: ffff909a2f957448 RDI: ffff909a2f957448
-[  112.836065] RBP: ffffaa6180220e78 R08: 00000000000006e9 R09: 0000000000000004
-[  112.836066] R10: 000000000000000a R11: 0000000000000001 R12: 0000000000000000
-[  112.836068] R13: ffff909a261a47a0 R14: 0000000000000000 R15: 0000000000000004
-[  112.836070] FS:  0000000000000000(0000) GS:ffff909a2f940000(0000) knlGS:0000000000000000
-[  112.836071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  112.836073] CR2: 00007f4e3ffffa08 CR3: 00000001afc0a006 CR4: 00000000001606e0
-[  112.836074] Call Trace:
-[  112.836076]  <IRQ>
-[  112.836083]  ? finish_td+0xb3/0xf0
-[  112.836092]  ? ath9k_rx_prepare.isra.11+0x22f/0x2a0 [ath9k_htc]
-[  112.836099]  ath9k_rx_tasklet+0x10b/0x1d0 [ath9k_htc]
-[  112.836105]  tasklet_action_common.isra.22+0x63/0x110
-[  112.836108]  tasklet_action+0x22/0x30
-[  112.836115]  __do_softirq+0xe4/0x2da
-[  112.836118]  irq_exit+0xae/0xb0
-[  112.836121]  do_IRQ+0x86/0xe0
-[  112.836125]  common_interrupt+0xf/0xf
-[  112.836126]  </IRQ>
-[  112.836130] RIP: 0010:cpuidle_enter_state+0xa9/0x440
-[  112.836133] Code: 3d bc 20 38 55 e8 f7 1d 84 ff 49 89 c7 0f 1f 44 00 00 31 ff e8 28 29 84 ff 80 7d d3 00 0f 85 e6 01 00 00 fb 66 0f 1f 44 00 00 <45> 85 ed 0f 89 ff 01 00 00 41 c7 44 24 10 00 00 00 00 48 83 c4 18
-[  112.836134] RSP: 0018:ffffaa61800e3e48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffde
-[  112.836136] RAX: ffff909a2f96b340 RBX: ffffffffabb58200 RCX: 000000000000001f
-[  112.836137] RDX: 0000001a458adc5d RSI: 0000000026c9b581 RDI: 0000000000000000
-[  112.836139] RBP: ffffaa61800e3e88 R08: 0000000000000002 R09: 000000000002abc0
-[  112.836140] R10: ffffaa61800e3e18 R11: 000000000000002d R12: ffffca617fb40b00
-[  112.836141] R13: 0000000000000002 R14: ffffffffabb582d8 R15: 0000001a458adc5d
-[  112.836145]  ? cpuidle_enter_state+0x98/0x440
-[  112.836149]  ? menu_select+0x370/0x600
-[  112.836151]  cpuidle_enter+0x2e/0x40
-[  112.836154]  call_cpuidle+0x23/0x40
-[  112.836156]  do_idle+0x204/0x280
-[  112.836159]  cpu_startup_entry+0x1d/0x20
-[  112.836164]  start_secondary+0x167/0x1c0
-[  112.836169]  secondary_startup_64+0xa4/0xb0
-[  112.836173] ---[ end trace 9f4cd18479cc5ae5 ]---
+If preemption is disabled, all metadata buffers needed to perform the
+scrub are already in memory, and there are a lot of records to check,
+it's possible that the scrub thread will run for an extended period of
+time without sleeping for IO or any other reason.  Then the watchdog
+timer or the RCU stall timeout can trigger, producing the backtrace
+above.
 
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+To fix this problem, call cond_resched() from the scrub thread so that
+we back out to the scheduler whenever necessary.
+
+Reported-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ fs/xfs/scrub/common.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index baacbd11eb43..b5d7ef4da17f 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -973,6 +973,8 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	struct ath_htc_rx_status *rxstatus;
- 	struct ath_rx_status rx_stats;
- 	bool decrypt_error = false;
-+	__be16 rs_datalen;
-+	bool is_phyerr;
- 
- 	if (skb->len < HTC_RX_FRAME_HEADER_SIZE) {
- 		ath_err(common, "Corrupted RX frame, dropping (len: %d)\n",
-@@ -982,11 +984,24 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 
- 	rxstatus = (struct ath_htc_rx_status *)skb->data;
- 
--	if (be16_to_cpu(rxstatus->rs_datalen) -
--	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
-+	rs_datalen = be16_to_cpu(rxstatus->rs_datalen);
-+	if (unlikely(rs_datalen -
-+	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0)) {
- 		ath_err(common,
- 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
--			be16_to_cpu(rxstatus->rs_datalen), skb->len);
-+			rs_datalen, skb->len);
-+		goto rx_next;
-+	}
-+
-+	is_phyerr = rxstatus->rs_status & ATH9K_RXERR_PHY;
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index 2d4324d12f9a..51ea2ab124b7 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -14,8 +14,15 @@
+ static inline bool
+ xchk_should_terminate(
+ 	struct xfs_scrub	*sc,
+-	int				*error)
++	int			*error)
+ {
 +	/*
-+	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
++	 * If preemption is disabled, we need to yield to the scheduler every
++	 * few seconds so that we don't run afoul of the soft lockup watchdog
++	 * or RCU stall detector.
 +	 */
-+	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
-+		ath_warn(common,
-+			 "Short RX data len, dropping (dlen: %d)\n",
-+			 rs_datalen);
- 		goto rx_next;
- 	}
- 
-@@ -1011,7 +1026,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	 * Process PHY errors and return so that the packet
- 	 * can be dropped.
- 	 */
--	if (rx_stats.rs_status & ATH9K_RXERR_PHY) {
-+	if (unlikely(is_phyerr)) {
- 		/* TODO: Not using DFS processing now. */
- 		if (ath_cmn_process_fft(&priv->spec_priv, hdr,
- 				    &rx_stats, rx_status->mactime)) {
++	cond_resched();
++
+ 	if (fatal_signal_pending(current)) {
+ 		if (*error == 0)
+ 			*error = -EAGAIN;
 -- 
 2.20.1
 
