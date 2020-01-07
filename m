@@ -2,125 +2,93 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B9FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670F7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF4D2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DBDB2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgAGGpE (ORCPT
+        id S1726346AbgAGGsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:45:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:53050 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgAGGpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:45:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3E7731B;
-        Mon,  6 Jan 2020 22:45:02 -0800 (PST)
-Received: from [10.162.43.133] (p8cg001049571a15.blr.arm.com [10.162.43.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A45EE3F703;
-        Mon,  6 Jan 2020 22:48:16 -0800 (PST)
-Subject: Re: [mm/debug] 87c4696d57: kernel_BUG_at_include/linux/mm.h
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Tue, 7 Jan 2020 01:48:00 -0500
+Received: from smtp.eckelmann.de ([217.19.183.80]:14592 "EHLO
+        smtp.eckelmann.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGGsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 01:48:00 -0500
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 01:47:59 EST
+Received: from ws067.eckelmann.group (2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9)
+ by EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1591.10; Tue, 7 Jan 2020 07:32:55 +0100
+Date:   Tue, 7 Jan 2020 07:32:50 +0100
+From:   Thorsten Scherer <thorsten.scherer@eckelmann.de>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+CC:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org, lkp@lists.01.org
-References: <20191227142255.GD2760@shao2-debian>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <490e77d6-a3ef-dd70-4c29-b90234f8a13d@arm.com>
-Date:   Tue, 7 Jan 2020 12:16:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Joe Perches <joe@perches.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] siox: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20200107063250.GA30387@ws067.eckelmann.group>
+References: <20200101131418.GA3110@nishad>
 MIME-Version: 1.0
-In-Reply-To: <20191227142255.GD2760@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200101131418.GA3110@nishad>
+X-Originating-IP: [2a00:1f08:4007:5c00:1a60:24ff:fe97:84c9]
+X-ClientProxiedBy: EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
+ To EX-SRV2.eckelmann.group (2a00:1f08:4007:e035:172:18:35:5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/27/2019 07:52 PM, kernel test robot wrote:
-> [    9.781974] kernel BUG at include/linux/mm.h:592!
-> [    9.782810] invalid opcode: 0000 [#1] PTI
-> [    9.783443] CPU: 0 PID: 1 Comm: swapper Not tainted 5.5.0-rc3-00001-g87c4696d57b5e #1
-> [    9.784528] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [    9.785756] EIP: __free_pages+0x14/0x40
-> [    9.786442] Code: 0c 9c 5e fa 89 d8 e8 5b f3 ff ff 56 9d 5b 5e 5d c3 8d 74 26 00 90 8b 48 1c 55 89 e5 85 c9 75 16 ba b4 b6 84 d6 e8 ac 49 fe ff <0f> 0b 8d b4 26 00 00 00 00 8d 76 00 ff 48 1c 75 10 85 d2 75 07 e8
-> [    9.789697] EAX: d68761f7 EBX: ea52f000 ECX: ea4f8520 EDX: d684b6b4
-> [    9.790850] ESI: 00000000 EDI: ef45e000 EBP: ea501f08 ESP: ea501f08
-> [    9.791879] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010286
-> [    9.792783] CR0: 80050033 CR2: ffffffff CR3: 16d00000 CR4: 000406b0
-> [    9.792783] Call Trace:
-> [    9.792783]  free_pages+0x3c/0x50
-> [    9.792783]  pgd_free+0x5a/0x170
-> [    9.792783]  __mmdrop+0x42/0xe0
-> [    9.792783]  debug_vm_pgtable+0x54f/0x567
-> [    9.792783]  kernel_init_freeable+0x90/0x1e3
-> [    9.792783]  ? rest_init+0xf0/0xf0
-> [    9.792783]  kernel_init+0x8/0xf0
-> [    9.792783]  ret_from_fork+0x19/0x24
-> [    9.792783] Modules linked in:
-> [    9.792803] ---[ end trace 91b7335adcf0b656 ]---
+On Wed, Jan 01, 2020 at 06:44:23PM +0530, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style in
+> header file related to Eckelmann SIOX driver.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used).
 > 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
 > 
-> To reproduce:
-> 
->         # build kernel
-> 	cd linux
-> 	cp config-5.5.0-rc3-00001-g87c4696d57b5e .config
-> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Hello,
+Acked-by: Thorsten Scherer <thorsten.scherer@eckelmann.de>
 
-As the failure might be happening during boot when the test executes,
-do we really need to run these LKP based QEMU environment in order to
-reproduce the problem ? Could not this be recreated on a standalone
-system.
+> ---
+> Changes in v2:
+>   - Correct the spelling of the word Eckelmann.
+> ---
+>  drivers/siox/siox.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/siox/siox.h b/drivers/siox/siox.h
+> index c674bf6fb119..f08b43b713c5 100644
+> --- a/drivers/siox/siox.h
+> +++ b/drivers/siox/siox.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (C) 2015-2017 Pengutronix, Uwe Kleine-König <kernel@pengutronix.de>
+>   */
+> -- 
+> 2.17.1
+> 
 
-- Anshuman
+Kind regards
+Thorsten
+
+--
+Thorsten Scherer | Eckelmann AG | www.eckelmann.de |
