@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ABEC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A95FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9593520678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BD82077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430931;
-	bh=unLuJrYUMC8VjJJgbWqG0S69A83tXxMtHCMPO8y6DcM=;
+	s=default; t=1578430936;
+	bh=7YRSWAeP925XDAOHspxYHiU39ztDtMlWlOCjtxBYRoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7RA0memcgBdAVbCGsVL3hzjOb+93l8FPOjO93XsGEs1ZdLc5kvnIrIF8neu53vYi
-	 CNGDfvulnsgOsy+se7OsMRUb+lY9TqA247jT7gAUw5DrLPMbxULWmwnXBCwbYi5th1
-	 MMA38OUPXDoITuh+MMv9+Q+wvFLLSMRawU3Yg9Zk=
+	b=PxFrVhSHZ++oExrC1VBV+xNlMECWwK8JX/58sgopphOL6ly00TLmXYMwhzmk2J4MS
+	 fEhcRE1273hePBQjIu2x0QJXkMzi0M6gaFYPICEePKGZKhNytEA2O2P/UUQ3t12qQj
+	 wbmrrgxv09Facq7d/fZhUqP4N86KRtsyvI9y0Guc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgAGVCJ (ORCPT
+        id S1728720AbgAGVCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40866 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgAGVCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:06 -0500
+        id S1728416AbgAGVCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CB75214D8;
-        Tue,  7 Jan 2020 21:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AEDA2077B;
+        Tue,  7 Jan 2020 21:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430925;
-        bh=unLuJrYUMC8VjJJgbWqG0S69A83tXxMtHCMPO8y6DcM=;
+        s=default; t=1578430930;
+        bh=7YRSWAeP925XDAOHspxYHiU39ztDtMlWlOCjtxBYRoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRUZWN9Gz+ucI4+v2s8/YKcC+BUxcjTg0shm6WyOwbNXoUp0tyChMWS2Lz5g0xsLB
-         YoBkgxizBZoog5GzVXBL9ZIndp41e2MQtC9hPuZzR1UtX34OqaJsySOnha2ynWDUzP
-         IAPoWdBGB6hs7MZEVrUJLVhhJA0+VxdHG8hGr0XY=
+        b=P8NBh1uFNoermZ/tP4xYjZKRfIFq7sylFrf2oexypmBM0Sx51rw8dLCWPfwlK2dTh
+         8nRug0fH9T5qE3mfpYFwtXy4W0vmW+Philsbp2BR6wiGQE5punyjiTiodynN3tBiTu
+         IEg1A3DE6ctiL3MV1e3S1+OfBn7MNAMtbMIA0xzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.4 152/191] watchdog: tqmx86_wdt: Fix build error
-Date:   Tue,  7 Jan 2020 21:54:32 +0100
-Message-Id: <20200107205341.102689315@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 154/191] regulator: bd70528: Remove .set_ramp_delay for bd70528_ldo_ops
+Date:   Tue,  7 Jan 2020 21:54:34 +0100
+Message-Id: <20200107205341.208013098@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-commit 9a6c274ac1c4346f5384f2290caeb42dc674c471 upstream.
+commit 6f1ff76154b8b36033efcbf6453a71a3d28f52cd upstream.
 
-If TQMX86_WDT is y and WATCHDOG_CORE is m, building fails:
+The .set_ramp_delay should be for bd70528_buck_ops only.
+Setting .set_ramp_delay for for bd70528_ldo_ops causes problem because
+BD70528_MASK_BUCK_RAMP (0x10) overlaps with BD70528_MASK_LDO_VOLT (0x1f).
+So setting ramp_delay for LDOs may change the voltage output, fix it.
 
-drivers/watchdog/tqmx86_wdt.o: In function `tqmx86_wdt_probe':
-tqmx86_wdt.c:(.text+0x46e): undefined reference to `watchdog_init_timeout'
-tqmx86_wdt.c:(.text+0x4e0): undefined reference to `devm_watchdog_register_device'
-
-Select WATCHDOG_CORE to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e3c21e088f89 ("watchdog: tqmx86: Add watchdog driver for the IO controller")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191206124259.25880-1-yuehaibing@huawei.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 99ea37bd1e7d ("regulator: bd70528: Support ROHM BD70528 regulator block")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Link: https://lore.kernel.org/r/20200101022406.15176-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/bd70528-regulator.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1444,6 +1444,7 @@ config SMSC37B787_WDT
- config TQMX86_WDT
- 	tristate "TQ-Systems TQMX86 Watchdog Timer"
- 	depends on X86
-+	select WATCHDOG_CORE
- 	help
- 	This is the driver for the hardware watchdog timer in the TQMX86 IO
- 	controller found on some of their ComExpress Modules.
+--- a/drivers/regulator/bd70528-regulator.c
++++ b/drivers/regulator/bd70528-regulator.c
+@@ -101,7 +101,6 @@ static const struct regulator_ops bd7052
+ 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+ 	.set_voltage_time_sel = regulator_set_voltage_time_sel,
+-	.set_ramp_delay = bd70528_set_ramp_delay,
+ };
+ 
+ static const struct regulator_ops bd70528_led_ops = {
 
 
