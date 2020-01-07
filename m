@@ -2,142 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F6C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCEC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4131F20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhzG/3+u"
+	by mail.kernel.org (Postfix) with ESMTP id 672522146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578420189;
+	bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n7LqBH+ogqXfyF2hV8DFQ814SaCQqZ5+oikHDTI0wRyzxVixvnCwmSP4Y62jJbKn8
+	 TPD0vy8zFOhOgaPKCZBonSVTEIiyHWe5gHJ+3ooDx2RI3mrnmS2hFrH9dDK1QD8Zd1
+	 PcEYZX+M0Os6EBJmWXKilYxu7+Yr/zJaEnKjUrls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgAGSBP (ORCPT
+        id S1728511AbgAGSDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:01:15 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55845 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728459AbgAGSBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:01:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578420072;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PCioPbrHOnFEeTCk1vgQEdBJULoDBPQbI4x0bUxfuB4=;
-        b=MhzG/3+uZjPRj2Ux8J4t4UYKXQ3fW3qdWjsC/U1rM0rMOsTi5YNymJuLsyTPppXogNlypn
-        LhTIKP/CiTUJgtmNv6qLP8mA6MFT0vJJjMmjbtXTcrjpeqn+mzQxuK7sw2sNvQ2twwjs7+
-        L4URlrU6Y4Cy+MGY/Ci5rpteItvKEmA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-Nxn0akJlOCG4ursA8-8saw-1; Tue, 07 Jan 2020 13:01:08 -0500
-X-MC-Unique: Nxn0akJlOCG4ursA8-8saw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 7 Jan 2020 13:03:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbgAGSDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:03:08 -0500
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54EC0593A4;
-        Tue,  7 Jan 2020 18:01:07 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B58E60C88;
-        Tue,  7 Jan 2020 18:01:02 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id CA8892202E9; Tue,  7 Jan 2020 13:01:01 -0500 (EST)
-Date:   Tue, 7 Jan 2020 13:01:01 -0500
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20200107180101.GC15920@redhat.com>
-References: <20190827163828.GA6859@redhat.com>
- <20190828065809.GA27426@infradead.org>
- <20190828175843.GB912@redhat.com>
- <20190828225322.GA7777@dread.disaster.area>
- <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
- <20191216181014.GA30106@redhat.com>
- <20200107125159.GA15745@infradead.org>
- <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
- <20200107170731.GA472641@magnolia>
- <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1622146E;
+        Tue,  7 Jan 2020 18:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578420187;
+        bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e2LzPBNXp3x9Bm5rMIEhqwZU81/LocL4/QqhOxwF/P+YoAWqVZI0jLC5EM8khBdqF
+         MioV+9WAdD3+dUiHdLpMCdx4wAXSTcy0PZCcO8yKcP2J4vJw+juDRuGFP5pNxv3pTQ
+         29KO2sWh0NSf5f3ZXEzDza38dv7g3MSSEJvAMvn8=
+Received: by mail-qt1-f173.google.com with SMTP id n15so502441qtp.5;
+        Tue, 07 Jan 2020 10:03:07 -0800 (PST)
+X-Gm-Message-State: APjAAAURryYFfymvWfxrvVZZkLs41BOLguW2QEjLcRRrUaEm3uUOtIFk
+        5ipif0b1PSO56d0bYgjZGpXOakCNBMreHmOR+Q==
+X-Google-Smtp-Source: APXvYqzYgPt2mmOM92fmtqc1Y7J5YrHICFVpYfLAMISsmbC9T8x4hClE7gReZJC7gNb4Eez9i67VoJZ6iFbj0o1RXfE=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr187365qtp.224.1578420186617;
+ Tue, 07 Jan 2020 10:03:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200107130903.14421-1-benjamin.gaignard@st.com>
+ <20200107130903.14421-3-benjamin.gaignard@st.com> <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
+In-Reply-To: <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 7 Jan 2020 12:02:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
+Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen
+ to json-schema
+To:     Bastien Nocera <hadess@hadess.net>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yannick Fertre <yannick.fertre@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:29:17AM -0800, Dan Williams wrote:
-> On Tue, Jan 7, 2020 at 9:08 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> >
-> > On Tue, Jan 07, 2020 at 06:22:54AM -0800, Dan Williams wrote:
-> > > On Tue, Jan 7, 2020 at 4:52 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > >
-> > > > On Mon, Dec 16, 2019 at 01:10:14PM -0500, Vivek Goyal wrote:
-> > > > > > Agree. In retrospect it was my laziness in the dax-device
-> > > > > > implementation to expect the block-device to be available.
-> > > > > >
-> > > > > > It looks like fs_dax_get_by_bdev() is an intercept point where a
-> > > > > > dax_device could be dynamically created to represent the subset range
-> > > > > > indicated by the block-device partition. That would open up more
-> > > > > > cleanup opportunities.
-> > > > >
-> > > > > Hi Dan,
-> > > > >
-> > > > > After a long time I got time to look at it again. Want to work on this
-> > > > > cleanup so that I can make progress with virtiofs DAX paches.
-> > > > >
-> > > > > I am not sure I understand the requirements fully. I see that right now
-> > > > > dax_device is created per device and all block partitions refer to it. If
-> > > > > we want to create one dax_device per partition, then it looks like this
-> > > > > will be structured more along the lines how block layer handles disk and
-> > > > > partitions. (One gendisk for disk and block_devices for partitions,
-> > > > > including partition 0). That probably means state belong to whole device
-> > > > > will be in common structure say dax_device_common, and per partition state
-> > > > > will be in dax_device and dax_device can carry a pointer to
-> > > > > dax_device_common.
-> > > > >
-> > > > > I am also not sure what does it mean to partition dax devices. How will
-> > > > > partitions be exported to user space.
-> > > >
-> > > > Dan, last time we talked you agreed that partitioned dax devices are
-> > > > rather pointless IIRC.  Should we just deprecate partitions on DAX
-> > > > devices and then remove them after a cycle or two?
-> > >
-> > > That does seem a better plan than trying to force partition support
-> > > where it is not needed.
-> >
-> > Question: if one /did/ have a partitioned DAX device and used kpartx to
-> > create dm-linear devices for each partition, will DAX still work through
-> > that?
-> 
-> The device-mapper support will continue, but it will be limited to
-> whole device sub-components. I.e. you could use kpartx to carve up
-> /dev/pmem0 and still have dax, but not partitions of /dev/pmem0.
+On Tue, Jan 7, 2020 at 7:38 AM Bastien Nocera <hadess@hadess.net> wrote:
+>
+> On Tue, 2020-01-07 at 14:09 +0100, Benjamin Gaignard wrote:
+> > Convert the Goodix binding to DT schema format using json-schema
+>
+> I don't have an opinion on the migration itself, but this really should
+> not lose any of the descriptions that were in the old text file.
 
-So we can't use fdisk/parted to partition /dev/pmem0. Given /dev/pmem0
-is a block device, I thought tools will expect it to be partitioned.
-Sometimes I create those partitions and use /dev/pmem0. So what's
-the replacement for this. People often have tools/scripts which might
-want to partition the device and these will start failing. 
+To some extent, yes. Any information specific to the device should be.
+Anything generic can be dropped. I see 2 cases that should be kept:
 
-IOW, I do not understand that why being able to partition /dev/pmem0
-(which is a block device from user space point of view), is pointless.
+> > - - reg                       : I2C address of the chip. Should be
+> > 0x5d or 0x14
 
-Thanks
-Vivek
+'I2C address of the chip' can be dropped as that's every 'reg'
+property for I2C devices. The addresses can be expressed as
+constraints.
 
+> > - - irq-gpios         : GPIO pin used for IRQ. The driver uses the
+> > -                       interrupt gpio pin as output to reset the
+> > device.
+
+Also useful info.
+
+Rob
