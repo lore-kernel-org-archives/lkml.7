@@ -2,177 +2,105 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67ECC32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7031720707
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7EA207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uKWJDe1i"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hbqhD5F2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbgAGDWK (ORCPT
+        id S1727479AbgAGDYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:22:10 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:48745 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgAGDWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:22:10 -0500
-Received: from [IPv6:2601:646:8600:3281:b19f:287a:bb58:115c] ([IPv6:2601:646:8600:3281:b19f:287a:bb58:115c])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0073LmUi3203176
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 6 Jan 2020 19:21:50 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0073LmUi3203176
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019122001; t=1578367311;
-        bh=/FJWxFmnQWfWatyrgKd0gVo3/yEc0bk99NQ6Gk5bK1U=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=uKWJDe1iemuHyEAzEU7Zf6bM5XhZk28w7prAkAj/A2n2tHCYWkySM3F5o7ldhQGx2
-         Q5U19RjwUQDEtwD04YoUiwRUdHUYdy4GqZ2i3SKt5hvSWOn7vaDgcOF9oUxvc/sihC
-         ziAdaKTiqUV7eHWBuK9Rozb2T3cXTcA/gQSfs+bdm34V+KbgwzdhAxlAwRy/jjo1QM
-         MwcIop9OosyJpzV79+sMJR03eoQBogoLSeuA0GhLI0fdWe2ZKHfgJQn3PpEugVljPv
-         XUa8SFWgej4Ipa+KGD/9nSmP6UXc5fAcBOkAaXNnJRRSCWZvgL3dRESJQ2wwWv40H4
-         fAS/gzqHI75Kw==
-Date:   Mon, 06 Jan 2020 19:21:40 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
-References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-5-masahiroy@kernel.org> <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com> <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
+        Mon, 6 Jan 2020 22:24:20 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55261 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbgAGDYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:24:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sHmJ6g0Fz9sR1;
+        Tue,  7 Jan 2020 14:24:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578367457;
+        bh=poCI2cN3Flh3Fw5GP2FaHzixm2h9ceYsCEGfZCUUo1o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hbqhD5F2l/dTcZbyO35wu+/vfZ6aXrt60JUgUp9prjedf9qEU/qPD9NjcJkyYLg7S
+         mxZeJWwCSrTDsQ28+YKhVU/+3+amPSWO+c/OfCy7wH+BOnQ5h0gV2VwxmH7+Mlhqev
+         p7AB0SkiF8XRl58ACXjw/I5fC4wZbaYHxOIqP25rOy2IHk01tzeI/OVU7NJdxsBAHs
+         SI2G76g7BpxVH5iYBDf9dbctOrRiSs3qPHiQ9GKzKrdUBBsg18mW396zlyZIA1dAFM
+         e2CqLRCot7JNmwNzKVF694kUMyG003RzfdhSu6ynnilTJ2Gk+09YQnA+NYveABi4Po
+         e0ZnWb+Fuh4Vw==
+Date:   Tue, 7 Jan 2020 14:24:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kishon Vijay Abraham I <kishon@ti.com>, Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: linux-next: manual merge of the phy-next tree with the usb tree
+Message-ID: <20200107142415.4a35fcdb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-CC:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <AB861F14-0F89-4A9B-AC24-34D86DDCB935@zytor.com>
+Content-Type: multipart/signed; boundary="Sig_/EodVVjPqEcOteuKkAFTMeTy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On January 6, 2020 2:26:22 AM PST, Masahiro Yamada <masahiroy@kernel=2Eorg>=
- wrote:
->(+CC Ben Hutchings, H=2E Peter Anvin)
->
->In my understanding, the klibc build system is standalone=2E
->So, the change in Linux kernel does not affect klibc at all=2E
->Only the depending part is UAPI headers (make headers_install)=2E
->
->So, this patch
->(https://lore=2Ekernel=2Eorg/patchwork/patch/1175336/)
->should be OK=2E
->
->Please correct me if I am wrong=2E
->
->
->On Mon, Jan 6, 2020 at 4:43 PM Greg Thelen <gthelen@google=2Ecom> wrote:
->>
->> Masahiro Yamada <masahiroy@kernel=2Eorg> wrote:
->>
->> > The comments in usr/Makefile wrongly refer to the script name
->(twice)=2E
->> >
->> > Line 37:
->> >     # The dependency list is generated by gen_initramfs=2Esh -l
->> >
->> > Line 54:
->> >     # 4) Arguments to gen_initramfs=2Esh changes
->> >
->> > There does not exist such a script=2E
->> >
->> > I was going to fix the comments, but after some consideration, I
->thought
->> > "gen_initramfs=2Esh" would be more suitable than
->"gen_initramfs_list=2Esh"
->> > because it generates an initramfs image in the common usage=2E
->> >
->> > The script generates a list that can be fed to gen_init_cpio only
->when
->> > it is directly run without -o or -l option=2E
->> >
->> > Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
->> > ---
->> >
->> > Changes in v2: None
->> >
->> >  usr/Makefile                                    | 2 +-
->> >  usr/{gen_initramfs_list=2Esh =3D> gen_initramfs=2Esh} | 0
->> >  2 files changed, 1 insertion(+), 1 deletion(-)
->> >  rename usr/{gen_initramfs_list=2Esh =3D> gen_initramfs=2Esh} (100%)
->>
->> Will this break klibc?  It might have a ref to the old name=2E
->>
->https://git=2Ekernel=2Eorg/pub/scm/libs/klibc/klibc=2Egit/tree/usr/Kbuild=
-#n55
->
->I do not think so=2E
->
->As I stated above, the klibc build system is independent of
->any script in the Linux kernel=2E
->
->The klibc Makefile refers to
->scripts/gen_initramfs_list=2Esh, which does not exist=2E
->
->My path is renaming
->usr/gen_initramfs_list=2Esh to usr/gen_initramfs=2Esh
->
->
->If the renaming had been problematic for klibc,
->commit f6f57a46435d7253a52a1a07a58183678ad266a0
->("initramfs: move gen_initramfs_list=2Esh from scripts/ to usr/")
->would have already caused a problem=2E
->
->
->
->Ben, Hans,
->Is usr/Kbuild in klibc used?
->If it is not used, is it better to delete it to avoid confusion?
->
->
->Masahiro Yamada
->
->
->
->
->> > diff --git a/usr/Makefile b/usr/Makefile
->> > index 55c942da01cd=2E=2Ee44a66b8c051 100644
->> > --- a/usr/Makefile
->> > +++ b/usr/Makefile
->> > @@ -24,7 +24,7 @@ $(obj)/initramfs_data=2Eo: $(obj)/$(datafile_y)
->FORCE
->> >  # Generate the initramfs cpio archive
->> >
->> >  hostprogs-y :=3D gen_init_cpio
->> > -initramfs   :=3D $(CONFIG_SHELL)
->$(srctree)/$(src)/gen_initramfs_list=2Esh
->> > +initramfs   :=3D $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs=2Es=
-h
->> >  ramfs-input :=3D $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
->> >                       $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
->> >  ramfs-args  :=3D \
->> > diff --git a/usr/gen_initramfs_list=2Esh b/usr/gen_initramfs=2Esh
->> > similarity index 100%
->> > rename from usr/gen_initramfs_list=2Esh
->> > rename to usr/gen_initramfs=2Esh
+--Sig_/EodVVjPqEcOteuKkAFTMeTy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That is correct=2E
+Hi all,
 
-The klibc integration work was mainly fine in an actual kernel tree, which=
- pulled the klibc tree=2E
+Today's linux-next merge of the phy-next tree got a conflict in:
 
-It has obviously bitrotted somewhat, but it wouldn't be all that hard to r=
-esurrect it if there is ever interest=2E
+  drivers/phy/mediatek/Kconfig
+
+between commit:
+
+  203b7ee14d3a ("phy: Enable compile testing for some of drivers")
+
+from the usb tree and commits:
+
+  6ee054e3a2e9 ("phy: mediatek: Fix Kconfig indentation")
+  1544133d48c3 ("phy: Enable compile testing for some of drivers")
+
+from the phy-next tree.
+
+I fixed it up (I just used the latter version of the file) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+
 
 --=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Cheers,
+Stephen Rothwell
+
+--Sig_/EodVVjPqEcOteuKkAFTMeTy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4T+d8ACgkQAVBC80lX
+0GxBXgf+P+PBi8yS21wNVwquW4Pf2fGLdcQ7qic4NdGwaz0JPHu8O5GdPDCThP4u
+xpWC8Y+nwiOJ0j2uv79p21OIXnIQS09mGPauh9OdjFP0/3PVYqRGqqRYVk9CE3Zh
+LdxrR/XszKalvJCEkyoUFMUQBO6qc3GHX959K8750MbESLpK1yOEFTIgYS7GQjyF
+u11fx1+CUQORotQ62EXlJXFkKBEIKrrw4zvQTe4iZXpJNE4xsZjKqamZjbLCsQar
+REPT94SB/LV439TljEZLleW0omRJxYRIqUPD2OBQSDSez/Hm7EZaMYVUU75AS/bz
+P0JnxUsjQhChb2lWzzH7ljwEa8AdUw==
+=aMWr
+-----END PGP SIGNATURE-----
+
+--Sig_/EodVVjPqEcOteuKkAFTMeTy--
