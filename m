@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB953C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D7FC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02192081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259D7208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430656;
-	bh=UtDLfCiZ9OSzj/tTpVIGP/rWN4T/vbiXkOGjmBqs1AM=;
+	s=default; t=1578430659;
+	bh=hFlnMAuexBIYadEPJ22i3/BbCHDfpBlVwdKylJjByHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uc8YhUe3iYxt1txoe/xPTvnvJ2UBa8et4IwS1WLtD3BEAwQnaeJzwgu1hkqo6fvY7
-	 LY9xKLDzB7EvCH62LnR3ivazyATIQHinOwD3GWPhKxRie3rIwMDelrdHSCNb+7cwGC
-	 +ryak3gyl4XOvuNjIM6DaFhd0XPWsxOC7WzNXYv8=
+	b=yj4pGbwEalH1sDmJtwnBpSPewEIGEMsImPlBnKrx1QUozTg8LvKMobryNMXIHlTG/
+	 cPeOr7CRwUO/aTlOeFgr3GuyY3qctA13+V+3tNPaeOCsj0khGcQlaKeAkIkc48nRPh
+	 mXHWgzm/ljlR8VwjSn5fS4lV/zHwWYOe1ZawaJ24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgAGU5f (ORCPT
+        id S1727649AbgAGU5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbgAGU5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:30 -0500
+        id S1727620AbgAGU5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B4C208C4;
-        Tue,  7 Jan 2020 20:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C1A2087F;
+        Tue,  7 Jan 2020 20:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430650;
-        bh=UtDLfCiZ9OSzj/tTpVIGP/rWN4T/vbiXkOGjmBqs1AM=;
+        s=default; t=1578430654;
+        bh=hFlnMAuexBIYadEPJ22i3/BbCHDfpBlVwdKylJjByHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M16YBQie5TnV+JFWzJSTdVWDSMeg4PCDNvMstvuGrkutH5MoPI8mXevwez0kpXPCw
-         dzx1dayNwumg3nSMQHkLV9nmmmi9eGo91B2MXeXfziR1c6R/czDXMO6A59m4S/pBjN
-         tVA0X4zezpz41UXgOsDSPGwxxlL1TynkrZCMNjjc=
+        b=kSezIfPhipttu/ldV9kG7LA12t9eJ3Cu6VXtSJRis4TvP0i8der0fgn1Kv0/gm2rr
+         3EfBGnjAnEZx47UrL+nuE5F731HzrNQVBlc6w9Umhy2Eil/Z+xgPGApSLWKF4YUtrF
+         ihhBx9fV1kS4uHwE+JOP4cOJuOBYMoqt07GcHXRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
-        EJ Hsu <ejh@nvidia.com>, Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/191] usb: gadget: fix wrong endpoint desc
-Date:   Tue,  7 Jan 2020 21:52:39 +0100
-Message-Id: <20200107205335.087685984@linuxfoundation.org>
+Subject: [PATCH 5.4 041/191] afs: Fix mountpoint parsing
+Date:   Tue,  7 Jan 2020 21:52:41 +0100
+Message-Id: <20200107205335.192793624@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,59 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
+[ Upstream commit 158d58335393af3956a9c06f0816ee75ed1f1447 ]
 
-Gadget driver should always use config_ep_by_speed() to initialize
-usb_ep struct according to usb device's operating speed. Otherwise,
-usb_ep struct may be wrong if usb devcie's operating speed is changed.
+Each AFS mountpoint has strings that define the target to be mounted.  This
+is required to end in a dot that is supposed to be stripped off.  The
+string can include suffixes of ".readonly" or ".backup" - which are
+supposed to come before the terminal dot.  To add to the confusion, the "fs
+lsmount" afs utility does not show the terminal dot when displaying the
+string.
 
-The key point in this patch is that we want to make sure the desc pointer
-in usb_ep struct will be set to NULL when gadget is disconnected.
-This will force it to call config_ep_by_speed() to correctly initialize
-usb_ep struct based on the new operating speed when gadget is
-re-connected later.
+The kernel mount source string parser, however, assumes that the terminal
+dot marks the suffix and that the suffix is always "" and is thus ignored.
+In most cases, there is no suffix and this is not a problem - but if there
+is a suffix, it is lost and this affects the ability to mount the correct
+volume.
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+The command line mount command, on the other hand, is expected not to
+include a terminal dot - so the problem doesn't arise there.
+
+Fix this by making sure that the dot exists and then stripping it when
+passing the string to the mount configuration.
+
+Fixes: bec5eb614130 ("AFS: Implement an autocell mount capability [ver #2]")
+Reported-by: Jonathan Billings <jsbillings@jsbillings.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
- drivers/usb/gadget/function/f_rndis.c | 1 +
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ fs/afs/mntpt.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
-index 6ce044008cf6..460d5d7c984f 100644
---- a/drivers/usb/gadget/function/f_ecm.c
-+++ b/drivers/usb/gadget/function/f_ecm.c
-@@ -621,8 +621,12 @@ static void ecm_disable(struct usb_function *f)
+diff --git a/fs/afs/mntpt.c b/fs/afs/mntpt.c
+index f532d6d3bd28..79bc5f1338ed 100644
+--- a/fs/afs/mntpt.c
++++ b/fs/afs/mntpt.c
+@@ -126,7 +126,7 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
+ 		if (src_as->cell)
+ 			ctx->cell = afs_get_cell(src_as->cell);
  
- 	DBG(cdev, "ecm deactivated\n");
+-		if (size > PAGE_SIZE - 1)
++		if (size < 2 || size > PAGE_SIZE - 1)
+ 			return -EINVAL;
  
--	if (ecm->port.in_ep->enabled)
-+	if (ecm->port.in_ep->enabled) {
- 		gether_disconnect(&ecm->port);
-+	} else {
-+		ecm->port.in_ep->desc = NULL;
-+		ecm->port.out_ep->desc = NULL;
-+	}
+ 		page = read_mapping_page(d_inode(mntpt)->i_mapping, 0, NULL);
+@@ -140,7 +140,9 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
+ 		}
  
- 	usb_ep_disable(ecm->notify);
- 	ecm->notify->desc = NULL;
-diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
-index d48df36622b7..0d8e4a364ca6 100644
---- a/drivers/usb/gadget/function/f_rndis.c
-+++ b/drivers/usb/gadget/function/f_rndis.c
-@@ -618,6 +618,7 @@ static void rndis_disable(struct usb_function *f)
- 	gether_disconnect(&rndis->port);
- 
- 	usb_ep_disable(rndis->notify);
-+	rndis->notify->desc = NULL;
- }
- 
- /*-------------------------------------------------------------------------*/
+ 		buf = kmap(page);
+-		ret = vfs_parse_fs_string(fc, "source", buf, size);
++		ret = -EINVAL;
++		if (buf[size - 1] == '.')
++			ret = vfs_parse_fs_string(fc, "source", buf, size - 1);
+ 		kunmap(page);
+ 		put_page(page);
+ 		if (ret < 0)
 -- 
 2.20.1
 
