@@ -2,70 +2,73 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6C3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439FC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310CE20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44123206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ef4VoKVq"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QWaRBgfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgAGXU6 (ORCPT
+        id S1727659AbgAGXVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:20:58 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35710 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgAGXU6 (ORCPT
+        Tue, 7 Jan 2020 18:21:02 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36863 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgAGXU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:20:58 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so1462252wro.2;
-        Tue, 07 Jan 2020 15:20:56 -0800 (PST)
+        Tue, 7 Jan 2020 18:20:59 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so1462859wru.3;
+        Tue, 07 Jan 2020 15:20:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n8Xx2TMo98HOlnNXLfC+Sqmt0X1ycOlUNLncTAwPcpw=;
-        b=ef4VoKVqe4g5ezm4iwoyskM7fNVE5Pe8ZwAriX4UoHXrg2UenS01yC3mdQNhCDlOFi
-         zMx+THsG9CmCaNAh0KTvTGRQuxcIVdbfM/jMDy3hDLru3fXQF7n0SUZzSTbuy1p4ukPD
-         zD6XYUTu9BErJHwbe8waeqaTPy5qvqEOl95iEfhnWn1Y68mM7OTNr+Zmj/Xf7Gp0ubnc
-         Bo76HZDwI8IBpQjT9XVBxgEnfXQGS3M1qjgY5ifNX1KNEVOCECG47GvDbDaZItHdlLNH
-         /6CmVCU868YRshLAfM8IZZzpljxZnrGt5u6aaVyxyxRACP2q/P5BtyhDzdYx4iKEJnYv
-         vgVg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vV3UUGvvS5e8WsB7ogZ/noPCe30PWO4cAHloQARZuMU=;
+        b=QWaRBgfZaWwF/o5TtRmsgFA8xMd72UlNn8DRyiFN0jTom3bemOIPUhrrsKBbPAIFPJ
+         OfNPUerjyxw6FJm3VOSYYi5Jgr+yKEMboXZfvsuYAU45QDTIYTNGFT7b4Dnd6llum1GO
+         OYVNZfemZicnDMO/Gbi6LPR+cmcbUamwBbbKb6PmT/ZELPKX9wA3PiUldg1RwEFbpZJn
+         FChDB9Cwd2uWGi82zr/EoW+/0IdYDj9pSitFG9zN1kP+GK+xahlLOedxl0bQf6TtlRGj
+         mcHrgAF6imjQzl6jZDR9Rxjj8vQL2u3++H3O10BNjbxcTxdtE1Aaad7VlOpHNIRI7GDf
+         JY3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n8Xx2TMo98HOlnNXLfC+Sqmt0X1ycOlUNLncTAwPcpw=;
-        b=ciiim2+P+3iTAdFm1pZmzts7xf33ofvTKf7NzbBxlJfbViIqm25JNE13v6ysFc8vaM
-         O0G/EpUOyJhoD7Lsa/Jqnk9aJYJ7WNKL8MErbgHEki9NcOfJJ7clEIi0Wvha87f2xoXc
-         aL8KxlLfm8lq5fN1oZ1gzf/r6U/e0WwylXZXsZADhABbgG/vXy0porNpLRUtCOeV0kHl
-         unNB37vpPdSzrKbdBqfCY43VK7J3HY7MXfQeeR/GwcmZ2MIWPGxR95r8Zs0OyN0SDJYy
-         g9ZAlG/K316mPLbKYSF4gqTaSrpDl+WjITMdPhPfmEYXdkjNNQytJ9/Rjx7XFIdmJKWb
-         V91A==
-X-Gm-Message-State: APjAAAWCtYRje5l4SD0uzVgra6i793nRaY36kqnywFaUkrjVQlzKd465
-        NCkD8X7ewR7elBmcrUszThg=
-X-Google-Smtp-Source: APXvYqy6aZ57xs+O3szbAeVwXJr7Jzj0ibfQay91BV98G3in0RgnjJOoPl8vF91zzF2H+4FTVXGR8A==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr1313257wrn.251.1578439256295;
-        Tue, 07 Jan 2020 15:20:56 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vV3UUGvvS5e8WsB7ogZ/noPCe30PWO4cAHloQARZuMU=;
+        b=GoOok3I9YdI4GEpFvm9azGU1npvOzepQubPtSiFx7SHHH639LQepTMQZWRuSjmqrkq
+         rOPOxisUFuG7/pMW4tt94WIB2UOkxZTOpdlQnOPz+Q7Uf2Fm+2nkLEbJ3qsRzODtBnEt
+         LO6kSQWv6E7bhKY8udwcmL1jpAfMbQKfShMhPcWE/Bnt9o3TSnipf3KS2jwSAV8m61GP
+         7Pu2lBPjjbIDKXc3ibWOePrMssWwXTYBwPZxiB+TUTDDQdd0sbbuw1U36M7Vhh3iwsgU
+         aoZxUiGMZIAUtqNO7vT1wPu8aAOv7hQCGkeAmT8Q3o7asdYsu4lCS9keTzq2gALTb86+
+         MQBQ==
+X-Gm-Message-State: APjAAAUBgPSbsBig7vELt46cO+UtQjFRkLOxcf1G07/lB7Ei/1aubTdA
+        yOquuPffsxebKIL4yZify0D+z8r3L9I=
+X-Google-Smtp-Source: APXvYqyKuhYihOEUdettZiq3ZmkfYHAwS5DF2R/FVnINtIyY9r4EbiuwLBRM7ACqUWiqDdfnsEIjrA==
+X-Received: by 2002:a5d:62d0:: with SMTP id o16mr1319611wrv.197.1578439258079;
+        Tue, 07 Jan 2020 15:20:58 -0800 (PST)
 Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id n3sm1669577wrs.8.2020.01.07.15.20.55
+        by smtp.googlemail.com with ESMTPSA id n3sm1669577wrs.8.2020.01.07.15.20.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 15:20:55 -0800 (PST)
+        Tue, 07 Jan 2020 15:20:57 -0800 (PST)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         amit.kucheria@verdurent.com, linux-pm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
         jeff.dagenais@gmail.com, edubezval@gmail.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/2] make generic-adc-thermal less noisy
-Date:   Wed,  8 Jan 2020 00:20:42 +0100
-Message-Id: <20200107232044.889075-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/2] thermal: generic-adc: silence info message for IIO_TEMP channels
+Date:   Wed,  8 Jan 2020 00:20:44 +0100
+Message-Id: <20200107232044.889075-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107232044.889075-1-martin.blumenstingl@googlemail.com>
+References: <20200107232044.889075-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,31 +76,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I want to use generic-adc-thermal on the 32-bit Amlogic SoCs in the
-future. These have a thermal sensors which can be read through the
-SAR ADC (for which we have an IIO driver) on those SoCs.
+Since commit d36e2fa0253875 ("thermal: generic-adc: make lookup table
+optional") "generic-adc-thermal" can be used with an IIO_TEMP channel.
+In this case the following message is logged at probe time:
+  no lookup table, assuming DAC channel returns milliCelcius
 
-While testing I found the generic-adc-thermal driver to be a bit
-noisy when operating in well supported environment:
-- the SoC temperature sensor on the 32-bit Amlogic SoCs is typically
-  loaded late because of it's dependencies (it needs data from the
-  eFuse and a syscon to calibrate). Yet I still got a message stating
-  there's no lookup table for the generic-adc-thermal defined (which
-  is expected and perfectly valid on these Amlogic SoCs, as the IIO
-  channel returns the temperature).
-- the IIO channel is correctly defined with type IIO_TEMP, yet the
-  generic-adc-thermal driver still prints a message which first lead
-  me to believe that I passed an incorrect IIO channel (one that
-  returns a voltage).
+Silence this info message if the channel type is known to be in
+milli celsius. Keep this message when the channel type is unknown or not
+of type temperature.
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/thermal/thermal-generic-adc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Martin Blumenstingl (2):
-  thermal: generic-adc: silence "no lookup table" on deferred probe
-  thermal: generic-adc: silence info message for IIO_TEMP channels
-
- drivers/thermal/thermal-generic-adc.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
+index 226e3c2b7469..73665c3ccfe0 100644
+--- a/drivers/thermal/thermal-generic-adc.c
++++ b/drivers/thermal/thermal-generic-adc.c
+@@ -76,13 +76,17 @@ static int gadc_thermal_read_linear_lookup_table(struct device *dev,
+ 						 struct gadc_thermal_info *gti)
+ {
+ 	struct device_node *np = dev->of_node;
++	enum iio_chan_type chan_type;
+ 	int ntable;
+ 	int ret;
+ 
+ 	ntable = of_property_count_elems_of_size(np, "temperature-lookup-table",
+ 						 sizeof(u32));
+ 	if (ntable <= 0) {
+-		dev_notice(dev, "no lookup table, assuming DAC channel returns milliCelcius\n");
++		ret = iio_get_channel_type(gti->channel, &chan_type);
++		if (ret || chan_type != IIO_TEMP)
++			dev_notice(dev,
++				   "no lookup table, assuming DAC channel returns milliCelcius\n");
+ 		return 0;
+ 	}
+ 
 -- 
 2.24.1
 
