@@ -4,141 +4,160 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AD9C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5268C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B385F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5E72081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578394040;
-	bh=lx0N24QV2sC8n2uwTIpJFQ48++uOCaPRG7lhAflolis=;
+	s=default; t=1578394135;
+	bh=zxHNRJ8BMyhu9nKPoaajNBjN8A33KfzEyKTtopb08W0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2UpRHy7QSb0hFnXL0sKb4NoUQG61XuNkBYf+h+2cL6gkb8cOD2Owu7aWEPjpsSBZJ
-	 zsp76GpQvNvf/eDsW9kbq3CSV0KnKzfRR3HTqILc5QF9ty6YjsnGadg5SCKrLdnfL8
-	 eoAmJFxTseLj48LP0bsRoo7Ucn/pn5R24rZBGqv0=
+	b=u5Y3Y8PWp7hyu3wfmisc+wiIv6ara96BcajZxIPKgP411MN+2NtIjr7aogNim6brN
+	 /2zubvojJSY02vYkRLXK1ywLuGYln+KsJnyioM93vOkd//YVem2LvMe29PpzqZE9tI
+	 5gZVaObt8p4MO+JxIaY2afTmci92FAorpiknJdWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgAGKrU (ORCPT
+        id S1727875AbgAGKsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:47:20 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:54127 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGKrT (ORCPT
+        Tue, 7 Jan 2020 05:48:54 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34351 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbgAGKsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:47:19 -0500
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 007Al5UM008952;
-        Tue, 7 Jan 2020 19:47:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 007Al5UM008952
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578394026;
-        bh=OYNGV4JvNCCmwqcWZMh74h89ilsmJbXDDxowiwIXyfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oNK6akEl9+VaXgqOCIv/Yj2Hy8K2Vx0Wx+KeZOq59aU0cZ6OMr0JOelff7VugJ5b3
-         0r0+Qx4v32juhRTUdXsZIYHq9hIzbPchR9qxN/DoZV4xiQNqSD4kRH8XVd54tUUFz1
-         SFxuprGGx2J88DumBZx1xmBauZV7L3gdij8tvM8MdW+XiJMzZjIHJFpT9dI482S0So
-         JVUIGQM+arnEzliiA5WJNvMnGD4XyRjaVzMN92w9kl8NEZ/Lkv1hUh8TMXgNBkdVCU
-         YraJUL3NiUEqk3SVQrpujf+d/zfWlYuZ1EqMOXJD+lDrKwPqEPBBiUepV8UrSiq0AX
-         2VVxwVH7dY92g==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id g15so33605107vsf.1;
-        Tue, 07 Jan 2020 02:47:06 -0800 (PST)
-X-Gm-Message-State: APjAAAUhyRPPYKq+Wv//NWSvpX2rE1mVlm0l+dtKgFI7LfQFAmjRG1BT
-        2gAaxukJd/J7Oc60GqCvJzjL/CBxgZuhfEP1SDU=
-X-Google-Smtp-Source: APXvYqz9JS/aZkeux6B8QGJdYFwEGdW/zjyZwos0iNnJPfN/UBIsyusPgdvKO47WfxbRljnG2ie6qxkRvLPTPhcDl0s=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr54996236vsq.215.1578394025191;
- Tue, 07 Jan 2020 02:47:05 -0800 (PST)
+        Tue, 7 Jan 2020 05:48:54 -0500
+Received: by mail-ot1-f67.google.com with SMTP id a15so75887497otf.1;
+        Tue, 07 Jan 2020 02:48:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WSE97IsDt/0HNGDotMlpkWXy8wGljVOzhB0c9xp6lOQ=;
+        b=CgClBwzsglgCjFH7jdg5jX6oBmETH6CNZ+GEj6qCjKg+S5IT1Y7/ib8cFQIieikey8
+         pJX+0w5gNhGki9gAyOlAtF4nSXqvDuYEbY8EAJt1giRo6Em89z0g4ikRH5FqW7HUiMSt
+         tYmlFjowoStg++ONMkxW13NmKpjlfLPlwZlQTZDblo2N18J1cGPWwtvwbthYnvSooeNd
+         U9xF+uuecSgLhbG0Scse1mLLoIzOTMg8xhxoTbxLVU23h/IzyR0aKpAClmTJbSQ3iE2N
+         bLLfcOum6ZnYbPrIGEEbNfQganFapm+rjJWEl1LShpTUdmOkWsGKu05e1MMTqU15BBtS
+         r8YA==
+X-Gm-Message-State: APjAAAXwLPUnrJe/Hz1ggf/PN2dwevoBs2tz72bSDLKiHts7mYIjxCGK
+        JEEcgu45Y8t2b8bxc7irjAV1m8zRXrnnvkGPkIY=
+X-Google-Smtp-Source: APXvYqyb909xw3pW97wWn1+hEZa4V25wQcI/pM8kvkSjy7tVft8dVm7RxOov26ChMbLWIGhx807LcgPTRqNHsWQ5k50=
+X-Received: by 2002:a9d:7b4a:: with SMTP id f10mr12352350oto.4.1578394133504;
+ Tue, 07 Jan 2020 02:48:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-2-masahiroy@kernel.org>
-In-Reply-To: <20200104150238.19834-2-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 7 Jan 2020 19:46:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
-Message-ID: <CAK7LNAS+SfvRRu=WHzh6eghBNusMiEaxuqj0L+5jnA0W=HOy+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 01/13] initramfs: replace klibcdirs in Makefile with FORCE
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+References: <1577706988-56848-1-git-send-email-wangxiongfeng2@huawei.com>
+In-Reply-To: <1577706988-56848-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jan 2020 11:48:42 +0100
+Message-ID: <CAJZ5v0gN4A+eRtebxY=8DYfFiRE7FWO_3=a4m9G1_sgUsGPBWA@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI/PPTT: fixed some parameter type is not right
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        "H. Peter Anvin" <hpa@zytor.com>
+        tiantao <tiantao6@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC: Ben Hutchings, H. Peter Anvin)
-
-On Sun, Jan 5, 2020 at 12:03 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Mon, Dec 30, 2019 at 1:01 PM Xiongfeng Wang
+<wangxiongfeng2@huawei.com> wrote:
 >
-> 'klibcdirs' was added by commit d39a206bc35d ("kbuild: rebuild initramfs
-> if content of initramfs changes"). If this is just a matter of forcing
-> execution of the recipe line, we can replace it with FORCE.
+> From: Tian Tao <tiantao6@huawei.com>
 >
-> I do not understand the purpose of
+> The fourth parameter 'level' of function 'acpi_find_cache_level()' is a
+> signed interger, but its caller 'acpi_find_cache_node()' passes that
+> parameter an unsigned interger. This patch fixes the paramter type
+> inconsistency.
 >
->    $(deps_initramfs): klibcdirs
-
-
-Perhaps, the 'klibcdirs' target might be intended
-to control the directory descending
-in case klibc is dropped in the kernel tree.
-
-Anyway, klibc is built independently
-of Linux kernel, and this 'klibcdirs' target
-is just a no-op stub as far as the kernel tree is concerned.
-
-Clean it up.
-
-
-> Remove it.
+> Signed-off-by: Tian Tao <tiantao6@huawei.com>
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 >
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
+> v2:     fix the conflicts in the third hunk.
+>         Modify the commit information a little bit.
+> ---
+>  drivers/acpi/pptt.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
 >
-> Changes in v2:
->   - New patch (I forgot to submit this in v1 series)
+> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+> index f31544d..4ae9335 100644
+> --- a/drivers/acpi/pptt.c
+> +++ b/drivers/acpi/pptt.c
+> @@ -98,11 +98,11 @@ static inline bool acpi_pptt_match_type(int table_type, int type)
+>   *
+>   * Return: The cache structure and the level we terminated with.
+>   */
+> -static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
+> -                               int local_level,
+> -                               struct acpi_subtable_header *res,
+> -                               struct acpi_pptt_cache **found,
+> -                               int level, int type)
+> +static unsigned int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
+> +                                        unsigned int local_level,
+> +                                        struct acpi_subtable_header *res,
+> +                                        struct acpi_pptt_cache **found,
+> +                                        unsigned int level, int type)
+>  {
+>         struct acpi_pptt_cache *cache;
 >
->  usr/Makefile | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+> @@ -119,7 +119,7 @@ static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
+>                         if (*found != NULL && cache != *found)
+>                                 pr_warn("Found duplicate cache level/type unable to determine uniqueness\n");
 >
-> diff --git a/usr/Makefile b/usr/Makefile
-> index e6f7cb2f81db..55c942da01cd 100644
-> --- a/usr/Makefile
-> +++ b/usr/Makefile
-> @@ -3,9 +3,6 @@
->  # kbuild file for usr/ - including initramfs image
->  #
+> -                       pr_debug("Found cache @ level %d\n", level);
+> +                       pr_debug("Found cache @ level %u\n", level);
+>                         *found = cache;
+>                         /*
+>                          * continue looking at this node's resource list
+> @@ -132,16 +132,17 @@ static int acpi_pptt_walk_cache(struct acpi_table_header *table_hdr,
+>         return local_level;
+>  }
 >
-> -klibcdirs:;
-> -PHONY += klibcdirs
-> -
->  suffix_y = $(subst $\",,$(CONFIG_INITRAMFS_COMPRESSION))
->  datafile_y = initramfs_data.cpio$(suffix_y)
->  datafile_d_y = .$(datafile_y).d
-> @@ -50,13 +47,12 @@ targets := $(datafile_y)
->  # do not try to update files included in initramfs
->  $(deps_initramfs): ;
+> -static struct acpi_pptt_cache *acpi_find_cache_level(struct acpi_table_header *table_hdr,
+> -                                                    struct acpi_pptt_processor *cpu_node,
+> -                                                    int *starting_level, int level,
+> -                                                    int type)
+> +static struct acpi_pptt_cache *
+> +acpi_find_cache_level(struct acpi_table_header *table_hdr,
+> +                     struct acpi_pptt_processor *cpu_node,
+> +                     unsigned int *starting_level, unsigned int level,
+> +                     int type)
+>  {
+>         struct acpi_subtable_header *res;
+> -       int number_of_levels = *starting_level;
+> +       unsigned int number_of_levels = *starting_level;
+>         int resource = 0;
+>         struct acpi_pptt_cache *ret = NULL;
+> -       int local_level;
+> +       unsigned int local_level;
 >
-> -$(deps_initramfs): klibcdirs
->  # We rebuild initramfs_data.cpio if:
->  # 1) Any included file is newer than initramfs_data.cpio
->  # 2) There are changes in which files are included (added or deleted)
->  # 3) If gen_init_cpio are newer than initramfs_data.cpio
->  # 4) Arguments to gen_initramfs.sh changes
-> -$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) klibcdirs
-> +$(obj)/$(datafile_y): $(obj)/gen_init_cpio $(deps_initramfs) FORCE
->         $(Q)$(initramfs) -l $(ramfs-input) > $(obj)/$(datafile_d_y)
->         $(call if_changed,initfs)
+>         /* walk down from processor node */
+>         while ((res = acpi_get_pptt_resource(table_hdr, cpu_node, resource))) {
+> @@ -321,12 +322,12 @@ static struct acpi_pptt_cache *acpi_find_cache_node(struct acpi_table_header *ta
+>                                                     unsigned int level,
+>                                                     struct acpi_pptt_processor **node)
+>  {
+> -       int total_levels = 0;
+> +       unsigned int total_levels = 0;
+>         struct acpi_pptt_cache *found = NULL;
+>         struct acpi_pptt_processor *cpu_node;
+>         u8 acpi_type = acpi_cache_type(type);
 >
+> -       pr_debug("Looking for CPU %d's level %d cache type %d\n",
+> +       pr_debug("Looking for CPU %d's level %u cache type %d\n",
+>                  acpi_cpu_id, level, acpi_type);
+>
+>         cpu_node = acpi_find_processor_node(table_hdr, acpi_cpu_id);
 > --
-> 2.17.1
->
 
+Applied for 5.6 as "ACPI: PPTT: Consistently use unsigned int as
+parameter type" with some minor changes in the changelog.
 
--- 
-Best Regards
-Masahiro Yamada
+Thanks!
