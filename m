@@ -2,147 +2,106 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CDEC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066B2C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305C524681
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32BF20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432345;
+	bh=oSVw/i/5zpP39arLMUvAIPUk4ziO5aQIjG1jYWIsv74=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TYYdqFrIJJMt5FBjoB1Ydqs8qsHbkDGxMPnq8PcEUpq1MVOS4L6L7u9au8VBD6KQS
+	 iKdNYFv/JSQF8PzVl3MQxd1/v4RbNOc8cWajV7FXRt2csNs0jCJhi1oSp0UxT5osKu
+	 SxqWLKkMvvTDiPj/YnBj4XFh9bX1qrg4Ks0IlBZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgAGU7m (ORCPT
+        id S1728514AbgAGVZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:59:42 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41790 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728143AbgAGU7g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:36 -0500
-Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1AB3A7E9696;
-        Wed,  8 Jan 2020 07:59:29 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iovwl-0005j6-Bq; Wed, 08 Jan 2020 07:59:27 +1100
-Date:   Wed, 8 Jan 2020 07:59:27 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Chris Down <chris@chrisdown.name>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
-Message-ID: <20200107205927.GP23195@dread.disaster.area>
-References: <cover.1578225806.git.chris@chrisdown.name>
- <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
- <20200107001039.GM23195@dread.disaster.area>
- <20200107001643.GA485121@chrisdown.name>
- <20200107003944.GN23195@dread.disaster.area>
- <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com>
- <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
+        Tue, 7 Jan 2020 16:25:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbgAGU7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C582081E;
+        Tue,  7 Jan 2020 20:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578430780;
+        bh=oSVw/i/5zpP39arLMUvAIPUk4ziO5aQIjG1jYWIsv74=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wuauVopSBOE0aiHQCbgCgBnWjl4hudZ4eCx9fohhcyq+BlQkWum3hn7+FE/+knU6d
+         /ZUMoSl8cvLSZ37bh/I32SQ6qLGWYrJl020l3ITgZIPlzfFjsx3AFps2zl7YbXoDZn
+         rcDs9tuPVAhZMLAEqaRekKGxcgdShlM7yA0UWyD4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 094/191] seccomp: Check that seccomp_notif is zeroed out by the user
+Date:   Tue,  7 Jan 2020 21:53:34 +0100
+Message-Id: <20200107205338.024294053@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+References: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=NfcANyMyxpC2L4-oeLMA:9
-        a=m9ZyxzaG-Li82a_w:21 a=3IqF15cTKkrrdw7V:21 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22 a=AjGcO6oz07-iQ99wixmX:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:36:25AM -0800, Hugh Dickins wrote:
-> On Tue, 7 Jan 2020, Amir Goldstein wrote:
-> > On Tue, Jan 7, 2020 at 2:40 AM Dave Chinner <david@fromorbit.com> wrote:
-> > > On Tue, Jan 07, 2020 at 12:16:43AM +0000, Chris Down wrote:
-> > > > Dave Chinner writes:
-> > > > > It took 15 years for us to be able to essentially deprecate
-> > > > > inode32 (inode64 is the default behaviour), and we were very happy
-> > > > > to get that albatross off our necks.  In reality, almost everything
-> > > > > out there in the world handles 64 bit inodes correctly
-> > > > > including 32 bit machines and 32bit binaries on 64 bit machines.
-> > > > > And, IMNSHO, there no excuse these days for 32 bit binaries that
-> > > > > don't using the *64() syscall variants directly and hence support
-> > > > > 64 bit inodes correctlyi out of the box on all platforms.
-> 
-> Interesting take on it.  I'd all along imagined we would have to resort
-> to a mount option for safety, but Dave is right that I was too focused on
-> avoiding tmpfs regressions, without properly realizing that people were
-> very unlikely to have written such tools for tmpfs in particular, but
-> written them for all filesystems, and already encountered and fixed
-> such EOVERFLOWs for other filesystems.
-> 
-> Hmm, though how readily does XFS actually reach the high inos on
-> ordinary users' systems?
+From: Sargun Dhillon <sargun@sargun.me>
 
-Quite frequently these days - the threshold for exceeding 32 bits
-in the inode number is dependent on the inode size.
+commit 2882d53c9c6f3b8311d225062522f03772cf0179 upstream.
 
-Old v4 filesystems use 256 byte inodes by default, so they overflow
-32bits when the filesystem size is >1TB.
+This patch is a small change in enforcement of the uapi for
+SECCOMP_IOCTL_NOTIF_RECV ioctl. Specifically, the datastructure which
+is passed (seccomp_notif) must be zeroed out. Previously any of its
+members could be set to nonsense values, and we would ignore it.
 
-Current v5 filesystems use 512 byte inodes, so they overflow 32 bits
-on filesytsems >2TB.
+This ensures all fields are set to their zero value.
 
-> > > > I'm very glad to hear that. I strongly support moving to 64-bit inums in all
-> > > > cases if there is precedent that it's not a compatibility issue, but from
-> > > > the comments on my original[0] patch (especially that they strayed from the
-> > > > original patches' change to use ino_t directly into slab reuse), I'd been
-> > > > given the impression that it was known to be one.
-> > > >
-> > > > From my perspective I have no evidence that inode32 is needed other than the
-> > > > comment from Jeff above get_next_ino. If that turns out not to be a problem,
-> > > > I am more than happy to just wholesale migrate 64-bit inodes per-sb in
-> > > > tmpfs.
-> > >
-> > > Well, that's my comment above about 32 bit apps using non-LFS
-> > > compliant interfaces in this day and age. It's essentially a legacy
-> > > interface these days, and anyone trying to access a modern linux
-> > > filesystem (btrfs, XFS, ext4, etc) ion 64 bit systems need to handle
-> > > 64 bit inodes because they all can create >32bit inode numbers
-> > > in their default configurations.
-> 
-> I thought ext4 still deals in 32-bit inos, so ext4-world would not
-> necessarily have caught up?
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+Acked-by: Tycho Andersen <tycho@tycho.ws>
+Link: https://lore.kernel.org/r/20191229062451.9467-2-sargun@sargun.me
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Hmmm - I might have got my wires crossed there - there *was* a
-project some time ago to increase the ext4 inode number size for
-large filesystems. Ah, yeah, there we go:
+---
+ kernel/seccomp.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-https://lore.kernel.org/linux-ext4/20171101212455.47964-1-artem.blagodarenko@gmail.com/
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1015,6 +1015,13 @@ static long seccomp_notify_recv(struct s
+ 	struct seccomp_notif unotif;
+ 	ssize_t ret;
+ 
++	/* Verify that we're not given garbage to keep struct extensible. */
++	ret = check_zeroed_user(buf, sizeof(unotif));
++	if (ret < 0)
++		return ret;
++	if (!ret)
++		return -EINVAL;
++
+ 	memset(&unotif, 0, sizeof(unotif));
+ 
+ 	ret = down_interruptible(&filter->notif->request);
 
-I thought it had been rolled in with all the other "make stuff
-larger" features that ext4 has...
 
-> Though, arguing the other way, IIUC 64-bit
-> ino support comes bundled with file sizes over 2GB (on all architectures?),
-> and it's hard to imagine who gets by with a 2GB file size limit nowadays.
-
-Right, you need to define LFS support for >2GB file support and
-you get 64 bit inode support with that for free. It's only legacy
-binaries that haven't been rebuilt in the past 15 years that are an
-issue here, but there are so many other things that can go trivially
-wrong with such binaries I think that inode numbers are the least of
-the worries here...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
