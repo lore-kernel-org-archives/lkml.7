@@ -2,278 +2,144 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D44CC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370C1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34932080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fqh5U2fC"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9352077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgAGX3Q (ORCPT
+        id S1727408AbgAGXbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:29:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43934 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAGX3P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:29:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so1413659wre.10;
-        Tue, 07 Jan 2020 15:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1tW6HmVMiDgLM2CovlrlsfjuFYlon1yNOi28H4tR49g=;
-        b=fqh5U2fC4UTSDw9CbE6H1ohLxAJ9RdXme36gItZ/Gt4BTBe5ptN6v5SZyUnkgUGr7R
-         RbV0SOUOkw2j37tf26eow4UcUsd1w4+eNBL+we7Jkd2kV+4bJ/hBO0k5/AFmZPm2P7zm
-         L3rkCqNGELtYbgCQxb+NRyqWHeIYTW/iKwJVX/VRFV5K+IBPt++AxqEa8fmWIqodg13E
-         YoZUmPqlSvdvWoo1iqB88gYWRIfORC6tnRFv0vUOSLl3QbRFYYB5OpKEyr6CVIfw78LJ
-         BdmA25HOu5JsAYQ560uPmsiNOisrWDvJNWLo0ulxR1lrH6Q+Kr6HNpX4mUhIZOd8yNEB
-         C4+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1tW6HmVMiDgLM2CovlrlsfjuFYlon1yNOi28H4tR49g=;
-        b=iNM8009I+XFB0K4Z9/qXg5SOITijDpkJmdGhDFWA8G5vEh1fQPILjXEIc8EOu40GPz
-         ibsqjKhwnNX0kbimXI4uXGJaVBFiFhXr7ugg2IUKZ8sO2nmfP+P7tAur8RVoQ1htYSCZ
-         YZrBVjGsUOhlxA9UC8b/mmO91iv+ObWbEHNIk1c9KS8yEKOzWn+VjPdGi/6lTODq9YDs
-         pj6Us84saev2kZjuTdHX1N+PK6vu8eWhgDxn2Ha+KvdOy/d4ap1F/jj114SywWCqQVCK
-         35kfb/UnDiAlHg8/ciynA/j0ialf4wDRgQiV1RYLL62jpJ0qH37ZnGnvTtNdq2mMufzu
-         48mw==
-X-Gm-Message-State: APjAAAXFGUdNlAiYHSLSCE8SPjHieev5cjrNRl3JT4nLiSznU0IHOBrH
-        QUPBQmiUkUAg5VazR2gfw5hgXntbovA=
-X-Google-Smtp-Source: APXvYqy414W/mvEzb9sLPeO3N9gkDzA+wEZN6OvA6Cds/IsShTOMuCZUlBnSZJPKh9rkCEmf+VB3tg==
-X-Received: by 2002:adf:dc86:: with SMTP id r6mr1540773wrj.68.1578439752099;
-        Tue, 07 Jan 2020 15:29:12 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id k13sm1714127wrx.59.2020.01.07.15.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 15:29:11 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        wsa@the-dreams.de
-Cc:     khilman@baylibre.com, narmstrong@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.galvani@gmail.com, jian.hu@amlogic.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] i2c: meson: implement the master_xfer_atomic callback
-Date:   Wed,  8 Jan 2020 00:29:01 +0100
-Message-Id: <20200107232901.891177-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Jan 2020 18:31:04 -0500
+Received: from mga12.intel.com ([192.55.52.136]:33852 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgAGXbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:31:03 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 15:31:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
+   d="scan'208";a="370772634"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 15:31:02 -0800
+Date:   Tue, 7 Jan 2020 15:31:02 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
+ encryption is enabled
+Message-ID: <20200107233102.GC16987@linux.intel.com>
+References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
+ <20200106224931.GB12879@linux.intel.com>
+ <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
+ <20200106233846.GC12879@linux.intel.com>
+ <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
+ <20200107222813.GB16987@linux.intel.com>
+ <298352c6-7670-2929-9621-1124775bfaed@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <298352c6-7670-2929-9621-1124775bfaed@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boards with some of the 32-bit SoCs (mostly Meson8 and Meson8m2) use a
-Ricoh RN5T618 PMU which acts as system power controller. The driver for
-the system power controller may need to the I2C bus just before shutting
-down or rebooting the system. At this stage the interrupts may be
-disabled already.
+On Tue, Jan 07, 2020 at 04:54:34PM -0600, Tom Lendacky wrote:
+> On 1/7/20 4:28 PM, Sean Christopherson wrote:
+> > On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
+> >> On 1/6/20 5:38 PM, Sean Christopherson wrote:
+> >>> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
+> >>>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
+> >>>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
+> >>>>> on a future processor, i.e. x86_phys_bits==52.
+> >>>>
+> >>>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
+> >>>> always be a reduction in physical addressing (so I'm told).
+> >>>
+> >>> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
+> >>> that reducing the PA space is optional.  Section 7.10.2 is especially
+> >>> clear on this:
+> >>>
+> >>>   In implementations where the physical address size of the processor is
+> >>>   reduced when memory encryption features are enabled, software must
+> >>>   ensure it is executing from addresses where these upper physical address
+> >>>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
+> >>
+> >> It's probably not likely, but given what is stated, I can modify my patch
+> >> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
+> >>
+> >> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
+> >> 	    boot_cpu_data.x86_phys_bits < 52) {
+> >>
+> >>>
+> >>> But, hopefully the other approach I have in mind actually works, as it's
+> >>> significantly less special-case code and would naturally handle either
+> >>> case, i.e. make this a moot point.
+> >>
+> >> I'll hold off on the above and wait for your patch.
+> > 
+> > Sorry for the delay, this is a bigger mess than originally thought.  Or
+> > I'm completely misunderstanding the issue, which is also a distinct
+> > possibility :-)
+> > 
+> > Due to KVM activating its L1TF mitigation irrespective of whether the CPU
+> > is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
+> > to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
+> > uses those first five reserved PA bits to store the MMIO GFN.  Setting
+> > BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
+> > a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
+> 
+> The L1TF mitigation only gets applied when:
+>   boot_cpu_data.x86_cache_bits < 52 - shadow_nonpresent_or_rsvd_mask_len
+> 
+>   and with shadow_nonpresent_or_rsvd_mask_len = 5, that means that means
+>   boot_cpu_data.x86_cache_bits < 47.
+> 
+> On AMD processors that support memory encryption, the x86_cache_bits value
+> is not adjusted, just the x86_phys_bits. So for AMD processors that have
+> memory encryption support, this value will be at least 48 and therefore
+> not activate the L1TF mitigation.
 
-Implement the master_xfer_atomic callback so the driver for the RN5T618
-PMU can communicate properly with the PMU when shutting down or
-rebooting the board. The CTRL register has a status bit which can be
-polled to determine when processing has completed. According to the
-public S805 datasheet the value 0 means "idle" and 1 means "running".
+Ah.  Hrm.  I'd prefer to clean that code up to make the interactions more
+explicit, but may be we can separate that out.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/i2c/busses/i2c-meson.c | 97 +++++++++++++++++++++++-----------
- 1 file changed, 65 insertions(+), 32 deletions(-)
+> > The only sane approach I can think of is to activate the L1TF mitigation
+> > based on whether the CPU is vulnerable to L1TF, as opposed to activating> the mitigation purely based on the max PA of the CPU.  Since all CPUs that
+> > support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
+> > should never be active at the same time.
+> 
+> There is still the issue of setting a single bit that can conflict with
+> the C-bit. As it is today, if the C-bit were to be defined as bit 51, then
+> KVM would not take a nested page fault and MMIO would be broken.
 
-diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-index 1e2647f9a2a7..7486b46e475f 100644
---- a/drivers/i2c/busses/i2c-meson.c
-+++ b/drivers/i2c/busses/i2c-meson.c
-@@ -10,6 +10,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -213,6 +214,30 @@ static void meson_i2c_prepare_xfer(struct meson_i2c *i2c)
- 	writel(i2c->tokens[1], i2c->regs + REG_TOK_LIST1);
- }
- 
-+static void meson_i2c_transfer_complete(struct meson_i2c *i2c, u32 ctrl)
-+{
-+	if (ctrl & REG_CTRL_ERROR) {
-+		/*
-+		 * The bit is set when the IGNORE_NAK bit is cleared
-+		 * and the device didn't respond. In this case, the
-+		 * I2C controller automatically generates a STOP
-+		 * condition.
-+		 */
-+		dev_dbg(i2c->dev, "error bit set\n");
-+		i2c->error = -ENXIO;
-+		i2c->state = STATE_IDLE;
-+	} else {
-+		if (i2c->state == STATE_READ && i2c->count)
-+			meson_i2c_get_data(i2c, i2c->msg->buf + i2c->pos,
-+					   i2c->count);
-+
-+		i2c->pos += i2c->count;
-+
-+		if (i2c->pos >= i2c->msg->len)
-+			i2c->state = STATE_IDLE;
-+	}
-+}
-+
- static irqreturn_t meson_i2c_irq(int irqno, void *dev_id)
- {
- 	struct meson_i2c *i2c = dev_id;
-@@ -232,27 +257,9 @@ static irqreturn_t meson_i2c_irq(int irqno, void *dev_id)
- 		return IRQ_NONE;
- 	}
- 
--	if (ctrl & REG_CTRL_ERROR) {
--		/*
--		 * The bit is set when the IGNORE_NAK bit is cleared
--		 * and the device didn't respond. In this case, the
--		 * I2C controller automatically generates a STOP
--		 * condition.
--		 */
--		dev_dbg(i2c->dev, "error bit set\n");
--		i2c->error = -ENXIO;
--		i2c->state = STATE_IDLE;
--		complete(&i2c->done);
--		goto out;
--	}
--
--	if (i2c->state == STATE_READ && i2c->count)
--		meson_i2c_get_data(i2c, i2c->msg->buf + i2c->pos, i2c->count);
-+	meson_i2c_transfer_complete(i2c, ctrl);
- 
--	i2c->pos += i2c->count;
--
--	if (i2c->pos >= i2c->msg->len) {
--		i2c->state = STATE_IDLE;
-+	if (i2c->state == STATE_IDLE) {
- 		complete(&i2c->done);
- 		goto out;
- 	}
-@@ -279,10 +286,11 @@ static void meson_i2c_do_start(struct meson_i2c *i2c, struct i2c_msg *msg)
- }
- 
- static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
--			      int last)
-+			      int last, bool atomic)
- {
- 	unsigned long time_left, flags;
- 	int ret = 0;
-+	u32 ctrl;
- 
- 	i2c->msg = msg;
- 	i2c->last = last;
-@@ -300,13 +308,24 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
- 
- 	i2c->state = (msg->flags & I2C_M_RD) ? STATE_READ : STATE_WRITE;
- 	meson_i2c_prepare_xfer(i2c);
--	reinit_completion(&i2c->done);
-+
-+	if (!atomic)
-+		reinit_completion(&i2c->done);
- 
- 	/* Start the transfer */
- 	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, REG_CTRL_START);
- 
--	time_left = msecs_to_jiffies(I2C_TIMEOUT_MS);
--	time_left = wait_for_completion_timeout(&i2c->done, time_left);
-+	if (atomic) {
-+		ret = readl_poll_timeout_atomic(i2c->regs + REG_CTRL, ctrl,
-+						!(ctrl & REG_CTRL_STATUS),
-+						10, I2C_TIMEOUT_MS * 1000);
-+	} else {
-+		time_left = msecs_to_jiffies(I2C_TIMEOUT_MS);
-+		time_left = wait_for_completion_timeout(&i2c->done, time_left);
-+
-+		if (!time_left)
-+			ret = -ETIMEDOUT;
-+	}
- 
- 	/*
- 	 * Protect access to i2c struct and registers from interrupt
-@@ -315,13 +334,14 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
- 	 */
- 	spin_lock_irqsave(&i2c->lock, flags);
- 
-+	if (atomic && !ret)
-+		meson_i2c_transfer_complete(i2c, ctrl);
-+
- 	/* Abort any active operation */
- 	meson_i2c_set_mask(i2c, REG_CTRL, REG_CTRL_START, 0);
- 
--	if (!time_left) {
-+	if (ret)
- 		i2c->state = STATE_IDLE;
--		ret = -ETIMEDOUT;
--	}
- 
- 	if (i2c->error)
- 		ret = i2c->error;
-@@ -331,8 +351,8 @@ static int meson_i2c_xfer_msg(struct meson_i2c *i2c, struct i2c_msg *msg,
- 	return ret;
- }
- 
--static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
--			  int num)
-+static int meson_i2c_xfer_messages(struct i2c_adapter *adap,
-+				   struct i2c_msg *msgs, int num, bool atomic)
- {
- 	struct meson_i2c *i2c = adap->algo_data;
- 	int i, ret = 0;
-@@ -340,7 +360,7 @@ static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	clk_enable(i2c->clk);
- 
- 	for (i = 0; i < num; i++) {
--		ret = meson_i2c_xfer_msg(i2c, msgs + i, i == num - 1);
-+		ret = meson_i2c_xfer_msg(i2c, msgs + i, i == num - 1, atomic);
- 		if (ret)
- 			break;
- 	}
-@@ -350,14 +370,27 @@ static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	return ret ?: i;
- }
- 
-+static int meson_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			  int num)
-+{
-+	return meson_i2c_xfer_messages(adap, msgs, num, false);
-+}
-+
-+static int meson_i2c_xfer_atomic(struct i2c_adapter *adap,
-+				 struct i2c_msg *msgs, int num)
-+{
-+	return meson_i2c_xfer_messages(adap, msgs, num, true);
-+}
-+
- static u32 meson_i2c_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
- }
- 
- static const struct i2c_algorithm meson_i2c_algorithm = {
--	.master_xfer	= meson_i2c_xfer,
--	.functionality	= meson_i2c_func,
-+	.master_xfer		= meson_i2c_xfer,
-+	.master_xfer_atomic	= meson_i2c_xfer_atomic,
-+	.functionality		= meson_i2c_func,
- };
- 
- static int meson_i2c_probe(struct platform_device *pdev)
--- 
-2.24.1
+Wouldn't Paolo's patch to use the raw "cpuid_eax(0x80000008) & 0xff" for
+shadow_phys_bits fix that particular collision by causing
+kvm_set_mmio_spte_mask() to clear the present bit?  Or am I misundertanding
+how the PA reduction interacts with the C-Bit?
 
+AIUI, using phys_bits=48, then the standard scenario is Cbit=47 and some
+additional bits 46:M are reserved.  Applying that logic to phys_bits=52,
+then Cbit=51 and bits 50:M are reserved, so there's a collision but it's
+mostly benign because shadow_phys_bits==52, which triggers this:
+
+	if (IS_ENABLED(CONFIG_X86_64) && shadow_phys_bits == 52)
+		mask &= ~1ull;
+
+In other words, Paolo's patch fixes the fatal bug, but unnecessarily
+disables optimized MMIO page faults.  To remedy that, your idea is to rely
+on the (undocumented?) behavior that there are always additional reserved
+bits between Cbit and the reduced x86_phys_bits.
