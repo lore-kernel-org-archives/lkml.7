@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F258C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B144C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2662080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7572080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432278;
-	bh=Lf0qSoNnd1NLsTNWmHjU1H+8nyTFwg5E/IYaE3vv60o=;
+	s=default; t=1578432280;
+	bh=Keft5cNz48ZkxfUyWXWdQD2X5bR09IZdkkQriQJCqzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWQ9NJBhd5ZhgQMIFJij6Mqp1L45KkXhF4I5tUT9wpYuDdEO4+qdMQwMntyLRo+wZ
-	 g3NBcCXvhwKYKXDyxGXnTF9YU8ui5AnLmVjeLHoaE+RNExTYVMMd76KGbNN5Hq1eKW
-	 v82I1Twlw4Qs+BK4rWTb+8pvAcsMpiJn5L4nTuSE=
+	b=SypiRWEP8Y9Acu64RjWOHP88UkRqJ1iZ0t7YLqSgJRrROx8++Yq8F2mdH3Zf3Dvm/
+	 Y5s8NdHT6JLOXCeFY0JDIPDpREGnFtp+05/n3rlnhDp5kxR5786Fc7beDPWGPBHwTa
+	 VyBiHUySYZiLelLCDcG+EMbEAUSlr6ZoPXuh9Hcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgAGVYg (ORCPT
+        id S1728323AbgAGVAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:24:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:00:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbgAGVAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:22 -0500
+        id S1728267AbgAGVAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38ACC2081E;
-        Tue,  7 Jan 2020 21:00:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FA532081E;
+        Tue,  7 Jan 2020 21:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430819;
-        bh=Lf0qSoNnd1NLsTNWmHjU1H+8nyTFwg5E/IYaE3vv60o=;
+        s=default; t=1578430809;
+        bh=Keft5cNz48ZkxfUyWXWdQD2X5bR09IZdkkQriQJCqzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uapP214aa5LK2/U00rUYpr/3YHNEyqh/ErU8YkFaI8tdXxGw/NyMk246KU+h6A323
-         q02iR0Hy7AqI3l9XAnvJFm7txT8zgEEg7HA4ipivNBsEcxXzCfzs6IJc9wgG07slF0
-         E2Opvv/ZHHdMiXKsdtkSUscSNcrz0CF7U94yZGJo=
+        b=A8iXkoFqePqcJHpO+KJ3yNRmtTQ5F+vNLwjHH8lVKpcp7/dm/t2Osq1CMOfJ8CIW6
+         NLX1hADxpZKL3+pOGzOlHqnwCj96+dWLF0iAJwHdjDAHsnjOKhQpUXm2g3BCef+ihG
+         OzHH+PiohgmGcss/KKjCyCcY3oQrri2/FucKBHzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 109/191] libata: Fix retrieving of active qcs
-Date:   Tue,  7 Jan 2020 21:53:49 +0100
-Message-Id: <20200107205338.819875029@linuxfoundation.org>
+Subject: [PATCH 5.4 105/191] ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+Date:   Tue,  7 Jan 2020 21:53:45 +0100
+Message-Id: <20200107205338.610644493@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,125 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 8385d756e114f2df8568e508902d5f9850817ffb upstream.
+commit 84b032dbfdf1c139cd2b864e43959510646975f8 upstream.
 
-ata_qc_complete_multiple() is called with a mask of the still active
-tags.
+This reverts commit 6bb86fefa086faba7b60bb452300b76a47cde1a5
+("libahci_platform: Staticize ahci_platform_<en/dis>able_phys()") we are
+going to need ahci_platform_{enable,disable}_phys() in a subsequent
+commit for ahci_brcm.c in order to properly control the PHY
+initialization order.
 
-mv_sata doesn't have this information directly and instead calculates
-the still active tags from the started tags (ap->qc_active) and the
-finished tags as (ap->qc_active ^ done_mask)
+Also make sure the function prototypes are declared in
+include/linux/ahci_platform.h as a result.
 
-Since 28361c40368 the hw_tag and tag are no longer the same and the
-equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
-initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
-started and this will be in done_mask on completion. ap->qc_active ^
-done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
-the internal tag will never be reported as completed.
-
-This is fixed by introducing ata_qc_get_active() which returns the
-active hardware tags and calling it where appropriate.
-
-This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
-problem. There is another case in sata_nv that most likely needs fixing
-as well, but this looks a little different, so I wasn't confident enough
-to change that.
-
-Fixes: 28361c403683 ("libata: add extra internal command")
 Cc: stable@vger.kernel.org
-Tested-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Add missing export of ata_qc_get_active(), as per Pali.
-
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
 ---
- drivers/ata/libata-core.c |   24 ++++++++++++++++++++++++
- drivers/ata/sata_fsl.c    |    2 +-
- drivers/ata/sata_mv.c     |    2 +-
- drivers/ata/sata_nv.c     |    2 +-
- include/linux/libata.h    |    1 +
- 5 files changed, 28 insertions(+), 3 deletions(-)
+ drivers/ata/libahci_platform.c |    6 ++++--
+ include/linux/ahci_platform.h  |    2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -5326,6 +5326,30 @@ void ata_qc_complete(struct ata_queued_c
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -43,7 +43,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_ops);
+  * RETURNS:
+  * 0 on success otherwise a negative error code
+  */
+-static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
++int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
+ {
+ 	int rc, i;
+ 
+@@ -74,6 +74,7 @@ disable_phys:
+ 	}
+ 	return rc;
  }
++EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
  
  /**
-+ *	ata_qc_get_active - get bitmask of active qcs
-+ *	@ap: port in question
-+ *
-+ *	LOCKING:
-+ *	spin_lock_irqsave(host lock)
-+ *
-+ *	RETURNS:
-+ *	Bitmask of active qcs
-+ */
-+u64 ata_qc_get_active(struct ata_port *ap)
-+{
-+	u64 qc_active = ap->qc_active;
-+
-+	/* ATA_TAG_INTERNAL is sent to hw as tag 0 */
-+	if (qc_active & (1ULL << ATA_TAG_INTERNAL)) {
-+		qc_active |= (1 << 0);
-+		qc_active &= ~(1ULL << ATA_TAG_INTERNAL);
-+	}
-+
-+	return qc_active;
-+}
-+EXPORT_SYMBOL_GPL(ata_qc_get_active);
-+
-+/**
-  *	ata_qc_complete_multiple - Complete multiple qcs successfully
-  *	@ap: port in question
-  *	@qc_active: new qc_active mask
---- a/drivers/ata/sata_fsl.c
-+++ b/drivers/ata/sata_fsl.c
-@@ -1278,7 +1278,7 @@ static void sata_fsl_host_intr(struct at
- 				     i, ioread32(hcr_base + CC),
- 				     ioread32(hcr_base + CA));
- 		}
--		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-+		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
- 		return;
+  * ahci_platform_disable_phys - Disable PHYs
+@@ -81,7 +82,7 @@ disable_phys:
+  *
+  * This function disables all PHYs found in hpriv->phys.
+  */
+-static void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
++void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
+ {
+ 	int i;
  
- 	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -2827,7 +2827,7 @@ static void mv_process_crpb_entries(stru
+@@ -90,6 +91,7 @@ static void ahci_platform_disable_phys(s
+ 		phy_exit(hpriv->phys[i]);
  	}
+ }
++EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
  
- 	if (work_done) {
--		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-+		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+ /**
+  * ahci_platform_enable_clks - Enable platform clocks
+--- a/include/linux/ahci_platform.h
++++ b/include/linux/ahci_platform.h
+@@ -19,6 +19,8 @@ struct ahci_host_priv;
+ struct platform_device;
+ struct scsi_host_template;
  
- 		/* Update the software queue position index in hardware */
- 		writelfl((pp->crpb_dma & EDMA_RSP_Q_BASE_LO_MASK) |
---- a/drivers/ata/sata_nv.c
-+++ b/drivers/ata/sata_nv.c
-@@ -984,7 +984,7 @@ static irqreturn_t nv_adma_interrupt(int
- 					check_commands = 0;
- 				check_commands &= ~(1 << pos);
- 			}
--			ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-+			ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
- 		}
- 	}
- 
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -1174,6 +1174,7 @@ extern unsigned int ata_do_dev_read_id(s
- 					struct ata_taskfile *tf, u16 *id);
- extern void ata_qc_complete(struct ata_queued_cmd *qc);
- extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
-+extern u64 ata_qc_get_active(struct ata_port *ap);
- extern void ata_scsi_simulate(struct ata_device *dev, struct scsi_cmnd *cmd);
- extern int ata_std_bios_param(struct scsi_device *sdev,
- 			      struct block_device *bdev,
++int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
++void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
+ int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
+ void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
+ int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
 
 
