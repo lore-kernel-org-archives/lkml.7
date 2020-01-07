@@ -2,280 +2,531 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F64C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8398FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A0520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bPx7kY5O"
+	by mail.kernel.org (Postfix) with ESMTP id 462312081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgAGNmm (ORCPT
+        id S1728105AbgAGNo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:42:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39245 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbgAGNml (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:42:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so53974171wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 05:42:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xNvCQyjsNiMUg/1lQuS7zN7awhZ1AvaufUW/jWm6iRE=;
-        b=bPx7kY5OI+nNft9fnbwsarqoPjGBjJJSjjHzWemXe3t7GER+zoJfFAnPj400t2LQoz
-         fM/PlOJkPuNd55bpx8Xg2ungszpbk2ANrty4/RTg8I8f/rUiM0UTTJbSVUQllww5BtLk
-         MhbJDN/WMLVxKo+LFMjuLhbk7yiH5bSuk5gmrJYBUOfSjb3deloyUmPNpJHtSVJDo30d
-         Np1N/XWLrtCcUQpcB0ymOhi7kk+AqUKbjXVqvPurUks396AZbHpHhbjm0k45kYeCB2Dz
-         OR0+R4pYchkrRnCvDjZgBDAwE0sHfRuQH0svQql2ptcweXxcQHrOdhk3CmxxRAYMnqlQ
-         mEBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xNvCQyjsNiMUg/1lQuS7zN7awhZ1AvaufUW/jWm6iRE=;
-        b=qfrPoaNBfu5o12/EK+WhFENkUAtNUfHlpZ+wxkNJibDNA1b6X4Ni32Lql4ztpdtKBF
-         +iwaPO69VO+TxlCgKYRRH1eX5NS32PlC8qqOloJsdA8teeNmq8ur634IYT9gQHCNKwx7
-         lVVratHaT37RRukFiZHDtGnxT7LTuVa6BorW0HvFaw4ip3fZzB8hrG+K1vvooJh0OhCl
-         jvJx9xkNozitrjdG0qfNhcvqzKW1Cp82rlSAykRKdflhYnhQwvg4zihW//ZvUC0iRrPz
-         iY6ulSCsUbVEcdWwDdiIHK15sgi1aI4JFTXjC/+3vZojziYKlhCtoM/FSjyyDBVv+A8W
-         2BMw==
-X-Gm-Message-State: APjAAAXGcV9VGTwiJOwg1LSpu+PlAk/aSVmULhXmH/h7o3rwuuHOor1j
-        o993Cxs8zwWVkNj+LXMvqoZEtA==
-X-Google-Smtp-Source: APXvYqxZncKxrwIQPda/14R2WMIJ14evaqCxUBMzMvTe9xz6KV6xriLPnpaU0IjPUZ4UdN3tcI57rA==
-X-Received: by 2002:a5d:6901:: with SMTP id t1mr101971046wru.94.1578404558194;
-        Tue, 07 Jan 2020 05:42:38 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id f1sm77802537wrp.93.2020.01.07.05.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 05:42:37 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:42:34 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200107134234.GA158998@google.com>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
+        Tue, 7 Jan 2020 08:44:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57008 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgAGNo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:44:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8C7DFADD7;
+        Tue,  7 Jan 2020 13:44:25 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 57B1F1E0B47; Tue,  7 Jan 2020 14:44:25 +0100 (CET)
+Date:   Tue, 7 Jan 2020 14:44:25 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] udf: Update header files to UDF 2.60
+Message-ID: <20200107134425.GE25547@quack2.suse.cz>
+References: <20191226111923.9721-1-pali.rohar@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191220164838.31619-1-qais.yousef@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191226111923.9721-1-pali.rohar@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
-
-On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
-> +/*
-> + * By default RT tasks run at the maximum performance point/capacity of the
-> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-> + * SCHED_CAPACITY_SCALE.
-> + *
-> + * This knob allows admins to change the default behavior when uclamp is being
-> + * used. In battery powered devices particularly running at the maximum
-> + * capacity will increase energy consumption and shorten the battery life.
-> + *
-> + * This knob only affects the default value RT uses when a new RT task is
-> + * forked or has just changed policy to RT and no uclamp user settings were
-> + * applied (ie: the task didn't modify the default value to a new value.
-> + *
-> + * This knob will not override the system default values defined above.
-> + */
-
-I suppose this comment could go in the sysctl doc file instead ?
-
-> +unsigned int sysctl_sched_rt_uclamp_util_min = SCHED_CAPACITY_SCALE;
-
-I would suggest renaming the knob as 'sysctl_sched_rt_default_uclamp_min'
-or something along those lines to make it clear it's a default value.
-
-And for consistency with the existing code, perhaps set the default to
-uclamp_none(UCLAMP_MAX) instead of an explicit SCHED_CAPACITY_SCALE?
-
->  /* All clamps are required to be less or equal than these values */
->  static struct uclamp_se uclamp_default[UCLAMP_CNT];
->  
-> @@ -919,6 +936,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->  	return uc_req;
->  }
->  
-> +void uclamp_rt_sync_default_util_min(struct task_struct *p)
-> +{
-> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
-> +
-> +	if (!uc_se->user_defined)
-> +		uclamp_se_set(uc_se, sysctl_sched_rt_uclamp_util_min, false);
-> +}
-> +
->  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
->  {
->  	struct uclamp_se uc_eff;
-> @@ -1116,12 +1141,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  				loff_t *ppos)
->  {
->  	bool update_root_tg = false;
-> -	int old_min, old_max;
-> +	int old_min, old_max, old_rt_min;
->  	int result;
->  
->  	mutex_lock(&uclamp_mutex);
->  	old_min = sysctl_sched_uclamp_util_min;
->  	old_max = sysctl_sched_uclamp_util_max;
-> +	old_rt_min = sysctl_sched_rt_uclamp_util_min;
->  
->  	result = proc_dointvec(table, write, buffer, lenp, ppos);
->  	if (result)
-> @@ -1129,12 +1155,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  	if (!write)
->  		goto done;
->  
-> +	/*
-> +	 * The new value will be applied to all RT tasks the next time they
-> +	 * wakeup, assuming the task is using the system default and not a user
-> +	 * specified value. In the latter we shall leave the value as the user
-> +	 * requested.
-> +	 */
->  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
->  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
->  		result = -EINVAL;
->  		goto undo;
->  	}
->  
-> +	if (sysctl_sched_rt_uclamp_util_min > SCHED_CAPACITY_SCALE) {
-> +		result = -EINVAL;
-> +		goto undo;
-> +	}
-> +
->  	if (old_min != sysctl_sched_uclamp_util_min) {
->  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
->  			      sysctl_sched_uclamp_util_min, false);
-> @@ -1160,6 +1197,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  undo:
->  	sysctl_sched_uclamp_util_min = old_min;
->  	sysctl_sched_uclamp_util_max = old_max;
-> +	sysctl_sched_rt_uclamp_util_min = old_rt_min;
->  done:
->  	mutex_unlock(&uclamp_mutex);
->  
-> @@ -1202,9 +1240,12 @@ static void __setscheduler_uclamp(struct task_struct *p,
->  		if (uc_se->user_defined)
->  			continue;
->  
-> -		/* By default, RT tasks always get 100% boost */
-> +		/*
-> +		 * By default, RT tasks always get 100% boost, which the admins
-> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
-> +		 */
->  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> -			clamp_value = uclamp_none(UCLAMP_MAX);
-> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
->  
->  		uclamp_se_set(uc_se, clamp_value, false);
->  	}
-> @@ -1236,9 +1277,12 @@ static void uclamp_fork(struct task_struct *p)
->  	for_each_clamp_id(clamp_id) {
->  		unsigned int clamp_value = uclamp_none(clamp_id);
->  
-> -		/* By default, RT tasks always get 100% boost */
-> +		/*
-> +		 * By default, RT tasks always get 100% boost, which the admins
-> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
-> +		 */
->  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> -			clamp_value = uclamp_none(UCLAMP_MAX);
-> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
->  
->  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
->  	}
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index e591d40fd645..19572dfc175b 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
->   */
->  static void task_woken_rt(struct rq *rq, struct task_struct *p)
->  {
-> +	/*
-> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
-> +	 * we apply any new value on the next wakeup, which is here.
-> +	 */
-> +	uclamp_rt_sync_default_util_min(p);
-
-The task has already been enqueued and sugov has been called by then I
-think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
-
-> +
->  	if (!task_running(rq, p) &&
->  	    !test_tsk_need_resched(rq->curr) &&
->  	    p->nr_cpus_allowed > 1 &&
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 280a3c735935..337bf17b1a9d 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
->  #endif /* CONFIG_CPU_FREQ */
->  
->  #ifdef CONFIG_UCLAMP_TASK
-> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
-> +
->  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
->  
->  static __always_inline
-> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
->  	return uclamp_util_with(rq, util, NULL);
->  }
->  #else /* CONFIG_UCLAMP_TASK */
-> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
-> +
->  static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
->  					    struct task_struct *p)
->  {
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 70665934d53e..06183762daac 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= sysctl_sched_uclamp_handler,
->  	},
-> +	{
-> +		.procname	= "sched_rt_util_clamp_min",
-> +		.data		= &sysctl_sched_rt_uclamp_util_min,
-> +		.maxlen		= sizeof(unsigned int),
-> +		.mode		= 0644,
-> +		.proc_handler	= sysctl_sched_uclamp_handler,
-> +	},
->  #endif
->  #ifdef CONFIG_SCHED_AUTOGROUP
->  	{
-> -- 
-> 2.17.1
+On Thu 26-12-19 12:19:23, Pali Rohár wrote:
+> This change synchronize header files ecma_167.h and osta_udf.h with
+> udftools 2.2 project which already have definitions for UDF 2.60 revision.
+> In most cases there are only changes in comments and added new definitions
+> and done. There are no functional changes in code. Visible changes are:
 > 
+> 1. Removed duplicate definition of UDF_ID_COMPLIANT macro.
+> 
+> 2. Moved OSTA Identifier Suffix macros from ecma_167.h to osta_udf.h,
+>    changed its naming and types (endianity fix) to match naming convention
+>    with other UDF structures.
+> 
+> 3. Renamed EXT_NEXT_EXTENT_ALLOCDECS macro to EXT_NEXT_EXTENT_ALLOCDESCS as
+>    "desc" abbrev (and not "dec") is used on all other places.
+> 
+> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
 
-Apart from the small things above, this seems like a sensible idea and
-would indeed be useful, so thanks for the patch!
+I like the changes. But can you please split them into several patches
+doing one thing at a time? Like:
 
-Quentin
+1) EXT_NEXT_EXTENT_ALLOCDECS spelling fixup
+2) OSTA definitions move & rename
+3) whatever is left.
+
+Thanks!
+
+								Honza
+
+> ---
+>  fs/udf/ecma_167.h |  42 +++++++++++++----------
+>  fs/udf/inode.c    |   6 ++--
+>  fs/udf/osta_udf.h | 100 +++++++++++++++++++++++++++++++++++++-----------------
+>  fs/udf/super.c    |   8 ++---
+>  fs/udf/truncate.c |   2 +-
+>  5 files changed, 100 insertions(+), 58 deletions(-)
+> 
+> diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
+> index fb7f2c7be..f9ee412fe 100644
+> --- a/fs/udf/ecma_167.h
+> +++ b/fs/udf/ecma_167.h
+> @@ -4,7 +4,8 @@
+>   * This file is based on ECMA-167 3rd edition (June 1997)
+>   * http://www.ecma.ch
+>   *
+> - * Copyright (c) 2001-2002  Ben Fennema <bfennema@falcon.csc.calpoly.edu>
+> + * Copyright (c) 2001-2002  Ben Fennema
+> + * Copyright (c) 2017-2019  Pali Rohár <pali.rohar@gmail.com>
+>   * All rights reserved.
+>   *
+>   * Redistribution and use in source and binary forms, with or without
+> @@ -32,11 +33,19 @@
+>   * SUCH DAMAGE.
+>   */
+>  
+> +/**
+> + * @file
+> + * ECMA-167r3 defines and structure definitions
+> + */
+> +
+>  #include <linux/types.h>
+>  
+>  #ifndef _ECMA_167_H
+>  #define _ECMA_167_H 1
+>  
+> +/* Character sets and coding - d-characters (ECMA 167r3 1/7.2) */
+> +typedef uint8_t		dchars;
+> +
+>  /* Character set specification (ECMA 167r3 1/7.2.1) */
+>  struct charspec {
+>  	uint8_t		charSetType;
+> @@ -54,6 +63,7 @@ struct charspec {
+>  #define CHARSPEC_TYPE_CS7		0x07	/* (1/7.2.9) */
+>  #define CHARSPEC_TYPE_CS8		0x08	/* (1/7.2.10) */
+>  
+> +/* Fixed-length character fields - d-string (EMCA 167r3 1/7.2.12) */
+>  typedef uint8_t		dstring;
+>  
+>  /* Timestamp (ECMA 167r3 1/7.3) */
+> @@ -88,20 +98,6 @@ struct regid {
+>  #define ENTITYID_FLAGS_DIRTY		0x00
+>  #define ENTITYID_FLAGS_PROTECTED	0x01
+>  
+> -/* OSTA UDF 2.1.5.2 */
+> -#define UDF_ID_COMPLIANT "*OSTA UDF Compliant"
+> -
+> -/* OSTA UDF 2.1.5.3 */
+> -struct domainEntityIDSuffix {
+> -	uint16_t	revision;
+> -	uint8_t		flags;
+> -	uint8_t		reserved[5];
+> -};
+> -
+> -/* OSTA UDF 2.1.5.3 */
+> -#define ENTITYIDSUFFIX_FLAGS_HARDWRITEPROTECT 0
+> -#define ENTITYIDSUFFIX_FLAGS_SOFTWRITEPROTECT 1
+> -
+>  /* Volume Structure Descriptor (ECMA 167r3 2/9.1) */
+>  #define VSD_STD_ID_LEN			5
+>  struct volStructDesc {
+> @@ -202,6 +198,13 @@ struct NSRDesc {
+>  	uint8_t		structData[2040];
+>  } __packed;
+>  
+> +/* Generic Descriptor */
+> +struct genericDesc {
+> +	struct tag	descTag;
+> +	__le32		volDescSeqNum;
+> +	uint8_t		reserved[492];
+> +} __packed;
+> +
+>  /* Primary Volume Descriptor (ECMA 167r3 3/10.1) */
+>  struct primaryVolDesc {
+>  	struct tag		descTag;
+> @@ -316,7 +319,7 @@ struct genericPartitionMap {
+>  
+>  /* Partition Map Type (ECMA 167r3 3/10.7.1.1) */
+>  #define GP_PARTITION_MAP_TYPE_UNDEF	0x00
+> -#define GP_PARTIITON_MAP_TYPE_1		0x01
+> +#define GP_PARTITION_MAP_TYPE_1		0x01
+>  #define GP_PARTITION_MAP_TYPE_2		0x02
+>  
+>  /* Type 1 Partition Map (ECMA 167r3 3/10.7.2) */
+> @@ -723,6 +726,7 @@ struct appUseExtAttr {
+>  #define EXTATTR_DEV_SPEC		12
+>  #define EXTATTR_IMP_USE			2048
+>  #define EXTATTR_APP_USE			65536
+> +#define EXTATTR_SUBTYPE			1
+>  
+>  /* Unallocated Space Entry (ECMA 167r3 4/14.11) */
+>  struct unallocSpaceEntry {
+> @@ -754,10 +758,12 @@ struct partitionIntegrityEntry {
+>  /* Short Allocation Descriptor (ECMA 167r3 4/14.14.1) */
+>  
+>  /* Extent Length (ECMA 167r3 4/14.14.1.1) */
+> +#define EXT_LENGTH_MASK			0x3FFFFFFF
+> +#define EXT_TYPE_MASK			0xC0000000
+>  #define EXT_RECORDED_ALLOCATED		0x00000000
+>  #define EXT_NOT_RECORDED_ALLOCATED	0x40000000
+>  #define EXT_NOT_RECORDED_NOT_ALLOCATED	0x80000000
+> -#define EXT_NEXT_EXTENT_ALLOCDECS	0xC0000000
+> +#define EXT_NEXT_EXTENT_ALLOCDESCS	0xC0000000
+>  
+>  /* Long Allocation Descriptor (ECMA 167r3 4/14.14.2) */
+>  
+> @@ -774,7 +780,7 @@ struct pathComponent {
+>  	uint8_t		componentType;
+>  	uint8_t		lengthComponentIdent;
+>  	__le16		componentFileVersionNum;
+> -	dstring		componentIdent[0];
+> +	dchars		componentIdent[0];
+>  } __packed;
+>  
+>  /* File Entry (ECMA 167r3 4/14.17) */
+> diff --git a/fs/udf/inode.c b/fs/udf/inode.c
+> index ea80036d7..e875bc566 100644
+> --- a/fs/udf/inode.c
+> +++ b/fs/udf/inode.c
+> @@ -1981,10 +1981,10 @@ int udf_setup_indirect_aext(struct inode *inode, udf_pblk_t block,
+>  
+>  		__udf_add_aext(inode, &nepos, &cp_loc, cp_len, 1);
+>  		udf_write_aext(inode, epos, &nepos.block,
+> -			       sb->s_blocksize | EXT_NEXT_EXTENT_ALLOCDECS, 0);
+> +			       sb->s_blocksize | EXT_NEXT_EXTENT_ALLOCDESCS, 0);
+>  	} else {
+>  		__udf_add_aext(inode, epos, &nepos.block,
+> -			       sb->s_blocksize | EXT_NEXT_EXTENT_ALLOCDECS, 0);
+> +			       sb->s_blocksize | EXT_NEXT_EXTENT_ALLOCDESCS, 0);
+>  	}
+>  
+>  	brelse(epos->bh);
+> @@ -2143,7 +2143,7 @@ int8_t udf_next_aext(struct inode *inode, struct extent_position *epos,
+>  	unsigned int indirections = 0;
+>  
+>  	while ((etype = udf_current_aext(inode, epos, eloc, elen, inc)) ==
+> -	       (EXT_NEXT_EXTENT_ALLOCDECS >> 30)) {
+> +	       (EXT_NEXT_EXTENT_ALLOCDESCS >> 30)) {
+>  		udf_pblk_t block;
+>  
+>  		if (++indirections > UDF_MAX_INDIR_EXTS) {
+> diff --git a/fs/udf/osta_udf.h b/fs/udf/osta_udf.h
+> index a4da59e38..838f853b2 100644
+> --- a/fs/udf/osta_udf.h
+> +++ b/fs/udf/osta_udf.h
+> @@ -1,10 +1,11 @@
+>  /*
+>   * osta_udf.h
+>   *
+> - * This file is based on OSTA UDF(tm) 2.50 (April 30, 2003)
+> + * This file is based on OSTA UDF(tm) 2.60 (March 1, 2005)
+>   * http://www.osta.org
+>   *
+> - * Copyright (c) 2001-2004  Ben Fennema <bfennema@falcon.csc.calpoly.edu>
+> + * Copyright (c) 2001-2004  Ben Fennema
+> + * Copyright (c) 2017-2019  Pali Rohár <pali.rohar@gmail.com>
+>   * All rights reserved.
+>   *
+>   * Redistribution and use in source and binary forms, with or without
+> @@ -32,38 +33,57 @@
+>   * SUCH DAMAGE.
+>   */
+>  
+> +/**
+> + * @file
+> + * OSTA-UDF defines and structure definitions
+> + */
+> +
+>  #include "ecma_167.h"
+>  
+>  #ifndef _OSTA_UDF_H
+>  #define _OSTA_UDF_H 1
+>  
+> -/* OSTA CS0 Charspec (UDF 2.50 2.1.2) */
+> +/* OSTA CS0 Charspec (UDF 2.60 2.1.2) */
+>  #define UDF_CHAR_SET_TYPE		0
+>  #define UDF_CHAR_SET_INFO		"OSTA Compressed Unicode"
+>  
+> -/* Entity Identifier (UDF 2.50 2.1.5) */
+> -/* Identifiers (UDF 2.50 2.1.5.2) */
+> +/* Entity Identifier (UDF 2.60 2.1.5) */
+> +/* Identifiers (UDF 2.60 2.1.5.2) */
+> +/* Implementation Use Extended Attribute (UDF 2.60 3.3.4.5) */
+> +/* Virtual Allocation Table (UDF 1.50 2.2.10) */
+> +/* Logical Volume Extended Information (UDF 1.50 Errata, DCN 5003, 3.3.4.5.1.3) */
+> +/* OS2EA (UDF 1.50 3.3.4.5.3.1) */
+> +/* MacUniqueIDTable (UDF 1.50 3.3.4.5.4.3) */
+> +/* MacResourceFork (UDF 1.50 3.3.4.5.4.4) */
+>  #define UDF_ID_DEVELOPER		"*Linux UDFFS"
+>  #define	UDF_ID_COMPLIANT		"*OSTA UDF Compliant"
+>  #define UDF_ID_LV_INFO			"*UDF LV Info"
+>  #define UDF_ID_FREE_EA			"*UDF FreeEASpace"
+>  #define UDF_ID_FREE_APP_EA		"*UDF FreeAppEASpace"
+>  #define UDF_ID_DVD_CGMS			"*UDF DVD CGMS Info"
+> +#define UDF_ID_VAT_LVEXTENSION		"*UDF VAT LVExtension"
+>  #define UDF_ID_OS2_EA			"*UDF OS/2 EA"
+>  #define UDF_ID_OS2_EA_LENGTH		"*UDF OS/2 EALength"
+>  #define UDF_ID_MAC_VOLUME		"*UDF Mac VolumeInfo"
+>  #define UDF_ID_MAC_FINDER		"*UDF Mac FinderInfo"
+>  #define UDF_ID_MAC_UNIQUE		"*UDF Mac UniqueIDTable"
+>  #define UDF_ID_MAC_RESOURCE		"*UDF Mac ResourceFork"
+> +#define UDF_ID_OS400_DIRINFO		"*UDF OS/400 DirInfo"
+>  #define UDF_ID_VIRTUAL			"*UDF Virtual Partition"
+>  #define UDF_ID_SPARABLE			"*UDF Sparable Partition"
+>  #define UDF_ID_ALLOC			"*UDF Virtual Alloc Tbl"
+>  #define UDF_ID_SPARING			"*UDF Sparing Table"
+>  #define UDF_ID_METADATA			"*UDF Metadata Partition"
+>  
+> -/* Identifier Suffix (UDF 2.50 2.1.5.3) */
+> -#define IS_DF_HARD_WRITE_PROTECT	0x01
+> -#define IS_DF_SOFT_WRITE_PROTECT	0x02
+> +/* Identifier Suffix (UDF 2.60 2.1.5.3) */
+> +#define DOMAIN_FLAGS_HARD_WRITE_PROTECT	0x01
+> +#define DOMAIN_FLAGS_SOFT_WRITE_PROTECT	0x02
+> +
+> +struct domainIdentSuffix {
+> +	__le16		UDFRevision;
+> +	uint8_t		domainFlags;
+> +	uint8_t		reserved[5];
+> +} __packed;
+>  
+>  struct UDFIdentSuffix {
+>  	__le16		UDFRevision;
+> @@ -75,15 +95,15 @@ struct UDFIdentSuffix {
+>  struct impIdentSuffix {
+>  	uint8_t		OSClass;
+>  	uint8_t		OSIdentifier;
+> -	uint8_t		reserved[6];
+> +	uint8_t		impUse[6];
+>  } __packed;
+>  
+>  struct appIdentSuffix {
+>  	uint8_t		impUse[8];
+>  } __packed;
+>  
+> -/* Logical Volume Integrity Descriptor (UDF 2.50 2.2.6) */
+> -/* Implementation Use (UDF 2.50 2.2.6.4) */
+> +/* Logical Volume Integrity Descriptor (UDF 2.60 2.2.6) */
+> +/* Implementation Use (UDF 2.60 2.2.6.4) */
+>  struct logicalVolIntegrityDescImpUse {
+>  	struct regid	impIdent;
+>  	__le32		numFiles;
+> @@ -94,8 +114,8 @@ struct logicalVolIntegrityDescImpUse {
+>  	uint8_t		impUse[0];
+>  } __packed;
+>  
+> -/* Implementation Use Volume Descriptor (UDF 2.50 2.2.7) */
+> -/* Implementation Use (UDF 2.50 2.2.7.2) */
+> +/* Implementation Use Volume Descriptor (UDF 2.60 2.2.7) */
+> +/* Implementation Use (UDF 2.60 2.2.7.2) */
+>  struct impUseVolDescImpUse {
+>  	struct charspec	LVICharset;
+>  	dstring		logicalVolIdent[128];
+> @@ -115,7 +135,7 @@ struct udfPartitionMap2 {
+>  	__le16		partitionNum;
+>  } __packed;
+>  
+> -/* Virtual Partition Map (UDF 2.50 2.2.8) */
+> +/* Virtual Partition Map (UDF 2.60 2.2.8) */
+>  struct virtualPartitionMap {
+>  	uint8_t		partitionMapType;
+>  	uint8_t		partitionMapLength;
+> @@ -126,7 +146,7 @@ struct virtualPartitionMap {
+>  	uint8_t		reserved2[24];
+>  } __packed;
+>  
+> -/* Sparable Partition Map (UDF 2.50 2.2.9) */
+> +/* Sparable Partition Map (UDF 2.60 2.2.9) */
+>  struct sparablePartitionMap {
+>  	uint8_t partitionMapType;
+>  	uint8_t partitionMapLength;
+> @@ -141,7 +161,7 @@ struct sparablePartitionMap {
+>  	__le32 locSparingTable[4];
+>  } __packed;
+>  
+> -/* Metadata Partition Map (UDF 2.4.0 2.2.10) */
+> +/* Metadata Partition Map (UDF 2.60 2.2.10) */
+>  struct metadataPartitionMap {
+>  	uint8_t		partitionMapType;
+>  	uint8_t		partitionMapLength;
+> @@ -160,14 +180,14 @@ struct metadataPartitionMap {
+>  
+>  /* Virtual Allocation Table (UDF 1.5 2.2.10) */
+>  struct virtualAllocationTable15 {
+> -	__le32		VirtualSector[0];
+> +	__le32		vatEntry[0];
+>  	struct regid	vatIdent;
+>  	__le32		previousVATICBLoc;
+>  } __packed;
+>  
+>  #define ICBTAG_FILE_TYPE_VAT15		0x00U
+>  
+> -/* Virtual Allocation Table (UDF 2.50 2.2.11) */
+> +/* Virtual Allocation Table (UDF 2.60 2.2.11) */
+>  struct virtualAllocationTable20 {
+>  	__le16		lengthHeader;
+>  	__le16		lengthImpUse;
+> @@ -175,9 +195,9 @@ struct virtualAllocationTable20 {
+>  	__le32		previousVATICBLoc;
+>  	__le32		numFiles;
+>  	__le32		numDirs;
+> -	__le16		minReadRevision;
+> -	__le16		minWriteRevision;
+> -	__le16		maxWriteRevision;
+> +	__le16		minUDFReadRev;
+> +	__le16		minUDFWriteRev;
+> +	__le16		maxUDFWriteRev;
+>  	__le16		reserved;
+>  	uint8_t		impUse[0];
+>  	__le32		vatEntry[0];
+> @@ -185,7 +205,7 @@ struct virtualAllocationTable20 {
+>  
+>  #define ICBTAG_FILE_TYPE_VAT20		0xF8U
+>  
+> -/* Sparing Table (UDF 2.50 2.2.12) */
+> +/* Sparing Table (UDF 2.60 2.2.12) */
+>  struct sparingEntry {
+>  	__le32		origLocation;
+>  	__le32		mappedLocation;
+> @@ -201,12 +221,12 @@ struct sparingTable {
+>  			mapEntry[0];
+>  } __packed;
+>  
+> -/* Metadata File (and Metadata Mirror File) (UDF 2.50 2.2.13.1) */
+> +/* Metadata File (and Metadata Mirror File) (UDF 2.60 2.2.13.1) */
+>  #define ICBTAG_FILE_TYPE_MAIN		0xFA
+>  #define ICBTAG_FILE_TYPE_MIRROR		0xFB
+>  #define ICBTAG_FILE_TYPE_BITMAP		0xFC
+>  
+> -/* struct struct long_ad ICB - ADImpUse (UDF 2.50 2.2.4.3) */
+> +/* struct struct long_ad ICB - ADImpUse (UDF 2.60 2.2.4.3) */
+>  struct allocDescImpUse {
+>  	__le16		flags;
+>  	uint8_t		impUse[4];
+> @@ -214,17 +234,17 @@ struct allocDescImpUse {
+>  
+>  #define AD_IU_EXT_ERASED		0x0001
+>  
+> -/* Real-Time Files (UDF 2.50 6.11) */
+> +/* Real-Time Files (UDF 2.60 6.11) */
+>  #define ICBTAG_FILE_TYPE_REALTIME	0xF9U
+>  
+> -/* Implementation Use Extended Attribute (UDF 2.50 3.3.4.5) */
+> -/* FreeEASpace (UDF 2.50 3.3.4.5.1.1) */
+> +/* Implementation Use Extended Attribute (UDF 2.60 3.3.4.5) */
+> +/* FreeEASpace (UDF 2.60 3.3.4.5.1.1) */
+>  struct freeEaSpace {
+>  	__le16		headerChecksum;
+>  	uint8_t		freeEASpace[0];
+>  } __packed;
+>  
+> -/* DVD Copyright Management Information (UDF 2.50 3.3.4.5.1.2) */
+> +/* DVD Copyright Management Information (UDF 2.60 3.3.4.5.1.2) */
+>  struct DVDCopyrightImpUse {
+>  	__le16		headerChecksum;
+>  	uint8_t		CGMSInfo;
+> @@ -232,20 +252,35 @@ struct DVDCopyrightImpUse {
+>  	uint8_t		protectionSystemInfo[4];
+>  } __packed;
+>  
+> -/* Application Use Extended Attribute (UDF 2.50 3.3.4.6) */
+> -/* FreeAppEASpace (UDF 2.50 3.3.4.6.1) */
+> +/* Logical Volume Extended Information (UDF 1.50 Errata, DCN 5003, 3.3.4.5.1.3) */
+> +struct LVExtensionEA {
+> +	__le16		headerChecksum;
+> +	__le64		verificationID;
+> +	__le32		numFiles;
+> +	__le32		numDirs;
+> +	dstring		logicalVolIdent[128];
+> +} __packed;
+> +
+> +/* Application Use Extended Attribute (UDF 2.60 3.3.4.6) */
+> +/* FreeAppEASpace (UDF 2.60 3.3.4.6.1) */
+>  struct freeAppEASpace {
+>  	__le16		headerChecksum;
+>  	uint8_t		freeEASpace[0];
+>  } __packed;
+>  
+> -/* UDF Defined System Stream (UDF 2.50 3.3.7) */
+> +/* UDF Defined System Stream (UDF 2.60 3.3.7) */
+>  #define UDF_ID_UNIQUE_ID		"*UDF Unique ID Mapping Data"
+>  #define UDF_ID_NON_ALLOC		"*UDF Non-Allocatable Space"
+>  #define UDF_ID_POWER_CAL		"*UDF Power Cal Table"
+>  #define UDF_ID_BACKUP			"*UDF Backup"
+>  
+> -/* Operating System Identifiers (UDF 2.50 6.3) */
+> +/* UDF Defined Non-System Streams (UDF 2.60 3.3.8) */
+> +#define UDF_ID_MAC_RESOURCE_FORK_STREAM	"*UDF Macintosh Resource Fork"
+> +/* #define UDF_ID_OS2_EA		"*UDF OS/2 EA" */
+> +#define UDF_ID_NT_ACTL			"*UDF NT ACL"
+> +#define UDF_ID_UNIX_ACTL		"*UDF UNIX ACL"
+> +
+> +/* Operating System Identifiers (UDF 2.60 6.3) */
+>  #define UDF_OS_CLASS_UNDEF		0x00U
+>  #define UDF_OS_CLASS_DOS		0x01U
+>  #define UDF_OS_CLASS_OS2		0x02U
+> @@ -270,6 +305,7 @@ struct freeAppEASpace {
+>  #define UDF_OS_ID_LINUX			0x05U
+>  #define UDF_OS_ID_MKLINUX		0x06U
+>  #define UDF_OS_ID_FREEBSD		0x07U
+> +#define UDF_OS_ID_NETBSD		0x08U
+>  #define UDF_OS_ID_WIN9X			0x00U
+>  #define UDF_OS_ID_WINNT			0x00U
+>  #define UDF_OS_ID_OS400			0x00U
+> diff --git a/fs/udf/super.c b/fs/udf/super.c
+> index 8c28e93e9..2d0b90800 100644
+> --- a/fs/udf/super.c
+> +++ b/fs/udf/super.c
+> @@ -767,7 +767,7 @@ static int udf_check_vsd(struct super_block *sb)
+>  static int udf_verify_domain_identifier(struct super_block *sb,
+>  					struct regid *ident, char *dname)
+>  {
+> -	struct domainEntityIDSuffix *suffix;
+> +	struct domainIdentSuffix *suffix;
+>  
+>  	if (memcmp(ident->ident, UDF_ID_COMPLIANT, strlen(UDF_ID_COMPLIANT))) {
+>  		udf_warn(sb, "Not OSTA UDF compliant %s descriptor.\n", dname);
+> @@ -778,9 +778,9 @@ static int udf_verify_domain_identifier(struct super_block *sb,
+>  			 dname);
+>  		goto force_ro;
+>  	}
+> -	suffix = (struct domainEntityIDSuffix *)ident->identSuffix;
+> -	if (suffix->flags & (1 << ENTITYIDSUFFIX_FLAGS_HARDWRITEPROTECT) ||
+> -	    suffix->flags & (1 << ENTITYIDSUFFIX_FLAGS_SOFTWRITEPROTECT)) {
+> +	suffix = (struct domainIdentSuffix *)ident->identSuffix;
+> +	if ((suffix->domainFlags & DOMAIN_FLAGS_HARD_WRITE_PROTECT) ||
+> +	    (suffix->domainFlags & DOMAIN_FLAGS_SOFT_WRITE_PROTECT)) {
+>  		if (!sb_rdonly(sb)) {
+>  			udf_warn(sb, "Descriptor for %s marked write protected."
+>  				 " Forcing read only mount.\n", dname);
+> diff --git a/fs/udf/truncate.c b/fs/udf/truncate.c
+> index 63a47f1e1..532cda996 100644
+> --- a/fs/udf/truncate.c
+> +++ b/fs/udf/truncate.c
+> @@ -241,7 +241,7 @@ int udf_truncate_extents(struct inode *inode)
+>  
+>  	while ((etype = udf_current_aext(inode, &epos, &eloc,
+>  					 &elen, 0)) != -1) {
+> -		if (etype == (EXT_NEXT_EXTENT_ALLOCDECS >> 30)) {
+> +		if (etype == (EXT_NEXT_EXTENT_ALLOCDESCS >> 30)) {
+>  			udf_write_aext(inode, &epos, &neloc, nelen, 0);
+>  			if (indirect_ext_len) {
+>  				/* We managed to free all extents in the
+> -- 
+> 2.11.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
