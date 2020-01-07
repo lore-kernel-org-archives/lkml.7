@@ -2,143 +2,95 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5727FC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E5C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F71320678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B8920678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgAGR2K (ORCPT
+        id S1728461AbgAGR21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:28:10 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:43047 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbgAGR2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:28:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id o13so112480ilf.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:28:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zcJOkvouZPbSRqYxxbEiilRTbfXGpDRuJVTCWHOU3cc=;
-        b=QpRzeEJMAftdShpkeaCK8++r+fE2ikjVjfhbTZSvYwT7TRAEOwi6CqvB1rlwyA0SNR
-         pCvBMT4DvkanO+I2oOENQhslfiMywHknBlAIUKJx95Y7wcemjFCZz2v8BNAGvwC6tRlo
-         wkn0QX6Y+G+a/kXG79QACYiJ7yDNAhuQPDinCkGOmVIn/xZ2H83Ve4XfAFabzd/diNzK
-         LnImmIdhD1bdkptMtWrlzrUKUO96WhG7aFfkC1De0SdwA0IUdYUNl8A+2iWwPhH8fAbs
-         EQKdLacAWfs/96eZJLBuxmnJ6wN8pJmzHM7ToZBVYzS1f+mhln4hzpcvA5VJEV/+FmIe
-         Q/6w==
-X-Gm-Message-State: APjAAAWn5VyIwiOUA6NpTM02qrjRacgOBfWcuawH+UUZbUZQ4TrOriFR
-        lM9OvU7Bxj+vSzZdajyANi8AsrRXr+nId6GbZw4wgUSTxQ7A
-X-Google-Smtp-Source: APXvYqw6q1hvmsYoBbeSDp7ozskflEF0SobE3NYgog1aSsfBxaHfqvjZC5bqnj3Ka3vZAJBdMI18ryTdQVohc3b78aH9yEBHzYoI
+        Tue, 7 Jan 2020 12:28:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55882 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728321AbgAGR20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:28:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 285D6AD2C;
+        Tue,  7 Jan 2020 17:28:25 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 79AD11E06E5; Tue,  7 Jan 2020 18:28:24 +0100 (CET)
+Date:   Tue, 7 Jan 2020 18:28:24 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Jan Kara <jack@suse.cz>, kernel test robot <rong.a.chen@intel.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+Subject: Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2% regression
+Message-ID: <20200107172824.GK25547@quack2.suse.cz>
+References: <20191224005915.GW2760@shao2-debian>
+ <20200107134106.GD25547@quack2.suse.cz>
+ <20200107165708.GA3619@mit.edu>
 MIME-Version: 1.0
-X-Received: by 2002:a02:ca10:: with SMTP id i16mr613269jak.10.1578418089724;
- Tue, 07 Jan 2020 09:28:09 -0800 (PST)
-Date:   Tue, 07 Jan 2020 09:28:09 -0800
-In-Reply-To: <000000000000a347ef059b8ee979@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008b914b059b9019d2@google.com>
-Subject: Re: general protection fault in hash_ipportnet4_uadt
-From:   syzbot <syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, coreteam@netfilter.org, davem@davemloft.net,
-        fw@strlen.de, info@metux.net, jeremy@azazel.net,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107165708.GA3619@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Tue 07-01-20 11:57:08, Theodore Y. Ts'o wrote:
+> On Tue, Jan 07, 2020 at 02:41:06PM +0100, Jan Kara wrote:
+> > Hello,
+> > 
+> > On Tue 24-12-19 08:59:15, kernel test robot wrote:
+> > > FYI, we noticed a -20.2% regression of filebench.sum_bytes_mb/s due to commit:
+> > > 
+> > > 
+> > > commit: b1b4705d54abedfd69dcdf42779c521aa1e0fbd3 ("ext4: introduce direct I/O read using iomap infrastructure")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > 
+> > > in testcase: filebench
+> > > on test machine: 8 threads Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz with 8G memory
+> > > with following parameters:
+> > > 
+> > > 	disk: 1HDD
+> > > 	fs: ext4
+> > > 	test: fivestreamreaddirect.f
+> > > 	cpufreq_governor: performance
+> > > 	ucode: 0x27
+> > 
+> > I was trying to reproduce this but I failed with my test VM. I had SATA SSD
+> > as a backing store though so maybe that's what makes a difference. Maybe
+> > the new code results in somewhat more seeks because the five threads which
+> > compete in submitting sequential IO end up being more interleaved?
+> 
+> A "-20.2% regression" should be read as a "20.2% performance
+> improvement" is zero-day kernel speak.
 
-HEAD commit:    c101fffc Merge tag 'mlx5-fixes-2020-01-06' of git://git.ke..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f4f3c1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=34bd2369d38707f3f4a7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b35ec6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13044076e00000
+Are you sure? I can see:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
+     58.30 ±  2%     -20.2%      46.53        filebench.sum_bytes_mb/s
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9656 Comm: syz-executor756 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:hash_ipportnet4_uadt+0x20b/0x13e0  
-net/netfilter/ipset/ip_set_hash_ipportnet.c:173
-Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 71 0c 00 00 4c 89  
-e2 45 8b 6d 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 2c
-RSP: 0018:ffffc90001ee7150 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90001ee7320 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff867e4e78 RDI: ffff8880a7f08070
-RBP: ffffc90001ee72b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: 0000000000000000
-R13: 0000000002000000 R14: ffffc90001ee7220 R15: ffff8880a4c3a400
-FS:  0000000000e4b880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000446 CR3: 000000009e154000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
-  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440839
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffde8ed0ad8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440839
-RDX: 0000000000000002 RSI: 0000000020000140 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000008 R09: 00000000004002c8
-R10: 000000000000204e R11: 0000000000000246 R12: 00000000004020c0
-R13: 0000000000402150 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 4497e0a4dc04971d ]---
-RIP: 0010:hash_ipportnet4_uadt+0x20b/0x13e0  
-net/netfilter/ipset/ip_set_hash_ipportnet.c:173
-Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 71 0c 00 00 4c 89  
-e2 45 8b 6d 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 2c
-RSP: 0018:ffffc90001ee7150 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90001ee7320 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff867e4e78 RDI: ffff8880a7f08070
-RBP: ffffc90001ee72b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: 0000000000000000
-R13: 0000000002000000 R14: ffffc90001ee7220 R15: ffff8880a4c3a400
-FS:  0000000000e4b880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000446 CR3: 000000009e154000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+which implies to me previously the throughput was 58 MB/s and after the
+commit it was 46 MB/s?
 
+Anyway, in my testing that commit made no difference in that benchmark
+whasoever (getting around 97 MB/s for each thread before and after the
+commit).
+ 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
