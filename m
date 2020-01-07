@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF14C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F670C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7D924676
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD75820678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430880;
-	bh=z13CnoUeWhmZSS2tZYusASTt+xbcYV1m6+PgX0H3/Ok=;
+	s=default; t=1578430886;
+	bh=jAlvcewV9U+9MHtI6CXvnOqScZyb4jj5yGm+G/+Yszw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOVSvbh/B12oAXMqaHG/DMFEbXPqPZ66Cx5+M4YPkcC1mRZPCraEXitNeFdrWP52d
-	 kN7HWLyRXrlK9tnsSmD/v2LN2X6aZaq+XcEPc5qQ9fTdhFzGxsyhkiis3Bto951i69
-	 tlVIUU+n9iGeRJbQ3iFnJZcOQ0SUIJUqBrcbynGo=
+	b=LvNc3+hB2Ppajxzd2kHIxrSF5pkC3sq41fqUO5uPhuVSamTl4ZyhdMgrXItw33WvJ
+	 m9E7hNoFpcaxaLvpCjzoUllg0n8ieRTDfCimqmz9jnNo+eHtx6qHwlRV1aSpNsdKn1
+	 epBhV2by1BrBIHIZ+8B094OMFG0wTXFtOfPH5QSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbgAGVBT (ORCPT
+        id S1728561AbgAGVBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37936 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgAGVBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:10 -0500
+        id S1727976AbgAGVBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681A621744;
-        Tue,  7 Jan 2020 21:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA28B24679;
+        Tue,  7 Jan 2020 21:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430869;
-        bh=z13CnoUeWhmZSS2tZYusASTt+xbcYV1m6+PgX0H3/Ok=;
+        s=default; t=1578430877;
+        bh=jAlvcewV9U+9MHtI6CXvnOqScZyb4jj5yGm+G/+Yszw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbVFpaBjlNBZ2zb4UwVcluMdUn9gAXidEIaEQKHRAWlimy9dRuzTDn+RvcKGr+v4b
-         iFQV/BQRr8H7HppnP0NfXVsQNMp/H1OUPlqYhXO1YTCw3C+NtoJ3RhS/dv44HEhp7d
-         QVwgOWt83Rww1SISmLhiksOjiYo29/I95jL4MO2c=
+        b=zST9epCOpHNKqC6bVjNRCddsWmEwgGrbZrWiDSB1l0dQM67+N1TPz6LqTZg0Pm0Fj
+         z9Iuu1Gtcl+Q8SE6lVgzALSEiD2Lubz7RsVigJ0Epszo3Af/GLEEBXzeAOuLIDb6wP
+         7Hq8Cny1ZQHc/0aUoaTkmDgPVG47C+uKKzPLL3ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 123/191] dmaengine: virt-dma: Fix access after free in vchan_complete()
-Date:   Tue,  7 Jan 2020 21:54:03 +0100
-Message-Id: <20200107205339.563984538@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.4 134/191] PM / devfreq: Check NULL governor in available_governors_show
+Date:   Tue,  7 Jan 2020 21:54:14 +0100
+Message-Id: <20200107205340.140773346@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,38 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-commit 24461d9792c2c706092805ff1b067628933441bd upstream.
+commit d68adc8f85cd757bd33c8d7b2660ad6f16f7f3dc upstream.
 
-vchan_vdesc_fini() is freeing up 'vd' so the access to vd->tx_result is
-via already freed up memory.
+The governor is initialized after sysfs attributes become visible so in
+theory the governor field can be NULL here.
 
-Move the vchan_vdesc_fini() after invoking the callback to avoid this.
-
-Fixes: 09d5b702b0f97 ("dmaengine: virt-dma: store result on dma descriptor")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20191220131100.21804-1-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: bcf23c79c4e46 ("PM / devfreq: Fix available_governor sysfs")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/virt-dma.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/devfreq/devfreq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/virt-dma.c
-+++ b/drivers/dma/virt-dma.c
-@@ -104,9 +104,8 @@ static void vchan_complete(unsigned long
- 		dmaengine_desc_get_callback(&vd->tx, &cb);
- 
- 		list_del(&vd->node);
--		vchan_vdesc_fini(vd);
--
- 		dmaengine_desc_callback_invoke(&cb, &vd->tx_result);
-+		vchan_vdesc_fini(vd);
- 	}
- }
- 
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1196,7 +1196,7 @@ static ssize_t available_governors_show(
+ 	 * The devfreq with immutable governor (e.g., passive) shows
+ 	 * only own governor.
+ 	 */
+-	if (df->governor->immutable) {
++	if (df->governor && df->governor->immutable) {
+ 		count = scnprintf(&buf[count], DEVFREQ_NAME_LEN,
+ 				  "%s ", df->governor_name);
+ 	/*
 
 
