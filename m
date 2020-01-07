@@ -2,105 +2,120 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96926C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B353AC32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2862075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836A32072E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="go/i/cMb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mdt/L/fH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgAGBjZ (ORCPT
+        id S1727440AbgAGBpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 20:39:25 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34474 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbgAGBjY (ORCPT
+        Mon, 6 Jan 2020 20:45:35 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40026 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbgAGBpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 20:39:24 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i6so20923809pfc.1;
-        Mon, 06 Jan 2020 17:39:24 -0800 (PST)
+        Mon, 6 Jan 2020 20:45:35 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c17so41330396qkg.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 17:45:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BcDQpu3fVXCp65bnUVYlKVk92q4FOMqEZL5EQW3/yP0=;
-        b=go/i/cMbOARRQVokioLhN/htb67IaDYlIXboEVmR1TbTKiQ2STY3u7h+OAlUGluGD9
-         nisE4oGOyJq2DU9BJziGyu5rlwdKzFeJ8Q99xx5LSTmq7kug3g4njnY6/IeKySSE6Rpw
-         J6XkW9JpUQXDpViYg4XB8n/79IPwt7hKekALIFpDbrOhptBoDWHnFaSk2B+YnAYdWu0y
-         qdFnXhGxKJgvsVSUR2YL+tGpYZNiXXKJ3JiYosEq6NEAqSX0pJDImRkoaRZPygFcq1BT
-         15fYgMMSzAoiREZHI9aSh1KDDnudMKMr0YNg7NLALjqLaxOkj4BPjHd54Cd94JuK2hTK
-         aODw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ft6xmRm0Xn4A+6zJu2AAPIsi5FGpNr4OiKyWPq8PF3E=;
+        b=mdt/L/fHFt2uUCxneOT+wJBx1zeGq9fEF86Cyn+w5YQHYXVdG2UDKU90QAJJDbAT6E
+         IZWrNX6Taxnc5BNAW8Yp3jFm3p+efXels7I1FhUsccQ4zciOFeCl6pRPzl9m7pO2PuDr
+         KccNYENPlAXa8/HDVUEFXxyjyo87LkIjp98PX/W8bgzxDLiDmuBzWbE0awp041Lw231F
+         +39mAOxKlUQKQGTmn1zMvdes8C2LY2Tfwuk7RCMGiBDabQHnqMP7NGNdvxL2BEaX+Sak
+         z7fe9ZeK79KghIH6+sVVA3NzodbDqzqiLcC+fviJJ+agPmBXo3F4bTuXNJhJr2KcUTHw
+         nV6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BcDQpu3fVXCp65bnUVYlKVk92q4FOMqEZL5EQW3/yP0=;
-        b=W2pOOyFJZNcJniknCcnNjUvdGYI3kVYh1f1S5Nk03dK2Moy3Ng/+vCZc4EXyiZSoSj
-         Azr1n1gDeiR9cF1cQyUzyKULD0hZGNUiRM3lFQmYIMrMfUGqq9IPSIj/r5+Bxv+Fvuea
-         ii02gF1IWBYCv/TMWDA10AYAuCwtqF9I8jv5tagcNKh+y0wv3D/2xIRThOdAKhzwACva
-         0Gg6gk4TMSP0rACSqcP6Qs0hJ0ROiuf61G9kAuxmwo5EabUE1AjTYwVQnccEN6zxLI+f
-         adinjThPPIlQBcKdVErI8XdMGpY+mgUQ+uxuDZvEcY1KDBEtvxabdPzOiqwLD0TsIP0Q
-         A22g==
-X-Gm-Message-State: APjAAAWxWPHINIdgHFiEsOT2XUvpk9GU8njHleD+sOZMBOSiYd0JX2Nw
-        e6Dv4nOOtSiw6IPvrDctRKTKwcc0
-X-Google-Smtp-Source: APXvYqyrC/hBUWYQWUfTch01WDIl59Zo5xgxUL1U3eB1k4mRKVaNtP7SHeVR+/2OMDkTHoKxKDx68w==
-X-Received: by 2002:aa7:96b7:: with SMTP id g23mr109012696pfk.108.1578361164098;
-        Mon, 06 Jan 2020 17:39:24 -0800 (PST)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id p23sm74779248pgh.83.2020.01.06.17.39.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 17:39:23 -0800 (PST)
-From:   liuyang34 <yangliuxm34@gmail.com>
-X-Google-Original-From: liuyang34 <liuyang34@xiaomi.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     liuyang34 <liuyang34@xiaomi.com>
-Subject: [PATCH v2] selinuxfs: use scnprinft to get real length for inode
-Date:   Tue,  7 Jan 2020 09:39:18 +0800
-Message-Id: <1578361158-27940-1-git-send-email-liuyang34@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ft6xmRm0Xn4A+6zJu2AAPIsi5FGpNr4OiKyWPq8PF3E=;
+        b=lKZTd7ialDiVYeQzv9hXnKqI0TirJnoM8LXemKbzPFldLH0BbBpYUQCn2bMS9VQank
+         I+zZwtGq5COJr0fH3QmnquRHik6Cjrm+mf8bdcEuWYDZ4xuTABip7LCMXrMfaaC4xnFx
+         oD4wwjCQyyk8drJonsIMzAqHJ6KwTIUs92PKtxJ8KFXg1H3QVzY/SxhOxT6t4b7IcPcS
+         4wwLzOqbzvQWhvQDgtYc/MH1DGP3WeUfTFOHUqZ9+GCn5h/6GAM1PHHx3WDSqf11hPZv
+         nxcTgdim459CZ0eamUFzR0U8hgNlhEpinsoXM/mL4EAdmm1NtymZ7vhm8JhCxtJH8WK3
+         VivA==
+X-Gm-Message-State: APjAAAWEkHPfLwZJepJ/20WHmG+KBtel594K267N5x53ci3aXxJrdOat
+        47Zmphp4e2zIHTovpIaJ4MZ9Wncilb4wNtT58iE/6Q==
+X-Google-Smtp-Source: APXvYqwhpelqz1BD3Zaxd7qhMERDtnjDXuXuK5sCqGFKA0nX5yXFO0Qqv4/D7HsevTyPJjTlnid1ORnGa9dP/VZvId4=
+X-Received: by 2002:a37:ba03:: with SMTP id k3mr83504125qkf.127.1578361533830;
+ Mon, 06 Jan 2020 17:45:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20191210195333.648018-1-arnd@arndb.de> <d739240f-aaa6-c310-9c68-16c1a08ce759@nvidia.com>
+In-Reply-To: <d739240f-aaa6-c310-9c68-16c1a08ce759@nvidia.com>
+From:   Curtis Malainey <cujomalainey@google.com>
+Date:   Mon, 6 Jan 2020 17:45:22 -0800
+Message-ID: <CAOReqxh9wamuKQnjPqUsZS_=4xUbsy-Y3v+=OXGaWV5EuONPmA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rt5677: add SPI_MASTER dependency
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-as the return value of snprintf maybe over the size of TMPBUFLEN, use scnprintf
-to instead of it in sel_read_class and sel_read_perm
-
-Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
----
- security/selinux/selinuxfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index ee94fa4..376d2c0e 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -1672,7 +1672,7 @@ static ssize_t sel_read_class(struct file *file, char __user *buf,
- {
- 	unsigned long ino = file_inode(file)->i_ino;
- 	char res[TMPBUFLEN];
--	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
-+	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
- 	return simple_read_from_buffer(buf, count, ppos, res, len);
- }
- 
-@@ -1686,7 +1686,7 @@ static ssize_t sel_read_perm(struct file *file, char __user *buf,
- {
- 	unsigned long ino = file_inode(file)->i_ino;
- 	char res[TMPBUFLEN];
--	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_perm(ino));
-+	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_perm(ino));
- 	return simple_read_from_buffer(buf, count, ppos, res, len);
- }
- 
--- 
-2.7.4
-
+On Wed, Dec 11, 2019 at 3:00 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 10/12/2019 19:52, Arnd Bergmann wrote:
+> > When CONFIG_SPI is disabled, the newly added code for the DSP
+> > firmware loading fails to link:
+> >
+> > ERROR: "rt5677_spi_hotword_detected" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
+> > ERROR: "rt5677_spi_write" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
+>
+> Would it be better if the above functions or the functions that call
+> these are conditional on CONFIG_SND_SOC_RT5677_SPI?
+>
+> > Add a dependency to prevent this configuration.
+> >
+> > Note: the does not work with the DT probing, as there is no binding
+>
+> Are you missing 'SPI' or something here?
+>
+> > for the SPI half of the driver, but nothing seems to be using that
+> > with the mainline kernel anyway.
+>
+> From a Tegra perspective, given that we don't use SPI in conjunction
+> with the rt5677 codec, only I2C so far, I am not sure we should make the
+> tegra_rt5677 driver dependent upon it. We should be able to operate
+> without the SPI bits enabled.
+>
+There should be no changes needed for tegra, this should be isolated
+to the bdw machine driver. The only things added to the machine driver
+were some dai links.
+> Cheers
+> Jon
+>
+> --
+> nvpublic
