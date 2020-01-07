@@ -6,125 +6,218 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F62C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C730C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C9C2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13232081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgAGLd7 (ORCPT
+        id S1727915AbgAGLe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:33:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58727 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGLd6 (ORCPT
+        Tue, 7 Jan 2020 06:34:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7918 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727559AbgAGLe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:33:58 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ion7T-0002sF-BX; Tue, 07 Jan 2020 12:33:55 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ion7S-0007gx-AY; Tue, 07 Jan 2020 12:33:54 +0100
-Date:   Tue, 7 Jan 2020 12:33:54 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107113354.ggq6zarewq5ip354@pengutronix.de>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
- <20200107110359.GA32423@pi3>
+        Tue, 7 Jan 2020 06:34:58 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007BVtwq037072
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 06:34:57 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb925c4ny-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:34:57 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 7 Jan 2020 11:34:54 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 Jan 2020 11:34:51 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007BYohE47513776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jan 2020 11:34:50 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A1CB4C046;
+        Tue,  7 Jan 2020 11:34:50 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 492354C04A;
+        Tue,  7 Jan 2020 11:34:50 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.119])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jan 2020 11:34:50 +0000 (GMT)
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
+ crashes in KVM guests after reboot
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>
+References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
+ <20191218100926-mutt-send-email-mst@kernel.org>
+ <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
+ <20200106054041-mutt-send-email-mst@kernel.org>
+ <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
+ <20200107042401-mutt-send-email-mst@kernel.org>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 7 Jan 2020 12:34:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200107042401-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107110359.GA32423@pi3>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+x-cbid: 20010711-0028-0000-0000-000003CEE3B4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010711-0029-0000-0000-00002492F331
+Message-Id: <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:03:59PM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-K�nig wrote:
-> > > I guess other solution would be to add stubs for few clk functions...
-> > > 
-> > > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > > > config (which does't have HAS_IOMEM) and they all compile fine.
-> > > 
-> > > Because of !HAS_IOMEM, since some time ARCH=um does not support
-> > > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> > > testing (and for regular build it is selected by ARCH).
-> > 
-> > Hehe, I didn't notice because for testing I just dropped the "depends on
-> > ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-> > compile fine on UML.
-> > 
-> > Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-> > !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-> > later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-> > == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-> > revert bc083a64b6c0 today? (And if not, a comment about why near the
-> > "depends on !UML" in init/Kconfig would be great.)
-> > 
-> > Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-> > though the compile testers won't notice it missing. Or should HAS_IOMEM
-> > be dropped?
+
+
+On 07.01.20 10:39, Michael S. Tsirkin wrote:
+> On Tue, Jan 07, 2020 at 09:59:16AM +0100, Christian Borntraeger wrote:
+>>
+>>
+>> On 06.01.20 11:50, Michael S. Tsirkin wrote:
+>>> On Wed, Dec 18, 2019 at 04:59:02PM +0100, Christian Borntraeger wrote:
+>>>> On 18.12.19 16:10, Michael S. Tsirkin wrote:
+>>>>> On Wed, Dec 18, 2019 at 03:43:43PM +0100, Christian Borntraeger wrote:
+>>>>>> Michael,
+>>>>>>
+>>>>>> with 
+>>>>>> commit db7286b100b503ef80612884453bed53d74c9a16 (refs/bisect/skip-db7286b100b503ef80612884453bed53d74c9a16)
+>>>>>>     vhost: use batched version by default
+>>>>>> plus
+>>>>>> commit 6bd262d5eafcdf8cdfae491e2e748e4e434dcda6 (HEAD, refs/bisect/bad)
+>>>>>>     Revert "vhost/net: add an option to test new code"
+>>>>>> to make things compile (your next tree is not easily bisectable, can you fix that as well?).
+>>>>>
+>>>>> I'll try.
+>>>>>
+>>>>>>
+>>>>>> I get random crashes in my s390 KVM guests after reboot.
+>>>>>> Reverting both patches together with commit decd9b8 "vhost: use vhost_desc instead of vhost_log" to
+>>>>>> make it compile again) on top of linux-next-1218 makes the problem go away.
+>>>>>>
+>>>>>> Looks like the batched version is not yet ready for prime time. Can you drop these patches until
+>>>>>> we have fixed the issues?
+>>>>>>
+>>>>>> Christian
+>>>>>>
+>>>>>
+>>>>> Will do, thanks for letting me know.
+>>>>
+>>>> I have confirmed with the initial reporter (internal test team) that <driver name='qemu'/> 
+>>>> with a known to be broken linux next kernel also fixes the problem, so it is really the
+>>>> vhost changes.
+>>>
+>>> OK I'm back and trying to make it more bisectable.
+>>>
+>>> I pushed a new tag "batch-v2".
+>>> It's same code but with this bisect should get more information.
+>>
+>> I get the following with this tag
+>>
+>> drivers/vhost/net.c: In function ‘vhost_net_tx_get_vq_desc’:
+>> drivers/vhost/net.c:574:7: error: implicit declaration of function ‘vhost_get_vq_desc_batch’; did you mean ‘vhost_get_vq_desc’? [-Werror=implicit-function-declaration]
+>>   574 |   r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
+>>       |       ^~~~~~~~~~~~~~~~~~~~~~~
+>>       |       vhost_get_vq_desc
+>>
 > 
-> I think yes, it can be dropped, but this would require:
-> 1. Fixing any dependencies on HAS_IOMEM, e.g.:
->     WARNING: unmet direct dependencies detected for MFD_SYSCON
->       Depends on [n]: HAS_IOMEM [=n]
->       Selected by [y]:
->       - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
+> Not sure why but I pushed a wrong commit. Sorry. Should be good now.
+> 
 
-I don't understand that warning. What did you modify to trigger that?
-Probably related to the big "if HAS_IOMEM" in drivers/mfd/Kconfig?!
+during bisect:
 
-> 2. Checking if all of stubs are implemented (not only IOMEM but maybe
->    DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
->    need devm_ioremap_resource() and others.
+drivers/vhost/vhost.c: In function ‘vhost_get_vq_desc_batch’:
+drivers/vhost/vhost.c:2634:8: error: ‘id’ undeclared (first use in this function); did you mean ‘i’?
+ 2634 |  ret = id;
+      |        ^~
+      |        i
 
-A problem is that it's unclear (to me at least) what the presence of
-HAS_IOMEM actually implies. I thought it's about ioremap + readl +
-writel (including their respective variants). Does it really include dma
-stuff, too?
+I changed that to i
 
-> Quick test shows mentioned "unmet direct dependencies" and:
->     phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
->     dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
 
-dma_pgprot seems to depend on HAS_DMA though, not HAS_IOMEM.
+The last step then gave me  (on commit 50297a8480b439efc5f3f23088cb2d90b799acef vhost: use batched version by default)
+net enc1: Unexpected TXQ (0) queue failure: -5
+in the guest.
 
-(Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
-NO_DMA has three different definitions. Two of them (in
-drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
-unrelated.)
+bisect log so far:
+[cborntra@m83lp52 linux]$ git bisect log
+git bisect start
+# bad: [3131e79bb9e9892a5a6bd33513de9bc90b20e867] vhost: use vhost_desc instead of vhost_log
+git bisect bad 3131e79bb9e9892a5a6bd33513de9bc90b20e867
+# good: [d1281e3a562ec6a08f944a876481dd043ba739b9] virtio-blk: remove VIRTIO_BLK_F_SCSI support
+git bisect good d1281e3a562ec6a08f944a876481dd043ba739b9
+# good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
+git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
+# good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
+git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
+# bad: [1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79] vhost: batching fetches
+git bisect bad 1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+
