@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523A6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283DCC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C87D208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6005206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432458;
-	bh=EG8mgsXvyYWllOTkobaif61wALGAf0iokGmfEznAR7M=;
+	s=default; t=1578432464;
+	bh=A64t3xi++pgaS/FV2RW0dRsxnqvTG6K3/WIFHAi0uak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CtppIk4B9I8smqdlAE8N7StxoHiDdBqG8oV3C2WrGRFyU2U2O6zu7PqXRN4KK+iY9
-	 Z+TRCRWZx1+6Kq38OvYY+ZuMyhEYdY3eSArCCpWVsCIBV3lZ/R08lvRRTCNc48Mv7M
-	 RvH/bsVwN00QDiQtechdPzTE6zxRcLuy+KcK9Oo0=
+	b=gbGVg9OrOv7sH6Szyxt5E9+PNeFZH6gHGPKTKvvx5QFQ61zssf7vA0P0srixxr+KS
+	 Lwa83f60V7V3+G70OHb+m34coCzzUhS4B8TKcFiRZIAkVQkX+x0+H6EOAExfYYjzjI
+	 Tr4nAiemTs3EkXgmKduJuc+Pu/HDTouzMtUI5n3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgAGU51 (ORCPT
+        id S1728666AbgAGV1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:27:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbgAGU5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:20 -0500
+        id S1727592AbgAGU5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0B8C2087F;
-        Tue,  7 Jan 2020 20:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A482081E;
+        Tue,  7 Jan 2020 20:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430640;
-        bh=EG8mgsXvyYWllOTkobaif61wALGAf0iokGmfEznAR7M=;
+        s=default; t=1578430652;
+        bh=A64t3xi++pgaS/FV2RW0dRsxnqvTG6K3/WIFHAi0uak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXxnHqlNNuOYDOMeYDgYGes1OKykc5XfdL3RP9rhHiUo3R9PEr6wHmvH9O7lkxd9w
-         6HPo7gBIx71nd3OJ/dMgFG4mQqXTN61ptPUae4zqeczWC2kmey8OEKDt43sQY9UzWe
-         EMfUwSoAYi5+Twd0FdmxeXgKt12RwWmlxFA+F3MA=
+        b=SkKkPeDuiujMUoZ9ZxeguIoZGeQvpA3qwQKz3qOE3GNrmAEECTM50HcxZIy9mYJm0
+         DMpc8vAVLIK3ftEPxJJEC4d8OV5B2y9a/94tV9xooUKG81oDx/TlzU+UYvTaqlmWm8
+         Rl67kTSRumzdPhpylj9nLi+ztgQbnvpYCnNING64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kupfer <michael.kupfer@fau.de>,
-        Kay Friedrich <kay.friedrich@fau.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 035/191] staging/wlan-ng: add CRC32 dependency in Kconfig
-Date:   Tue,  7 Jan 2020 21:52:35 +0100
-Message-Id: <20200107205334.875765584@linuxfoundation.org>
+        stable@vger.kernel.org, netdev@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/191] net: make socket read/write_iter() honor IOCB_NOWAIT
+Date:   Tue,  7 Jan 2020 21:52:40 +0100
+Message-Id: <20200107205335.139933986@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,35 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kay Friedrich <kay.friedrich@fau.de>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 2740bd3351cd5a4351f458aabaa1c9b77de3867b ]
+[ Upstream commit ebfcd8955c0b52eb793bcbc9e71140e3d0cdb228 ]
 
-wlan-ng uses the function crc32_le,
-but CRC32 wasn't a dependency of wlan-ng
+The socket read/write helpers only look at the file O_NONBLOCK. not
+the iocb IOCB_NOWAIT flag. This breaks users like preadv2/pwritev2
+and io_uring that rely on not having the file itself marked nonblocking,
+but rather the iocb itself.
 
-Co-developed-by: Michael Kupfer <michael.kupfer@fau.de>
-Signed-off-by: Michael Kupfer <michael.kupfer@fau.de>
-Signed-off-by: Kay Friedrich <kay.friedrich@fau.de>
-Link: https://lore.kernel.org/r/20191127112457.2301-1-kay.friedrich@fau.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: netdev@vger.kernel.org
+Acked-by: David Miller <davem@davemloft.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wlan-ng/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ net/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/wlan-ng/Kconfig b/drivers/staging/wlan-ng/Kconfig
-index ac136663fa8e..082c16a31616 100644
---- a/drivers/staging/wlan-ng/Kconfig
-+++ b/drivers/staging/wlan-ng/Kconfig
-@@ -4,6 +4,7 @@ config PRISM2_USB
- 	depends on WLAN && USB && CFG80211
- 	select WIRELESS_EXT
- 	select WEXT_PRIV
-+	select CRC32
- 	help
- 	  This is the wlan-ng prism 2.5/3 USB driver for a wide range of
- 	  old USB wireless devices.
+diff --git a/net/socket.c b/net/socket.c
+index d7a106028f0e..ca8de9e1582d 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -955,7 +955,7 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 			     .msg_iocb = iocb};
+ 	ssize_t res;
+ 
+-	if (file->f_flags & O_NONBLOCK)
++	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+ 		msg.msg_flags = MSG_DONTWAIT;
+ 
+ 	if (iocb->ki_pos != 0)
+@@ -980,7 +980,7 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (iocb->ki_pos != 0)
+ 		return -ESPIPE;
+ 
+-	if (file->f_flags & O_NONBLOCK)
++	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+ 		msg.msg_flags = MSG_DONTWAIT;
+ 
+ 	if (sock->type == SOCK_SEQPACKET)
 -- 
 2.20.1
 
