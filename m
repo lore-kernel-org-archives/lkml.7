@@ -2,82 +2,109 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549F32146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578421600;
-	bh=1u8pj7Qw0AQoNvxZ80zo7WkZ+ykeQKwOkuqIfoY82BI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=quQUugxTLWU9qC2F7V3ESwarNoQfQ56y3JRgDW2SQUKt3LkWrGNCbZEW8hclrky6M
-	 cE/9HuJ3XlZbfVn7njXPUrAuouQLbi26N4e2q57TQOyUlot/UfY8p693RC62f+DOVh
-	 rRsmWziBO743NjY0HLIjSxH6fd5SZMiFGiY9DhPA=
+	by mail.kernel.org (Postfix) with ESMTP id 23F8A222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="it07uPHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgAGS0j (ORCPT
+        id S1728617AbgAGS0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbgAGS0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:26:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 378CB206F0;
-        Tue,  7 Jan 2020 18:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578421598;
-        bh=1u8pj7Qw0AQoNvxZ80zo7WkZ+ykeQKwOkuqIfoY82BI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qAUFCrY0VsgbJsWkl1Ty/fCBqJOnyXxaLaGMFEQAjMBxvtd1+0K//ZkxRuFCl5jFg
-         530EHb0+8VYvKLWD+P83krZ6+TZltwhDvzlA7dEYXvsKmEKOWI46y+lWzfxm300iIJ
-         HuuEgXWGWhOiBYU7MbqoZCHc7SmDn8bva79/QyqY=
-Date:   Tue, 7 Jan 2020 19:26:36 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>, hch@lst.de,
-        Sasha Levin <sashal@kernel.org>, m.szyprowski@samsung.com,
-        linux- stable <stable@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        lkft-triage@lists.linaro.org
-Subject: Re: dma-direct: don't check swiotlb=force in dma_direct_map_resource
-Message-ID: <20200107182636.GA2021584@kroah.com>
-References: <CA+G9fYvMX4gMi6hmTmukzgr1xPsoJsj0WTm=AS3hC5Mq-dLvsQ@mail.gmail.com>
- <2c401e83-99d2-925f-66fe-fffe04415e1a@arm.com>
+        Tue, 7 Jan 2020 13:26:43 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37811 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbgAGS0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:26:42 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 21so279496qky.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:26:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7T+Uz+ziIhwrQC1V0AO3Y5+ZIkKPGfie4ADyDKB8cAU=;
+        b=it07uPHDjGFZLQpswrCddH3xbdXVBbPpx7Nx/qj/M+AFTfNxE4quAolxqS+arqL82c
+         bl2Dty4s2fHhhM+letMeeVrn66LuHeYFxq+gNVaSLml043l3Mgqb4ZuFwUwnaUla9vBU
+         XCvnGSIeEWBLy3HClWG54PiF0P9CP0Kw/yorUkncnr/GVkjNLF0VOPdoEqQc1YZs648M
+         +wTyOAeW9mG/SF5WZayTC41edK3kWoBdjfGk0WyEi0tItDsszZY4wPlWG0TOaJoVLoYS
+         XPL4BZeApnwa5rKBzKuaVQbj42euhCwi2RU/Q78YPwDBnIw92QRCD1G8blFVRkcADxlx
+         9fLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7T+Uz+ziIhwrQC1V0AO3Y5+ZIkKPGfie4ADyDKB8cAU=;
+        b=EvA8zOBbCKeT288rAJtJ0+/I5bnYycZQDqxniBULKS8gCPlviNgNRKRVWfklSz/930
+         2fUkclORbnHog2Fu5OYBFhGxMVKKBMuzkzm1p5ZfF0YlbRxCRWxWsUzRPW2jB4fnBXcQ
+         Wan2CkGZOSmPSDgPZOiQnmNrXFW9npaJcs4XqiNBUtHJrHyHeYSiAGeemgJR8m6pLB/p
+         8IHyvleg1thCvfqCo3IVaxY28z2/865UxEWadWK9FBwBgyHz9DOJru0pnFayLl+ruYc8
+         AuWSHh09SKbRZnh2ghFkgWmnLKSr/fSQD0reB+TcSV4XeZPUCtumXCQzdDG0VPvlvtIE
+         qxCA==
+X-Gm-Message-State: APjAAAVTpkipcic9kvm8DdSakpRgt/OLq9IzYrKW1QUg7LmTFtF1Uy4U
+        yWf6lLSzsZ5vT+WAEJY8/N2CTQ==
+X-Google-Smtp-Source: APXvYqx7dejdsvwplVt1zaxwDZ5VHKGR9kLeMkjdXFz1Pgrfhz+vaitLElnr3cudKfk5O3dhcZdagQ==
+X-Received: by 2002:a37:bcc4:: with SMTP id m187mr655640qkf.329.1578421601844;
+        Tue, 07 Jan 2020 10:26:41 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id t29sm186540qkm.27.2020.01.07.10.26.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 10:26:41 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iotYv-0008Q7-0P; Tue, 07 Jan 2020 14:26:41 -0400
+Date:   Tue, 7 Jan 2020 14:26:40 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
+        dledford@redhat.com, paulmck@kernel.org, rcu@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+Message-ID: <20200107182640.GC26174@ziepe.ca>
+References: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2c401e83-99d2-925f-66fe-fffe04415e1a@arm.com>
+In-Reply-To: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 06:18:28PM +0000, Robin Murphy wrote:
-> On 07/01/2020 5:38 pm, Naresh Kamboju wrote:
-> > Following build error on stable-rc 5.4.9-rc1 for arm architecture.
-> > 
-> > dma/direct.c: In function 'dma_direct_possible':
-> > dma/direct.c:329:3: error: too many arguments to function 'dma_capable'
-> >     dma_capable(dev, dma_addr, size, true);
-> >     ^~~~~~~~~~~
+On Tue, Jan 07, 2020 at 11:05:08PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 > 
-> Not sure that $SUBJECT comes into it at all, but by the look of it I guess
-> "dma-direct: exclude dma_direct_map_resource from the min_low_pfn check"
-> implicitly depends on 130c1ccbf553 ("dma-direct: unify the dma_capable
-> definitions") too.
+> list_for_each_entry_rcu has built-in RCU and lock checking.
+> Pass cond argument to list_for_each_entry_rcu.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>  drivers/infiniband/hw/hfi1/verbs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+> index 089e201d7550..cab2ff185240 100644
+> +++ b/drivers/infiniband/hw/hfi1/verbs.c
+> @@ -515,7 +515,8 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
+>  				       opa_get_lid(packet->dlid, 9B));
+>  		if (!mcast)
+>  			goto drop;
+> -		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+> +		list_for_each_entry_rcu(p, &mcast->qp_list, list
+> +								lock_is_held(&(ibp->rvp.lock).dep_map)) {
 
-Ugh, good catch.  I'll drop these patches, they don't look ok for stable
-at this point in time.
+This is missing a ',' and isn't indented properly. Does it even
+compile?
 
-thanks,
+The idea seems sound though.
 
-greg k-h
+Jason
