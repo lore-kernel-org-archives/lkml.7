@@ -2,89 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5846CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D92C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207982073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341A8206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgAGWEl (ORCPT
+        id S1727304AbgAGWGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:04:41 -0500
-Received: from mga11.intel.com ([192.55.52.93]:40523 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbgAGWEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:04:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 14:04:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
-   d="scan'208";a="217317989"
-Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Jan 2020 14:04:39 -0800
-Subject: [PATCH] tpm: handle negative priv->response_len in tpm_common_read
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     keescook@chromium.org, tadeusz.struk@intel.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-integrity@vger.kernel.org, labbott@redhat.com
-Date:   Tue, 07 Jan 2020 14:04:48 -0800
-Message-ID: <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
-In-Reply-To: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
-References: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 7 Jan 2020 17:06:33 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:38017 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgAGWGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:06:33 -0500
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N6JtR-1jmL2U1O2b-016eOK; Tue, 07 Jan 2020 23:06:31 +0100
+Received: by mail-qk1-f175.google.com with SMTP id a203so909099qkc.3;
+        Tue, 07 Jan 2020 14:06:30 -0800 (PST)
+X-Gm-Message-State: APjAAAVb410bR7aDf9atZ3/Y8cBO3H+sfO9Bh0A4fyBS5QhJSXFXDzlZ
+        FPEEQm+iejWCv/j45urnGEYwjVXrR+vlMsGCN0k=
+X-Google-Smtp-Source: APXvYqzLX1vDB9bbHKm0RIfLRmhhg3Pbbkya5hKGBWX/IIiUDGpl/J0vvUx4sgrkexjEB1wHob2sa45CjmKbtRESa5M=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr1531468qka.286.1578434790062;
+ Tue, 07 Jan 2020 14:06:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200107203041.843060-1-arnd@arndb.de> <1578430874.4288.2.camel@HansenPartnership.com>
+In-Reply-To: <1578430874.4288.2.camel@HansenPartnership.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Jan 2020 23:06:05 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2GbfvgWep1JGNUX7c8jrtQs40PgUfq5C3d_zYuBK5nmw@mail.gmail.com>
+Message-ID: <CAK8P3a2GbfvgWep1JGNUX7c8jrtQs40PgUfq5C3d_zYuBK5nmw@mail.gmail.com>
+Subject: Re: [PATCH] ima: make ASYMMETRIC_PUBLIC_KEY_SUBTYPE 'bool'
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:UNCZ4qhZHs2qnSxwdJ7LsP8e+/8oh0SxkGihIdlHUQ6cnEU0nWQ
+ SyKEWjbvZgrzpN/ioEEhPBuxLgOJYfm9CUzbt+KRkgFUMEUMUrad6Tw1ZYApxcWIFKoVcVT
+ hGrpnLs9xXVsvbf542th7RIzwOBE/3Q7oGaSaAOgUCLS0m/J6V2uiuqMKGaEFThLnq16vLX
+ uYcE4Po9nPm2Ow5JoK0pw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kVSAH9wvaGI=:l20eCZV1dCjDqukeUw4Gzf
+ HbALFQ+QUIxaAJT+c0fcRA7BLMFyZ1aWywgnu3XkV56rUxEml7oiWA4D1ogEbfVNLmV90YSUl
+ W5iyI+h4E1TWyI4QlHxXl4vh10xEbXTFJaOw8Rxog6QGZHsBfewji1/px19BNqGh+yuUkX6CC
+ WA7DQfWn7NVZh7undBoYTURzu5PBcK4Be5wmq4e1DvJf9bEpZ+cEGxPrFOIRWxMblKfQDbran
+ Rzjybl9QmOokfiin3/Vi1gRPOulOU+BTt+H+GFizvB2df7WfmTyEP7/Gmt7BlFDED1Jh+O2XF
+ ESD+ZUKqb22euLMYHoBIc2tcGRNwPdVjqMdp8jlYrzyjQNOdFI/h9o/jPd0XIbTNbYjK/Wmbc
+ SxCleVE0xNwUU0uI5zlb475gv+4W3L4x8MS1VwnQkl9SZxw1If+p8+JrS/cpsMDpUBdN5DYP7
+ SOwaFIBuQWxEtKKfOyeV1WvCKwMTruAgh4LNA86QcpcGZDOnK8jLOGBXj3YKEttnBZpE/Fnqd
+ HtIpxse/e7hn96fWRtZm9bm8A+Q6C7baP9dNReMuXYHSJpMgspOXMoBvN6yDHSjcJgJHDm/B3
+ YMXGHprDt+IqvQbOrpVttEkFpjVa3aVtsO+B6zyrfhIXtZo/rl4v2J2TakXMtOmdtVLPEmgPt
+ OAEKOBL5YQKtBn8xn2zpxajrvo9o8LKU9hYqg9sv2IGbMD1iWW9t/Umu9v6N8DKx6xqsUWxyZ
+ bmQ6c8jdIP0mZrrzXpA94t3J394bo1idNG5E3bPhrQ3QNZ7R8M+0WQWxZfsDeLEpNF5+pn1Hd
+ IRv43Ru+8jhRIfyt4E4jECocSjcVNs4ULLQn0UnHnMzPf2qiVLNAriWU2TQcynDF1RQUQ1P1P
+ u9/T50iWs5OuNU0pnQyg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The priv->responce_length can hold the size of an response or
-an negative error code, and the tpm_common_read() needs to handle
-both cases correctly. Changed the type of responce_length to
-signed and accounted for negative value in tpm_common_read()
+On Tue, Jan 7, 2020 at 10:01 PM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Tue, 2020-01-07 at 21:30 +0100, Arnd Bergmann wrote:
 
-Cc: stable@vger.kernel.org
-Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
-Reported-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
----
- drivers/char/tpm/tpm-dev-common.c |    2 +-
- drivers/char/tpm/tpm-dev.h        |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> >  config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+> > -     tristate "Asymmetric public-key crypto algorithm subtype"
+> > +     bool "Asymmetric public-key crypto algorithm subtype"
+>
+> I believe the crypto guys do like stuff to be modular.
+>
+> However, we've already implemented this solution:
+>
+> https://lore.kernel.org/linux-integrity/20200107194350.3782-2-nramas@linux.microsoft.com/
+>
+> To solve the problem via an intermediate boolean config variable.
 
-diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
-index b23b0b999232..87f449340202 100644
---- a/drivers/char/tpm/tpm-dev-common.c
-+++ b/drivers/char/tpm/tpm-dev-common.c
-@@ -130,7 +130,7 @@ ssize_t tpm_common_read(struct file *file, char __user *buf,
- 		priv->response_read = true;
- 
- 		ret_size = min_t(ssize_t, size, priv->response_length);
--		if (!ret_size) {
-+		if (ret_size <= 0) {
- 			priv->response_length = 0;
- 			goto out;
- 		}
-diff --git a/drivers/char/tpm/tpm-dev.h b/drivers/char/tpm/tpm-dev.h
-index 1089fc0bb290..f3742bcc73e3 100644
---- a/drivers/char/tpm/tpm-dev.h
-+++ b/drivers/char/tpm/tpm-dev.h
-@@ -14,7 +14,7 @@ struct file_priv {
- 	struct work_struct timeout_work;
- 	struct work_struct async_work;
- 	wait_queue_head_t async_wait;
--	size_t response_length;
-+	ssize_t response_length;
- 	bool response_read;
- 	bool command_enqueued;
- 
+Ok, that looks good to me.
 
+    Arnd
