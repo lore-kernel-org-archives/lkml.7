@@ -2,102 +2,116 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF6BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14044222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269DC20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O45qqj0a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YazhU/1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgAGRgs (ORCPT
+        id S1728474AbgAGRio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:36:48 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:55527 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbgAGRgr (ORCPT
+        Tue, 7 Jan 2020 12:38:44 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46237 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728408AbgAGRio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:36:47 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d5so80892pjz.5;
-        Tue, 07 Jan 2020 09:36:47 -0800 (PST)
+        Tue, 7 Jan 2020 12:38:44 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so296954lfl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:38:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yEpRHlcDF4psUPPX8udaCtEP3gg4YAcBzZqIRmvDq4M=;
-        b=O45qqj0aDDULssDuKLQcH16n+Zkv27jPGry9/wMjWy0wRqXphQim2gedId/p3u4n2Z
-         MMcmLTugiChCJ7XpCS0cGoXvkAUaTZCdA68ICgGDyGESgXIrKDek3SK5U9jL9ggoBXKi
-         /QVCQV+SXMbuh3h4lzYjs4AmZAXZ8R82e/Rz//ukbWs9tLnHy3FyBZsXgved9Bf6PNdH
-         C47yCiHk9ag1bygHICUnu52JC3Q84XJSjP7qHGcrb+lh/8JLZruI1NBnArcirWoER96h
-         gGhphUznyXUT6/c8h+3fjnCkTa5SD9fnFzBHJWF4xI2QScOkI0ZgDMhr/5m7UuWzj1Yw
-         1aMQ==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=YShlSsj6Xvg1OPo/28mdVtM8iXSk9E0UBpNiD7d4cxc=;
+        b=YazhU/1g6LwFUIZeow4DmwAk2IRXPDITZkAOr2G/j4sCa4bGbUL7sYUao55R8VZ3ZQ
+         Jv2Ml2OB7SXId3CCh1zEulZ3QjsySlL3rT53Y4ldWMtvsqes3QDo+aeIgRm+/pLEA+Tm
+         5aThR1u/u5iFNvsiBzluecy1q1OyXe9+IJ3tht63Sq7JFgqxTMRn03XZzN0fvRdggLQF
+         p//PkUf6nff51015iEzpZHBUNPubmqTws917O69DZZ+pI/GRjcKWwhKPoFEHYjjXqdnz
+         UekIRCddL2f1Z2MlbWBZJRAs1cl/r2UVmMtlSKhppAdCQdR1Iz9eiypKiHjS68jCEYSU
+         whfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yEpRHlcDF4psUPPX8udaCtEP3gg4YAcBzZqIRmvDq4M=;
-        b=N7K4mV9isj56J6iEg0jf4RJfp4szhOeDDU/o2malQ/LZ04+6wa1i6LGkxd0Xntx9TP
-         960sZIz7FqvAUKZ0TPOf+WlUyyiDAGQYr7cw+9akg4rk2jCsqQR5vRLlZTUl7v9nWoby
-         MnPWzE+1IIlxVf4aUyjU3gn85qtIGnXzeCDV6KNFClH9ABVC6q/eAvPUztem99K6f4AQ
-         X1MdciW+EZvvRZ/PYzQMg3vVRXsCfBqe/7HTB87czANOZIRCCCrWoyQtmW3zboaRDQUJ
-         ZY9qXIR9GDlf9uoKhf8truqM4Ldi5oLWcdTTuo4g2lQgERjkTt7bPqfcbc6FovRb7Lmd
-         TA9w==
-X-Gm-Message-State: APjAAAU4X//CUizQioTEXbhm+43dlK8fbgolWuYfbV7qqqBRqKh/+qmi
-        tMkz1D3dfXHI6QxESfvkZ/U=
-X-Google-Smtp-Source: APXvYqwlIMhhQqRk4XXts851ki2Ruxlx1uFIWb/XbuB0nNQEVcpwt/2clYA0lB6mVvUaefD7sNnXEw==
-X-Received: by 2002:a17:902:c509:: with SMTP id o9mr822791plx.112.1578418607016;
-        Tue, 07 Jan 2020 09:36:47 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:fd53:981d:523f:a647:bef8])
-        by smtp.gmail.com with ESMTPSA id d3sm130091pfn.113.2020.01.07.09.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 09:36:46 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
-        dledford@redhat.com, paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH 3/3] infiniband: sw: rdmavt: mcast.c: Use built-in RCU list checking
-Date:   Tue,  7 Jan 2020 23:05:10 +0530
-Message-Id: <20200107173510.20320-3-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
-References: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=YShlSsj6Xvg1OPo/28mdVtM8iXSk9E0UBpNiD7d4cxc=;
+        b=sukbcLQrXkvumkVmgcprbjzh4xLEHQoK43LIlZ81knD/xGS0KiH3oYSlDOQzVmx9xc
+         B60qc9cwYRq8aAdpOSe3C/NngTePEerb9k4R2A3KTKaTLE/8mrAxm+zqjqGQqqYQ/rir
+         BQv2HQJiwVVhuljOfMuM7dbve+CCsA61k6u9NRSkd39Mzs3G+NPUdnHFYbi8xiNjfgg/
+         2X9mnKlOW0jJYfMYv0AlhtJTv7s0LCP1XeXnjOAmeLjqJlVDyq/SMxFuq6JYy9Sjooxa
+         Mgh0wQyOIRdRn/nWi1rmgGdFLxOWTrrJM/hog4wnhm3bxvSAKlGFiSKLZVuIr3BgD04E
+         Whjg==
+X-Gm-Message-State: APjAAAU1Rq3Fprr6ror01Vb3GGp8NpUWv0FGhDOJ4JX2qUdi5jzaNgYs
+        RqVh3c44yxtNyH1ZxNLFS6DwzPx50O0vuiyDQmELdA==
+X-Google-Smtp-Source: APXvYqzQpfWSWht2AsmDB2uHaiszhuxs88LR7mPSu6VSKvyO2MAlyzIQvfINY/+/sMaehSvr/ao1iKhlBnfVVXZebDI=
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr352825lfk.67.1578418721583;
+ Tue, 07 Jan 2020 09:38:41 -0800 (PST)
+MIME-Version: 1.0
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Jan 2020 23:08:30 +0530
+Message-ID: <CA+G9fYvMX4gMi6hmTmukzgr1xPsoJsj0WTm=AS3hC5Mq-dLvsQ@mail.gmail.com>
+Subject: Re: dma-direct: don't check swiotlb=force in dma_direct_map_resource
+To:     hch@lst.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     robin.murphy@arm.com, m.szyprowski@samsung.com,
+        linux- stable <stable@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Following build error on stable-rc 5.4.9-rc1 for arm architecture.
 
-Use built-in RCU and lock-checking for list_for_each_entry_rcu()
-by passing the cond argument.
+dma/direct.c: In function 'dma_direct_possible':
+dma/direct.c:329:3: error: too many arguments to function 'dma_capable'
+   dma_capable(dev, dma_addr, size, true);
+   ^~~~~~~~~~~
+In file included from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/include/linux/dma-direct.h:12:0,
+                 from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/kernel/dma/direct.c:10:
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/arch/arm/include/asm/dma-direct.h:17:20:
+note: declared here
+ static inline bool dma_capable(struct device *dev, dma_addr_t addr,
+size_t size)
+                    ^~~~~~~~~~~
+In file included from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/include/linux/init.h:5:0,
+                 from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/include/linux/memblock.h:12,
+                 from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/kernel/dma/direct.c:7:
+dma/direct.c: In function 'dma_direct_map_resource':
+dma/direct.c:378:16: error: too many arguments to function 'dma_capable'
+  if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+                ^
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/include/linux/compiler.h:78:42:
+note: in definition of macro 'unlikely'
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                                          ^
+In file included from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/include/linux/dma-direct.h:12:0,
+                 from
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/kernel/dma/direct.c:10:
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/arch/arm/include/asm/dma-direct.h:17:20:
+note: declared here
+ static inline bool dma_capable(struct device *dev, dma_addr_t addr,
+size_t size)
+                    ^~~~~~~~~~~
+/srv/oe/build/tmp-lkft-glibc/work-shared/am57xx-evm/kernel-source/scripts/Makefile.build:265:
+recipe for target 'kernel/dma/direct.o' failed
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/infiniband/sw/rdmavt/mcast.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Full build log link,
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.4/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/44/consoleText
 
-diff --git a/drivers/infiniband/sw/rdmavt/mcast.c b/drivers/infiniband/sw/rdmavt/mcast.c
-index dd11c6fcd060..5fce375f22f4 100644
---- a/drivers/infiniband/sw/rdmavt/mcast.c
-+++ b/drivers/infiniband/sw/rdmavt/mcast.c
-@@ -224,7 +224,8 @@ static int rvt_mcast_add(struct rvt_dev_info *rdi, struct rvt_ibport *ibp,
- 		}
- 
- 		/* Search the QP list to see if this is already there. */
--		list_for_each_entry_rcu(p, &tmcast->qp_list, list) {
-+		list_for_each_entry_rcu(p, &tmcast->qp_list, list
-+								lock_is_held(&(ibp->lock).dep_map)) {
- 			if (p->qp == mqp->qp) {
- 				ret = ESRCH;
- 				goto bail;
 -- 
-2.17.1
-
+Linaro LKFT
+https://lkft.linaro.org
