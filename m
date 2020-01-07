@@ -2,154 +2,112 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BEC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1528FC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDC82080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="b7XXJm4K"
+	by mail.kernel.org (Postfix) with ESMTP id E23E32080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgAGNi2 (ORCPT
+        id S1728164AbgAGNid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:38:28 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26644 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727880AbgAGNi2 (ORCPT
+        Tue, 7 Jan 2020 08:38:33 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52587 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgAGNic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:38:28 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007Dai0C031061;
-        Tue, 7 Jan 2020 08:37:53 -0500
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xarg9700u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 08:37:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X3PutjIminsTL8rN5N0KsTr9pD8JymHE3p8bIwGGv/XQj7uTCh1swAkJGa/fHlDdZKPgK+LG1TbA6o3g/j7F5UjfxOvzfGNKgm0qo4Y/9XpKY7Vb0HKhZ1e7TeQurJO3IMIhOaKvWK+i2x05OhHjYM63oU9B2WQWh4PPnvpIzdI+5/+Luk4ra+QTcWzJgf/JIID4RFxRurQg0r9btK3uOeDKfahQSo4UyrCXG18kcDo6ScaVgRCaL3MpDDtD04w4wF+g9CLrTaPjF+t+ieeZoUk+d3W4Mt5AVQd+sXyPuChHag3vuy5idevQD6KEN0fVt8BQ/ifesPA2tkfUzfXAcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
- b=VoXgZSM6oQbKJ4FWs7pdzP0Jt2riXMvItCGZyUzzWw4Aadd918MA9kOavCQFL/N4s7UChVytgte+nDJieXLk2Whuc4P9G6oayd5dP/3wgXU1mMjmvSWodamVXm2cJ14cPCCJK6OujeaT2w0xiDGUTtrRYmFmnWGZaPC4GStb5PKkzz8dD7SlYTzUWLju9mbY5bAtpnQSEESWy8aY6JeT1qsRlE4fXY+R/iS0hF+7kZjp4rtD2YvcSVZyIRf/LzkU4wnRwwM8vlnpcjTum66JWIqMgnU1f43U+s8VbfoGjoowfFXGNZZAZM8dVzhUbTYyHVfVjNjQfPpPz0OypQ5Wvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=lists.freedesktop.org
- smtp.mailfrom=analog.com; dmarc=bestguesspass action=none
- header.from=analog.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXONAl8khotmNpxZIDY9Jtj9dWE9GvxOwxoDyUMVbHw=;
- b=b7XXJm4Ka4urUESs9MEn0NbQvlmQPYDkXDbjkFJFw5u8oKARVgoAwucdU8F7AMeFDHxKTv/UUIAQnKndLu6jFcPjhAM+0D4SAEA9fCFYqnRgfdKJrGobGWQByemdNlPzrpVr2dHckBEUoTY3q45/Wipg0J1rIoa1gXX+JH83VEk=
-Received: from BN3PR03CA0103.namprd03.prod.outlook.com (2603:10b6:400:4::21)
- by DM6PR03MB3532.namprd03.prod.outlook.com (2603:10b6:5:ba::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15; Tue, 7 Jan
- 2020 13:37:50 +0000
-Received: from CY1NAM02FT033.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by BN3PR03CA0103.outlook.office365.com
- (2603:10b6:400:4::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend
- Transport; Tue, 7 Jan 2020 13:37:50 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT033.mail.protection.outlook.com (10.152.75.179) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2602.11
- via Frontend Transport; Tue, 7 Jan 2020 13:37:49 +0000
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 007DbbDu004373
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 05:37:37 -0800
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Jan 2020
- 08:37:47 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Jan 2020 08:37:47 -0500
-Received: from btogorean-pc.ad.analog.com ([10.48.65.146])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 007DbflP002280;
-        Tue, 7 Jan 2020 08:37:41 -0500
-From:   Bogdan Togorean <bogdan.togorean@analog.com>
-To:     <dri-devel@lists.freedesktop.org>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <sam@ravnborg.org>, <alexander.deucher@amd.com>,
-        <matt.redfearn@thinci.com>, <robdclark@chromium.org>,
-        <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>
-Subject: [RESEND v3 0/2] drm: bridge: adv7511: Add support For ADV7535
-Date:   Tue, 7 Jan 2020 15:34:30 +0200
-Message-ID: <20200107133431.5201-1-bogdan.togorean@analog.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 7 Jan 2020 08:38:32 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iop3l-0007Jd-RU; Tue, 07 Jan 2020 14:38:13 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iop3j-0005N2-6B; Tue, 07 Jan 2020 14:38:11 +0100
+Date:   Tue, 7 Jan 2020 14:38:11 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
+References: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
+ <20191217073533.GC31182@pengutronix.de>
+ <20191217125832.GF4755@sirena.org.uk>
+ <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
+ <20200107130911.GD4877@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(376002)(39860400002)(346002)(199004)(189003)(246002)(4744005)(8936002)(8676002)(6916009)(2616005)(1076003)(7416002)(5660300002)(86362001)(356004)(36756003)(6666004)(7636002)(426003)(44832011)(186003)(336012)(478600001)(2906002)(107886003)(316002)(54906003)(26005)(7696005)(70586007)(70206006)(4326008)(16060500001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3532;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f5c145c7-01a8-4221-4bfa-08d79376c9ed
-X-MS-TrafficTypeDiagnostic: DM6PR03MB3532:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB35321A3FE1FC408E04DA5FB89B3F0@DM6PR03MB3532.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-Forefront-PRVS: 027578BB13
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 11lT62xBRkJmxzTNZuLZOzB4Xjk+YADi/nW/BSLhNG4SRvNm/jk4KfDrKip6ArJ10UTGZfi0JDl+dKa3ulvhpctUvoJlTFmnZDcp+7wFYVu3/CLg7wJafo1VYkEVblC8ib1S3MesqvJ2QAP/bsbYyzUGCr5bsSS2uCrby3wSenGMDv3fM2mdUMoo8Kl16qsgppM5k94GBlCSAcXpKD3CMhWZ2RCOopgc3N3G04kbG6stx6CbYVv0/qnyAidk96ACF3XCiQ9jxC5h1IWqdztXS7+IZbhwMUu+q0jRf166xFhRAK1I0K7f/8vhBFbZNaNHaZ5cKfYhWLKbSX4ZWWp8FUdzXJcxM41JdEbJTSEbWiWceosEGj50ArZe2sWHtfHKYOWe3R6TAkRxENlD299h3F+5g/yovcEpzBlttO5N5sFRH8UcWptoacpKPH+7z/IMyB3W70sezCEk0+RjULxAotZDOvPECcZ7B1tMNvYUzSQr6RFk52OTH7kLppqe90JJ
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 13:37:49.7789
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5c145c7-01a8-4221-4bfa-08d79376c9ed
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3532
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- adultscore=0 mlxscore=0 priorityscore=1501 spamscore=0 suspectscore=1
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
- mlxlogscore=767 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001070113
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107130911.GD4877@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:32:28 up 53 days,  4:51, 47 users,  load average: 0.02, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set add support for ADV7535 part in ADV7511 driver.
+On 20-01-07 13:09, Mark Brown wrote:
+> On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
+> > On 19-12-17 12:58, Mark Brown wrote:
+> 
+> > > This doesn't say anything about how the GPIO input is expected to be
+> > > controlled, for voltage setting any runtime control would need to be
+> > > done by the driver and it sounds like that's all that can be controlled.
+> > > The way this reads I'd expect one use of this to be for fast voltage
+> > > setting for example (you could even combine that with suspend sequencing
+> > > using the internal sequencer if you mux back to the sequencer during
+> > > suspend).
+> 
+> > The input signal is routed trough the da9062 gpio block to the
+> > regualtors. You can't set any voltage value using a gpio instead you
+> > decide which voltage setting is applied. The voltage values for
+> > runtime/suspend comes from the dt-data. No it's not just a fast
+> > switching option imagine the system suspend case where the cpu and soc
+> > voltage can be reduced to a very low value. Older soc's like the imx6
+> > signaling this state by a hard wired gpio line because the soc and
+> > cpu cores don't work properly on such low voltage values. This is
+> > my use case and I can't use the sequencer.
+> 
+> My point is that I can't tell any of this from the description.
 
-ADV7535 and ADV7533 are pin to pin compatible parts but ADV7535
-support TMDS clock upto 148.5Mhz and resolutions up to 1080p@60Hz.
+Therefore I want to discuss the dt-binding documentation with you and
+the others to get this done. Is the above description better to
+understand the dt-binding?
 
----
-Changes in v3:
- - remove CONFIG_DRM_I2C_ADV7533 from Kconfig. Now driver support
-all chip versions
- - create macros for v1p2 config registers
- - remove dummy functions from header
-
-Bogdan Togorean (2):
-  dt-bindings: drm: bridge: adv7511: Add ADV7535 support
-  drm: bridge: adv7511: Add support for ADV7535
-
- .../bindings/display/bridge/adi,adv7511.txt   | 23 +++++-----
- drivers/gpu/drm/bridge/adv7511/Kconfig        | 13 ++----
- drivers/gpu/drm/bridge/adv7511/Makefile       |  3 +-
- drivers/gpu/drm/bridge/adv7511/adv7511.h      | 44 +++----------------
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  | 35 ++++++++++-----
- 5 files changed, 44 insertions(+), 74 deletions(-)
-
--- 
-2.23.0
-
+Regards,
+  Marco
