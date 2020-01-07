@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F07C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6FFC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8EF20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF79E2467A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430804;
-	bh=KxQqkjSP+KQQKGgW+0xbxHTcfTNBu7JiDtSMXcq+ViY=;
+	s=default; t=1578430810;
+	bh=zhn7nBfRDeH8Ol627tHo1Y9YVjTIhuLu8UENFkLNKiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBKZXSMuDt+hWnfgdUv3/9ILHqerxZROcOW48Ke0KFXgGx6/9FnFrFtFjIovJ6U+e
-	 KISb3RBH9g7su0FRNsKsGN5rTPmq+9QCol+M3Kj1xorE+w5BjAic/VZKnXsl5Xkyev
-	 t9FuAUR787df0nttG/YKl4X/w5M5jTlrBu68GLD8=
+	b=QADg4AvD5FvxSNySoGjJi4IZnDhTii5eu6/B572VtzMCboBUzoUssZ7Lp+ILXFCDR
+	 iSD0ktp8a+PY0wIUjztCUZW7T709+8jTewr4m5+84gb32TbihXr9ThPGvVEGD7RO5C
+	 D8XtBra5McYH1b6OnMSP9U0/lUG2lcSpPevB/Y34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgAGVAD (ORCPT
+        id S1727290AbgAGVAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33908 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:00:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgAGVAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:00 -0500
+        id S1727733AbgAGVAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F4112081E;
-        Tue,  7 Jan 2020 20:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83DB82081E;
+        Tue,  7 Jan 2020 21:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430800;
-        bh=KxQqkjSP+KQQKGgW+0xbxHTcfTNBu7JiDtSMXcq+ViY=;
+        s=default; t=1578430805;
+        bh=zhn7nBfRDeH8Ol627tHo1Y9YVjTIhuLu8UENFkLNKiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBwkvXxz75jXy+oCmFIgczFE5G9VG2RV2seTO/ttZCVje6dZrl3GDDFbvbP98PVcx
-         Z7F1Q76orGufZbTIuOpDvMucVYdCj+0//5C+AdNPMiRb+FaFB490QrHsUd7+fc5Rmz
-         Ai2eqUAlT+dU11kapCTIirXiKEHjs9C45w0T+/no=
+        b=JpPhP9Vd8sCdHB2rtoB4VkBbT9oCVMXKKz/sE8kI/Cl895Yqww1nnpdLngBxUxo6X
+         s9kJVImvUfRK6GosSeEhRpdVodd0/geea+BzHSuXvyREL9AUciei421QjzwlHVRGis
+         1G5h1kG8nVEf0Kio6aPC06xDWckaDuoQ+QyBrX+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        Jinsuk Choi <jjinsuk.choi@lge.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 084/191] mm/zsmalloc.c: fix the migrated zspage statistics.
-Date:   Tue,  7 Jan 2020 21:53:24 +0100
-Message-Id: <20200107205337.494599781@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 103/191] compat_ioctl: block: handle BLKGETZONESZ/BLKGETNRZONES
+Date:   Tue,  7 Jan 2020 21:53:43 +0100
+Message-Id: <20200107205338.504353839@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -63,42 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanho Min <chanho.min@lge.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit ac8f05da5174c560de122c499ce5dfb5d0dfbee5 upstream.
+commit 21d37340912d74b1222d43c11aa9dd0687162573 upstream.
 
-When zspage is migrated to the other zone, the zone page state should be
-updated as well, otherwise the NR_ZSPAGE for each zone shows wrong
-counts including proc/zoneinfo in practice.
+These were added to blkdev_ioctl() in v4.20 but not blkdev_compat_ioctl,
+so add them now.
 
-Link: http://lkml.kernel.org/r/1575434841-48009-1-git-send-email-chanho.min@lge.com
-Fixes: 91537fee0013 ("mm: add NR_ZSMALLOC to vmstat")
-Signed-off-by: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>        [4.9+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org> # v4.20+
+Fixes: 72cd87576d1d ("block: Introduce BLKGETZONESZ ioctl")
+Fixes: 65e4e3eee83d ("block: Introduce BLKGETNRZONES ioctl")
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/zsmalloc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ block/compat_ioctl.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -2069,6 +2069,11 @@ static int zs_page_migrate(struct addres
- 		zs_pool_dec_isolated(pool);
- 	}
- 
-+	if (page_zone(newpage) != page_zone(page)) {
-+		dec_zone_page_state(page, NR_ZSPAGES);
-+		inc_zone_page_state(newpage, NR_ZSPAGES);
-+	}
-+
- 	reset_page(page);
- 	put_page(page);
- 	page = newpage;
+--- a/block/compat_ioctl.c
++++ b/block/compat_ioctl.c
+@@ -357,6 +357,8 @@ long compat_blkdev_ioctl(struct file *fi
+ 	case BLKRRPART:
+ 	case BLKREPORTZONE:
+ 	case BLKRESETZONE:
++	case BLKGETZONESZ:
++	case BLKGETNRZONES:
+ 		return blkdev_ioctl(bdev, mode, cmd,
+ 				(unsigned long)compat_ptr(arg));
+ 	case BLKBSZSET_32:
 
 
