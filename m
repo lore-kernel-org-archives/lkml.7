@@ -2,111 +2,125 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC61DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D618FC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B01206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DD4206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 06:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OswjlB0+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VauDvkWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAGGwC (ORCPT
+        id S1726485AbgAGGyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:52:02 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41760 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAGGwC (ORCPT
+        Tue, 7 Jan 2020 01:54:35 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37315 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGGyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 01:52:02 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so38065162lfp.8;
-        Mon, 06 Jan 2020 22:52:00 -0800 (PST)
+        Tue, 7 Jan 2020 01:54:35 -0500
+Received: by mail-il1-f193.google.com with SMTP id t8so44867543iln.4;
+        Mon, 06 Jan 2020 22:54:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WUnO+radcDoArHUxgY/LqGVsNr7soHSA+IuBZIqQcIk=;
-        b=OswjlB0+mvHFQ7VjpegU5m7dK61DFSydo/6/E18tQRfS94B3kqMk4IUuUb0880SuC7
-         CtUQ9zxX1/AukkI8C8ugs7CsT7OdtYlkdFGZKBY922rcdnXgQLoQv/OUga1JhHbmoU0f
-         bePjw0urMLkJaaoV1iQZ4ieAulDYNKUpXJZcsA9vUyJ/W+Eu3fBphRObpdRWU2YdgJtn
-         cQX+z4CESHsSyBWttKiw6W18nCooOooY55qC3dVej1Eec62yWaBv0Qze1BPaL2zqaeuT
-         tdna7fpLGOin/0zMsMfo25E/xJRBlc6At61vrOdbcJhYeDozQ9Ra2F9x3amgACZ3QPPe
-         0UMA==
+        bh=+SCicnEjkyGwhQ2AgjvMF6X8DeQvHHm5K6F+M+EsiSo=;
+        b=VauDvkWvynYu3g7Fs6x0yQotweycU1WnoCLtCr61aTA7fmLaQ0tMBm6lm6lyPzBJEr
+         pKm512nt7Bn8iunBUOhvg9mNL6dKI6YrstUHevxFGjMryXMnXtSbr8Jgm6iS7SnukDHU
+         X1k+q7mDT2d3DVYzK4G9PketVqxnQhZwo6SuLu79XVoTHYLdRk0dWdK0IJTiPnPQsVDd
+         bDbg7zu4/Fyl6TEO8J+AYb8uG5qccIWPQKU/w1+L4i6KKAK66Ezni4xpN0AHyGdRi/CV
+         fUiT7h4O8D1pwRdHlHTi/vXzZ85O7uZsFLkM/M8/n/fUOUCeo9BWWObsBNrhQoaJy1ET
+         ZzIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WUnO+radcDoArHUxgY/LqGVsNr7soHSA+IuBZIqQcIk=;
-        b=mYuya3GC4p278QJRJYidwz1e4bhk9WIFJ0LFs9aFobE5BY/9EpZq/sRH0Gx4GsHKLQ
-         dBZBr6yGZsePczxiF6+on7LsNxp4aYxz+EDwxLYaXi/9fJ0M336qcDqWrfKq0mnwRLOV
-         FqKndsLyZvNGE0YhQQ/CH+dE7vmy1mNIOhaDh8TQdtUJQfNuIrOGg1XtKlJBu76Ckd3q
-         e8I0OuegSrKh4PTxJqZCCZ2mgEBd5iMO7mPneZqArj1RXxr4DkrJtq2H76C1kePDaMdj
-         EImmM1DRiIoyuMoW0Ksmmr1IUWYP5K/uyPHaug6nDzB3EilwZ2SdPPlfXd29K534y2f5
-         +FXA==
-X-Gm-Message-State: APjAAAUMZDFJCjlrlOm4cHRzb19v1kW6v5n3r1dS7C6I2DR/S4Po5aRE
-        lgFJ+pEU/wbxCgvBLpnP9OrbL4doX2TE/Fy6hF0E7A==
-X-Google-Smtp-Source: APXvYqxB33hvchxJV9c5VTYOx9pur7scggA4RYgB6JrpNzrL5mYN0Gy3eAnRA8wJk8Mt48gtPpjFVAWmsShm7Iryuj0=
-X-Received: by 2002:ac2:4436:: with SMTP id w22mr58809295lfl.185.1578379919959;
- Mon, 06 Jan 2020 22:51:59 -0800 (PST)
+        bh=+SCicnEjkyGwhQ2AgjvMF6X8DeQvHHm5K6F+M+EsiSo=;
+        b=UEQ9Wfvs25QKSW//NZPV2V8R64+UF8aTbs4WuJ/9dBB3iGwe5ZpkEjsUZYQTn2bQXC
+         a4WZKEJRQuKfGdKgXng9fXqvK+9mHAnuGo1Yid1nOWbRit3SoKHc2QV1iE0GD7pImgbm
+         zm4UFSg3qPG+GkUICZuTNh9xcwPP6RuW4Pw/BtfDl2jM3hRM+o/KQgoj2rL9RKmqyKMY
+         0bINFwVwnXTZFXvThIwkY6E4mMnwlwMBJIoa7ntqEX+LxFENqK28ZykMI38XrAFvZPx2
+         W7c3QOS7/cYjpNQYb7vU13YXqQbJklSFMzA1PfawWOENvTqH5Qf+djD9zO4dlNK3XLwA
+         a+oQ==
+X-Gm-Message-State: APjAAAWGN81S9GX1AjI0CsaCxgWk0Sh5kjKkKJ31dOmAM5GRoPmNjr3W
+        nsP5y4NyxqP5+huipLyRjFrA8aYjgC/CYHydpRQ=
+X-Google-Smtp-Source: APXvYqxCG63+ToFv7QxbgGA8nekvOLEB3uq0vA184/pCTkC0mQiIYHbo0bQs0D1l/B5uwGv5o8P/yTE1tHYkViMPURA=
+X-Received: by 2002:a92:88d0:: with SMTP id m77mr94426988ilh.9.1578380074721;
+ Mon, 06 Jan 2020 22:54:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-9-brianvv@google.com>
- <CAEf4BzaeLV8EkGunioqD=sn0Bin4EL0WMzp1T6GjdBajWaFQ+w@mail.gmail.com>
-In-Reply-To: <CAEf4BzaeLV8EkGunioqD=sn0Bin4EL0WMzp1T6GjdBajWaFQ+w@mail.gmail.com>
-From:   Brian Vazquez <brianvv.kernel@gmail.com>
-Date:   Tue, 7 Jan 2020 00:51:48 -0600
-Message-ID: <CABCgpaVEXW7Wa9hKn3Dymbt5Lu_XNia3S=akk6tG+8zWQ6=cHw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 08/11] libbpf: add libbpf support to batch ops
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+References: <cover.1578225806.git.chris@chrisdown.name> <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
+ <20200107001039.GM23195@dread.disaster.area> <20200107001643.GA485121@chrisdown.name>
+ <20200107003944.GN23195@dread.disaster.area>
+In-Reply-To: <20200107003944.GN23195@dread.disaster.area>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 7 Jan 2020 08:54:23 +0200
+Message-ID: <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Chris Down <chris@chrisdown.name>, Linux MM <linux-mm@kvack.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reviewing it, Andrii!
+On Tue, Jan 7, 2020 at 2:40 AM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Tue, Jan 07, 2020 at 12:16:43AM +0000, Chris Down wrote:
+> > Dave Chinner writes:
+> > > It took 15 years for us to be able to essentially deprecate
+> > > inode32 (inode64 is the default behaviour), and we were very happy
+> > > to get that albatross off our necks.  In reality, almost everything
+> > > out there in the world handles 64 bit inodes correctly
+> > > including 32 bit machines and 32bit binaries on 64 bit machines.
+> > > And, IMNSHO, there no excuse these days for 32 bit binaries that
+> > > don't using the *64() syscall variants directly and hence support
+> > > 64 bit inodes correctlyi out of the box on all platforms.
+> > >
+> > > I don't think we should be repeating past mistakes by trying to
+> > > cater for broken 32 bit applications on 64 bit machines in this day
+> > > and age.
+> >
+> > I'm very glad to hear that. I strongly support moving to 64-bit inums in all
+> > cases if there is precedent that it's not a compatibility issue, but from
+> > the comments on my original[0] patch (especially that they strayed from the
+> > original patches' change to use ino_t directly into slab reuse), I'd been
+> > given the impression that it was known to be one.
+> >
+> > From my perspective I have no evidence that inode32 is needed other than the
+> > comment from Jeff above get_next_ino. If that turns out not to be a problem,
+> > I am more than happy to just wholesale migrate 64-bit inodes per-sb in
+> > tmpfs.
+>
+> Well, that's my comment above about 32 bit apps using non-LFS
+> compliant interfaces in this day and age. It's essentially a legacy
+> interface these days, and anyone trying to access a modern linux
+> filesystem (btrfs, XFS, ext4, etc) ion 64 bit systems need to handle
+> 64 bit inodes because they all can create >32bit inode numbers
+> in their default configurations.
+>
 
-On Wed, Dec 18, 2019 at 6:54 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Dec 11, 2019 at 2:35 PM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > From: Yonghong Song <yhs@fb.com>
-> >
-> > Added four libbpf API functions to support map batch operations:
-> >   . int bpf_map_delete_batch( ... )
-> >   . int bpf_map_lookup_batch( ... )
-> >   . int bpf_map_lookup_and_delete_batch( ... )
-> >   . int bpf_map_update_batch( ... )
-> >
-> > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > ---
->
-> These libbpf APIs should use _opts approach from the get go to make
-> them extensible, but preserving backwards/forward compatibility.
-> Please take a look at one of few that are already using them (or
-> follow Andrey's bpf_prog_attach work, as he's adding opts-based one at
-> the moment).
+Chris,
 
-I will add this to next version.
->
-> >  tools/lib/bpf/bpf.c      | 61 ++++++++++++++++++++++++++++++++++++++++
-> >  tools/lib/bpf/bpf.h      | 14 +++++++++
-> >  tools/lib/bpf/libbpf.map |  4 +++
-> >  3 files changed, 79 insertions(+)
-> >
->
-> [...]
+Following Dave's comment, let's keep the config option, but make it
+default to Y and remove the mount option for now.
+If somebody shouts, mount option could be re-added later.
+This way at least we leave an option for workaround for an unlikely
+breakage.
+
+Thanks,
+Amir.
