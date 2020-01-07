@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E95C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCE2206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD7A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1578432368;
-	bh=E30sFues24HlCjY1fOZNux+zdrKpYpbad432urrigyU=;
+	bh=w7hS21l4Ab8SljiLavSQJM154nNNKvNmXLEasB/FU8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qIKhNZERlB/kT3o2bcUre63l+Rl2D9qHLuR/qkIMb4CJSi0fH93SG2lUzGuTlySRi
-	 na8WrnQ5eJytsGvkAJHpbP4dGnqFBSp9gEqblcEk1I96hrPSfyoHDbj/4pCgiaPA6y
-	 SI8jrYjLyqywqZH0NukjerfzuqpFCYnjEvBoZdxE=
+	b=KApmqBsi1/qIDQ5SRUBxNI/7MI2dYZIQQQsGwKuXM7bQlAJ7RlU2M2QeUInhQN1F3
+	 P1jFWSyO7cspNatdCdn+UsLq/sMOceCx1tlZVQs5HVsGgsfFPQv3lZPDnWBgQJuWDA
+	 KCOWW3OMbsj1+AijW9redxd0p4fFVFIN3OyTMjqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgAGU7P (ORCPT
+        id S1728088AbgAGU7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:59:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgAGU7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:11 -0500
+        id S1728071AbgAGU7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F02DB214D8;
-        Tue,  7 Jan 2020 20:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BEC1214D8;
+        Tue,  7 Jan 2020 20:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430751;
-        bh=E30sFues24HlCjY1fOZNux+zdrKpYpbad432urrigyU=;
+        s=default; t=1578430746;
+        bh=w7hS21l4Ab8SljiLavSQJM154nNNKvNmXLEasB/FU8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0L3LptXFjBlPUvgYtBpMv1LwT+rhA/NrmG0H/ScOx2DXdZKnAyN4JxQx9QOAhDHr
-         zQNlSkfpUrYTyH4mU/WP+L3hhEiZ0R/F9SkuurIRRL3glSW0SBhik2VIiCkUtx4pZ6
-         aZlzxIrj+Fblqtx3L2R0t0YnK0/KvBxw3bxAcsFQ=
+        b=L3QO+wRPXOoG6dc/y/TXyBt+G1gyyzcjHvuXM1gp780beIDzwvhyAFpK/tD8wRuQJ
+         JcegRWlyj5PPE54O1JZEgRAI2ekYtoPsyaE77iccumG7oPrBep+vBn1oinxKW7ADit
+         UpM15AwTG6H74uNGdoVE167xm89pWDyzyxE5AUzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 080/191] media: cec: CEC 2.0-only bcast messages were ignored
-Date:   Tue,  7 Jan 2020 21:53:20 +0100
-Message-Id: <20200107205337.264248888@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 5.4 078/191] MIPS: Avoid VDSO ABI breakage due to global register variable
+Date:   Tue,  7 Jan 2020 21:53:18 +0100
+Message-Id: <20200107205337.156961744@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,41 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Paul Burton <paulburton@kernel.org>
 
-commit cec935ce69fc386f13959578deb40963ebbb85c3 upstream.
+commit bbcc5672b0063b0e9d65dc8787a4f09c3b5bb5cc upstream.
 
-Some messages are allowed to be a broadcast message in CEC 2.0
-only, and should be ignored by CEC 1.4 devices.
+Declaring __current_thread_info as a global register variable has the
+effect of preventing GCC from saving & restoring its value in cases
+where the ABI would typically do so.
 
-Unfortunately, the check was wrong, causing such messages to be
-marked as invalid under CEC 2.0.
+To quote GCC documentation:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> If the register is a call-saved register, call ABI is affected: the
+> register will not be restored in function epilogue sequences after the
+> variable has been assigned. Therefore, functions cannot safely return
+> to callers that assume standard ABI.
+
+When our position independent VDSO is built for the n32 or n64 ABIs all
+functions it exposes should be preserving the value of $gp/$28 for their
+caller, but in the presence of the __current_thread_info global register
+variable GCC stops doing so & simply clobbers $gp/$28 when calculating
+the address of the GOT.
+
+In cases where the VDSO returns success this problem will typically be
+masked by the caller in libc returning & restoring $gp/$28 itself, but
+that is by no means guaranteed. In cases where the VDSO returns an error
+libc will typically contain a fallback path which will now fail
+(typically with a bad memory access) if it attempts anything which
+relies upon the value of $gp/$28 - eg. accessing anything via the GOT.
+
+One fix for this would be to move the declaration of
+__current_thread_info inside the current_thread_info() function,
+demoting it from global register variable to local register variable &
+avoiding inadvertently creating a non-standard calling ABI for the VDSO.
+Unfortunately this causes issues for clang, which doesn't support local
+register variables as pointed out by commit fe92da0f355e ("MIPS: Changed
+current_thread_info() to an equivalent supported by both clang and GCC")
+which introduced the global register variable before we had a VDSO to
+worry about.
+
+Instead, fix this by continuing to use the global register variable for
+the kernel proper but declare __current_thread_info as a simple extern
+variable when building the VDSO. It should never be referenced, and will
+cause a link error if it is. This resolves the calling convention issue
+for the VDSO without having any impact upon the build of the kernel
+itself for either clang or gcc.
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: ebb5e78cc634 ("MIPS: Initial implementation of a VDSO")
+Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <christian.brauner@canonical.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/cec/cec-adap.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/include/asm/thread_info.h |   20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
---- a/drivers/media/cec/cec-adap.c
-+++ b/drivers/media/cec/cec-adap.c
-@@ -1083,11 +1083,11 @@ void cec_received_msg_ts(struct cec_adap
- 			valid_la = false;
- 		else if (!cec_msg_is_broadcast(msg) && !(dir_fl & DIRECTED))
- 			valid_la = false;
--		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST1_4))
-+		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST))
- 			valid_la = false;
- 		else if (cec_msg_is_broadcast(msg) &&
--			 adap->log_addrs.cec_version >= CEC_OP_CEC_VERSION_2_0 &&
--			 !(dir_fl & BCAST2_0))
-+			 adap->log_addrs.cec_version < CEC_OP_CEC_VERSION_2_0 &&
-+			 !(dir_fl & BCAST1_4))
- 			valid_la = false;
- 	}
- 	if (valid_la && min_len) {
+--- a/arch/mips/include/asm/thread_info.h
++++ b/arch/mips/include/asm/thread_info.h
+@@ -49,8 +49,26 @@ struct thread_info {
+ 	.addr_limit	= KERNEL_DS,		\
+ }
+ 
+-/* How to get the thread information struct from C.  */
++/*
++ * A pointer to the struct thread_info for the currently executing thread is
++ * held in register $28/$gp.
++ *
++ * We declare __current_thread_info as a global register variable rather than a
++ * local register variable within current_thread_info() because clang doesn't
++ * support explicit local register variables.
++ *
++ * When building the VDSO we take care not to declare the global register
++ * variable because this causes GCC to not preserve the value of $28/$gp in
++ * functions that change its value (which is common in the PIC VDSO when
++ * accessing the GOT). Since the VDSO shouldn't be accessing
++ * __current_thread_info anyway we declare it extern in order to cause a link
++ * failure if it's referenced.
++ */
++#ifdef __VDSO__
++extern struct thread_info *__current_thread_info;
++#else
+ register struct thread_info *__current_thread_info __asm__("$28");
++#endif
+ 
+ static inline struct thread_info *current_thread_info(void)
+ {
 
 
