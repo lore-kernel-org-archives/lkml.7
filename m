@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85409C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D272C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5686A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611B62077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431350;
-	bh=0qvwg7wr7w/Fkb/s8ijemyHsOCnZ++Y6lwmRapzSbSE=;
+	s=default; t=1578431354;
+	bh=GQBVEZGlbksctnFREZSXoYAEJQU309V6FUkfk+fRUZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s12MNgPFL3uJh27sGhHvSbsxEWddLTAGFVLJjwVCTWjfOOCLuYcPLGmphK4hkcKwR
-	 lsXj1QuotqKQaj2wzYGMpiH86vhCdC6OQMyCzrirmfhludLw5Gi6l1GtSHTnuNcbLG
-	 R1aYFMD9SwUsn29KLGPN+lCLGVC9nDEhIpTqo5R0=
+	b=cKJnJ5C9trtGzcL3E77fBoBKWRnUIVok2kGfC8PSDlJcFh91ikLn5C1j1DZ4gDA/q
+	 j87azdSNGsc8JCtGuGxEt4BQeewjsZomfEoKw9arMmFLP9r2d++X7CNqSbTyp7+EVf
+	 J01rW5etSXmUgOdiQL18Z/kWuRHr/4CSL1yTnwLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgAGVJI (ORCPT
+        id S1729619AbgAGVJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729754AbgAGVI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:56 -0500
+        id S1729761AbgAGVI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1892E2072A;
-        Tue,  7 Jan 2020 21:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAB72072A;
+        Tue,  7 Jan 2020 21:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431335;
-        bh=0qvwg7wr7w/Fkb/s8ijemyHsOCnZ++Y6lwmRapzSbSE=;
+        s=default; t=1578431338;
+        bh=GQBVEZGlbksctnFREZSXoYAEJQU309V6FUkfk+fRUZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2D2BUZhMOhtWQMCJPZPniitkYBlw2AZC0r2OiBR0weVxSZJ45NdNk9v9jtjne6zib
-         fte+O+CmRpkWNp++xjmDyH66HP6BKbRsKffQi7ji7QTjbBlVChLs/mnK+y1/8oCJEm
-         Yf1R7lt/KywB3lSIFPZqi8PKIayqhnrUQWIM2DCE=
+        b=NrWoHnyN8if3m77/j93HCOzvYCO97I02ix//jy8WzHp54kASFx2N6rYOP4Mot7d3/
+         9ozjZkvYzaKGIwBT6jnDX2zABq1RdWERcZfWPbeTW4FHXF3/syZS5olfsj6UwqfDFc
+         gZXVfpoAvWA7XQIdwYM5IQRq9ik4oweGAGxleFtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 15/74] s390/cpum_sf: Avoid SBD overflow condition in irq handler
-Date:   Tue,  7 Jan 2020 21:54:40 +0100
-Message-Id: <20200107205146.991759745@linuxfoundation.org>
+Subject: [PATCH 4.14 16/74] IB/mlx4: Follow mirror sequence of device add during device removal
+Date:   Tue,  7 Jan 2020 21:54:41 +0100
+Message-Id: <20200107205147.197514932@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -60,75 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
+[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
 
-The s390 CPU Measurement sampling facility has an overflow condition
-which fires when all entries in a SBD are used.
-The measurement alert interrupt is triggered and reads out all samples
-in this SDB. It then tests the successor SDB, if this SBD is not full,
-the interrupt handler does not read any samples at all from this SDB
-The design waits for the hardware to fill this SBD and then trigger
-another meassurement alert interrupt.
+Current code device add sequence is:
 
-This scheme works nicely until
-an perf_event_overflow() function call discards the sample due to
-a too high sampling rate.
-The interrupt handler has logic to read out a partially filled SDB
-when the perf event overflow condition in linux common code is met.
-This causes the CPUM sampling measurement hardware and the PMU
-device driver to operate on the same SBD's trailer entry.
-This should not happen.
+ib_register_device()
+ib_mad_init()
+init_sriov_init()
+register_netdev_notifier()
 
-This can be seen here using this trace:
-   cpumsf_pmu_add: tear:0xb5286000
-   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
-   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
-        above shows 1. interrupt
-   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
-   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
-        above shows 2. interrupt
-	... this goes on fine until...
-   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
-   perf_push_sample1: overflow
-      one or more samples read from the IRQ handler are rejected by
-      perf_event_overflow() and the IRQ handler advances to the next SDB
-      and modifies the trailer entry of a partially filled SDB.
-   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
-      timestamp: 14:32:52.519953
+Therefore, the remove sequence should be,
 
-Next time the IRQ handler is called for this SDB the trailer entry shows
-an overflow count of 19 missed entries.
-   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
-      timestamp: 14:32:52.970058
+unregister_netdev_notifier()
+close_sriov()
+mad_cleanup()
+ib_unregister_device()
 
-Remove access to a follow on SDB when event overflow happened.
+However it is not above.
+Hence, make do above remove sequence.
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/infiniband/hw/mlx4/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 95c047bf4a12..b652593d7de6 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1294,12 +1294,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 		 */
- 		if (flush_all && done)
- 			break;
--
--		/* If an event overflow happened, discard samples by
--		 * processing any remaining sample-data-blocks.
--		 */
--		if (event_overflow)
--			flush_all = 1;
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 0299c0642de8..7e73a1a6cb67 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -3073,16 +3073,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
+ 	ibdev->ib_active = false;
+ 	flush_workqueue(wq);
+ 
+-	mlx4_ib_close_sriov(ibdev);
+-	mlx4_ib_mad_cleanup(ibdev);
+-	ib_unregister_device(&ibdev->ib_dev);
+-	mlx4_ib_diag_cleanup(ibdev);
+ 	if (ibdev->iboe.nb.notifier_call) {
+ 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
+ 			pr_warn("failure unregistering notifier\n");
+ 		ibdev->iboe.nb.notifier_call = NULL;
  	}
  
- 	/* Account sample overflows in the event hardware structure */
++	mlx4_ib_close_sriov(ibdev);
++	mlx4_ib_mad_cleanup(ibdev);
++	ib_unregister_device(&ibdev->ib_dev);
++	mlx4_ib_diag_cleanup(ibdev);
++
+ 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
+ 			      ibdev->steer_qpn_count);
+ 	kfree(ibdev->ib_uc_qpns_bitmap);
 -- 
 2.20.1
 
