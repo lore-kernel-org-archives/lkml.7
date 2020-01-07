@@ -2,89 +2,143 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F277EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12364C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E76207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578374126;
-	bh=7IRn73LOcIxtOPF38vt+jdde9KSqRJ/hkO43TQ+PV6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xZpW8DNoQ8CqArLwSFXN/lAjx01RGqgFHHNfXgl2kAwTkcoahSZigTfoUNhdhxfG5
-	 V15CtkiJ1wwTkSDjfRyt0AE27YKKwo5gdyfPKZ38uTZ5i/kpCM/3ByDBy05/68IOpK
-	 ChOQqRgYdbNbxgzJrXYZN1raYA38oh/ZB7l6ilrQ=
+	by mail.kernel.org (Postfix) with ESMTP id DC3B6207FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:16:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q40BGR+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgAGFP0 (ORCPT
+        id S1726587AbgAGFQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:15:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgAGFPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 00:15:25 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214E7207FD;
-        Tue,  7 Jan 2020 05:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578374124;
-        bh=7IRn73LOcIxtOPF38vt+jdde9KSqRJ/hkO43TQ+PV6U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dnpAH75AkRY/1sigQosliNYb44fjXUGI2Xe+Dafae7NTasmhJWZx+xPPtruGzof9z
-         ekmuxXw3RYrNLLwaqyFrIQ2MDeGdHqUhMO/aBvrxvBjJb4RYfgduqd6DFtDSNZ7i++
-         Gt/q+ebKKUIWAqAO7XQIDe03Tvpx6CNDuA2Yb8dk=
-Date:   Mon, 6 Jan 2020 21:15:21 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code
- check
-Message-ID: <20200107051521.GF705@sol.localdomain>
-References: <20200106045833.1725-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
+        Tue, 7 Jan 2020 00:16:47 -0500
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:57009 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGFQq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 00:16:46 -0500
+Received: by mail-ua1-f73.google.com with SMTP id b15so6011295uas.23
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 21:16:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cfX1tvKpjBFaGwVknnvW2VBwxewGwbcoGgPS02CBSEM=;
+        b=Q40BGR+McgMbCgqtKK+XRsRmJJBj/BH4LjOY1inQamlLz1Onc25gJfKSbGCbLp3BV6
+         kKbmIcg1Qs8OlNWNQNQVhlpP5eQeWpb8bdcg/T1uA1M21Nwy3AmiDfyWJt0tvnczfV4l
+         F5+GHxcTVIFp5EjxqoKHbB5BR5AscstZMpWufBT8/BJSWPsoka2tUFUerrjyIkmcUjjK
+         wZ3VxyoNX/QvFD5IuLtoVSHr99qrCNN1Y+s01aUz0lsnsY4sqo6j8cw1VnQNt7bNfDGH
+         /9+qGi2HEFX3SqvMkNy9rSPpAhx5BvUPP3MMTK/c1L92gGjvYGn+U5QaEIouLcVwROXe
+         FVsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cfX1tvKpjBFaGwVknnvW2VBwxewGwbcoGgPS02CBSEM=;
+        b=WzFmL4n0RJCArxhYni0Bd/s4221g9oNwH2J400cTTHayJlFCgvTcTxeGC3iulYPid4
+         JvN6fOsP6edc1wEtLjO8/1DUbd/y777gNIfMSHuU+2JCR0/nKqoVBaO7joZrNQK2Jg8i
+         yuDMCidKzH1e59DDipuSIMntfb8W184A4PqSoOxMcxOZ/ziyxbdRdwiE9+mDl45YOWbl
+         neiCed+c1AjxG6YNY5bMxhgQO32e+tat1MG58mZ1jGlGBAV9VkUiEbdRznx77Jr2LYzx
+         beum+NKYGm7jfhsCwbG/uNQ4Xj6ZxW9eJ+v2GFDifw1vyz6qBWaZ0T1mKGLxq2OJYMQV
+         Jwew==
+X-Gm-Message-State: APjAAAU7o/21+DcqTsiMZi60AKlw+PFdh0YcgBuF9HfOFaBtdNSpADTN
+        nHK0/Gigy6UP58j8qeSfwLszfuhFsQA=
+X-Google-Smtp-Source: APXvYqzc67czlLj1xc/BSkQkduLdtiKKbLVUdrPq7hUPjUVp5UmYvrkDtchUfmBzIECNLQOquU+7Qzeor7M=
+X-Received: by 2002:a1f:8d57:: with SMTP id p84mr56402733vkd.65.1578374205529;
+ Mon, 06 Jan 2020 21:16:45 -0800 (PST)
+Date:   Mon,  6 Jan 2020 21:16:32 -0800
+Message-Id: <20200107051638.40893-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v2 0/6] Support for Casefolding and Encryption
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:58:33PM +0900, Masahiro Yamada wrote:
-> 'PTR_ERR(p) == -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
-> 
-> The semantic patch that generates this commit is as follows:
-> 
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) == - error_code)
-> +PTR_ERR(ptr) == - error_code
-> // </smpl>
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Ext4 and F2FS currently both support casefolding and encryption, but not at
+the same time. These patches aim to rectify that.
 
-Any reason for not doing instead:
+Since directory names are stored case preserved, we cannot just take the hash
+of the ciphertext. Instead we use the siphash of the casefolded name. With this
+we no longer have a direct path from an encrypted name to the hash without the
+key. To deal with this, fscrypt now always includes the hash in the name it
+presents when the key is not present. There is a pre-existing bug where you can
+change parts of the hash and still match the name so long as the disruption to
+the hash does not happen to affect lookup on that filesystem. I'm not sure how
+to fix that without making ext4 lookups slower in the more common case.
 
-	ptr == ERR_PTR(-error_code)
+I moved the identical dcache operations for ext4 and f2fs into the VFS, as any
+filesystem that uses casefolding will need the same code. This will also allow
+further optimizations to that path, although my current changes don't take
+advantage of that yet.
 
-?  To me it seems weird to use PTR_ERR() on non-error pointers.  I even had to
-double check that it returns a 'long' and not an 'int'.  (If it returned an
-'int', it wouldn't work...)
+For Ext4, this also means that we need to store the hash on disk. We only do so
+for encrypted and casefolded directories to avoid on disk format changes.
+Previously encryption and casefolding could not live on the same filesystem,
+and we're relaxing that requirement. F2fs is a bit more straightforward since
+it already stores hashes on disk.
 
-- Eric
+I've updated the related tools with just enough to enable the feature. I still
+need to adjust their respective fsck's, although without access to the keys,
+they won't be able to verify the hashes of casefolded and encrypted names.
+
+changes:
+fscrypt moved to separate thread to rebase on fscrypt dev branch
+addressed feedback, plus some minor fixes
+
+Daniel Rosenberg (6):
+  TMP: fscrypt: Add support for casefolding with encryption
+  vfs: Fold casefolding into vfs
+  f2fs: Handle casefolding with Encryption
+  ext4: Use struct super_blocks' casefold data
+  ext4: Hande casefolding with encryption
+  ext4: Optimize match for casefolded encrypted dirs
+
+ Documentation/filesystems/ext4/directory.rst |  27 ++
+ fs/crypto/Kconfig                            |   1 +
+ fs/crypto/fname.c                            | 234 ++++++++++---
+ fs/crypto/fscrypt_private.h                  |   9 +
+ fs/crypto/keysetup.c                         |  32 +-
+ fs/crypto/policy.c                           |  45 ++-
+ fs/dcache.c                                  |  28 ++
+ fs/ext4/dir.c                                |  75 +----
+ fs/ext4/ext4.h                               |  87 +++--
+ fs/ext4/hash.c                               |  26 +-
+ fs/ext4/ialloc.c                             |   5 +-
+ fs/ext4/inline.c                             |  41 ++-
+ fs/ext4/namei.c                              | 326 ++++++++++++-------
+ fs/ext4/super.c                              |  21 +-
+ fs/f2fs/dir.c                                | 114 +++----
+ fs/f2fs/f2fs.h                               |  14 +-
+ fs/f2fs/hash.c                               |  25 +-
+ fs/f2fs/inline.c                             |   9 +-
+ fs/f2fs/super.c                              |  17 +-
+ fs/f2fs/sysfs.c                              |   8 +-
+ fs/inode.c                                   |   7 +
+ fs/namei.c                                   |  41 ++-
+ include/linux/fs.h                           |  10 +
+ include/linux/fscrypt.h                      |  96 ++----
+ include/linux/unicode.h                      |  14 +
+ 25 files changed, 835 insertions(+), 477 deletions(-)
+
+-- 
+2.24.1.735.g03f4e72817-goog
+
