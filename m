@@ -2,100 +2,243 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF4EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C71C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBFB2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479122072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:56:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qWr8P8YF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgAGNyg (ORCPT
+        id S1728103AbgAGN45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:54:36 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:60325 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGNyf (ORCPT
+        Tue, 7 Jan 2020 08:56:57 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41197 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGN45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:54:35 -0500
-Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mnq8Y-1jV55U0jbG-00pI9v; Tue, 07 Jan 2020 14:54:34 +0100
-Received: by mail-qk1-f181.google.com with SMTP id k6so42678792qki.5;
-        Tue, 07 Jan 2020 05:54:33 -0800 (PST)
-X-Gm-Message-State: APjAAAXQxuz4KREulreElswh1Jjf1oNapnUkTtO2gvkSaRJKHbl7WSXg
-        BP+ympirVerd79FjGwoCYquJYD1lw1qdFVnWJuY=
-X-Google-Smtp-Source: APXvYqxganD8ZrCIqDyUtQfBqO0agkD208yuy9nhgKAOXvloNNFhJIXLOG+bMa6bJ39dPMJZh/yjpxY1x4nnSb3sYgE=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr84906448qkh.3.1578405272953;
- Tue, 07 Jan 2020 05:54:32 -0800 (PST)
+        Tue, 7 Jan 2020 08:56:57 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so50394778eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 05:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dPFVnSyX9G7Xno3hG+Ni/JXNUtGdIA/0mAR2Q6kZsno=;
+        b=qWr8P8YFqXfDZNldkjhAm+txdX7iIsKYJ6Z2fvhyXf0CewIQyOlAdr57I9+xCyepgl
+         rct4zTGcdabb78WzLt1LIKtDmbOK492SzsAI16IQ0Lw/3lmWcZ/0MDCn7eFlykhioQAh
+         kbRok0v1P4AoU0SEuTpCCrXkDzBHwpmDV90WBtJYxSSdVRXLdV9nI8NX9GUPhUy/Pli3
+         FIyCjPHvj13FOvlVqXzrHDcygbdRCxNvlQ8n5SLvXiALR0DKIGfTdVPFkCyejskLB8HP
+         rGGhB4a0TiHpZsC5K4lCH3ooC5h9mtFlw6tnj5Ss3gVCL7/0bNqpKjyw4aAmfHfsUW3l
+         G0AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dPFVnSyX9G7Xno3hG+Ni/JXNUtGdIA/0mAR2Q6kZsno=;
+        b=K5hYI4SkdCV7MYh7icZXCKregxwutRDBDJeWIknerrZWcPOhvCdsOq3+pD83K34v1K
+         ECixDq8I8HocNtIhW2gVYslHQjuVpr0xPONZleyRyhrOWneIldJtdngs0SOqE2ZncU8a
+         Gu+R9GgfqhFUu0iLlVyXK99mWDCZiwsziscSRxHQKzMmYm/PrYNUt/Qn22g8FLDO29m2
+         L+vJ+ZpluQA0tN6WsFa8HspWP0Wvw0pwdmAdXRE46ieSdmaAbM0jlEhGh4pY2hX8xRMq
+         ADfVGOAIhSBmnUKeQvzKlfxwT2nOGf8peJCe6C8d3V9agzctAVwMNHGnvSoJpY7gdOeq
+         gaYQ==
+X-Gm-Message-State: APjAAAVngCKl0d8HN5mgCfOHFzT6Gnsfb2gVjp7s5I/CC2ikZe9OKnKb
+        cEIZW1u2MoYV9uvnoZes+upgKcjwgns=
+X-Google-Smtp-Source: APXvYqy1DsslueK8hPG0D1udj2o42a4IBAsIGV0XdtvHCr1VC+bgDCeGfO9fon7w18YmZGPO2BylAg==
+X-Received: by 2002:a05:6402:3184:: with SMTP id di4mr113867727edb.59.1578405414488;
+        Tue, 07 Jan 2020 05:56:54 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id dn12sm7560355edb.89.2020.01.07.05.56.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 05:56:53 -0800 (PST)
+Subject: Re: [PATCH V3 2/4] dt-bindings: media: venus: Add sc7180 DT schema
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
+ <1577971501-3732-3-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <d5b04aea-00f2-a2da-3e78-03dd776bbad9@linaro.org>
+Date:   Tue, 7 Jan 2020 15:56:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1578399963-2229-1-git-send-email-krzk@kernel.org>
- <CAMuHMdULcBE1inRzTRFJeRDToT1wW+nrMEfiUs7DxMLR0tqb3w@mail.gmail.com>
- <CAJKOXPcbUfUcmU2O50M5Hs2y6ggg-m5qU-AJ6HjSL9dFTCp64A@mail.gmail.com> <20200107133256.GA648@pi3>
-In-Reply-To: <20200107133256.GA648@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Jan 2020 14:54:16 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1EiHCVo0aJzwsv_kbT9ENMScnxfWM7Zoc08fd7bL=D1g@mail.gmail.com>
-Message-ID: <CAK8P3a1EiHCVo0aJzwsv_kbT9ENMScnxfWM7Zoc08fd7bL=D1g@mail.gmail.com>
-Subject: Re: [PATCH] sh: clk: Fix discarding const qualifier warning
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:tU0eO8O6xurj+b44Y54kgigL29BQZecRwNVL9NdGsXX8W+0xG9d
- m/KvYojG5ZmCv5v/Tw6t2Vp5ecy5m4Wy3UfF7q9r9G+7O3HT9j0k1Kp3f+iXh1JiBXnAow5
- rhWeNuacha9UnIIBiF+cOftztsw+DfX5wLAeVAFQKRvbvLwSmv4RSSffFGzCc+VNX1in7+f
- eyp3rHoR/gTTKymVq3WIw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pBpIjKq4bxc=:sfOGqOKLVrui8Kc9jwGZFG
- 6WgealvGo0mB1XnzG5lmF93aviHe27egZjqE7+z2gpmyqdjL0s9vEtigUTT4hkWsVOxaJ0pBp
- uMNGoEYg9NHdkDDQUZhZM4K/iraHORT+amkLhegud09jBD+zmX+xwS6BqSp7Fw9akwj6rcvtz
- B2uPCPiEx1ThqbUjOAZPwSzoen3KMm407InYVdsffFPsqE1I6eRusUBiiYp+UnaeHNEEhX36A
- p5z5/vU5hT8iuWPr2PguDEAF4xNX8cVuMsyVnAEZ8HG4D93U9/zT/114jAaeoGa5T6TpUwAAV
- /yH3Xe14ggrg93R9gr/isKHW34Kyj8zfYLPd+/NfK0AvAkcuc4vjeY6j/exQ7bs708QQ9Mw1I
- eKn0WQWhsdzgsKkXMBTO0rrw9PhYvFxOF30LskXnAUdX8VeeF/ITtr0YnZsGikC6ssqqG184J
- hPAp+PG6AKU8l4TAuWpQqniSx8M3475gC+UjUKkRbLRfFdWvCZShkNg6WkJtgO+NMAFmRfhoC
- oF0M18fotksFQJuzLwLBH70eXJR+I06VbsehAiPGIbcS/yjSr2h7PUmzqeNBNKXmSCayWnUBt
- 5UKSX3QPr8LMKnPDpYYn1AgoWacjC2BIR3hMuImeV9P2wgm9npAyHX77o5SKr9wHxYAmW6Rfn
- AG+ZYu08gSMXYYm+GQx3o+hCxySZu80Pp3HHT6EjQsEA6ff35OE6jxqdkp1imiyMXYKPwREyw
- wZ1L48N01cHh+I6mBNjZ5THOks01zjFRTm4i7dKBFYA4AeEFCczs8+7Do4FWElaC4Z9QWvmyb
- ZO0chCUZ1dOqodlFllRxu3Hcbv2EDYPk0cZ2dLMmL6WfHqTzXGZ1j3bXAmZd/ttJxu9Zjbm/i
- EAkML5yNme0/pQxR7Dhg==
+In-Reply-To: <1577971501-3732-3-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/powerpc/kernel/iomap.cOn Tue, Jan 7, 2020 at 2:33 PM Krzysztof
-Kozlowski <krzk@kernel.org> wrote:
-> On Tue, Jan 07, 2020 at 02:05:14PM +0100, Krzysztof Kozlowski wrote:
-> > On Tue, 7 Jan 2020 at 14:00, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > Since this is a SuperH driver, I adjusted it to the SuperH
-> > implementation - lack of const. However iIndeed it makes sense to have
-> > them all taking "const"... Let me check, if I can fix it (without the
-> > real HW).
->
-> That will be non-trivial because many platforms define ioreadX() with
-> non-const. For example entire alpha with many its implementations of
-> ioread(). Even include/asm-generic/iomap.h defines them as non-const...
+Hi,
 
-I found these instances:
+On 1/2/20 3:24 PM, Dikshita Agarwal wrote:
+> Add new qcom,sc7180-venus DT binding schema.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  .../bindings/media/qcom,venus-sc7180.yaml          | 136 +++++++++++++++++++++
+>  1 file changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> new file mode 100644
+> index 0000000..b78952c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
+> @@ -0,0 +1,136 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/media/qcom,venus-sc7180.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Venus video encode and decode accelerators
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> +
+> +description: |
+> +  The Venus IP is a video encode and decode accelerator present
+> +  on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    const: "qcom,sc7180-venus"
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 2
+> +
+> +  power-domain-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: venus
+> +      - const: vcodec0
+> +
+> +  clocks:
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +      - const: bus
+> +      - const: vcodec0_core
+> +      - const: vcodec0_bus
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 20
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  video-core0:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-decoder"
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +  video-core1:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: "venus-encoder"
+> +
+> +    required:
+> +      - compatible
+> +
+> +    additionalProperties: false
+> +
+> +  video-firmware:
+> +    type: object
+> +
+> +    description: |
+> +      Firmware subnode is needed when the platform does not
+> +      have TrustZone.
+> +
+> +    properties:
+> +      iommus:
+> +        minItems: 1
 
-arch/alpha/include/asm/io.h
-arch/alpha/kernel/io.c
-arch/parisc/include/asm/io.h
-arch/parisc/lib/iomap.c
-arch/sh/kernel/iomap.c
-arch/powerpc/kernel/iomap.c
-lib/iomap.c
-include/asm-generic/iomap.h
+please add
 
-At least the last four file would have to be done at the same time as
-the header is shared, but the actual conversion should be trivial.
+       required:
+         - iommus
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - power-domains
+> +  - power-domain-names
+> +  - clocks
+> +  - clock-names
+> +  - iommus
+> +  - memory-region
+> +  - video-core0
+> +  - video-core1
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+> +
+> +		venus: video-codec@aa00000 {
+> +			compatible = "qcom,sc7180-venus";
+> +			reg = <0 0x0aa00000 0 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>,
+> +					<&videocc VCODEC0_GDSC>;
+> +			power-domain-names = "venus", "vcodec0";
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus",
+> +				"vcodec0_core", "vcodec0_bus";
+> +			iommus = <&apps_smmu 0x0c00 0x60>;
+> +			memory-region = <&venus_mem>;
+> +
+> +			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
+> +					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
+> +			interconnect-names = "video-mem", "cpu-cfg";
+> +
+> +			video-core0 {
+> +				compatible = "venus-decoder";
+> +			};
+> +
+> +			video-core1 {
+> +				compatible = "venus-encoder";
+> +			};
+> +
+> +		};
+> 
 
-       Arnd
+-- 
+regards,
+Stan
