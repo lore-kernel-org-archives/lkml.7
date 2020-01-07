@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12583C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D95C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E722087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C1024676
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431286;
-	bh=S8oyQmk2bK3fShqP7uWuNeqnWu8CI95aGAD1RHdmMjY=;
+	s=default; t=1578431290;
+	bh=kQ+stVW+RZUX7+jj/wl1c4/c/pQ7UdeqlaKbJVcIxkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKpBXFOHpUdwi+G7IuqJMlgth2Cyuu02f0f5X8vux0WtGn2LBKrqfFAuQssDjqGrB
-	 c8GKSkclQQBjREtknewdncgR8R1/NEuYEcMz4LuDohxnDgI4xh2c16bbzT4LnHFqn0
-	 dSaz3hIjF5kqRn8WRdufl/9Q+8siCOkbzyYGG0cw=
+	b=Wam8RRtUIM4LOl4Jb6MonO/Vba9Cd4PdoSeM44bvMCniPKkOxqtI2aglEMv2HC6sA
+	 AVsa9URWrpQMdnmQXz3jgexyOp6TN+xM1tb9Q/3K6kjbvSU2M22a5mif9X+iFRSzUU
+	 Y8jOQTjbznX2AOZhqaKq+6JbsUfQpnC/9tIthsPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgAGVIF (ORCPT
+        id S1729640AbgAGVIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59762 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgAGVIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:00 -0500
+        id S1729324AbgAGVIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA2B2087F;
-        Tue,  7 Jan 2020 21:07:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 440DA2072A;
+        Tue,  7 Jan 2020 21:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431279;
-        bh=S8oyQmk2bK3fShqP7uWuNeqnWu8CI95aGAD1RHdmMjY=;
+        s=default; t=1578431284;
+        bh=kQ+stVW+RZUX7+jj/wl1c4/c/pQ7UdeqlaKbJVcIxkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnPcIvz+kpDpHv7Svq/sFZAi+AVzXjaxatXWHd1BZz86ZRGK0VVxBZQQ3LIyq7uER
-         yXFQiijEbcklNEI8xoa0bjZ/CqGen89Lklt9xmSOBQUvJylCXXE4Gqt1guxkK8O22z
-         ffZ1gU+rDl6F29vu+oX93XsgxVVfQ/SmGOSlv5ts=
+        b=QTb5US5EhKgv0Hmgb1IydJ15XS1jLdHpQF0/ioVHaA463ZNP9n5UlvAgSXcWurFRA
+         gkcG/Y7HOi8MlJziBg6pNeVgfmg7m2HmYAhPwumGxxeC9ApgGw7twHOF8VSZ2qiv5M
+         +Lh0Ejihn7jBa8t2ctAcr19wNcAY5Era+oIUsL7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/115] net: core: limit nested device depth
-Date:   Tue,  7 Jan 2020 21:55:17 +0100
-Message-Id: <20200107205309.009025767@linuxfoundation.org>
+Subject: [PATCH 4.19 109/115] ath9k_htc: Discard undersized packets
+Date:   Tue,  7 Jan 2020 21:55:19 +0100
+Message-Id: <20200107205309.387693386@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,455 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-[ Upstream commit 5343da4c17429efaa5fb1594ea96aee1a283e694 ]
+[ Upstream commit cd486e627e67ee9ab66914d36d3127ef057cc010 ]
 
-Current code doesn't limit the number of nested devices.
-Nested devices would be handled recursively and this needs huge stack
-memory. So, unlimited nested devices could make stack overflow.
+Sometimes the hardware will push small packets that trigger a WARN_ON
+in mac80211. Discard them early to avoid this issue.
 
-This patch adds upper_level and lower_level, they are common variables
-and represent maximum lower/upper depth.
-When upper/lower device is attached or dettached,
-{lower/upper}_level are updated. and if maximum depth is bigger than 8,
-attach routine fails and returns -EMLINK.
+This patch ports 2 patches from ath9k to ath9k_htc.
+commit 3c0efb745a172bfe96459e20cbd37b0c945d5f8d "ath9k: discard
+undersized packets".
+commit df5c4150501ee7e86383be88f6490d970adcf157 "ath9k: correctly
+handle short radar pulses".
 
-In addition, this patch converts recursive routine of
-netdev_walk_all_{lower/upper} to iterator routine.
+[  112.835889] ------------[ cut here ]------------
+[  112.835971] WARNING: CPU: 5 PID: 0 at net/mac80211/rx.c:804 ieee80211_rx_napi+0xaac/0xb40 [mac80211]
+[  112.835973] Modules linked in: ath9k_htc ath9k_common ath9k_hw ath mac80211 cfg80211 libarc4 nouveau snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec video snd_hda_core ttm snd_hwdep drm_kms_helper snd_pcm crct10dif_pclmul snd_seq_midi drm snd_seq_midi_event crc32_pclmul snd_rawmidi ghash_clmulni_intel snd_seq aesni_intel aes_x86_64 crypto_simd cryptd snd_seq_device glue_helper snd_timer sch_fq_codel i2c_algo_bit fb_sys_fops snd input_leds syscopyarea sysfillrect sysimgblt intel_cstate mei_me intel_rapl_perf soundcore mxm_wmi lpc_ich mei kvm_intel kvm mac_hid irqbypass parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear e1000e ahci libahci wmi
+[  112.836022] CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.3.0-wt #1
+[  112.836023] Hardware name: MouseComputer Co.,Ltd. X99-S01/X99-S01, BIOS 1.0C-W7 04/01/2015
+[  112.836056] RIP: 0010:ieee80211_rx_napi+0xaac/0xb40 [mac80211]
+[  112.836059] Code: 00 00 66 41 89 86 b0 00 00 00 e9 c8 fa ff ff 4c 89 b5 40 ff ff ff 49 89 c6 e9 c9 fa ff ff 48 c7 c7 e0 a2 a5 c0 e8 47 41 b0 e9 <0f> 0b 48 89 df e8 5a 94 2d ea e9 02 f9 ff ff 41 39 c1 44 89 85 60
+[  112.836060] RSP: 0018:ffffaa6180220da8 EFLAGS: 00010286
+[  112.836062] RAX: 0000000000000024 RBX: ffff909a20eeda00 RCX: 0000000000000000
+[  112.836064] RDX: 0000000000000000 RSI: ffff909a2f957448 RDI: ffff909a2f957448
+[  112.836065] RBP: ffffaa6180220e78 R08: 00000000000006e9 R09: 0000000000000004
+[  112.836066] R10: 000000000000000a R11: 0000000000000001 R12: 0000000000000000
+[  112.836068] R13: ffff909a261a47a0 R14: 0000000000000000 R15: 0000000000000004
+[  112.836070] FS:  0000000000000000(0000) GS:ffff909a2f940000(0000) knlGS:0000000000000000
+[  112.836071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  112.836073] CR2: 00007f4e3ffffa08 CR3: 00000001afc0a006 CR4: 00000000001606e0
+[  112.836074] Call Trace:
+[  112.836076]  <IRQ>
+[  112.836083]  ? finish_td+0xb3/0xf0
+[  112.836092]  ? ath9k_rx_prepare.isra.11+0x22f/0x2a0 [ath9k_htc]
+[  112.836099]  ath9k_rx_tasklet+0x10b/0x1d0 [ath9k_htc]
+[  112.836105]  tasklet_action_common.isra.22+0x63/0x110
+[  112.836108]  tasklet_action+0x22/0x30
+[  112.836115]  __do_softirq+0xe4/0x2da
+[  112.836118]  irq_exit+0xae/0xb0
+[  112.836121]  do_IRQ+0x86/0xe0
+[  112.836125]  common_interrupt+0xf/0xf
+[  112.836126]  </IRQ>
+[  112.836130] RIP: 0010:cpuidle_enter_state+0xa9/0x440
+[  112.836133] Code: 3d bc 20 38 55 e8 f7 1d 84 ff 49 89 c7 0f 1f 44 00 00 31 ff e8 28 29 84 ff 80 7d d3 00 0f 85 e6 01 00 00 fb 66 0f 1f 44 00 00 <45> 85 ed 0f 89 ff 01 00 00 41 c7 44 24 10 00 00 00 00 48 83 c4 18
+[  112.836134] RSP: 0018:ffffaa61800e3e48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffde
+[  112.836136] RAX: ffff909a2f96b340 RBX: ffffffffabb58200 RCX: 000000000000001f
+[  112.836137] RDX: 0000001a458adc5d RSI: 0000000026c9b581 RDI: 0000000000000000
+[  112.836139] RBP: ffffaa61800e3e88 R08: 0000000000000002 R09: 000000000002abc0
+[  112.836140] R10: ffffaa61800e3e18 R11: 000000000000002d R12: ffffca617fb40b00
+[  112.836141] R13: 0000000000000002 R14: ffffffffabb582d8 R15: 0000001a458adc5d
+[  112.836145]  ? cpuidle_enter_state+0x98/0x440
+[  112.836149]  ? menu_select+0x370/0x600
+[  112.836151]  cpuidle_enter+0x2e/0x40
+[  112.836154]  call_cpuidle+0x23/0x40
+[  112.836156]  do_idle+0x204/0x280
+[  112.836159]  cpu_startup_entry+0x1d/0x20
+[  112.836164]  start_secondary+0x167/0x1c0
+[  112.836169]  secondary_startup_64+0xa4/0xb0
+[  112.836173] ---[ end trace 9f4cd18479cc5ae5 ]---
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add link dummy0 name vlan1 type vlan id 1
-    ip link set vlan1 up
-
-    for i in {2..55}
-    do
-	    let A=$i-1
-
-	    ip link add vlan$i link vlan$A type vlan id $i
-    done
-    ip link del dummy0
-
-Splat looks like:
-[  155.513226][  T908] BUG: KASAN: use-after-free in __unwind_start+0x71/0x850
-[  155.514162][  T908] Write of size 88 at addr ffff8880608a6cc0 by task ip/908
-[  155.515048][  T908]
-[  155.515333][  T908] CPU: 0 PID: 908 Comm: ip Not tainted 5.4.0-rc3+ #96
-[  155.516147][  T908] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  155.517233][  T908] Call Trace:
-[  155.517627][  T908]
-[  155.517918][  T908] Allocated by task 0:
-[  155.518412][  T908] (stack is not available)
-[  155.518955][  T908]
-[  155.519228][  T908] Freed by task 0:
-[  155.519885][  T908] (stack is not available)
-[  155.520452][  T908]
-[  155.520729][  T908] The buggy address belongs to the object at ffff8880608a6ac0
-[  155.520729][  T908]  which belongs to the cache names_cache of size 4096
-[  155.522387][  T908] The buggy address is located 512 bytes inside of
-[  155.522387][  T908]  4096-byte region [ffff8880608a6ac0, ffff8880608a7ac0)
-[  155.523920][  T908] The buggy address belongs to the page:
-[  155.524552][  T908] page:ffffea0001822800 refcount:1 mapcount:0 mapping:ffff88806c657cc0 index:0x0 compound_mapcount:0
-[  155.525836][  T908] flags: 0x100000000010200(slab|head)
-[  155.526445][  T908] raw: 0100000000010200 ffffea0001813808 ffffea0001a26c08 ffff88806c657cc0
-[  155.527424][  T908] raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-[  155.528429][  T908] page dumped because: kasan: bad access detected
-[  155.529158][  T908]
-[  155.529410][  T908] Memory state around the buggy address:
-[  155.530060][  T908]  ffff8880608a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  155.530971][  T908]  ffff8880608a6c00: fb fb fb fb fb f1 f1 f1 f1 00 f2 f2 f2 f3 f3 f3
-[  155.531889][  T908] >ffff8880608a6c80: f3 fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  155.532806][  T908]                                            ^
-[  155.533509][  T908]  ffff8880608a6d00: fb fb fb fb fb fb fb fb fb f1 f1 f1 f1 00 00 00
-[  155.534436][  T908]  ffff8880608a6d80: f2 f3 f3 f3 f3 fb fb fb 00 00 00 00 00 00 00 00
-[ ... ]
-
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h |   4 +
- net/core/dev.c            | 272 +++++++++++++++++++++++++++++++-------
- 2 files changed, 231 insertions(+), 45 deletions(-)
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 23 +++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 9dfa0ae173ac..d5527e3828d1 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -1619,6 +1619,8 @@ enum netdev_priv_flags {
-  * 	@perm_addr:		Permanent hw address
-  * 	@addr_assign_type:	Hw address assignment type
-  * 	@addr_len:		Hardware address length
-+ *	@upper_level:		Maximum depth level of upper devices.
-+ *	@lower_level:		Maximum depth level of lower devices.
-  *	@neigh_priv_len:	Used in neigh_alloc()
-  * 	@dev_id:		Used to differentiate devices that share
-  * 				the same link layer address
-@@ -1853,6 +1855,8 @@ struct net_device {
- 	unsigned char		perm_addr[MAX_ADDR_LEN];
- 	unsigned char		addr_assign_type;
- 	unsigned char		addr_len;
-+	unsigned char		upper_level;
-+	unsigned char		lower_level;
- 	unsigned short		neigh_priv_len;
- 	unsigned short          dev_id;
- 	unsigned short          dev_port;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8ff21d461f08..a26d87073f71 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -149,6 +149,7 @@
- #include "net-sysfs.h"
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index baacbd11eb43..b5d7ef4da17f 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -973,6 +973,8 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	struct ath_htc_rx_status *rxstatus;
+ 	struct ath_rx_status rx_stats;
+ 	bool decrypt_error = false;
++	__be16 rs_datalen;
++	bool is_phyerr;
  
- #define MAX_GRO_SKBS 8
-+#define MAX_NEST_DEV 8
+ 	if (skb->len < HTC_RX_FRAME_HEADER_SIZE) {
+ 		ath_err(common, "Corrupted RX frame, dropping (len: %d)\n",
+@@ -982,11 +984,24 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
  
- /* This should be increased if a protocol with a bigger head is added. */
- #define GRO_MAX_HEAD (MAX_HEADER + 128)
-@@ -6542,6 +6543,21 @@ struct net_device *netdev_upper_get_next_dev_rcu(struct net_device *dev,
- }
- EXPORT_SYMBOL(netdev_upper_get_next_dev_rcu);
+ 	rxstatus = (struct ath_htc_rx_status *)skb->data;
  
-+static struct net_device *netdev_next_upper_dev(struct net_device *dev,
-+						struct list_head **iter)
-+{
-+	struct netdev_adjacent *upper;
-+
-+	upper = list_entry((*iter)->next, struct netdev_adjacent, list);
-+
-+	if (&upper->list == &dev->adj_list.upper)
-+		return NULL;
-+
-+	*iter = &upper->list;
-+
-+	return upper->dev;
-+}
-+
- static struct net_device *netdev_next_upper_dev_rcu(struct net_device *dev,
- 						    struct list_head **iter)
- {
-@@ -6559,28 +6575,93 @@ static struct net_device *netdev_next_upper_dev_rcu(struct net_device *dev,
- 	return upper->dev;
- }
- 
-+static int netdev_walk_all_upper_dev(struct net_device *dev,
-+				     int (*fn)(struct net_device *dev,
-+					       void *data),
-+				     void *data)
-+{
-+	struct net_device *udev, *next, *now, *dev_stack[MAX_NEST_DEV + 1];
-+	struct list_head *niter, *iter, *iter_stack[MAX_NEST_DEV + 1];
-+	int ret, cur = 0;
-+
-+	now = dev;
-+	iter = &dev->adj_list.upper;
-+
-+	while (1) {
-+		if (now != dev) {
-+			ret = fn(now, data);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		next = NULL;
-+		while (1) {
-+			udev = netdev_next_upper_dev(now, &iter);
-+			if (!udev)
-+				break;
-+
-+			next = udev;
-+			niter = &udev->adj_list.upper;
-+			dev_stack[cur] = now;
-+			iter_stack[cur++] = iter;
-+			break;
-+		}
-+
-+		if (!next) {
-+			if (!cur)
-+				return 0;
-+			next = dev_stack[--cur];
-+			niter = iter_stack[cur];
-+		}
-+
-+		now = next;
-+		iter = niter;
+-	if (be16_to_cpu(rxstatus->rs_datalen) -
+-	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
++	rs_datalen = be16_to_cpu(rxstatus->rs_datalen);
++	if (unlikely(rs_datalen -
++	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0)) {
+ 		ath_err(common,
+ 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
+-			be16_to_cpu(rxstatus->rs_datalen), skb->len);
++			rs_datalen, skb->len);
++		goto rx_next;
 +	}
 +
-+	return 0;
-+}
-+
- int netdev_walk_all_upper_dev_rcu(struct net_device *dev,
- 				  int (*fn)(struct net_device *dev,
- 					    void *data),
- 				  void *data)
- {
--	struct net_device *udev;
--	struct list_head *iter;
--	int ret;
-+	struct net_device *udev, *next, *now, *dev_stack[MAX_NEST_DEV + 1];
-+	struct list_head *niter, *iter, *iter_stack[MAX_NEST_DEV + 1];
-+	int ret, cur = 0;
- 
--	for (iter = &dev->adj_list.upper,
--	     udev = netdev_next_upper_dev_rcu(dev, &iter);
--	     udev;
--	     udev = netdev_next_upper_dev_rcu(dev, &iter)) {
--		/* first is the upper device itself */
--		ret = fn(udev, data);
--		if (ret)
--			return ret;
-+	now = dev;
-+	iter = &dev->adj_list.upper;
- 
--		/* then look at all of its upper devices */
--		ret = netdev_walk_all_upper_dev_rcu(udev, fn, data);
--		if (ret)
--			return ret;
-+	while (1) {
-+		if (now != dev) {
-+			ret = fn(now, data);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		next = NULL;
-+		while (1) {
-+			udev = netdev_next_upper_dev_rcu(now, &iter);
-+			if (!udev)
-+				break;
-+
-+			next = udev;
-+			niter = &udev->adj_list.upper;
-+			dev_stack[cur] = now;
-+			iter_stack[cur++] = iter;
-+			break;
-+		}
-+
-+		if (!next) {
-+			if (!cur)
-+				return 0;
-+			next = dev_stack[--cur];
-+			niter = iter_stack[cur];
-+		}
-+
-+		now = next;
-+		iter = niter;
++	is_phyerr = rxstatus->rs_status & ATH9K_RXERR_PHY;
++	/*
++	 * Discard zero-length packets and packets smaller than an ACK
++	 * which are not PHY_ERROR (short radar pulses have a length of 3)
++	 */
++	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
++		ath_warn(common,
++			 "Short RX data len, dropping (dlen: %d)\n",
++			 rs_datalen);
+ 		goto rx_next;
  	}
  
- 	return 0;
-@@ -6688,23 +6769,42 @@ int netdev_walk_all_lower_dev(struct net_device *dev,
- 					void *data),
- 			      void *data)
- {
--	struct net_device *ldev;
--	struct list_head *iter;
--	int ret;
-+	struct net_device *ldev, *next, *now, *dev_stack[MAX_NEST_DEV + 1];
-+	struct list_head *niter, *iter, *iter_stack[MAX_NEST_DEV + 1];
-+	int ret, cur = 0;
- 
--	for (iter = &dev->adj_list.lower,
--	     ldev = netdev_next_lower_dev(dev, &iter);
--	     ldev;
--	     ldev = netdev_next_lower_dev(dev, &iter)) {
--		/* first is the lower device itself */
--		ret = fn(ldev, data);
--		if (ret)
--			return ret;
-+	now = dev;
-+	iter = &dev->adj_list.lower;
- 
--		/* then look at all of its lower devices */
--		ret = netdev_walk_all_lower_dev(ldev, fn, data);
--		if (ret)
--			return ret;
-+	while (1) {
-+		if (now != dev) {
-+			ret = fn(now, data);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		next = NULL;
-+		while (1) {
-+			ldev = netdev_next_lower_dev(now, &iter);
-+			if (!ldev)
-+				break;
-+
-+			next = ldev;
-+			niter = &ldev->adj_list.lower;
-+			dev_stack[cur] = now;
-+			iter_stack[cur++] = iter;
-+			break;
-+		}
-+
-+		if (!next) {
-+			if (!cur)
-+				return 0;
-+			next = dev_stack[--cur];
-+			niter = iter_stack[cur];
-+		}
-+
-+		now = next;
-+		iter = niter;
- 	}
- 
- 	return 0;
-@@ -6725,28 +6825,93 @@ static struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
- 	return lower->dev;
- }
- 
--int netdev_walk_all_lower_dev_rcu(struct net_device *dev,
--				  int (*fn)(struct net_device *dev,
--					    void *data),
--				  void *data)
-+static u8 __netdev_upper_depth(struct net_device *dev)
-+{
-+	struct net_device *udev;
-+	struct list_head *iter;
-+	u8 max_depth = 0;
-+
-+	for (iter = &dev->adj_list.upper,
-+	     udev = netdev_next_upper_dev(dev, &iter);
-+	     udev;
-+	     udev = netdev_next_upper_dev(dev, &iter)) {
-+		if (max_depth < udev->upper_level)
-+			max_depth = udev->upper_level;
-+	}
-+
-+	return max_depth;
-+}
-+
-+static u8 __netdev_lower_depth(struct net_device *dev)
- {
- 	struct net_device *ldev;
- 	struct list_head *iter;
--	int ret;
-+	u8 max_depth = 0;
- 
- 	for (iter = &dev->adj_list.lower,
--	     ldev = netdev_next_lower_dev_rcu(dev, &iter);
-+	     ldev = netdev_next_lower_dev(dev, &iter);
- 	     ldev;
--	     ldev = netdev_next_lower_dev_rcu(dev, &iter)) {
--		/* first is the lower device itself */
--		ret = fn(ldev, data);
--		if (ret)
--			return ret;
-+	     ldev = netdev_next_lower_dev(dev, &iter)) {
-+		if (max_depth < ldev->lower_level)
-+			max_depth = ldev->lower_level;
-+	}
- 
--		/* then look at all of its lower devices */
--		ret = netdev_walk_all_lower_dev_rcu(ldev, fn, data);
--		if (ret)
--			return ret;
-+	return max_depth;
-+}
-+
-+static int __netdev_update_upper_level(struct net_device *dev, void *data)
-+{
-+	dev->upper_level = __netdev_upper_depth(dev) + 1;
-+	return 0;
-+}
-+
-+static int __netdev_update_lower_level(struct net_device *dev, void *data)
-+{
-+	dev->lower_level = __netdev_lower_depth(dev) + 1;
-+	return 0;
-+}
-+
-+int netdev_walk_all_lower_dev_rcu(struct net_device *dev,
-+				  int (*fn)(struct net_device *dev,
-+					    void *data),
-+				  void *data)
-+{
-+	struct net_device *ldev, *next, *now, *dev_stack[MAX_NEST_DEV + 1];
-+	struct list_head *niter, *iter, *iter_stack[MAX_NEST_DEV + 1];
-+	int ret, cur = 0;
-+
-+	now = dev;
-+	iter = &dev->adj_list.lower;
-+
-+	while (1) {
-+		if (now != dev) {
-+			ret = fn(now, data);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		next = NULL;
-+		while (1) {
-+			ldev = netdev_next_lower_dev_rcu(now, &iter);
-+			if (!ldev)
-+				break;
-+
-+			next = ldev;
-+			niter = &ldev->adj_list.lower;
-+			dev_stack[cur] = now;
-+			iter_stack[cur++] = iter;
-+			break;
-+		}
-+
-+		if (!next) {
-+			if (!cur)
-+				return 0;
-+			next = dev_stack[--cur];
-+			niter = iter_stack[cur];
-+		}
-+
-+		now = next;
-+		iter = niter;
- 	}
- 
- 	return 0;
-@@ -7003,6 +7168,9 @@ static int __netdev_upper_dev_link(struct net_device *dev,
- 	if (netdev_has_upper_dev(upper_dev, dev))
- 		return -EBUSY;
- 
-+	if ((dev->lower_level + upper_dev->upper_level) > MAX_NEST_DEV)
-+		return -EMLINK;
-+
- 	if (!master) {
- 		if (netdev_has_upper_dev(dev, upper_dev))
- 			return -EEXIST;
-@@ -7029,6 +7197,12 @@ static int __netdev_upper_dev_link(struct net_device *dev,
- 	if (ret)
- 		goto rollback;
- 
-+	__netdev_update_upper_level(dev, NULL);
-+	netdev_walk_all_lower_dev(dev, __netdev_update_upper_level, NULL);
-+
-+	__netdev_update_lower_level(upper_dev, NULL);
-+	netdev_walk_all_upper_dev(upper_dev, __netdev_update_lower_level, NULL);
-+
- 	return 0;
- 
- rollback:
-@@ -7111,6 +7285,12 @@ void netdev_upper_dev_unlink(struct net_device *dev,
- 
- 	call_netdevice_notifiers_info(NETDEV_CHANGEUPPER,
- 				      &changeupper_info.info);
-+
-+	__netdev_update_upper_level(dev, NULL);
-+	netdev_walk_all_lower_dev(dev, __netdev_update_upper_level, NULL);
-+
-+	__netdev_update_lower_level(upper_dev, NULL);
-+	netdev_walk_all_upper_dev(upper_dev, __netdev_update_lower_level, NULL);
- }
- EXPORT_SYMBOL(netdev_upper_dev_unlink);
- 
-@@ -8978,6 +9158,8 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->gso_max_size = GSO_MAX_SIZE;
- 	dev->gso_max_segs = GSO_MAX_SEGS;
-+	dev->upper_level = 1;
-+	dev->lower_level = 1;
- 
- 	INIT_LIST_HEAD(&dev->napi_list);
- 	INIT_LIST_HEAD(&dev->unreg_list);
+@@ -1011,7 +1026,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	 * Process PHY errors and return so that the packet
+ 	 * can be dropped.
+ 	 */
+-	if (rx_stats.rs_status & ATH9K_RXERR_PHY) {
++	if (unlikely(is_phyerr)) {
+ 		/* TODO: Not using DFS processing now. */
+ 		if (ath_cmn_process_fft(&priv->spec_priv, hdr,
+ 				    &rx_stats, rx_status->mactime)) {
 -- 
 2.20.1
 
