@@ -2,104 +2,233 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7018DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5657C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316F820715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578435915;
-	bh=ck4c7UJ9ZG5qWrKFy9xztVIZezQr5I8+IAhGkqjM2wo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oz9Gps1aYVdSredT4pPJeG5wg4t5dCGQW++l1ZeZ4Opo9mC91X2qwvbujpUfHg4xK
-	 WbJchyP6hp+aZjTq9sPwyvIEqeyLZedKzSA1/Ajbs6YixyyPLwDGTCqX4d7nOsBJXi
-	 f4NrBthDggAiFPCSltJqpD+9v9pjGd4Z2jwOYWis=
+	by mail.kernel.org (Postfix) with ESMTP id B361520715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgAGWZO (ORCPT
+        id S1727344AbgAGWZa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:25:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 17:25:30 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:37546 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgAGWZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:25:14 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DEA206DB;
-        Tue,  7 Jan 2020 22:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578435913;
-        bh=ck4c7UJ9ZG5qWrKFy9xztVIZezQr5I8+IAhGkqjM2wo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LjnYP2WtPxOf1+s588IKoPoQVbQS95f9r2Tm6C45d4QkS3w5bt0sdSroqMOUdQvpv
-         0kiMXWQ2G04zlLAjsQtwAVQZhAI3ggQxSYs35zfx78MEZx3H4qwXMb+q1w8VPwzJAl
-         iZocijQ+jIbbVfEkp/KVespF2ONYI7c7xk27OxQw=
-Date:   Tue, 7 Jan 2020 14:25:12 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>, linux-mm@kvack.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: work around bogus -Wrestrict warning
-Message-Id: <20200107142512.b3d63df56ffee1ef471b6acd@linux-foundation.org>
-In-Reply-To: <20200107214042.855757-1-arnd@arndb.de>
-References: <20200107214042.855757-1-arnd@arndb.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726558AbgAGWZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:25:30 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioxHq-00051T-Rh; Tue, 07 Jan 2020 23:25:18 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
+Date:   Tue, 07 Jan 2020 23:25:17 +0100
+Message-ID: <3869290.WS1K4CcMg6@phil>
+In-Reply-To: <4d5a896ee0f40908365800dcd0554eb39c5d68c1.camel@collabora.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com> <2299954.gvZHxIxoM0@diego> <4d5a896ee0f40908365800dcd0554eb39c5d68c1.camel@collabora.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jan 2020 22:40:26 +0100 Arnd Bergmann <arnd@arndb.de> wrote:
+Am Dienstag, 7. Januar 2020, 23:03:54 CET schrieb Ezequiel Garcia:
+> On Tue, 2020-01-07 at 22:30 +0100, Heiko Stübner wrote:
+> > Hi Ezequiel,
+> > 
+> > Am Dienstag, 7. Januar 2020, 14:20:10 CET schrieb Ezequiel Garcia:
+> > > Hi Heiko, Laurent,
+> > > 
+> > > On Tue, 2020-01-07 at 10:28 +0100, Heiko Stübner wrote:
+> > > > Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
+> > > > > On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> > > > > > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > > > > > > Hi Helen,
+> > > > > > > 
+> > > > > > > Thank you for the patch.
+> > > > > > > 
+> > > > > > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > > > > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > > > > > > 
+> > > > > > > > This was tested and verified with:
+> > > > > > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-
+> > > > > > > > dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > > > > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > > > > > > 
+> > > > > > > > ---
+> > > > > > > > 
+> > > > > > > > Changes in v12:
+> > > > > > > > - The commit replaces the following commit in previous series named
+> > > > > > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > > > > > > This new patch adds yaml binding and was verified with
+> > > > > > > > make dtbs_check and make dt_binding_check
+> > > > > > > > 
+> > > > > > > > Changes in v11: None
+> > > > > > > > Changes in v10:
+> > > > > > > > - unsquash
+> > > > > > > > 
+> > > > > > > > Changes in v9:
+> > > > > > > > - fix title division style
+> > > > > > > > - squash
+> > > > > > > > - move to staging
+> > > > > > > > 
+> > > > > > > > Changes in v8: None
+> > > > > > > > Changes in v7:
+> > > > > > > > - updated doc with new design and tested example
+> > > > > > > > 
+> > > > > > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > > > > > > >  1 file changed, 75 insertions(+)
+> > > > > > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > b/drivers/staging/media/phy-
+> > > > > > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > new file mode 100644
+> > > > > > > > index 000000000000..af97f1b3e005
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > > > > > @@ -0,0 +1,75 @@
+> > > > > > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > > > > > +%YAML 1.2
+> > > > > > > > +---
+> > > > > > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > > +
+> > > > > > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > > > > > > 
+> > > > > > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
+> > > > > > 
+> > > > > > The driver currently only supports RX0, but I think you are right,
+> > > > > > it should say RX here. This binding could be extended for RX1.
+> > > > > > 
+> > > > > > > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > > > > > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> > > > > > 
+> > > > > > I am not following this. The driver handles just one PHY. Each PHY
+> > > > > > should have its own node.
+> > > > > 
+> > > > > Looking at the registers, it seems that the different PHYs are
+> > > > > intertwined and we would could have trouble handling the different PHYs
+> > > > > with different DT nodes and thus struct device instances.
+> > > > 
+> > > > I have to confess to not following _ALL_ of the threads, so may say
+> > > > something stupid, but I don't think the PHYs are intertwined so much.
+> > > > 
+> > > > Where RX0 is controlled from the "General Register Files" alone
+> > > > [register dumping ground for soc designers], the TX1RX1-phy
+> > > > actually gets controlled from inside the dsi1 register area it seems.
+> > > > 
+> > > > So in my previous (still unsucessful) tests, I was rolling with something like
+> > > > https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
+> > > > 
+> > > > With the actual "logic" picked from the vendor kernel, that just double-
+> > > > maps the dsi1-registers in both dsi and dphy driver, which was strange.
+> > > > 
+> > > > 
+> > > 
+> > > Describing each PHY in its own device node (as we currently do)
+> > > results in:
+> > > 
+> > >         mipi_dphy_tx1rx1: mipi-dphy-tx1rx1@ff968000 {
+> > >                 compatible = "rockchip,rk3399-mipi-dphy";
+> > >                 reg = <0x0 0xff968000 0x0 0x8000>;
+> > >                 rockchip,grf = <&grf>;
+> > >         };
+> > 
+> > 0xff968000 actually really is the dsi1 controller, so we'll already
+> > have a node for that area. That is the reason I went that way to make
+> > the rockchip-dsi optionally also behave as phy-provider.
+> > 
+> > So when it's used in combination with drm and a panel or so it will
+> > behave as dsi controller, but when requested via the phy-framework
+> > it will expose the dphy functionality.
+> > 
+> 
+> Hm, and will this driver also support RX1?
 
-> gcc -O3 produces some really odd warnings for this file:
-> 
-> kernel/kallsyms.c: In function 'sprint_symbol':
-> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
->    strcpy(buffer, name);
->    ^~~~~~~~~~~~~~~~~~~~
-> kernel/kallsyms.c: In function 'sprint_symbol_no_offset':
-> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
->    strcpy(buffer, name);
->    ^~~~~~~~~~~~~~~~~~~~
-> kernel/kallsyms.c: In function 'sprint_backtrace':
-> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
->    strcpy(buffer, name);
->    ^~~~~~~~~~~~~~~~~~~~
-> 
-> This obviously cannot be since it is preceded by an 'if (name != buffer)'
-> check.
-> 
-> Using sprintf() instead of strcpy() is a bit wasteful but is
-> the best workaround I could come up with.
-> 
-> ...
->
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -366,7 +366,7 @@ static int __sprint_symbol(char *buffer, unsigned long address,
->  		return sprintf(buffer, "0x%lx", address - symbol_offset);
->  
->  	if (name != buffer)
-> -		strcpy(buffer, name);
-> +		sprintf(buffer, "%s", name);
->  	len = strlen(buffer);
->  	offset -= symbol_offset;
+what is RX1 in your book? :-)
 
-gee, is that even worth "fixing"?  Oleksandr, I've seen a couple of
-these false positives.  Do we know if anyone is taking them to the gcc
-developers?
+According to the TRM the rk3399 has 3 DPHYs,
+tx0 - connected exclusively to dsi0
+      (this is handled internally by the dw-mipi-dsi driver with controls
+       in the dsi0 register space)
+rx0 - connected exclusively to isp0
+      (this is handled by the individual dphy driver from Helen's series)
+tx1rx1 - shared between dsi1 and isp1
+      (again inside the dsi1 register space)
+
+
+> 
+> > 
+> > >         grf: syscon@ff770000 {
+> > >                 mipi_dphy_rx0: mipi-dphy-rx0 {
+> > >                         compatible = "rockchip,rk3399-mipi-dphy";
+> > >                 };
+> > >         };
+> > > 
+> > > Which is mildly ugly, as it uses two mechanism to describe
+> > > the GRF resource. In addition, the driver will then _infer_
+> > > which device node is RX0 and which is TX1RX1, from this.
+> > > 
+> > > Perhaps Laurent's proposal, describing each PHY explicitly,
+> > > would be cleaner?
+> > 
+> > so I really think we shouldn't merge these two things together,
+> > especially to not break the dsi1 controller part.
+> > 
+> 
+> I don't think it would necesarily break the dsi1 controller part.
+> 
+> You can declare both device nodes as sharing the address region,
+> and then the driver can request the I/O resource only when it needs to,
+> i.e. in the PHY .init hook.
+
+dsi1 is of course a dw-mipi-dsi one, which in turn shares a common bridge
+driver over multiple variants (non-rockchip), which expects its registers
+mapped during probe.
+
+I think it would not really work well if you need to make the whole world
+follow that idea ;-) .
+
+
+Hence my approach with exposing the phy interface from the dsi driver.
+If you look at the dts part, it also just looks like it should be ... as
+a regular phy:
+	https://github.com/mmind/linux-rockchip/blob/wip/tc358749/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L1764
+
+And on the driver side there is even some short circuit protection.
+When used as phy, it won't allow to be used as a component and
+vice versa.
+
+
+> It's not super nice, but there's no real reason two devices
+> can't share an I/O memory resource.
+
+Counter argument, devicetree is not a means to handle Linux
+peculiarites - instead it should describe the hardware ...
+and the area there _is_ the dsi1 controller ;-)
+
+Heiko
+
 
