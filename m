@@ -7,90 +7,94 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211C8C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C68C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AFE208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DEA20715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NxDpUxb8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fOibXhuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgAGOVY (ORCPT
+        id S1728263AbgAGOWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:21:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37237 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGOVX (ORCPT
+        Tue, 7 Jan 2020 09:22:02 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54119 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728232AbgAGOWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:21:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so41545918wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:21:22 -0800 (PST)
+        Tue, 7 Jan 2020 09:22:01 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so19148143wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:22:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=azgP9PCCbsROjZ/Zv0Cietnsuop473LJEmV+uxcq2/Q=;
-        b=NxDpUxb8VwIteetS34QYQv+7Ifm+Vgr/QSMt8l1vjZGmQHeyjDs0Im3CvXbP173MX9
-         XCrDRyrfU6D1XY5Jm5Mju0iCP0LeFS74KyXXBpXBOspr8hxS9tCCAIGrnFKhk4y+jPqj
-         lC2Bkt9HWBZEXiKSgTPtw8WPVQwS1VmCbmtKItgUsIsJSGesCjrKAG67F24pczDSIB4V
-         88rS3U6NK7OwYSBH8vcxJ+PgMCiWjChWIKdvSySGU1n4H6aWakK7DLO8CQnA69kYX9sd
-         Hvp68g5tkuUVY3IJBX2o/stx9jTlnp9zgIQUSiKLrOs5CjMnUBBvyfmImZuWhXAGMDBo
-         epaw==
+        bh=wk7NHZalQZ1UjOdJ8ZWvs/hit0iBCMoY2txpdTCN4GQ=;
+        b=fOibXhuSieWvb1qUSapgehbecao5J/gPeNA0kLDDfZmrbYPPhL4ghZM8ihMRDxCtfD
+         hP4UHcJe4OnhyyIvWr7DOKaslMnYgYEUkg3XQF9IQAYJ8SiOlav3hU6xW1JtS6IWPegc
+         auKUrZqLnO7SD7eGIrPlN91wfCe5JFct8BxtCqHdDGSCaD34ikfAh+tRc9FPFbNq/c83
+         ApktI5Tm4RFTp3cEDaKD6cPoSnkKTRYA4VDeefjRxSFcCwgn00X/29zsvxnisYQol9Jo
+         qf8+piYW8epV8G8RCEwhRPX9wVh6ZVLUqdkpPB8Y3AS2Ue/AiowrUH+N7IgbbWGjJYxV
+         Repw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=azgP9PCCbsROjZ/Zv0Cietnsuop473LJEmV+uxcq2/Q=;
-        b=ud+gEYeiNgI/Z0SGDytjqbGzLECupeIPupgjyJcLx9p1Lc7/Eh4jKbv3vqJPREGJim
-         F2Zab/caBNBzwRmJBpsasZfuIQLZ8BrSoRtOJlKesjOiQIhph7nahxM+QT/zcbwagFgA
-         Nn5bDVXbc6DkRBKHX2dPaE9MIgE7JHqJ2U30aJqRrDk0zfQih+k2CwX6/AzbGPdWA55+
-         zsS1npbR8tC1krdB7BGeKFdp2wqFHE47REJm0/3Sq5HA3Gw5mP4C0XFxCMNoWWiRfzmt
-         x9R5AgdV5hTB7UiEHjzfQdrCe0/psCsr4huxfrULrp8TLK6WuwuFSRH8lWLtIVN1pe7O
-         SoFg==
-X-Gm-Message-State: APjAAAUmnOWFY17JTa1tN3DiyEGbNSyUk4GT7J56SRmyTQ4OaVQM/2+l
-        QMSmsD2P1H7kC1Gex/FcpHkVP21vfCA=
-X-Google-Smtp-Source: APXvYqzNo1kOfNgyBHgzFUZVdegqI1QcWuFJbzR0+8/g+AShalBaRufT2SoZy1pZBCofT16eBQid4g==
-X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr104817988wrw.255.1578406881664;
-        Tue, 07 Jan 2020 06:21:21 -0800 (PST)
+        bh=wk7NHZalQZ1UjOdJ8ZWvs/hit0iBCMoY2txpdTCN4GQ=;
+        b=pPSjxlMAhOJE72GONxfJWLiv27bZvRoRv+pDpi/7nG0M5EP43R+3VFCjDDSaggqHut
+         tIY2OPNG2Ihv8R6J7Y9axMW8CcxablUBxTKmk3IaGYeO6jPNULyo5R4NHtI+4HV+JVYs
+         UExbZrOMuaqzLh8HB/dwTt5YesGEpL/zZWR9YLxpv3u8kNcacM6c7ufa/JM+bZSnegRT
+         6Cx5e9SzgdQyrw/q2+Qr7RrhSsyVsisGk6tUbFOjXGkKd8KHwrBVNwPQBPZVKFzPIdWI
+         Ki5q4j8+yywcnSN1NkqgoGDIerSXLJCLxF7dBlO6S0hJNLqJh83eiv3sWjL1kvLXQoAd
+         vMww==
+X-Gm-Message-State: APjAAAUVCF9UVy6BOkwADq8gG4Ebr48dwpFZwN79RX5cr4Mq4j6fjaFx
+        Z68IehxGkFlXOZYbFQ5+5ubut24zQSg=
+X-Google-Smtp-Source: APXvYqzh6VzltP60UrbK+lVpjxE2Y3cgOYj5xY3tv94tLPnQKyX5C2TsYHSQ60VAjM+fBdmdnpKxqA==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr40509510wmj.96.1578406919509;
+        Tue, 07 Jan 2020 06:21:59 -0800 (PST)
 Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id a1sm27110377wmj.40.2020.01.07.06.21.20
+        by smtp.gmail.com with ESMTPSA id b137sm27962168wme.26.2020.01.07.06.21.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 06:21:21 -0800 (PST)
-Date:   Tue, 7 Jan 2020 14:21:35 +0000
+        Tue, 07 Jan 2020 06:21:58 -0800 (PST)
+Date:   Tue, 7 Jan 2020 14:22:13 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        zhengbin13@huawei.com
-Subject: Re: [PATCH] mfd: tqmx86: remove set but not used variable 'i2c_ien'
-Message-ID: <20200107142135.GL14821@dell>
-References: <20200103120925.460-1-yukuai3@huawei.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/20] mfd: samsung: Rename Samsung to lowercase
+Message-ID: <20200107142213.GM14821@dell>
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-19-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103120925.460-1-yukuai3@huawei.com>
+In-Reply-To: <20200104152107.11407-19-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jan 2020, yu kuai wrote:
+On Sat, 04 Jan 2020, Krzysztof Kozlowski wrote:
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
+> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+> name.
 > 
-> drivers/mfd/tqmx86.c: In function ‘tqmx86_probe’:
-> drivers/mfd/tqmx86.c:161:29: warning: variable ‘i2c_ien’
-> set but not used I[-Wunused-but-set-variable]
+> "SAMSUNG" is not an abbreviation but a regular trademarked name.
+> Therefore it should be written with lowercase letters starting with
+> capital letter.
 > 
-> It is never used, and so can be removed.
+> Although advertisement materials usually use uppercase "SAMSUNG", the
+> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+> privacy/legal statements on
+> https://www.samsung.com/semiconductor/privacy-global/).
 > 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/mfd/tqmx86.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/mfd/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Applied, thanks.
 
