@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2CCC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029B6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB222087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94E624656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430592;
-	bh=riLU6jR2dZjj/BENyJ4UDmGbWvVH5PG0HvTdu2g6uUk=;
+	s=default; t=1578430594;
+	bh=hysfUu4p0Fqb8tnXbESrzUN74FW2jpMqqXphEDibYMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvt8IFKs0PRQNTnamXmXSNX3iASZE9Wzrnx6J9LifIAgZSoh2N3DyQp5jdC5F4LWd
-	 yji48e+GAdvAvczTFqjRVTRYlW7qrha+OZbFGLd7JW8zcWSgi/785p+oB3XZsS5DCd
-	 3AaPcDnSP40UJVxKUQIgYBjGfHaQ8dSShT72tmQw=
+	b=nBJpyvcYtkF31MVXOP62K3ASvyCTn3HbGjW3qaf6MdFWauWvXZMHQDN3G9APDKGea
+	 BVOoWVU8sTUUYll/tahss5Z3aTuWR3pYfVpdYjvvgd4V7nPAbziw61yyH2do8ZxZCl
+	 grTeT1l421hP4T4Gb27EaQH5KX/WCcOqL1yQTxqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgAGU4a (ORCPT
+        id S1727206AbgAGU4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:56:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51890 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbgAGU41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:56:27 -0500
+        id S1727176AbgAGU43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:56:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D3A32087F;
-        Tue,  7 Jan 2020 20:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2FE2081E;
+        Tue,  7 Jan 2020 20:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430586;
-        bh=riLU6jR2dZjj/BENyJ4UDmGbWvVH5PG0HvTdu2g6uUk=;
+        s=default; t=1578430589;
+        bh=hysfUu4p0Fqb8tnXbESrzUN74FW2jpMqqXphEDibYMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dg1ipP/uBfXer26aLulndJ67CnARmZN+/vMGozLu+Uv1U+VJVWV3tAnyCsE4cWKkr
-         M2wYCekEiwSnoWX9tabLCSkAZtLy2glb6Zmnq+mKkmUcK5rUJMsyBCZnZBzmMUK6xg
-         M9pSbsmLifCTk0JD/SQS/OXjlQJBF1GUT2sev+eU=
+        b=u/4bFLEEzw5/wbpEFbfl646XZDv5JfH48+X/AGlx/WTwug1CGCPXNG4WQw8amG+/0
+         f+pktRv778lVTcGe7VO3VteU50Ik3lBPhLEbZPeqRNYdW4aK52tuqDulyVJkSdclvm
+         BLCuxNcxjyv7pvm+Kl9PBkJglFnCvPXNaSUMQYvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guchun Chen <guchun.chen@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/191] drm/amdgpu: add check before enabling/disabling broadcast mode
-Date:   Tue,  7 Jan 2020 21:52:04 +0100
-Message-Id: <20200107205333.241449625@linuxfoundation.org>
+Subject: [PATCH 5.4 005/191] drm/amdgpu: add header line for power profile on Arcturus
+Date:   Tue,  7 Jan 2020 21:52:05 +0100
+Message-Id: <20200107205333.294699840@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,72 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 6e807535dae5dbbd53bcc5e81047a20bf5eb08ea ]
+[ Upstream commit 14891c316ca7e15d81dba78f30fb630e3f9ee2c9 ]
 
-When security violation from new vbios happens, data fabric is
-risky to stop working. So prevent the direct access to DF
-mmFabricConfigAccessControl from the new vbios and onwards.
+So the output is consistent with other asics.
 
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/df_v3_6.c | 38 ++++++++++++++++------------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-index 5850c8e34caa..97d11d792351 100644
---- a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-+++ b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-@@ -261,23 +261,29 @@ static void df_v3_6_update_medium_grain_clock_gating(struct amdgpu_device *adev,
- {
- 	u32 tmp;
+diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+index d493a3f8c07a..b68bf8dcfa78 100644
+--- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
+@@ -1388,12 +1388,17 @@ static int arcturus_get_power_profile_mode(struct smu_context *smu,
+ 					"VR",
+ 					"COMPUTE",
+ 					"CUSTOM"};
++	static const char *title[] = {
++			"PROFILE_INDEX(NAME)"};
+ 	uint32_t i, size = 0;
+ 	int16_t workload_type = 0;
  
--	/* Put DF on broadcast mode */
--	adev->df_funcs->enable_broadcast_mode(adev, true);
--
--	if (enable && (adev->cg_flags & AMD_CG_SUPPORT_DF_MGCG)) {
--		tmp = RREG32_SOC15(DF, 0, mmDF_PIE_AON0_DfGlobalClkGater);
--		tmp &= ~DF_PIE_AON0_DfGlobalClkGater__MGCGMode_MASK;
--		tmp |= DF_V3_6_MGCG_ENABLE_15_CYCLE_DELAY;
--		WREG32_SOC15(DF, 0, mmDF_PIE_AON0_DfGlobalClkGater, tmp);
--	} else {
--		tmp = RREG32_SOC15(DF, 0, mmDF_PIE_AON0_DfGlobalClkGater);
--		tmp &= ~DF_PIE_AON0_DfGlobalClkGater__MGCGMode_MASK;
--		tmp |= DF_V3_6_MGCG_DISABLE;
--		WREG32_SOC15(DF, 0, mmDF_PIE_AON0_DfGlobalClkGater, tmp);
--	}
-+	if (adev->cg_flags & AMD_CG_SUPPORT_DF_MGCG) {
-+		/* Put DF on broadcast mode */
-+		adev->df_funcs->enable_broadcast_mode(adev, true);
+ 	if (!smu->pm_enabled || !buf)
+ 		return -EINVAL;
+ 
++	size += sprintf(buf + size, "%16s\n",
++			title[0]);
 +
-+		if (enable) {
-+			tmp = RREG32_SOC15(DF, 0,
-+					mmDF_PIE_AON0_DfGlobalClkGater);
-+			tmp &= ~DF_PIE_AON0_DfGlobalClkGater__MGCGMode_MASK;
-+			tmp |= DF_V3_6_MGCG_ENABLE_15_CYCLE_DELAY;
-+			WREG32_SOC15(DF, 0,
-+					mmDF_PIE_AON0_DfGlobalClkGater, tmp);
-+		} else {
-+			tmp = RREG32_SOC15(DF, 0,
-+					mmDF_PIE_AON0_DfGlobalClkGater);
-+			tmp &= ~DF_PIE_AON0_DfGlobalClkGater__MGCGMode_MASK;
-+			tmp |= DF_V3_6_MGCG_DISABLE;
-+			WREG32_SOC15(DF, 0,
-+					mmDF_PIE_AON0_DfGlobalClkGater, tmp);
-+		}
- 
--	/* Exit broadcast mode */
--	adev->df_funcs->enable_broadcast_mode(adev, false);
-+		/* Exit broadcast mode */
-+		adev->df_funcs->enable_broadcast_mode(adev, false);
-+	}
- }
- 
- static void df_v3_6_get_clockgating_state(struct amdgpu_device *adev,
+ 	for (i = 0; i <= PP_SMC_POWER_PROFILE_CUSTOM; i++) {
+ 		/*
+ 		 * Conv PP_SMC_POWER_PROFILE* to WORKLOAD_PPLIB_*_BIT
 -- 
 2.20.1
 
