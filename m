@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECFFC33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F7EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB0020880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C662077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431666;
-	bh=VUtMeQKWQSIxCGS9aZYwceQXOd91vXhSxdYmNnp6R9Q=;
+	s=default; t=1578431669;
+	bh=6UY2T6dWzU5eztkg4rE2iFcamizXIGPsVRx6/VMKGK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsWneOwolntvSan+W5wdvL85KOih6mFtCIBwZHJOCInknP7Mdn8tkxhehI0N0NOVV
-	 QGF73IPlE3E9n7Fmm6/s+v5xlH04O34oie/EdAXtTXk6c6fpT0rbWPsPbdu/7c27fv
-	 vg2Q4KZDoqqdnSOh8w23fsF9+BofjVf+1GvFyAj8=
+	b=GAx06KrBQaoIAPymNylCLZQIUCzh8TPVhtR5exF+TrNA/Pjzkdc97zCniF6kSf3h7
+	 5R+YY+Z5vVL1kRJyKsrsLX+HQaVhnVvZYCY5urae9ajR4/AQcd8kmaHrHSRkHw9nqA
+	 wKZPQsPlkmAJZol0npu8O1Kb4Ba1yA3rVUWFqjwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgAGVJV (ORCPT
+        id S1729749AbgAGVO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34366 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:14:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729336AbgAGVJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:13 -0500
+        id S1729812AbgAGVJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAD9D2072A;
-        Tue,  7 Jan 2020 21:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00B992072A;
+        Tue,  7 Jan 2020 21:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431352;
-        bh=VUtMeQKWQSIxCGS9aZYwceQXOd91vXhSxdYmNnp6R9Q=;
+        s=default; t=1578431364;
+        bh=6UY2T6dWzU5eztkg4rE2iFcamizXIGPsVRx6/VMKGK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSEfMWt5eFjbmM02IEvDXLebzWxjEg+En+YjlnSqr6ybd8otf8Kx82fgvo87urXJQ
-         kju9zhkoi6pFHL2T3IH6Zk7H4WwFQKghPwYtArk11mWbm7DgpWd3Asyog0slbwrz9v
-         szGjoERGUhr61NlsvByA84WjhCXZIVtzum0fd1YE=
+        b=Ao1/5NOqAc7QkhFatHtHG9u3d+vsrNXi6pG+P7torummm4U4dwZMAt9uz1jKVxH1b
+         UULvqVMIwAGqFnhKVNMrON+CJG3nhZK8HSDQCL0CEzanDfpoMUwVRf6CeE0VTXbgA+
+         lfLmhsCzyVTWOZQL/PAkrCwk9LUIYAc2fHDVytW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
+        stable@vger.kernel.org, Steve Wise <larrystevenwise@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 21/74] taskstats: fix data-race
-Date:   Tue,  7 Jan 2020 21:54:46 +0100
-Message-Id: <20200107205150.297768462@linuxfoundation.org>
+Subject: [PATCH 4.14 05/74] rxe: correctly calculate iCRC for unaligned payloads
+Date:   Tue,  7 Jan 2020 21:54:30 +0100
+Message-Id: <20200107205138.948448570@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -64,103 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Steve Wise <larrystevenwise@gmail.com>
 
-[ Upstream commit 0b8d616fb5a8ffa307b1d3af37f55c15dae14f28 ]
+[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
 
-When assiging and testing taskstats in taskstats_exit() there's a race
-when setting up and reading sig->stats when a thread-group with more
-than one thread exits:
+If RoCE PDUs being sent or received contain pad bytes, then the iCRC
+is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
+iCRC, as well as ingress PDUs being dropped due to erroneously detecting
+a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
+in iCRC computations.
 
-write to 0xffff8881157bbe10 of 8 bytes by task 7951 on cpu 0:
- taskstats_tgid_alloc kernel/taskstats.c:567 [inline]
- taskstats_exit+0x6b7/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- get_signal+0x2a2/0x1320 kernel/signal.c:2734
- do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
- exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
- prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
- do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Note: This bug has caused broken on-the-wire compatibility with actual
+hardware RoCE devices since the soft-RoCE driver was first put into the
+mainstream kernel.  Fixing it will create an incompatibility with the
+original soft-RoCE devices, but is necessary to be compatible with real
+hardware devices.
 
-read to 0xffff8881157bbe10 of 8 bytes by task 7949 on cpu 1:
- taskstats_tgid_alloc kernel/taskstats.c:559 [inline]
- taskstats_exit+0xb2/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- __do_sys_exit_group kernel/exit.c:994 [inline]
- __se_sys_exit_group kernel/exit.c:992 [inline]
- __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
- do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fix this by using smp_load_acquire() and smp_store_release().
-
-Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Marco Elver <elver@google.com>
-Reviewed-by: Will Deacon <will@kernel.org>
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Link: https://lore.kernel.org/r/20191009114809.8643-1-christian.brauner@ubuntu.com
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
+Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/taskstats.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
+ drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
+ drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-index 4559e914452b..390c76d4503c 100644
---- a/kernel/taskstats.c
-+++ b/kernel/taskstats.c
-@@ -568,25 +568,33 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
- static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
- {
- 	struct signal_struct *sig = tsk->signal;
--	struct taskstats *stats;
-+	struct taskstats *stats_new, *stats;
+diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
+index 83412df726a5..b7098f7bb30e 100644
+--- a/drivers/infiniband/sw/rxe/rxe_recv.c
++++ b/drivers/infiniband/sw/rxe/rxe_recv.c
+@@ -393,7 +393,7 @@ int rxe_rcv(struct sk_buff *skb)
  
--	if (sig->stats || thread_group_empty(tsk))
--		goto ret;
-+	/* Pairs with smp_store_release() below. */
-+	stats = smp_load_acquire(&sig->stats);
-+	if (stats || thread_group_empty(tsk))
-+		return stats;
- 
- 	/* No problem if kmem_cache_zalloc() fails */
--	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-+	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
- 
- 	spin_lock_irq(&tsk->sighand->siglock);
--	if (!sig->stats) {
--		sig->stats = stats;
--		stats = NULL;
-+	stats = sig->stats;
-+	if (!stats) {
-+		/*
-+		 * Pairs with smp_store_release() above and order the
-+		 * kmem_cache_zalloc().
-+		 */
-+		smp_store_release(&sig->stats, stats_new);
-+		stats = stats_new;
-+		stats_new = NULL;
- 	}
- 	spin_unlock_irq(&tsk->sighand->siglock);
- 
--	if (stats)
--		kmem_cache_free(taskstats_cache, stats);
--ret:
--	return sig->stats;
-+	if (stats_new)
-+		kmem_cache_free(taskstats_cache, stats_new);
+ 	calc_icrc = rxe_icrc_hdr(pkt, skb);
+ 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
+-			      payload_size(pkt));
++			      payload_size(pkt) + bth_pad(pkt));
+ 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
+ 	if (unlikely(calc_icrc != pack_icrc)) {
+ 		if (skb->protocol == htons(ETH_P_IPV6))
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index 9fd4f04df3b3..e6785b1ea85f 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
+ 			if (err)
+ 				return err;
+ 		}
++		if (bth_pad(pkt)) {
++			u8 *pad = payload_addr(pkt) + paylen;
 +
-+	return stats;
- }
++			memset(pad, 0, bth_pad(pkt));
++			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
++		}
+ 	}
+ 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
  
- /* Send pid data out on exit */
+diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
+index 9207682b7a2e..a07a29b48863 100644
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@ -738,6 +738,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
+ 	if (err)
+ 		pr_err("Failed copying memory\n");
+ 
++	if (bth_pad(&ack_pkt)) {
++		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
++		u8 *pad = payload_addr(&ack_pkt) + payload;
++
++		memset(pad, 0, bth_pad(&ack_pkt));
++		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
++	}
+ 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
+ 	*p = ~icrc;
+ 
 -- 
 2.20.1
 
