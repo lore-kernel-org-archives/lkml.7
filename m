@@ -2,387 +2,119 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F94C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE0CC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CB0206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16F2206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Qe+Akwoz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FtsWrF22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgAGHxu (ORCPT
+        id S1727277AbgAGHzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:53:50 -0500
-Received: from jax4mhob23.registeredsite.com ([64.69.218.111]:38864 "EHLO
-        jax4mhob23.registeredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbgAGHxu (ORCPT
+        Tue, 7 Jan 2020 02:55:04 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:45077 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbgAGHzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:53:50 -0500
-Received: from mailpod.hostingplatform.com ([10.30.71.205])
-        by jax4mhob23.registeredsite.com (8.14.4/8.14.4) with ESMTP id 0077rlDp108662
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 02:53:47 -0500
-Received: (qmail 5502 invoked by uid 0); 7 Jan 2020 07:53:47 -0000
-X-TCPREMOTEIP: 81.173.50.109
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
-  by 0 with ESMTPA; 7 Jan 2020 07:53:46 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-clk@vger.kernel.org
-Cc:     sboyd@kernel.org, mturquette@baylibre.com,
-        linux-kernel@vger.kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v2] clk, clk-si5341: Support multiple input ports
-Date:   Tue,  7 Jan 2020 08:53:40 +0100
-Message-Id: <20200107075340.14528-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jan 2020 02:55:03 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id A2F47220C7;
+        Tue,  7 Jan 2020 02:55:02 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 07 Jan 2020 02:55:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=yn5V1ILcZ0kXEAzZg+JzlKT4KJW
+        MwKW3bisUeNMYdZA=; b=Qe+AkwozbnL83siBhs0HNucL4maZbd3UdlHCmHzdsSu
+        FTGLuq6x3VAo4j4jbLLXs2zuWxsvkEF5Pwc5jlFlNTpdvGdaYNh1hYaeA9opoA/0
+        oD3/aoXaQVsxWR2V1MG+r30RBvTWbv9SyKEFAVSX6XBt2dYpcdFZL5kXUXoE2p0N
+        dxfMuUFEJQSONLs/HaHLFPfBqI7Hjh55AqlAHJrrntB9bwGaUxBSm6yJhsdXHFBw
+        gpDoLgWVxh1kdrxjBvOH1t1Q78PPUgE91tyjVQfwPeJdjHfchas5WQkmBAMqAfuY
+        HadpnksNT3I3MHAmrwGVakUOl8l6Y413Vt8H2okU/QQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=yn5V1I
+        LcZ0kXEAzZg+JzlKT4KJWMwKW3bisUeNMYdZA=; b=FtsWrF226MAkiL1ot199v5
+        6kBiNJx+xvOOcyNlkejkrscTtWt3VbJCwaRZaqKWTYMyH8MnBy4FhQ+HhLGmM1dr
+        xqtwBmfUxxVFVgDT+ahvar/jDfexus5RrvJKlbEvv8Hm7oA0LYG8/4NoQUTEz6OE
+        glwXaEltNAlikG3CqJ/sX0PDokrkYoeH5sCNnm7LZh1OPrumkaGM6DYA3iG9Blpb
+        /P+BDRtTLN5/1rM61O8K2UkUIQuyxkRdcBGQDMxGFUyka617CDP0XjvwhLw0fFFA
+        WgjzxMqe1pUl8ksueuyOJJRjNZBB8UahlBgY2Jo+cHMtkRktJK4t+NtTZE2zmT5g
+        ==
+X-ME-Sender: <xms:VTkUXkUyRI46-g7DlLfiv26dWN7Zo82Ry6PvyzTprHw5JPuSS7EPFQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehuddguddugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
+    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:VTkUXp3ZpLGFt3ZoNob1bAOZGAn0QMBRMyiFsAV2TMFHH3Lzo7GfNA>
+    <xmx:VTkUXlcTghyGXhUBnzKq3cJsYr1jFomlHdqEx-9Jy4M9RWQ_1oyhjQ>
+    <xmx:VTkUXmVoGho5uV6TNIez03CgbqaKp5FPpFVfgRhI7GooZwAhp6rdLQ>
+    <xmx:VjkUXuy2tBvO5JyTLRCPOgdGiSGlY439d9Ouj6NhkF_9_lZbP9KUpw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 62A5B80059;
+        Tue,  7 Jan 2020 02:55:01 -0500 (EST)
+Date:   Tue, 7 Jan 2020 08:55:00 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kishon@ti.com, praneeth@ti.com, jsarha@ti.com,
+        tomi.valkeinen@ti.com, mparab@cadence.com, sjakhade@cadence.com
+Subject: Re: [PATCH v3] phy: Add DisplayPort configuration options
+Message-ID: <20200107075500.br66fzynztpl6jc5@gilmour.lan>
+References: <1578313360-18124-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20200107054837.DB91F2075A@mail.kernel.org>
-References: <20191205115734.6987-1-mike.looijmans@topic.nl> <20200107054837.DB91F2075A@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="du7252vquuj4pt2d"
+Content-Disposition: inline
+In-Reply-To: <1578313360-18124-1-git-send-email-yamonkar@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Si5341 and Si5340 have multiple input clock options. So far, the driver
-only supported the XTAL input, this adds support for the three external
-clock inputs as well.
 
-If the clock chip isn't programmed at boot, the driver will default to the
-XTAL input as before. If there is no "xtal" clock input available, it will
-pick the first connected input (e.g. "in0") as the input clock for the PLL.
-One can use clock-assigned-parents to select a particular clock as input.
+--du7252vquuj4pt2d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Typo "isn't", remove first hunk, s/unsigned char/u8/
+On Mon, Jan 06, 2020 at 01:22:40PM +0100, Yuti Amonkar wrote:
+> Allow DisplayPort PHYs to be configured through the generic
+> functions through a custom structure added to the generic union.
+> The configuration structure is used for reconfiguration of
+> DisplayPort PHYs during link training operation.
+>
+> The parameters added here are the ones defined in the DisplayPort
+> spec v1.4 which include link rate, number of lanes, voltage swing
+> and pre-emphasis.
+>
+> Add the DisplayPort phy mode to the generic phy_mode enum.
+>
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
 
- drivers/clk/clk-si5341.c | 212 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 196 insertions(+), 16 deletions(-)
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-diff --git a/drivers/clk/clk-si5341.c b/drivers/clk/clk-si5341.c
-index 6e780c2a9e6b..3c228b018116 100644
---- a/drivers/clk/clk-si5341.c
-+++ b/drivers/clk/clk-si5341.c
-@@ -16,6 +16,8 @@
- #include <linux/slab.h>
- #include <asm/unaligned.h>
- 
-+#define SI5341_NUM_INPUTS 4
-+
- #define SI5341_MAX_NUM_OUTPUTS 10
- #define SI5340_MAX_NUM_OUTPUTS 4
- 
-@@ -56,8 +58,8 @@ struct clk_si5341 {
- 	struct i2c_client *i2c_client;
- 	struct clk_si5341_synth synth[SI5341_NUM_SYNTH];
- 	struct clk_si5341_output clk[SI5341_MAX_NUM_OUTPUTS];
--	struct clk *pxtal;
--	const char *pxtal_name;
-+	struct clk *input_clk[SI5341_NUM_INPUTS];
-+	const char *input_clk_name[SI5341_NUM_INPUTS];
- 	const u16 *reg_output_offset;
- 	const u16 *reg_rdiv_offset;
- 	u64 freq_vco; /* 13500–14256 MHz */
-@@ -78,10 +80,25 @@ struct clk_si5341_output_config {
- #define SI5341_DEVICE_REV	0x0005
- #define SI5341_STATUS		0x000C
- #define SI5341_SOFT_RST		0x001C
-+#define SI5341_IN_SEL		0x0021
-+#define SI5341_XAXB_CFG		0x090E
-+#define SI5341_IN_EN		0x0949
-+#define SI5341_INX_TO_PFD_EN	0x094A
-+
-+/* Input selection */
-+#define SI5341_IN_SEL_MASK	0x06
-+#define SI5341_IN_SEL_SHIFT	1
-+#define SI5341_IN_SEL_REGCTRL	0x01
-+#define SI5341_INX_TO_PFD_SHIFT	4
-+
-+/* XTAL config bits */
-+#define SI5341_XAXB_CFG_EXTCLK_EN	BIT(0)
-+#define SI5341_XAXB_CFG_PDNB		BIT(1)
- 
- /* Input dividers (48-bit) */
- #define SI5341_IN_PDIV(x)	(0x0208 + ((x) * 10))
- #define SI5341_IN_PSET(x)	(0x020E + ((x) * 10))
-+#define SI5341_PX_UPD		0x0230
- 
- /* PLL configuration */
- #define SI5341_PLL_M_NUM	0x0235
-@@ -120,6 +137,10 @@ struct si5341_reg_default {
- 	u8 value;
- };
- 
-+static const char * const si5341_input_clock_names[] = {
-+	"in0", "in1", "in2", "xtal"
-+};
-+
- /* Output configuration registers 0..9 are not quite logically organized */
- static const u16 si5341_reg_output_offset[] = {
- 	0x0108,
-@@ -390,7 +411,112 @@ static unsigned long si5341_clk_recalc_rate(struct clk_hw *hw,
- 	return (unsigned long)res;
- }
- 
-+static int si5341_clk_get_selected_input(struct clk_si5341 *data)
-+{
-+	int err;
-+	u32 val;
-+
-+	err = regmap_read(data->regmap, SI5341_IN_SEL, &val);
-+	if (err < 0)
-+		return err;
-+
-+	return (val & SI5341_IN_SEL_MASK) >> SI5341_IN_SEL_SHIFT;
-+}
-+
-+static u8 si5341_clk_get_parent(struct clk_hw *hw)
-+{
-+	struct clk_si5341 *data = to_clk_si5341(hw);
-+	int res = si5341_clk_get_selected_input(data);
-+
-+	if (res < 0)
-+		return 0; /* Apparently we cannot report errors */
-+
-+	return res;
-+}
-+
-+static int si5341_clk_reparent(struct clk_si5341 *data, u8 index)
-+{
-+	int err;
-+	u8 val;
-+
-+	val = (index << SI5341_IN_SEL_SHIFT) & SI5341_IN_SEL_MASK;
-+	/* Enable register-based input selection */
-+	val |= SI5341_IN_SEL_REGCTRL;
-+
-+	err = regmap_update_bits(data->regmap,
-+		SI5341_IN_SEL, SI5341_IN_SEL_REGCTRL | SI5341_IN_SEL_MASK, val);
-+	if (err < 0)
-+		return err;
-+
-+	if (index < 3) {
-+		/* Enable input buffer for selected input */
-+		err = regmap_update_bits(data->regmap,
-+				SI5341_IN_EN, 0x07, BIT(index));
-+		if (err < 0)
-+			return err;
-+
-+		/* Enables the input to phase detector */
-+		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
-+				0x7 << SI5341_INX_TO_PFD_SHIFT,
-+				BIT(index + SI5341_INX_TO_PFD_SHIFT));
-+		if (err < 0)
-+			return err;
-+
-+		/* Power down XTAL oscillator and buffer */
-+		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
-+				SI5341_XAXB_CFG_PDNB, 0);
-+		if (err < 0)
-+			return err;
-+
-+		/*
-+		 * Set the P divider to "1". There's no explanation in the
-+		 * datasheet of these registers, but the clockbuilder software
-+		 * programs a "1" when the input is being used.
-+		 */
-+		err = regmap_write(data->regmap, SI5341_IN_PDIV(index), 1);
-+		if (err < 0)
-+			return err;
-+
-+		err = regmap_write(data->regmap, SI5341_IN_PSET(index), 1);
-+		if (err < 0)
-+			return err;
-+
-+		/* Set update PDIV bit */
-+		err = regmap_write(data->regmap, SI5341_PX_UPD, BIT(index));
-+		if (err < 0)
-+			return err;
-+	} else {
-+		/* Disable all input buffers */
-+		err = regmap_update_bits(data->regmap, SI5341_IN_EN, 0x07, 0);
-+		if (err < 0)
-+			return err;
-+
-+		/* Disable input to phase detector */
-+		err = regmap_update_bits(data->regmap, SI5341_INX_TO_PFD_EN,
-+				0x7 << SI5341_INX_TO_PFD_SHIFT, 0);
-+		if (err < 0)
-+			return err;
-+
-+		/* Power up XTAL oscillator and buffer */
-+		err = regmap_update_bits(data->regmap, SI5341_XAXB_CFG,
-+				SI5341_XAXB_CFG_PDNB, SI5341_XAXB_CFG_PDNB);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int si5341_clk_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_si5341 *data = to_clk_si5341(hw);
-+
-+	return si5341_clk_reparent(data, index);
-+}
-+
- static const struct clk_ops si5341_clk_ops = {
-+	.set_parent = si5341_clk_set_parent,
-+	.get_parent = si5341_clk_get_parent,
- 	.recalc_rate = si5341_clk_recalc_rate,
- };
- 
-@@ -985,7 +1111,8 @@ static const struct regmap_range si5341_regmap_volatile_range[] = {
- 	regmap_reg_range(0x000C, 0x0012), /* Status */
- 	regmap_reg_range(0x001C, 0x001E), /* reset, finc/fdec */
- 	regmap_reg_range(0x00E2, 0x00FE), /* NVM, interrupts, device ready */
--	/* Update bits for synth config */
-+	/* Update bits for P divider and synth config */
-+	regmap_reg_range(SI5341_PX_UPD, SI5341_PX_UPD),
- 	regmap_reg_range(SI5341_SYNTH_N_UPD(0), SI5341_SYNTH_N_UPD(0)),
- 	regmap_reg_range(SI5341_SYNTH_N_UPD(1), SI5341_SYNTH_N_UPD(1)),
- 	regmap_reg_range(SI5341_SYNTH_N_UPD(2), SI5341_SYNTH_N_UPD(2)),
-@@ -1122,6 +1249,7 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
- 	struct device_node *np = data->i2c_client->dev.of_node;
- 	u32 m_num = 0;
- 	u32 m_den = 0;
-+	int sel;
- 
- 	if (of_property_read_u32(np, "silabs,pll-m-num", &m_num)) {
- 		dev_err(&data->i2c_client->dev,
-@@ -1135,7 +1263,11 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
- 	if (!m_num || !m_den) {
- 		dev_err(&data->i2c_client->dev,
- 			"PLL configuration invalid, assume 14GHz\n");
--		m_den = clk_get_rate(data->pxtal) / 10;
-+		sel = si5341_clk_get_selected_input(data);
-+		if (sel < 0)
-+			return sel;
-+
-+		m_den = clk_get_rate(data->input_clk[sel]) / 10;
- 		m_num = 1400000000;
- 	}
- 
-@@ -1143,11 +1275,52 @@ static int si5341_initialize_pll(struct clk_si5341 *data)
- 			SI5341_PLL_M_NUM, m_num, m_den);
- }
- 
-+static int si5341_clk_select_active_input(struct clk_si5341 *data)
-+{
-+	int res;
-+	int err;
-+	int i;
-+
-+	res = si5341_clk_get_selected_input(data);
-+	if (res < 0)
-+		return res;
-+
-+	/* If the current register setting is invalid, pick the first input */
-+	if (!data->input_clk[res]) {
-+		dev_dbg(&data->i2c_client->dev,
-+			"Input %d not connected, rerouting\n", res);
-+		res = -ENODEV;
-+		for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
-+			if (data->input_clk[i]) {
-+				res = i;
-+				break;
-+			}
-+		}
-+		if (res < 0) {
-+			dev_err(&data->i2c_client->dev,
-+				"No clock input available\n");
-+			return res;
-+		}
-+	}
-+
-+	/* Make sure the selected clock is also enabled and routed */
-+	err = si5341_clk_reparent(data, res);
-+	if (err < 0)
-+		return err;
-+
-+	err = clk_prepare_enable(data->input_clk[res]);
-+	if (err < 0)
-+		return err;
-+
-+	return res;
-+}
-+
- static int si5341_probe(struct i2c_client *client,
- 		const struct i2c_device_id *id)
- {
- 	struct clk_si5341 *data;
- 	struct clk_init_data init;
-+	struct clk *input;
- 	const char *root_clock_name;
- 	const char *synth_clock_names[SI5341_NUM_SYNTH];
- 	int err;
-@@ -1161,12 +1334,16 @@ static int si5341_probe(struct i2c_client *client,
- 
- 	data->i2c_client = client;
- 
--	data->pxtal = devm_clk_get(&client->dev, "xtal");
--	if (IS_ERR(data->pxtal)) {
--		if (PTR_ERR(data->pxtal) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		dev_err(&client->dev, "Missing xtal clock input\n");
-+	for (i = 0; i < SI5341_NUM_INPUTS; ++i) {
-+		input = devm_clk_get(&client->dev, si5341_input_clock_names[i]);
-+		if (IS_ERR(input)) {
-+			if (PTR_ERR(input) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			data->input_clk_name[i] = si5341_input_clock_names[i];
-+		} else {
-+			data->input_clk[i] = input;
-+			data->input_clk_name[i] = __clk_get_name(input);
-+		}
- 	}
- 
- 	err = si5341_dt_parse_dt(client, config);
-@@ -1188,9 +1365,6 @@ static int si5341_probe(struct i2c_client *client,
- 	if (err < 0)
- 		return err;
- 
--	/* "Activate" the xtal (usually a fixed clock) */
--	clk_prepare_enable(data->pxtal);
--
- 	if (of_property_read_bool(client->dev.of_node, "silabs,reprogram")) {
- 		initialization_required = true;
- 	} else {
-@@ -1223,7 +1397,14 @@ static int si5341_probe(struct i2c_client *client,
- 					ARRAY_SIZE(si5341_reg_defaults));
- 		if (err < 0)
- 			return err;
-+	}
-+
-+	/* Input must be up and running at this point */
-+	err = si5341_clk_select_active_input(data);
-+	if (err < 0)
-+		return err;
- 
-+	if (initialization_required) {
- 		/* PLL configuration is required */
- 		err = si5341_initialize_pll(data);
- 		if (err < 0)
-@@ -1231,9 +1412,8 @@ static int si5341_probe(struct i2c_client *client,
- 	}
- 
- 	/* Register the PLL */
--	data->pxtal_name = __clk_get_name(data->pxtal);
--	init.parent_names = &data->pxtal_name;
--	init.num_parents = 1; /* For now, only XTAL input supported */
-+	init.parent_names = data->input_clk_name;
-+	init.num_parents = SI5341_NUM_INPUTS;
- 	init.ops = &si5341_clk_ops;
- 	init.flags = 0;
- 	data->hw.init = &init;
--- 
-2.17.1
+Thanks!
+Maxime
 
+--du7252vquuj4pt2d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhQ5UwAKCRDj7w1vZxhR
+xXypAQDrUSF7C03RKFJRzD9tHtHNlDkcVO86S8hSOKHQRGzFFwEAkJlAb74qa+8U
++zrWeY3JxNz41kmUxYlakFQ2ySqNgwc=
+=l0UX
+-----END PGP SIGNATURE-----
+
+--du7252vquuj4pt2d--
