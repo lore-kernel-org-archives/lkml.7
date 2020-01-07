@@ -2,130 +2,100 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBD9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D27C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC18206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3A720880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578384376;
+	bh=DOk3UZ+3UKE/Je3PgZ7/ME++FhgdPvtRLVhfPi4N7VY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=elL4ZW4WVrcOi0T0RlvuRuKC5VO3ZS2PWy7PddJqSxLXhFy33NSgii9gJImgfJ0zd
+	 I7lf2zw+EP5CLSkiUEMm3GjO7QEREPAcOMVP1eG7ib3Ke6AANpfsJTIi1LBdDnE0MY
+	 hXRWqLSeJSMVTnDLB2F+qInTeZB5TtdTXkcexV78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgAGICc (ORCPT
+        id S1727211AbgAGIGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:02:32 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45801 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgAGICc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:02:32 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so75333258otp.12;
-        Tue, 07 Jan 2020 00:02:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gWtGSvrvqj2AXyyq8wSP7MkIDXrKmFzyU8WLInWmmmM=;
-        b=uJGPnUWT2fgEW7NwA5VNHUoAEiODFbBHtE5WgtafeT64J+GbWpI8TetH1Rw6EyZCHN
-         mp9JuIcWmEKJgJg6WSl+fCKBpcdJ+U5vO7jPOX0cDXHOVnmAQstkmYxZeUv3MaF18DI4
-         Hjfv7bCpNc6tJ8nsUQM0SHstYKxPhL51E9FMBdZwHM5kV1gzROfN6+LpY982sG5duqBo
-         56F1gimO5dbpNCZm1Zik+0Guk1HICp/yEEtG+JSpVwpkwZtU8xYabr/fcCd/nrb8meT1
-         p3oIlF+LjjugAe6sCcBLAhATKFIWnGcYlbpBnQAUNbwPKbYTlWIxhPELemAQviFMClI5
-         bSqQ==
-X-Gm-Message-State: APjAAAXeaniCrFS2ykQeVdBO71yLJihk0lgysQTZ70boMy2TwuroZQJh
-        /WxOcGsj7jpQxuUyqFOv35UxUTKudQHOjLv3QPLKPny9
-X-Google-Smtp-Source: APXvYqzSi9MVw/FPeW9TOgb3jI/DXK3Qcmr0bBEADQfnQ3cj/FW1nMF2VK4jkU4UCWEdTeHD/7fBEjnw5ck2vYvFb3E=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr121132715otd.39.1578384150999;
- Tue, 07 Jan 2020 00:02:30 -0800 (PST)
+        Tue, 7 Jan 2020 03:06:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgAGIGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:06:15 -0500
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2273207FD;
+        Tue,  7 Jan 2020 08:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578384375;
+        bh=DOk3UZ+3UKE/Je3PgZ7/ME++FhgdPvtRLVhfPi4N7VY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EVqyLomEibHqfsh/fdjOw+R9PIdJSvOtuKzk9puRKfAmx8hxV35Mr6nolU5JheeX1
+         NY/NF4v7ewi11/nBxoD+V1zCXW4Moh30qTW4y6760aU6BUsMNXvPgHN0YfRxiBwqHf
+         xR4DVJ/1ZuB/4A3HjH168lBfxsiRYoW0IEeKkEdE=
+Received: by mail-lf1-f48.google.com with SMTP id i23so38217678lfo.7;
+        Tue, 07 Jan 2020 00:06:14 -0800 (PST)
+X-Gm-Message-State: APjAAAV3S9UGxsuNmBFMpuoNiDLsdB61MkCfXSdisnbggk2/X/vXORuO
+        uoEN6/K7eIrEZujuJ7uKjc3y1yCZL5lrfZzhBdE=
+X-Google-Smtp-Source: APXvYqyt0jfw/VuteoYYKjbIy1ZfUPeHaleVOxSewKNVGU59FN/Y9Q5Kf3dKIxGJau9eJkWcZcdx7ELAWHvghj1P9b4=
+X-Received: by 2002:a19:4849:: with SMTP id v70mr58350017lfa.30.1578384372775;
+ Tue, 07 Jan 2020 00:06:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <20191230133852.5890-3-geert+renesas@glider.be> <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
- <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com> <49c477ed-0da3-9269-803a-cc35cd1137b8@gmail.com>
-In-Reply-To: <49c477ed-0da3-9269-803a-cc35cd1137b8@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 09:02:19 +0100
-Message-ID: <CAMuHMdUJ_jknvY_Fp0Tghif_J3uaT9MhiX5KXXBKJ_=P4hfkUQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200107143058.7f821056@canb.auug.org.au>
+In-Reply-To: <20200107143058.7f821056@canb.auug.org.au>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 7 Jan 2020 09:06:01 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPcVnjT1R4dvZ+xBdZ2mQ-XS385YEv33Q++qh3K5aw6OjA@mail.gmail.com>
+Message-ID: <CAJKOXPcVnjT1R4dvZ+xBdZ2mQ-XS385YEv33Q++qh3K5aw6OjA@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the usb tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
-
-On Tue, Jan 7, 2020 at 8:26 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> On 1/7/20 1:10 AM, Frank Rowand wrote:
-> > On 1/6/20 5:34 PM, Frank Rowand wrote:
-> >> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
-> >>> As GPIO hogs are configured at GPIO controller initialization time,
-> >>> adding/removing GPIO hogs in DT overlays does not work.
-> >>>
-> >>> Add support for GPIO hogs described in DT overlays by registering an OF
-> >>> reconfiguration notifier, to handle the addition and removal of GPIO hog
-> >>> subnodes to/from a GPIO controller device node.
-> >>>
-> >>> Note that when a GPIO hog device node is being removed, its "gpios"
-> >>> properties is no longer available, so we have to keep track of which
-> >>> node a hog belongs to, which is done by adding a pointer to the hog's
-> >>> device node to struct gpio_desc.
-> >>
-> >> If I have read the patches and the existing overlay source correctly,
-> >> then some observations:
-> >>
-> >> - A gpio hog node added in an overlay will be properly processed.
-> >>
-> >> - A gpio hog node already existing in the live devicetree, but with a
-> >>   non-active status will be properly processed if the status of the
-> >>   gpio hog node is changed to "ok" in the overlay.
-> >>
-> >> - If a gpio hog node already exists in the live devicetree with an
-> >>   active status, then any updated or added properties in that gpio
-> >>   hog node in the overlay will have no effect.
-> >>
-> >>   There is a scenario where the updated property would have an effect:
-> >>   apply a second overlay that sets the status to inactive, then apply
-> >>   a third overlay that sets the status back to active.  This is a
-> >>   rather contrived example and I think it should be documented as
-> >>   not supported and the result undefined.
-> >
-> > I went back and double checked the related code.  For gpio hog nodes
-> > that are in a non-overlay, the status property is checked because
-> > of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
-> > to search for gpio hog nodes, and for_each_available_child_of_node()
-> > checks the status property.  But in the case of a gpio hog node
-> > added by an overlay, of_gpio_notify() does not check the status
-> > property in the gpio hog node.  The check for the status property
-> > should be added to of_gpio_notify().
+On Tue, 7 Jan 2020 at 04:31, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> One more thing I have not thought through is the case where the
-> overlay contains both the gpio node and the gpio hog node.  I'll
-> walk through that tomorrow.
+> Hi all,
+>
+> After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
+> produced these warnings:
+>
+> WARNING: unmet direct dependencies detected for I2C_S3C2410
+>   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+>   Selected by [m]:
+>   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+>
+> WARNING: unmet direct dependencies detected for I2C_S3C2410
+>   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+>   Selected by [m]:
+>   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+>
+> WARNING: unmet direct dependencies detected for I2C_S3C2410
+>   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+>   Selected by [m]:
+>   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+>
+> Introduced by commit
+>
+>   203b7ee14d3a ("phy: Enable compile testing for some of drivers")
 
-I haven't veried that, but I assume that works already without my patch,
-as GPIO hogs are configured at GPIO controller initialization time.
+Hi,
 
-Gr{oetje,eeting}s,
+The fix is here:
+https://lore.kernel.org/lkml/CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com/
+i2c: Enable compile testing for some of drivers
+Although I need to send v2 of it.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
