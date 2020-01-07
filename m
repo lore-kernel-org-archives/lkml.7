@@ -2,310 +2,166 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF11C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A48C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755542087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF9B20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D7aIPA7g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WEj/4pjL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgAGKIt (ORCPT
+        id S1727763AbgAGKJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:08:49 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35097 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgAGKIs (ORCPT
+        Tue, 7 Jan 2020 05:09:20 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34876 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:08:48 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so18706257wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:08:47 -0800 (PST)
+        Tue, 7 Jan 2020 05:09:20 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so28290261pgk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:09:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=EBsCPTse1nt4u+am6F0iVanlxGySwPooZK6E7bwxkd8=;
-        b=D7aIPA7gCw1/JlpaDYyEfck03ELbTH8H/WUz5FMzs+L2Z2bYi/x+atshveQS4uqD/W
-         f/cFpBbrKYkWHe1RXgT+3ib1QG3VPh4UlzGhsuZn7Me2CDeP+/BcFRW4DDvtWFOriCPt
-         QCNhL8hLXFluJSe+EJwPC6Mjmmtg8ooVq5E0cm79VJMIPvrLO5ACZfN2RpbkiZeRoKaq
-         QVWGFHR4TESskMJoIEDJzdHxYt4sRqfW39I8nIQHnoNkubBsOkfKcZp2x8OhEBDr56K9
-         zRY1K+2j9OQRy/haGvwV5Wi50MO1G6he9Gfg/6hLTRF0ejUWXZ3cnCBWty5UZ1bGdRyY
-         m9rg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fh3O8FUS+JCaHVqiFhhe/nxdGVYnjX+clSRFCRVmmSc=;
+        b=WEj/4pjLqYeWkhO4fPA2gWoyp2dTldapkfo5J6bAbs4Zc/pXMjpiepqKcuqzsChChk
+         dqe5KngBAc5495qHgTeaeAcGQlWwLY/w12nWO3uSqZum5uSW9SxvbCxjsmnpx+Hxbzq+
+         WOomnQlNh4KK9QtHQZmmPIIrflycK21GH7NwiU85exl8F1Hj1FHYT8f1/+W1xWjIVlvN
+         xaTSRZyOWtD7C3U0nqNLcc4SODc1npJB45+3ovHya+q7dykrN/G6u97u2UZ9rwTOBYIg
+         kPQi3Tk8r9/0feyK/oPGrl52vyIYB9++lHZRAA9JZqd9Xab0DPFKP7h+jQt2dFSXUMqS
+         O/xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=EBsCPTse1nt4u+am6F0iVanlxGySwPooZK6E7bwxkd8=;
-        b=qf8Ly9ciD4EH42K3Jt2pGfOumbNsoCBqQZGLgb4/LxIUVVFNZmmycVocW7uTb1z8SC
-         2ppU1EUBdxb8ROA8IIT/Mi9epZv8J2htW+cuy6jGCkgIEN7zbBowqWnP6a1rwSczufcz
-         tgTS9Ma56Y7NonPvdcCeJNyCwNp9m6Xy1mgw/5ZYk0J5gMNiCot8Fa5JgTXHZ40Jmo5S
-         y4oWzMtwtCCr4mFLTjMQXrvdotfzEmPmO/Ep1TCeVmgaiVP/LazjxOJzN6TSj0flOGQT
-         o4hRIE0pMjnpNiD/abXXNbxCfyDvsq3xdRC9dsg1+WZ9M7x0fvaYOLTG20ydQM5AlnBb
-         R2Lw==
-X-Gm-Message-State: APjAAAVcubKHCcoiRlrJM/HPnI4cHfarjKH1JhEP8QWtRNtTnJ866v1H
-        erCDNarXf3RpFpOhIb7BnyLTmg==
-X-Google-Smtp-Source: APXvYqx/9OmvRjpm93sB0dSaUYT78HckHFE7SyLEgq7eos2rFdx9uCPtnTHpxADasmlolBUJoD97qA==
-X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr40358175wma.6.1578391726264;
-        Tue, 07 Jan 2020 02:08:46 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z3sm75915294wrs.94.2020.01.07.02.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 02:08:45 -0800 (PST)
-References: <20191223214529.20377-1-repk@triplefau.lt> <20191223214529.20377-2-repk@triplefau.lt> <1jeewrpgrr.fsf@starbuckisacylon.baylibre.com> <20191226201146.GA1803@voidbox>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
-In-reply-to: <20191226201146.GA1803@voidbox>
-Date:   Tue, 07 Jan 2020 11:08:44 +0100
-Message-ID: <1j7e23shn7.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fh3O8FUS+JCaHVqiFhhe/nxdGVYnjX+clSRFCRVmmSc=;
+        b=q1A5C2DSY2ebx9KFIhaFaxPDGQphzFYNXtpqheixOQf0Yt/YSCYQhchLMTfIcZ8KA/
+         L2XnDAK6zmNKHqXNhhHXeYhaohgUekY2YN19tONo/1fQ+8CmDBdlRkPKSMNhOR2xGiGn
+         YzZPHPCM4iYXGrczL1QkeWbbPSLj3bwn2wdFam6uPSaHP5a6zGnFd2o/f4sQYwBUXq/D
+         iJm3LyH+UCbTm8uEny4oKWxaWeEklXG7EvMYIv5dFVoKVTD5wzr3Th44G+QC80RxfnK5
+         o8U4VRYLgroQL5W6EJItmAF7fyNE9ok4IfITc4pTQW0OfNyCVjvXOORJv7YD/ex6WW31
+         dIew==
+X-Gm-Message-State: APjAAAVClYkOW5yJ5s4kNH5cGc/P7tNRpxNdW6AOxmTgvkbfMZ7JKqGn
+        xwdbqw3yBdHBbVX9I1l7HEqALw==
+X-Google-Smtp-Source: APXvYqxuxwCZxGb94u3QAgwT++lUAP9pGgnpEQ8eegAoy2lxtaF9se1JNXDYZssEdSDTpmpzZ1x10A==
+X-Received: by 2002:a63:e0f:: with SMTP id d15mr114718655pgl.255.1578391759665;
+        Tue, 07 Jan 2020 02:09:19 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li519-153.members.linode.com. [66.175.222.153])
+        by smtp.gmail.com with ESMTPSA id h26sm87622119pfr.9.2020.01.07.02.09.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 02:09:19 -0800 (PST)
+Date:   Tue, 7 Jan 2020 18:09:06 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2] perf parse: Copy string to perf_evsel_config_term
+Message-ID: <20200107100906.GA23348@leoy-ThinkPad-X240s>
+References: <20200107031828.23103-1-leo.yan@linaro.org>
+ <20200107091609.GB290055@krava>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107091609.GB290055@krava>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 07, 2020 at 10:16:09AM +0100, Jiri Olsa wrote:
 
-On Thu 26 Dec 2019 at 21:11, Remi Pommarel <repk@triplefau.lt> wrote:
+[...]
 
-> On Thu, Dec 26, 2019 at 10:39:36AM +0100, Jerome Brunet wrote:
->> 
->> On Mon 23 Dec 2019 at 22:45, Remi Pommarel <repk@triplefau.lt> wrote:
->> 
->> > This adds support for the MIPI PHY also needed for PCIE found in the
->> > Amlogic AXG SoC Family.
->> >
->> > MIPI or PCIE selection is done by the #phy-cells, making the mode
->> > static and exclusive.
->> >
->> > For now only PCIE fonctionality is supported.
->> >
->> > This PHY will be used to replace the mipi_enable clock gating logic
->> > which was mistakenly added in the clock subsystem. This also activate
->> > a non documented band gap bit in those registers that allows reliable
->> > PCIE clock signal generation on AXG platforms.
->> >
->> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
->> > ---
->> >  drivers/phy/amlogic/Kconfig                   |  11 ++
->> >  drivers/phy/amlogic/Makefile                  |   1 +
->> >  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
->> >  3 files changed, 188 insertions(+)
->> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
->> >
->> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
->> > index af774ac2b934..1eeb75d018e3 100644
->> > --- a/drivers/phy/amlogic/Kconfig
->> > +++ b/drivers/phy/amlogic/Kconfig
->> > @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
->> >  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
->> >  	  in Meson G12A SoCs.
->> >  	  If unsure, say N.
->> > +
->> > +config PHY_MESON_AXG_MIPI_PCIE
->> > +	tristate "Meson AXG MIPI + PCIE PHY driver"
->> > +	default ARCH_MESON
->> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
->> > +	select GENERIC_PHY
->> > +	select MFD_SYSCON
->> > +	help
->> > +	  Enable this to support the Meson MIPI + PCIE PHY found
->> > +	  in Meson AXG SoCs.
->> > +	  If unsure, say N.
->> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
->> > index 11d1c42ac2be..2167330a0ae8 100644
->> > --- a/drivers/phy/amlogic/Makefile
->> > +++ b/drivers/phy/amlogic/Makefile
->> > @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
->> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
->> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
->> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
->> > +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
->> > diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
->> > new file mode 100644
->> > index 000000000000..006aa8cdfc47
->> > --- /dev/null
->> > +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
->> > @@ -0,0 +1,176 @@
->> > +// SPDX-License-Identifier: GPL-2.0
->> > +/*
->> > + * Amlogic AXG MIPI + PCIE PHY driver
->> > + *
->> > + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
->> > + */
->> > +#include <linux/module.h>
->> > +#include <linux/phy/phy.h>
->> > +#include <linux/regmap.h>
->> > +#include <linux/mfd/syscon.h>
->> > +#include <linux/platform_device.h>
->> > +#include <dt-bindings/phy/phy.h>
->> > +
->> > +#define HHI_MIPI_CNTL0 0x00
->> > +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
->> > +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
->> > +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
->> > +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
->> > +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
->> > +
->> > +#define HHI_MIPI_CNTL1 0x01
->> > +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
->> > +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
->> > +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
->> > +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
->> > +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
->> > +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
->> > +
->> > +#define HHI_MIPI_CNTL2 0x02
->> > +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
->> > +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
->> > +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
->> > +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
->> > +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
->> > +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
->> > +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
->> > +
->> > +struct phy_axg_mipi_pcie_priv {
->> > +	struct phy *phy;
->> > +	unsigned int mode;
->> > +	struct regmap *regmap;
->> > +};
->> > +
->> > +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
->> > +	.reg_bits = 8,
->> > +	.val_bits = 32,
->> > +	.reg_stride = 4,
->> > +	.max_register = HHI_MIPI_CNTL2,
->> > +};
->> > +
->> > +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
->> > +{
->> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
->> > +
->> > +	/* MIPI not supported yet */
->> > +	if (priv->mode != PHY_TYPE_PCIE)
->> > +		return 0;
->> > +
->> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
->> > +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
->> > +
->> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
->> > +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
->> > +	return 0;
->> > +}
->> > +
->> > +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
->> > +{
->> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
->> > +
->> > +	/* MIPI not supported yet */
->> > +	if (priv->mode != PHY_TYPE_PCIE)
->> > +		return 0;
->> > +
->> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
->> > +			   HHI_MIPI_CNTL0_BANDGAP, 0);
->> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
->> > +			   HHI_MIPI_CNTL0_ENABLE, 0);
->> > +	return 0;
->> > +}
->> > +
->> > +static int phy_axg_mipi_pcie_init(struct phy *phy)
->> > +{
->> > +	return 0;
->> > +}
->> > +
->> > +static int phy_axg_mipi_pcie_exit(struct phy *phy)
->> > +{
->> > +	return 0;
->> > +}
->> > +
->> > +static const struct phy_ops phy_axg_mipi_pcie_ops = {
->> > +	.init = phy_axg_mipi_pcie_init,
->> > +	.exit = phy_axg_mipi_pcie_exit,
->> > +	.power_on = phy_axg_mipi_pcie_power_on,
->> > +	.power_off = phy_axg_mipi_pcie_power_off,
->> > +	.owner = THIS_MODULE,
->> > +};
->> > +
->> > +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
->> > +					   struct of_phandle_args *args)
->> > +{
->> > +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
->> > +	unsigned int mode;
->> > +
->> > +	if (args->args_count != 1) {
->> > +		dev_err(dev, "invalid number of arguments\n");
->> > +		return ERR_PTR(-EINVAL);
->> > +	}
->> > +
->> > +	mode = args->args[0];
->> > +
->> > +	/* MIPI mode is not supported yet */
->> > +	if (mode != PHY_TYPE_PCIE) {
->> > +		dev_err(dev, "invalid phy mode select argument\n");
->> > +		return ERR_PTR(-EINVAL);
->> > +	}
->> > +
->> > +	priv->mode = mode;
->> > +	return priv->phy;
->> > +}
->> > +
->> > +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
->> > +{
->> > +	struct phy_provider *pphy;
->> > +	struct device *dev = &pdev->dev;
->> > +	struct phy_axg_mipi_pcie_priv *priv;
->> > +	struct device_node *np = dev->of_node;
->> > +	int ret;
->> > +
->> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
->> > +	if (!priv)
->> > +		return -ENOMEM;
->> > +
->> > +	/* Get the hhi system controller node */
->> > +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
->> > +	if (IS_ERR(priv->regmap)) {
->> > +		dev_err(dev, "failed to get HHI regmap\n");
->> > +		return PTR_ERR(priv->regmap);
->> > +	}
->> 
->> Remi,
->> 
->> Unless we are absolutely sure this will be *AXG ONLY*, I would
->> prefer if you get the registers without the syscon.
->> 
->> Having it introduce some kind of dependency between the 2 which is
->> likely to make this driver SoC specific.
->> 
->> It was clearly wrong for the clock controller to map these regiters, and
->> if there is a possibility that this driver is used on other SoCs, I
->> would prefer if we did not carry that mistake over. I would prefer if we
->> fixed the clock controller so you don't need syscon here.
->
-> Jerome thank you for reviewing this,
->
-> Sure I will remove access to the registers through syscon system. Just
-> to be sure we are on the same page here. What you suggest is keeping the
-> two PHYs approach from this patchset (instead of the one PHY in v3),
-> even if there is not exactly two PHYs, right ?
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index ed7c008b9c8b..49b26504bee3 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1220,7 +1220,6 @@ static int get_config_terms(struct list_head *head_config,
+> >  			    struct list_head *head_terms __maybe_unused)
+> >  {
+> >  #define ADD_CONFIG_TERM(__type, __name, __val)			\
+> > -do {								\
+> >  	struct perf_evsel_config_term *__t;			\
+> >  								\
+> >  	__t = zalloc(sizeof(*__t));				\
+> > @@ -1229,9 +1228,23 @@ do {								\
+> >  								\
+> >  	INIT_LIST_HEAD(&__t->list);				\
+> >  	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
+> > -	__t->val.__name = __val;				\
+> >  	__t->weak	= term->weak;				\
+> > -	list_add_tail(&__t->list, head_terms);			\
+> > +	list_add_tail(&__t->list, head_terms)
+> > +
+> > +#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
+> > +do {								\
+> > +	ADD_CONFIG_TERM(__type, __name, __val);			\
+> > +	__t->val.__name = __val;				\
+> > +} while (0)
+> > +
+> > +#define ADD_CONFIG_TERM_STR(__type, __name, __val)		\
+> > +do {								\
+> > +	ADD_CONFIG_TERM(__type, __name, __val);			\
+> > +	__t->val.__name = strdup(__val);			\
+> > +	if (!__t->val.__name) {					\
+> > +		zfree(&__t);					\
+> > +		return -ENOMEM;					\
+> > +	}							\
+> >  } while (0)
+> 
+> hum, I did not check yesterday how we release perf_evsel_config_term
+> objects, but looks like now we need to release those pointers in here:
+>   perf_evsel__free_config_terms
 
-Well, according the doc, this "MIPI Phy" seems to be used by the PCIe
-PHY so I tempted to say yes but I'm not very familiar with the PHY
-subsystem. I'm sure the PHY maintainers can help us with this
+My bad!  I did some check for releasing but missed this function.
 
->
-> Thanks,
+Will spin a new patch for this.  Since '__t->val' is an union type, so
+for the releasing, I think we need to use below code.
 
+Please let me know if this is okay for you?
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a69e64236120..fc659cdbd3ce 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1264,7 +1264,19 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+        struct perf_evsel_config_term *term, *h;
+ 
+        list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
++               int type = term->type;
++
+                list_del_init(&term->list);
++
++               if (type == PARSE_EVENTS__TERM_TYPE_CALLGRAPH)
++                       zfree(&term->val.callgraph);
++
++               if (type == PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE)
++                       zfree(&term->val.branch);
++
++               if (type == PARSE_EVENTS__TERM_TYPE_DRV_CFG)
++                       zfree(&term->val.drv_cfg);
++
+                free(term);
+        }
+ }
+
+Thanks,
+Leo
