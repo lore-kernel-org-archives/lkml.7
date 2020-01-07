@@ -2,241 +2,177 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E414C32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67ECC32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643D02075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7031720707
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="knmIP/0T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uKWJDe1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgAGDSm (ORCPT
+        id S1727488AbgAGDWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:18:42 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42906 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbgAGDSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:18:42 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 4so27869087pfz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 19:18:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=FPVgAA67m3TAdDYScRWZhAuLGh650kB2AJurIEodDz0=;
-        b=knmIP/0Ts3HRnwu5A4EgqxBj1dPlxUQ47wOqTbFr8RIEgTDEQfnS1nmyyPJVAA1xG5
-         rWvjeVSg4G3n6TI6C06WOUS3yQkuWFE7XWODNZb5t6+42r91AaWfQT6pf94iEsEszu18
-         EGvdZ8pgnpI7kYMP7YkjM2Hucv6wjfre+FunQI4kknoGcILNU710IRUX+Vn6AhiP6E5I
-         Ar/auhps/hjfObcVOMAsqbaPQyS/PfUNPIbFTLJrvL4eRBoNZjp7+n1NBhct2OpfZI4O
-         4uk78VabCyg9hvhL4aI4LVN/IOfnClF9z9LJgCCN2epuEuXxwYQm6AevZ8sjJGXOjwKN
-         W7QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FPVgAA67m3TAdDYScRWZhAuLGh650kB2AJurIEodDz0=;
-        b=jCpFQNxEeG84vMd78iYFSFeI9NuogJmerZ/+r1Zmew1gFLo4LmygQIJgirhpkYNYjs
-         +oPEXK7vlTJ84mecwUjWp4yS0Z/tbSf9GbNjeZGsFjeb63NIRDTI+AAiVvCtmh3JD2mp
-         mvo4OQ832Xvcb2c4gVuA7quRnSNzoMsCuHQMpZLUODcjE52H6WiFLlhFSG24oAUYui3g
-         2nggC01B/IkRpm5s+A2Owr+/IQF7QTo87zUfIGf+SZgdngCPUPG6iJLQNlvnJTHAypIB
-         qVgurEtFP/4/+uEzmyR1sLtQbHUPBVsppo7lOx8Hj8Nye1PT62/DDlSVsg+j4wjRReTv
-         AKTg==
-X-Gm-Message-State: APjAAAUq4c4w5b2osoQnTev6skt+3LBjQY9DPGeY1Ki9IPZ0K1mj+GGE
-        y30lsNOgaecRKnWhYL/zdPuMUA==
-X-Google-Smtp-Source: APXvYqzzHczdNbQ54kR/gJeRRIwGxWZ6BMgfEMvdNXwwz324fZfFVf2G4GtUbNN1JDO7TId7us9zJQ==
-X-Received: by 2002:a63:7705:: with SMTP id s5mr112078724pgc.379.1578367121393;
-        Mon, 06 Jan 2020 19:18:41 -0800 (PST)
-Received: from localhost.localdomain (li1058-79.members.linode.com. [45.33.121.79])
-        by smtp.gmail.com with ESMTPSA id r62sm81699361pfc.89.2020.01.06.19.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 19:18:40 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2] perf parse: Copy string to perf_evsel_config_term
-Date:   Tue,  7 Jan 2020 11:18:28 +0800
-Message-Id: <20200107031828.23103-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jan 2020 22:22:10 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:48745 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbgAGDWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:22:10 -0500
+Received: from [IPv6:2601:646:8600:3281:b19f:287a:bb58:115c] ([IPv6:2601:646:8600:3281:b19f:287a:bb58:115c])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0073LmUi3203176
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Mon, 6 Jan 2020 19:21:50 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0073LmUi3203176
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019122001; t=1578367311;
+        bh=/FJWxFmnQWfWatyrgKd0gVo3/yEc0bk99NQ6Gk5bK1U=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=uKWJDe1iemuHyEAzEU7Zf6bM5XhZk28w7prAkAj/A2n2tHCYWkySM3F5o7ldhQGx2
+         Q5U19RjwUQDEtwD04YoUiwRUdHUYdy4GqZ2i3SKt5hvSWOn7vaDgcOF9oUxvc/sihC
+         ziAdaKTiqUV7eHWBuK9Rozb2T3cXTcA/gQSfs+bdm34V+KbgwzdhAxlAwRy/jjo1QM
+         MwcIop9OosyJpzV79+sMJR03eoQBogoLSeuA0GhLI0fdWe2ZKHfgJQn3PpEugVljPv
+         XUa8SFWgej4Ipa+KGD/9nSmP6UXc5fAcBOkAaXNnJRRSCWZvgL3dRESJQ2wwWv40H4
+         fAS/gzqHI75Kw==
+Date:   Mon, 06 Jan 2020 19:21:40 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
+References: <20200104150238.19834-1-masahiroy@kernel.org> <20200104150238.19834-5-masahiroy@kernel.org> <xr93ftgt6ndv.fsf@gthelen.svl.corp.google.com> <CAK7LNAT2ai=-wbLmU2hqihbzVy7kKCGg=ipOK09XtSWiDYMW1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 04/13] initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+CC:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   hpa@zytor.com
+Message-ID: <AB861F14-0F89-4A9B-AC24-34D86DDCB935@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-perf with CoreSight fails to record trace data with command:
+On January 6, 2020 2:26:22 AM PST, Masahiro Yamada <masahiroy@kernel=2Eorg>=
+ wrote:
+>(+CC Ben Hutchings, H=2E Peter Anvin)
+>
+>In my understanding, the klibc build system is standalone=2E
+>So, the change in Linux kernel does not affect klibc at all=2E
+>Only the depending part is UAPI headers (make headers_install)=2E
+>
+>So, this patch
+>(https://lore=2Ekernel=2Eorg/patchwork/patch/1175336/)
+>should be OK=2E
+>
+>Please correct me if I am wrong=2E
+>
+>
+>On Mon, Jan 6, 2020 at 4:43 PM Greg Thelen <gthelen@google=2Ecom> wrote:
+>>
+>> Masahiro Yamada <masahiroy@kernel=2Eorg> wrote:
+>>
+>> > The comments in usr/Makefile wrongly refer to the script name
+>(twice)=2E
+>> >
+>> > Line 37:
+>> >     # The dependency list is generated by gen_initramfs=2Esh -l
+>> >
+>> > Line 54:
+>> >     # 4) Arguments to gen_initramfs=2Esh changes
+>> >
+>> > There does not exist such a script=2E
+>> >
+>> > I was going to fix the comments, but after some consideration, I
+>thought
+>> > "gen_initramfs=2Esh" would be more suitable than
+>"gen_initramfs_list=2Esh"
+>> > because it generates an initramfs image in the common usage=2E
+>> >
+>> > The script generates a list that can be fed to gen_init_cpio only
+>when
+>> > it is directly run without -o or -l option=2E
+>> >
+>> > Signed-off-by: Masahiro Yamada <masahiroy@kernel=2Eorg>
+>> > ---
+>> >
+>> > Changes in v2: None
+>> >
+>> >  usr/Makefile                                    | 2 +-
+>> >  usr/{gen_initramfs_list=2Esh =3D> gen_initramfs=2Esh} | 0
+>> >  2 files changed, 1 insertion(+), 1 deletion(-)
+>> >  rename usr/{gen_initramfs_list=2Esh =3D> gen_initramfs=2Esh} (100%)
+>>
+>> Will this break klibc?  It might have a ref to the old name=2E
+>>
+>https://git=2Ekernel=2Eorg/pub/scm/libs/klibc/klibc=2Egit/tree/usr/Kbuild=
+#n55
+>
+>I do not think so=2E
+>
+>As I stated above, the klibc build system is independent of
+>any script in the Linux kernel=2E
+>
+>The klibc Makefile refers to
+>scripts/gen_initramfs_list=2Esh, which does not exist=2E
+>
+>My path is renaming
+>usr/gen_initramfs_list=2Esh to usr/gen_initramfs=2Esh
+>
+>
+>If the renaming had been problematic for klibc,
+>commit f6f57a46435d7253a52a1a07a58183678ad266a0
+>("initramfs: move gen_initramfs_list=2Esh from scripts/ to usr/")
+>would have already caused a problem=2E
+>
+>
+>
+>Ben, Hans,
+>Is usr/Kbuild in klibc used?
+>If it is not used, is it better to delete it to avoid confusion?
+>
+>
+>Masahiro Yamada
+>
+>
+>
+>
+>> > diff --git a/usr/Makefile b/usr/Makefile
+>> > index 55c942da01cd=2E=2Ee44a66b8c051 100644
+>> > --- a/usr/Makefile
+>> > +++ b/usr/Makefile
+>> > @@ -24,7 +24,7 @@ $(obj)/initramfs_data=2Eo: $(obj)/$(datafile_y)
+>FORCE
+>> >  # Generate the initramfs cpio archive
+>> >
+>> >  hostprogs-y :=3D gen_init_cpio
+>> > -initramfs   :=3D $(CONFIG_SHELL)
+>$(srctree)/$(src)/gen_initramfs_list=2Esh
+>> > +initramfs   :=3D $(CONFIG_SHELL) $(srctree)/$(src)/gen_initramfs=2Es=
+h
+>> >  ramfs-input :=3D $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
+>> >                       $(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+>> >  ramfs-args  :=3D \
+>> > diff --git a/usr/gen_initramfs_list=2Esh b/usr/gen_initramfs=2Esh
+>> > similarity index 100%
+>> > rename from usr/gen_initramfs_list=2Esh
+>> > rename to usr/gen_initramfs=2Esh
 
-  perf record -e cs_etm/@tmc_etr0/u --per-thread ls
-  failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
-  directory)/perf/
+That is correct=2E
 
-This failure is root caused with the commit 1dc925568f01 ("perf
-parse: Add a deep delete for parse event terms").
+The klibc integration work was mainly fine in an actual kernel tree, which=
+ pulled the klibc tree=2E
 
-The log shows, cs_etm fails to parse the sink attribution; cs_etm event
-relies on the event configuration to pass sink name, but the event
-specific configuration data cannot be passed properly with flow:
+It has obviously bitrotted somewhat, but it wouldn't be all that hard to r=
+esurrect it if there is ever interest=2E
 
-  get_config_terms()
-    ADD_CONFIG_TERM(DRV_CFG, drv_cfg, term->val.str);
-      __t->val.drv_cfg = term->val.str;
-        `> __t->val.drv_cfg is assigned to term->val.str;
-
-  parse_events_terms__purge()
-    parse_events_term__delete()
-      zfree(&term->val.str);
-        `> term->val.str is freed and assigned to NULL pointer;
-
-  cs_etm_set_sink_attr()
-    sink = __t->val.drv_cfg;
-      `> sink string has been freed.
-
-To fix this issue, in the function get_config_terms(), this patch
-changes from directly assignment pointer value for the strings to
-use strdup() for allocation a new duplicate string for the cases:
-
-  perf_evsel_config_term::val.callgraph
-  perf_evsel_config_term::val.branch
-  perf_evsel_config_term::val.drv_cfg.
-
-Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/parse-events.c | 55 +++++++++++++++++++++-------------
- 1 file changed, 34 insertions(+), 21 deletions(-)
-
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index ed7c008b9c8b..49b26504bee3 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1220,7 +1220,6 @@ static int get_config_terms(struct list_head *head_config,
- 			    struct list_head *head_terms __maybe_unused)
- {
- #define ADD_CONFIG_TERM(__type, __name, __val)			\
--do {								\
- 	struct perf_evsel_config_term *__t;			\
- 								\
- 	__t = zalloc(sizeof(*__t));				\
-@@ -1229,9 +1228,23 @@ do {								\
- 								\
- 	INIT_LIST_HEAD(&__t->list);				\
- 	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
--	__t->val.__name = __val;				\
- 	__t->weak	= term->weak;				\
--	list_add_tail(&__t->list, head_terms);			\
-+	list_add_tail(&__t->list, head_terms)
-+
-+#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
-+do {								\
-+	ADD_CONFIG_TERM(__type, __name, __val);			\
-+	__t->val.__name = __val;				\
-+} while (0)
-+
-+#define ADD_CONFIG_TERM_STR(__type, __name, __val)		\
-+do {								\
-+	ADD_CONFIG_TERM(__type, __name, __val);			\
-+	__t->val.__name = strdup(__val);			\
-+	if (!__t->val.__name) {					\
-+		zfree(&__t);					\
-+		return -ENOMEM;					\
-+	}							\
- } while (0)
- 
- 	struct parse_events_term *term;
-@@ -1239,53 +1252,53 @@ do {								\
- 	list_for_each_entry(term, head_config, list) {
- 		switch (term->type_term) {
- 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
--			ADD_CONFIG_TERM(PERIOD, period, term->val.num);
-+			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
--			ADD_CONFIG_TERM(FREQ, freq, term->val.num);
-+			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_TIME:
--			ADD_CONFIG_TERM(TIME, time, term->val.num);
-+			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
--			ADD_CONFIG_TERM(CALLGRAPH, callgraph, term->val.str);
-+			ADD_CONFIG_TERM_STR(CALLGRAPH, callgraph, term->val.str);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
--			ADD_CONFIG_TERM(BRANCH, branch, term->val.str);
-+			ADD_CONFIG_TERM_STR(BRANCH, branch, term->val.str);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
--			ADD_CONFIG_TERM(STACK_USER, stack_user, term->val.num);
-+			ADD_CONFIG_TERM_VAL(STACK_USER, stack_user, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_INHERIT:
--			ADD_CONFIG_TERM(INHERIT, inherit, term->val.num ? 1 : 0);
-+			ADD_CONFIG_TERM_VAL(INHERIT, inherit, term->val.num ? 1 : 0);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
--			ADD_CONFIG_TERM(INHERIT, inherit, term->val.num ? 0 : 1);
-+			ADD_CONFIG_TERM_VAL(INHERIT, inherit, term->val.num ? 0 : 1);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
--			ADD_CONFIG_TERM(MAX_STACK, max_stack, term->val.num);
-+			ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
--			ADD_CONFIG_TERM(MAX_EVENTS, max_events, term->val.num);
-+			ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events, term->val.num);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
--			ADD_CONFIG_TERM(OVERWRITE, overwrite, term->val.num ? 1 : 0);
-+			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite, term->val.num ? 1 : 0);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
--			ADD_CONFIG_TERM(OVERWRITE, overwrite, term->val.num ? 0 : 1);
-+			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite, term->val.num ? 0 : 1);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
--			ADD_CONFIG_TERM(DRV_CFG, drv_cfg, term->val.str);
-+			ADD_CONFIG_TERM_STR(DRV_CFG, drv_cfg, term->val.str);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_PERCORE:
--			ADD_CONFIG_TERM(PERCORE, percore,
--					term->val.num ? true : false);
-+			ADD_CONFIG_TERM_VAL(PERCORE, percore,
-+					    term->val.num ? true : false);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
--			ADD_CONFIG_TERM(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
-+			ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
--			ADD_CONFIG_TERM(AUX_SAMPLE_SIZE, aux_sample_size, term->val.num);
-+			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size, term->val.num);
- 			break;
- 		default:
- 			break;
-@@ -1322,7 +1335,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct list_head *head_config,
- 	}
- 
- 	if (bits)
--		ADD_CONFIG_TERM(CFG_CHG, cfg_chg, bits);
-+		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits);
- 
- #undef ADD_CONFIG_TERM
- 	return 0;
--- 
-2.17.1
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
