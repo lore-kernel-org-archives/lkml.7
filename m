@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22CDC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B65C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61502077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB8A2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431484;
-	bh=fEofdPQLdo3o+UTKlPauo6nULx3FWB7k5nBorR9fbVE=;
+	s=default; t=1578431487;
+	bh=0R/VuNQgqLiSOyrFkGugHHU88bjz5YODxiiTm2z06Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cimLAmFii2wooL0fS4HD1T8BXFsHzXOgCOHdcA2V9mfKBjTAbVJYrqoRWb8XJWYca
-	 xRjpmXKmMcTJhqndCX95sVIrlIaKnbLMoEuGdQhkokgoJ4/snGd5D6obINfnpdAWtm
-	 0/i0oolv/WRciLzThdiLEttHnh2ElhsMdZuspnlw=
+	b=zlk2NhboDGWowlepNbTlKMU4L8kXafD2xNC6OI4VVdXpiN91stDptLYZsFUUYCEdJ
+	 KZPvyqOJHlHeiC99b+tlgm7ExYVUu9k29wOp40sUKOmYyJYgMJ27Is+CQGXaeZ/uCQ
+	 e4b9d6HzG9ahcByPHjQA2+VyB/UhhjaaBPKf9gC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgAGVLX (ORCPT
+        id S1730104AbgAGVL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:11:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:11:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbgAGVLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:11:19 -0500
+        id S1730088AbgAGVLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EB92077B;
-        Tue,  7 Jan 2020 21:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 634762072A;
+        Tue,  7 Jan 2020 21:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431478;
-        bh=fEofdPQLdo3o+UTKlPauo6nULx3FWB7k5nBorR9fbVE=;
+        s=default; t=1578431480;
+        bh=0R/VuNQgqLiSOyrFkGugHHU88bjz5YODxiiTm2z06Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNk8p4MaFsyWbwiMXCGy5QV2Gfs+uCtvbEr7RMYsNPah/r/n7iRX3bOxeN+ePwMPr
-         IeUbQOJkYHxj1wmPSWUgjln/FDidjLUQ/8MsCuaok+7lE6exx9tPmLhKAJK/KH+ZKW
-         6lrCgV7cFGt1yjqvMtdFsg6QoRfHYJcczS8We+xo=
+        b=FDeseyRwBwo5dcZKlRxj4OSKUfKsk1DM0WXbbV03FAtIKyxPdeVYZzjT0kDH46xBG
+         pXM5L7Ajujye7r2iZ1NWocJ29scAim/ZWCiLQP3xb5ZSwD0SBe8VzRlnUotgOHvF2l
+         Km8DgB9PjWhadof4cBjPYMfcVx8CbiAMWjHxTaU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 74/74] perf/x86/intel/bts: Fix the use of page_private()
-Date:   Tue,  7 Jan 2020 21:55:39 +0100
-Message-Id: <20200107205237.020338795@linuxfoundation.org>
+Subject: [PATCH 4.14 66/74] coresight: etb10: Do not call smp_processor_id from preemptible
+Date:   Tue,  7 Jan 2020 21:55:31 +0100
+Message-Id: <20200107205229.904121011@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -65,93 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
+[ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
 
-Commit
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
 
-brought in a warning with the BTS buffer initialization
-that is easily tripped with (assuming KPTI is disabled):
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
 
-instantly throwing:
-
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
-> Modules linked in:
-> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
-> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
-> Call Trace:
->  rb_alloc_aux+0x339/0x550
->  perf_mmap+0x607/0xc70
->  mmap_region+0x76b/0xbd0
-...
-
-It appears to assume (for lost raisins) that PagePrivate() is set,
-while later it actually tests for PagePrivate() before using
-page_private().
-
-Make it consistent and always check PagePrivate() before using
-page_private().
-
-Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
+Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.6+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/bts.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/hwtracing/coresight/coresight-etb10.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 24ffa1e88cf9..4d3399405d06 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -71,9 +71,17 @@ struct bts_buffer {
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index d14a9cb7959a..7fcf70b2163d 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -287,9 +287,7 @@ static void *etb_alloc_buffer(struct coresight_device *csdev, int cpu,
+ 	int node;
+ 	struct cs_buffers *buf;
  
- static struct pmu bts_pmu;
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
  
-+static int buf_nr_pages(struct page *page)
-+{
-+	if (!PagePrivate(page))
-+		return 1;
-+
-+	return 1 << page_private(page);
-+}
-+
- static size_t buf_size(struct page *page)
- {
--	return 1 << (PAGE_SHIFT + page_private(page));
-+	return buf_nr_pages(page) * PAGE_SIZE;
- }
- 
- static void *
-@@ -89,9 +97,7 @@ bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
- 	/* count all the high order buffers */
- 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
- 		page = virt_to_page(pages[pg]);
--		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
--			return NULL;
--		pg += 1 << page_private(page);
-+		pg += buf_nr_pages(page);
- 		nbuf++;
- 	}
- 
-@@ -115,7 +121,7 @@ bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
- 		unsigned int __nr_pages;
- 
- 		page = virt_to_page(pages[pg]);
--		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
-+		__nr_pages = buf_nr_pages(page);
- 		buf->buf[nbuf].page = page;
- 		buf->buf[nbuf].offset = offset;
- 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+ 	if (!buf)
 -- 
 2.20.1
 
