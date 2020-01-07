@@ -2,113 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E2C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91E6C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FFF2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7562075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USaN/sz2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjzY/BAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgAGNAo (ORCPT
+        id S1728077AbgAGNBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:00:44 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41572 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAGNAm (ORCPT
+        Tue, 7 Jan 2020 08:01:30 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38197 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgAGNBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:00:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x8so28474583pgk.8;
-        Tue, 07 Jan 2020 05:00:42 -0800 (PST)
+        Tue, 7 Jan 2020 08:01:30 -0500
+Received: by mail-lj1-f193.google.com with SMTP id w1so32667349ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 05:01:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lvbtfIt25K3V9bkjoOOm4QAQQ2RLXWTWl1KKBEvQFkY=;
-        b=USaN/sz2xKuxGlMgjZHB/wUWQ/8RghB5BDQntO5KHxNVHiYUNlXljkZOc+xBwlotWi
-         iR0vr+2KKITG8AilRUMRJvatthQT/2UFg7eTxjT+LRAErQVgfryuIsKryfhO5LuNbdx/
-         wSUFMCEdFIi99eFmxcmYny8U12L3h2jEPieIrMDf2rLBo7G0Nb2Y2jTw5rWt9QlWT4BT
-         W/zAB5JN0aalf1nmGYQukNVY1UsCh6sT/VjlGjg0/ixeKb71W/s7Hxwy8RKU9Dx/b2Yo
-         bE9f/bqLta8M7ohdj39m1HB4K2lvkAzwuPFkw+WH09pDEATD0mwOWflkmzVF2tsG6tUT
-         9ZjQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vZDJ0Z3KTFuC9+XlVjxg702wKwgGzFZIhEmKFnvf86g=;
+        b=MjzY/BAuEKZAcNNT+oRqdDHKYqnzMWjORiGocCmWFgViO0SQorMl9uOkA0kY+tZ5Sf
+         IoTtuA+3nKp9JAnTq+dM35A7eZyRt3zsIiuz6kXFuQI9Ai9DqHxdA/e+oPjVCKE/LGV8
+         GCfAZEJ39bHDDiijwQlnzJcB2cvL4Z9i+ClziGxKcVYXv2hYsLNCj90lDyr76xNw2NHD
+         V0MkHG+RXhSDDecDp02bTaaMV6Pi2i+T4MBzXqROZyFTeVqDnyLFB+OBTT9MAF9Kcj/H
+         GBi6H7Ca6DShJRTARhq4gIXuZg6nq2v4GiCIl1uOFX20TAS6Oexu9LTG08NoYLPAqA9v
+         4QRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lvbtfIt25K3V9bkjoOOm4QAQQ2RLXWTWl1KKBEvQFkY=;
-        b=GaZCja/Vdy6t7deyL9MlQH2w/9DdE52ZazACF0FreDMe0pgrLmiQvYN4ucoiz5Vo3u
-         gF2hplvmOlAn8fzD/XXYgP4ZSwaZ306WZHesIQ6IRSMPU+23E8oMktBk/+A1jrnZBjNJ
-         BCEnfexur18gxdWRgAafnzpAhTCWdSdgq47yGfU59SH4hJyIWCiVc7Px/HFGHPL5UDVv
-         KK6nJH2mJewyHnsLKvZIfnfjQ0lfuFBYrhhBtkIYfLZ2Gow8dEmuak9mHXXhNb59PoPO
-         rbE1yH917RSAzGcHooLMztDbB4kTKnNKsug2m9Gqf4CEHB0+WjHeSoyyNQi4hl+UiFn9
-         wj/A==
-X-Gm-Message-State: APjAAAVO40ydyDahA7IrUZE4sTApXjpcCNGn8k7KrnZRzj7KdtPzNesd
-        7QpzVojUtpyoEODtykzZWRs=
-X-Google-Smtp-Source: APXvYqz9WKLmVN/nRjjHtNkoSm6v+LC6l/HWdccIHNtmRotZJu3YefPowp/baIagDwVd/ryHNTbl6w==
-X-Received: by 2002:a62:ac03:: with SMTP id v3mr113535234pfe.17.1578402041672;
-        Tue, 07 Jan 2020 05:00:41 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j10sm28590800pjb.14.2020.01.07.05.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 05:00:40 -0800 (PST)
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
- <20191219003256.GA28144@roeck-us.net> <yq17e233o0o.fsf@oracle.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net>
-Date:   Tue, 7 Jan 2020 05:00:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vZDJ0Z3KTFuC9+XlVjxg702wKwgGzFZIhEmKFnvf86g=;
+        b=ZgBTKqfUnNlAu2+lAnxbl9kMDVxnElzuVp/qdBN3SFAKdCiyYQNGjp31liQ8S4QEJ6
+         a06hh3kfNFzut1a6kcnUrZ8VqlmhOEsDhRzrCIca2mMSdEvDvu80/paWjMPGW4Gjsuns
+         YfS/IrOeltknf3PALr0aXEtJKVYunBgET7D1asbG4rZ7o2C4y/FI/RPvYuB8VGCDG3sS
+         eNVbjSIiZLjvnXzFKkc32pidxSObK0BVOOeSYwAfMOB9VgsbNQ9oRBpet1X3EdQ8VK42
+         r1YVA2jxQiP13iMBVKN0q8Fr9y5j2nqzyIKngZVeNpRaXPJ06qQtVVsFNwl4DnQ0Qil7
+         Xknw==
+X-Gm-Message-State: APjAAAXZ9SfyiIvPyWFanYWrRHNv5ebhVNXB1iV25Lkn63e8EFHSRbhp
+        icNFbxF5BuD/miy0rp6VviciTRiTqpzstXJVPJthTw==
+X-Google-Smtp-Source: APXvYqzfa9fyHLZiKNwulHXqjCb8J6xujMZt5bBYtglre/yN1M6166N2+u+zxthTNv8KgR4tjFQhinxWumnRvskeLf8=
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61608991ljj.191.1578402087989;
+ Tue, 07 Jan 2020 05:01:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <yq17e233o0o.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191218163701.171914-1-arnd@arndb.de> <CACRpkdbqzLUNUjx_kt3-7JLZym2RZ47edW5qp0MgXmpW4-Xf9Q@mail.gmail.com>
+ <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com>
+ <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com> <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 14:01:16 +0100
+Message-ID: <CACRpkdYWbHS1ZwRhCPyfncXyCyhFrmxOz1OzZR3Ui1toNHh60A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: lochnagar: select GPIOLIB
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, patches@opensource.cirrus.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/6/20 8:10 PM, Martin K. Petersen wrote:
-> 
-> Hi Guenter!
-> 
->>>   - I still think sensor naming needs work. How and where are the
->>>     "drivetemp-scsi-8-140" names generated?
->>>
->> Quick one: In libsensors, outside the kernel. The naming is generic,
->> along the line of <driver name>-<bus name>-<bus index>-<slot>.
-> 
-> I understand that there are sensors that may not have an obvious
-> associated topology and therefore necessitate coming up with a suitable
-> naming or enumeration scheme. But in this case we already have a
-> well-defined SCSI device name. Any particular reason you don't shift the
-> chip.addr back and print the H:C:T:L format that you used as input?
-> 
-> However arcane H:C:T:L may seem, I think that predictable naming would
-> make things a lot easier for users that need to identify which device
-> matches which sensor...
-> 
+On Tue, Jan 7, 2020 at 1:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Jan 7, 2020 at 12:58 PM Richard Fitzgerald
+> <rf@opensource.cirrus.com> wrote:
+> > On 07/01/2020 10:39, Arnd Bergmann wrote:
+> > > On Tue, Jan 7, 2020 at 10:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > >> On Wed, Dec 18, 2019 at 5:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >>> I wonder if GPIOLIB should just become mandatory when enabling the pinctrl
+> > >>> subsystem, or if there are still good reasons for leaving it disabled
+> > >>> on any machine that uses CONFIG_PINCTRL.
+> > >>
+> > >> Hm that is a tricky question, they almost always come in pair but are
+> > >> technically speaking separate subsystems.
+> > >
+> > > I think there are a number of use cases for GPIOLIB drivers without PINCTRL, but
+> > > are there any examples of the reverse?
+> >
+> > You could have muxable pins that aren't gpios. For example muxing
+> > between i2c/spi signals. So a pinctrl driver doesn't imply gpio.
+>
+> I understand that this is the case in theory, but what I was wondering about
+> is whether there are any such users, or at least any that also want to
+> save a few kilobytes of kernel size for gpiolib.
 
-Not sure I understand. Do you mean to add "H:C:T:L" to "drivetemp" ?
-That would make it something like "drivetemp:H:C:T:L-scsi-8-140".
-Not sure if that is really useful, and it would at least be partially
-redundant.
+I don't think so. In any case what we need to do at all times is
+put gpiolib on lowcarb diet as it gets compiled into pretty much
+everything (at least everything embedded), so I am working a bit on that.
 
-"scsi-8-140" is created by libsensors, so any change in that would
-have to be made there, not in the kernel driver.
-
-Guenter
+Yours,
+Linus Walleij
