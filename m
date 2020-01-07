@@ -2,126 +2,196 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80289C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C30D2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L72FmqY7"
+	by mail.kernel.org (Postfix) with ESMTP id 58621222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgAGRbw (ORCPT
+        id S1728488AbgAGRdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:31:52 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41980 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgAGRbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:31:52 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so192819pgk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:31:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6tbx6y0alCppo4JulU8ZX+Wq5gWxVblT3if0J5vpiqg=;
-        b=L72FmqY7y9JcE1Hl8aVOS075lkg2C/pQlQl3XVkV9+o4hG12UWm6Z+RNU4UaowMX7l
-         AzJI7/sOkWRixckpCz3sLqVPZ9Lmn0VMJOukcWmnoz0mlT/zeKG8T+7vtUMCBlLNLNmD
-         C7TYuadNxUKRk5Jyrl5xgt4f5z004pCSe3P5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6tbx6y0alCppo4JulU8ZX+Wq5gWxVblT3if0J5vpiqg=;
-        b=qD3LYnsRPtHr8u/sGzNBkvvYe9XG5dk48Qbcd6xRBbSXd80KpvrQj5GsAFd0VMB9wx
-         XRZBzpX5pf0X9MMQsjiKIja+C5rgxJGnFwE03bwmNyppu4SCWoOOc9T3SIvBw5tt+TtW
-         E89ojsppNhiAjg2chqtYYL+uOOw0WzTTr7nD6DjnqdbR4wRf6+NLSOqFv+ES2TLdZ3qh
-         NzKVwZwk8Mz2OToxL5IIRht3z6fC+RXbz2gGBEEETZeeOI3j+3XXeWSbKOqWrcaub0kK
-         RQE88sP7naivwABzXJGSAxpfK6vKNLQuFZzsbDfIyBhHWxuFH8LCaHbYC9dS5cMrL8gy
-         ogyw==
-X-Gm-Message-State: APjAAAUtbLQkA0su4lfll1GAwbh4n5F1kHoe5QzO56T/2NBzDwL22ds/
-        CZ8Oo1mLNEkStoqGrZ2lnOtqVg==
-X-Google-Smtp-Source: APXvYqxuZTRMvr2E0NVTDg27lnwD7H9kx+RE+QwcVmHID/+AUrQOH+CqDmCL6ILFL3+vIgX9QTQ34Q==
-X-Received: by 2002:a63:8041:: with SMTP id j62mr551347pgd.41.1578418311104;
-        Tue, 07 Jan 2020 09:31:51 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 80sm126769pfw.123.2020.01.07.09.31.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 09:31:50 -0800 (PST)
-Date:   Tue, 7 Jan 2020 09:31:49 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Add qca_power_on() API to support
- both wcn399x and Rome power up
-Message-ID: <20200107173149.GD89495@google.com>
-References: <20200107052601.32216-1-rjliao@codeaurora.org>
+        Tue, 7 Jan 2020 12:33:41 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12573 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728266AbgAGRdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:33:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 09:33:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="233279357"
+Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jan 2020 09:33:13 -0800
+Subject: Re: [PATCH 2/3] media: aspeed: Use runtime configuration
+To:     Joel Stanley <joel@jms.id.au>, Eddie James <eajames@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200107034324.38073-1-joel@jms.id.au>
+ <20200107034324.38073-3-joel@jms.id.au>
+From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Message-ID: <c18ec7d5-023a-f0cd-40fd-32eab1d089fb@linux.intel.com>
+Date:   Tue, 7 Jan 2020 09:33:10 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200107052601.32216-1-rjliao@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200107034324.38073-3-joel@jms.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+Hi Joel,
 
-On Tue, Jan 07, 2020 at 01:26:01PM +0800, Rocky Liao wrote:
-> This patch adds a unified API qca_power_on() to support both wcn399x and
-> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
-> regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
+On 1/6/2020 7:43 PM, Joel Stanley wrote:
+> The aspeed video IP has some differences between SoC families. Currently
+> the driver decides which registers to use at compile time, which means
+> a single kernel can not be used between platforms.
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> Switch to using runtime configuration of the registers that vary between
+> SoC families. This is in preparation for upcoming ast2600 support.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
->  drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>   drivers/media/platform/aspeed-video.c | 53 ++++++++++++++++++++-------
+>   1 file changed, 39 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 9392cc7f9908..f6555bd1adbc 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart *hu)
->  	return 0;
->  }
->  
-> +static int qca_power_on(struct hci_dev *hdev)
-> +{
-> +	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> +	struct qca_serdev *qcadev;
-> +	int ret = 0;
+> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+> index 8f849d9866af..d70b893fd4cf 100644
+> --- a/drivers/media/platform/aspeed-video.c
+> +++ b/drivers/media/platform/aspeed-video.c
+> @@ -72,11 +72,8 @@
+>   #define  VE_SEQ_CTRL_CAP_BUSY		BIT(16)
+>   #define  VE_SEQ_CTRL_COMP_BUSY		BIT(18)
+>   
+> -#ifdef CONFIG_MACH_ASPEED_G5
+> -#define  VE_SEQ_CTRL_JPEG_MODE		BIT(13)	/* AST2500 */
+> -#else
+> -#define  VE_SEQ_CTRL_JPEG_MODE		BIT(8)	/* AST2400 */
+> -#endif /* CONFIG_MACH_ASPEED_G5 */
+> +#define AST2500_VE_SEQ_CTRL_JPEG_MODE	BIT(13)
+> +#define AST2400_VE_SEQ_CTRL_JPEG_MODE	BIT(8)
+>   
+>   #define VE_CTRL				0x008
+>   #define  VE_CTRL_HSYNC_POL		BIT(0)
+> @@ -220,6 +217,9 @@ struct aspeed_video {
+>   	struct video_device vdev;
+>   	struct mutex video_lock;	/* v4l2 and videobuf2 lock */
+>   
+> +	u32 jpeg_mode;
+> +	u32 comp_size_read;
 
-another option would be to return directly from the if/else branches,
-but either way is fine.
+How do you think about of adding
+'const struct aspeed_video_config *config' instead so that we can
+use them like 'video->config->jpeg_mode' in this module. Also, we could
+simply add any SoC specific variations in the future if we add the
+'config' member instead of above.
+
+Overall it looks good to me. I'll rebase my change on top of it.
+
+Thanks a lot!
+
+Jae
 
 > +
-> +	if (qca_is_wcn399x(soc_type)) {
-> +		ret = qca_wcn3990_init(hu);
-> +	} else {
-> +		if (hu->serdev) {
-> +			qcadev = serdev_device_get_drvdata(hu->serdev);
-> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-> +			/* Controller needs time to bootup. */
-> +			msleep(150);
-> +		}
-> +	}
+>   	wait_queue_head_t wait;
+>   	spinlock_t lock;		/* buffer list lock */
+>   	struct delayed_work res_work;
+> @@ -243,6 +243,21 @@ struct aspeed_video {
+>   
+>   #define to_aspeed_video(x) container_of((x), struct aspeed_video, v4l2_dev)
+>   
+> +struct aspeed_video_config {
+> +	u32 jpeg_mode;
+> +	u32 comp_size_read;
+> +};
 > +
-> +	return ret;
-> +}
+> +static const struct aspeed_video_config ast2400_config = {
+> +	.jpeg_mode = AST2400_VE_SEQ_CTRL_JPEG_MODE,
+> +	.comp_size_read = VE_OFFSET_COMP_STREAM,
+> +};
 > +
-
-I expected qca_power_on() would be called from qca_open(), but as is
-this would only work for ROME, and not WCN399x, which only enables
-the regulators in qca_open(), qca_wcn3990_init() is called from
-qca_setup(). Is there a particular reason for this assymmetry between
-the ROME and WCN399x initialization (i.e. one is fully powered up after
-open(), the other not)?
+> +static const struct aspeed_video_config ast2500_config = {
+> +	.jpeg_mode = AST2500_VE_SEQ_CTRL_JPEG_MODE,
+> +	.comp_size_read = VE_OFFSET_COMP_STREAM,
+> +};
+> +
+>   static const u32 aspeed_video_jpeg_header[ASPEED_VIDEO_JPEG_HEADER_SIZE] = {
+>   	0xe0ffd8ff, 0x464a1000, 0x01004649, 0x60000101, 0x00006000, 0x0f00feff,
+>   	0x00002d05, 0x00000000, 0x00000000, 0x00dbff00
+> @@ -572,7 +587,7 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
+>   	if (sts & VE_INTERRUPT_COMP_COMPLETE) {
+>   		struct aspeed_video_buffer *buf;
+>   		u32 frame_size = aspeed_video_read(video,
+> -						   VE_OFFSET_COMP_STREAM);
+> +						   video->comp_size_read);
+>   
+>   		spin_lock(&video->lock);
+>   		clear_bit(VIDEO_FRAME_INPRG, &video->flags);
+> @@ -907,7 +922,7 @@ static void aspeed_video_init_regs(struct aspeed_video *video)
+>   		FIELD_PREP(VE_COMP_CTRL_DCT_LUM, video->jpeg_quality) |
+>   		FIELD_PREP(VE_COMP_CTRL_DCT_CHR, video->jpeg_quality | 0x10);
+>   	u32 ctrl = VE_CTRL_AUTO_OR_CURSOR;
+> -	u32 seq_ctrl = VE_SEQ_CTRL_JPEG_MODE;
+> +	u32 seq_ctrl = video->jpeg_mode;;
+>   
+>   	if (video->frame_rate)
+>   		ctrl |= FIELD_PREP(VE_CTRL_FRC, video->frame_rate);
+> @@ -1653,8 +1668,17 @@ static int aspeed_video_init(struct aspeed_video *video)
+>   	return rc;
+>   }
+>   
+> +static const struct of_device_id aspeed_video_of_match[] = {
+> +	{ .compatible = "aspeed,ast2400-video-engine", .data = &ast2400_config },
+> +	{ .compatible = "aspeed,ast2500-video-engine", .data = &ast2500_config },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
+> +
+>   static int aspeed_video_probe(struct platform_device *pdev)
+>   {
+> +	const struct aspeed_video_config *config;
+> +	const struct of_device_id *match;
+>   	struct aspeed_video *video;
+>   	int rc;
+>   
+> @@ -1666,6 +1690,14 @@ static int aspeed_video_probe(struct platform_device *pdev)
+>   	if (IS_ERR(video->base))
+>   		return PTR_ERR(video->base);
+>   
+> +	match = of_match_node(aspeed_video_of_match, pdev->dev.of_node);
+> +	if (!match)
+> +		return -EINVAL;
+> +
+> +	config = match->data;
+> +	video->jpeg_mode = config->jpeg_mode;
+> +	video->comp_size_read = config->comp_size_read;
+> +
+>   	video->frame_rate = 30;
+>   	video->dev = &pdev->dev;
+>   	spin_lock_init(&video->lock);
+> @@ -1712,13 +1744,6 @@ static int aspeed_video_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -static const struct of_device_id aspeed_video_of_match[] = {
+> -	{ .compatible = "aspeed,ast2400-video-engine" },
+> -	{ .compatible = "aspeed,ast2500-video-engine" },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
+> -
+>   static struct platform_driver aspeed_video_driver = {
+>   	.driver = {
+>   		.name = DEVICE_NAME,
+> 
