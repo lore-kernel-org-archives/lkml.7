@@ -2,51 +2,53 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967C8C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B61C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8332080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBCB20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431478;
-	bh=oW1nIEzA6jjiMGX+FCEbkGMKE3Sgwqg5MklncoVW89Q=;
+	s=default; t=1578431481;
+	bh=FFl5on5lW1IxzzZrZ1+pAEUxh6sI9aLDd0x/S0R5VJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtW4aDlnj65l3aYJXUH7vlhmByFXyR76XVwKRtm0rLJRnIonAs8HONc0/aYh75V6x
-	 K4/iPIpWNX6D8rPx+ML7ITKeMPpZMUZcZqvOVyS/8B+XWU7Wzi/hQ59yDBd3vR73ap
-	 /oa6M4DVrH7B7XDJrgpRrJ7hvzxyACcTgL01ptUw=
+	b=PVl2StMAH6x1YWi1cS7W3azMYSFLV6FK1Ez4VZLsVxJsSbi8V9EjldjFlRhK/DUVd
+	 1NwjurYxDjqTOw6x62QwiDxTz3CtWiYUMWOM6RXJyJbncoB9ulZ2H7BQgGMN2jCMem
+	 tvi1K4Jk60QeXELxrekah7we6oWMudKvLYtEjUls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgAGVLR (ORCPT
+        id S1729643AbgAGVLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:11:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbgAGVLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:11:14 -0500
+        id S1730051AbgAGVLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:11:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24FB12080A;
-        Tue,  7 Jan 2020 21:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB6F20880;
+        Tue,  7 Jan 2020 21:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431473;
-        bh=oW1nIEzA6jjiMGX+FCEbkGMKE3Sgwqg5MklncoVW89Q=;
+        s=default; t=1578431476;
+        bh=FFl5on5lW1IxzzZrZ1+pAEUxh6sI9aLDd0x/S0R5VJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zy9M0l2qLzMksrjmXw5D2bO8C9jYeDs/f4eezo8Afd1g7Sfocg2a3Zl44y6T6vtVn
-         eDuLyPCu7lHQSfdPSoZb8dDZr0f6aQmaq5bzin8Bv8iMqr4nOQi8zWOr73w/6zqhDW
-         wTpIN5smXUgeyE5sHwzg92CD2SHBCQaXbZ+Us/Gg=
+        b=OJJdgzTBS9zZ/INsfWgUyAMJ4w0FYrVofg7iYTf7YW7ZPfXhgJGM536Y0bxbt7/nB
+         C/Az2grnEs/mTfuB4MOsL2huCTg0TlF3zbFn2S4bF0RnFjhnFIxsm3v6NfqkWFOdGM
+         4QfMWw6jU16QhBc2OjExVZfoRpTu4poL710Tqw7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Mavrodiev <stefan@olimex.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 4.14 24/74] drm/sun4i: hdmi: Remove duplicate cleanup calls
-Date:   Tue,  7 Jan 2020 21:54:49 +0100
-Message-Id: <20200107205153.399711138@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 65/74] coresight: tmc-etf: Do not call smp_processor_id from preemptible
+Date:   Tue,  7 Jan 2020 21:55:30 +0100
+Message-Id: <20200107205228.054429793@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,38 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mavrodiev <stefan@olimex.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 57177d214ee0816c4436c23d6c933ccb32c571f1 upstream.
+[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
 
-When the HDMI unbinds drm_connector_cleanup() and drm_encoder_cleanup()
-are called. This also happens when the connector and the encoder are
-destroyed. This double call triggers a NULL pointer exception.
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-The patch fixes this by removing the cleanup calls in the unbind
-function.
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
+ caller is tmc_alloc_etf_buffer+0x5c/0x60
+ CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+ Call trace:
+  dump_backtrace+0x0/0x150
+  show_stack+0x14/0x20
+  dump_stack+0x9c/0xc4
+  debug_smp_processor_id+0x10c/0x110
+  tmc_alloc_etf_buffer+0x5c/0x60
+  etm_setup_aux+0x1c4/0x230
+  rb_alloc_aux+0x1b8/0x2b8
+  perf_mmap+0x35c/0x478
+  mmap_region+0x34c/0x4f0
+  do_mmap+0x2d8/0x418
+  vm_mmap_pgoff+0xd0/0xf8
+  ksys_mmap_pgoff+0x88/0xf8
+  __arm64_sys_mmap+0x28/0x38
+  el0_svc_handler+0xd8/0x138
+  el0_svc+0x8/0xc
 
-Cc: <stable@vger.kernel.org>
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191217124632.20820-1-stefan@olimex.com
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
+
+Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.7+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -438,8 +438,6 @@ static void sun4i_hdmi_unbind(struct dev
- 	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 336194d059fe..329a201c0c19 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -308,9 +308,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
+ 	int node;
+ 	struct cs_buffers *buf;
  
- 	cec_unregister_adapter(hdmi->cec_adap);
--	drm_connector_cleanup(&hdmi->connector);
--	drm_encoder_cleanup(&hdmi->encoder);
- 	i2c_del_adapter(hdmi->i2c);
- 	clk_disable_unprepare(hdmi->mod_clk);
- 	clk_disable_unprepare(hdmi->bus_clk);
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
+ 
+ 	/* Allocate memory structure for interaction with Perf */
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+-- 
+2.20.1
+
 
 
