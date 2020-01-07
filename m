@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE42C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BA624676
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF5D2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430749;
-	bh=+8/l5PDbTPjHpcojaSQlovgVrTLf3sxj8sgQ4f4RTCE=;
+	s=default; t=1578430758;
+	bh=+TKr1AGg60wAl/rfC0raSUEYB/My//ET9SMahqLI2Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U+acwZSg475pkfiLwNRtw9ETn4yh2+qA9TqIYPHvfiEYYDXGe0ZWDgO2BMZLl6VF+
-	 tOjVePRoVNCF/JRQv02rJ/ek1tUfdcOge4peOYJNToRRE6OxCS/6WLRrZrTuo0m9jm
-	 DXSuuBDYZ53ih0rvyJAFwZRt9srrNKIrc/Zrx8Ew=
+	b=DTsj/7buKUMRYTaTFyyrYDuYuFBGNm3LoWhdhv3Se+XB8AZQ0/nvGr0zyXfl6iozZ
+	 UPD0X5xH/dWyJWbbxctqyrhBy4cZXP0cxYFYFkp8m+j944Syl4qvDqXLIxFOw//pp2
+	 sdLyPRwZCKyLC9OJis9iscfQnZ8qD5XOdW2WzzT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgAGU7H (ORCPT
+        id S1728112AbgAGU7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:59:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:59:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgAGU7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:59:04 -0500
+        id S1727593AbgAGU7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:59:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B19A2087F;
-        Tue,  7 Jan 2020 20:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D34921744;
+        Tue,  7 Jan 2020 20:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430744;
-        bh=+8/l5PDbTPjHpcojaSQlovgVrTLf3sxj8sgQ4f4RTCE=;
+        s=default; t=1578430753;
+        bh=+TKr1AGg60wAl/rfC0raSUEYB/My//ET9SMahqLI2Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xd/I2THQfD9fwWq2l0VueCBWyySIJ5qh/674ou4KpZKnl0eqCh0l0rN8zZu9VSU10
-         vZEvBNSSNzj6o+sdQX2b+AKBJWqap/Rnxx66DrQXxVo7ryRTHPz31xMmeCTZ0joGxd
-         AUBFhLLs1JULdhrj7F6+95Z1UohgxF8nOkJUpZpk=
+        b=lF06d9ddKCdkUg06EMO2CztvzYYRDn4NpGY+8Lfk6onQ54jX+jAHFAWt39lNeUaha
+         bE8+gDpYcBovwbf8ba+DpFFrQjFFJT2hibeNHQ2V1yCxk3UvjwZesfCcSgb7e8Xs8L
+         /iManxCK8CFqnUyvqmMx6Nm/98I0jN3j5+LAH4Rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 5.4 077/191] MIPS: BPF: eBPF JIT: check for MIPS ISA compliance in Kconfig
-Date:   Tue,  7 Jan 2020 21:53:17 +0100
-Message-Id: <20200107205337.103399328@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 081/191] media: cec: avoid decrementing transmit_queue_sz if it is 0
+Date:   Tue,  7 Jan 2020 21:53:21 +0100
+Message-Id: <20200107205337.317281298@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -68,65 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit f596cf0d8062cb5d0a4513a8b3afca318c13be10 upstream.
+commit 95c29d46ab2a517e4c26d0a07300edca6768db17 upstream.
 
-It is completely wrong to check for compile-time MIPS ISA revision in
-the body of bpf_int_jit_compile() as it may lead to get MIPS JIT fully
-omitted by the CC while the rest system will think that the JIT is
-actually present and works [1].
-We can check if the selected CPU really supports MIPS eBPF JIT at
-configure time and avoid such situations when kernel can be built
-without both JIT and interpreter, but with CONFIG_BPF_SYSCALL=y.
+WARN if transmit_queue_sz is 0 but do not decrement it.
+The CEC adapter will become unresponsive if it goes below
+0 since then it thinks there are 4 billion messages in the
+queue.
 
-[1] https://lore.kernel.org/linux-mips/09d713a59665d745e21d021deeaebe0a@dlink.ru/
+Obviously this should not happen, but a driver bug could
+cause this.
 
-Fixes: 716850ab104d ("MIPS: eBPF: Initial eBPF support for MIPS32 architecture.")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Hassan Naveed <hnaveed@wavecomp.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: <stable@vger.kernel.org>      # for v4.12 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/Kconfig        |    2 +-
- arch/mips/net/ebpf_jit.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/cec/cec-adap.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -46,7 +46,7 @@ config MIPS
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
- 	select HAVE_ASM_MODVERSIONS
--	select HAVE_EBPF_JIT if (64BIT && !CPU_MICROMIPS)
-+	select HAVE_EBPF_JIT if 64BIT && !CPU_MICROMIPS && TARGET_ISA_REV >= 2
- 	select HAVE_CONTEXT_TRACKING
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_C_RECORDMCOUNT
---- a/arch/mips/net/ebpf_jit.c
-+++ b/arch/mips/net/ebpf_jit.c
-@@ -1803,7 +1803,7 @@ struct bpf_prog *bpf_int_jit_compile(str
- 	unsigned int image_size;
- 	u8 *image_ptr;
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -378,7 +378,8 @@ static void cec_data_cancel(struct cec_d
+ 	} else {
+ 		list_del_init(&data->list);
+ 		if (!(data->msg.tx_status & CEC_TX_STATUS_OK))
+-			data->adap->transmit_queue_sz--;
++			if (!WARN_ON(!data->adap->transmit_queue_sz))
++				data->adap->transmit_queue_sz--;
+ 	}
  
--	if (!prog->jit_requested || MIPS_ISA_REV < 2)
-+	if (!prog->jit_requested)
- 		return prog;
+ 	if (data->msg.tx_status & CEC_TX_STATUS_OK) {
+@@ -430,6 +431,14 @@ static void cec_flush(struct cec_adapter
+ 		 * need to do anything special in that case.
+ 		 */
+ 	}
++	/*
++	 * If something went wrong and this counter isn't what it should
++	 * be, then this will reset it back to 0. Warn if it is not 0,
++	 * since it indicates a bug, either in this framework or in a
++	 * CEC driver.
++	 */
++	if (WARN_ON(adap->transmit_queue_sz))
++		adap->transmit_queue_sz = 0;
+ }
  
- 	tmp = bpf_jit_blind_constants(prog);
+ /*
+@@ -520,7 +529,8 @@ int cec_thread_func(void *_adap)
+ 		data = list_first_entry(&adap->transmit_queue,
+ 					struct cec_data, list);
+ 		list_del_init(&data->list);
+-		adap->transmit_queue_sz--;
++		if (!WARN_ON(!data->adap->transmit_queue_sz))
++			adap->transmit_queue_sz--;
+ 
+ 		/* Make this the current transmitting message */
+ 		adap->transmitting = data;
 
 
