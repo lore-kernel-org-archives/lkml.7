@@ -2,248 +2,161 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E0AC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB554C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D53A20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12D42077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="NhFDt2GD"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="K1SJzptC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbgAGJfh (ORCPT
+        id S1727699AbgAGJgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:35:37 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:34624 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727084AbgAGJfh (ORCPT
+        Tue, 7 Jan 2020 04:36:46 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8410 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726485AbgAGJgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:35:37 -0500
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 94D492E147D;
-        Tue,  7 Jan 2020 12:35:33 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id h27FGk7aFr-ZWvOxK5e;
-        Tue, 07 Jan 2020 12:35:33 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1578389733; bh=v2AjJsKmlVuvG4ZJs7dIGBHGueTYXG52IcpCaI7Exro=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=NhFDt2GDsyQSBPqF5kyyt/HTUf2jLUgpop4IcDtsepkJCHReoU12Y2wpKOCzbM7bE
-         0mA80NU9mZEgj/cjqPtzv+bLsr/jRXlEU78gvne7JiDeEYCiXk0clEz4f8xazd7D3Y
-         93o4S+CfrnI4oPXyHisT1Ueq0+hcBqsPnkwO8Cww=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:6407::1:5])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Hjw2ShryIg-ZWVCuV1m;
-        Tue, 07 Jan 2020 12:35:32 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/rmap: fix reusing mergeable anon_vma as parent when
- fork
-To:     "lixinhai.lxh@gmail.com" <lixinhai.lxh@gmail.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "richardw.yang" <richardw.yang@linux.intel.com>,
-        "kirill.shutemov" <kirill.shutemov@linux.intel.com>
-References: <157830736034.8148.7070851958306750616.stgit@buzz>
- <CALYGNiMUQ2=OjF4G3jQYZMXja5mGinXB8M1YRCe8kctCzQoWHw@mail.gmail.com>
- <2020010710441027026650@gmail.com>
- <f008876f-c163-e77d-d8e6-4722ba69e9f0@yandex-team.ru>
- <2020010717045916228557@gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <a9af1185-7ad4-c3a1-b61c-063ddc013c85@yandex-team.ru>
-Date:   Tue, 7 Jan 2020 12:35:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 04:36:45 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0079TxTi002880;
+        Tue, 7 Jan 2020 04:36:43 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xaneaenfm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 04:36:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c0HsXCsziZyNdgyIPpBys4c487GTBHhDf4wOcqPNdaADQkMrkUz/fD/rjpMb58ofsNBz6zCyqWtVwNwBIAbJ2QqDnemJlGHnW0qmN36uqSK4SwPkkaNd00ekeDN+hFdWzfn4A+f1zh2x+h3THMJnHeAUBkGJPdkZ2qF/u89WvAuscslG9n2ffRYuc5pIMnYqmeRNnXpERIucrj8/cg8b6zAtwp524CvHNCc/ssTcAf3a9Jj4j58HwUykM6t4fKYFpzmk/4KfAueTgVYmss2NVhBVqgsRM5Sy5HMaZQ44+o2QnHELByqRbgFqBGBX+Ow+0D1velOOBYSHyu0PrLaQ2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DP7oLjeZUvWthHSR01GGgTPwZjKhAXEVFc/06W0YZ9E=;
+ b=aS5vd4eLoJr6kM/RYYN9UbgIuEpA9O4tucqs06qwLYFWsDUGTHD3LY0enh3Gk+oqmGGgPSloiX6iyDni808NhpzmL1b5XyWe18cGirq4XXSQBDAaOonuqIakP2GoTSv11OYHA0PmH+/0/cKn9ExcYSAf+OKzqA/z1XdsVeB4a74NUow5k1olnPxVFdtsEO+GC85AJOeE/ltJColmCwzHq5/eHZX0pMQhsssJbpc8tUMVrw9r0Hjhciv29B3Uf89j+LPjiXTq9kgpq3SHu19HD3CF/lbKM4FgO5rXKnIGlTa78wislJE1i2qUI25smVG8kZvnSYcVtQg+Q4UFGamxTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DP7oLjeZUvWthHSR01GGgTPwZjKhAXEVFc/06W0YZ9E=;
+ b=K1SJzptCfyUKnLuuUhWO7nePYXxAdl/wlpvoHd+aQEd36Bor/L67BseU3J4CAb2Yv4Fpgx9aVDbpqoC3N6b2YoTkvtGHx8ozukha266NiYTJOx+E/dIgnLdoqquVpzyCynL27OtiDiSGYXb9a2LIONhOyGYaEde+33TpI+IFwo0=
+Received: from BN6PR03MB3347.namprd03.prod.outlook.com (10.174.94.163) by
+ BN6PR03MB3235.namprd03.prod.outlook.com (10.174.235.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Tue, 7 Jan 2020 09:36:41 +0000
+Received: from BN6PR03MB3347.namprd03.prod.outlook.com
+ ([fe80::80b6:bfbd:9b6d:710a]) by BN6PR03MB3347.namprd03.prod.outlook.com
+ ([fe80::80b6:bfbd:9b6d:710a%4]) with mapi id 15.20.2602.015; Tue, 7 Jan 2020
+ 09:36:41 +0000
+From:   "Sa, Nuno" <Nuno.Sa@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/5] iio: gyro: adi16136: construct adis data on probe vs
+ static on driver
+Thread-Topic: [PATCH 1/5] iio: gyro: adi16136: construct adis data on probe vs
+ static on driver
+Thread-Index: AQHVsc7hkRpTGyvey0WEfc10BPgG9ae7YwqAgAED+oCAIrGCAA==
+Date:   Tue, 7 Jan 2020 09:36:41 +0000
+Message-ID: <02afd05b9d1563bd1bb1bedf231e20c8363f23d3.camel@analog.com>
+References: <20191213160312.1834-1-alexandru.ardelean@analog.com>
+         <20191215161847.21c67f00@archlinux>
+         <2a5ffffea57ec97d7dde766fb88a8297c5f2d448.camel@analog.com>
+In-Reply-To: <2a5ffffea57ec97d7dde766fb88a8297c5f2d448.camel@analog.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0aac3032-1ec5-4794-0758-08d793551a23
+x-ms-traffictypediagnostic: BN6PR03MB3235:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR03MB3235359D6831126C663DEAA7993F0@BN6PR03MB3235.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 027578BB13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(376002)(366004)(396003)(53754006)(199004)(189003)(81156014)(81166006)(2616005)(316002)(4001150100001)(8676002)(2906002)(110136005)(186003)(71200400001)(76116006)(86362001)(8936002)(5660300002)(66946007)(54906003)(64756008)(478600001)(66476007)(6636002)(6486002)(6512007)(66446008)(36756003)(4326008)(66556008)(6506007)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR03MB3235;H:BN6PR03MB3347.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m03mPmJxPy56r44ICi4bvkRn2QuECIt2uxsG/qv5Cp24BsDw3Co+WG4gUpPdWTwELOQ4SvPOUboyinhxFB2TuakIuUqLvwh6FTiRXizicgkDybDIrOWcwXN0XFtnS92aA4y1Q5IVolIqdbPOwqSamp98OZFtx5Eh9L4vvavZI4B7s42f9py27zk5PdLI29T37l9WBMdk7vjY9L/SKBCt9PBG7wwREA04ZWoOY6MQqHoZnkUK8gY13kNjIHvhZfQDNZYQWIkQW2D7cff66TqZEnS7vKGqcwMfgHUuVrh9phXIao0VOf5HlwoUjIywmgfN+aNTTxHUlO1DHicCL+tlVRfn1k+ONdNK2NEGMZVAMQHok1dM8zbDxAWtJKl1acIoehW+oZ5uoXJT7qmytbO3urd/QQ+VRisXfdDkBYz25B18Q2YLx/eT99asdrpXP9C3FT9Vvan9IQC6slutHpYYzG6DkrGOaK9vFTZuHl2vFm+EIzAliSKaiNPwJbRIu/C7
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3D82380EF0F9034A9893327F1A4144A6@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <2020010717045916228557@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aac3032-1ec5-4794-0758-08d793551a23
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 09:36:41.5331
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aNPubAHENE81frOqV3T5e+eO6CCqPIcWEbDd10ugx2nwzhr0g8ZjCrskqhILon/3M9MDwDtATqcGn9AKk3BvIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB3235
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-07_02:2020-01-06,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 12.05, lixinhai.lxh@gmail.com wrote:
-> On 2020-01-07 at 16:24 Konstantin Khlebnikov wrote:
->> On 07/01/2020 05.44, lixinhai.lxh@gmail.com wrote:
->>> On 2020-01-07 at 04:35 Konstantin Khlebnikov wrote:
->>>> On Mon, Jan 6, 2020 at 1:42 PM Konstantin Khlebnikov
->>>> <khlebnikov@yandex-team.ru> wrote:
->>>>>
->>>>> This fixes couple misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
->>>>> mergeable anon_vma as parent when fork").
->>>>>
->>>>> First problem caused by initialization order in dup_mmap(): vma->vm_prev
->>>>> is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
->>>>> previous VMA in parent mm. This is fixed by rearrangement in dup_mmap().
->>>>>
->>>>> If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
->>>>> before all patches in child process related VMAs: DST1 DST2 .. DSTn will
->>>>> use different anon-vmas: ANON1 ANON2 .. ANONn. Before this patch only DST1
->>>>> will fork new ANON1 and following DST2 .. DSTn will share parent's ANON0.
->>>>> With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
->>>>>
->>>>> Also this patch moves sharing logic out of anon_vma_clone() into more
->>>>> specific anon_vma_fork() because this supposed to work only at fork().
->>>>> Function anon_vma_clone() is more generic is also used at splitting VMAs.
->>>>>
->>>>> Second problem is hidden behind first one: assumption "Parent has vm_prev,
->>>>> which implies we have vm_prev" is wrong if first VMA in parent mm has set
->>>>> flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
->>>>> because in current code 'prev' actually is same as 'pprev'. To avoid that
->>>>> this patch just checks pointer and compares vm_start to verify relation
->>>>> between previous VMAs in parent and child.
->>>>>
->>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>>>> Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
->>>>
->>>> Oops, I've forgot to mention that Li Xinhai <lixinhai.lxh@gmail.com>
->>>> found and reported this suspicious code. Sorry.
->>>>
->>>> Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
->>>> Link: https://lore.kernel.org/linux-mm/CALYGNiNzz+dxHX0g5-gNypUQc3B=8_Scp53-NTOh=zWsdUuHAw@mail.gmail.com/T/#t
->>>>
->>>
->>> Can we change the interface
->>> int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma),
->>> to
->>> int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma, struct vm_area_struct *pcvma),
->>> and 'pcvma' means previous child vma.
->>> so highlight the use of that vma, and the current code sequence for linking 'tmp' vma
->>> in dup_mmap() is not changed(in case some code would have dependency on that
->>> linking sequence)
->>
->> There should be no dependency on linking sequence.
->> But we could generalize sharing: cloned vma could share prev anon-vma
->> (or any other actually) if anon_vma->parent == src->anon_vma.
->> This is more clear than sharing only between related vmas.
->>
-> I mean in
-> int dup_mmap(...)
-> {
-> 		tmp = vm_area_dup(mpnt);
-> 
-> //.... some code in this part would have dependency on 'tmp->vm_prev, tmp->vm_next'
-> // ... I didn't go through all this part, but need take care about it.
-> // so, better to keep the current semantic and pass in *pprev for anon vma call
-
-Yeah, there is weird and unintentional reference in case VM_WIPEONFORK:
-anon_vma_prepare -> find_mergeable_anon_vma
-
-This is just dangerous.
-
-> 
-> 		/*
-> 		 * Link in the new vma and copy the page table entries.
-> 		 */
-> 		*pprev = tmp;
-> 		pprev = &tmp->vm_next;
-> 		tmp->vm_prev = prev;
-> 		prev = tmp;
-> 
-> }
-> 
->>>
->>> Another issue is for linking the avc for the reused anon_vma. anon_vma_clone()
->>> use the iteration
->>> list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma),
->>> to link avc for child vma, and it is unable to reach the resued anon_vma because
->>> that is from the previous vma not from parent vma. So, in anon_vma_fork(),
->>> we need to setup the avc link for vma->anon.
->>
->> Oh, yes. That's another example where current code miraculously stays correct.
->>
->>>
->>>>> ---
->>>>>      kernel/fork.c |    4 ++--
->>>>>      mm/rmap.c     |   25 ++++++++++++-------------
->>>>>      2 files changed, 14 insertions(+), 15 deletions(-)
->>>>>
->>>>> diff --git a/kernel/fork.c b/kernel/fork.c
->>>>> index 2508a4f238a3..04ee5e243f65 100644
->>>>> --- a/kernel/fork.c
->>>>> +++ b/kernel/fork.c
->>>>> @@ -548,6 +548,8 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>>>                     if (retval)
->>>>>                             goto fail_nomem_policy;
->>>>>                     tmp->vm_mm = mm;
->>>>> +               tmp->vm_prev = prev;    /* anon_vma_fork use this */
->>>>> +               tmp->vm_next = NULL;
->>>>>                     retval = dup_userfaultfd(tmp, &uf);
->>>>>                     if (retval)
->>>>>                             goto fail_nomem_anon_vma_fork;
->>>>> @@ -559,7 +561,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>>>                     } else if (anon_vma_fork(tmp, mpnt))
->>>>>                             goto fail_nomem_anon_vma_fork;
->>>>>                     tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
->>>>> -               tmp->vm_next = tmp->vm_prev = NULL;
->>>>>                     file = tmp->vm_file;
->>>>>                     if (file) {
->>>>>                             struct inode *inode = file_inode(file);
->>>>> @@ -592,7 +593,6 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>>>>                      */
->>>>>                     *pprev = tmp;
->>>>>                     pprev = &tmp->vm_next;
->>>>> -               tmp->vm_prev = prev;
->>>>>                     prev = tmp;
->>>>>
->>>>>                     __vma_link_rb(mm, tmp, rb_link, rb_parent);
->>>>> diff --git a/mm/rmap.c b/mm/rmap.c
->>>>> index b3e381919835..77b3aa38d5c2 100644
->>>>> --- a/mm/rmap.c
->>>>> +++ b/mm/rmap.c
->>>>> @@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>>>>      {
->>>>>             struct anon_vma_chain *avc, *pavc;
->>>>>             struct anon_vma *root = NULL;
->>>>> -       struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
->>>>> -
->>>>> -       /*
->>>>> -        * If parent share anon_vma with its vm_prev, keep this sharing in in
->>>>> -        * child.
->>>>> -        *
->>>>> -        * 1. Parent has vm_prev, which implies we have vm_prev.
->>>>> -        * 2. Parent and its vm_prev have the same anon_vma.
->>>>> -        */
->>>>> -       if (!dst->anon_vma && src->anon_vma &&
->>>>> -           pprev && pprev->anon_vma == src->anon_vma)
->>>>> -               dst->anon_vma = prev->anon_vma;
->>>>> -
->>>>>
->>>>>             list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->>>>>                     struct anon_vma *anon_vma;
->>>>> @@ -334,6 +321,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>>>>       */
->>>>>      int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->>>>>      {
->>>>> +       struct vm_area_struct *prev = vma->vm_prev, *pprev = pvma->vm_prev;
->>>>>             struct anon_vma_chain *avc;
->>>>>             struct anon_vma *anon_vma;
->>>>>             int error;
->>>>> @@ -345,6 +333,17 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->>>>>             /* Drop inherited anon_vma, we'll reuse existing or allocate new. */
->>>>>             vma->anon_vma = NULL;
->>>>>
->>>>> +       /*
->>>>> +        * If parent shares anon_vma with its vm_prev, keep this sharing.
->>>>> +        *
->>>>> +        * Previous VMA could be missing or not match previuos in parent
->>>>> +        * if VM_DONTCOPY is set: compare vm_start to avoid this case.
->>>>> +        */
->>>>> +       if (pvma->anon_vma && pprev && prev &&
->>>>> +           pprev->anon_vma == pvma->anon_vma &&
->>>>> +           pprev->vm_start == prev->vm_start)
->>>>> +               vma->anon_vma = prev->anon_vma;
->>>>> +
->>>>>             /*
->>>>>              * First, attach the new VMA to the parent VMA's anon_vmas,
->>>>>              * so rmap can find non-COWed pages in child processes.
->>>>>
->>>> >
+SGkgYWxsLA0KDQpPbiBNb24sIDIwMTktMTItMTYgYXQgMDc6NDkgKzAwMDAsIEFyZGVsZWFuLCBB
+bGV4YW5kcnUgd3JvdGU6DQo+IE9uIFN1biwgMjAxOS0xMi0xNSBhdCAxNjoxOCArMDAwMCwgSm9u
+YXRoYW4gQ2FtZXJvbiB3cm90ZToNCj4gPiANCj4gPiBPbiBGcmksIDEzIERlYyAyMDE5IDE4OjAz
+OjA4ICswMjAwDQo+ID4gQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5h
+bG9nLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gPiBUaGlzIGNoYW5nZSBpcyBkb25lIGluIHByZXBh
+cmF0aW9uIG9mIGFkZGluZyBhbiBgc3RydWN0DQo+ID4gPiBhZGlzX3RpbWVvdXRgDQo+ID4gPiB0
+eXBlLg0KPiA+ID4gU29tZSBBRElTIGRyaXZlcnMgc3VwcG9ydCBtdWx0aXBsZSBkcml2ZXJzLCB3
+aXRoIHZhcmlvdXMNCj4gPiA+IGNvbWJpbmF0aW9ucw0KPiA+ID4gb2YNCj4gPiA+IHRpbWVvdXRz
+LiBDcmVhdGluZyBzdGF0aWMgdGFibGVzIGZvciBlYWNoIGRyaXZlciBpcyBwb3NzaWJsZSwgYnV0
+DQo+ID4gPiB0aGF0DQo+ID4gPiBhbHNvDQo+ID4gPiBjcmVhdGVzIHF1aXRlIGEgbG90IG9mIGR1
+cGxpY2F0aW9uLg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBOdW5vIFPDoSA8bnVuby5z
+YUBhbmFsb2cuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxh
+bGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4NCj4gPiANCj4gPiBUaGVyZSBhcmUgY29uc2lk
+ZXJhYmxlIGFkdmFudGFnZXMgdG8gdXNpbmcgY29uc3RhbnQgc3RydWN0dXJlcywNCj4gPiAoc2Vj
+dXJpdHkgLSBub3QgdGhhdCByZWxldmFudCBoZXJlIHByb2JhYmx5LCBYaVAsIGdlbmVyYWwNCj4g
+PiByZWFkYWJpbGl0eSkNCj4gPiANCj4gPiBTbyB0byB0YWtlIGEgc2VyaWVzIGxpa2UgdGhpcyBJ
+IHdhbnQgdG8gc2VlIGV2aWRlbmNlIHRoYXQgaXQgbWFrZXMNCj4gPiBhIHNpZ25pZmljYW50IGRp
+ZmZlcmVuY2UuICBTbyBmYXIgeW91IGp1c3QgaGF2ZSBjYXNlcyB3aGVyZSB3ZSBlbmQNCj4gPiB1
+cA0KPiA+IHdpdGggYSB3b3JzZSByZXN1bHQuICBNb3JlIGNvZGUsIGhhcmRlciB0byByZWFkLi4u
+DQo+ID4gDQo+ID4gSGVuY2UgaXQgd2lsbCB0YWtlIGEgbG90IHRvIHBlcnN1YWRlIG1lIHRvIHRh
+a2UgdGhpcyBzZXJpZXMgd2l0aG91dA0KPiA+IHRoZSBmb2xsb3cgdXAgcGF0Y2hlcyB3aGVyZSBJ
+IGFzc3VtZSBzaWduaWZpY2FudCBhZHZhbnRhZ2VzIGFyZQ0KPiA+IHNlZW4uDQo+ID4gDQo+IA0K
+PiBXZWxsLCB3ZSd2ZSBoYXZlIHNvbWUgZGlzY3Vzc2lvbiBhYm91dCB0aGlzLCBhbmQgaG93IHRv
+IGRvIGl0Lg0KPiBUaGVyZSBhcmUgc2V2ZXJhbCBhbHRlcm5hdGl2ZXMuDQo+IA0KPiBTb21lIG9m
+IHRoZSBpZGVhcyB3ZXJlOg0KPiAxLiBLZWVwIHRoZSBzdGF0aWMgZGF0YSBhbmQgY2xvbmUgaXQg
+KyBwb3B1bGF0ZSB0aGUgYWRpc190aW1lb3V0IGRhdGENCj4gYXMNCj4gbmVlZGVkIGR1cmluZyBw
+cm9iZSBbYmFzZWQgb24gZWFjaCBkZXZpY2UncyBjaGlwLWluZm9dDQo+IDIuIFJld29yayBhbGwg
+dGhlIGNoaXAtaW5mbyBkYXRhIHRvIGluY2x1ZGUgdGhlIGFkaXNfZGF0YSB0eXBlcy9pbmZvDQo+
+IA0KPiAyLiBtYXkgcmVxdWlyZSBtb3JlIHdvcmsgOyAxLiByZXF1aXJlIGZld2VyIHBhdGNoZXMN
+Cj4gDQo+IFRoaXMgaW1wbGVtZW50YXRpb24gW2luIHRoaXMgc2VyaWVzXSBpcyAxLiBidXQgd2l0
+aG91dCBrZWVwaW5nIHRoZQ0KPiBzdGF0aWMNCj4gZGF0YSBhbmQgdGVtcGxhdGUuDQo+IEkgZ3Vl
+c3MgdGhlIGlkZWEgd2FzIHRvIHJlZHVjZSBtZW1vcnkgdXNhZ2UgW2J5IGtlZXBpbmcgdGhlIHN0
+YXRpYw0KPiBkYXRhXS4gSQ0KPiBhZG1pdCB0aGUgbWVtb3J5IHVzYWdlIGlzIG5vdCB0aGF0IGJp
+Zy4NCj4gDQo+IEknbGwgdGFrZSBhIGxvb2sgYXQgdGhpcyBhZ2FpbiwgYW5kIHNlZSBpZiAyLiBj
+YW4gd29yayBtb3JlIG5pY2VseS4NCj4gSXQgbWlnaHQgYmUgdGhhdCAxLiB3b3VsZCBiZSB0aGUg
+ZW5kLXJlc3VsdCwgYnV0IHdobyBrbm93cz8NCj4gDQo+IFRoYW5rcw0KPiBBbGV4DQoNCkkgZ3Vl
+c3Mgd2UgYWxzbyBuZWVkIHRvIHByZXBhcmUvc2VuZCB0aGUgZm9sbG93aW5nIHBhdGNoZXMgdG8g
+c2hvdw0KSm9uYXRoYW4gd2h5IHdlIG5lZWQgdG8gZHluYW1pY2FsbHkgYWxsb2NhdGUgdGhlIGRh
+dGEgc3RydWN0dXJlIGluIHNvbWUNCmRyaXZlcnMuIEluIHRoZSBlbmQgaXMgYmVjYXVzZSBzb21l
+IGRldmljZXMgcmVxdWlyZSBkaWZmZXJlbnQgdGltZW91dHMNCihoYW5kbGVkIGJ5IHRoZSBhZGlz
+IGNvcmUgbGlicmFyeSkgdGhhbiB0aGUgb3RoZXJzIGFuZCwgaW4gc29tZSBjYXNlcw0KdGhlc2Ug
+ZGlmZmVyZW5jZXMgYXJlIHF1aXRlIHNpZ25pZmljYXRpdmUuIEl0IHdhcyBldmVuIGhhcHBlbmlu
+ZyB0aGF0DQppbiBzb21lIGNhc2VzLCB3ZSB3ZXJlIG5vdCBzbGVlcGluZyBlbm91Z2ggdGltZSAo
+ZWc6IGFmdGVyIGEgcmVzZXQNCmNvbW1hbmQpLiBJbiB0aGUgbmV4dCBwYXRjaGVzLCBhIHRpbWVv
+dXQgc3RydWN0dXJlIGlzIGluY2x1ZGVkIHRoYXQNCm5lZWRzIHRvIGJlIGZpbGxlZCBmb3IgZWFj
+aCBkZXZpY2UuDQoNCkFsZXgsIG1heWJlIHdlIHNob3VsZCBpbmNsdWRlIG1vcmUgcGF0Y2hlcyBp
+biB0aGlzIHNlcmllcyB0byBzaG93IHRoZQ0KImJpZyBwaWN0dXJlIiBhbmQgdGhlbiB3ZSBjYW4g
+ZGlzY3VzcyBpZiB0aGlzIGlzIHRoZSBiZXN0IGFwcHJvYWNoLg0KDQpOdW5vIFPDoQ0K
