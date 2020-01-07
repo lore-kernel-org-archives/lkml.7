@@ -2,200 +2,113 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2CC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B56C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95FED2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818E920848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac4Fp/2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgAGJ5B (ORCPT
+        id S1727718AbgAGJ5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:57:01 -0500
-Received: from outbound-smtp17.blacknight.com ([46.22.139.234]:36547 "EHLO
-        outbound-smtp17.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgAGJ5B (ORCPT
+        Tue, 7 Jan 2020 04:57:24 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33252 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGJ5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:57:01 -0500
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp17.blacknight.com (Postfix) with ESMTPS id 218571C2E13
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 09:56:58 +0000 (GMT)
-Received: (qmail 973 invoked from network); 7 Jan 2020 09:56:58 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 Jan 2020 09:56:57 -0000
-Date:   Tue, 7 Jan 2020 09:56:55 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains v2
-Message-ID: <20200107095655.GF3466@techsingularity.net>
-References: <20191220084252.GL3178@techsingularity.net>
- <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
- <20200103143051.GA3027@techsingularity.net>
- <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
- <20200106145225.GB3466@techsingularity.net>
- <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
+        Tue, 7 Jan 2020 04:57:23 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so46029549lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:57:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DqETa3KopmnqhBmKQkCkl339vUoTL40Ury4Oh30NJ/A=;
+        b=Ac4Fp/2JiwxQnvSwiDOmhTdurlLEWHHCzqzuyfwkcBsclNUL5vfxkoJNCevMGeTHnG
+         7XLr11elYPvivRsMhdIrZJWmkdb9AoEi77x8akM3w3dD17AI9da8Inmn7WasOJObO8Cz
+         FG/UF2v8VM7gkk+YH5uSuCkYVjvQGeBNnPeQVHUrkHwdxzMh6Efntgn8lVj02p71KgQ1
+         ROG0OMpjtcl+fsUQ9Sy2tMB9OrxyC2Gz+Ucw7iv5YhkgRC/v811RahDekBZ945xoj59q
+         qDVCCYHsFk4BBpi0FFrSv+s0kwkMtSzN6EpdByzHJnGd1Ws/60dhLVfxhYjVRXY5ewXk
+         iL2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DqETa3KopmnqhBmKQkCkl339vUoTL40Ury4Oh30NJ/A=;
+        b=cxcbppaUAsposSzvMOQS6ECMvUTU3NWpLMbdp+X952aLaNsN8mkWQbQLT3ipE+DPmR
+         GK8NXOFiLDfTQ14pYhSJkywVo0EK+mgW/8cI9f5fb6RiJVST1mZtwgPHjSYF0wcIn9bl
+         9WZeGzpawQ/wZfali7csOopQahE0iVL+8TK/KVfNp2qvVU4rP8Q/KaXwdUcyRhrhKQKx
+         X+tU7GVYVlT2szK8PqC92+9b2NOROUIlvUpYKGI0DYsMZGatdikxqg27RJsqvxIAtDGw
+         fK8LDCXpnuZf+ZPKYjqTHy+/zDMiioI9fJJtz+/utWWPcrB3DVy2WqXWxhlWnry+68I6
+         C94A==
+X-Gm-Message-State: APjAAAU7Q/8r4L6D01DJYTNXNjxE20o6Epn+hc7ejVAYjhrOyF69gQOO
+        Dzyp/e0aUNfEBC2llbgtPqLTJL63NVMvsvTXbbNJ82dZxg2HcQ==
+X-Google-Smtp-Source: APXvYqw3FYN0uI4aImFcJ5taMInCUjiIIQMXZbeTsXdgGvHxycERpns4e+a3FYoFe4c64LOaTaRAaZ+9U5MhrFwiIOc=
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61158833ljj.191.1578391041640;
+ Tue, 07 Jan 2020 01:57:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191204231931.21378-1-linus.walleij@linaro.org> <20191219170409.GH35479@atomide.com>
+In-Reply-To: <20191219170409.GH35479@atomide.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 10:57:10 +0100
+Message-ID: <CACRpkdYm2b7G6dvmY5VCSSQCK6DMEYMYRqnoMpH6jaumkQL3Xg@mail.gmail.com>
+Subject: Re: [PATCH] mfd: motorola-cpcap: Do not hardcode SPI mode flags
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:38:26AM +0100, Vincent Guittot wrote:
-> > > This looks weird to me because you use imbalance_pct, which is
-> > > meaningful only compare a ratio, to define a number that will be then
-> > > compared to a number of tasks without taking into account the weight
-> > > of the node. So whatever the node size, 32 or 128 CPUs, the
-> > > imbalance_adj will be the same: 3 with the default imbalance_pct of
-> > > NUMA level which is 125 AFAICT
-> > >
+On Thu, Dec 19, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
+
+> * Linus Walleij <linus.walleij@linaro.org> [700101 00:00]:
+> > The current use of mode flags to us SPI_MODE_0 and
+> > SPI_CS_HIGH is fragile: it overwrites anything already
+> > assigned by the SPI core. Change it thusly:
 > >
-> > The intent in this version was to only cover the low utilisation case
-> > regardless of the NUMA node size. There were too many corner cases
-> > where the tradeoff of local memory latency versus local memory bandwidth
-> > cannot be quantified. See Srikar's report as an example but it's a general
-> > problem. The use of imbalance_pct was simply to find the smallest number of
-> > running tasks were (imbalance_pct - 100) would be 1 running task and limit
-> 
-> But using imbalance_pct alone doesn't mean anything.
+> > - Just |= the SPI_MODE_0 so we keep other flags
+> > - Assign ^= SPI_CS_HIGH since we might be active high
+> >   already, and that is usually the case with GPIOs used
+> >   for chip select, even if they are in practice active low.
+> >
+> > Add a comment clarifying why ^= SPI_CS_HIGH is the right
+> > choice here.
+>
+> Looks like this breaks booting for droid4 with a cpcap
+> PMIC, probably as regulators won't work. There's no GPIO
+> controller involved in this case for the chip select, the
+> pins are directly controlled by the spi-omap2-mcspi.c
+> driver.
+>
+> From the pin muxing setup we see there's a pull-down on
+> mcspi1_cs0 pin meaning it's active high:
+>
+> /* 0x4a100138 mcspi1_cs0.mcspi1_cs0 ae23 */
+> OMAP4_IOPAD(0x138, PIN_INPUT_PULLDOWN | MUX_MODE0)
+>
+> My guess a similar issue is with similar patches for
+> all non-gpio spi controllers?
+>
+> Let me know if you want me to test some other changes,
+> or if this patch depends on some other changes.
 
-Other than figuring out "how many running tasks are required before
-imbalance_pct is roughly equivalent to one fully active CPU?". Even then,
-it's a bit weak as imbalance_pct makes hard-coded assumptions on what
-the tradeoff of cross-domain migration is without considering the hardware.
+So this must mean that something else is setting SPI_CS_HIGH
+for this driver, such as the device tree, right?
 
-> Using similar to the below
-> 
->     busiest->group_weight * (env->sd->imbalance_pct - 100) / 100
-> 
-> would be more meaningful
-> 
+And the |= SPI_CS_HIGH assignment in the driver is just
+surplus and we should just delete this code instead.
 
-It's meaningful to some sense from a conceptual point of view but
-setting the low utilisation cutoff depending on the number of CPUs on
-the node does not account for any local memory latency vs bandwidth.
-i.e. on a small or mid-range machine the cutoff will make sense. On
-larger machines, the cutoff could be at the point where memory bandwidth
-is saturated leading to a scenario whereby upgrading to a larger
-machine performs worse than the smaller machine.
+Would that be right?
 
-Much more importantly, doing what you suggest allows an imbalance
-of more CPUs than are backed by a single LLC. On high-end AMD EPYC 2
-machines, busiest->group_weight scaled by imbalance_pct spans multiple L3
-caches. That is going to have side-effects. While I also do not account
-for the LLC group_weight, it's unlikely the cut-off I used would be
-smaller than an LLC cache on a large machine as the cache.
-
-These two points are why I didn't take the group weight into account.
-
-Now if you want, I can do what you suggest anyway as long as you are happy
-that the child domain weight is also taken into account and to bound the
-largest possible allowed imbalance to deal with the case of a node having
-multiple small LLC caches. That means that some machines will be using the
-size of the node and some machines will use the size of an LLC. It's less
-predictable overall as some machines will be "special" relative to others
-making it harder to reproduce certain problems locally but it would take
-imbalance_pct into account in a way that you're happy with.
-
-Also bear in mind that whether LLC is accounted for or not, the final
-result should be halved similar to the other imbalance calculations to
-avoid over or under load balancing.
-
-> Or you could use the util_avg so you will take into account if the
-> tasks are short running ones or long running ones
-> 
-
-util_avg can be skewed if there are big outliers. Even then, it's not
-a great metric for the low utilisation cutoff. Large numbers of mostly
-idle but running tasks would be treated similarly to small numbers of
-fully active tasks. It's less predictable and harder to reason about how
-load balancing behaves across a variety of workloads.
-
-Based on what you suggest, the result looks like this (build tested
-only)
-
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ba749f579714..1b2c7bed2db5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8648,10 +8648,6 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 	/*
- 	 * Try to use spare capacity of local group without overloading it or
- 	 * emptying busiest.
--	 * XXX Spreading tasks across NUMA nodes is not always the best policy
--	 * and special care should be taken for SD_NUMA domain level before
--	 * spreading the tasks. For now, load_balance() fully relies on
--	 * NUMA_BALANCING and fbq_classify_group/rq to override the decision.
- 	 */
- 	if (local->group_type == group_has_spare) {
- 		if (busiest->group_type > group_fully_busy) {
-@@ -8691,16 +8687,41 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 			env->migration_type = migrate_task;
- 			lsub_positive(&nr_diff, local->sum_nr_running);
- 			env->imbalance = nr_diff >> 1;
--			return;
--		}
-+		} else {
- 
--		/*
--		 * If there is no overload, we just want to even the number of
--		 * idle cpus.
--		 */
--		env->migration_type = migrate_task;
--		env->imbalance = max_t(long, 0, (local->idle_cpus -
-+			/*
-+			 * If there is no overload, we just want to even the number of
-+			 * idle cpus.
-+			 */
-+			env->migration_type = migrate_task;
-+			env->imbalance = max_t(long, 0, (local->idle_cpus -
- 						 busiest->idle_cpus) >> 1);
-+		}
-+
-+		/* Consider allowing a small imbalance between NUMA groups */
-+		if (env->sd->flags & SD_NUMA) {
-+			struct sched_domain *child = env->sd->child;
-+			unsigned int imbalance_adj;
-+
-+			/*
-+			 * Calculate an acceptable degree of imbalance based
-+			 * on imbalance_adj. However, do not allow a greater
-+			 * imbalance than the child domains weight to avoid
-+			 * a case where the allowed imbalance spans multiple
-+			 * LLCs.
-+			 */
-+			imbalance_adj = busiest->group_weight * (env->sd->imbalance_pct - 100) / 100;
-+			imbalance_adj = min(imbalance_adj, child->span_weight);
-+			imbalance_adj >>= 1;
-+
-+			/*
-+			 * Ignore small imbalances when the busiest group has
-+			 * low utilisation.
-+			 */
-+			if (busiest->sum_nr_running < imbalance_adj)
-+				env->imbalance = 0;
-+		}
-+
- 		return;
- 	}
- 
+Yours,
+Linus Walleij
