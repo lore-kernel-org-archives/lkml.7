@@ -2,122 +2,177 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EF2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DCEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79E721744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="LKOp8zdm"
+	by mail.kernel.org (Postfix) with ESMTP id 14B3A21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:53:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578416012;
+	bh=5pGZzG2R2Yg9BvXiJJcmzkQkuLAOfS9PEHpiBXb0Uls=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TFoMC5jxWRzp5mrRI42/MexBIx86femaIoJhE4jbM8Rf7KC1CByLkh69LkShR70c7
+	 9zXELBhvQlWFp+C6ToZW9cEWfGmZz7LyhCx+MP+tR4sDSioWmSwhoGYv19hPDgOgjn
+	 KiVmzUmdg+fQKPfUl2bBWU2kZjdi4XD1Huo0ybgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgAGQvk (ORCPT
+        id S1728463AbgAGQxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:51:40 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41011 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgAGQvj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:51:39 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so49755908ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:51:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O9KthzSBlV2h+WxdbZIT5o9+mFIwnqBIvXtaw9MUgzg=;
-        b=LKOp8zdmoSum2UR+j4KJocdvPfwPzYAUWFgx40En05B55RlN2LgDg43eJLuLapRLmK
-         jqrNDxbw2trUmEtrDNai+RkVQgpKizgdoa4rfhwfthH/qs7bhaVMvkZUw2S7yKbGk1BD
-         3dIJc9t415O6oAKL1r4bKCgQAKdoXr+NZiV6BvFNYVFSpfHVs+VDdhjiineOgb8Hdi89
-         d1jpo17hiVg9EhFt32rXBXwtRpzviOxZhOvs90q29oVgZ5RzC5CrYh9JOyS75lGq/fUf
-         nfAQnhU+VyMc3zGWa/kRQYj9z8/v5yrMj7fJncIYFlNgxwuoQsfLWdkmMPq/lmMx3mhf
-         Ohog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O9KthzSBlV2h+WxdbZIT5o9+mFIwnqBIvXtaw9MUgzg=;
-        b=LRSZxiUgrCBqB1yN2DS5huNDYR9pDJ9XZsnjLaPq5UJLyYmuno20QhVAZlgiFrRRGk
-         cTDYwBPFg0zhuZw3GsE6JJa1Wgtb5zKywe9PFf+QPVdUsQMWkD/Egh+ofXnaqAhVdrQ2
-         u+e/dMDYSzsuIaT49D4o4UQNwdYLBgEnMA5/iDVwaza/Dwjw36YLWh2uflc6rNCmr9PE
-         ef9i8kBM+4/eibuGut7L72rio78HmhTn4OiQa7EduAHKfVlxK09G+YAj23RW40K4DGN8
-         z3CEoAPenhaRy2JanEqMSObSCQbiQxq/kxvA94Scy5KyvY7srs7UJMJudpvSp4MMxHor
-         d/fA==
-X-Gm-Message-State: APjAAAUlzZNo1vuTNuqmUxua+saIPMLRfrixm7Njy+y5+vwf8Y9E2EuV
-        18llgPcmBn+kOUJrJajTGy0zHxspG1NEqx4AMytzUQ==
-X-Google-Smtp-Source: APXvYqw6U32nWtNm+ttH4lxWAxYmZl94/E5Y2ndD4ZwTAE5serAfv2V2aHN5sspi0BBZhQYntyqX6V2MPHXIxjXT0oI=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr416220jad.136.1578415897577;
- Tue, 07 Jan 2020 08:51:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
- <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
- <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
- <20200107144455.GF32742@smile.fi.intel.com> <20200107144548.GG32742@smile.fi.intel.com>
- <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com> <20200107155854.GK32742@smile.fi.intel.com>
-In-Reply-To: <20200107155854.GK32742@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 7 Jan 2020 17:51:26 +0100
-Message-ID: <CAMRc=MeFOeXxy=L0i1ckxnDJESTJAdgrP7t3sqR81zKxbMPGxA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefani Seibold <stefani@seibold.net>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Jan 2020 11:53:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728386AbgAGQxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:53:30 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B395D2073D;
+        Tue,  7 Jan 2020 16:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578416009;
+        bh=5pGZzG2R2Yg9BvXiJJcmzkQkuLAOfS9PEHpiBXb0Uls=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q+mZvp8DRBQ+NGLFMRHq+ToaCPgY0sfmDNR9VpdaiZ9T2V/2nT/SeANXkK/wLMDoP
+         zenjraQPO9M07VwPEmNNuyRUDTXxaFInE+OA1UUiQvrcd9MJ0C7xFDpFQN49dMy/gI
+         GDlqwuMx3bvmjp+6UgH+xyziWuKaIO8OxKhrqNsk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT 00/13] iomap: Constify ioreadX() iomem argument
+Date:   Tue,  7 Jan 2020 17:52:57 +0100
+Message-Id: <1578415992-24054-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 7 sty 2020 o 16:58 Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> On Tue, Jan 07, 2020 at 04:19:59PM +0100, Bartosz Golaszewski wrote:
-> > wt., 7 sty 2020 o 15:45 Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
-> > >
-> > > On Tue, Jan 07, 2020 at 04:44:55PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > Let's try to CC the actual author (Stefani Seibold) and see if th=
-e mail
-> > > > > address works and if he can look at it. Or did you already talk t=
-o
-> > > > > Stefani?
-> > > > >
-> > > > > (git blame is always my best friend in cases like this, hehe)
-> > > >
-> > > > Recently I started to be smarted in such cases, i.e. I run also
-> > > > `git log --author=3D'$AUTHOR'` to see if they are still active and
-> > > > what address had been used lately.
-> > >
-> > > ...and another possibility to `git log --grep '$AUTHOR'`.
->
-> > So if some module doesn't have an official maintainer listed in
-> > MAINTAINERS, we should still get a review from the original author?
->
-> If you asking me, I do it in a way of playing good citizen. It's not requ=
-ired,
-> but may give a good feedback.
->
-> > KFIFO lives in lib/ - is there even an official maintainer for all
-> > library helpers?
->
-> lib/ is (in most cases) under akpm@ realm.
->
+Hi,
 
-Once the first part of the series is in Linus' branch, I'll resend the
-remaining patches with akpm in Cc.
+The ioread8/16/32() and others have inconsistent interface among the
+architectures: some taking address as const, some not.
 
-Bart
+It seems there is nothing really stopping all of them to take
+pointer to const.
+
+Patchset was really tested on all affected architectures.
+Build testing is in progress - I hope auto-builders will point any issues.
+
+
+Todo
+====
+Convert also string versions (ioread16_rep() etc) if this aproach looks OK.
+
+
+Merging
+=======
+The first 5 patches - iomap, alpha, sh, parisc and powerpc - should probably go
+via one tree, or even squashed into one.
+
+All other can go separately after these get merged.
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (13):
+  iomap: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  alpha: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  sh: Constify ioreadX() iomem argument (as in generic implementation)
+  parisc: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  powerpc: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  arc: Constify ioreadX() iomem argument (as in generic implementation)
+  drm/mgag200: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  drm/nouveau: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  media: fsl-viu: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  net: wireless: ath5k: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  net: wireless: rtl818x: Constify ioreadX() iomem argument (as in
+    generic implementation)
+  ntb: intel: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  virtio: pci: Constify ioreadX() iomem argument (as in generic
+    implementation)
+
+ arch/alpha/include/asm/core_apecs.h                |  6 +--
+ arch/alpha/include/asm/core_cia.h                  |  6 +--
+ arch/alpha/include/asm/core_lca.h                  |  6 +--
+ arch/alpha/include/asm/core_marvel.h               |  4 +-
+ arch/alpha/include/asm/core_mcpcia.h               |  6 +--
+ arch/alpha/include/asm/core_t2.h                   |  2 +-
+ arch/alpha/include/asm/io.h                        | 12 +++---
+ arch/alpha/include/asm/io_trivial.h                | 16 ++++----
+ arch/alpha/include/asm/jensen.h                    |  2 +-
+ arch/alpha/include/asm/machvec.h                   |  6 +--
+ arch/alpha/kernel/core_marvel.c                    |  2 +-
+ arch/alpha/kernel/io.c                             |  6 +--
+ arch/arc/plat-axs10x/axs10x.c                      |  4 +-
+ arch/parisc/include/asm/io.h                       |  4 +-
+ arch/parisc/lib/iomap.c                            | 48 +++++++++++-----------
+ arch/powerpc/kernel/iomap.c                        | 22 +++++-----
+ arch/sh/kernel/iomap.c                             | 10 ++---
+ drivers/gpu/drm/mgag200/mgag200_drv.h              |  4 +-
+ drivers/gpu/drm/nouveau/nouveau_bo.c               |  2 +-
+ drivers/media/platform/fsl-viu.c                   |  2 +-
+ drivers/net/wireless/ath/ath5k/ahb.c               | 10 ++---
+ .../net/wireless/realtek/rtl818x/rtl8180/rtl8180.h |  6 +--
+ drivers/ntb/hw/intel/ntb_hw_gen1.c                 |  2 +-
+ drivers/ntb/hw/intel/ntb_hw_gen3.h                 |  2 +-
+ drivers/ntb/hw/intel/ntb_hw_intel.h                |  2 +-
+ drivers/virtio/virtio_pci_modern.c                 |  6 +--
+ include/asm-generic/iomap.h                        | 22 +++++-----
+ include/linux/io-64-nonatomic-hi-lo.h              |  4 +-
+ include/linux/io-64-nonatomic-lo-hi.h              |  4 +-
+ lib/iomap.c                                        | 18 ++++----
+ 30 files changed, 123 insertions(+), 123 deletions(-)
+
+-- 
+2.7.4
+
