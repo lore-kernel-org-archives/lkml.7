@@ -6,91 +6,85 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA234C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36114206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD000206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgAGUDL (ORCPT
+        id S1728721AbgAGUEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:03:11 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:35737 "EHLO
+        Tue, 7 Jan 2020 15:04:02 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:42257 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGUDL (ORCPT
+        with ESMTP id S1728358AbgAGUEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:03:11 -0500
+        Tue, 7 Jan 2020 15:04:01 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M2wCi-1iq23L2cxw-003JkJ; Tue, 07 Jan 2020 21:02:35 +0100
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MJnnV-1j8w0N2oEj-00K6Dy; Tue, 07 Jan 2020 21:03:50 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Arvid Brodin <arvid.brodin@alten.se>,
+        "David S. Miller" <davem@davemloft.net>,
+        Taehee Yoo <ap420073@gmail.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        David Sterba <dsterba@suse.com>,
-        Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Eric Whitney <enwlinux@gmail.com>, linux-ext4@vger.kernel.org,
+        Murali Karicheri <m-karicheri2@ti.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: fix ext4 unused-variable warning
-Date:   Tue,  7 Jan 2020 21:02:12 +0100
-Message-Id: <20200107200233.3244877-1-arnd@arndb.de>
+Subject: [PATCH net-next] hsr: fix dummy hsr_debugfs_rename() declaration
+Date:   Tue,  7 Jan 2020 21:03:39 +0100
+Message-Id: <20200107200347.3374445-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:nfqDsO3LApBgvoCI17Vt2kujvHVXqGUNcSRj3x/2fTZrCNeqX1M
- F9zM+mnkHdTWrc8g19vcpdlPTdaeQMGctnjAd/ioxofcHU1qTbwnfFeP/MrcEfKmHgnbhlA
- LITm7qBEBt3FmbD1j5qsxPgLTKoMbehLkBXEuegwnGIdKpbvcBlEk71cfB/ZsbNaguQPf2y
- au9r1NadicA1lx67tXQvw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HP6fxNg0DoQ=:mI6FjMO2CLchjmhCaimz1O
- RvTpLvCYslXOk8SOGfIozC7UAaSd/0Fn3FwOPA6hXFie7ds6cDrUOQc4AxWD6tW2DGhcgBDK0
- Prf7AER5VGkDDU5zBCr4ybsNdi3+p4EbqmauBQCozrgYoEO9sOO5zr4nSqREqC2HE5wB8lXla
- Vwkx1JnVXOf83lqGdxhidkj5eQH1a3mMGpLa2hoI/R+Lr/rXtHGK9ZM6sPKQ/wunLQrIRetC1
- uEOjyC4UP8aBwuUTTtYpRWkorXX4dwUztGThaOaOje7OuQFa9sBldp2FiuY0KFlf35EwOQnZx
- utCFCNe8GAvk0iZA8xQRswEHHmldFrUb/valpP15os0S1ZA4bcLiL5nLhdU4QpAse4elN6Kfj
- jLxdPq199nk/KlA5EvUumBn4WC8qXlGL9843ZFKSdJd5+WIXXn1AaDrCGZK2lkVZgsflxVT0Y
- zn0kQueq3XYE1+QMbaWJ9FR2WoQKHc7lTQBpZq1RcppU4AYZfmY9JMcUQX4w0Hio8K/AEzr7F
- Rls7K+DW9Avm7lvoaMFI9zDfApDHV6iJPs+DFMlPilKg+O/EfM8xzF/icbp1fHsZYJC/M0HcE
- fBXJnBgZqBYJKpVhy7g/bU7ySnFEzh78m9gA7HxEoSqSxRW9vfYTCRBHknVvdbIrPzVF/FRf6
- UOrnPBaZiMCzeDclWVndxSTByA1n3S6X2W+ibi6T60PTjejvbpP4e0ZCs6CPd32Jefl5wakFd
- OB3+Ov2Ky45B709gjWM4HZ/3wO7i7/reyh/1JWo/HpvOjS1B/ur/6srUfXsDcq1/PTDcc3LwX
- wpvFjxaxwZi5cvYONTKaACbl+37cfjD6txwLtxjUHx1patvnun/UxaKmAogwFOtK4hYLC5VHC
- xB286Hgxy1QD2NDpi7ow==
+X-Provags-ID: V03:K1:CUXJi1Tq3W0V+VbCAFGkPpkT/YOTIHx0LzCaN38WI+u8M7LI2id
+ E+5NfhgOFFX8KSoOSK2y6xcv34UdanrEXES5kNgmtPJqrT4Ou41rjH/lzar+4MYVwj+cEz6
+ fLnp636IrOKuWkOebAaigXFCe6IH6YX+Bqi0u5+dcfbP18Q6Aw9JwHSe1l0B2E6sIG8/YgQ
+ +2Fq8uXferZs6dLQvnQaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZVUXRmvyAaI=:2nn+y6XsGq2+TZSOwWUUL1
+ M9QiP8eppGTbZoaFZXpIQdg8LGjAnLoZEVgjqaPkmma+zaVCFr8PqlPJZH3Aiclx5dM+xDVQT
+ cokm4Mw/reJNstn0TyJHvOzUUlZlVu0UjwoNlQjqqYPSs5igeWjU9iBMS/BkAlWEvlNTTdhc1
+ B0lgJcneaqkxYDXt1n03ICR82x3/YToB51nUgNEs+e4PDCuV5wR6wlkqfd2BaEiQybojz1Za9
+ DsX4hU9p1qLHjz1Gbm//VDiKd8cE4PgnVDi/JeFWqTLDCSglfX18lYSkxAHsZD6Pe00PvAQzI
+ aNJRsiwOHMyNPfwEnF6h28qGs968zuhvXFFtbmiZzh8ZOCjymzdn0TIhifR6Ml1sQ6IyR3VYp
+ s8F9RtnN4/krMuWYGTkdEy2Y1cbaQ6hSBwQE0rmu+ZJ2UQWiquC+gktrTJjX3EVk8y1KFx6p/
+ H2GRKvwMdoOz5pyROd+JDvRW4FGVK+i73x/Nz4e0jv/xFqoHFeZxraHRkfu0l2sAOIlY8Hd3o
+ 6onhvVzTIWOz2/PmbGzpcub4p3tm7L7q7hsTpwLG97ObD44KEBIhIw4WnpehVQteUhZEFM6NB
+ MYXCvwYntoNVlOve+NP+ceN8oQpyknXT+kwNtc2KN1OEIi6oQsDFJC+4Vt7/tiMQhTlN1SBzc
+ 8maiQLyI9Jl2NHlEcwaIL0YGBILps5apSUnYYqbBdWlKR61aGne0MAYgIyGnxMQHuzDa3hFMU
+ Izh4U7aimhiIr0D7713RlwM/zQy+njhIj2mg8O9wbGWpBNpZiGOzUblu2tSr6CB+Jw0bkQzDA
+ pK4jGeipuVy4fb/0kTNtzwuBldInlXG8Ib85RlcNJvjyxdfaT62qNNpu+cp6zSOv98Ia0xBeB
+ uLIJCU5X36PwyYi/uP9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bugfix introduce a harmless warning:
+The hsr_debugfs_rename prototype got an extra 'void' that needs to
+be removed again:
 
-fs/ext4/inode.c: In function 'ext4_page_mkwrite':
-fs/ext4/inode.c:5910:24: error: unused variable 'mapping' [-Werror=unused-variable]
+In file included from /git/arm-soc/net/hsr/hsr_main.c:12:
+net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
+ static inline void void hsr_debugfs_rename(struct net_device *dev)
 
-Remove the now-unused variable.
-
-Fixes: 4a58d8158f6d ("fs: Fix page_mkwrite off-by-one errors")
+Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/ext4/inode.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/hsr/hsr_main.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 9a3e8d075cd0..d0049fd0bfd4 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5907,7 +5907,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
- 	vm_fault_t ret;
- 	struct file *file = vma->vm_file;
- 	struct inode *inode = file_inode(file);
--	struct address_space *mapping = inode->i_mapping;
- 	handle_t *handle;
- 	get_block_t *get_block;
- 	int retries = 0;
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index d40de84a637f..754d84b217f0 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -191,7 +191,7 @@ void hsr_debugfs_term(struct hsr_priv *priv);
+ void hsr_debugfs_create_root(void);
+ void hsr_debugfs_remove_root(void);
+ #else
+-static inline void void hsr_debugfs_rename(struct net_device *dev)
++static inline void hsr_debugfs_rename(struct net_device *dev)
+ {
+ }
+ static inline void hsr_debugfs_init(struct hsr_priv *priv,
 -- 
 2.20.0
 
