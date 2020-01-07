@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B5C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2202C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E972081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867BA2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432420;
-	bh=a5JwpBB9jVORplUE4Cl0WF9azzaKIEA4qQ7p37Bo/WU=;
+	s=default; t=1578432427;
+	bh=b6hHzhhH4j4yJWEfAwTZPH2tgCJ0peR/nIhwBna9zBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pup2jdY7WytXuz17NDfw6I8s5ty0HJ30KXC7tA470E3X+MhJaxYIcCZlKWGTK2+9X
-	 +YeJln9SOhgIpRlwLBRrulKwNTM/XwMmtKetRIht7UFbv7XM6AewrrSYP0b2OvdDmC
-	 tVIMxPHxj8lNo7JkfJ/e8FxbJvYdQ8obKARRPkl8=
+	b=TU00wiPqv1Zob5d+2DRRSZ9FETKYxOIk9ztQF8EOu7wu9RB4q//KZ4waVyah8/z+f
+	 7iLulHFWJvS10cxVdf+K7EgswpTQDCLXwkyeK0DRKIS8tBFd9rMjIVSIxyjv3Zg2+V
+	 7SQdjwxmTxYQQif2MtH1HAw1ZaZV+95JJLPOCoYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgAGU6S (ORCPT
+        id S1728114AbgAGV1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:27:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbgAGU6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:14 -0500
+        id S1727256AbgAGU6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104142081E;
-        Tue,  7 Jan 2020 20:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4621E24679;
+        Tue,  7 Jan 2020 20:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430693;
-        bh=a5JwpBB9jVORplUE4Cl0WF9azzaKIEA4qQ7p37Bo/WU=;
+        s=default; t=1578430688;
+        bh=b6hHzhhH4j4yJWEfAwTZPH2tgCJ0peR/nIhwBna9zBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6TkUdVmWA4Nf643Rs6OFaCKfgGMJZUtDHVlkJKmPD2mbnAkKahp2o4ZU5ng6+blV
-         JKMIjK+heGq2USjYogSsy9eH4/UndpJR8PlUbmI9FXnHWqGiRVXEQFzKAhd4oSCBlc
-         yKCvYYOxWiTXFjgikDfeuteazYdw/atr6gjoSRPY=
+        b=iH4P6A8XKKLlANHO0PxcPvMOAevNka07w/FtUq6YXLMRdy24n+vSziNAkBqyVFogD
+         CNd0RQF3bJreiI+Dy9akbUt5KccOhjBzDwZPn0cCYRWWsBzXRUPM6wHn3PpU6FoY+N
+         2FLHXaIp/uM5yJKNwC+oHoe4o1HeAGFI6qlxwzaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/191] ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen
-Date:   Tue,  7 Jan 2020 21:52:58 +0100
-Message-Id: <20200107205336.102253423@linuxfoundation.org>
+Subject: [PATCH 5.4 056/191] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound to a driver
+Date:   Tue,  7 Jan 2020 21:52:56 +0100
+Message-Id: <20200107205335.996172425@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,80 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaroslav Kysela <perex@perex.cz>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit d2cd795c4ece1a24fda170c35eeb4f17d9826cbb ]
+[ Upstream commit bacd861452d2be86a4df341b12e32db7dac8021e ]
 
-The auto-parser assigns the bass speaker to DAC3 (NID 0x06) which
-is without the volume control. I do not see a reason to use DAC2,
-because the shared output to all speakers produces the sufficient
-and well balanced sound. The stereo support is enough for this
-purpose (laptop).
+Nvidia proprietary driver doesn't support runtime power management, so
+when a user only wants to use the integrated GPU, it's a common practice
+to let dGPU not to bind any driver, and let its upstream port to be
+runtime suspended. At the end of runtime suspension the port uses
+platform power management to disable power through _OFF method of power
+resource, which is listed by _PR3.
 
-Signed-off-by: Jaroslav Kysela <perex@perex.cz>
-Link: https://lore.kernel.org/r/20191129144027.14765-1-perex@perex.cz
+After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
+the dGPU comes with an HDA function, the HDA won't be suspended if the
+dGPU is unbound, so the power resource can't be turned off by its
+upstream port driver.
+
+Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+discrete GPU") only allows HDA to be runtime suspended once GPU is
+bound, to keep APU's HDA working.
+
+However, HDA on dGPU isn't that useful if dGPU is not bound to any
+driver.  So let's relax the runtime suspend requirement for dGPU's HDA
+function, to disable the power source to save lots of power.
+
+BugLink: https://bugs.launchpad.net/bugs/1840835
+Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20191018073848.14590-2-kai.heng.feng@canonical.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ sound/pci/hda/hda_intel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index e849cf681e23..62a471b5fc87 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5547,6 +5547,16 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
- 	}
- }
- 
-+/* force NID 0x17 (Bass Speaker) to DAC1 to share it with the main speaker */
-+static void alc285_fixup_speaker2_to_dac1(struct hda_codec *codec,
-+					  const struct hda_fixup *fix, int action)
-+{
-+	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
-+		hda_nid_t conn[1] = { 0x02 };
-+		snd_hda_override_conn_list(codec, 0x17, 1, conn);
-+	}
-+}
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 86a416cdeb29..4e757aa9d322 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
+ {
+ 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
+ 	struct pci_dev *p = get_bound_vga(chip->pci);
++	struct pci_dev *parent;
+ 	if (p) {
+ 		dev_info(chip->card->dev,
+ 			 "Handle vga_switcheroo audio client\n");
+ 		hda->use_vga_switcheroo = 1;
+-		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
 +
- /* Hook to update amp GPIO4 for automute */
- static void alc280_hp_gpio4_automute_hook(struct hda_codec *codec,
- 					  struct hda_jack_callback *jack)
-@@ -5849,6 +5859,7 @@ enum {
- 	ALC225_FIXUP_DISABLE_MIC_VREF,
- 	ALC225_FIXUP_DELL1_MIC_NO_PRESENCE,
- 	ALC295_FIXUP_DISABLE_DAC3,
-+	ALC285_FIXUP_SPEAKER2_TO_DAC1,
- 	ALC280_FIXUP_HP_HEADSET_MIC,
- 	ALC221_FIXUP_HP_FRONT_MIC,
- 	ALC292_FIXUP_TPT460,
-@@ -6652,6 +6663,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc295_fixup_disable_dac3,
- 	},
-+	[ALC285_FIXUP_SPEAKER2_TO_DAC1] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_speaker2_to_dac1,
-+	},
- 	[ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7241,6 +7256,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
-+	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
-@@ -7425,6 +7441,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
- 	{.id = ALC225_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc225-dell1"},
- 	{.id = ALC295_FIXUP_DISABLE_DAC3, .name = "alc295-disable-dac3"},
-+	{.id = ALC285_FIXUP_SPEAKER2_TO_DAC1, .name = "alc285-speaker2-to-dac1"},
- 	{.id = ALC280_FIXUP_HP_HEADSET_MIC, .name = "alc280-hp-headset"},
- 	{.id = ALC221_FIXUP_HP_FRONT_MIC, .name = "alc221-hp-mic"},
- 	{.id = ALC298_FIXUP_SPK_VOLUME, .name = "alc298-spk-volume"},
++		/* cleared in either gpu_bound op or codec probe, or when its
++		 * upstream port has _PR3 (i.e. dGPU).
++		 */
++		parent = pci_upstream_bridge(p);
++		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
+ 		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+ 		pci_dev_put(p);
+ 	}
 -- 
 2.20.1
 
