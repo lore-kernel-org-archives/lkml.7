@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3D2C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFF3C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B822077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395842072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431232;
-	bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
+	s=default; t=1578431235;
+	bh=PJiUvpwPoyr1arg9rtkaT0ebDJHK7JIlcm/v/7n7Xrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2TxIKkwiyO7kEbJlHu6mzWwAj+o74vbBqSj69Pyx9R716hXreFBxaFPVruzQNLp1b
-	 UAPPtkFaJ9igHnVMkjQBz1tOqiWlBmDkynx/zcSEDE6RaL0FtqzRb9SyNvHOEQ3x7P
-	 RSUWbM4fXdpwwuA0mmylgtMU1KS1zS/FpA/rDYW8=
+	b=HRgO869nnMgckxVsv8hXcdpx3aRqRMtmnb0EuYOyIUC1TIJ0T1Evk4mtIvwwzvQ75
+	 ClUT5TBmWCqrYOVeCaAotoeTW60p0YM8KzMURk0Pf8DmKPsnDd/AHQTOvPIChUAs95
+	 5rvT+2sRhNNB2SUqDoXM4T3wjHuEoVmRKdsWkt24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgAGVHL (ORCPT
+        id S1729176AbgAGVHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:07:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:07:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbgAGVHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:02 -0500
+        id S1729467AbgAGVHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3282C20678;
-        Tue,  7 Jan 2020 21:07:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9263F2077B;
+        Tue,  7 Jan 2020 21:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431221;
-        bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
+        s=default; t=1578431224;
+        bh=PJiUvpwPoyr1arg9rtkaT0ebDJHK7JIlcm/v/7n7Xrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yb9MdwkbExQ6zNde+g/nIbuKczyE7p9NIi3ipz+d2/L/GSBrTH1RSdUNY5XB4p8qI
-         56pGql4VdcxIPSjsJ9k6HTOZZQ2u2BgwT/FetzNi/MUmvTq1Sjl+/Hw/eO/a9VBnzc
-         XKwhYv9dSSdACnohmJlrC9wxLvAVX68EtmvY9gd8=
+        b=Si968RFwfdsmOA5eoZgQBYycCHPpNyd9gZhkZYfMClwun0xvPcXpkVQSUCBS65Sf5
+         gjqL7/5gibU2pjxtpDz06qAJuNNso6BL2gm/x3HRo3lEtGwozBReSJUWMw6yu5xA+L
+         iHxZ442ZCS8tQOQXsNaHdyziGfI7VfIA2vqDGBdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 048/115] media: pulse8-cec: fix lost cec_transmit_attempt_done() call
-Date:   Tue,  7 Jan 2020 21:54:18 +0100
-Message-Id: <20200107205302.324393223@linuxfoundation.org>
+Subject: [PATCH 4.19 049/115] media: cec: CEC 2.0-only bcast messages were ignored
+Date:   Tue,  7 Jan 2020 21:54:19 +0100
+Message-Id: <20200107205302.396648397@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -61,11 +61,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit e5a52a1d15c79bb48a430fb263852263ec1d3f11 upstream.
+commit cec935ce69fc386f13959578deb40963ebbb85c3 upstream.
 
-The periodic PING command could interfere with the result of
-a CEC transmit, causing a lost cec_transmit_attempt_done()
-call.
+Some messages are allowed to be a broadcast message in CEC 2.0
+only, and should be ignored by CEC 1.4 devices.
+
+Unfortunately, the check was wrong, causing such messages to be
+marked as invalid under CEC 2.0.
 
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc: <stable@vger.kernel.org>      # for v4.10 and up
@@ -73,67 +75,25 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/pulse8-cec/pulse8-cec.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/media/cec/cec-adap.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/usb/pulse8-cec/pulse8-cec.c
-+++ b/drivers/media/usb/pulse8-cec/pulse8-cec.c
-@@ -121,6 +121,7 @@ struct pulse8 {
- 	unsigned int vers;
- 	struct completion cmd_done;
- 	struct work_struct work;
-+	u8 work_result;
- 	struct delayed_work ping_eeprom_work;
- 	struct cec_msg rx_msg;
- 	u8 data[DATA_SIZE];
-@@ -142,8 +143,10 @@ static void pulse8_irq_work_handler(stru
- {
- 	struct pulse8 *pulse8 =
- 		container_of(work, struct pulse8, work);
-+	u8 result = pulse8->work_result;
- 
--	switch (pulse8->data[0] & 0x3f) {
-+	pulse8->work_result = 0;
-+	switch (result & 0x3f) {
- 	case MSGCODE_FRAME_DATA:
- 		cec_received_msg(pulse8->adap, &pulse8->rx_msg);
- 		break;
-@@ -177,12 +180,12 @@ static irqreturn_t pulse8_interrupt(stru
- 		pulse8->escape = false;
- 	} else if (data == MSGEND) {
- 		struct cec_msg *msg = &pulse8->rx_msg;
-+		u8 msgcode = pulse8->buf[0];
- 
- 		if (debug)
- 			dev_info(pulse8->dev, "received: %*ph\n",
- 				 pulse8->idx, pulse8->buf);
--		pulse8->data[0] = pulse8->buf[0];
--		switch (pulse8->buf[0] & 0x3f) {
-+		switch (msgcode & 0x3f) {
- 		case MSGCODE_FRAME_START:
- 			msg->len = 1;
- 			msg->msg[0] = pulse8->buf[1];
-@@ -191,14 +194,20 @@ static irqreturn_t pulse8_interrupt(stru
- 			if (msg->len == CEC_MAX_MSG_SIZE)
- 				break;
- 			msg->msg[msg->len++] = pulse8->buf[1];
--			if (pulse8->buf[0] & MSGCODE_FRAME_EOM)
-+			if (msgcode & MSGCODE_FRAME_EOM) {
-+				WARN_ON(pulse8->work_result);
-+				pulse8->work_result = msgcode;
- 				schedule_work(&pulse8->work);
-+				break;
-+			}
- 			break;
- 		case MSGCODE_TRANSMIT_SUCCEEDED:
- 		case MSGCODE_TRANSMIT_FAILED_LINE:
- 		case MSGCODE_TRANSMIT_FAILED_ACK:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_DATA:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_LINE:
-+			WARN_ON(pulse8->work_result);
-+			pulse8->work_result = msgcode;
- 			schedule_work(&pulse8->work);
- 			break;
- 		case MSGCODE_HIGH_ERROR:
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1038,11 +1038,11 @@ void cec_received_msg_ts(struct cec_adap
+ 			valid_la = false;
+ 		else if (!cec_msg_is_broadcast(msg) && !(dir_fl & DIRECTED))
+ 			valid_la = false;
+-		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST1_4))
++		else if (cec_msg_is_broadcast(msg) && !(dir_fl & BCAST))
+ 			valid_la = false;
+ 		else if (cec_msg_is_broadcast(msg) &&
+-			 adap->log_addrs.cec_version >= CEC_OP_CEC_VERSION_2_0 &&
+-			 !(dir_fl & BCAST2_0))
++			 adap->log_addrs.cec_version < CEC_OP_CEC_VERSION_2_0 &&
++			 !(dir_fl & BCAST1_4))
+ 			valid_la = false;
+ 	}
+ 	if (valid_la && min_len) {
 
 
