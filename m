@@ -2,111 +2,94 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A146C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06AAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14641207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9BE2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgAGITg (ORCPT
+        id S1727559AbgAGIVQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:19:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40117 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgAGITg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:19:36 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iok5P-0005uY-CY; Tue, 07 Jan 2020 09:19:35 +0100
-Message-ID: <0ff51b3e4443a03f1d3ee8d3091863e03a22c2cf.camel@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] ata: ahci_brcm: Perform reset after obtaining
- resources
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Date:   Tue, 07 Jan 2020 09:19:33 +0100
-In-Reply-To: <20200106191906.18266-2-f.fainelli@gmail.com>
-References: <20200106191906.18266-1-f.fainelli@gmail.com>
-         <20200106191906.18266-2-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 7 Jan 2020 03:21:16 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:44923 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgAGIVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:21:16 -0500
+Received: from [IPv6:2601:646:8600:3281:c17a:5ef:6afe:4c48] ([IPv6:2601:646:8600:3281:c17a:5ef:6afe:4c48])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0078K3ZN3264752
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 7 Jan 2020 00:20:03 -0800
+Authentication-Results: mail.zytor.com; dkim=permerror (bad message/signature format)
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-Id: <202001070820.0078K3ZN3264752@mail.zytor.com>
+Date:   Tue, 07 Jan 2020 00:19:53 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAK8P3a17GshP1KmCpvCkWGDGJLC_JrGUFQZTLbfe5+sSwTjyxw@mail.gmail.com>
+References: <20200102145552.1853992-1-arnd@arndb.de> <20200102145552.1853992-3-arnd@arndb.de> <87woa410nx.fsf@mpe.ellerman.id.au> <CAK8P3a17GshP1KmCpvCkWGDGJLC_JrGUFQZTLbfe5+sSwTjyxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all architectures
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Robert Richter <rric@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev@zytor.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+<linuxppc-dev@lists.ozlabs.org>,oprofile-list@lists.sf.net,linux-s390 <linux-s390@vger.kernel.org>,sparclinux <sparclinux@vger.kernel.org>
+From: hpa@zytor.com
+Message-ID: <41625F06-D755-4C82-86DF-A9415FEEE13D@zytor.com>
 
-On Mon, 2020-01-06 at 11:19 -0800, Florian Fainelli wrote:
-> Resources such as clocks, PHYs, regulators are likely to get a probe
-> deferral return code, which could lead to the AHCI controller being
-> reset a few times until it gets successfully probed. Since this is
-> typically the most time consuming operation, move it after the resources
-> have been acquired.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/ata/ahci_brcm.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 13ceca687104..70e3e386d52e 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -453,15 +453,9 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  	else
->  		reset_name = "ahci";
->  
-> -	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
-> -	if (!IS_ERR_OR_NULL(priv->rcdev))
-> -		reset_control_deassert(priv->rcdev);
-> -
->  	hpriv = ahci_platform_get_resources(pdev, 0);
-> -	if (IS_ERR(hpriv)) {
-> -		ret = PTR_ERR(hpriv);
-> -		goto out_reset;
-> -	}
-> +	if (IS_ERR(hpriv))
-> +		return PTR_ERR(hpriv);
->  
->  	hpriv->plat_data = priv;
->  	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP | AHCI_HFLAG_NO_WRITE_TO_RO;
-> @@ -478,6 +472,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  		break;
->  	}
->  
-> +	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
-> +	if (!IS_ERR_OR_NULL(priv->rcdev))
-> +		reset_control_deassert(priv->rcdev);
-> +
+On January 7, 2020 12:08:31 AM PST, Arnd Bergmann <arnd@arndb.de> wrote:
+>On Tue, Jan 7, 2020 at 3:05 AM Michael Ellerman <mpe@ellerman.id.au>
+>wrote:
+>> Arnd Bergmann <arnd@arndb.de> writes:
+>> > +
+>> > +static inline compat_uptr_t ptr_to_compat(void __user *uptr)
+>> > +{
+>> > +     return (u32)(unsigned long)uptr;
+>> > +}
+>>
+>> Is there a reason we cast to u32 directly instead of using
+>compat_uptr_t?
+>
+>Probably Al found this to be more explicit at the time when he
+>introduced
+>it on all the architectures in 2005. I just moved it here and kept the
+>definition.
+>
+>       Arnd
 
-Please use devm_reset_control_get_optional_exclusive(), that returns
-NULL if the requested reset is not specified in the device tree. Do
-return the error code on IS_ERR(). You can then call
-reset_control_deassert() unconditionally, it checks for and ignores
-the NULL pointer.
-
-regards
-Philipp
-
+Did compat_uptr_t exist back then?
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
