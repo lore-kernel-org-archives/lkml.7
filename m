@@ -2,201 +2,92 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB91BC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4111C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859D92081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578414730;
-	bh=SMzFaUQKVwdt7sH6vdMk0iKFRgIvyx8vVNv3eHAXS1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GpInr88bKmQ4rnkO6CO+B0SwCu+tpXNKL8zjCaElFdVypurgvVH+/cPAgcSHjYvNp
-	 /nElKFKUw66yv4xTU5RRosiAvTRTSexd2gYICP7BPkULaxvGeBnF1u0zkIJ2hpSXdm
-	 FIMnlflFF+AXO/sCC0x7vZICLoJkz5HRaMqw+wcU=
+	by mail.kernel.org (Postfix) with ESMTP id B6D5E2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jghIoYUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgAGQcJ (ORCPT
+        id S1728397AbgAGQcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:32:09 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39471 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgAGQcJ (ORCPT
+        Tue, 7 Jan 2020 11:32:32 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:52294 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgAGQcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:32:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id c16so43166931qko.6;
-        Tue, 07 Jan 2020 08:32:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EXsf8J2QF1KRZGOWtWEWKs3DqNsHO+r1D8ycqowGQlM=;
-        b=bpRgbibs09Jn+oJ4pkmpZxvOzcsIbPknZDJvb/ZdoOwcbUl9jZGlIt0DfiIaEjT6QW
-         coEf6/E77CcxXC0xbC5PJ9s8eHtuBzuJbpxgQsoSHTc8rM+L+nrZrWeNcln8h4wFFx7S
-         F4a8YQE+xax5Y0q9xJYPR86MejdYk2Zy/hUn4t9Ile5YLCPWnpWI87S1iyvUflERv8nt
-         RSGna/fvRYXretBqqkt2E/XeQj5hWAkmx50e05o3/Ub/lC/1VePZ5YZDLnzx6Hy8ogzl
-         nKXDeEDrCYfqM3MEU7bINrBeoab7FcgNIrE6VNqZF7MfYIQNuSrlyziWX2lNyXRJhZT+
-         wavw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EXsf8J2QF1KRZGOWtWEWKs3DqNsHO+r1D8ycqowGQlM=;
-        b=fgY9PTJ1ViMpW79JU3Zl+k9YVx+UmXhtGzwo6AcD90gIpFHrFdIIzHwlvmuPeHmAbu
-         VC6gjxMwcfEer0wovAqtPrdOk+UwH1eOrl+CTgy32y4Ek69nwI8S8jLe1L1IGLKqixoR
-         OW5tmRSTQSL1Wk2wXpiGIv3d/Dcijob1VQlmu/B/u2FuWFNZkDz0uJgiP91TS6ATEYfu
-         kXXYH4c1geJe3V6+LWtj5WvelX1bArgIA4dITIqKy5v10lMnBRVmKppWvHjF6TnLVWQ3
-         se+E+LA3C/xFPE+IRXtbSPrd8aAXTxe6zowILuY/3NcR+RtCNx8n5uUCq4FB559aCLI6
-         B4Qw==
-X-Gm-Message-State: APjAAAUIEmYpBZmyVLZ4PvQcqo0B9+WsPlhCaNhegAS9nNXXBwsS4HL9
-        Kq81YwH60P6XKCf5lrXRc2E=
-X-Google-Smtp-Source: APXvYqwybjAi8YN4FFFB7QbiJ2hGqTqTi6cQVSEkO05FxJafjonWgsWKkRoLAyBRFjP2z0/ZU110Qw==
-X-Received: by 2002:a05:620a:1592:: with SMTP id d18mr174878qkk.80.1578414727473;
-        Tue, 07 Jan 2020 08:32:07 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:4305])
-        by smtp.gmail.com with ESMTPSA id l35sm121588qtl.12.2020.01.07.08.32.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Jan 2020 08:32:06 -0800 (PST)
-Date:   Tue, 7 Jan 2020 08:32:04 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] clone3: allow spawning processes into cgroups
-Message-ID: <20200107163204.GB2677547@devbig004.ftw2.facebook.com>
-References: <20191223061504.28716-1-christian.brauner@ubuntu.com>
- <20191223061504.28716-3-christian.brauner@ubuntu.com>
+        Tue, 7 Jan 2020 11:32:32 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007GTOjE080833;
+        Tue, 7 Jan 2020 16:32:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=N9upsMAlLmvUTlzkavWx89kJXD4D8Kh3lf2UkOHuARQ=;
+ b=jghIoYUKa4Tcd1/4KIHmlyRe4FKxZri6W8Bw5FCHWW2VAFwfpDlhHZ7tYfmxGmemKirS
+ Jg7bo8ytoScK//fvs+27q1bV9xb9LVZxzPC1uTceWZuZj2dwavs/RMXyCGqTPpj6HWhL
+ ORvN9Pl19WqGkgkcoxvbH8F5hN1WaZme6gKQTDSUIiOWXefzjhlwsAHLyKnm63r0mDIB
+ RvYY5Pt5vpoMiGNe5B01P3YZBrlOdVhx3+YrW6iA5OmoAK5GjLnF3q9oXUJqmocBJF4N
+ 4mI8+FxdDdGdd15C5MNIFg7MiYRSoaPFePyos0nYtdIrZVK2VcrFRYT0SrQIL/auKxFH Xw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xajnpxncb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 16:32:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007GTYRF081834;
+        Tue, 7 Jan 2020 16:32:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xcjvdgt15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 16:32:17 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 007GWC8e031346;
+        Tue, 7 Jan 2020 16:32:15 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 08:32:11 -0800
+Date:   Tue, 7 Jan 2020 19:32:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/rose: remove redundant assignment to variable failed
+Message-ID: <20200107163202.GD27042@kadam>
+References: <20200107152415.106353-1-colin.king@canonical.com>
+ <20200107161827.GO3911@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191223061504.28716-3-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200107161827.GO3911@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=963
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 07:15:03AM +0100, Christian Brauner wrote:
-> +static struct cgroup *cgroup_get_from_file(struct file *f)
-> +{
-> +	struct cgroup_subsys_state *css;
-> +	struct cgroup *cgrp;
-> +
-> +	css = css_tryget_online_from_dir(f->f_path.dentry, NULL);
-> +	if (IS_ERR(css))
-> +		return ERR_CAST(css);
-> +
-> +	cgrp = css->cgroup;
-> +	if (!cgroup_on_dfl(cgrp)) {
-> +		cgroup_put(cgrp);
-> +		return ERR_PTR(-EBADF);
-> +	}
-> +
-> +	return cgrp;
-> +}
+Never mind.  I misread what the code is doing.  Your patch is correct.
+My patch would have been harmless but made the code even more confusing.
 
-It's minor but can you put this refactoring into a separate patch?
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-...
-> +static int cgroup_css_set_fork(struct task_struct *parent,
-> +			       struct kernel_clone_args *kargs)
-> +	__acquires(&cgroup_mutex) __acquires(&cgroup_threadgroup_rwsem)
-> +{
-> +	int ret;
-> +	struct cgroup *dst_cgrp = NULL, *src_cgrp;
-> +	struct css_set *cset;
-> +	struct super_block *sb;
-> +	struct file *f;
-> +
-> +	if (kargs->flags & CLONE_INTO_CGROUP) {
-> +		ret = mutex_lock_killable(&cgroup_mutex);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-I don't think this is necessary.  cgroup_mutex should always only be
-held for a finite enough time; otherwise, processes would get stuck on
-random cgroupfs accesses or even /proc/self/cgroup.
-
-...
-> +	spin_lock_irq(&css_set_lock);
-> +	src_cgrp = task_cgroup_from_root(parent, &cgrp_dfl_root);
-> +	spin_unlock_irq(&css_set_lock);
-
-You can simply do cset->dfl_root here, which is consistent with other
-code paths which know that they want the dfl cgroup.
-
-> +	ret = cgroup_attach_permissions(src_cgrp, dst_cgrp, sb,
-> +					!!(kargs->flags & CLONE_THREAD));
-> +	if (ret)
-> +		goto err;
-
-So, the existing perm check depends on the fact that for the write
-operation to have started, it already should have passed write perm
-check on the destination cgroup.procs file.  We're missing that here,
-so we prolly need to check that explicitly.
-
-> @@ -214,13 +215,21 @@ static void pids_cancel_attach(struct cgroup_taskset *tset)
-> +static int pids_can_fork(struct task_struct *parent, struct task_struct *child,
-> +			 struct kernel_clone_args *args)
->  {
-> +	struct css_set *new_cset = NULL;
->  	struct cgroup_subsys_state *css;
->  	struct pids_cgroup *pids;
->  	int err;
->  
-> -	css = task_css_check(current, pids_cgrp_id, true);
-> +	if (args)
-> +		new_cset = args->cset;
-> +
-> +	if (!new_cset)
-> +		css = task_css_check(current, pids_cgrp_id, true);
-> +	else
-> +		css = new_cset->subsys[pids_cgrp_id];
-
-Heh, this kinda sucks.  Would it be better to pass in the new css into
-the callbacks rather than clone args?
-
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 2508a4f238a3..1604552f7cd3 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2165,16 +2165,15 @@ static __latent_entropy struct task_struct *copy_process(
->  	INIT_LIST_HEAD(&p->thread_group);
->  	p->task_works = NULL;
->  
-> -	cgroup_threadgroup_change_begin(current);
->  	/*
->  	 * Ensure that the cgroup subsystem policies allow the new process to be
->  	 * forked. It should be noted the the new process's css_set can be changed
->  	 * between here and cgroup_post_fork() if an organisation operation is in
->  	 * progress.
->  	 */
-> -	retval = cgroup_can_fork(p);
-> +	retval = cgroup_can_fork(current, p, args);
->  	if (retval)
-> -		goto bad_fork_cgroup_threadgroup_change_end;
-> +		goto bad_fork_put_pidfd;
->  
->  	/*
->  	 * From this point on we must avoid any synchronous user-space
-
-Maybe we can move these changes into a prep patch together with the
-get_from_file change so that this patch only contains the actual
-feature implementation?
-
-Other than that, looks good to me.  Once the above review points are
-addressed and Oleg is okay with it, I'll be happy to route this
-through the cgroup tree.
-
-Thanks so much for working on this.  This is really cool.
-
--- 
-tejun
+regards,
+dan carpenter
