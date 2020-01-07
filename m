@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5BDC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBD3C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8EC2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8482087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432240;
-	bh=WhSVxVp3AZb+Zjctd27Ove9es0wWxTvm7Xk0qqFHkwc=;
+	s=default; t=1578432242;
+	bh=lBf9sA7WTA250z718+ZZzpBOwT83vp1JQTiDek8zm5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8ep/FlBNHvZmbQIAxcMm0EyjQO/e0w0+NwuGg+0r0h554tiyXou/eQDR+89Ls5XC
-	 y7a6N4OsvZSvIWlnALbDof0rZrdF5anyNctmaZF4GCs1o1b7v3rYP3aBHi5E/yxBO7
-	 pG9mN7N873lxwZNIUzYMydjrPLMaPHBxMM+88YrY=
+	b=EKb6wD1ugKUNoVjYFyWEWFHsKSihnTiHxlx3Y9kWArqnr4l/nPQtBN+tUzgUlUGjd
+	 cdyPx7Z5Oh9yplTSVckaGDx5hhskyx9FsxlO0iOeFS1pAfkK5/21jJmj2yc/aTMMbq
+	 CelWVY5fmV9KdzqKz5ud+pvnoc/mNXYyvOg9ldfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgAGVX7 (ORCPT
+        id S1728463AbgAGVAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:00:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgAGVA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:59 -0500
+        id S1728394AbgAGVAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5227B2077B;
-        Tue,  7 Jan 2020 21:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF347214D8;
+        Tue,  7 Jan 2020 21:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430857;
-        bh=WhSVxVp3AZb+Zjctd27Ove9es0wWxTvm7Xk0qqFHkwc=;
+        s=default; t=1578430836;
+        bh=lBf9sA7WTA250z718+ZZzpBOwT83vp1JQTiDek8zm5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejScTPwFEk1j9xk0L9ES0U68NLJUDHBgcNJ+sNG2sXj1m+MYPReZ1LueUzJWMQHsd
-         0Qrg6Kame9PuFGqNdv5xXTelIN21x0ZVlzL24cmeT5M7dd1Gr4Ai1R32cLBQRLL0sd
-         Qu73BqPLkegy94ipdGygvSah3vXaBOB5RT/PURO0=
+        b=wTCM7HcvxOBLyJY8uto0svBZbqd7dSy97t6IapR0EZLyswc4r/RkNhPajb8q5nS0Y
+         2HcwlQ116nsXxPmnaMKrBw9tLYpZhhtvyRBAwSnmAmTdkXiwWgCH5ejSbJuH1ALrFQ
+         ebWtnnC5Qz7kDa8t6ik1h1LwASxt0zDe5RnJIWOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gang He <ghe@suse.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 088/191] ocfs2: fix the crash due to call ocfs2_get_dlm_debug once less
-Date:   Tue,  7 Jan 2020 21:53:28 +0100
-Message-Id: <20200107205337.708010706@linuxfoundation.org>
+        stable@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 115/191] tracing: Fix lock inversion in trace_event_enable_tgid_record()
+Date:   Tue,  7 Jan 2020 21:53:55 +0100
+Message-Id: <20200107205339.137365016@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -66,74 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gang He <GHe@suse.com>
+From: Prateek Sood <prsood@codeaurora.org>
 
-commit b73eba2a867e10b9b4477738677341f3307c07bb upstream.
+commit 3a53acf1d9bea11b57c1f6205e3fe73f9d8a3688 upstream.
 
-Because ocfs2_get_dlm_debug() function is called once less here, ocfs2
-file system will trigger the system crash, usually after ocfs2 file
-system is unmounted.
+       Task T2                             Task T3
+trace_options_core_write()            subsystem_open()
 
-This system crash is caused by a generic memory corruption, these crash
-backtraces are not always the same, for exapmle,
+ mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
 
-    ocfs2: Unmounting device (253,16) on (node 172167785)
-    general protection fault: 0000 [#1] SMP PTI
-    CPU: 3 PID: 14107 Comm: fence_legacy Kdump:
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-    RIP: 0010:__kmalloc+0xa5/0x2a0
-    Code: 00 00 4d 8b 07 65 4d 8b
-    RSP: 0018:ffffaa1fc094bbe8 EFLAGS: 00010286
-    RAX: 0000000000000000 RBX: d310a8800d7a3faf RCX: 0000000000000000
-    RDX: 0000000000000000 RSI: 0000000000000dc0 RDI: ffff96e68fc036c0
-    RBP: d310a8800d7a3faf R08: ffff96e6ffdb10a0 R09: 00000000752e7079
-    R10: 000000000001c513 R11: 0000000004091041 R12: 0000000000000dc0
-    R13: 0000000000000039 R14: ffff96e68fc036c0 R15: ffff96e68fc036c0
-    FS:  00007f699dfba540(0000) GS:ffff96e6ffd80000(0000) knlGS:00000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 000055f3a9d9b768 CR3: 000000002cd1c000 CR4: 00000000000006e0
-    Call Trace:
-     ext4_htree_store_dirent+0x35/0x100 [ext4]
-     htree_dirblock_to_tree+0xea/0x290 [ext4]
-     ext4_htree_fill_tree+0x1c1/0x2d0 [ext4]
-     ext4_readdir+0x67c/0x9d0 [ext4]
-     iterate_dir+0x8d/0x1a0
-     __x64_sys_getdents+0xab/0x130
-     do_syscall_64+0x60/0x1f0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    RIP: 0033:0x7f699d33a9fb
+ set_tracer_flag()
 
-This regression problem was introduced by commit e581595ea29c ("ocfs: no
-need to check return value of debugfs_create functions").
+   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
 
-Link: http://lkml.kernel.org/r/20191225061501.13587-1-ghe@suse.com
-Fixes: e581595ea29c ("ocfs: no need to check return value of debugfs_create functions")
-Signed-off-by: Gang He <ghe@suse.com>
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>	[5.3+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+    mutex_lock(event_mutex)
+
+This gives a circular dependency deadlock between trace_types_lock and
+event_mutex. To fix this invert the usage of trace_types_lock and
+event_mutex in trace_options_core_write(). This keeps the sequence of
+lock usage consistent.
+
+Link: http://lkml.kernel.org/r/0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com
+
+Cc: stable@vger.kernel.org
+Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/dlmglue.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace.c        |    8 ++++++++
+ kernel/trace/trace_events.c |    8 ++++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3282,6 +3282,7 @@ static void ocfs2_dlm_init_debug(struct
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4590,6 +4590,10 @@ int trace_keep_overwrite(struct tracer *
  
- 	debugfs_create_u32("locking_filter", 0600, osb->osb_debug_root,
- 			   &dlm_debug->d_filter_secs);
-+	ocfs2_get_dlm_debug(dlm_debug);
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
++	if ((mask == TRACE_ITER_RECORD_TGID) ||
++	    (mask == TRACE_ITER_RECORD_CMD))
++		lockdep_assert_held(&event_mutex);
++
+ 	/* do nothing if flag is already set */
+ 	if (!!(tr->trace_flags & mask) == !!enabled)
+ 		return 0;
+@@ -4657,6 +4661,7 @@ static int trace_set_options(struct trac
+ 
+ 	cmp += len;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = match_string(trace_options, -1, cmp);
+@@ -4667,6 +4672,7 @@ static int trace_set_options(struct trac
+ 		ret = set_tracer_flag(tr, 1 << ret, !neg);
+ 
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	/*
+ 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
+@@ -7972,9 +7978,11 @@ trace_options_core_write(struct file *fi
+ 	if (val != 0 && val != 1)
+ 		return -EINVAL;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 	ret = set_tracer_flag(tr, 1 << index, val);
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	if (ret < 0)
+ 		return ret;
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -320,7 +320,8 @@ void trace_event_enable_cmd_record(bool
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+@@ -334,7 +335,6 @@ void trace_event_enable_cmd_record(bool
+ 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
  }
  
- static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
+ void trace_event_enable_tgid_record(bool enable)
+@@ -342,7 +342,8 @@ void trace_event_enable_tgid_record(bool
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+ 			continue;
+@@ -356,7 +357,6 @@ void trace_event_enable_tgid_record(bool
+ 				  &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
+ }
+ 
+ static int __ftrace_event_enable_disable(struct trace_event_file *file,
 
 
