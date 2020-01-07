@@ -2,123 +2,86 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB44C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AEAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC2B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540C520678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578394394;
+	bh=bNilcerdl73VUIGDQZx6U+nfIxHICBuqIp8lXsS7xHE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jbiPw8w6W7OJ3NBLKMvO0cZEa4B4g8GKvlMUtIm240BIGcy3l7H99pf3riSEG6f1D
+	 HXkplCAFeSlNlLtbJ+2psBCDEztyVXoo3ZgWTBTYX0upBw6sT2JC0kLhx7EBUkdC/f
+	 aW/A3V2OemnzpV28bxvZWKw+OveR3e/zGpMkzHf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgAGKtt (ORCPT
+        id S1727787AbgAGKxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:49:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55422 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbgAGKtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:49:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 77070AC8F;
-        Tue,  7 Jan 2020 10:49:45 +0000 (UTC)
-Message-ID: <cfd3a908f7e899c8199a0e34bf9ec294f9e027d3.camel@suse.de>
-Subject: Re: [PATCH v2] mmc: bcm2835: Use dma_request_chan() instead
- dma_request_slave_channel()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, ulf.hansson@linaro.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com
-Cc:     vkoul@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 07 Jan 2020 11:49:43 +0100
-In-Reply-To: <20200107104040.14500-1-peter.ujfalusi@ti.com>
-References: <20200107104040.14500-1-peter.ujfalusi@ti.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-N+V++2Edv1iq1XaEBcoq"
-User-Agent: Evolution 3.34.2 
+        Tue, 7 Jan 2020 05:53:13 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39266 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgAGKxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:53:13 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so75880307oty.6;
+        Tue, 07 Jan 2020 02:53:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zQgMxIq/VfvRE3nG5UqBet/nAdYddLHDXbcSwRzGXB8=;
+        b=X7HHS3MYKnwUqyuAHO1GUAqQ97zQoNwtf9JHphX17XNdLTQpWyvvPhRRYrSxF2Rxw0
+         PggIhTLv1+bW5SyR4R+nBqiJcQR6zRG6BQmUYQuPmALeXkfNvuZQ3fQhXIKyRbKlKZhf
+         CCQHLWX6SbQoIT/n3QmvHJdq60Kt30/392G1EhocSDb0FgcqcFPBrBH6z7rdjwPFkfCN
+         4LHxRwoEqYqU4IzLjVEqpGVGjO7xZM4deO+D0Z5WQWKAHLcvbfyaquJWtMr+m0GYjuMd
+         Z8ChJQzW681NnREVVmyyYrvmdeSoo3kYwIa4BU0VHuUYSatGZC7H+g3guNZutIwqYbti
+         qOvg==
+X-Gm-Message-State: APjAAAUaW2rzHkGa82AeKwRsl7P+1DSFqey3OavPXdWxM9KdRSZcLL2c
+        sSpv7kpn5mdxANk3lnmKU1965fEsWdm627ymXX0=
+X-Google-Smtp-Source: APXvYqy0cMm1oxIX74m7J9Bap5GaDWP72fzfk1QKMa8V/r3WF4XJqww8DNutMlLPLM0vZKb7GMzTU+Le3mgFzN7L7W8=
+X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr114686171otr.167.1578394392565;
+ Tue, 07 Jan 2020 02:53:12 -0800 (PST)
 MIME-Version: 1.0
+References: <20191206175409.335568-1-jason@jlekstrand.net> <20200102202754.24028-1-jason@jlekstrand.net>
+ <7eba4578-42e2-69da-99a3-2fc316a588b8@redhat.com>
+In-Reply-To: <7eba4578-42e2-69da-99a3-2fc316a588b8@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jan 2020 11:53:01 +0100
+Message-ID: <CAJZ5v0iBbHQ=jeKpsq45eQzNMS+xxH_8kCUS-T-VLVFT-tZDzw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: button: Add a DMI quirk for Razer Blade Stealth 13
+ late 2019 lid-switch
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Jason Ekstrand <jason@jlekstrand.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-N+V++2Edv1iq1XaEBcoq
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2020-01-07 at 12:40 +0200, Peter Ujfalusi wrote:
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
->=20
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
+On Thu, Jan 2, 2020 at 10:27 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
 > Hi,
->=20
-> Changes since v1:
-> - jump to err: instead of returning in case of EPROBE_DEFER
->=20
-> Regards,
-> Peter
+>
+> On 02-01-2020 21:27, Jason Ekstrand wrote:
+> > Running evemu-record on the lid switch event shows that the lid reports
+> > the first close but then never reports an open.  This causes systemd to
+> > continuously re-suspend the laptop every 30s.  Resetting the _LID to
+> > open fixes the issue.
+> >
+> > v2: Updated the comment to better describe the behavior of ACPI
+> >
+> > Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+>
+> Thanks, looks good to me now:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Thanks,
-Nicolas
-
->=20
->  drivers/mmc/host/bcm2835.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 99f61fd2a658..c3d949847cbd 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1393,7 +1393,17 @@ static int bcm2835_probe(struct platform_device *p=
-dev)
->  	host->dma_chan =3D NULL;
->  	host->dma_desc =3D NULL;
-> =20
-> -	host->dma_chan_rxtx =3D dma_request_slave_channel(dev, "rx-tx");
-> +	host->dma_chan_rxtx =3D dma_request_chan(dev, "rx-tx");
-> +	if (IS_ERR(host->dma_chan_rxtx)) {
-> +		ret =3D PTR_ERR(host->dma_chan_rxtx);
-> +		host->dma_chan_rxtx =3D NULL;
-> +
-> +		if (ret =3D=3D -EPROBE_DEFER)
-> +			goto err;
-> +
-> +		/* Ignore errors to fall back to PIO mode */
-> +	}
-> +
-> =20
->  	clk =3D devm_clk_get(dev, NULL);
->  	if (IS_ERR(clk)) {
-
-
---=-N+V++2Edv1iq1XaEBcoq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4UYkcACgkQlfZmHno8
-x/5e3wf/eUvwQW2b9ZB6S1muHMTUNQhpNJKwE77BmeyyDodnuNKbTzeR1TyJzEws
-JIMPSXnOKwuF2qvNLnpZrFTsCVmBqAY0M3U2M2Q1lIsiuWpRW0CpiHVWlMV3spHx
-553nQ3mxwWXTvt1mHlJ5I6YIqivfGZSoRU6c0JuGLNZanttjfapD6BDIAy0pepdb
-Xviq1Qzo5GxpLiabSs5rBPnxzZFZUtpXoLZJZv5nSW43q5xLugFxWjAY41xxFK85
-AD2V6mWKd+fQ4GXZGTaw1IaRPYDODJcskngQntKuoclCSkY2/3LKn+eu0DF7STFs
-lLPQIkggT59U+JX3iT3AoS6xf8NRWA==
-=KfEu
------END PGP SIGNATURE-----
-
---=-N+V++2Edv1iq1XaEBcoq--
-
+Applied as 5.6 material, thanks!
