@@ -2,169 +2,140 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1005EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38CBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2485208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DC42087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GrBVEeA5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dg5eAnUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgAGRFL (ORCPT
+        id S1728438AbgAGRHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:05:11 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49754 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728236AbgAGRFK (ORCPT
+        Tue, 7 Jan 2020 12:07:46 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60494 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgAGRHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:05:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007H3iei003491;
-        Tue, 7 Jan 2020 18:04:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=k8Ykg5/Yo41lBC1coc/u/HSoyYnbdKASySt8c3gqmKA=;
- b=GrBVEeA5NA34R5VSWMl3O4ERGcHf2abU7Gi2f8Uo89Yn3uBxA4SdipU+KGxcmKIDyyUy
- kquhKIVr/y+2FkXO8vmDK+PCS8V4Lr2ydeUq5W3SH76nU9APrHnHwaNk325a7DlRox70
- WlEDTIV8IUTuye7wMMRgI/TiyFm6opkwVBuR/yz5DXgNyHqeWLNh+wvpXWUubl/mvFFH
- bUwqh/jP9rxYMxZc0vaV98aPx+LSgzPuK0qyvgdIYERz9diq03rJE+EYKi27CKLOK87G
- Rp3XdZz5edPzX39Jgzq9CwAF4JSkqjgbGtJ8Jf5xHxKnf4UlZ9+2id0c6cH5GLm7oUpd xA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakm5fhc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 18:04:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA55B10002A;
-        Tue,  7 Jan 2020 18:04:53 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A8EAD21F704;
-        Tue,  7 Jan 2020 18:04:53 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 18:04:53 +0100
-Subject: Re: [PATCH v2] mfd: stm32-timers: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <lee.jones@linaro.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200107105959.18920-1-peter.ujfalusi@ti.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <af1040f5-4377-1466-7d82-b62004fedab8@st.com>
-Date:   Tue, 7 Jan 2020 18:04:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 12:07:45 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007Gxs1i108694;
+        Tue, 7 Jan 2020 17:07:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=TonZdKs5flBwONqESEptkzUdNDu8nb8volKmuzA6Cz0=;
+ b=Dg5eAnULbmvdHQzXt/MZgtHB0R/zWD0HQ+5s3azeZp8EEZ34ay8U8IXHjZGsgK27rehS
+ bb8ffV2JEBwuogOZg4wcANMgdMBKS97CpXpWk7KU7SVlPQgFUWlVHu1DAfnGryIv1LKI
+ M5AvVllmupEsFvrHYTNamVFhNzc87ByL1gWOw0iTmEuPoX1/m7tYqFY+EvYYNZUwGLxG
+ 1Lo8F+6TNJ6Q1EeRhKR2XXV7l75GPDLV1kYwFuGmzfY9nlZh5W1Im1qMYi7elyFGtzp+
+ gnwn6VDCbHk8N4C5wW46kKsyxAWes1ui6aXftOTsyPgLj2wHtLqD0FgPkvrqcDbM/whH 9A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnpxvme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 17:07:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007GxqZk067504;
+        Tue, 7 Jan 2020 17:07:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xcpamx72e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 17:07:34 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 007H7XOT027070;
+        Tue, 7 Jan 2020 17:07:33 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 09:07:33 -0800
+Date:   Tue, 7 Jan 2020 09:07:31 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20200107170731.GA472641@magnolia>
+References: <20190821175720.25901-2-vgoyal@redhat.com>
+ <20190826115152.GA21051@infradead.org>
+ <20190827163828.GA6859@redhat.com>
+ <20190828065809.GA27426@infradead.org>
+ <20190828175843.GB912@redhat.com>
+ <20190828225322.GA7777@dread.disaster.area>
+ <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
+ <20191216181014.GA30106@redhat.com>
+ <20200107125159.GA15745@infradead.org>
+ <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200107105959.18920-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-07_05:2020-01-07,2020-01-07 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 11:59 AM, Peter Ujfalusi wrote:
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
+On Tue, Jan 07, 2020 at 06:22:54AM -0800, Dan Williams wrote:
+> On Tue, Jan 7, 2020 at 4:52 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Mon, Dec 16, 2019 at 01:10:14PM -0500, Vivek Goyal wrote:
+> > > > Agree. In retrospect it was my laziness in the dax-device
+> > > > implementation to expect the block-device to be available.
+> > > >
+> > > > It looks like fs_dax_get_by_bdev() is an intercept point where a
+> > > > dax_device could be dynamically created to represent the subset range
+> > > > indicated by the block-device partition. That would open up more
+> > > > cleanup opportunities.
+> > >
+> > > Hi Dan,
+> > >
+> > > After a long time I got time to look at it again. Want to work on this
+> > > cleanup so that I can make progress with virtiofs DAX paches.
+> > >
+> > > I am not sure I understand the requirements fully. I see that right now
+> > > dax_device is created per device and all block partitions refer to it. If
+> > > we want to create one dax_device per partition, then it looks like this
+> > > will be structured more along the lines how block layer handles disk and
+> > > partitions. (One gendisk for disk and block_devices for partitions,
+> > > including partition 0). That probably means state belong to whole device
+> > > will be in common structure say dax_device_common, and per partition state
+> > > will be in dax_device and dax_device can carry a pointer to
+> > > dax_device_common.
+> > >
+> > > I am also not sure what does it mean to partition dax devices. How will
+> > > partitions be exported to user space.
+> >
+> > Dan, last time we talked you agreed that partitioned dax devices are
+> > rather pointless IIRC.  Should we just deprecate partitions on DAX
+> > devices and then remove them after a cycle or two?
 > 
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi,
-> 
-> Changes since v1:
-> - Fall back to PIO mode only in case of ENODEV and report all other errors
-> 
-> Regards,
-> Peter
+> That does seem a better plan than trying to force partition support
+> where it is not needed.
 
-Hi Peter,
+Question: if one /did/ have a partitioned DAX device and used kpartx to
+create dm-linear devices for each partition, will DAX still work through
+that?
 
-Thanks for the patch,
-
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-
-Best Regards,
-Fabrice
-
-> 
->  drivers/mfd/stm32-timers.c | 32 +++++++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
-> index efcd4b980c94..add603359124 100644
-> --- a/drivers/mfd/stm32-timers.c
-> +++ b/drivers/mfd/stm32-timers.c
-> @@ -167,10 +167,11 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
->  	regmap_write(ddata->regmap, TIM_ARR, 0x0);
->  }
->  
-> -static void stm32_timers_dma_probe(struct device *dev,
-> +static int stm32_timers_dma_probe(struct device *dev,
->  				   struct stm32_timers *ddata)
->  {
->  	int i;
-> +	int ret = 0;
->  	char name[4];
->  
->  	init_completion(&ddata->dma.completion);
-> @@ -179,14 +180,23 @@ static void stm32_timers_dma_probe(struct device *dev,
->  	/* Optional DMA support: get valid DMA channel(s) or NULL */
->  	for (i = STM32_TIMERS_DMA_CH1; i <= STM32_TIMERS_DMA_CH4; i++) {
->  		snprintf(name, ARRAY_SIZE(name), "ch%1d", i + 1);
-> -		ddata->dma.chans[i] = dma_request_slave_channel(dev, name);
-> +		ddata->dma.chans[i] = dma_request_chan(dev, name);
->  	}
-> -	ddata->dma.chans[STM32_TIMERS_DMA_UP] =
-> -		dma_request_slave_channel(dev, "up");
-> -	ddata->dma.chans[STM32_TIMERS_DMA_TRIG] =
-> -		dma_request_slave_channel(dev, "trig");
-> -	ddata->dma.chans[STM32_TIMERS_DMA_COM] =
-> -		dma_request_slave_channel(dev, "com");
-> +	ddata->dma.chans[STM32_TIMERS_DMA_UP] = dma_request_chan(dev, "up");
-> +	ddata->dma.chans[STM32_TIMERS_DMA_TRIG] = dma_request_chan(dev, "trig");
-> +	ddata->dma.chans[STM32_TIMERS_DMA_COM] = dma_request_chan(dev, "com");
-> +
-> +	for (i = STM32_TIMERS_DMA_CH1; i < STM32_TIMERS_MAX_DMAS; i++) {
-> +		if (IS_ERR(ddata->dma.chans[i])) {
-> +			/* Save the first error code to return */
-> +			if (PTR_ERR(ddata->dma.chans[i]) != -ENODEV && !ret)
-> +				ret = PTR_ERR(ddata->dma.chans[i]);
-> +
-> +			ddata->dma.chans[i] = NULL;
-> +		}
-> +	}
-> +
-> +	return ret;
->  }
->  
->  static void stm32_timers_dma_remove(struct device *dev,
-> @@ -230,7 +240,11 @@ static int stm32_timers_probe(struct platform_device *pdev)
->  
->  	stm32_timers_get_arr_size(ddata);
->  
-> -	stm32_timers_dma_probe(dev, ddata);
-> +	ret = stm32_timers_dma_probe(dev, ddata);
-> +	if (ret) {
-> +		stm32_timers_dma_remove(dev, ddata);
-> +		return ret;
-> +	}
->  
->  	platform_set_drvdata(pdev, ddata);
->  
-> 
+--D
