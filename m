@@ -2,101 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3348C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8817C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E0E207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76096208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YcQd5Oxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgAGP65 (ORCPT
+        id S1728344AbgAGQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:58:57 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26224 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbgAGP65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:58:57 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 07:58:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="370629795"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 07:58:54 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iorFu-0006gd-RA; Tue, 07 Jan 2020 17:58:54 +0200
-Date:   Tue, 7 Jan 2020 17:58:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefani Seibold <stefani@seibold.net>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-Message-ID: <20200107155854.GK32742@smile.fi.intel.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
- <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
- <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
- <20200107144455.GF32742@smile.fi.intel.com>
- <20200107144548.GG32742@smile.fi.intel.com>
- <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com>
+        Tue, 7 Jan 2020 11:00:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24622 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728052AbgAGQAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:00:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578412841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2tgaAOxuK+BpANAaDpR2VlivTHiWdjlqBTqnI3DjVok=;
+        b=YcQd5OxhDD93m32hoAsJJoehZAPLC2/9IdXjfP+OoZPBljEkOKcm5xF4kfcfVjxsjt//EM
+        rBBv7C5GMQc3Nl0PBo8UXgcHQRE3jnCi4FrvxkvWwUQIPHdHq+DjvofrT8bpzIxAitjdvz
+        ejxJr7gtSHt/Kc5Ivuv1i2rtXrE+MdU=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-QlwyI2DuNjCUj8HwU1u-1Q-1; Tue, 07 Jan 2020 11:00:38 -0500
+X-MC-Unique: QlwyI2DuNjCUj8HwU1u-1Q-1
+Received: by mail-qt1-f198.google.com with SMTP id m18so73503qtq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:00:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2tgaAOxuK+BpANAaDpR2VlivTHiWdjlqBTqnI3DjVok=;
+        b=CBJ87Y2u5VtlA7EkPojP+DbLDtOd1wPVhuPyYgrQyXbiz6dZ8gSBwWx6eVBTNzsdwp
+         lK38rbAmuLvUgxhYFqpUv1EwCHUlJSsz/f4cxQMNqlfclZOTPUegaL2HlyLJS4jMSJ9n
+         lTt6yrPiVNyuhkgXrEPmUM/gCBgfxi6go2AYHSjzdoF3RIRCahgr4d3UztsV42LxtDyf
+         1nvBEIAF3QuLQ7qeJjOAqcfE0S1aRtwPaxALoDMm7edzoCBULpW6Sx3P7OT3zQ6AErPg
+         iVWJRF/eFd3AneYuHyCQUpsUpUfcIjA7d63CcC18B4tAOV0sQcnXeDXzMAZA/Oadu5+n
+         cagw==
+X-Gm-Message-State: APjAAAWVZKGss1zK0t2q9lKDrVMCHUp+PO12tc4Gkm+Bd5LfoCcXA11u
+        E7VFsmuhoX5JNa5Cl6D5GwqrzMSfKizT20mqLLH4QR7paSWq4I8xNnOfkMOsnGz3do2Jlv0hBbL
+        4lPavxu5P+4FEil7sJoaod/mE
+X-Received: by 2002:ad4:5614:: with SMTP id ca20mr77314qvb.43.1578412838104;
+        Tue, 07 Jan 2020 08:00:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxco4tN6LuFo9JPmqxefJvTz1h/hHztoZLdPyxjrU9NmEQbj/K8aPW34C5/taBpDrO7OrLbbw==
+X-Received: by 2002:ad4:5614:: with SMTP id ca20mr77269qvb.43.1578412837710;
+        Tue, 07 Jan 2020 08:00:37 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id t1sm20365985qkt.129.2020.01.07.08.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 08:00:37 -0800 (PST)
+Date:   Tue, 7 Jan 2020 11:00:35 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Andrew Jones <drjones@redhat.com>
+Subject: Re: [PATCH v3 2/8] KVM: selftests: Add demand paging content to the
+ demand paging test
+Message-ID: <20200107160035.GG219677@xz-x1>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-3-bgardon@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216213901.106941-3-bgardon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 04:19:59PM +0100, Bartosz Golaszewski wrote:
-> wt., 7 sty 2020 o 15:45 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisał(a):
-> >
-> > On Tue, Jan 07, 2020 at 04:44:55PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
-> > >
-> > > ...
-> > >
-> > > > Let's try to CC the actual author (Stefani Seibold) and see if the mail
-> > > > address works and if he can look at it. Or did you already talk to
-> > > > Stefani?
-> > > >
-> > > > (git blame is always my best friend in cases like this, hehe)
-> > >
-> > > Recently I started to be smarted in such cases, i.e. I run also
-> > > `git log --author='$AUTHOR'` to see if they are still active and
-> > > what address had been used lately.
-> >
-> > ...and another possibility to `git log --grep '$AUTHOR'`.
+On Mon, Dec 16, 2019 at 01:38:55PM -0800, Ben Gardon wrote:
 
-> So if some module doesn't have an official maintainer listed in
-> MAINTAINERS, we should still get a review from the original author?
+[...]
 
-If you asking me, I do it in a way of playing good citizen. It's not required,
-but may give a good feedback.
+> +static void *uffd_handler_thread_fn(void *arg)
+> +{
+> +	struct uffd_handler_args *uffd_args = (struct uffd_handler_args *)arg;
+> +	int uffd = uffd_args->uffd;
+> +	int64_t pages = 0;
+> +
+> +	while (!quit_uffd_thread) {
+> +		struct uffd_msg msg;
+> +		struct pollfd pollfd[1];
+> +		int r;
+> +		uint64_t addr;
+> +
+> +		pollfd[0].fd = uffd;
+> +		pollfd[0].events = POLLIN;
+> +
+> +		/*
+> +		 * TODO this introduces a 0.5sec delay at the end of the test.
+> +		 * Reduce the timeout or eliminate it following the example in
+> +		 * tools/testing/selftests/vm/userfaultfd.c
+> +		 */
+> +		r = poll(pollfd, 1, 500);
 
-> KFIFO lives in lib/ - is there even an official maintainer for all
-> library helpers?
-
-lib/ is (in most cases) under akpm@ realm.
+Would you mind implement it instead of adding a todo?  IIUC it's as
+simple as a few more lines than the comment itself.  Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Peter Xu
 
