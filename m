@@ -2,103 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3440C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4971BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9466207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8D1207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="NxEljdX0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k7CraodJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbgAGL6b (ORCPT
+        id S1728035AbgAGL7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:58:31 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:63124 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727982AbgAGL6b (ORCPT
+        Tue, 7 Jan 2020 06:59:39 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54754 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgAGL7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:58:31 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007BvGbt026141;
-        Tue, 7 Jan 2020 05:58:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=PODMain02222019;
- bh=cLhF3qKf38jGY8av3O6TIut/RMEI7A1bYJ0WOXmAxts=;
- b=NxEljdX0syV1zKOU1Z+dfQDWPd81WEAQe2vmdebPIwjYWy0XA9PsR3k5xBCJk8Cm0BxR
- aVzo8oRa2xLeZKsF0mbcHgQPJk6kYI4/hzaFIvGo6QkAqZ4cso54bw7mtvcqyVSkK+nG
- XZDBwvfbMH7nI/dcC7iQ4G9oCNippIAtM66BJzOzFaz5z6L7F6IAokJztCP/O3fdWEdS
- H8v1PYIoCZ2UbBNGkDMdpp76R43itToHfn5/QjR5nPhozEVQBWF6lEGETMMaPDlt2fR/
- 2odkDmR+/Goa1cOvMHZtnWjNTpvbBfPLM3WdH3XFRXv8dko/PH/eId8BQlZpU9cUcfEE 7g== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=rf@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2xar0tbe23-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 07 Jan 2020 05:58:24 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 7 Jan
- 2020 11:58:22 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 7 Jan 2020 11:58:22 +0000
-Received: from [198.90.251.123] (edi-sw-dsktp006.ad.cirrus.com [198.90.251.123])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 57C6E2B1;
-        Tue,  7 Jan 2020 11:58:22 +0000 (UTC)
-Subject: Re: [PATCH] pinctrl: lochnagar: select GPIOLIB
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191218163701.171914-1-arnd@arndb.de>
- <CACRpkdbqzLUNUjx_kt3-7JLZym2RZ47edW5qp0MgXmpW4-Xf9Q@mail.gmail.com>
- <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com>
-From:   Richard Fitzgerald <rf@opensource.cirrus.com>
-Message-ID: <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com>
-Date:   Tue, 7 Jan 2020 11:58:22 +0000
+        Tue, 7 Jan 2020 06:59:39 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007BxVZp039432;
+        Tue, 7 Jan 2020 05:59:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578398371;
+        bh=9f+EURYDVK8DvqsdPDWz6PKR3Gmyc0NgzwaKz2rZZqc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=k7CraodJJAgLom/FV7vcp7q6wpkNFj4haAqS6Aj+H4+UHXCCjQ6Dbs7VT9TN+kmQn
+         ueQv0e9MhunDK9gaFN8FeYTsGOScPbkpggjcV75oMVKaxctL37GVb9/VR4e2m50jgx
+         fjk655GpjMOkec1DpOi3dzhA1aSfaUtffuFHmsgo=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BxVTD124337
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:59:31 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 05:59:30 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 05:59:30 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BxSIe032947;
+        Tue, 7 Jan 2020 05:59:29 -0600
+Subject: Re: [PATCH][next] dmaengine: ti: omap-dma: don't allow a null
+ od->plat pointer to be dereferenced
+To:     Colin King <colin.king@canonical.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, <dmaengine@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200106122325.39121-1-colin.king@canonical.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <b7200998-c8e7-0841-ce91-ad3834c63cae@ti.com>
+Date:   Tue, 7 Jan 2020 13:59:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200106122325.39121-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=950
- impostorscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001070098
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 10:39, Arnd Bergmann wrote:
-> On Tue, Jan 7, 2020 at 10:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Wed, Dec 18, 2019 at 5:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>> I wonder if GPIOLIB should just become mandatory when enabling the pinctrl
->>> subsystem, or if there are still good reasons for leaving it disabled
->>> on any machine that uses CONFIG_PINCTRL.
->>
->> Hm that is a tricky question, they almost always come in pair but are
->> technically speaking separate subsystems.
+Colin,
+
+On 06/01/2020 14.23, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> I think there are a number of use cases for GPIOLIB drivers without PINCTRL, but
-> are there any examples of the reverse?
+> Currently when the call to dev_get_platdata returns null the driver issues
+> a warning and then later dereferences the null pointer.  Avoid this issue
+> by returning -EPROBE_DEFER errror rather when the platform data is null.
+
+Thank you for noticing it!
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Addresses-Coverity: ("Dereference after null check")
+> Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/dma/ti/omap-dma.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
->         Arnd
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> index fc8f7b2fc7b3..335c3fa7a3b1 100644
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
+> @@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+>  	if (conf) {
+>  		od->cfg = conf;
+>  		od->plat = dev_get_platdata(&pdev->dev);
+> -		if (!od->plat)
+> +		if (!od->plat) {
+>  			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
+> +			return -EPROBE_DEFER;
+> +		}
+>  	} else {
+>  		od->cfg = &default_cfg;
+>  
 > 
 
-You could have muxable pins that aren't gpios. For example muxing 
-between i2c/spi signals. So a pinctrl driver doesn't imply gpio.
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
