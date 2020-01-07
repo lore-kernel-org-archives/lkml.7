@@ -2,88 +2,85 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A4AC33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B0B2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578451304;
-	bh=g1QhP24GYtWHumO4wQr4TElEcAdPK+9n2phaXK0dnyw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=soQMotfhPL2AOHeBeoc8gpibr7SO1GbZv+IGqR19B9VFD0abHL2SXBRO2hJSTU1L1
-	 FzX18hXuDm7MOoQUaK9pKWnYUHeERsj8Q8CeDZZlckhy9P4fKrai2yroohJDswCZRo
-	 IgluSZiZ8BZxogMqC5dILfWgKDB+EQGqNehpA+BA=
+	by mail.kernel.org (Postfix) with ESMTP id D92AD2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgAHCln (ORCPT
+        id S1726697AbgAHCnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 21:41:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49738 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 21:43:51 -0500
+Received: from mga17.intel.com ([192.55.52.151]:62958 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgAHCln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 21:41:43 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FFF22070E;
-        Wed,  8 Jan 2020 02:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578451302;
-        bh=g1QhP24GYtWHumO4wQr4TElEcAdPK+9n2phaXK0dnyw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Bt7a73xRq0/Rf78yaKwW95qAUNQLW+9WsGTi3acVMAVkaOiLW9ktfpB75lbFmZIKn
-         mHnElvI2MEaq6yYWE0LoOVWoRmq2RG/iBT4QoL0hn8vNq4Y1uD71OpnY/YuYBp0aWh
-         d8XLkq4NPbe6hUOTf7pCbXZOZGCULArjd5qbNfSQ=
-Subject: Re: [PATCH 4.19 000/115] 4.19.94-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200107205240.283674026@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <3e601354-667e-0f25-dc67-43594f757bd5@kernel.org>
-Date:   Tue, 7 Jan 2020 19:41:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725812AbgAHCnu (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 21:43:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 18:43:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
+   d="scan'208";a="370823473"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 18:43:47 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com, tmricht@linux.ibm.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH] perf report: Fix no libunwind compiled warning break s390 issue
+Date:   Wed,  8 Jan 2020 03:17:45 +0800
+Message-Id: <20200107191745.18415-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 1:53 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.94 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.94-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Commit 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
+breaks the s390 platform. S390 uses libdw-dwarf-unwind for call chain
+unwinding and had no support for libunwind.
 
-Compiled and booted on my test system. No dmesg regressions.
+So the warning "Please install libunwind development packages during the perf build."
+caused the confusion even if the call-graph is displayed correctly.
 
-thanks,
--- Shuah
+This patch adds checking for HAVE_DWARF_SUPPORT, which is set when
+libdw-dwarf-unwind is compiled in.
+
+Fixes: 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
+
+Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/builtin-report.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index de988589d99b..66cd97cc8b92 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -412,10 +412,10 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
+ 
+-#ifndef HAVE_LIBUNWIND_SUPPORT
++#if !defined(HAVE_LIBUNWIND_SUPPORT) && !defined(HAVE_DWARF_SUPPORT)
+ 	if (dwarf_callchain_users) {
+-		ui__warning("Please install libunwind development packages "
+-			    "during the perf build.\n");
++		ui__warning("Please install libunwind or libdw "
++			    "development packages during the perf build.\n");
+ 	}
+ #endif
+ 
+-- 
+2.17.1
 
