@@ -2,106 +2,113 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB64C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E2C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA82B2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FFF2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USaN/sz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgAGNAl convert rfc822-to-8bit (ORCPT
+        id S1728075AbgAGNAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:00:41 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44165 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAGNAk (ORCPT
+        Tue, 7 Jan 2020 08:00:44 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41572 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgAGNAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:00:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so73703820otj.11;
-        Tue, 07 Jan 2020 05:00:40 -0800 (PST)
+        Tue, 7 Jan 2020 08:00:42 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x8so28474583pgk.8;
+        Tue, 07 Jan 2020 05:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lvbtfIt25K3V9bkjoOOm4QAQQ2RLXWTWl1KKBEvQFkY=;
+        b=USaN/sz2xKuxGlMgjZHB/wUWQ/8RghB5BDQntO5KHxNVHiYUNlXljkZOc+xBwlotWi
+         iR0vr+2KKITG8AilRUMRJvatthQT/2UFg7eTxjT+LRAErQVgfryuIsKryfhO5LuNbdx/
+         wSUFMCEdFIi99eFmxcmYny8U12L3h2jEPieIrMDf2rLBo7G0Nb2Y2jTw5rWt9QlWT4BT
+         W/zAB5JN0aalf1nmGYQukNVY1UsCh6sT/VjlGjg0/ixeKb71W/s7Hxwy8RKU9Dx/b2Yo
+         bE9f/bqLta8M7ohdj39m1HB4K2lvkAzwuPFkw+WH09pDEATD0mwOWflkmzVF2tsG6tUT
+         9ZjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/tDonRgiYbrY37yCv1vErvadfPleOAtUFh1U/IUmHLA=;
-        b=EdvocXaep5mpt3xPW8YRIw0QJue1/QkkuYzXgjyxYuBZhU/nTQ4pjsEtj0T9T+o0vA
-         48Pv3QVX11+36hxalkmf+wzOaD/DPSkqeJ4EqhUDFeJ/1Pa2zta8/lqYr6xhAtV8a0hx
-         7AChiTTqC1nzxqWwhrySsxqRMKYiCxcHg0XpIto7fFvABQmX0q+QrrMkPUHK3cEkBqzj
-         XLN6OGGCQNyqHydHAKe7X6Pdq4mDaxz8rwhQJyc+VLpJ4h7WhJRxfRrzbaYRp2NBa5Tv
-         huWdcDRPG8LtztPLnLDNtLTL3Aqk5EjdBonajFef0OKgBWcehc+NWjE4CimNVly8jIA+
-         hnVw==
-X-Gm-Message-State: APjAAAV/QxmXNJ5Bw8igqMy9T30NjORwComiR+qqsRBQgiYJiLPlWGnI
-        8mRssl5lmp6ZEjiHDVYDr6S9+r2HOjY+msLsVs28HIst
-X-Google-Smtp-Source: APXvYqwVEiZdtAx1URV7kxIlRfyWNFcbIl7T1Bf0xYRY+qICQQ3zwn9Zra7eC1drnbfK6J46aIOgcm6GkBlg6MFAFmE=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr124208561otm.297.1578402039812;
- Tue, 07 Jan 2020 05:00:39 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lvbtfIt25K3V9bkjoOOm4QAQQ2RLXWTWl1KKBEvQFkY=;
+        b=GaZCja/Vdy6t7deyL9MlQH2w/9DdE52ZazACF0FreDMe0pgrLmiQvYN4ucoiz5Vo3u
+         gF2hplvmOlAn8fzD/XXYgP4ZSwaZ306WZHesIQ6IRSMPU+23E8oMktBk/+A1jrnZBjNJ
+         BCEnfexur18gxdWRgAafnzpAhTCWdSdgq47yGfU59SH4hJyIWCiVc7Px/HFGHPL5UDVv
+         KK6nJH2mJewyHnsLKvZIfnfjQ0lfuFBYrhhBtkIYfLZ2Gow8dEmuak9mHXXhNb59PoPO
+         rbE1yH917RSAzGcHooLMztDbB4kTKnNKsug2m9Gqf4CEHB0+WjHeSoyyNQi4hl+UiFn9
+         wj/A==
+X-Gm-Message-State: APjAAAVO40ydyDahA7IrUZE4sTApXjpcCNGn8k7KrnZRzj7KdtPzNesd
+        7QpzVojUtpyoEODtykzZWRs=
+X-Google-Smtp-Source: APXvYqz9WKLmVN/nRjjHtNkoSm6v+LC6l/HWdccIHNtmRotZJu3YefPowp/baIagDwVd/ryHNTbl6w==
+X-Received: by 2002:a62:ac03:: with SMTP id v3mr113535234pfe.17.1578402041672;
+        Tue, 07 Jan 2020 05:00:41 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j10sm28590800pjb.14.2020.01.07.05.00.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 05:00:40 -0800 (PST)
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
+ <20191219003256.GA28144@roeck-us.net> <yq17e233o0o.fsf@oracle.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net>
+Date:   Tue, 7 Jan 2020 05:00:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1578399963-2229-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1578399963-2229-1-git-send-email-krzk@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 14:00:28 +0100
-Message-ID: <CAMuHMdULcBE1inRzTRFJeRDToT1wW+nrMEfiUs7DxMLR0tqb3w@mail.gmail.com>
-Subject: Re: [PATCH] sh: clk: Fix discarding const qualifier warning
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <yq17e233o0o.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On 1/6/20 8:10 PM, Martin K. Petersen wrote:
+> 
+> Hi Guenter!
+> 
+>>>   - I still think sensor naming needs work. How and where are the
+>>>     "drivetemp-scsi-8-140" names generated?
+>>>
+>> Quick one: In libsensors, outside the kernel. The naming is generic,
+>> along the line of <driver name>-<bus name>-<bus index>-<slot>.
+> 
+> I understand that there are sensors that may not have an obvious
+> associated topology and therefore necessitate coming up with a suitable
+> naming or enumeration scheme. But in this case we already have a
+> well-defined SCSI device name. Any particular reason you don't shift the
+> chip.addr back and print the H:C:T:L format that you used as input?
+> 
+> However arcane H:C:T:L may seem, I think that predictable naming would
+> make things a lot easier for users that need to identify which device
+> matches which sensor...
+> 
 
-On Tue, Jan 7, 2020 at 1:26 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> ioreadX() accepts pointer to non-const memory.  This fixes warnings
-> like:
->
->     drivers/sh/clk/cpg.c: In function ‘r8’:
->     drivers/sh/clk/cpg.c:41:17: warning: passing argument 1 of ‘ioread8’
->         discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Not sure I understand. Do you mean to add "H:C:T:L" to "drivetemp" ?
+That would make it something like "drivetemp:H:C:T:L-scsi-8-140".
+Not sure if that is really useful, and it would at least be partially
+redundant.
 
-Thanks for your patch!
+"scsi-8-140" is created by libsensors, so any change in that would
+have to be made there, not in the kernel driver.
 
-> --- a/drivers/sh/clk/cpg.c
-> +++ b/drivers/sh/clk/cpg.c
-> @@ -36,17 +36,17 @@ static void sh_clk_write(int value, struct clk *clk)
->                 iowrite32(value, clk->mapped_reg);
->  }
->
-> -static unsigned int r8(const void __iomem *addr)
-> +static unsigned int r8(void __iomem *addr)
->  {
->         return ioread8(addr);
->  }
-
-Isn't the real issue that some implementations of ioreadX() take const,
-while others don't?
-
-Even the generic ones disagree:
-
-    include/asm-generic/io.h:static inline u8 ioread8(const volatile
-void __iomem *addr)
-    include/asm-generic/iomap.h:extern unsigned int ioread8(void __iomem *);
-
-IMHO they all should take "const volatile void __iomem *".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Guenter
