@@ -2,52 +2,51 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A396CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9580C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779882080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA542087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431146;
-	bh=h78LiViRzEh6d+ijw9JkEE6khZZLjwesHoeCtKLHX88=;
+	s=default; t=1578431149;
+	bh=E+EQLAk6PsgNrY6xQceMY5eimhfrpN7qa8vd0HS/aQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I8wJ7deVMqkZQ/wE6zJailsfVeZNYQS2Bj0QjBTCr2/JGmBRBebK+WiUqt/FBmGQD
-	 qq2pDSIkqnJh+qWJtk/B96hKu5LILK6V11unUYyWyBBY9Sx5tE7ZO4Y4ePaJ6GbJ0m
-	 83QrJAEEipiZuXo6uxLHJTAqC1/x5XSGplphXksM=
+	b=MvdTBhd/I/1evCd3wMagFW27D6+f5+ipM1cUzcJPH576i+bKF4nTM3Quvhjdoov65
+	 j+HogkCWS0TSVKi1JVaKJAGWm5I6ZXKkyOSpBJ8JTPKgM9Bg2b11yunAdi1gIcaSfR
+	 WtQ62JxFXi6IECC0dyUfoycDt6S39mgvn0JUzQKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgAGVFp (ORCPT
+        id S1729097AbgAGVFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbgAGVFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:39 -0500
+        id S1729048AbgAGVFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332E9208C4;
-        Tue,  7 Jan 2020 21:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03D2C2081E;
+        Tue,  7 Jan 2020 21:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431138;
-        bh=h78LiViRzEh6d+ijw9JkEE6khZZLjwesHoeCtKLHX88=;
+        s=default; t=1578431143;
+        bh=E+EQLAk6PsgNrY6xQceMY5eimhfrpN7qa8vd0HS/aQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlpAi7vE1QDTDvWd2xO53PmnJtivkdMtdGONO/2lA+Z4+pNFahtFzDCWsordhbsTr
-         zMoBMzWI9Q9WaOiGU9bpQPrTC+3aJiOWb1TJ89p39MCmWbw/pC5WPIfk9OZcad0W+/
-         /sXN4OZBlHgJjbHk4eqg2Puwh4zfjotjtG+ifxTo=
+        b=YFz4nae+YI1LJ4kF7tQi1ppiwLldv+mutGiJEkOqYcHH2PxXNVSQPecDXRx/+21sZ
+         dyqwhojxcD0Ko7LfeQSBkO68mGsThOIuHWu2QTCWmgzIIOX1zRUS5z1V5Q2+Z9XGSF
+         t4r0q2qycrwZU7Wo5oHQ1U+Zm0F4RkQ2CjTML/mE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Wise <larrystevenwise@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/115] rxe: correctly calculate iCRC for unaligned payloads
-Date:   Tue,  7 Jan 2020 21:53:43 +0100
-Message-Id: <20200107205248.080933189@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 044/115] ALSA: usb-audio: set the interface format after resume on Dell WD19
+Date:   Tue,  7 Jan 2020 21:54:14 +0100
+Message-Id: <20200107205302.031798906@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,83 +59,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <larrystevenwise@gmail.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
+commit 92adc96f8eecd9522a907c197cc3d62e405539fe upstream.
 
-If RoCE PDUs being sent or received contain pad bytes, then the iCRC
-is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
-iCRC, as well as ingress PDUs being dropped due to erroneously detecting
-a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
-in iCRC computations.
+Recently we found the headset-mic on the Dell Dock WD19 doesn't work
+anymore after s3 (s2i or deep), this problem could be workarounded by
+closing (pcm_close) the app and then reopening (pcm_open) the app, so
+this bug is not easy to be detected by users.
 
-Note: This bug has caused broken on-the-wire compatibility with actual
-hardware RoCE devices since the soft-RoCE driver was first put into the
-mainstream kernel.  Fixing it will create an incompatibility with the
-original soft-RoCE devices, but is necessary to be compatible with real
-hardware devices.
+When problem happens, retire_capture_urb() could still be called
+periodically, but the size of captured data is always 0, it could be
+a firmware bug on the dock. Anyway I found after resuming, the
+snd_usb_pcm_prepare() will be called, and if we forcibly run
+set_format() to set the interface and its endpoint, the capture
+size will be normal again. This problem and workaound also apply to
+playback.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
-Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To fix it in the kernel, add a quirk to let set_format() run
+forcibly once after resume.
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191218132650.6303-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
- drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ sound/usb/card.h         |    1 +
+ sound/usb/pcm.c          |   21 +++++++++++++++++++--
+ sound/usb/quirks-table.h |    3 ++-
+ sound/usb/quirks.c       |   11 +++++++++++
+ sound/usb/usbaudio.h     |    3 ++-
+ 5 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index d30dbac24583..695a607e2d14 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -391,7 +391,7 @@ void rxe_rcv(struct sk_buff *skb)
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -142,6 +142,7 @@ struct snd_usb_substream {
+ 	struct snd_usb_endpoint *sync_endpoint;
+ 	unsigned long flags;
+ 	bool need_setup_ep;		/* (re)configure EP at prepare? */
++	bool need_setup_fmt;		/* (re)configure fmt after resume? */
+ 	unsigned int speed;		/* USB_SPEED_XXX */
  
- 	calc_icrc = rxe_icrc_hdr(pkt, skb);
- 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
--			      payload_size(pkt));
-+			      payload_size(pkt) + bth_pad(pkt));
- 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
- 	if (unlikely(calc_icrc != pack_icrc)) {
- 		if (skb->protocol == htons(ETH_P_IPV6))
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index f7dd8de79941..1c1eae0ef8c2 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
- 			if (err)
- 				return err;
- 		}
-+		if (bth_pad(pkt)) {
-+			u8 *pad = payload_addr(pkt) + paylen;
-+
-+			memset(pad, 0, bth_pad(pkt));
-+			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
-+		}
+ 	u64 formats;			/* format bitmasks (all or'ed) */
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -517,11 +517,11 @@ static int set_format(struct snd_usb_sub
+ 		return -EINVAL;
+ 	altsd = get_iface_desc(alts);
+ 
+-	if (fmt == subs->cur_audiofmt)
++	if (fmt == subs->cur_audiofmt && !subs->need_setup_fmt)
+ 		return 0;
+ 
+ 	/* close the old interface */
+-	if (subs->interface >= 0 && subs->interface != fmt->iface) {
++	if (subs->interface >= 0 && (subs->interface != fmt->iface || subs->need_setup_fmt)) {
+ 		if (!subs->stream->chip->keep_iface) {
+ 			err = usb_set_interface(subs->dev, subs->interface, 0);
+ 			if (err < 0) {
+@@ -535,6 +535,9 @@ static int set_format(struct snd_usb_sub
+ 		subs->altset_idx = 0;
  	}
- 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
  
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 681d8e0913d0..9078cfd3b8bd 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -737,6 +737,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
- 	if (err)
- 		pr_err("Failed copying memory\n");
- 
-+	if (bth_pad(&ack_pkt)) {
-+		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
-+		u8 *pad = payload_addr(&ack_pkt) + payload;
++	if (subs->need_setup_fmt)
++		subs->need_setup_fmt = false;
 +
-+		memset(pad, 0, bth_pad(&ack_pkt));
-+		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
-+	}
- 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
- 	*p = ~icrc;
+ 	/* set interface */
+ 	if (iface->cur_altsetting != alts) {
+ 		err = snd_usb_select_mode_quirk(subs, fmt);
+@@ -1722,6 +1725,13 @@ static int snd_usb_substream_playback_tr
+ 		subs->data_endpoint->retire_data_urb = retire_playback_urb;
+ 		subs->running = 0;
+ 		return 0;
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
++			stop_endpoints(subs, true);
++			subs->need_setup_fmt = true;
++			return 0;
++		}
++		break;
+ 	}
  
--- 
-2.20.1
-
+ 	return -EINVAL;
+@@ -1754,6 +1764,13 @@ static int snd_usb_substream_capture_tri
+ 		subs->data_endpoint->retire_data_urb = retire_capture_urb;
+ 		subs->running = 1;
+ 		return 0;
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
++			stop_endpoints(subs, true);
++			subs->need_setup_fmt = true;
++			return 0;
++		}
++		break;
+ 	}
+ 
+ 	return -EINVAL;
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3400,7 +3400,8 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ 		.vendor_name = "Dell",
+ 		.product_name = "WD19 Dock",
+ 		.profile_name = "Dell-WD15-Dock",
+-		.ifnum = QUIRK_NO_INTERFACE
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_SETUP_FMT_AFTER_RESUME
+ 	}
+ },
+ 
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -519,6 +519,16 @@ static int create_standard_mixer_quirk(s
+ 	return snd_usb_create_mixer(chip, quirk->ifnum, 0);
+ }
+ 
++
++static int setup_fmt_after_resume_quirk(struct snd_usb_audio *chip,
++				       struct usb_interface *iface,
++				       struct usb_driver *driver,
++				       const struct snd_usb_audio_quirk *quirk)
++{
++	chip->setup_fmt_after_resume_quirk = 1;
++	return 1;	/* Continue with creating streams and mixer */
++}
++
+ /*
+  * audio-interface quirks
+  *
+@@ -557,6 +567,7 @@ int snd_usb_create_quirk(struct snd_usb_
+ 		[QUIRK_AUDIO_EDIROL_UAXX] = create_uaxx_quirk,
+ 		[QUIRK_AUDIO_ALIGN_TRANSFER] = create_align_transfer_quirk,
+ 		[QUIRK_AUDIO_STANDARD_MIXER] = create_standard_mixer_quirk,
++		[QUIRK_SETUP_FMT_AFTER_RESUME] = setup_fmt_after_resume_quirk,
+ 	};
+ 
+ 	if (quirk->type < QUIRK_TYPE_COUNT) {
+--- a/sound/usb/usbaudio.h
++++ b/sound/usb/usbaudio.h
+@@ -44,7 +44,7 @@ struct snd_usb_audio {
+ 	wait_queue_head_t shutdown_wait;
+ 	unsigned int txfr_quirk:1; /* Subframe boundaries on transfers */
+ 	unsigned int tx_length_quirk:1; /* Put length specifier in transfers */
+-	
++	unsigned int setup_fmt_after_resume_quirk:1; /* setup the format to interface after resume */
+ 	int num_interfaces;
+ 	int num_suspended_intf;
+ 	int sample_rate_read_error;
+@@ -107,6 +107,7 @@ enum quirk_type {
+ 	QUIRK_AUDIO_EDIROL_UAXX,
+ 	QUIRK_AUDIO_ALIGN_TRANSFER,
+ 	QUIRK_AUDIO_STANDARD_MIXER,
++	QUIRK_SETUP_FMT_AFTER_RESUME,
+ 
+ 	QUIRK_TYPE_COUNT
+ };
 
 
