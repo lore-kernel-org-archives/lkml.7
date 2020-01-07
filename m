@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68411C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB953C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336EC2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02192081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430653;
-	bh=uqHxD+2OSmIuTXyB391CppfgqjnldoliToKaoB41u3s=;
+	s=default; t=1578430656;
+	bh=UtDLfCiZ9OSzj/tTpVIGP/rWN4T/vbiXkOGjmBqs1AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6+7iPe4i+vO5useXJIVizTckyySOglYEwF82MPVlUTqcsqNjxXWONM4dKeYXSVZx
-	 kbafuVc+Y/hE9WPEY5gv8yD0HwLOIt6dKjfjj2SIk1rBWUrd/5ev8/IyrRTh147p2d
-	 XBulb1QXxUYzMurKwoOlyL52BQfkAQD5znj3mlLk=
+	b=uc8YhUe3iYxt1txoe/xPTvnvJ2UBa8et4IwS1WLtD3BEAwQnaeJzwgu1hkqo6fvY7
+	 LY9xKLDzB7EvCH62LnR3ivazyATIQHinOwD3GWPhKxRie3rIwMDelrdHSCNb+7cwGC
+	 +ryak3gyl4XOvuNjIM6DaFhd0XPWsxOC7WzNXYv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbgAGU5c (ORCPT
+        id S1727632AbgAGU5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbgAGU52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:28 -0500
+        id S1726916AbgAGU5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2211E2081E;
-        Tue,  7 Jan 2020 20:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B4C208C4;
+        Tue,  7 Jan 2020 20:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430647;
-        bh=uqHxD+2OSmIuTXyB391CppfgqjnldoliToKaoB41u3s=;
+        s=default; t=1578430650;
+        bh=UtDLfCiZ9OSzj/tTpVIGP/rWN4T/vbiXkOGjmBqs1AM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wph45ApUDKe5JkL2e6Zoo4luShdWeFtCf+/mw5Xu1kZCuPNah0aoKF74ZeQcMXb+B
-         vfOtwScG6ywmwadsYQMn5P8RLkCI/OwerBHgu5ltYD/6E4qHLqr0qn2Cxw0dHi1Q3Y
-         nILsxvFL609XH85ifE4IKWj4T/oOy9NBQLWXxDGQ=
+        b=M16YBQie5TnV+JFWzJSTdVWDSMeg4PCDNvMstvuGrkutH5MoPI8mXevwez0kpXPCw
+         dzx1dayNwumg3nSMQHkLV9nmmmi9eGo91B2MXeXfziR1c6R/czDXMO6A59m4S/pBjN
+         tVA0X4zezpz41UXgOsDSPGwxxlL1TynkrZCMNjjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        EJ Hsu <ejh@nvidia.com>, Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/191] drm/nouveau/kms/nv50-: fix panel scaling
-Date:   Tue,  7 Jan 2020 21:52:38 +0100
-Message-Id: <20200107205335.035106704@linuxfoundation.org>
+Subject: [PATCH 5.4 039/191] usb: gadget: fix wrong endpoint desc
+Date:   Tue,  7 Jan 2020 21:52:39 +0100
+Message-Id: <20200107205335.087685984@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,41 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: EJ Hsu <ejh@nvidia.com>
 
-[ Upstream commit 3d1890ef8023e61934e070021b06cc9f417260c0 ]
+[ Upstream commit e5b5da96da50ef30abb39cb9f694e99366404d24 ]
 
-Under certain circumstances, encoder atomic_check() can be entered
-without adjusted_mode having been reset to the same as mode, which
-confuses the scaling logic and can lead to a misprogrammed display.
+Gadget driver should always use config_ep_by_speed() to initialize
+usb_ep struct according to usb device's operating speed. Otherwise,
+usb_ep struct may be wrong if usb devcie's operating speed is changed.
 
-Fix this by checking against the user-provided mode directly.
+The key point in this patch is that we want to make sure the desc pointer
+in usb_ep struct will be set to NULL when gadget is disconnected.
+This will force it to call config_ep_by_speed() to correctly initialize
+usb_ep struct based on the new operating speed when gadget is
+re-connected later.
 
-Link: https://bugs.freedesktop.org/show_bug.cgi?id=108615
-Link: https://gitlab.freedesktop.org/xorg/driver/xf86-video-nouveau/issues/464
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: EJ Hsu <ejh@nvidia.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_ecm.c   | 6 +++++-
+ drivers/usb/gadget/function/f_rndis.c | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index b5b1a34f896f..d735ea7e2d88 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -326,9 +326,9 @@ nv50_outp_atomic_check_view(struct drm_encoder *encoder,
- 			 * same size as the native one (e.g. different
- 			 * refresh rate)
- 			 */
--			if (adjusted_mode->hdisplay == native_mode->hdisplay &&
--			    adjusted_mode->vdisplay == native_mode->vdisplay &&
--			    adjusted_mode->type & DRM_MODE_TYPE_DRIVER)
-+			if (mode->hdisplay == native_mode->hdisplay &&
-+			    mode->vdisplay == native_mode->vdisplay &&
-+			    mode->type & DRM_MODE_TYPE_DRIVER)
- 				break;
- 			mode = native_mode;
- 			asyc->scaler.full = true;
+diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
+index 6ce044008cf6..460d5d7c984f 100644
+--- a/drivers/usb/gadget/function/f_ecm.c
++++ b/drivers/usb/gadget/function/f_ecm.c
+@@ -621,8 +621,12 @@ static void ecm_disable(struct usb_function *f)
+ 
+ 	DBG(cdev, "ecm deactivated\n");
+ 
+-	if (ecm->port.in_ep->enabled)
++	if (ecm->port.in_ep->enabled) {
+ 		gether_disconnect(&ecm->port);
++	} else {
++		ecm->port.in_ep->desc = NULL;
++		ecm->port.out_ep->desc = NULL;
++	}
+ 
+ 	usb_ep_disable(ecm->notify);
+ 	ecm->notify->desc = NULL;
+diff --git a/drivers/usb/gadget/function/f_rndis.c b/drivers/usb/gadget/function/f_rndis.c
+index d48df36622b7..0d8e4a364ca6 100644
+--- a/drivers/usb/gadget/function/f_rndis.c
++++ b/drivers/usb/gadget/function/f_rndis.c
+@@ -618,6 +618,7 @@ static void rndis_disable(struct usb_function *f)
+ 	gether_disconnect(&rndis->port);
+ 
+ 	usb_ep_disable(rndis->notify);
++	rndis->notify->desc = NULL;
+ }
+ 
+ /*-------------------------------------------------------------------------*/
 -- 
 2.20.1
 
