@@ -2,299 +2,309 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AACC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953CDC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F4B2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5515C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RVuRlnsB";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="hqFYZ/nk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kz5j+01k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgAGS0J (ORCPT
+        id S1728575AbgAGS0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:26:09 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50466 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727925AbgAGS0I (ORCPT
+        Tue, 7 Jan 2020 13:26:24 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37082 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728519AbgAGS0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:26:08 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C8D93405A7;
-        Tue,  7 Jan 2020 18:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578421567; bh=l7ak5lpTxNseUMoUZlW0lhqnhAZWSqUSQrgCdp4z67s=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=RVuRlnsBBHBJSmibENDCD/sPJLBuIKHEvOiF+ItxUXsuBLZdrCfe+ZyY13uhlowTx
-         nVrtiSZKhEws4/k11sM51WFe4TBYGQCZIvjRrv1MWGtMqAQH1lZ5/XOIcMdOb5/TxI
-         jgmNVxCq6U42nP167ifHcq8LA+WjCHEXNJQxIGkAyBiW+f2e6xDaHWKVQn3maRnDPE
-         fcl3gc6DVMdD2nr+TL24WutheQBt5a0uxDGwzX8NNZ+lgbdfLl+vb3GKHF2uVlyzEl
-         26Dv80buHn1b/DP98xvj6OtoSc9v/TQZJMCJcP0aAh99NdnqGRcPaebHPHXg+o71M+
-         qCr2Pai9A3YLA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 4D4DCA006A;
-        Tue,  7 Jan 2020 18:26:02 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 Jan 2020 10:25:59 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 Jan 2020 10:25:58 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LEjBqRPxCNsbUwRPsDRl/9g4MuS0ZLuPb/u6zE3Uauehsq54TDzNorvc5VTggQrwWAMGxrdu91xV/P3s+PdRi0osRvstNwpSqUUc23a9uycjBvkBTzsprEfwxN7ZpLZmlxPKq1w8ewneovY39sCwIGywSdZR5NBPhzjqlvf3mz13dssTok2K1mxxttkg6gsNrqfd0dB/bQolXHPCYM9KSeLhPz4GIkZcrvsEY/zvglnh/vA5RyJhKd/w75y5FPcaV4++KyDTQL4JPnHGircfzo/1LQfVVOO9DrGJnnKbZQcaSZtqvONVNLLitZcAa3Z/caDbrEIceOhi6xTx3i81BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7ak5lpTxNseUMoUZlW0lhqnhAZWSqUSQrgCdp4z67s=;
- b=IHnqVSHt4eYxWRkyMfmgSX8Uxjdg3TwvPj73VsRkp+kyM+4GukvWJNf3GQb2QItTbyoYkqvd+QXRU8klRAjsJsvm7OKHwx8MirujjbiT1TzQ2+ulRZiT/rnUoylqHhFNeY0Zrqvd3PBYlIwu1xWxFK6swi0lygWDjLLZNb2L4IPzSw192EMeETaaS6s2j+d5j7/0U3NsF1HMR+tAQBCoGAJufUZHLBOfL2IoS1K2/hH1VYdSzK6ZC7CjwhowmZZ4UgtPFUBDjATsAwnp8BNZhJWI5i7ZwdV2Kueb2kpix1JteLbMmfnZvIKHjt7+QB04F2O1u1n8otjjmOAn9dsEQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+        Tue, 7 Jan 2020 13:26:24 -0500
+Received: by mail-vs1-f67.google.com with SMTP id x18so142521vsq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 10:26:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7ak5lpTxNseUMoUZlW0lhqnhAZWSqUSQrgCdp4z67s=;
- b=hqFYZ/nkt4+QAcAnVDiUPPkZjwl0LWMbwEMvi1LSxWrXVZEyCr1h5nDhxyRy89WnCCu513K2RsK5/uj6f9KQXXvWxWBestcc4HzAKvnh04d6GkdaPwxKw4bNBTIoccUvr8aJTOvfoeG9CH+E2g41QTj1P9/xTBK1acYU8a9LUIU=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (20.178.54.89) by
- BYAPR12MB3240.namprd12.prod.outlook.com (20.179.93.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11; Tue, 7 Jan 2020 18:25:57 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333%6]) with mapi id 15.20.2623.008; Tue, 7 Jan 2020
- 18:25:57 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH 4/5] ARC: add support for DSP-enabled userspace
- applications
-Thread-Topic: [PATCH 4/5] ARC: add support for DSP-enabled userspace
- applications
-Thread-Index: AQHVvOAMSI6VRGHN00GBtEUk/fXvJafflg0A
-Date:   Tue, 7 Jan 2020 18:25:57 +0000
-Message-ID: <a3890ccb-e948-6ad6-c2ea-5b77b9d3a289@synopsys.com>
-References: <20191227180347.3579-1-Eugeniy.Paltsev@synopsys.com>
- <20191227180347.3579-5-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20191227180347.3579-5-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [149.117.75.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 19a2a052-fd00-4c21-2a7d-08d7939f0a30
-x-ms-traffictypediagnostic: BYAPR12MB3240:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3240EB9C1C35E1F8FAA178DFB63F0@BYAPR12MB3240.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 027578BB13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(366004)(396003)(136003)(189003)(199004)(186003)(110136005)(26005)(316002)(5660300002)(2616005)(478600001)(6506007)(53546011)(54906003)(64756008)(66556008)(66476007)(76116006)(2906002)(66946007)(66446008)(31686004)(8936002)(71200400001)(6486002)(81166006)(81156014)(86362001)(8676002)(31696002)(4326008)(36756003)(107886003)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3240;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PbZHgRo5GVk6mmkhaFZ2cU1svyqO1t2xIbRa5VD0mJuEDg0EAXibJx4Rap2G6QDSSJGmFM1JpV7iUvzxZWvMysMjruR3m6Zqx10vC9SQ0KT3gEzQYHJymgDb9k/HSLNDt578/0Cqfu0MwZ6Q3dpcFzXEMKAiEiPIUbKyu9I7heSiC9i5CGiJOTROzV1JCfIdO53tn3ry+YrM/t8P7m27EAA24j+yI/3kGaGR62oGUnGQcJhdIvLoq67wcj7JJeV5aqEVC2AD23Lejz/m1M7oDBQeFEJq/SlPPjnX2+NaEv+BVET8ZqAG46HLwV7kkMCT5akI3SZfuWWDOMUuuUU5lAH+xGWL5dzZ1PtVZFxIcWNTaHN7KR9xlAiZ+YD1TYYLgO6DqU+eLNifEZlh2um40h05UB95sxsP9o9ZHsmRq5yh0lQQeX6N6bEM6N/g46rM
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <99F0AE71FD7F8F4D966F73EBF37E17BC@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=180HQDGZyjA3825E1ybbAgS73yQoWTFqKE6iODg5bn4=;
+        b=kz5j+01kye8wJBsHY0lsrDc02IJK8yj8NouSr3PjL4rhatokFqmtPTKBpkEOoKCbk5
+         07DXnzBJGFjyWXYHJ0ZnsagSHIRkoLWfAG1lIhwn7RD0nYa21mxUy9W344TDDyc5hOoJ
+         oj+jLds8pDjR1as1vZtgZU+BaU5LD1EeS/E1+4vdbBH9Iasjp6j9gT09gbOKRckF83Zl
+         4gn4j/NuNlFWjGIedpSzoM3D3mIt/Lv95EZx7s/tArTee9Ow3rcdHQJ2KAuYMganEE+t
+         gkL0Xf65n/vWGbSl304pSWPqC8hguj71i8m+r6PODrQ2uVhuH6MxS/2tG9aDiFbny4X9
+         OhkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=180HQDGZyjA3825E1ybbAgS73yQoWTFqKE6iODg5bn4=;
+        b=Km23EfBEzcoNfRnC9MxD0ghd28ZvqCXi84qCSjnOY4rVYoFbcW44BCkWGjGr+lEA0V
+         E82ycpZmYPp7zm5w9PdeVaubiLZ0JfQ/S72LEyBFGTdmydSKUV+8AF74HCQClw43Uiw0
+         1YjNWF2+ZDLxbAPdAg4kKBS/a/zTGUdbjR3rc8Bxv9XwCaFAkNMGGaraZCuatr6vJ2Hg
+         HC5o8Zb3W43XTx3vjdZMazKZQTkpD4dsoM37ARUyON0jQmuf4bzPFFY48Nw3tFPMKfSV
+         ktWTIfagnGwKHFO179jgrW/7sLVMAhgRp8Wy2PGctRzFl9IBgElkYL9BUqrG7+iKcRLZ
+         HYYA==
+X-Gm-Message-State: APjAAAVjkaFSWfwqPP+z44ZSbYdGQzUh+Og6q19S4U6UVaaB+KU2mukj
+        s64ybAgdovM3jb/UWxoZoCgTTBcRZab7sqVep6xrKw==
+X-Google-Smtp-Source: APXvYqzkXi0wXOwP//CKn0kWO+Wgdv1M2iTHL07U2YSncefx4C6YPC5Jja38MLtT3ns+OFLPEsILPqyaF1cG8ZNjEMY=
+X-Received: by 2002:a67:f054:: with SMTP id q20mr365066vsm.17.1578421582246;
+ Tue, 07 Jan 2020 10:26:22 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19a2a052-fd00-4c21-2a7d-08d7939f0a30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 18:25:57.4787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4zCdihzFHnuA4sZ1pwSYRk08uXswY4tHApuYRgJB+Pojd642yC3WSI25h5p+G0NI0QxI38ziFYeS6MRLNJLRmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3240
-X-OriginatorOrg: synopsys.com
+References: <20191216213901.106941-1-bgardon@google.com> <20191216213901.106941-6-bgardon@google.com>
+ <20200107152341.rtfmciob5ly6nnjj@kamzik.brq.redhat.com>
+In-Reply-To: <20200107152341.rtfmciob5ly6nnjj@kamzik.brq.redhat.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Tue, 7 Jan 2020 10:26:10 -0800
+Message-ID: <CANgfPd9aCcN8BJDkkDuC2=3Po3f6BQ6q7JkQfL7n+giDCySu7A@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] KVM: selftests: Pass args to vCPU instead of using globals
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTIvMjcvMTkgMTA6MDMgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gVG8gYmUgYWJs
-ZSB0byBydW4gRFNQLWVuYWJsZWQgdXNlcnNwYWNlIGFwcGxpY2F0aW9ucyB3ZSBuZWVkIHRvDQo+
-IHNhdmUgYW5kIHJlc3RvcmUgZm9sbG93aW5nIERTUC1yZWxhdGVkIHJlZ2lzdGVyczoNCj4gQXQg
-SVJRL2V4Y2VwdGlvbiBlbnRyeS9leGl0Og0KPiAgKiBBQ0MwX0dMTywgQUNDMF9HSEksIERTUF9D
-VFJMDQo+ICAqIEFDQzBfTE8sIEFDQzBfSEkgKHdlIGFscmVhZHkgc2F2ZSB0aGVtIGFzIHI1OCwg
-cjU5IHBhaXIpDQo+IEF0IGNvbnRleHQgc3dpdGNoOg0KPiAgKiBEU1BfQkZMWTAsIERTUF9GRlRf
-Q1RSTA0KDQpHb29kIHN1bW1hcnk6IGJ1dCB0aGUgcXVlc3Rpb24gaXMgdGhpcyBtb3JlIHRoYW4g
-bmVlZGVkLg0KRm9yIGtlcm5lbCBwcm9wZXIsIHlvdSd2ZSBkaXNhYmxlZCBndWFyZCBiaXRzLCBz
-YXR1cmF0aW9uIGV0YyBhbHJlYWR5LiBBRkFJS1MgZ2NjDQp3b24ndCBnZW5lcmF0ZSBjb21wbGV4
-L2ZyYWN0aW9uYWwgbWF0aCBmb3Iga2VybmVsIHNvIHlvdXIgYnVsbGV0ICMxIGNhbiBsaWtlbHkg
-YmUNCmNvbnNpZGVyZWQgdXNlciBzcGFjZSBvbmx5IGhlbmNlIGNhbiBnbyB0byBidWxsZXQgIzMu
-IERvIHlvdSBoYXZlIHJlYXNvbnMgdG8NCmJlbGlldmUgb3RoZXJ3aXNlID8NCg0KPiBTaWduZWQt
-b2ZmLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+
-IC0tLQ0KPiAgYXJjaC9hcmMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICA3ICsrKw0KPiAg
-YXJjaC9hcmMvaW5jbHVkZS9hc20vYXJjcmVncy5oICAgICB8ICAyICsNCj4gIGFyY2gvYXJjL2lu
-Y2x1ZGUvYXNtL2RzcC1pbXBsLmggICAgfCA3NSArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0NCj4gIGFyY2gvYXJjL2luY2x1ZGUvYXNtL2RzcC5oICAgICAgICAgfCA0MiArKysrKysrKysr
-KysrKysrKw0KPiAgYXJjaC9hcmMvaW5jbHVkZS9hc20vZW50cnktYXJjdjIuaCB8ICAzICsrDQo+
-ICBhcmNoL2FyYy9pbmNsdWRlL2FzbS9wcm9jZXNzb3IuaCAgIHwgIDQgKysNCj4gIGFyY2gvYXJj
-L2luY2x1ZGUvYXNtL3B0cmFjZS5oICAgICAgfCAgNCArKw0KPiAgYXJjaC9hcmMvaW5jbHVkZS9h
-c20vc3dpdGNoX3RvLmggICB8ICAyICsNCj4gIGFyY2gvYXJjL2tlcm5lbC9hc20tb2Zmc2V0cy5j
-ICAgICAgfCAgNyArKysNCj4gIGFyY2gvYXJjL2tlcm5lbC9zZXR1cC5jICAgICAgICAgICAgfCAg
-MiArLQ0KPiAgMTAgZmlsZXMgY2hhbmdlZCwgMTQ2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcmMvaW5jbHVkZS9hc20vZHNwLmgNCj4N
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL0tjb25maWcgYi9hcmNoL2FyYy9LY29uZmlnDQo+IGlu
-ZGV4IGI5Y2Q3Y2UzZjg3OC4uYzMyMTA3NTRhM2QyIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9L
-Y29uZmlnDQo+ICsrKyBiL2FyY2gvYXJjL0tjb25maWcNCj4gQEAgLTQzMiw2ICs0MzIsMTMgQEAg
-Y29uZmlnIEFSQ19EU1BfS0VSTkVMDQo+ICAJICBEU1AgZXh0ZW5zaW9uIHByZXNlbmNlIGluIEhX
-LCBubyBzdXBwb3J0IGZvciBEU1AtZW5hYmxlZCB1c2Vyc3BhY2UNCj4gIAkgIGFwcGxpY2F0aW9u
-cy4gV2UgZG9uJ3Qgc2F2ZSAvIHJlc3RvcmUgRFNQIHJlZ2lzdGVycyBhbmQgb25seSBkbw0KPiAg
-CSAgc29tZSBtaW5pbWFsIHByZXBhcmF0aW9ucyBzbyB1c2Vyc3BhY2Ugd29uJ3QgYmUgYWJsZSB0
-byBicmVhayBrZXJuZWwNCj4gKw0KPiArY29uZmlnIEFSQ19EU1BfVVNFUlNQQUNFDQo+ICsJYm9v
-bCAiU3VwcG9ydCBEU1AgZm9yIHVzZXJzcGFjZSBhcHBzIg0KPiArCXNlbGVjdCBBUkNfSEFTX0FD
-Q0xfUkVHUw0KPiArCWhlbHANCj4gKwkgIERTUCBleHRlbnNpb24gcHJlc2VuY2UgaW4gSFcsIHN1
-cHBvcnQgc2F2ZSAvIHJlc3RvcmUgRFNQIHJlZ2lzdGVycyB0bw0KPiArCSAgcnVuIERTUC1lbmFi
-bGVkIHVzZXJzcGFjZSBhcHBsaWNhdGlvbnMNCj4gIGVuZGNob2ljZQ0KPiAgDQo+ICBjb25maWcg
-QVJDX0lSUV9OT19BVVRPU0FWRQ0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvaW5jbHVkZS9hc20v
-YXJjcmVncy5oIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vYXJjcmVncy5oDQo+IGluZGV4IDAwMDRi
-MWU5YjMyNS4uYTcxMzgxOWNhYjNjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9pbmNsdWRlL2Fz
-bS9hcmNyZWdzLmgNCj4gKysrIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vYXJjcmVncy5oDQo+IEBA
-IC0xMTgsNiArMTE4LDggQEANCj4gIA0KPiAgLyoNCj4gICAqIERTUC1yZWxhdGVkIHJlZ2lzdGVy
-cw0KPiArICogUmVnaXN0ZXJzIG5hbWVzIG11c3QgY29ycmVzcG9uZCB0byBkc3BfY2FsbGVlX3Jl
-Z3Mgc3RydWN0dXJlIGZpZWxkcyBuYW1lcw0KPiArICogZm9yIGF1dG9tYXRpYyBvZmZzZXQgY2Fs
-Y3VsYXRpb24gaW4gRFNQX0FVWF9TQVZFX1JFU1RPUkUgbWFjcm9zLg0KDQpnb29kIGlkZWEgZm9y
-IHByZXZlbnRpbmcgY2FyYm9uIGVycm9ycy4NCg0KPiAgICovDQo+ICAjZGVmaW5lIEFSQ19BVVhf
-RFNQX0JVSUxECTB4N0ENCj4gICNkZWZpbmUgQVJDX0FVWF9BQ0MwX0xPCQkweDU4MA0KPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcmMvaW5jbHVkZS9hc20vZHNwLWltcGwuaCBiL2FyY2gvYXJjL2luY2x1
-ZGUvYXNtL2RzcC1pbXBsLmgNCj4gaW5kZXggNzg4MDkzY2JlNjg5Li43YjY0MGE2ODBkZmMgMTAw
-NjQ0DQo+IC0tLSBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2RzcC1pbXBsLmgNCj4gKysrIGIvYXJj
-aC9hcmMvaW5jbHVkZS9hc20vZHNwLWltcGwuaA0KPiBAQCAtNyw2ICs3LDggQEANCj4gICNpZm5k
-ZWYgX19BU01fQVJDX0RTUF9JTVBMX0gNCj4gICNkZWZpbmUgX19BU01fQVJDX0RTUF9JTVBMX0gN
-Cj4gIA0KPiArI2luY2x1ZGUgPGFzbS9kc3AuaD4NCj4gKw0KPiAgI2RlZmluZSBEU1BfQ1RSTF9E
-SVNBQkxFRF9BTEwJCTANCj4gIA0KPiAgI2lmZGVmIF9fQVNTRU1CTFlfXw0KPiBAQCAtMjgsMTEg
-KzMwLDgyIEBADQo+ICAJICogYWJsZSB0byBicmVhayBrZXJuZWwgKi8NCj4gIAltb3YJcjU4LCBE
-U1BfQ1RSTF9ESVNBQkxFRF9BTEwNCj4gIAlzcglyNTgsIFtBUkNfQVVYX0RTUF9DVFJMXQ0KPiAt
-I2VuZGlmIC8qIEFSQ19EU1BfS0VSTkVMICovDQo+ICsNCj4gKyNlbGlmIGRlZmluZWQoQVJDX0RT
-UF9TQVZFX1JFU1RPUkVfUkVHUykNCj4gKwlscglyNTgsIFtBUkNfQVVYX0FDQzBfR0xPXQ0KPiAr
-CWxyCXI1OSwgW0FSQ19BVVhfQUNDMF9HSEldDQo+ICsJU1QyCXI1OCwgcjU5LCBQVF9BQ0MwX0dM
-Tw0KPiArDQo+ICsJbHIJcjU4LCBbQVJDX0FVWF9EU1BfQ1RSTF0NCj4gKwlzdAlyNTgsIFtzcCwg
-UFRfRFNQX0NUUkxdDQo+ICsNCj4gKyNlbmRpZg0KPiArLmVuZG0NCj4gKw0KPiArLyogY2xvYmJl
-cnMgcjU4LCByNTkgcmVnaXN0ZXJzIHBhaXIgKi8NCj4gKy5tYWNybyBEU1BfUkVTVE9SRV9SRUdG
-SUxFX0lSUQ0KPiArI2lmIGRlZmluZWQoQVJDX0RTUF9TQVZFX1JFU1RPUkVfUkVHUykNCj4gKwlM
-RDIJcjU4LCByNTksIFBUX0FDQzBfR0xPDQo+ICsJc3IJcjU4LCBbQVJDX0FVWF9BQ0MwX0dMT10N
-Cj4gKwlzcglyNTksIFtBUkNfQVVYX0FDQzBfR0hJXQ0KPiArDQo+ICsJbGQJcjU4LCBbc3AsIFBU
-X0RTUF9DVFJMXQ0KPiArCXNyCXI1OCwgW0FSQ19BVVhfRFNQX0NUUkxdDQo+ICsNCj4gKyNlbmRp
-Zg0KDQpBc3N1bWluZyB5b3Ugc3RpbGwgbmVlZCB0aGlzLCBjb25zaWRlciB1c2luZyBkaWZmZXJl
-bnQgc2NyYXRjaCByZWdpc3RlcnMgaWYNCnBvc3NpYmxlLiBJIHVuZGVyc3RhbmQgaXQgZ2V0cyB0
-cmlja3kgaW4gcmVzdG9yZSBwYXRoIGJ1dCB0aGVyZSBldmVuIG1vcmUNCnJlZ2lzdGVycyBhcmUg
-YXZhaWxhYmxlIHRvIGNsb2JiZXIgYXMgdGhleSB3aWxsIGJlIHJlc3RvcmVkIGFmdGVyIHRoaXMg
-Y29kZS4NCg0KPiArI2lmZGVmIEFSQ19EU1BfU0FWRV9SRVNUT1JFX1JFR1MNCj4gKw0KPiArLyoN
-Cj4gKyAqIEFzIHdlIHNhdmUgbmV3IGFuZCByZXN0b3JlIG9sZCBBVVggcmVnaXN0ZXIgdmFsdWUg
-aW4gdGhlIHNhbWUgcGxhY2Ugd2UNCj4gKyAqIGNhbiBvcHRpbWl6ZSBhIGJpdCBhbmQgdXNlIEFF
-WCBpbnN0cnVjdGlvbiAoc3dhcCBjb250ZW50cyBvZiBhbiBhdXhpbGlhcnkNCj4gKyAqIHJlZ2lz
-dGVyIHdpdGggYSBjb3JlIHJlZ2lzdGVyKSBpbnN0ZWFkIG9mIExSICsgU1IgcGFpci4NCj4gKyAq
-Lw0KPiArI2RlZmluZSBBVVhfU0FWRV9SRVNUT1JFKF9zYXZldG8sIF9yZWFkZnJvbSwgX29mZnQs
-IF9hdXgsIF9zY3JhdGNoKQlcDQo+ICtkbyB7CQkJCQkJCQkJXA0KPiArCV9fYXNtX18gX192b2xh
-dGlsZV9fKAkJCQkJCVwNCj4gKwkJImxkCSUwLCBbJTIsICU0XQkJCVxuIgkJXA0KPiArCQkiYWV4
-CSUwLCBbJTNdCQkJXG4iCQlcDQo+ICsJCSJzdAklMCwgWyUxLCAlNF0JCQlcbiIJCVwNCj4gKwkJ
-OgkJCQkJCQlcDQo+ICsJCSAgIj0mciIgKF9zY3JhdGNoKQkvKiBtdXN0IGJlIGVhcmx5IGNsb2Ji
-ZXIgKi8JXA0KDQpEZWZpbmUgdGhlIHNjcmF0Y2ggdmFyaWFibGUgbG9jYWxseSBmb3IgY2xhcml0
-eSBhbmQgYmV0dGVyIGxpdmVuZXNzIHRyYWNraW5nIC0gZm9yDQpib3RoIGNvZGUgcmVhZGVyIGFu
-ZCBjb21waWxlciA6LSkNCkFsc28gYXZvaWRzIGhhdmluZyB0byBpbml0aWFsaXplIGl0Lg0KDQo+
-ICsJCToJCQkJCQkJXA0KPiArCQkgICAiciIgKF9zYXZldG8pLAkJCQkJXA0KPiArCQkgICAiciIg
-KF9yZWFkZnJvbSksCQkJCQlcDQo+ICsJCSAgICJJIiAoX2F1eCksCQkJCQkJXA0KPiArCQkgICAi
-SSIgKF9vZmZ0KQkJCQkJCVwNCj4gKwkJOgkJCQkJCQlcDQoNCkFFWCB3aXRoICJJIiBjb25zdHJh
-aW50IHdpbGwgbGlrZWx5IGJlIGFuIDggYnl0ZSBpbnN0cnVjdGlvbnMgYWx3YXlzLiBCZXN0IHRv
-IGdpdmUNCmNvbXBpbGVyIHdpZ2dsZSByb29tIHdpdGggIklyIg0KDQo+ICsJCSAgIm1lbW9yeSIJ
-CQkJCQlcDQo+ICsJKTsJCQkJCQkJCVwNCj4gK30gd2hpbGUgKDApDQo+ICsNCj4gKyNkZWZpbmUg
-RFNQX0FVWF9TQVZFX1JFU1RPUkUoX3NhdmV0bywgX3JlYWRmcm9tLCBfYXV4LCBfc2NyYXRjaCkJ
-XA0KPiArCUFVWF9TQVZFX1JFU1RPUkUoX3NhdmV0bywgX3JlYWRmcm9tLAkJCQlcDQo+ICsJCW9m
-ZnNldG9mKHN0cnVjdCBkc3BfY2FsbGVlX3JlZ3MsIF9hdXgpLAkJCVwNCj4gKwkJQVJDX0FVWF8j
-I19hdXgsIF9zY3JhdGNoKQ0KPiArDQo+ICtzdGF0aWMgaW5saW5lIHZvaWQgYXJjX2RzcF9zYXZl
-X3Jlc3RvcmUoc3RydWN0IHRhc2tfc3RydWN0ICpwcmV2LA0KPiArCQkJCQlzdHJ1Y3QgdGFza19z
-dHJ1Y3QgKm5leHQpDQo+ICt7DQo+ICsJbG9uZyB1bnNpZ25lZCBpbnQgKnNhdmV0byA9ICZwcmV2
-LT50aHJlYWQuZHNwLkRTUF9CRkxZMDsNCj4gKwlsb25nIHVuc2lnbmVkIGludCAqcmVhZGZyb20g
-PSAmbmV4dC0+dGhyZWFkLmRzcC5EU1BfQkZMWTA7DQo+ICsNCj4gKwlsb25nIHVuc2lnbmVkIGlu
-dCB6ZXJvID0gMDsNCg0KU2VlIGNvbW1lbnQgYWJvdXQgcHVzaGluZyBzY3JhdGNoIHRvIHRoZSBy
-ZWxldmFudCBjb2RlIGJsb2NrLg0KDQo+ICsNCj4gKwlEU1BfQVVYX1NBVkVfUkVTVE9SRShzYXZl
-dG8sIHJlYWRmcm9tLCBEU1BfQkZMWTAsIHplcm8pOw0KPiArCURTUF9BVVhfU0FWRV9SRVNUT1JF
-KHNhdmV0bywgcmVhZGZyb20sIERTUF9GRlRfQ1RSTCwgemVybyk7DQo+ICt9DQo+ICsNCg0KW3Nu
-aXBdDQoNCj4gKw0KPiArI2lmIGRlZmluZWQoQ09ORklHX0FSQ19EU1BfVVNFUlNQQUNFKQ0KPiAr
-I2RlZmluZSBBUkNfRFNQX1NBVkVfUkVTVE9SRV9SRUdTCTENCj4gKyNlbmRpZg0KDQpJIGNhbiBz
-ZWUgdSBhZGRlZCB0aGlzIGZvciBjb25zaXN0ZW5jeSB3aXRoIGJlbG93IHdoaWNoIGlzIGEgcmVh
-bGx5IGJhZCBpZGVhOiBzZWUNCmJlbG93Lg0KDQo+ICsNCj4gKyNpZm5kZWYgX19BU1NFTUJMWV9f
-DQo+ICsNCj4gKy8qIHNvbWUgZGVmaW5lcyB0byBzaW1wbGlmeSBjb25maWcgc2FuaXRpemUgaW4g
-a2VybmVsL3NldHVwLmMgKi8NCj4gKyNpZiBkZWZpbmVkKENPTkZJR19BUkNfRFNQX0tFUk5FTCkg
-CXx8IFwNCj4gKyAgICBkZWZpbmVkKENPTkZJR19BUkNfRFNQX1VTRVJTUEFDRSkNCj4gKyNkZWZp
-bmUgQVJDX0RTUF9IQU5ETEVECQkJMQ0KPiArI2Vsc2UNCj4gKyNkZWZpbmUgQVJDX0RTUF9IQU5E
-TEVECQkJMA0KPiArI2VuZGlmDQoNClRoaXMgaXMgYSByZWFsbHkgYmFkIGlkZWEgLSB1IHIgaW50
-cm9kdWNpbmcgZXhwbGljaXQgaW5jbHVkZSBkZXBlbmRlbmNpZXMgd2hpY2gNCmNhbiBjaGFuZ2Ug
-ZXZlbiBvdXRzaWRlIG9mIGFyY2ggY2hhbmdlcyAhDQpXZSd2ZSBkZWFsdCB3aXRoIGVub3VnaCBv
-ZiB0aGVzZSBwcm9ibGVtcyB3aXRoIGN1cnJlbnQuaCwgc28gYmVzdCB0byBhdm9pZCwgZXZlbg0K
-aWYgdGhlcmUgaXMgc29tZSBjb2RlIGNsdXR0ZXIuDQoNCj4gKw0KPiArI2lmIGRlZmluZWQoQ09O
-RklHX0FSQ19EU1BfVVNFUlNQQUNFKQ0KPiArI2RlZmluZSBBUkNfRFNQX09QVF9OQU1FCQkiQ09O
-RklHX0FSQ19EU1BfVVNFUlNQQUNFIg0KPiArI2Vsc2UNCj4gKyNkZWZpbmUgQVJDX0RTUF9PUFRf
-TkFNRQkJIkNPTkZJR19BUkNfRFNQX0tFUk5FTCINCj4gKyNlbmRpZg0KPiArDQo+ICsvKg0KPiAr
-ICogRFNQLXJlbGF0ZWQgc2F2ZWQgcmVnaXN0ZXJzIC0gbmVlZCB0byBiZSBzYXZlZCBvbmx5IHdo
-ZW4geW91IGFyZQ0KPiArICogc2NoZWR1bGVkIG91dC4NCj4gKyAqIHN0cnVjdHVyZSBmaWVsZHMg
-bmFtZSBtdXN0IGNvcnJlc3BvbmQgdG8gYXV4IHJlZ2lzdGVyIGRlZmVuaXRpb25zIGZvcg0KPiAr
-ICogYXV0b21hdGljIG9mZnNldCBjYWxjdWxhdGlvbiBpbiBEU1BfQVVYX1NBVkVfUkVTVE9SRSBt
-YWNyb3MNCj4gKyAqLw0KPiArc3RydWN0IGRzcF9jYWxsZWVfcmVncyB7DQo+ICsJdW5zaWduZWQg
-bG9uZyBEU1BfQkZMWTAsIERTUF9GRlRfQ1RSTDsNCj4gK307DQo+ICsNCj4gKyNlbmRpZiAvKiAh
-X19BU1NFTUJMWV9fICovDQo+ICsNCj4gKyNlbmRpZiAvKiBfX0FTTV9BUkNfRFNQX0ggKi8NCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2VudHJ5LWFyY3YyLmggYi9hcmNoL2Fy
-Yy9pbmNsdWRlL2FzbS9lbnRyeS1hcmN2Mi5oDQo+IGluZGV4IGUzZjhiZDNlMmViYS4uNWQwNzlm
-MGI2MjQzIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9pbmNsdWRlL2FzbS9lbnRyeS1hcmN2Mi5o
-DQo+ICsrKyBiL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2VudHJ5LWFyY3YyLmgNCj4gQEAgLTE5Miw2
-ICsxOTIsOSBAQA0KPiAgCWxkCXIyNSwgW3NwLCBQVF91c2VyX3IyNV0NCj4gICNlbmRpZg0KPiAg
-DQo+ICsJLyogY2xvYmJlcnMgcjU4LCByNTkgcmVnaXN0ZXJzIHBhaXIsIHNvIG11c3QgYmUgYmVm
-b3JlIHI1OCwgcjU5IHJlc3RvcmUgKi8NCj4gKwlEU1BfUkVTVE9SRV9SRUdGSUxFX0lSUQ0KPiAr
-DQo+ICAjaWZkZWYgQ09ORklHX0FSQ19IQVNfQUNDTF9SRUdTDQo+ICAJTEQyCXI1OCwgcjU5LCBQ
-VF9yNTgNCj4gICNlbmRpZg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvaW5jbHVkZS9hc20vcHJv
-Y2Vzc29yLmggYi9hcmNoL2FyYy9pbmNsdWRlL2FzbS9wcm9jZXNzb3IuaA0KPiBpbmRleCA3MDZl
-ZGVhYTU1ODMuLjE3MTZkZjBmNDQ3MiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcmMvaW5jbHVkZS9h
-c20vcHJvY2Vzc29yLmgNCj4gKysrIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vcHJvY2Vzc29yLmgN
-Cj4gQEAgLTE0LDYgKzE0LDcgQEANCj4gICNpZm5kZWYgX19BU1NFTUJMWV9fDQo+ICANCj4gICNp
-bmNsdWRlIDxhc20vcHRyYWNlLmg+DQo+ICsjaW5jbHVkZSA8YXNtL2RzcC5oPg0KPiAgDQo+ICAj
-aWZkZWYgQ09ORklHX0FSQ19GUFVfU0FWRV9SRVNUT1JFDQo+ICAvKiBUaGVzZSBEUEZQIHJlZ3Mg
-bmVlZCB0byBiZSBzYXZlZC9yZXN0b3JlZCBhY3Jvc3MgY3R4LXN3ICovDQo+IEBAIC0zOSw2ICs0
-MCw5IEBAIHN0cnVjdCB0aHJlYWRfc3RydWN0IHsNCj4gIAl1bnNpZ25lZCBsb25nIGtzcDsJLyog
-a2VybmVsIG1vZGUgc3RhY2sgcG9pbnRlciAqLw0KPiAgCXVuc2lnbmVkIGxvbmcgY2FsbGVlX3Jl
-ZzsJLyogcG9pbnRlciB0byBjYWxsZWUgcmVncyAqLw0KPiAgCXVuc2lnbmVkIGxvbmcgZmF1bHRf
-YWRkcmVzczsJLyogZGJscyBhcyBicmtwdCBob2xkZXIgYXMgd2VsbCAqLw0KPiArI2lmZGVmIEFS
-Q19EU1BfU0FWRV9SRVNUT1JFX1JFR1MNCj4gKwlzdHJ1Y3QgZHNwX2NhbGxlZV9yZWdzIGRzcDsN
-Cj4gKyNlbmRpZg0KPiAgI2lmZGVmIENPTkZJR19BUkNfRlBVX1NBVkVfUkVTVE9SRQ0KPiAgCXN0
-cnVjdCBhcmNfZnB1IGZwdTsNCj4gICNlbmRpZg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvaW5j
-bHVkZS9hc20vcHRyYWNlLmggYi9hcmNoL2FyYy9pbmNsdWRlL2FzbS9wdHJhY2UuaA0KPiBpbmRl
-eCBiYTk4NTRlZjM5ZTguLmE1ODUxZWUxNDFkZSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcmMvaW5j
-bHVkZS9hc20vcHRyYWNlLmgNCj4gKysrIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vcHRyYWNlLmgN
-Cj4gQEAgLTgsNiArOCw3IEBADQo+ICAjZGVmaW5lIF9fQVNNX0FSQ19QVFJBQ0VfSA0KPiAgDQo+
-ICAjaW5jbHVkZSA8dWFwaS9hc20vcHRyYWNlLmg+DQo+ICsjaW5jbHVkZSA8YXNtL2RzcC5oPg0K
-PiAgDQo+ICAjaWZuZGVmIF9fQVNTRU1CTFlfXw0KPiAgDQo+IEBAIC05MSw2ICs5Miw5IEBAIHN0
-cnVjdCBwdF9yZWdzIHsNCj4gICNpZmRlZiBDT05GSUdfQVJDX0hBU19BQ0NMX1JFR1MNCj4gIAl1
-bnNpZ25lZCBsb25nIHI1OCwgcjU5OwkvKiBBQ0NML0FDQ0ggdXNlZCBieSBGUFUgLyBEU1AgTVBZ
-ICovDQo+ICAjZW5kaWYNCj4gKyNpZmRlZiBBUkNfRFNQX1NBVkVfUkVTVE9SRV9SRUdTDQoNClVz
-ZSB0aGUgS2NvbmZpZyBvcHRpb24gbmFtZSBkaXJlY3RseSBvciAhQ09ORklHX05PX0RTUCBldGMN
-Cg0KPiArCXVuc2lnbmVkIGxvbmcgQUNDMF9HTE8sIEFDQzBfR0hJLCBEU1BfQ1RSTDsNCj4gKyNl
-bmRpZg0KDQpzZWUgY29tbWVudHMgYXQgdG9wLg0KDQo+ICANCj4gIAkvKi0tLS0tLS0gQmVsb3cg
-bGlzdCBhdXRvIHNhdmVkIGJ5IGgvdyAtLS0tLS0tLS0tLSovDQo+ICAJdW5zaWduZWQgbG9uZyBy
-MCwgcjEsIHIyLCByMywgcjQsIHI1LCByNiwgcjcsIHI4LCByOSwgcjEwLCByMTE7DQoNCltzbmlw
-XQ0KDQo+ICB9DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9rZXJuZWwvc2V0dXAuYyBiL2FyY2gv
-YXJjL2tlcm5lbC9zZXR1cC5jDQo+IGluZGV4IGIzOTk1ZGQ2NzNkOS4uMzBkMzE1NzljNTFkIDEw
-MDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9rZXJuZWwvc2V0dXAuYw0KPiArKysgYi9hcmNoL2FyYy9r
-ZXJuZWwvc2V0dXAuYw0KPiBAQCAtNDQ3LDcgKzQ0Nyw3IEBAIHN0YXRpYyB2b2lkIGFyY19jaGtf
-Y29yZV9jb25maWcodm9pZCkNCj4gIAkJQ0hLX09QVF9TVFJJQ1QoQ09ORklHX0FSQ19IQVNfQUND
-TF9SRUdTLCBwcmVzZW50KTsNCj4gIA0KPiAgCQlwcmVzZW50ID0gZHNwX2V4aXN0KCk7DQo+IC0J
-CUNIS19PUFRfU1RSSUNUKENPTkZJR19BUkNfRFNQX0tFUk5FTCwgcHJlc2VudCk7DQo+ICsJCWNo
-a19vcHRfc3RyaWN0KEFSQ19EU1BfT1BUX05BTUUsIHByZXNlbnQsIEFSQ19EU1BfSEFORExFRCk7
-DQoNClRoaXMgbmVlZHMgdG8gYmUgcmV3b3JrZWQgZ2l2ZW4gdGhlIGhlYWRlciBmdWRnZSBpcyBu
-b3QgYSBnb29kIGlkZWEuDQoNCg==
+On Tue, Jan 7, 2020 at 7:23 AM Andrew Jones <drjones@redhat.com> wrote:
+>
+> On Mon, Dec 16, 2019 at 01:38:58PM -0800, Ben Gardon wrote:
+> > In preparation for supporting multiple vCPUs in the demand paging test,
+> > pass arguments to the vCPU instead of syncing globals to it.
+>
+> This will only work if we don't spill parameters onto the stack and all
+> data we want to pass fit in registers.
+
+That's a great point. I'll see about using globals and deriving the
+cpu ID to look up args. In your pseudocode below I see you use
+arch_get_cpu_id, but I don't believe this function exists in selftests
+and I don't have the knowledge off the top of my head to implement it
+for s390 and aarch64. Do you have any pointers for implementing such a
+function?
+
+> I've used multiple VCPUs in tests
+> before and stuck with the global syncing. I simply used arrays like this
+>
+>  static my_type_t my_data[NR_VCPUS];
+>
+>  static void guest_code(void)
+>  {
+>      int cpu = arch_get_cpu_id();
+>
+>      // do something with my_data[cpu]
+>  }
+>
+>  int main(void)
+>  {
+>      for (i = 0; i < NR_VCPUS; ++i) {
+>          // prepare my_data[i]
+>          sync_global_to_guest(vm, my_data[i]);
+>      }
+>
+>      // run vcpus
+>
+>     for (i = 0; i < NR_VCPUS; ++i) {
+>          sync_global_from_guest(vm, my_data[i]);
+>          // do something with my_data[i]
+>     }
+>  }
+>
+> >
+> > Signed-off-by: Ben Gardon <bgardon@google.com>
+> > ---
+> >  .../selftests/kvm/demand_paging_test.c        | 61 +++++++++++--------
+> >  1 file changed, 37 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
+> > index 4aa90a3fce99c..8ede26e088ab6 100644
+> > --- a/tools/testing/selftests/kvm/demand_paging_test.c
+> > +++ b/tools/testing/selftests/kvm/demand_paging_test.c
+> > @@ -42,7 +42,6 @@
+> >   */
+> >  static uint64_t host_page_size;
+> >  static uint64_t guest_page_size;
+> > -static uint64_t guest_num_pages;
+> >
+> >  static char *guest_data_prototype;
+> >
+> > @@ -63,14 +62,13 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
+> >   * Continuously write to the first 8 bytes of each page in the demand paging
+> >   * memory region.
+> >   */
+> > -static void guest_code(void)
+> > +static void guest_code(uint64_t gva, uint64_t pages)
+> >  {
+> >       int i;
+> >
+> > -     for (i = 0; i < guest_num_pages; i++) {
+> > -             uint64_t addr = guest_test_virt_mem;
+> > +     for (i = 0; i < pages; i++) {
+> > +             uint64_t addr = gva + (i * guest_page_size);
+> >
+> > -             addr += i * guest_page_size;
+> >               addr &= ~(host_page_size - 1);
+> >               *(uint64_t *)addr = 0x0123456789ABCDEF;
+> >       }
+> > @@ -82,18 +80,31 @@ static void guest_code(void)
+> >  static void *host_test_mem;
+> >  static uint64_t host_num_pages;
+> >
+> > +struct vcpu_thread_args {
+> > +     uint64_t gva;
+> > +     uint64_t pages;
+> > +     struct kvm_vm *vm;
+> > +     int vcpu_id;
+> > +};
+> > +
+> >  static void *vcpu_worker(void *data)
+> >  {
+> >       int ret;
+> > -     struct kvm_vm *vm = data;
+> > +     struct vcpu_thread_args *args = (struct vcpu_thread_args *)data;
+> > +     struct kvm_vm *vm = args->vm;
+> > +     int vcpu_id = args->vcpu_id;
+> > +     uint64_t gva = args->gva;
+> > +     uint64_t pages = args->pages;
+> >       struct kvm_run *run;
+> >
+> > -     run = vcpu_state(vm, VCPU_ID);
+> > +     vcpu_args_set(vm, vcpu_id, 2, gva, pages);
+>
+> vcpu_args_set() is currently only implemented by x86, so that's a good
+> reason for this to be an x86-only test for now. Well, unless this is
+> switched back to using global sync.
+>
+> > +
+> > +     run = vcpu_state(vm, vcpu_id);
+> >
+> >       /* Let the guest access its memory */
+> > -     ret = _vcpu_run(vm, VCPU_ID);
+> > +     ret = _vcpu_run(vm, vcpu_id);
+> >       TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
+> > -     if (get_ucall(vm, VCPU_ID, NULL) != UCALL_SYNC) {
+> > +     if (get_ucall(vm, vcpu_id, NULL) != UCALL_SYNC) {
+> >               TEST_ASSERT(false,
+> >                           "Invalid guest sync status: exit_reason=%s\n",
+> >                           exit_reason_str(run->exit_reason));
+> > @@ -269,11 +280,13 @@ static int setup_demand_paging(struct kvm_vm *vm,
+> >  #define PAGE_SHIFT_4K  12
+> >
+> >  static void run_test(enum vm_guest_mode mode, bool use_uffd,
+> > -                  useconds_t uffd_delay, uint64_t guest_memory_bytes)
+> > +                  useconds_t uffd_delay, uint64_t vcpu_wss)
+>
+> Not sure why guest_memory_bytes was renamed to vcpu_wss. What is wss?
+> Working set size?
+
+wss indeed stands for working set size, but I agree there's no reason
+to use it. I'll change guest_memory_bytes to vcpu_memory_bytes
+instead.
+
+>
+> >  {
+> >       pthread_t vcpu_thread;
+> >       pthread_t uffd_handler_thread;
+> >       struct kvm_vm *vm;
+> > +     struct vcpu_thread_args vcpu_args;
+> > +     uint64_t guest_num_pages;
+> >       int r;
+> >
+> >       /*
+> > @@ -283,16 +296,15 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+> >        * number will be enough for all archs. (e.g., 64K page size guest
+> >        * will need even less memory for page tables).
+> >        */
+> > -     vm = create_vm(mode, VCPU_ID,
+> > -                    (2 * guest_memory_bytes) >> PAGE_SHIFT_4K,
+> > +     vm = create_vm(mode, VCPU_ID, (2 * vcpu_wss) >> PAGE_SHIFT_4K,
+> >                      guest_code);
+> >
+> >       guest_page_size = vm_get_page_size(vm);
+> >
+> > -     TEST_ASSERT(guest_memory_bytes % guest_page_size == 0,
+> > +     TEST_ASSERT(vcpu_wss % guest_page_size == 0,
+> >                   "Guest memory size is not guest page size aligned.");
+> >
+> > -     guest_num_pages = guest_memory_bytes / guest_page_size;
+> > +     guest_num_pages = vcpu_wss / guest_page_size;
+> >
+> >  #ifdef __s390x__
+> >       /* Round up to multiple of 1M (segment size) */
+> > @@ -308,9 +320,9 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+> >                   guest_num_pages, vm_get_max_gfn(vm));
+> >
+> >       host_page_size = getpagesize();
+> > -     TEST_ASSERT(guest_memory_bytes % host_page_size == 0,
+> > +     TEST_ASSERT(vcpu_wss % host_page_size == 0,
+> >                   "Guest memory size is not host page size aligned.");
+> > -     host_num_pages = guest_memory_bytes / host_page_size;
+> > +     host_num_pages = vcpu_wss / host_page_size;
+> >
+> >       guest_test_phys_mem = (vm_get_max_gfn(vm) - guest_num_pages) *
+> >                             guest_page_size;
+> > @@ -354,10 +366,12 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+> >       /* Export the shared variables to the guest */
+> >       sync_global_to_guest(vm, host_page_size);
+> >       sync_global_to_guest(vm, guest_page_size);
+> > -     sync_global_to_guest(vm, guest_test_virt_mem);
+> > -     sync_global_to_guest(vm, guest_num_pages);
+> >
+> > -     pthread_create(&vcpu_thread, NULL, vcpu_worker, vm);
+> > +     vcpu_args.vm = vm;
+> > +     vcpu_args.vcpu_id = VCPU_ID;
+> > +     vcpu_args.gva = guest_test_virt_mem;
+> > +     vcpu_args.pages = guest_num_pages;
+> > +     pthread_create(&vcpu_thread, NULL, vcpu_worker, &vcpu_args);
+> >
+> >       /* Wait for the vcpu thread to quit */
+> >       pthread_join(vcpu_thread, NULL);
+> > @@ -404,8 +418,7 @@ static void help(char *name)
+> >       printf(" -d: add a delay in usec to the User Fault\n"
+> >              "     FD handler to simulate demand paging\n"
+> >              "     overheads. Ignored without -u.\n");
+> > -     printf(" -b: specify the number of bytes of memory which should be\n"
+> > -            "     allocated to the guest.\n");
+> > +     printf(" -b: specify the working set size, in bytes for each vCPU.\n");
+> >       puts("");
+> >       exit(0);
+> >  }
+> > @@ -413,7 +426,7 @@ static void help(char *name)
+> >  int main(int argc, char *argv[])
+> >  {
+> >       bool mode_selected = false;
+> > -     uint64_t guest_memory_bytes = DEFAULT_GUEST_TEST_MEM_SIZE;
+> > +     uint64_t vcpu_wss = DEFAULT_GUEST_TEST_MEM_SIZE;
+> >       unsigned int mode;
+> >       int opt, i;
+> >       bool use_uffd = false;
+> > @@ -448,7 +461,7 @@ int main(int argc, char *argv[])
+> >                                   "A negative UFFD delay is not supported.");
+> >                       break;
+> >               case 'b':
+> > -                     guest_memory_bytes = strtoull(optarg, NULL, 0);
+> > +                     vcpu_wss = strtoull(optarg, NULL, 0);
+> >               case 'h':
+> >               default:
+> >                       help(argv[0]);
+> > @@ -462,7 +475,7 @@ int main(int argc, char *argv[])
+> >               TEST_ASSERT(vm_guest_mode_params[i].supported,
+> >                           "Guest mode ID %d (%s) not supported.",
+> >                           i, vm_guest_mode_string(i));
+> > -             run_test(i, use_uffd, uffd_delay, guest_memory_bytes);
+> > +             run_test(i, use_uffd, uffd_delay, vcpu_wss);
+> >       }
+> >
+> >       return 0;
+> > --
+> > 2.24.1.735.g03f4e72817-goog
+> >
+>
+> Thanks,
+> drew
+>
