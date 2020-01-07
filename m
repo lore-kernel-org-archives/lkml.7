@@ -2,53 +2,52 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE74C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67233C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058792081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E4C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432056;
-	bh=MuIb+sqGhjVYAmssrn+7TlscdFUuD8dmFEMaZbKcdMU=;
+	s=default; t=1578432066;
+	bh=kVoxcKX+KKMHJvFVq6JCZCQdzgGtjwe3xwvlLF3JUR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dX1efIkAw4UnN/TaHUmr3KyW8mliHVLQ6esVuO3M03cPON4PE576Rcbu8MW7y6pXZ
-	 dfZ5APwUqmst73xFpujlK169yf2u9LwYFR9m7kuRX9EgAyTe24Htqr0tL8qdXL5ANX
-	 +NcXEyZuD7Ii7MHEYpXDZdiBhBJI6AR9sfCB9qfY=
+	b=XdVFiGyNGNJgUPLTf8ay+y95yhg+SW/bd3HwahI2VbhpUOyO3MCOBmBWaw70FkTdL
+	 WBLntjZ8y3ZP1mP/vHZ38dHQ50ew4yBYaS017G4Qpy8eVBhiwMl1fkL3LswGCgLoHg
+	 GVT4WhiGZUa6S6QWO0hVG2ib8DifV8ZgdyxHPr7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgAGVDq (ORCPT
+        id S1728935AbgAGVDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46300 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:03:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgAGVDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:43 -0500
+        id S1728128AbgAGVDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0ABD214D8;
-        Tue,  7 Jan 2020 21:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F356A2077B;
+        Tue,  7 Jan 2020 21:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431022;
-        bh=MuIb+sqGhjVYAmssrn+7TlscdFUuD8dmFEMaZbKcdMU=;
+        s=default; t=1578431010;
+        bh=kVoxcKX+KKMHJvFVq6JCZCQdzgGtjwe3xwvlLF3JUR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VO8FFRK1vKkGsUmV7jeJ6pxmgM1GsAxtx9jrp1QsZnE9j4AQtRQJJC59L+6P7Lm5o
-         7Ol6Lh2MfoCUCwLNasCRNGS477vJBCVuCaVS76VtRC0GvRfyABH1yt7OVbr5yiK2Pf
-         2TruW9pXAkduoQiGF7TaGQd3FsQ1eXKarFWByL9w=
+        b=KPgi/ExZ6ZpRUPIUuxJE96XpGD/jxfK5k8l1Fj0xGufihR27mqkYAgvhkSmzZi3LY
+         46nV1Oi8s2YY0DDWs+A9a/4PEzH4PcNEIqbW4FYBQhB8nicoqBLsWMRJFXxIHRYNA/
+         cj4HdWFZTiX38OOx0fjvKSIxTyJp7BLnMo4ANKPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 166/191] dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix typo in example
-Date:   Tue,  7 Jan 2020 21:54:46 +0100
-Message-Id: <20200107205341.865549681@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 188/191] hsr: avoid debugfs warning message when module is remove
+Date:   Tue,  7 Jan 2020 21:55:08 +0100
+Message-Id: <20200107205343.049814005@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -61,35 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 830dbce7c76ea529decac7d23b808c1e7da3d891 upstream.
+[ Upstream commit 84bb59d773853bc2dda2ac1ef8474c40eb33a3c6 ]
 
-The documented compatible value for R-Car H3 is
-"renesas,r8a7795-rcar-usb2-clock-sel", not
-"renesas,r8a77950-rcar-usb2-clock-sel".
+When hsr module is being removed, debugfs_remove() is called to remove
+both debugfs directory and file.
 
-Fixes: 311accb64570db45 ("clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0 clock selector PHY")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191016145650.30003-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+When module is being removed, module state is changed to
+MODULE_STATE_GOING then exit() is called.
+At this moment, module couldn't be held so try_module_get()
+will be failed.
 
+debugfs's open() callback tries to hold the module if .owner is existing.
+If it fails, warning message is printed.
+
+CPU0				CPU1
+delete_module()
+    try_stop_module()
+    hsr_exit()			open() <-- WARNING
+        debugfs_remove()
+
+In order to avoid the warning message, this patch makes hsr module does
+not set .owner. Unsetting .owner is safe because these are protected by
+inode_lock().
+
+Test commands:
+    #SHELL1
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    while :
+    do
+        ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1
+	modprobe -rv hsr
+    done
+
+    #SHELL2
+    while :
+    do
+        cat /sys/kernel/debug/hsr0/node_table
+    done
+
+Splat looks like:
+[  101.223783][ T1271] ------------[ cut here ]------------
+[  101.230309][ T1271] debugfs file owner did not clean up at exit: node_table
+[  101.230380][ T1271] WARNING: CPU: 3 PID: 1271 at fs/debugfs/file.c:309 full_proxy_open+0x10f/0x650
+[  101.233153][ T1271] Modules linked in: hsr(-) dummy veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_d]
+[  101.237112][ T1271] CPU: 3 PID: 1271 Comm: cat Tainted: G        W         5.5.0-rc1+ #204
+[  101.238270][ T1271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  101.240379][ T1271] RIP: 0010:full_proxy_open+0x10f/0x650
+[  101.241166][ T1271] Code: 48 c1 ea 03 80 3c 02 00 0f 85 c1 04 00 00 49 8b 3c 24 e8 04 86 7e ff 84 c0 75 2d 4c 8
+[  101.251985][ T1271] RSP: 0018:ffff8880ca22fa38 EFLAGS: 00010286
+[  101.273355][ T1271] RAX: dffffc0000000008 RBX: ffff8880cc6e6200 RCX: 0000000000000000
+[  101.274466][ T1271] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8880c4dd5c14
+[  101.275581][ T1271] RBP: 0000000000000000 R08: fffffbfff2922f5d R09: 0000000000000000
+[  101.276733][ T1271] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffffc0551bc0
+[  101.277853][ T1271] R13: ffff8880c4059a48 R14: ffff8880be50a5e0 R15: ffffffff941adaa0
+[  101.278956][ T1271] FS:  00007f8871cda540(0000) GS:ffff8880da800000(0000) knlGS:0000000000000000
+[  101.280216][ T1271] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  101.282832][ T1271] CR2: 00007f88717cfd10 CR3: 00000000b9440005 CR4: 00000000000606e0
+[  101.283974][ T1271] Call Trace:
+[  101.285328][ T1271]  do_dentry_open+0x63c/0xf50
+[  101.286077][ T1271]  ? open_proxy_open+0x270/0x270
+[  101.288271][ T1271]  ? __x64_sys_fchdir+0x180/0x180
+[  101.288987][ T1271]  ? inode_permission+0x65/0x390
+[  101.289682][ T1271]  path_openat+0x701/0x2810
+[  101.290294][ T1271]  ? path_lookupat+0x880/0x880
+[  101.290957][ T1271]  ? check_chain_key+0x236/0x5d0
+[  101.291676][ T1271]  ? __lock_acquire+0xdfe/0x3de0
+[  101.292358][ T1271]  ? sched_clock+0x5/0x10
+[  101.292962][ T1271]  ? sched_clock_cpu+0x18/0x170
+[  101.293644][ T1271]  ? find_held_lock+0x39/0x1d0
+[  101.305616][ T1271]  do_filp_open+0x17a/0x270
+[  101.306061][ T1271]  ? may_open_dev+0xc0/0xc0
+[ ... ]
+
+Fixes: fc4ecaeebd26 ("net: hsr: add debugfs support for display node list")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/hsr/hsr_debugfs.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
-@@ -46,7 +46,7 @@ Required properties:
- Example (R-Car H3):
+diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
+index 94447974a3c0..6135706f03d5 100644
+--- a/net/hsr/hsr_debugfs.c
++++ b/net/hsr/hsr_debugfs.c
+@@ -64,7 +64,6 @@ hsr_node_table_open(struct inode *inode, struct file *filp)
+ }
  
- 	usb2_clksel: clock-controller@e6590630 {
--		compatible = "renesas,r8a77950-rcar-usb2-clock-sel",
-+		compatible = "renesas,r8a7795-rcar-usb2-clock-sel",
- 			     "renesas,rcar-gen3-usb2-clock-sel";
- 		reg = <0 0xe6590630 0 0x02>;
- 		clocks = <&cpg CPG_MOD 703>, <&usb_extal>, <&usb_xtal>;
+ static const struct file_operations hsr_fops = {
+-	.owner	= THIS_MODULE,
+ 	.open	= hsr_node_table_open,
+ 	.read	= seq_read,
+ 	.llseek = seq_lseek,
+-- 
+2.20.1
+
 
 
