@@ -2,187 +2,130 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F4C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61299C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A422080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3447C21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 16:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Izu/226U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMjaeoJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgAGQje (ORCPT
+        id S1728412AbgAGQr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:39:34 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43351 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728020AbgAGQjd (ORCPT
+        Tue, 7 Jan 2020 11:47:26 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46511 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728211AbgAGQr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 11:39:33 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so215310ljm.10;
-        Tue, 07 Jan 2020 08:39:31 -0800 (PST)
+        Tue, 7 Jan 2020 11:47:26 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m26so221397ljc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 08:47:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d1JorjA4nbH0lGG9FrDXthugW4FVJXUIKyRvstTpWmI=;
-        b=Izu/226Uj2nozL8PXSGlrXpf2hZRBRTxs5rZYwlzW6HhfKCuWO9e+AfMKdG2+mvSoF
-         WBDkzCkGmbuNM5N0wOKVBE+mSdLjHWhnINcwXRdq19861b5VHuBEBvJDmhoEAz42TRR1
-         IrRLoLImN3X+vHMxsr4nz1PuLeNilTSfj99oc3gBbs8xVGICaD+FggSNaxCP+4+ev6cY
-         78DVj4OPXggKK/CopKlmzev+qXCtbcahpYjv3WHqmUubvTN8Dzk/Ry3DPPEWkUOMLty3
-         0/wS9W7JMx76zBLurZ6e3RyPGwZZi4wkof0yXbgA8FONrLLT9hVNnpzuhX9pYvc8hCd9
-         9sMA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZvoR1wO4oEITSwLk+nSR4iwy2dpggu13mmwT8OJyr0g=;
+        b=FMjaeoJA437ug2DT9AkKATKeWYluxfalXHIXuGLsu+H/CQWTMXEXGaJONDmFqkXD9Z
+         YIl47qQjL9YED4/QKTQMdRBMaR4UtzhzsUP4vEGJgLYsQ8a2Lh84aBwcaeZ5/Dv4RszG
+         GuV9ct7YZJyaK5EC0tdAm/MZa1N1zGPbW9Y1BGjKgKcF6Eaa0cfA576OBqXwRNXvngR+
+         q5bgSIUOToJTEtbIQwgXjX7ADRA6XiN3fJ+mbM5GBESF0JdmpNuOlJYgepSHvi/UyCa8
+         JcMXJizo1L2IUUuDvh8IEVEK/ct86ME35mNKyCYVQXGlZI1mfCA2nsZb30F/bHp35m1X
+         AOLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d1JorjA4nbH0lGG9FrDXthugW4FVJXUIKyRvstTpWmI=;
-        b=aa+a3dvQG0xk18WMFWfm3kjeS2xI0kDRNkwgsVoHNP0ua+WYw8Gmkdxlf1uoPxEJZW
-         nDRK2tcflThfkfq6Po2w2lISlwTkP326hSGjb9hQxmRqbv4qlj7zfybz9lt2iwydlbbf
-         p5/oEf664hbrFswv6CLpSYNgnZwPdCV+vafHzQyTkqcluKpFNpNb4w5+zTZTj4mwLbLh
-         ueK902+CDJghgsgwtsiA4Ic1FDiiqPNK1ftjSP1Su8FluZnwy1Ku452Lp9gMCY1NLJ1o
-         fLOc/78LdNYHZ1mQd+uK/S7Y8/N2+J4utzp6O9yFSVfey1qLuYhmRQO+SQMBamdfGL2x
-         C9nw==
-X-Gm-Message-State: APjAAAUSVmQMy8tpZWKcn/C4GcRG6c2vphlNjPzATj7aTv2zfj6huUZU
-        p84A6tpf9ZPeEHYiNGrqYT6OGUn/
-X-Google-Smtp-Source: APXvYqxoZ5xmiwKrF/YUAXqOLZ0jl59xUJWsp4EMsAOVgddA0Tnrq4tuX5iXnkNYfFd2wrqPLUR6Tg==
-X-Received: by 2002:a2e:9008:: with SMTP id h8mr202232ljg.217.1578415170023;
-        Tue, 07 Jan 2020 08:39:30 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a15sm100803lfi.60.2020.01.07.08.39.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 08:39:28 -0800 (PST)
-Subject: Re: [PATCH v3 0/9] NVIDIA Tegra I2C driver fixes and improvements
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200106010423.5890-1-digetx@gmail.com>
- <20200107123837.GE1964183@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c830befd-ac96-04ca-4338-1ca33f0674c3@gmail.com>
-Date:   Tue, 7 Jan 2020 19:39:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZvoR1wO4oEITSwLk+nSR4iwy2dpggu13mmwT8OJyr0g=;
+        b=VyMqoXDU59ZIFFdpV2CUC3CGexSMWdQ24BoFjqn6YHOzNX6j6LNLO8Xt5NhpODRNP3
+         L9ejLa7utLgFyc0FKJiNyeadlgU+4RddPuyorjSwyOWOZYOxucQfJynHUWyJ8N01S8Zs
+         +CPwUnyDFDK0jnFQKjtswyWRN49++8ufUR8pLmg4qNQy69VBz5ZRfZGKxuf5r99BhQGe
+         Orla5feK3sHdYdxXBsSOQdFsZO3ePnNbpvS09fx5ysMyZJifqUs5LMa78hyfe8LVcp1K
+         81oHiAsxiEgvPfZXm66vfX90FzsocB5ALYonUGFPa4OKsqdot3+bY7sUIXylI4Kr8pbx
+         +29A==
+X-Gm-Message-State: APjAAAXc7YSxIv7H9ehajeu8caR9US8YERug0UNzGj9q81k0u+bHvVRG
+        4WGkad24VhLp89T6ye5fYRe3NV2jT4pnima0X/XRTg==
+X-Google-Smtp-Source: APXvYqwIOBpCiKZzxq03MFz/y1i3ELijhWT1WUVjLBovW8HeCR9HCsqvBGOQKdcEH2KQk6TVpk5F1srYFucbjgSGpMY=
+X-Received: by 2002:a2e:5357:: with SMTP id t23mr215735ljd.227.1578415644575;
+ Tue, 07 Jan 2020 08:47:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200107123837.GE1964183@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+In-Reply-To: <20191210185351.14825-1-f.fainelli@gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Jan 2020 22:17:13 +0530
+Message-ID: <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
+On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Hi Jens,
+>
+> The first 4 patches are fixes and should ideally be queued up/picked up
+> by stable. The last 4 patches add support for BCM7216 which is one of
+> our latest devices supported by this driver.
+>
+> Patch #2 does a few things, but it was pretty badly broken before and it
+> is hard not to fix all call sites (probe, suspend, resume) in one shot.
+>
+> Please let me know if you have any comments.
+>
+> Thanks!
+>
+> Florian Fainelli (8):
+>   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+>   ata: ahci_brcm: Fix AHCI resources management
 
-07.01.2020 15:38, Thierry Reding пишет:
-> On Mon, Jan 06, 2020 at 04:04:14AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This patchset adds support for atomic transfers which are required for
->> shutting down machine properly. Secondly, a (not)suspending I2C and some
->> other things are fixed/improved by this small series as well. Please review
->> and apply, thanks in advance!
->>
->> Changelog:
->>
->> v3: The "Prevent interrupt triggering after transfer timeout" and "Support
->>     atomic transfers" patches got extra very minor improvements. The
->>     completion now is passed directly to tegra_i2c_poll_completion_timeout(),
->>     for consistency.
->>
->>     Added two new patches that firm up DMA transfer handling:
->>
->>       i2c: tegra: Always terminate DMA transfer
->>       i2c: tegra: Check DMA completion status in addition to left time
->>
->> v2: The series is renamed from "Tegra I2C: Support atomic transfers and
->>     correct suspend/resume" to "NVIDIA Tegra I2C driver fixes and
->>     improvements" because it now contains some more various changes.
->>
->>     New patches in v2:
->>
->>       i2c: tegra: Correct unwinding order on driver's probe error
->>       i2c: tegra: Prevent interrupt triggering after transfer timeout
->>       i2c: tegra: Use relaxed versions of readl/writel
->>
->>     The "Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN" got an
->>     improved wording for the code's comment to I2C_PIO_MODE_PREFERRED_LEN.
->>
->>     The "Support atomic transfers" also got some very minor tuning, like
->>     s/in_interrupt()/i2c_dev->is_curr_atomic_xfer/ in dvc_writel() that was
->>     missed in v1.
->>
->> v1: The "i2c: tegra: Support atomic transfers" previously was sent out as
->>     a separate patch, but later I spotted that suspend/resume doesn't
->>     work properly. The "i2c: tegra: Fix suspending in active runtime PM
->>     state" patch depends on the atomic patch because there is a need to
->>     active IRQ-safe mode for the runtime PM by both patches.
->>
->>     I fixed a missed doc-comment of the newly added "is_curr_atomic_xfer"
->>     structure field and added additional comment that explains why IRQ needs
->>     to be disabled for the atomic transfer in the "Support atomic transfers"
->>     patch.
->>
->>     Lastly, I added a minor "i2c: tegra: Rename .." patch that helps to
->>     follow driver's code.
->>
->> Dmitry Osipenko (9):
->>   i2c: tegra: Fix suspending in active runtime PM state
->>   i2c: tegra: Properly disable runtime PM on driver's probe error
->>   i2c: tegra: Prevent interrupt triggering after transfer timeout
->>   i2c: tegra: Support atomic transfers
->>   i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
->>   i2c: tegra: Use relaxed versions of readl/writel
->>   clk: tegra: Fix double-free in tegra_clk_init()
->>   i2c: tegra: Always terminate DMA transfer
->>   i2c: tegra: Check DMA completion status in addition to left time
->>
->>  drivers/clk/tegra/clk.c        |   4 +-
->>  drivers/i2c/busses/i2c-tegra.c | 216 ++++++++++++++++++++++-----------
->>  2 files changed, 147 insertions(+), 73 deletions(-)
-> 
-> I'm still a bit on the fence about that second patch because I don't
-> think force-suspend is the right thing to do.
+Following error on stable-rc 4.14 and 4.9 branch for arm build.
 
-Technically the force-suspend does absolutely the right thing. That's
-what other drivers do, including some of the Tegra drivers. Personally
-I'm feeling confident that it should be correct. Of course it would be
-better to get a confirmation, unfortunately Rafael didn't answer
-anything yet. We can always make another patch if it will turn out that
-something is wrong.
+ drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
+ drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
+member named 'rcdev'; did you mean 'dev'?
+   if (!IS_ERR_OR_NULL(priv->rcdev))
+                             ^~~~~
+                             dev
+   CC      fs/pnode.o
+   CC      block/genhd.o
+ drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
+function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
+[-Werror=implicit-function-declaration]
+    reset_control_assert(priv->rcdev);
+    ^~~~~~~~~~~~~~~~~~~~
+    ahci_reset_controller
+ drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
+member named 'rcdev'; did you mean 'dev'?
+    reset_control_assert(priv->rcdev);
+                               ^~~~~
+                               dev
+ cc1: some warnings being treated as errors
 
-> You should probably split the clk subsystem patch out of this series so
-> that it can be picked up into the clk tree (or I can pick it up into the
-> Tegra tree).
+Full build log links,
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
 
-I made a mistake during rebase and didn't notice that, the clk patch is
-already applied to the clk tree by Stephen Boyd. I'll fix the rebase and
-send out v4, thanks!
 
-> Other than that, I ran this through the testfarm and didn't see any
-> regressions:
-> 
->     Test results:
->       13 builds: 13 pass, 0 fail
->       11 boots:  11 pass, 0 fail
->       38 tests:  38 pass, 0 fail
-> 
->     Linux version: 5.5.0-rc5-g258d134300af
->     Boards tested: tegra20-ventana, tegra30-cardhu-a04, tegra124-jetson-tk1,
->                    tegra186-p2771-0000, tegra194-p2972-0000,
->                    tegra210-p2371-2180
-> 
-> I'll reply to the individual patches with a Tested-by for patchwork to
-> pick up.
-
-Thanks!
-
+-- 
+Linaro LKFT
+https://lkft.linaro.org
