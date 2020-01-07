@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D66C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E77C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC172080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C3220880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432481;
-	bh=5iePZfUEZunjoNLkBaYgCmYBqwNYY481W0P0hx6+A4k=;
+	s=default; t=1578432483;
+	bh=2ELgMWu3X5VHs9aQWl60YfTlsvdPjjVBVl51OAFztvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dM+E/fC0F2AheztQRJtnRrE5sWezMom/y94+EmURfry6GOcWHtykvwWAt5R1RqBcM
-	 RqMT+DmO5PlxW07GWtvTLCyaKMVl4jLU7TgT6MyTDejBlKfsECwIQC7na1aOl26x0L
-	 /CxIQkwkEg77pLyV9o+Ri0mnL01lowiniVfX9aos=
+	b=KDqf83masI8JQGEkNb8z3IjPNejbPpjEc8eJUTA5iEBb39gN7IyxtFmW9Do4yLLYb
+	 5AMzWvWP5Ik3ludwF9jwK3dzThej6TIJFe4uf/cdTOxYPa6jgGm0M/dgcMkP/sYcGs
+	 VFQwt6+msSwPYWY+icgUvwxaaJXJCybiCaiO2uUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgAGU5M (ORCPT
+        id S1727482AbgAGU5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbgAGU5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:06 -0500
+        id S1727402AbgAGU5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65879214D8;
-        Tue,  7 Jan 2020 20:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F041420880;
+        Tue,  7 Jan 2020 20:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430625;
-        bh=5iePZfUEZunjoNLkBaYgCmYBqwNYY481W0P0hx6+A4k=;
+        s=default; t=1578430623;
+        bh=2ELgMWu3X5VHs9aQWl60YfTlsvdPjjVBVl51OAFztvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljR5s1GvS/hQADxzCNqX20sdPlGEh5TZ/N+Y6Z9RyOO/nxCtixP6/9tgvdYpmYCAG
-         mLRQOfMs7Du8/hvnUkcC/vLgllU4d/ZD/eWLFu60o81ru2o8B/422JY4UiGsUdsj3p
-         gn+oAAMa64OIXRj4S8KqE3dl5LW/JbU11VLlOtSw=
+        b=KQIiJrQQ1+D1boPrEqoa0gr5x/pAdUNW3MlZCPOpcgOM9/6MbEhAxDo0RNP7YPWwH
+         RF1llE5e+xjzAmHusFXvnp0vpb2c0s7YVk48O5GnaMfZYW7bX/IAxlh2R/48oDGePQ
+         PEFFHp88fM7e3+ITaq4tuZ5BmVGO81mi6v+JSjnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        stable@vger.kernel.org,
+        Krishna Kant <krishna.kant@purestorage.com>,
+        Alexei Potashnik <alexei@purestorage.com>,
         Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
         Hannes Reinecke <hare@suse.de>,
         Roman Bolshakov <r.bolshakov@yadro.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 030/191] scsi: qla2xxx: Dont defer relogin unconditonally
-Date:   Tue,  7 Jan 2020 21:52:30 +0100
-Message-Id: <20200107205334.613230532@linuxfoundation.org>
+Subject: [PATCH 5.4 029/191] scsi: qla2xxx: Send Notify ACK after N2N PLOGI
+Date:   Tue,  7 Jan 2020 21:52:29 +0100
+Message-Id: <20200107205334.560228200@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -65,40 +68,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-[ Upstream commit dabc5ec915f3a2c657ecfb529cd3d4ec303a4412 ]
+[ Upstream commit 5e6b01d84b9d20bcd77fc7c4733a2a4149bf220a ]
 
-qla2x00_configure_local_loop sets RELOGIN_NEEDED bit and calls
-qla24xx_fcport_handle_login to perform the login. This bit triggers a wake
-up of DPC later after a successful login.
+qlt_handle_login schedules session for deletion even if a login is in
+progress. That causes login bouncing, i.e. a few logins are made before it
+settles down.
 
-The deferred call is not needed if login succeeds, and it's set in
-qla24xx_fcport_handle_login in case of errors, hence it should be safe to
-drop.
+Complete the first login by sending Notify Acknowledge IOCB via
+qlt_plogi_ack_unref if the session is pending login completion.
 
-Link: https://lore.kernel.org/r/20191125165702.1013-12-r.bolshakov@yadro.com
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: 9cd883f07a54 ("scsi: qla2xxx: Fix session cleanup for N2N")
+Cc: Krishna Kant <krishna.kant@purestorage.com>
+Cc: Alexei Potashnik <alexei@purestorage.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-11-r.bolshakov@yadro.com
 Acked-by: Quinn Tran <qutran@marvell.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Tested-by: Hannes Reinecke <hare@suse.de>
 Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_target.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 4e424f1ce5de..80f276d67c14 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -5045,7 +5045,6 @@ qla2x00_configure_local_loop(scsi_qla_host_t *vha)
- 				memcpy(&ha->plogi_els_payld.data,
- 				    (void *)ha->init_cb,
- 				    sizeof(ha->plogi_els_payld.data));
--				set_bit(RELOGIN_NEEDED, &vha->dpc_flags);
- 			} else {
- 				ql_dbg(ql_dbg_init, vha, 0x00d1,
- 				    "PLOGI ELS param read fail.\n");
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 18522ac79d9e..74a378a91b71 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -4803,6 +4803,7 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
+ 
+ 	switch (sess->disc_state) {
+ 	case DSC_DELETED:
++	case DSC_LOGIN_PEND:
+ 		qlt_plogi_ack_unref(vha, pla);
+ 		break;
+ 
 -- 
 2.20.1
 
