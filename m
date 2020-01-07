@@ -2,159 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42452C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC0DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EC9207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DD22081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hMwCZTFo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EXF17GSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgAGEYo (ORCPT
+        id S1727567AbgAGEjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:24:44 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36441 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbgAGEYo (ORCPT
+        Mon, 6 Jan 2020 23:39:54 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:50356 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbgAGEjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 23:24:44 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 19so62145172otz.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 20:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rpRVgkQrP+H8glvNMQeoSS2IHkaJmEZmOMYgHcv4/Sk=;
-        b=hMwCZTFotL92VhgJnQOx+5zKXeoHFoSDwxyQeDkGA7LL1xJ/5I1qifpHD05tGEJ/k1
-         D81lbVKvMM5wqPFXLh61rQyjbKeBSH5Fvnn0a/5n9Yj/TpAk3Pj0GP1I+sfNM0VmwXVH
-         T9SVgNr3TPjwmBBxcbMTev/tuMSNk+LWI0YsAS4v1EPSUGxuxQo/3h+UYuZlAUBRmir+
-         cilRI/wWpV+b0C/e78M1pw8nlm8AZ/iKLvy3lHo3u1ZPcZLcPhj36PonE0fXHE5FebIw
-         1H04+KlDDlAkwaMukRX/ufRxoF1bmBJoRoWyjdZAxuB28KEJGfld5brUc0sgJ20yz7fV
-         NLlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rpRVgkQrP+H8glvNMQeoSS2IHkaJmEZmOMYgHcv4/Sk=;
-        b=fOES3ooRzk1NhAzZOtbiCm8gdzZelg9iF2/TE8rcCWtOQjAgkB14DknxNOpH70bGNl
-         RTHFcx8Sb/DFKOobaFYODzotX+drQ/bA48w+eLH8YVQT8nGapl5cCDfgUhVrvzJkGcPE
-         gU+MBrXUAyqjI3WhaKMz9zCrDU4Zv+wkUTTCqQTaMrhU2UELoc8pGxw7cNHpk7nr42Gl
-         q7S+4clQ7SVsUPQJeM40lpII5qP6hO7/WPg4fLAnLp9cL4YHj/1J2HlLGIfpk+ORp7Uv
-         qxAM8P2YQ19A0j2/aZd/Jhmg3xo9Movo3+vQ7wCC1Cq6Ie6ICuY1h4DtEU1NQWJ5NWe1
-         Auig==
-X-Gm-Message-State: APjAAAWsAi3uMWqRartxuAMwni47wPDvQQmFqZLs03w9llrsmWSmigmg
-        VxORYQlgb+JclVpSuht9FHIYwe8fX1RMMX0UZ5nduQ==
-X-Google-Smtp-Source: APXvYqzf1d2T/uMauIo2ZeG7AJCoT0+lduA5vctbRQQqcUAxoautUmiDkuGdp3E5eiwrTJn7bTCIku50x+CJ+lwCShE=
-X-Received: by 2002:a9d:4e99:: with SMTP id v25mr123180121otk.363.1578371083582;
- Mon, 06 Jan 2020 20:24:43 -0800 (PST)
+        Mon, 6 Jan 2020 23:39:54 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0074dSia088622;
+        Tue, 7 Jan 2020 04:39:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=Ut4HfjsleA5SVSMZ/IcSbSv3IYy2cHSpvO/X4+oPjeU=;
+ b=EXF17GSlVh5i6vXJiSRt/n8Bu0aBoDDIf6+UwUKjkjbEbwVxR98Y/Mfo/tFNFG/NpEMa
+ wtt9DuKSzEVCgw9uuAAoaxZIPpiELCgvaB7r4615rv95+tBOlD0Yz7DpH9980dugJjrG
+ ZTWTTpfK15v+ykRTFqqbrPqaTQwCjCP6sU/QTVVZc2hbXIW471+/0cFQmQzxjrufZOWb
+ UykUo/M5Tc83KNeiH9EH3diV5G0rOR6ds0oBikOq9NeNUsw6X+u+oLxBX2Utzhcys3uD
+ R2twC+4j8SEbMz5pqa/nnN9WaJjNe9WMTSZIjJA0gVnR/x5bmCarGCcFR955oyuR0Hqr 3g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xakbqjvx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 04:39:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0074YEpR115118;
+        Tue, 7 Jan 2020 04:39:30 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xcjvc8p7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 04:39:29 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0074dSCw020340;
+        Tue, 7 Jan 2020 04:39:28 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Jan 2020 20:39:27 -0800
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        axboe@kernel.dk, ssomesh@amazon.com, hch@lst.de, mst@redhat.com,
+        Chaitanya.Kulkarni@wdc.com
+Subject: Re: [resend v1 5/5] drivers/scsi/sd.c: Convert to use disk_set_capacity
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200102075315.22652-1-sblbir@amazon.com>
+        <20200102075315.22652-6-sblbir@amazon.com>
+        <yq1blrg2agh.fsf@oracle.com> <1578369479.3251.31.camel@linux.ibm.com>
+Date:   Mon, 06 Jan 2020 23:39:25 -0500
+In-Reply-To: <1578369479.3251.31.camel@linux.ibm.com> (James Bottomley's
+        message of "Mon, 06 Jan 2020 19:57:59 -0800")
+Message-ID: <yq1y2uj283m.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157835763783.1456824.4013634516855823659.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200107035824.GA19080@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200107035824.GA19080@dhcp-128-65.nay.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 6 Jan 2020 20:24:32 -0800
-Message-ID: <CAPcyv4jbf2WR2ZU55564fORxKLf8tGH1XbYBpRfTvPouGWk2mg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] efi: Fix efi_memmap_alloc() leaks
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=875
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070036
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=939 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 7:58 PM Dave Young <dyoung@redhat.com> wrote:
+
+James,
+
+>> We already emit an SDEV_EVT_CAPACITY_CHANGE_REPORTED event if device
+>> capacity changes. However, this event does not automatically cause
+>> revalidation.
 >
-> On 01/06/20 at 04:40pm, Dan Williams wrote:
-> > With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
-> > updated and replaced multiple times. When that happens a previous
-> > dynamically allocated efi memory map can be garbage collected. Use the
-> > new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
-> > allocated memory map is being replaced.
-> >
-> > Debug statements in efi_memmap_free() reveal:
-> >
-> >  efi: __efi_memmap_free:37: phys: 0x23ffdd580 size: 2688 flags: 0x2
-> >  efi: __efi_memmap_free:37: phys: 0x9db00 size: 2640 flags: 0x2
-> >  efi: __efi_memmap_free:37: phys: 0x9e580 size: 2640 flags: 0x2
-> >
-> > ...a savings of 7968 bytes on a qemu boot with 2 entries specified to
-> > efi_fake_mem=.
-> >
-> > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/firmware/efi/memmap.c |   24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-> > index 04dfa56b994b..bffa320d2f9a 100644
-> > --- a/drivers/firmware/efi/memmap.c
-> > +++ b/drivers/firmware/efi/memmap.c
-> > @@ -29,6 +29,28 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
-> >       return PFN_PHYS(page_to_pfn(p));
-> >  }
-> >
-> > +static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
-> > +{
-> > +     if (flags & EFI_MEMMAP_MEMBLOCK) {
-> > +             if (slab_is_available())
-> > +                     memblock_free_late(phys, size);
-> > +             else
-> > +                     memblock_free(phys, size);
-> > +     } else if (flags & EFI_MEMMAP_SLAB) {
-> > +             struct page *p = pfn_to_page(PHYS_PFN(phys));
-> > +             unsigned int order = get_order(size);
-> > +
-> > +             free_pages((unsigned long) page_address(p), order);
-> > +     }
-> > +}
-> > +
-> > +static void __init efi_memmap_free(void)
-> > +{
-> > +     __efi_memmap_free(efi.memmap.phys_map,
-> > +                     efi.memmap.desc_size * efi.memmap.nr_map,
-> > +                     efi.memmap.flags);
-> > +}
-> > +
-> >  /**
-> >   * efi_memmap_alloc - Allocate memory for the EFI memory map
-> >   * @num_entries: Number of entries in the allocated map.
-> > @@ -100,6 +122,8 @@ static int __init __efi_memmap_init(struct efi_memory_map_data *data)
-> >               return -ENOMEM;
-> >       }
-> >
-> > +     efi_memmap_free();
-> > +
->
-> This seems still not safe,  see below function:
-> arch/x86/platform/efi/efi.c:
-> static void __init efi_clean_memmap(void)
-> It use same memmap for both old and new, and filter out those invalid
-> ranges in place, if the memory is freed then ..
+> Which I seem to remember was a deliberate choice: some change
+> capacities occur because the path goes passive and default values get
+> installed.
 
-In the efi_clean_memmap() case flags are 0, so efi_memmap_free() is a nop.
+Yep, it's very tricky territory.
 
-Would you feel better with an explicit?
-
-WARN_ON(efi.memmap.phys_map == data->phys_map && (data->flags &
-(EFI_MEMMAP_SLAB | EFI_MEMMAP_MEMBLOCK))
-
-...not sure it's worth it.
-
->
-> >       map.phys_map = data->phys_map;
-> >       map.nr_map = data->size / data->desc_size;
-> >       map.map_end = map.map + data->size;
-> >
+-- 
+Martin K. Petersen	Oracle Linux Engineering
