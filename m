@@ -2,145 +2,86 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925C4C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905AAC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E69A2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611972080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H0GsPYhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgAGKmt (ORCPT
+        id S1727875AbgAGKn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:42:49 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32965 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAGKmt (ORCPT
+        Tue, 7 Jan 2020 05:43:58 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46894 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727763AbgAGKn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:42:49 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iomJn-0005TW-KM; Tue, 07 Jan 2020 11:42:35 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iomJm-0004iE-4c; Tue, 07 Jan 2020 11:42:34 +0100
-Date:   Tue, 7 Jan 2020 11:42:34 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
-        Richard Weinberger <richard@nod.at>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107104234.wq74fska3szrg4ii@pengutronix.de>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
+        Tue, 7 Jan 2020 05:43:57 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so38493912lfl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:43:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ij45+y4tQbjswuhc/ASM64hxiBChi1v4xQfYvXcYB6s=;
+        b=H0GsPYhVqTjf0ta9+KsTEWOsl8hYTozJg22rau4LHG6gVZDFkftjFg6m6ivAvrew9+
+         w6SQ9vWlurV7I7uMUGuJ2MFZWAvwEjc0g9tesLRrgHOIueQ89kWtwxkX2EMeuyhEm4Bc
+         ev6hfj2CYGkr6rEZvPPxaufcm3fKBink56/CEXq2AFrAGsbf5O6MxZeWQe8+9iwLYMHv
+         8W9MebwA3kDNbKrwIt8wcDAg913dOlEX1+9Mxk0ZSY5pFwl3vy0tECVjQvWSQruqxgWT
+         C/TKRJ7priMWYWtbANZnP1AkjqGSZvydwd87XQ9ucfwBtsxPtmJD1GQtgnp+iAJCDd4z
+         EqMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ij45+y4tQbjswuhc/ASM64hxiBChi1v4xQfYvXcYB6s=;
+        b=RRFJY5Qxzp6LnO67FxdOg2qzCeZ3lxj0HNeIHlB3EjjX0Ur3ei9VEMGbJgJCu1HJTG
+         eqtjxAYOewi6v+lgNCvzovTxHhQYDUy3S0u7Vq5+YjcFpGVnMw9wLeCfbUy9QgVXo0eI
+         3MThl7RKVCfIVu41nJUgZB+05dtrRbz/Qd3Y0fOGJtstPp+kWb7LqGDj4d7PxwmAlYST
+         vLe/NsEaWLBfxmGC6a/HirEvv5kl0B6jsCLyekWt3qLwIzE0/NspDE9y7XQmHB+5Kvz6
+         6JHf8cEdFwBxj5pbldlSXdX93g/5+QD4ijFIoyaMPSiSlzr5Ax8dOYOyD/ZtmNjmmB1u
+         nVCg==
+X-Gm-Message-State: APjAAAU3k+QL72wE67xOtG1q9dT1srOYiGRmKSV/iJknxVR1kVafmHgY
+        mNJ9jC6r2Ey1RTL5GFFOClDlTOPNGOlNmr+1wWdIUA==
+X-Google-Smtp-Source: APXvYqz+jQpx/la/O2K0/budtRMX6KFmWmOMeG9QERQ6JtTLWAO+vG67nfJvEFSWtJY427WX0m7HLcUZUjplSCki6YQ=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58271999lfi.93.1578393835746;
+ Tue, 07 Jan 2020 02:43:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107082539.GA31827@pi3>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1577864614-5543-1-git-send-email-Julia.Lawall@inria.fr> <1577864614-5543-9-git-send-email-Julia.Lawall@inria.fr>
+In-Reply-To: <1577864614-5543-9-git-send-email-Julia.Lawall@inria.fr>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 11:43:44 +0100
+Message-ID: <CACRpkdYQfiuziMyu+oCyh-8wmgpzVY7V5+CPNqoSLm3+ZEFmVA@mail.gmail.com>
+Subject: Re: [PATCH 08/16] pinctrl: ssbi-mpp: constify copied structure
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     Andy Gross <agross@kernel.org>, kernel-janitors@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Krzysztof,
+On Wed, Jan 1, 2020 at 9:20 AM Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-On Tue, Jan 07, 2020 at 09:25:39AM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Jan 07, 2020 at 08:26:45AM +0100, Uwe Kleine-König wrote:
-> > On Mon, Dec 30, 2019 at 06:21:13PM +0100, Krzysztof Kozlowski wrote:
-> > > Some of the PWM drivers can be compile tested to increase build
-> > > coverage.
-> > > 
-> > > The Meson PWM driver requires COMMON_CLK dependency.
-> > 
-> > I'm surprised that there are not more that need this. Is HAVE_CLK not
-> > enough?
-> 
-> Nope. E.g. for alpha architecture, HAVE_CLK is not set and without
-> COMMON_CLK:
-> 
-> drivers/pwm/pwm-meson.o: In function `meson_pwm_init_channels':
-> (.text+0x244): undefined reference to `devm_clk_register'
+> The pm8xxx_pinctrl_desc structure is only copied into another structure,
+> so make it const.
+>
+> The opportunity for this change was found using Coccinelle.
+>
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-I see. devm_clk_register() only exists in include/linux/clk-provider.h.
+That's a pretty cool semantic check finding things like this!
 
-> I guess other solution would be to add stubs for few clk functions...
-> 
-> > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > config (which does't have HAS_IOMEM) and they all compile fine.
-> 
-> Because of !HAS_IOMEM, since some time ARCH=um does not support
-> COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> testing (and for regular build it is selected by ARCH).
+Patch applied.
 
-Hehe, I didn't notice because for testing I just dropped the "depends on
-..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-compile fine on UML.
-
-Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-!UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-== v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-revert bc083a64b6c0 today? (And if not, a comment about why near the
-"depends on !UML" in init/Kconfig would be great.)
-
-Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-though the compile testers won't notice it missing. Or should HAS_IOMEM
-be dropped?
-
-> > > @@ -318,7 +319,7 @@ config PWM_MEDIATEK
-> > >  
-> > >  config PWM_MXS
-> > >  	tristate "Freescale MXS PWM support"
-> > > -	depends on ARCH_MXS && OF
-> > > +	depends on (ARCH_MXS && OF) || COMPILE_TEST
-> > >  	select STMP_DEVICE
-> > >  	help
-> > >  	  Generic PWM framework driver for Freescale MXS.
-> > > @@ -328,7 +329,8 @@ config PWM_MXS
-> > >  
-> > >  config PWM_OMAP_DMTIMER
-> > >  	tristate "OMAP Dual-Mode Timer PWM support"
-> > > -	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-> > > +	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-> > > +	depends on OF
-> > 
-> > I'm surprised that OF isn't required for PWM_MXS but is is for
-> > PWM_OMAP_DMTIMER. pwm-mxs compiles without CONFIG_OF, didn't test
-> > pwm-omap-dmtimer.
-> 
-> Since some time !OF has all necessary stubs so OF is actually needed
-> only for binding, not compiling.
-
-That doesn't explain why you handle PWM_MXS and PWM_OMAP_DMTIMER
-differently though.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Yours,
+Linus Walleij
