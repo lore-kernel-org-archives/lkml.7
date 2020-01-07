@@ -2,237 +2,228 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23392C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570AFC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03CD208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2282146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="v8Niblhl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hf49G2GY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgAGPBZ (ORCPT
+        id S1728214AbgAGPC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:01:25 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51407 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727559AbgAGPBY (ORCPT
+        Tue, 7 Jan 2020 10:02:58 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20045 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728118AbgAGPC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:01:24 -0500
-Received: from [IPv6:2001:420:44c1:2577:cd88:93ae:ae73:3d6c]
- ([IPv6:2001:420:44c1:2577:cd88:93ae:ae73:3d6c])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id oqM8iLQnaN9dwoqMCiVvtj; Tue, 07 Jan 2020 16:01:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578409281; bh=dlauqvpQGYg8gIzE7vt8zEOQtKQRNLpz0TQmKxid07E=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=v8NiblhlR4I4zf8BhwkynPxs+nkGAGPktfWgiHivQwkx7TB+rzag5U979DVi4ZXCe
-         1yaoGIh3JzsfAv0i8+c7U9BjMFDmwuSQuudtjjDjyMI3XQyl0xc/0J/79sJ+MmjrXH
-         kUUO3XY+/WTVBzXDfEYkZAxj7VmqmlcaFEAiIglPOlNkPhepLHJRU8GZ7Ysxm7orSU
-         HaZB0hjCKJyf7t8Bo/X7K7a5Lbj0ZYVSFUSZ3mTN+umHbNG0Sofz8QnKFDR8usZYXk
-         7+J50Zx7Rsgfj+AWbOIQmweCO/pGvJacXvUtYg1L+Wn/6+4Z+J0zOVf//pIeczWBKl
-         IPSWSUB5Wtnig==
-Subject: Re: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling
- matrix
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
-        mripard@kernel.org, paul.kocialkowski@bootlin.com
-Cc:     gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-References: <20191213160428.54303-1-jernej.skrabec@siol.net>
- <20191213160428.54303-3-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4ac91ed5-a220-6a04-b1da-de27a306f8f2@xs4all.nl>
-Date:   Tue, 7 Jan 2020 16:01:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 10:02:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578409376;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EUJ0mt7q0dKdiWSQ8UabatJSnhVJrzvXfaQL9dNUYs4=;
+        b=Hf49G2GYWh3OARdMNvyM5bvTiBFB6m/exEecwmpGxQFQXg8Pehsb5SIQCeNklAAoN4nBWv
+        YhTemvaatRebq3YFiPPtpj8uM5EhZbMWj13xCdo5bGIgUXBRf2LaYkKzi/HL6DOSFtlG+g
+        ANhZF0oTHmqvahsHq2pxAVIZMQf5NaA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-4BlvWmnuPdeIVxRAM_5BiQ-1; Tue, 07 Jan 2020 10:02:53 -0500
+X-MC-Unique: 4BlvWmnuPdeIVxRAM_5BiQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E072C8005BC;
+        Tue,  7 Jan 2020 15:02:51 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 153F87BFFA;
+        Tue,  7 Jan 2020 15:02:47 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 16:02:45 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v3 4/8] KVM: selftests: Add memory size parameter to the
+ demand paging test
+Message-ID: <20200107150245.cblsqirr5mu4fqoo@kamzik.brq.redhat.com>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-5-bgardon@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191213160428.54303-3-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJY5ZdhhQ3Y8+/P4/PuY0Rn2kVBZ9dF7xWsX+alTuLCOoBo1MAlmbGpH0BJQwiEfcX6mzWQWrw43Fjb6azKuPYOyiu4d7kpHVAdU3P3+owyW7rCWaFj9
- Yo5I5K9KdiH4FpoxJ+LNc/gaGo0Vrm1HKcYty/e1/OWe2fLePr0Yg4he6atVOFXLCuYNa0BQXJLxW7mcgahVHXT2/kH8YuSLKSkukPeJBGY0p3w7saI+EqQL
- RHN6+VAvLPX977K6NMUM0h2VFDoP2P41iZ+3OdacAJwmhtnaf2//gGMpgFqPGODlM4GKippmALkM2OU+3GVbmfHTWHKHgDNZvlITCZSJidsoi/jM/9Uavk9b
- XizEZJO1Z2s4FRuEgwrNEu7oHOZLO7QIyguPGRmyp30KQK9eGABAVwfBgsskrnRAWyjOLP0bZeh8kzgQiJqRsXPpo9+M7xTSVEIb8wy+VC9XiYiDu1xp6UUL
- NrpAlDKzgUlelznxL9ypi53wqkEnFOsTSHtkMvPzz1sb8dRBFe2YYZt3Wr5BwfskLOaZfy2ORwNKevMohp7mdqwLAxRI1QvTA+1vw52yZtiAef3nTOvU380S
- 3SYh+e9/DzAlmFhzm9iyZ090/WzsYi+xPyzq0CksIxpm6g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216213901.106941-5-bgardon@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 5:04 PM, Jernej Skrabec wrote:
-> HEVC frames may use scaling list feature. Add support for it.
+On Mon, Dec 16, 2019 at 01:38:57PM -0800, Ben Gardon wrote:
+> Add an argument to allow the demand paging test to work on larger and
+> smaller guest sizes.
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Ben Gardon <bgardon@google.com>
 > ---
->  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
->  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
->  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
->  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
->  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
->  5 files changed, 81 insertions(+), 1 deletion(-)
+>  .../selftests/kvm/demand_paging_test.c        | 56 ++++++++++++-------
+>  1 file changed, 35 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> index c6ddd46eff82..bf68bc6b20c8 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> @@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[] = {
->  		.codec		= CEDRUS_CODEC_H265,
->  		.required	= true,
->  	},
-> +	{
-> +		.cfg = {
-> +			.id	= V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
-> +		},
-> +		.codec		= CEDRUS_CODEC_H265,
-> +		.required	= true,
-
-Should this be true? This means that existing applications are now
-suddenly required to always pass the scaling matrix for every buffer.
-
-Especially since the commit log says: 'HEVC frames *may* use scaling list
-feature', indicating that this is an optional feature.
-
-Regards,
-
-	Hans
-
-> +	},
->  	{
->  		.cfg = {
->  			.id	= V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> index 96765555ab8a..d945f4f0ff2d 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-> @@ -73,6 +73,7 @@ struct cedrus_h265_run {
->  	const struct v4l2_ctrl_hevc_sps			*sps;
->  	const struct v4l2_ctrl_hevc_pps			*pps;
->  	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
-> +	const struct v4l2_ctrl_hevc_scaling_matrix	*scaling_matrix;
->  };
+> diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
+> index 11de5b58995fb..4aa90a3fce99c 100644
+> --- a/tools/testing/selftests/kvm/demand_paging_test.c
+> +++ b/tools/testing/selftests/kvm/demand_paging_test.c
+> @@ -32,6 +32,8 @@
+>  /* Default guest test virtual memory offset */
+>  #define DEFAULT_GUEST_TEST_MEM		0xc0000000
 >  
->  struct cedrus_run {
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> index 4a2fc33a1d79..327ed6c264dc 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> @@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
->  			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
->  		run.h265.slice_params = cedrus_find_control_data(ctx,
->  			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
-> +		run.h265.scaling_matrix = cedrus_find_control_data(ctx,
-> +			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
->  		break;
->  
->  	default:
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> index 6945dc74e1d7..888bfd5ca224 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> @@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct cedrus_dev *dev,
->  	}
+> +#define DEFAULT_GUEST_TEST_MEM_SIZE (1 << 30) /* 1G */
+> +
+>  /*
+>   * Guest/Host shared variables. Ensure addr_gva2hva() and/or
+>   * sync_global_to/from_guest() are used when accessing from
+> @@ -264,11 +266,10 @@ static int setup_demand_paging(struct kvm_vm *vm,
+>  	return 0;
 >  }
 >  
-> +static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
-> +					   struct cedrus_run *run)
-> +{
-> +	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
-> +	struct cedrus_dev *dev = ctx->dev;
-> +	u32 i, j, k, val;
-> +
-> +	scaling = run->h265.scaling_matrix;
-> +
-> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
-> +		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
-> +		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
-> +		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
-> +		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
-> +
-> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
-> +		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
-> +		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
-> +		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
-> +		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
-> +
-> +	cedrus_h265_sram_write_offset(dev, VE_DEC_H265_SRAM_OFFSET_SCALING_LISTS);
-> +
-> +	for (i = 0; i < 6; i++)
-> +		for (j = 0; j < 8; j++)
-> +			for (k = 0; k < 8; k += 4) {
-> +				val = ((u32)scaling->scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
-> +				      ((u32)scaling->scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
-> +				      ((u32)scaling->scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
-> +				      scaling->scaling_list_8x8[i][j + k * 8];
-> +				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-> +			}
-> +
-> +	for (i = 0; i < 2; i++)
-> +		for (j = 0; j < 8; j++)
-> +			for (k = 0; k < 8; k += 4) {
-> +				val = ((u32)scaling->scaling_list_32x32[i][j + (k + 3) * 8] << 24) |
-> +				      ((u32)scaling->scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
-> +				      ((u32)scaling->scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
-> +				      scaling->scaling_list_32x32[i][j + k * 8];
-> +				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-> +			}
-> +
-> +	for (i = 0; i < 6; i++)
-> +		for (j = 0; j < 8; j++)
-> +			for (k = 0; k < 8; k += 4) {
-> +				val = ((u32)scaling->scaling_list_16x16[i][j + (k + 3) * 8] << 24) |
-> +				      ((u32)scaling->scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
-> +				      ((u32)scaling->scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
-> +				      scaling->scaling_list_16x16[i][j + k * 8];
-> +				cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-> +			}
-> +
-> +	for (i = 0; i < 6; i++)
-> +		for (j = 0; j < 4; j++) {
-> +			val = ((u32)scaling->scaling_list_4x4[i][j + 12] << 24) |
-> +			      ((u32)scaling->scaling_list_4x4[i][j + 8] << 16) |
-> +			      ((u32)scaling->scaling_list_4x4[i][j + 4] << 8) |
-> +			      scaling->scaling_list_4x4[i][j];
-> +			cedrus_write(dev, VE_DEC_H265_SRAM_DATA, val);
-> +		}
-> +}
-> +
->  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
->  			      struct cedrus_run *run)
+> -#define GUEST_MEM_SHIFT 30 /* 1G */
+>  #define PAGE_SHIFT_4K  12
+>  
+>  static void run_test(enum vm_guest_mode mode, bool use_uffd,
+> -		     useconds_t uffd_delay)
+> +		     useconds_t uffd_delay, uint64_t guest_memory_bytes)
 >  {
-> @@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+>  	pthread_t vcpu_thread;
+>  	pthread_t uffd_handler_thread;
+> @@ -276,33 +277,40 @@ static void run_test(enum vm_guest_mode mode, bool use_uffd,
+>  	int r;
 >  
->  	/* Scaling list. */
+>  	/*
+> -	 * We reserve page table for 2 times of extra dirty mem which
+> -	 * will definitely cover the original (1G+) test range.  Here
+> -	 * we do the calculation with 4K page size which is the
+> -	 * smallest so the page number will be enough for all archs
+> -	 * (e.g., 64K page size guest will need even less memory for
+> -	 * page tables).
+> +	 * We reserve page table for twice the ammount of memory we intend
+> +	 * to use in the test region for demand paging. Here we do the
+> +	 * calculation with 4K page size which is the smallest so the page
+> +	 * number will be enough for all archs. (e.g., 64K page size guest
+> +	 * will need even less memory for page tables).
+>  	 */
+>  	vm = create_vm(mode, VCPU_ID,
+> -		       2ul << (GUEST_MEM_SHIFT - PAGE_SHIFT_4K),
+> +		       (2 * guest_memory_bytes) >> PAGE_SHIFT_4K,
+>  		       guest_code);
 >  
-> -	reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
-> +	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
-> +		cedrus_h265_write_scaling_list(ctx, run);
-> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
-> +	} else {
-> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
-> +	}
->  	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
+>  	guest_page_size = vm_get_page_size(vm);
+> -	/*
+> -	 * A little more than 1G of guest page sized pages.  Cover the
+> -	 * case where the size is not aligned to 64 pages.
+> -	 */
+> -	guest_num_pages = (1ul << (GUEST_MEM_SHIFT -
+> -				   vm_get_page_shift(vm))) + 16;
+> +
+> +	TEST_ASSERT(guest_memory_bytes % guest_page_size == 0,
+> +		    "Guest memory size is not guest page size aligned.");
+> +
+> +	guest_num_pages = guest_memory_bytes / guest_page_size;
+> +
+>  #ifdef __s390x__
+>  	/* Round up to multiple of 1M (segment size) */
+>  	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
+>  #endif
+> +	/*
+> +	 * If there should be more memory in the guest test region than there
+> +	 * can be pages in the guest, it will definitely cause problems.
+> +	 */
+> +	TEST_ASSERT(guest_num_pages < vm_get_max_gfn(vm),
+> +		    "Requested more guest memory than address space allows.\n"
+> +		    "    guest pages: %lx max gfn: %lx\n",
+> +		    guest_num_pages, vm_get_max_gfn(vm));
 >  
->  	/* Neightbor information address. */
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> index 7beb03d3bb39..0d9449fe2b28 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> @@ -492,6 +492,8 @@
->  #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 0x64)
->  #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 0x68)
->  #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 0x6c)
-> +#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 + 0x78)
-> +#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 + 0x7c)
+>  	host_page_size = getpagesize();
+> -	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
+> -			 !!((guest_num_pages * guest_page_size) %
+> -			    host_page_size);
+> +	TEST_ASSERT(guest_memory_bytes % host_page_size == 0,
+> +		    "Guest memory size is not host page size aligned.");
+> +	host_num_pages = guest_memory_bytes / host_page_size;
 >  
->  #define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 0x80)
+>  	guest_test_phys_mem = (vm_get_max_gfn(vm) - guest_num_pages) *
+>  			      guest_page_size;
+> @@ -381,7 +389,8 @@ static void help(char *name)
+>  	int i;
 >  
-> 
+>  	puts("");
+> -	printf("usage: %s [-h] [-m mode] [-u] [-d uffd_delay_usec]\n", name);
+> +	printf("usage: %s [-h] [-m mode] [-u] [-d uffd_delay_usec]\n"
+> +	       "          [-b bytes test memory]\n", name);
+>  	printf(" -m: specify the guest mode ID to test\n"
+>  	       "     (default: test all supported modes)\n"
+>  	       "     This option may be used multiple times.\n"
+> @@ -395,6 +404,8 @@ static void help(char *name)
+>  	printf(" -d: add a delay in usec to the User Fault\n"
+>  	       "     FD handler to simulate demand paging\n"
+>  	       "     overheads. Ignored without -u.\n");
+> +	printf(" -b: specify the number of bytes of memory which should be\n"
+> +	       "     allocated to the guest.\n");
+
+Can we input in megabytes instead? And also it might be nice to output the
+default size here.
+
+>  	puts("");
+>  	exit(0);
+>  }
+> @@ -402,6 +413,7 @@ static void help(char *name)
+>  int main(int argc, char *argv[])
+>  {
+>  	bool mode_selected = false;
+> +	uint64_t guest_memory_bytes = DEFAULT_GUEST_TEST_MEM_SIZE;
+>  	unsigned int mode;
+>  	int opt, i;
+>  	bool use_uffd = false;
+> @@ -414,7 +426,7 @@ int main(int argc, char *argv[])
+>  	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
+>  #endif
+>  
+> -	while ((opt = getopt(argc, argv, "hm:ud:")) != -1) {
+> +	while ((opt = getopt(argc, argv, "hm:ud:b:")) != -1) {
+>  		switch (opt) {
+>  		case 'm':
+>  			if (!mode_selected) {
+> @@ -435,6 +447,8 @@ int main(int argc, char *argv[])
+>  			TEST_ASSERT(uffd_delay >= 0,
+>  				    "A negative UFFD delay is not supported.");
+>  			break;
+> +		case 'b':
+> +			guest_memory_bytes = strtoull(optarg, NULL, 0);
+
+Missing break. So it doesn't look like this was tested.
+
+>  		case 'h':
+>  		default:
+>  			help(argv[0]);
+> @@ -448,7 +462,7 @@ int main(int argc, char *argv[])
+>  		TEST_ASSERT(vm_guest_mode_params[i].supported,
+>  			    "Guest mode ID %d (%s) not supported.",
+>  			    i, vm_guest_mode_string(i));
+> -		run_test(i, use_uffd, uffd_delay);
+> +		run_test(i, use_uffd, uffd_delay, guest_memory_bytes);
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+>
+
+Thanks,
+drew
 
