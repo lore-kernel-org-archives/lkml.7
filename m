@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60318C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA33C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9302467F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3C72072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431430;
-	bh=rFSnAJvGaGBJ223eZhfvSst8ZYZ1pjx/lTrwIqMI/eA=;
+	s=default; t=1578431436;
+	bh=Du2QUUW3B3tz0fz3NBcjVpXpdDBoPzKjdz0jyzQXXJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOkcwp5DXrgaOOKrUlFXWoy21NXmT8F4u2RcJZjceWcGyLIcBSqDyeJcWk4T+YoLN
-	 rTHw/SV6B1Luh/b0zXTKfzlQ94yRIx0B/oarwXJxsQZfmnMFjAJZNkB0iOh2RFTrY3
-	 Lkb5DpMDWCmLUnEeaxu55XBwdJjDocFvO15Uii1c=
+	b=hSHdpsZDZyqotusISfoAspD+Yc51JJ+Uq1yqLPibR5T+DEr0nE5IO4sYK0TYe1h9Z
+	 w4fJDtu0Tn7GxZ5HLeZIoim/39uwbcCgw/Ds9wMU1SS1YlB9KlNPblKTt2061I9y+G
+	 xDgvwiVwlgMKzL6XXhdxLQWlE9eIhyvxFOUsRjXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgAGVK3 (ORCPT
+        id S1729986AbgAGVKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36740 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:10:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgAGVKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:18 -0500
+        id S1729957AbgAGVK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41ED120880;
-        Tue,  7 Jan 2020 21:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEFE208C4;
+        Tue,  7 Jan 2020 21:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431417;
-        bh=rFSnAJvGaGBJ223eZhfvSst8ZYZ1pjx/lTrwIqMI/eA=;
+        s=default; t=1578431427;
+        bh=Du2QUUW3B3tz0fz3NBcjVpXpdDBoPzKjdz0jyzQXXJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdqAWMi4YtTBrG17Yct+lJuXio8GnsxfRslLpP7T8o0UlHxQ0ysdhe1QZQfpaWJXG
-         Ci2gb2CCxvZTjy9yInWnSnP6rQDBHXaGIOVDnfuneCdE5SS55RbLf93bMGZhImKSq4
-         gPIfD86CD/ij5MaMYVX1yPViDmjs7mKzb7C+ON8A=
+        b=Res4NANhLiVKS8K5K3ZCnqadVDrCVMfT5DLXCI+S3Od5ptwoLRkAXzgvv8jBDIYoW
+         WvZHT0F6/8MAans8d228266ZpC+Y4X/fFNfvLrWW1mSqzssRYPSoEGeNDPYqr2FozI
+         c0xjy2IzTRGC+s8oE4cUNE75oaCX96DdkPLJJIbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 48/74] nfsd4: fix up replay_matches_cache()
-Date:   Tue,  7 Jan 2020 21:55:13 +0100
-Message-Id: <20200107205215.249446795@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 52/74] Bluetooth: btusb: fix PM leak in error case of setup
+Date:   Tue,  7 Jan 2020 21:55:17 +0100
+Message-Id: <20200107205218.150605138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,52 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 6e73e92b155c868ff7fce9d108839668caf1d9be upstream.
+commit 3d44a6fd0775e6215e836423e27f8eedf8c871ea upstream.
 
-When running an nfs stress test, I see quite a few cached replies that
-don't match up with the actual request.  The first comment in
-replay_matches_cache() makes sense, but the code doesn't seem to
-match... fix it.
+If setup() fails a reference for runtime PM has already
+been taken. Proper use of the error handling in btusb_open()is needed.
+You cannot just return.
 
-This isn't exactly a bugfix, as the server isn't required to catch every
-case of a false retry.  So, we may as well do this, but if this is
-fixing a problem then that suggests there's a client bug.
-
-Fixes: 53da6a53e1d4 ("nfsd4: catch some false session retries")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: ace31982585a3 ("Bluetooth: btusb: Add setup callback for chip init on USB")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/bluetooth/btusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3058,12 +3058,17 @@ static bool replay_matches_cache(struct
- 	    (bool)seq->cachethis)
- 		return false;
- 	/*
--	 * If there's an error than the reply can have fewer ops than
--	 * the call.  But if we cached a reply with *more* ops than the
--	 * call you're sending us now, then this new call is clearly not
--	 * really a replay of the old one:
-+	 * If there's an error then the reply can have fewer ops than
-+	 * the call.
- 	 */
--	if (slot->sl_opcnt < argp->opcnt)
-+	if (slot->sl_opcnt < argp->opcnt && !slot->sl_status)
-+		return false;
-+	/*
-+	 * But if we cached a reply with *more* ops than the call you're
-+	 * sending us now, then this new call is clearly not really a
-+	 * replay of the old one:
-+	 */
-+	if (slot->sl_opcnt > argp->opcnt)
- 		return false;
- 	/* This is the only check explicitly called by spec: */
- 	if (!same_creds(&rqstp->rq_cred, &slot->sl_cred))
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1123,7 +1123,7 @@ static int btusb_open(struct hci_dev *hd
+ 	if (data->setup_on_usb) {
+ 		err = data->setup_on_usb(hdev);
+ 		if (err < 0)
+-			return err;
++			goto setup_fail;
+ 	}
+ 
+ 	data->intf->needs_remote_wakeup = 1;
+@@ -1155,6 +1155,7 @@ done:
+ 
+ failed:
+ 	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
++setup_fail:
+ 	usb_autopm_put_interface(data->intf);
+ 	return err;
+ }
 
 
