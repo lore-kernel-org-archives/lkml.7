@@ -2,129 +2,205 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE055C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7429AC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5DE207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3713A206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="SlkuC2H9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgAGHvZ (ORCPT
+        id S1727574AbgAGHvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:51:25 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40154 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgAGHvZ (ORCPT
+        Tue, 7 Jan 2020 02:51:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54213 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgAGHvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:51:25 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w21so67504781otj.7;
-        Mon, 06 Jan 2020 23:51:24 -0800 (PST)
+        Tue, 7 Jan 2020 02:51:45 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so17813286wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 23:51:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=JeiqdmtUMyWOTftvNLubB0ZlSpHFDswOnC4RjW6U6GE=;
+        b=SlkuC2H9D5qWyaQ8qcx3F+xQydYl+QJcDgYjhvL4rtZQwX4HIrQo4UgAuLTY7BfB75
+         PUeh0Dq+H0Lmi7EtK7cBvCCoww5Kp3sGm9mU/3mOkZSw69UhjD+dCEyocHKQzVFBOd/f
+         1hwCcKM1Jvr1F0sNP7oAEe9J0ArUT1iAGTQbRCmMofqUGZfdbWQ22aWbnK6QGFNM/taU
+         qqGf8Zcd7yvzxKWY8xV2IPz3IF3sQfTXtFPQdTwi3R8+4tYmOFdNmQIeynklFPby/TXs
+         f4cDx6dhVDp86rGW02rMNHn6GVKqhBo0PIficdDSpRPP8cpoOPEqbZuJ0bNnB52K6viV
+         oc7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IhDjpeV2ZD5b67TQjXpRRWA8ieXAlI0j5cPvLS0Mz9w=;
-        b=LNVH4hNZ2mzsBrhmRO//uoQK+g/C5YSHWasMW1Fg2PwcclJMLQmNcVguQwtoStWmQO
-         6VxeFVM0qDT3f2GRe2XMsXrKca9P7nXNAUCKa9Noe/LM3JQdvPGfsHA1Zrv9vBdlGVbi
-         MOd4bQTZcpKup/5hQIRMdsNzDDB4fG1bmlGANMbuhnA6GIZHtWhZQfSC7oKx5mcmfhJl
-         Rw0q+m8PjTIW7xhO61F4FKIDPVCQNr+U0iqgOtiFURn+H4uGgOMkM1JG4KffrR1suv+P
-         JM/XgvPmx7ZuQnl12RP/yE0s9V6MJjkMHCGaGhlVRpV5gIbO2P3QTKHDIcpvZdn/l62M
-         dpcw==
-X-Gm-Message-State: APjAAAUGG8+4Or23tijj77lKmB2NNzSmPqjIKNd7P/sy0O1tC0jRuaeA
-        EL9w+pgxnWb0+LaWVFT3e0PZ1d4Ku98wNclqvxE6SA==
-X-Google-Smtp-Source: APXvYqyJZroCNEtajEIJCodckxBdAdM83feZCCmglDsINwRAXWGxOmnY7X7wSdV+Bv1DzlQMRl4MuLaQp3hEH4oIys8=
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr112915400otf.107.1578383484352;
- Mon, 06 Jan 2020 23:51:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be> <db13664e-f01a-5492-942b-f021f1bbe4e2@gmail.com>
-In-Reply-To: <db13664e-f01a-5492-942b-f021f1bbe4e2@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 08:51:13 +0100
-Message-ID: <CAMuHMdXuGf71whvtRsaDfoaCnCj+CrTWhhsQ0H3sGsQu7hMtfg@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=JeiqdmtUMyWOTftvNLubB0ZlSpHFDswOnC4RjW6U6GE=;
+        b=UbsEawBdRi7coUAy19mD4zEClFYFMMDRVs1bbvcPJFU5wRh0uRBRbkXh8AHZr90pJH
+         uxX8gBS3LTsTtjVzw6tD8BauHF0pgBGkY6HGICXudZD5sMVmOrNO7HVEu/dLl8m4gAQX
+         stRijmfyaJ2GeOuNcmLa4fHoVi0x4nsAmjOfhzs+QnvJHI4kmj2z7RAkcAKuEB/FDz9Z
+         F6FPa1GBG0KvlMCKM296FZtqizaGFiYo1UZxxUBjt9x6I4iqfh3gOgZMW2AIj5jsUTRf
+         KazjTzzYq4j+JCsoJxFJBPc36avRAIQNdrmAl2cGO6RNNu1FRO+2r4yftGeHD+iofSOE
+         thEg==
+X-Gm-Message-State: APjAAAXyzL5PnBnj/bMhMvexim2LDsc5lqArMOQXvvcSFiWvJZU9lyCY
+        Oay5A5zoi8+V1zYgly9nTn47eA==
+X-Google-Smtp-Source: APXvYqwbTzi4da5sYoYBNersGjGd0bPEnenG66OEdAADR5SYHnHw2lSWqTjx0cyI8PP76Y14jUTwNg==
+X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr35755682wml.156.1578383503183;
+        Mon, 06 Jan 2020 23:51:43 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id s10sm76197003wrw.12.2020.01.06.23.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 23:51:42 -0800 (PST)
+Message-ID: <5bd51904b1b6511748c5454bce437bdc038eeb1f.camel@unipv.it>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Ming Lei <ming.lei@redhat.com>, "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Tue, 07 Jan 2020 08:51:41 +0100
+In-Reply-To: <20191226083706.GA17974@ming.t460p>
+References: <20191223130828.GA25948@ming.t460p>
+         <20191223162619.GA3282@mit.edu>
+         <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
+         <20191223172257.GB3282@mit.edu>
+         <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
+         <20191223195301.GC3282@mit.edu> <20191224012707.GA13083@ming.t460p>
+         <20191225051722.GA119634@mit.edu> <20191226022702.GA2901@ming.t460p>
+         <20191226033057.GA10794@mit.edu> <20191226083706.GA17974@ming.t460p>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
+Il giorno gio, 26/12/2019 alle 16.37 +0800, Ming Lei ha scritto:
+> On Wed, Dec 25, 2019 at 10:30:57PM -0500, Theodore Y. Ts'o wrote:
+> > On Thu, Dec 26, 2019 at 10:27:02AM +0800, Ming Lei wrote:
+> > > Maybe we need to be careful for HDD., since the request count in
+> scheduler
+> > > queue is double of in-flight request count, and in theory NCQ
+> should only
+> > > cover all in-flight 32 requests. I will find a sata HDD., and
+> see if
+> > > performance drop can be observed in the similar 'cp' test.
+> > 
+> > Please try to measure it, but I'd be really surprised if it's
+> > significant with with modern HDD's.
+> 
+> Just find one machine with AHCI SATA, and run the following xfs
+> overwrite test:
+> 
+> #!/bin/bash
+> DIR=$1
+> echo 3 > /proc/sys/vm/drop_caches
+> fio --readwrite=write --filesize=5g --overwrite=1 --
+> filename=$DIR/fiofile \
+>         --runtime=60s --time_based --ioengine=psync --direct=0 --
+> bs=4k
+> 		--iodepth=128 --numjobs=2 --group_reporting=1 --
+> name=overwrite
+> 
+> FS is xfs, and disk is LVM over AHCI SATA with NCQ(depth 32),
+> because the
+> machine is picked up from RH beaker, and it is the only disk in the
+> box.
+> 
+> #lsblk
+> NAME                            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+> sda                               8:0    0 931.5G  0 disk 
+> ├─sda1                            8:1    0     1G  0 part /boot
+> └─sda2                            8:2    0 930.5G  0 part 
+>   ├─rhel_hpe--ml10gen9--01-root 253:0    0    50G  0 lvm  /
+>   ├─rhel_hpe--ml10gen9--01-swap 253:1    0   3.9G  0 lvm  [SWAP]
+>   └─rhel_hpe--ml10gen9--01-home 253:2    0 876.6G  0 lvm  /home
+> 
+> 
+> kernel: 3a7ea2c483a53fc("scsi: provide mq_ops->busy() hook") which
+> is
+> the previous commit of f664a3cc17b7 ("scsi: kill off the legacy IO
+> path").
+> 
+>             |scsi_mod.use_blk_mq=N |scsi_mod.use_blk_mq=Y |
+> -----------------------------------------------------------
+> throughput: |244MB/s               |169MB/s               |
+> -----------------------------------------------------------
+> 
+> Similar result can be observed on v5.4 kernel(184MB/s) with same
+> test
+> steps.
+> 
+> 
+> > That because they typically have
+> > a queue depth of 16, and a max_sectors_kb of 32767 (e.g., just
+> under
+> > 32 MiB).  Sort seeks are typically 1-2 ms, with full stroke seeks
+> > 8-10ms.  Typical sequential write speeds on a 7200 RPM drive is
+> > 125-150 MiB/s.  So suppose every other request sent to the HDD is
+> from
+> > the other request stream.  The disk will chose the 8 requests from
+> its
+> > queue that are contiguous, and so it will be writing around 256
+> MiB,
+> > which will take 2-3 seconds.  If it then needs to spend between 1
+> and
+> > 10 ms seeking to another location of the disk, before it writes
+> the
+> > next 256 MiB, the worst case overhead of that seek is 10ms / 2s,
+> or
+> > 0.5%.  That may very well be within your measurements' error bars.
+> 
+> Looks you assume that disk seeking just happens once when writing
+> around
+> 256MB. This assumption may not be true, given all data can be in
+> page
+> cache before writing. So when two tasks are submitting IOs
+> concurrently,
+> IOs from each single task is sequential, and NCQ may order the
+> current batch
+> submitted from the two streams. However disk seeking may still be
+> needed
+> for the next batch handled by NCQ.
+> 
+> > And of course, note that in real life, we are very *often* writing
+> to
+> > multiple files in parallel, for example, during a "make -j16"
+> while
+> > building the kernel.  Writing a single large file is certainly
+> > something people do (but even there people who are burning a 4G
+> DVD
+> > rip are often browsing the web while they are waiting for it to
+> > complete, and the browser will be writing cache files, etc.).  So
+> > whether or not this is something where we should be stressing over
+> > this specific workload is going to be quite debateable.
+> 
 
-On Tue, Jan 7, 2020 at 12:34 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
-> > As GPIO hogs are configured at GPIO controller initialization time,
-> > adding/removing GPIO hogs in Device Tree overlays currently does not
-> > work.  Hence this patch series adds support for that, by registering an
-> > of_reconfig notifier, as is already done for platform, i2c, and SPI
-> > devices.
-> >
-> > Perhaps this would be better served through a pinctrl-gpio driver?
-> > Pinctrl is already working fine with DT overlays, as the pinctrl-*
-> > properties are part of the slave device node, and thus looked up at
-> > slave device node attachment time, not at pin controller initialization
-> > time.
-> >
-> > In my particular use case (talking to SPI devices connected to a PMOD
-> > connector on the RSK+RZA1 development board), the GPIO performs board
-> > level muxing of a.o. the SPI MOSI/MISO/SCK signals.  Hence the hog
-> > really needs to be active only while talking to the SPI device, so the
-> > muxing could (in theory) be done upon demand.
-> > But how to describe that in DT, and implement it (using Runtime PM?)?
->
-> I'm trying to understand the use case.  I can easily imagine two cases:
->
->   (1) want to configure the GPIO to be able to use the SPI bus sometimes,
->       but configure the GPIO differently when not using the SPI bus
->
->   (2) want to describe a device on the SPI bus in an overlay, thus
->       also needing to describe the associate gpio hog node in the
->       same overlay
->
-> For use case (2), the proposed patch seems to be a good solution.
->
-> For use case (1), this is a case of trying to use devicetree as a
-> way to control configuration instead of describing the hardware.
-> In this case, Bartosz' reply may indicate the way forward.
->
-> I'll assume use case (2) for patch comments.
+Hi,
+  is there any update on this? Sorry if I am making noise, but I would
+like to help to improve the kernel (or fix it) if I can help.
+Otherwise, please let me know how to consider this case,
 
-Yes, my main interest is use case (2).
-I have no plans to pursue use case (1).
+Thanks, and bye
+Andrea
 
-However, I have some more comments and questions for use case (1).
-Before you can control configuration, you have to describe the hardware.
-Hence isn't that a job for DT?
-Furthermore, I'd like you to step back and answer the following question:
-what is the difference between a GPIO serving as a chip select for an
-SPI slave, and a GPIO controlling board level muxing?  In both cases the
-GPIO controls to which hardware other signals are routed, and both may
-be changed at runtime.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
