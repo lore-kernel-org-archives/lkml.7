@@ -2,81 +2,85 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F78C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBE8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42803207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578382116;
-	bh=BVHo00NklGMrI82+E8WLgTOJ1z15QHxTgAO8Fq717sA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VRkJMkrtIR4kSPqS7xKWZVg7yDUwjQ+TSKwLOsec7UwH4Q61N0XrqAo7ZRpzVbWG6
-	 0bRsklw6qMV/vCdPiUAqt0pOLSGv39BRlfLsy1YL5p4oTDA8WGxihqsft+v0gZtI7H
-	 Ap7W530AkaNGaEaFyiTuITxhMZtakUoACjPOWWqY=
+	by mail.kernel.org (Postfix) with ESMTP id 4D0C72075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgAGH2f (ORCPT
+        id S1727574AbgAGH3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:28:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgAGH2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:28:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9892075A;
-        Tue,  7 Jan 2020 07:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578382114;
-        bh=BVHo00NklGMrI82+E8WLgTOJ1z15QHxTgAO8Fq717sA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nrxKsb6LMgTMxCisihf0knznX31hWsxuWd0MVXC5grjJoJUSqRDGAgHh7ooQTMJYH
-         KBobJ1+QA81K2CWQz8KHY3FUPaUM8owjIIUF19hEmp/PMzzxi4KRdsG35RZ8+UGsZm
-         sDz+iosUV/Amkv7OgASYfuvhsQeDHSX6cKC4hA34=
-Date:   Tue, 7 Jan 2020 08:28:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ivan Sistik <sistik@3ksolutions.sk>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH] tty: serial: amba-pl011: added RS485 support
-Message-ID: <20200107072831.GB1014453@kroah.com>
-References: <20200106235203.27256-1-sistik@3ksolutions.sk>
+        Tue, 7 Jan 2020 02:29:39 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:59622 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726485AbgAGH3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 02:29:39 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iojIh-00023F-2M; Tue, 07 Jan 2020 08:29:15 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 0077TENG016760
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 7 Jan 2020 08:29:14 +0100
+Subject: Re: [PATCH 2/5] regulator: mp8859: add config option and build entry
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200106211633.2882-1-m.reichl@fivetechno.de>
+ <20200106211633.2882-3-m.reichl@fivetechno.de> <6648097.OAGuGJg3er@diego>
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Organization: five technologies GmbH
+Message-ID: <4ec799d7-9404-f61d-3db7-446fb8bd45a2@fivetechno.de>
+Date:   Tue, 7 Jan 2020 08:29:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106235203.27256-1-sistik@3ksolutions.sk>
+In-Reply-To: <6648097.OAGuGJg3er@diego>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578382178;468f51eb;
+X-HE-SMSGID: 1iojIh-00023F-2M
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:52:03AM +0100, Ivan Sistik wrote:
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -14,6 +14,9 @@
->   * not have an RI input, nor do they have DTR or RTS outputs.  If
->   * required, these have to be supplied via some other means (eg, GPIO)
->   * and hooked into this driver.
-> + *
-> + * Added software RS485 support, 05/jan/2020, Ivan Sistik
-> + *     sistik@3ksolutions.sk
+Hi Heiko,
+Am 06.01.20 um 22:22 schrieb Heiko Stübner:
+> Am Montag, 6. Januar 2020, 22:16:25 CET schrieb Markus Reichl:
+>> Add entries for the mp8859 regulator driver
+>> to the build system.
+>> 
+>> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> 
+> this still should get merged into patch1 :-)
 
-No need for this, that is what git changelogs are for :)
+Will merge them in next version.
 
-thanks,
+> 
+> Heiko
+> 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
 
-greg k-h
+Gruß,
+-- 
+Markus Reichl
