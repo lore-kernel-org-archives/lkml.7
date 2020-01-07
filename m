@@ -2,132 +2,101 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FCBC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A446BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76CC222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CF4222D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V29OXUfw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctDnGIsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgAGO2n (ORCPT
+        id S1728291AbgAGO3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:28:43 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35626 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgAGO2m (ORCPT
+        Tue, 7 Jan 2020 09:29:36 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37120 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgAGO3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:28:42 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l24so28592126pgk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:28:42 -0800 (PST)
+        Tue, 7 Jan 2020 09:29:36 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f129so19632061wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:29:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m5lSdpvKrQdoMNKY33r6vQZFxtEtwTJgacT6S/p15LA=;
-        b=V29OXUfwm4o6nbaaQVxAuVrKbGji3meV4j+OhIqD7BlXBrA2oYC9ni7MOCSdJb9nBr
-         FIR4XXV6k57HZCW4swIB5KLVE+viDHImvGR8BZyhdjbn3X9Y9KJ2OveARgiZu5Ws4oyu
-         pI9QwBt7aqRgr4yDb/ym+/NBbv82apnB2AIzh3RRNNAD+VUd15KC6X+YVeMSi2ejBQIK
-         ifc5TpiLEXgcZuMPZJd9iPpQwSZsEh+k39If7oIt2A7GM7vKRvXuwZjMtCEew37dToe5
-         PeUNiii9ntNBSYDcmHRIlOSmtHg+eNmXB9NsUhsqhvuVqx9m6ukydwBa64MmfAOoODes
-         C7pQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WCQIUAjaOQTa2KrlqSfFCAmYRoieddvlLsL8IMP8Pjk=;
+        b=ctDnGIsMiCNNhvUHfP9jXRyusrt/EtZ/5xP1IFIlknU99Bdw4Z0fMEXuurCwTT/viI
+         x2oOicB6H2UXays7DmTqhmvNUqDN855TwCRMcbgR8thz32PbHzZMkLv2kLUjEiVoMyO4
+         aelu6ObaD3tvDK90w1+k6f9CqRTsfeSJaxdETRa878Kr+fimOoN50j8QO5DMc/ykZEFZ
+         5YVsiTndhyyYZqBfr2oYmf31KKLmFxTeLzL0dU8g+aPdZjluEzliBnchCSJ8B4Mm0Sbq
+         kbOJ44Rq9JePY28/zbL/7PxLxrXCqR/QWRiyfJUHqwhlFcAUs0o3B15GMuUwTvz5CpCJ
+         hBbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m5lSdpvKrQdoMNKY33r6vQZFxtEtwTJgacT6S/p15LA=;
-        b=JzI5rPTpTquyFa1xOP0B/8uwhDib4MEcm404m2zriTdAmOWGxa2kMWIomcp+4XoHfX
-         1AGtSjD6xIKhu9/HjwkQGCmvrCsXzh4l6Zd5gADal+6k++blq9oica5kALAAHIfiA20g
-         RUGVXqSiBPDtAUWrshLc/xwe0BGtfeJLGHRgDyK0tNSa4rz04ZsjQBc89oku8i4rj7Of
-         0YpzZWe7PVDW07qkUGcqjJaFH0V+JL3VU2Y0IFCToWwWK+SOqkduLZ73QRn1zEZ6WJ0B
-         Bu3CiCBAJCwZ+7H/58tdgL+RuPKDYsB/coWjPPFLtWrzIlVSh2ojt0JESCRfmtT2ALbO
-         d0jw==
-X-Gm-Message-State: APjAAAViOL5EzJdfJ2KR5mqt4cA+7KdW4SR1Pv36+PDOwn4CYycp7Gw3
-        aSoPkfR2Ejm+QGbxGbLDSFoFd8x5oU7+Wz1kNcJPFA==
-X-Google-Smtp-Source: APXvYqwsvDKv31NioKb+iBX2xS/6+IXQu9qBpvBlOsvPE2Rnfz2aPjulQZ9cl4M3VPWvg1mHrdOQmsWs9sBNXW+eJTo=
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr82321097pfg.51.1578407321830;
- Tue, 07 Jan 2020 06:28:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WCQIUAjaOQTa2KrlqSfFCAmYRoieddvlLsL8IMP8Pjk=;
+        b=MssyDCi7wLYEtBbLirLsXiXR0cWdvQHgO4cLKfdRKw1CxBqibCB1vKzvZYaXkKz/3Q
+         EbcoPedYotjTgQs/Rr+J9M5/u5DmBavhktZAWzj22YbQeKCLxjOvLuH/hxTeUrmSQvM9
+         uxYb6+RzfOug8+69fcc4LmRYLUVbku3qk0LIYszPV/IAmUdFVRyaw/UStqbDhBqN3W5R
+         DKa46M8w5rVj17ydk9LXrlQQFFYsGwiCRDyluUuzr3Pdyx9JbHm6FqI+EROpRPep5Ne4
+         +GKNjWg0BoR5nt2ogTVxLfktKMVBp8HmJ/fzdC23oPv7NVZyhIcwDDAww6mYl+JTvCGP
+         irCQ==
+X-Gm-Message-State: APjAAAX2EWwP9fjH7Y4vcnpCpcIwCwYP7C+90W9n2Umps83/JMgpqDn5
+        a/QQaOE/uBVoH/ELvVSjwODdlCaOE6U=
+X-Google-Smtp-Source: APXvYqyVnSHPvZ4ExC4CJd4Ab0lYUXtlJ4xQ+ka+GVnoV9U85XICix4B3mT3sET442QG++2RwcNTcg==
+X-Received: by 2002:a1c:a543:: with SMTP id o64mr38680106wme.73.1578407374134;
+        Tue, 07 Jan 2020 06:29:34 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id f207sm29320212wme.9.2020.01.07.06.29.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 06:29:33 -0800 (PST)
+Date:   Tue, 7 Jan 2020 14:29:42 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH 2/2] mfd: madera: Wait for boot done before accessing any
+ other registers
+Message-ID: <20200107142942.GO14821@dell>
+References: <20200106102834.31301-1-ckeepax@opensource.cirrus.com>
+ <20200106102834.31301-2-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-References: <000000000000d29687059b3f32aa@google.com> <Pine.LNX.4.44L0.2001031159280.1560-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2001031159280.1560-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 7 Jan 2020 15:28:30 +0100
-Message-ID: <CAAeHK+z5sY=CpPhO0QZGE_o1Bo8XA4PG4NT=mprO=9=Rg+1kkQ@mail.gmail.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        ingrassia@epigenesys.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200106102834.31301-2-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 6:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Fri, 3 Jan 2020, syzbot wrote:
->
-> > Hello,
-> >
-> > syzbot has tested the proposed patch and the reproducer did not trigger
-> > crash:
-> >
-> > Reported-and-tested-by:
-> > syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com
-> >
-> > Tested on:
-> >
-> > commit:         ecdf2214 usb: gadget: add raw-gadget interface
-> > git tree:       https://github.com/google/kasan.git
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b06a019075333661
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=10e5f68920f13587ab12
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=177f06e1e00000
-> >
-> > Note: testing is done by a robot and is best-effort only.
->
-> Andrey:
->
-> Clearly something strange is going on here.  First, the patch should
-> not have changed the behavior; all it did was add some log messages.
-> Second, I don't see how the warning could have been triggered at all --
-> it seems to be complaining that 2 != 2.
+On Mon, 06 Jan 2020, Charles Keepax wrote:
 
-Hi Alan,
+> It is advised to wait for the boot done bit to be set before reading
+> any other register, update the driver to respect this.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/madera-core.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 
-It looks like some kind of race in involved here.
+I'm assuming this patch is orthogonal to the last?
 
-There are a few indications of that: 1. there's no C reproducer
-generated for this crash (usually happens because of timing
-differences when executing syz repro vs C repro), 2. syz repro has
-threaded, collide and repeat flags turned on (which means it gets
-executed many times with some syscalls scheduled asynchronously).
+Can I take it on its own?
 
-This also explains the weirdness around the 2 != 2 check being failed.
-First the comparison failed, then another thread updated one of the
-numbers being compared, and then the printk statement got executed.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
->
-> Does the reproducer really work?
-
-Yes, it worked for syzbot at the very least. It looks like your patch
-introduced some delays which made the bug untriggerable by the same
-reproducer. Since this is a race it might be quite difficult to
-reproduce this manually (due to timing differences caused by a
-different environment setup) as well unfortunately.
-
-Perhaps giving a less invasive patch (that minimizes timing changes
-introduced to the code that is suspected of being racy) to syzbot
-could be used to debug this.
-
-Thanks!
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
