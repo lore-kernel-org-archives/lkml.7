@@ -2,125 +2,151 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84188C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5FD208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578412132;
-	bh=m8JJwNYYUN0cI55b1bIkcqX+lHoyiGdFR/bK6o9/YMk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z5fwfVw8wrhylz5IbmW9kyLvHAxR4FeZaKNhwGlg+WlpR/Fyb8c8f72Ow1kjR5RcF
-	 8GT45l86cPr9yUINJFm+TKrppDj7+9cycoIX0r/OxaMALOC1IP7g5xPxzunYmSVvki
-	 WZnTLfdguo2nlZWMN8nXUXlrkdKvbDxd/vNSBzGU=
+	by mail.kernel.org (Postfix) with ESMTP id 552A32087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUlABEir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgAGPsv (ORCPT
+        id S1728434AbgAGPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbgAGPsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:48:51 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2808B208C4;
-        Tue,  7 Jan 2020 15:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578412130;
-        bh=m8JJwNYYUN0cI55b1bIkcqX+lHoyiGdFR/bK6o9/YMk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ELXoZKRxKo7R5r0mofZ53Y2FWh9zmTp8Em7ycLJvHJf4OqA5sB+SWyYHMx6PYHiW8
-         1SdZWYOp5ry24NfKanSDjxT+3mJwXwoHZzoLNzGatOug0DNWynZwYyxrwPvimiJC43
-         tqXQBu1Ql2Xbt7AXCx8y8V88zAKKdEfCG1CZV4Bg=
-Received: by mail-qk1-f177.google.com with SMTP id x1so42991749qkl.12;
-        Tue, 07 Jan 2020 07:48:50 -0800 (PST)
-X-Gm-Message-State: APjAAAXcYavMc5KQwjAZ1UVHcMY2HSzyFsBoRb8ipZJRgAu9RoXk8Hcu
-        frfxC9G5U8zzawvv/jur1dK9PZ8Proswwbc57Q==
-X-Google-Smtp-Source: APXvYqw42izep83otEMcE93AOoYtZ0fOAGbAAx5hxU3nM1+/TcTF1GLkofhxJo86KQeQJMXepNDVqz6q6bljFjDWx4M=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr89412395qkg.152.1578412129283;
- Tue, 07 Jan 2020 07:48:49 -0800 (PST)
+        Tue, 7 Jan 2020 10:49:25 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41547 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbgAGPtZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 10:49:25 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c26so50715505eds.8;
+        Tue, 07 Jan 2020 07:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q2dBMzJh1iqJhUE2UWcOEtoI19XwUDJebl5Ro3YyPJU=;
+        b=KUlABEirfWRnzjtocFxdIdVHqfMySuShVFGI6CrCqeviroT2bWoz7jMJ+ue0nO09Gs
+         jx5GKl0ptt9RV17YIu2BLBI8Nbh5cj+teqlXm/Fe2pDPGOS/QuTTcF2hi6SXIUdCI9oH
+         TzfVyBkXNDrvLIg13dWjGGkHmyU0L9pUmhk658bcVFejA9PVvmrAt5oYHsvO6FpUKZZ/
+         m4CA+ZAxNRKigoTM2l1u71Y/lv+AmIH1QUVsSmZIWIlCdFIPaZ9TUArWn6okwCTsO4pI
+         st1kdE6bEziDEJqxbjh1rtvS0ytNjfdgh81Mt47Js3oB2xKcLjcVefpmQ7tT9tRPPzGv
+         ojDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q2dBMzJh1iqJhUE2UWcOEtoI19XwUDJebl5Ro3YyPJU=;
+        b=aaeZdhKeCIJdnoLsEPYWPdboGhkyAArigdFWgqi9/ilejom6uYm7FoseKOpjP+pcoJ
+         PmFk5kyasTe8fVvcFSSQeYZfRfH18FnF54mICLvCV/y2oH7Ki72tkO6Wc9bjWoti35/h
+         rwHg3suFPFnh4+qfF4ac8scx+ozTfvR3cujkg+NKxqauuK8LkEPWz5sLBR7G6kfK0ZXg
+         /4KoHATmtlc8WWv6yNKtFkiBgoPPoBAzpmJifH3gdQ0wIKBph6KuRRPjh9RyazSR6W/2
+         nm6Aein5E2S/Govewm1a1JPeQZsATXEUkACNIBaBBHjT8TTrjJ4ykqjFf40klqwrKzGO
+         iChw==
+X-Gm-Message-State: APjAAAUiGMCJQOq+AU4a+SjMx+XFcMekWg9Vh1RrXDuObuDkCtTYqDSs
+        PBwowgS3gFy8eH8Ny8s69nWKkmpTjpLQU1nGAjKbog==
+X-Google-Smtp-Source: APXvYqzhf3gjK3FTDjFr5iw2WqmK9Jg7BY+62kmOfi7P7wa+NKewrDAuHRr/r5Q1CtrRCIy2HzoxKaKKII4JfC5I9mI=
+X-Received: by 2002:a50:fb96:: with SMTP id e22mr515499edq.18.1578412163371;
+ Tue, 07 Jan 2020 07:49:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20200102131845.12992-2-t-kristo@ti.com> <20200102132512.13248-1-t-kristo@ti.com>
- <20200103233855.GA19897@bogus> <358abb44-7724-4e25-6a3d-6939ec82386a@ti.com>
-In-Reply-To: <358abb44-7724-4e25-6a3d-6939ec82386a@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jan 2020 09:48:36 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJY8fzQ8=e=RHrtq1huucx6msqXJ+C6EcoaofBqRf9yLQ@mail.gmail.com>
-Message-ID: <CAL_JsqJY8fzQ8=e=RHrtq1huucx6msqXJ+C6EcoaofBqRf9yLQ@mail.gmail.com>
-Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
- remoteproc bindings
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
+References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 7 Jan 2020 17:49:12 +0200
+Message-ID: <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com>
+Subject: Re: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
+To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org
+        "zero19850401@gmail.com" <zero19850401@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 5:01 AM Tero Kristo <t-kristo@ti.com> wrote:
+Hi Chen,
+
+On Tue, 7 Jan 2020 at 12:37, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=B3)
+<JohnsonCH.Chen@moxa.com> wrote:
 >
-> On 04/01/2020 01:38, Rob Herring wrote:
-> > On Thu, Jan 02, 2020 at 03:25:12PM +0200, Tero Kristo wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>
-> >> Add the device tree bindings document for the IPU and DSP
-> >> remote processor devices on OMAP4+ SoCs.
-> >>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> [t-kristo@ti.com: converted to schema]
-> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >> ---
-> >> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
-> >>
-> >>   .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
-> >>   1 file changed, 329 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-
-
-> >> +  reg:
-> >> +    description: |
-> >> +      Address space for any remoteproc memories present on
-> >> +      the SoC. Should contain an entry for each value in
-> >> +      'reg-names'. These are mandatory for all DSP and IPU
-> >> +      processors that have them (OMAP4/OMAP5 DSPs do not have
-> >> +      any RAMs)
-> >> +
-> >> +  reg-names:
-> >> +    description: |
-> >> +      Required names for each of the address spaces defined in
-> >> +      the 'reg' property. Should contain a string from among
-> >> +      the following names, each representing the corresponding
-> >> +      internal RAM memory region.
-> >
-> > The schema is more constrained than 'a string from among the following
-> > names'. 'l2ram' is the only valid 1st entry for example.
+> Add dma_endian_le to solve ethernet TX/RX problems for freescale ls1021a.=
+ Without this, it will result in
+> rx-busy-errors by ethtool, and transmit queue timeout in ls1021a's platfo=
+rms.
 >
-> Right, I wasn't able to figure out a way to make the schema more
-> flexible, so I will just modify the description above.
+> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
+> ---
 
-The goal is somewhat to not be flexible as we want the possible
-combinations defined. If it is a manageable number of combinations,
-just list them out under a 'oneOf'.
+This patch is not valid. The endianness configuration in
+eTSECx_DMACTRL is reserved and not applicable.
+What is the value of SCFG_ETSECDMAMCR bits ETSEC_BD and ETSEC_FR_DATA
+on your board? Typically this is configured by the bootloader.
 
-Not encouraged, but it is possible to define any length and order of
-values (note 'items' is not a list here):
+>  drivers/net/ethernet/freescale/gianfar.c | 3 +++
+>  drivers/net/ethernet/freescale/gianfar.h | 4 ++++
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ether=
+net/freescale/gianfar.c
+> index 72868a28b621..ab4e45199df9 100644
+> --- a/drivers/net/ethernet/freescale/gianfar.c
+> +++ b/drivers/net/ethernet/freescale/gianfar.c
+> @@ -833,6 +833,7 @@ static int gfar_of_init(struct platform_device *ofdev=
+, struct net_device **pdev)
+>
+>         /* Find the TBI PHY.  If it's not there, we don't support SGMII *=
+/
+>         priv->tbi_node =3D of_parse_phandle(np, "tbi-handle", 0);
+> +       priv->dma_endian_le =3D of_property_read_bool(np, "fsl,dma-endian=
+-le");
+>
+>         return 0;
+>
+> @@ -1209,6 +1210,8 @@ static void gfar_start(struct gfar_private *priv)
+>         /* Initialize DMACTRL to have WWR and WOP */
+>         tempval =3D gfar_read(&regs->dmactrl);
+>         tempval |=3D DMACTRL_INIT_SETTINGS;
+> +       if (priv->dma_endian_le)
+> +               tempval |=3D DMACTRL_LE;
+>         gfar_write(&regs->dmactrl, tempval);
+>
+>         /* Make sure we aren't stopped */
+> diff --git a/drivers/net/ethernet/freescale/gianfar.h b/drivers/net/ether=
+net/freescale/gianfar.h
+> index 432c6a818ae5..aae07db5206b 100644
+> --- a/drivers/net/ethernet/freescale/gianfar.h
+> +++ b/drivers/net/ethernet/freescale/gianfar.h
+> @@ -215,6 +215,7 @@ extern const char gfar_driver_version[];
+>  #define DMACTRL_INIT_SETTINGS   0x000000c3
+>  #define DMACTRL_GRS             0x00000010
+>  #define DMACTRL_GTS             0x00000008
+> +#define DMACTRL_LE             0x00008000
+>
+>  #define TSTAT_CLEAR_THALT_ALL  0xFF000000
+>  #define TSTAT_CLEAR_THALT      0x80000000
+> @@ -1140,6 +1141,9 @@ struct gfar_private {
+>                 tx_pause_en:1,
+>                 rx_pause_en:1;
+>
+> +       /* little endian dma buffer and descriptor host interface */
+> +       unsigned int dma_endian_le;
+> +
+>         /* The total tx and rx ring size for the enabled queues */
+>         unsigned int total_tx_ring_size;
+>         unsigned int total_rx_ring_size;
+> --
+> 2.11.0
+>
+> Best regards,
+> Johnson
 
-items:
-  enum: [ ... ]
-
-Rob
+Regards,
+-Vladimir
