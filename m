@@ -2,108 +2,94 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A48C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0506C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049FB2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A350820848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rCQ72smI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgAGJDX (ORCPT
+        id S1727686AbgAGJDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:03:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35500 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgAGJDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:03:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9BD62B18F;
-        Tue,  7 Jan 2020 09:03:20 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 10:03:19 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jann Horn <jannh@google.com>, bpf@vger.kernel.org,
-        live-patching@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: BPF tracing trampoline synchronization between update/freeing
- and execution?
-Message-ID: <20200107090319.ggggnpkqfqdmldfy@pathway.suse.cz>
-References: <CAG48ez2gDDRtKaOcGdKLREd7RGtVzCypXiBMHBguOGSpxQFk3w@mail.gmail.com>
- <20200106165654.GP2844@hirez.programming.kicks-ass.net>
- <20200107082842.5w6zjgxy56wiftmm@pathway.suse.cz>
+        Tue, 7 Jan 2020 04:03:39 -0500
+Received: from mail-io1-f51.google.com ([209.85.166.51]:33162 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbgAGJDj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:03:39 -0500
+Received: by mail-io1-f51.google.com with SMTP id z8so51801338ioh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:03:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
+        b=rCQ72smI0DeWhto4Sdmg+g3DY80KqgNn96Sod2Bue/c4qK+Y2AWvn1/SKK0jdm3uMy
+         4OWncNlPthi60+f6sTGrp8rrYPvKwtxNVE9q20Fone5ubfhDjcoDdqDxDEQToIC91W19
+         1MVc8vTRmZbJ50sao+hrdDQ6lVbXLTX/7vT5BJWxxIBEeAFbgdIfsd/GZdCMEtBd/9XW
+         w/H6CWiDdCHqLtmpvq1SBiQSd6pm40ProtZ5QnDcHg1DjzsNfg/SH0EFcbZVvQ/7Uyww
+         dtkSLL0pOjU3mdP9zeAlTeJT3ui9xN4Vqsimo4y4KrTLY/1HDnct8cCDJuH61tYEXyMC
+         9K4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
+        b=eeqOpeTKB+KAuq+DxIBAMJPIV1re6HdwgVxwrgcn5A1TnEqvCsgigzis6uXuwmZD9R
+         vbnYHShsqBr3njXuP1nEx4ugz2uupwV1nh6dUh61bOwxJOkVjk70PcSm9m/FQ+qqR3ny
+         CDQk2MWbNfDuCWmKUh67QlZ/77AxHXha6Q+2zxs7cFfrVLIo3rB1+3HGbaAtLhYUuwsH
+         wx6NasIbDM9O3JTYxSchNKn9tcGaTvCsZe1tb8uaUuEy7hQyneW00Fv0GWQ5MIX2wNGV
+         weXHfRnfydap40XVmgS4OH4IS5Jbfrlcq1vrOPR0meEgJHmW7wYpTUU+OJr0OcC6NfTm
+         Bpuw==
+X-Gm-Message-State: APjAAAUTA1fpUDxjDjz0vOvoVfw0v3S3KnjP7q+o6MEEpAtutRVtRxsk
+        7bybV6WQyurlU0bALS7UEz0dHArHZZbmaMvclvorDQ==
+X-Google-Smtp-Source: APXvYqyUtDB0HoymsX65YpI76/mEkEWx0c+eKzafBa4vfpoPil7ziDgesHwZmWXrZmHNbTMZb+waD2Dwo254bAv1VmM=
+X-Received: by 2002:a6b:fb19:: with SMTP id h25mr72537201iog.40.1578387818317;
+ Tue, 07 Jan 2020 01:03:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107082842.5w6zjgxy56wiftmm@pathway.suse.cz>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com> <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 7 Jan 2020 10:03:27 +0100
+Message-ID: <CAMRc=Mf6CpsMpqwXjzC7jF0rxchSop+q7GQ2xgooKVRuC52VPQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-01-07 09:28:42, Petr Mladek wrote:
-> On Mon 2020-01-06 17:56:54, Peter Zijlstra wrote:
-> > On Mon, Jan 06, 2020 at 05:39:30PM +0100, Jann Horn wrote:
-> > > Hi!
-> > > 
-> > > I was chatting with kpsingh about BPF trampolines, and I noticed that
-> > > it looks like BPF trampolines (as of current bpf-next/master) seem to
-> > > be missing synchronization between trampoline code updates and
-> > > trampoline execution. Or maybe I'm missing something?
-> > > 
-> > > If I understand correctly, trampolines are executed directly from the
-> > > fentry placeholders at the start of arbitrary kernel functions, so
-> > > they can run without any locks held. So for example, if task A starts
-> > > executing a trampoline on entry to sys_open(), then gets preempted in
-> > > the middle of the trampoline, and then task B quickly calls
-> > > BPF_RAW_TRACEPOINT_OPEN twice, and then task A continues execution,
-> > > task A will end up executing the middle of newly-written machine code,
-> > > which can probably end up crashing the kernel somehow?
-> > > 
-> > > I think that at least to synchronize trampoline text freeing with
-> > > concurrent trampoline execution, it is necessary to do something
-> > > similar to what the livepatching code does with klp_check_stack(), and
-> > > then either use a callback from the scheduler to periodically re-check
-> > > tasks that were in the trampoline or let the trampoline tail-call into
-> > > a cleanup helper that is part of normal kernel text. And you'd
-> > > probably have to gate BPF trampolines on
-> > > CONFIG_HAVE_RELIABLE_STACKTRACE.
-> > 
-> > ftrace uses synchronize_rcu_tasks() to flip between trampolines iirc.
-> 
-> ftrace calls also schedule_on_each_cpu(ftrace_sync) to handle
-> situations where RCU is not watching, see rcu_is_watching().
-> 
-> The following is called in ftrace_shutdown():
-> 
-> 	schedule_on_each_cpu(ftrace_sync);
-> 
-> 	if (IS_ENABLED(CONFIG_PREEMPTION))
-> 		synchronize_rcu_tasks();
-> 
-> 	arch_ftrace_trampoline_free(ops);
+wt., 7 sty 2020 o 08:46 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
+=82(a):
+>
+> I'm happy with a (static) GPIO hog.
+>
+> BTW, what exactly do you mean with "mux framework"? Pinctrl/pinmux?
+>
 
-Just to be sure. IMHO, the above should be enough to decide when
-a ftrace-like trampoline could be freed. But it is not enough
-to decide whether any task is still in the middle of the BPF
-program that the trampoline jumped to.
+No, I meant the multiplexer subsystem under drivers/mux. I thought we
+could call mux_control_select() from pm_runtime_get_*() or something
+similar. This is just an idea though, and I see Frank already did an
+in-depth analysis so never mind my comment.
 
-You will likely need something more complicated to decide when it is safe
-to free the BPF program itself. The stack check probably won't help.
-I guess that the stack will be marked as unsafe in BPF program because
-there will be no data for ORC unwinder. But some simple reference
-counting might do the job.
-
-Best Regards,
-Petr
+Bart
