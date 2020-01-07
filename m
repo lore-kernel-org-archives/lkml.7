@@ -2,133 +2,150 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3BCC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4BCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A072087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnS9kng3"
+	by mail.kernel.org (Postfix) with ESMTP id 77D912081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgAGTBM (ORCPT
+        id S1728693AbgAGTBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:01:12 -0500
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:39648 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgAGTBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:01:12 -0500
-Received: by mail-pg1-f169.google.com with SMTP id b137so304927pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:01:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KL7wPr21JfmH2ZrLmhxKNh5vypd3qs9aYYpVHeAk1PY=;
-        b=FnS9kng3mIaaN7CIxp2b1cfAjU0Mq/Ife4FrJCVVNcV4FmuslfF8d5oJWZp7GOQTZY
-         5o4j97s20kgGkUo9mDYKwil2XqLy34EauuWNN3J3yxdiRS/cj8qYnecL9EyrNfdDplxh
-         FE+215BYvGVh5sjvx6XB8KoxaqO9gr+oNnORpSiq/gr+K4UEKI5Nd6jIDfuWPc8ajHN6
-         eiKaxoN6XZU12DgzRLDuBWBLIQYhbm3StiMjE6/WQEXMA6KZ66ariw0W8KYYLtdvo5m9
-         a6+9tZZLXNOW8uD8X3rr9XL7SzVhklAvUn0v4m9yhIyHVXANPCiYAjmkfrvGj4kJ/36M
-         ViFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KL7wPr21JfmH2ZrLmhxKNh5vypd3qs9aYYpVHeAk1PY=;
-        b=bYD4W2GyCKUdoOH+RKT1PgNemOKlqfCrBCmEug5Yvp4nXMWnhnbiFimK5KNcHssvhk
-         D4WzcUn4yqtgmxoZU1c2AruGgVmbMFavRyaaMgig1ddpEB5VRR2+i3Q5ZYvS0hh52cpP
-         uEmvW4l3M8eKlTaHQct1PkJbAAb0/Ke3Ow0brlpqiM84TxFrkDU+KpoYquBd3UES+vzd
-         RLBr6a/gb7LrOzE5ubBoqiWsn38GMG/keo3rp70l/fYce6DkLUy88Zg1NGwXvi6V15t6
-         cfPiGKJ8II2ApYM9D1gfcVYmqzqYJlFnnxd30AIf1Av1oeTawKMRl1FXrZh9o+iiOTuI
-         RjcQ==
-X-Gm-Message-State: APjAAAVS+6Oprbq7AQyLZNmQlACnnCrZkcGuKwmzmk1QoWUNvIJvegv3
-        bZSjzPpQF6aBlkX9JmykvFkJqksR
-X-Google-Smtp-Source: APXvYqw9dIT+IpGNKBl1zL5+g7t+bCA9xcWW0de/UZRm+B56BreqrFzdp4uVD570JqWDDyLu6DcAxg==
-X-Received: by 2002:a63:1908:: with SMTP id z8mr982840pgl.350.1578423671574;
-        Tue, 07 Jan 2020 11:01:11 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:b920:9a21:10c:ddbd? ([2001:4898:80e8:8:3930:9a21:10c:ddbd])
-        by smtp.gmail.com with ESMTPSA id r14sm311554pfh.10.2020.01.07.11.01.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 11:01:11 -0800 (PST)
-Subject: Re: EDAC driver for DMC520
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>,
-        Lei Wang <lewan@microsoft.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <bdb29d6d-bc63-cf68-0e32-556740537cd8@broadcom.com>
- <20200107184926.GL29542@zn.tnic>
- <f56605f8-e49f-6b99-5735-b4bec75af9fd@broadcom.com>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <5a3188d8-e23a-b0de-bef7-ff60dda339ab@gmail.com>
-Date:   Tue, 7 Jan 2020 11:01:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <f56605f8-e49f-6b99-5735-b4bec75af9fd@broadcom.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 7 Jan 2020 14:01:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:46496 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728358AbgAGTBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:01:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 11:01:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="223297319"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga003.jf.intel.com with ESMTP; 07 Jan 2020 11:01:45 -0800
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.41]) by
+ ORSMSX109.amr.corp.intel.com ([169.254.11.176]) with mapi id 14.03.0439.000;
+ Tue, 7 Jan 2020 11:01:45 -0800
+From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To:     "luto@amacapital.net" <luto@amacapital.net>
+CC:     "songliubraving@fb.com" <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "mjg59@google.com" <mjg59@google.com>,
+        "thgarnie@chromium.org" <thgarnie@chromium.org>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "revest@chromium.org" <revest@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "jackmanb@chromium.org" <jackmanb@chromium.org>,
+        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "mhalcrow@google.com" <mhalcrow@google.com>,
+        "andriin@fb.com" <andriin@fb.com>
+Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
+Thread-Topic: [PATCH bpf-next] bpf: Make trampolines W^X
+Thread-Index: AQHVwpjLpCzVLdPZ5Em9CS0HIZ/iOKfewVwAgAA1aoCAASP/gA==
+Date:   Tue, 7 Jan 2020 19:01:44 +0000
+Message-ID: <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
+References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
+         <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net>
+In-Reply-To: <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.54.75.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DE01A131372B9D4684BF9EC8078CC1AB@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/2020 10:55 AM, Scott Branden wrote:
-> Lei/Shiping,
-> 
-> On 2020-01-07 10:49 a.m., Borislav Petkov wrote:
->> On Tue, Jan 07, 2020 at 09:57:26AM -0800, Scott Branden wrote:
->>> Hello EDAC Maintainers,
->>>
->>> Could somebody have a look at the DMC520 patch series that has been waiting
->>> for a response since November:
->>> https://patchwork.kernel.org/patch/11248785/
->> Well, the dt bindings stuff is still being discussed:
->>
->> https://patchwork.kernel.org/patch/11248783/
->>
->> Also, looking at this again, the patch authorship looks really fishy:
->>
->> Sender is
->>
->> From: Shiping Ji <shiping.linux@gmail.com>
->>
->> however, he doesn't have his SOB in there and previous iterations were
->> done with Lei Wang whose SOB *is* there so I dunno what's going on.
->>
->> *Especially* if Lei Wang is being added as a maintainer of that driver
->> by the second patch but he's not sending this driver himself. If this
->> driver is going to be orphaned the moment it lands upstream, I'm not
->> going to take it.
-> Shiping/Lei could you please provide appropriate signed-off-by?
-> Also, if you do not have an appropriate maintainer for the driver
-> we have Yuqing Shen who can be maintainer of this driver.
-
-Yes, signed-off-by is still Lei Wang, who is still the official maintainer of the driver.
-
-Lei is currently in sick leave so I'm trying to complete the patches on her behalf. Please kindly let me know how to add my SOB there.
-
-Thanks!
-
->> So at least those two things need to be fixed/clarified first.
->>
->> HTH.
->>
-> 
-
--- 
-Best regards,
-Shiping Ji
+Q0MgTmFkYXYgYW5kIEplc3NpY2EuDQoNCk9uIE1vbiwgMjAyMC0wMS0wNiBhdCAxNTozNiAtMTAw
+MCwgQW5keSBMdXRvbWlyc2tpIHdyb3RlOg0KPiA+IE9uIEphbiA2LCAyMDIwLCBhdCAxMjoyNSBQ
+TSwgRWRnZWNvbWJlLCBSaWNrIFAgPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0KPiA+IHdy
+b3RlOg0KPiA+IA0KPiA+IO+7v09uIFNhdCwgMjAyMC0wMS0wNCBhdCAwOTo0OSArMDkwMCwgQW5k
+eSBMdXRvbWlyc2tpIHdyb3RlOg0KPiA+ID4gPiA+IE9uIEphbiA0LCAyMDIwLCBhdCA4OjQ3IEFN
+LCBLUCBTaW5naCA8a3BzaW5naEBjaHJvbWl1bS5vcmc+IHdyb3RlOg0KPiA+ID4gPiANCj4gPiA+
+ID4g77u/RnJvbTogS1AgU2luZ2ggPGtwc2luZ2hAZ29vZ2xlLmNvbT4NCj4gPiA+ID4gDQo+ID4g
+PiA+IFRoZSBpbWFnZSBmb3IgdGhlIEJQRiB0cmFtcG9saW5lcyBpcyBhbGxvY2F0ZWQgd2l0aA0K
+PiA+ID4gPiBicGZfaml0X2FsbG9jX2V4ZV9wYWdlIHdoaWNoIG1hcmtzIHRoaXMgYWxsb2NhdGVk
+IHBhZ2UgZXhlY3V0YWJsZS4gVGhpcw0KPiA+ID4gPiBtZWFucyB0aGF0IHRoZSBhbGxvY2F0ZWQg
+bWVtb3J5IGlzIFcgYW5kIFggYXQgdGhlIHNhbWUgdGltZSBtYWtpbmcgaXQNCj4gPiA+ID4gc3Vz
+Y2VwdGlibGUgdG8gV1ggYmFzZWQgYXR0YWNrcy4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpbmNlIHRo
+ZSBhbGxvY2F0ZWQgbWVtb3J5IGlzIHNoYXJlZCBiZXR3ZWVuIHR3byB0cmFtcG9saW5lcyAodGhl
+DQo+ID4gPiA+IGN1cnJlbnQgYW5kIHRoZSBuZXh0KSwgMiBwYWdlcyBtdXN0IGJlIGFsbG9jYXRl
+ZCB0byBhZGhlcmUgdG8gV15YIGFuZA0KPiA+ID4gPiB0aGUgZm9sbG93aW5nIHNlcXVlbmNlIGlz
+IG9iZXllZCB3aGVyZSB0cmFtcG9saW5lcyBhcmUgbW9kaWZpZWQ6DQo+ID4gPiANCj4gPiA+IENh
+biB3ZSBwbGVhc2UgZG8gYmV0dGVyIHJhdGhlciB0aGFuIHBpbGluZyBnYXJiYWdlIG9uIHRvcCBv
+ZiBnYXJiYWdlPw0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAtIE1hcmsgbWVtb3J5IGFzIG5v
+biBleGVjdXRhYmxlIChzZXRfbWVtb3J5X254KS4gV2hpbGUgbW9kdWxlX2FsbG9jIGZvcg0KPiA+
+ID4gPiB4ODYgYWxsb2NhdGVzIHRoZSBtZW1vcnkgYXMgUEFHRV9LRVJORUwgYW5kIG5vdCBQQUdF
+X0tFUk5FTF9FWEVDLCBub3QNCj4gPiA+ID4gYWxsIGltcGxlbWVudGF0aW9ucyBvZiBtb2R1bGVf
+YWxsb2MgZG8gc28NCj4gPiA+IA0KPiA+ID4gSG93IGFib3V0IGZpeGluZyB0aGlzIGluc3RlYWQ/
+DQo+ID4gPiANCj4gPiA+ID4gLSBNYXJrIHRoZSBtZW1vcnkgYXMgcmVhZC93cml0ZSAoc2V0X21l
+bW9yeV9ydykNCj4gPiA+IA0KPiA+ID4gUHJvYmFibHkgaGFybWxlc3MsIGJ1dCBzZWUgYWJvdmUg
+YWJvdXQgZml4aW5nIGl0Lg0KPiA+ID4gDQo+ID4gPiA+IC0gTW9kaWZ5IHRoZSB0cmFtcG9saW5l
+DQo+ID4gPiANCj4gPiA+IFNlZW1zIHJlYXNvbmFibGUuIEl04oCZcyB3b3J0aCBub3RpbmcgdGhh
+dCB0aGlzIHdob2xlIGFwcHJvYWNoIGlzDQo+ID4gPiBzdWJvcHRpbWFsOg0KPiA+ID4gdGhlIOKA
+nG1vZHVsZeKAnSBhbGxvY2F0b3Igc2hvdWxkIHJlYWxseSBiZSByZXR1cm5pbmcgYSBsaXN0IG9m
+IHBhZ2VzIHRvIGJlDQo+ID4gPiB3cml0dGVuIChub3QgYXQgdGhlIGZpbmFsIGFkZHJlc3MhKSB3
+aXRoIHRoZSBhY3R1YWwgZXhlY3V0YWJsZSBtYXBwaW5nIHRvDQo+ID4gPiBiZQ0KPiA+ID4gbWF0
+ZXJpYWxpemVkIGxhdGVyLCBidXQgdGhhdOKAmXMgYSBiaWdnZXIgcHJvamVjdCB0aGF0IHlvdeKA
+mXJlIHdlbGNvbWUgdG8NCj4gPiA+IGlnbm9yZQ0KPiA+ID4gZm9yIG5vdy4gIChDb25jcmV0ZWx5
+LCBpdCBzaG91bGQgcHJvZHVjZSBhIHZtYXAgYWRkcmVzcyB3aXRoIGJhY2tpbmcgcGFnZXMNCj4g
+PiA+IGJ1dA0KPiA+ID4gd2l0aCB0aGUgdm1hcCBhbGlhcyBlaXRoZXIgZW50aXJlbHkgdW5tYXBw
+ZWQgb3IgcmVhZC1vbmx5LiBBIHN1YnNlcXVlbnQNCj4gPiA+IGhlYWxlcg0KPiA+ID4gd291bGQs
+IGFsbCBhdCBvbmNlLCBtYWtlIHRoZSBkaXJlY3QgbWFwIHBhZ2VzIFJPIG9yIG5vdC1wcmVzZW50
+IGFuZCBtYWtlDQo+ID4gPiB0aGUNCj4gPiA+IHZtYXAgYWxpYXMgUlguKQ0KPiA+ID4gPiAtIE1h
+cmsgdGhlIG1lbW9yeSBhcyByZWFkLW9ubHkgKHNldF9tZW1vcnlfcm8pDQo+ID4gPiA+IC0gTWFy
+ayB0aGUgbWVtb3J5IGFzIGV4ZWN1dGFibGUgKHNldF9tZW1vcnlfeCkNCj4gPiA+IA0KPiA+ID4g
+Tm8sIHRoYW5rcy4gVGhlcmXigJlzIHZlcnkgbGl0dGxlIGV4Y3VzZSBmb3IgZG9pbmcgdHdvIElQ
+SSBmbHVzaGVzIHdoZW4gb25lDQo+ID4gPiB3b3VsZCBzdWZmaWNlLg0KPiA+ID4gDQo+ID4gPiBB
+cyBmYXIgYXMgSSBrbm93LCBhbGwgYXJjaGl0ZWN0dXJlcyBjYW4gZG8gdGhpcyB3aXRoIGEgc2lu
+Z2xlIGZsdXNoDQo+ID4gPiB3aXRob3V0DQo+ID4gPiByYWNlcyAgeDg2IGNlcnRhaW5seSBjYW4u
+IFRoZSBtb2R1bGUgZnJlZWluZyBjb2RlIGdldHMgdGhpcyBzZXF1ZW5jZQ0KPiA+ID4gcmlnaHQu
+DQo+ID4gPiBQbGVhc2UgcmV1c2UgaXRzIG1lY2hhbmlzbSBvciwgaWYgbmVlZGVkLCBleHBvcnQg
+dGhlIHJlbGV2YW50IGludGVyZmFjZXMuDQo+ID4gDQo+ID4gU28gaWYgSSB1bmRlcnN0YW5kIHRo
+aXMgcmlnaHQsIHNvbWUgdHJhbXBvbGluZXMgaGF2ZSBiZWVuIGFkZGVkIHRoYXQgYXJlDQo+ID4g
+Y3VycmVudGx5IHNldCBhcyBSV1ggYXQgbW9kaWZpY2F0aW9uIHRpbWUgQU5EIGxlZnQgdGhhdCB3
+YXkgZHVyaW5nIHJ1bnRpbWU/DQo+ID4gVGhlDQo+ID4gZGlzY3Vzc2lvbiBvbiB0aGUgb3JkZXIg
+b2Ygc2V0X21lbW9yeV8oKSBjYWxscyBpbiB0aGUgY29tbWl0IG1lc3NhZ2UgbWFkZSBtZQ0KPiA+
+IHRoaW5rIHRoYXQgdGhpcyB3YXMganVzdCBhIG1vZGlmaWNhdGlvbiB0aW1lIHRoaW5nIGF0IGZp
+cnN0Lg0KPiANCj4gSeKAmW0gbm90IHN1cmUgd2hhdCB0aGUgc3RhdHVzIHF1byBpcy4NCj4gDQo+
+IFdlIHJlYWxseSBvdWdodCB0byBoYXZlIGEgZ2VudWluZWx5IGdvb2QgQVBJIGZvciBhbGxvY2F0
+aW9uIGFuZCBpbml0aWFsaXphdGlvbg0KPiBvZiB0ZXh0LiAgV2UgY2FuIGRvIHNvIG11Y2ggYmV0
+dGVyIHRoYW4gc2V0X21lbW9yeV9ibGFoYmxhaC4NCj4gDQo+IEZXSVcsIEkgaGF2ZSBzb21lIGlk
+ZWFzIGFib3V0IG1ha2luZyBrZXJuZWwgZmx1c2hlcyBjaGVhcGVyLiBJdOKAmXMgY3VycmVudGx5
+DQo+IGJsb2NrZWQgb24gZmluZGluZyBzb21lIHRpbWUgYW5kIG9uIHRnbHjigJlzIGlycXRyYWNl
+IHdvcmsuDQo+IA0KDQpNYWtlcyBzZW5zZSB0byBtZS4gSSBndWVzcyB0aGVyZSBhcmUgNiB0eXBl
+cyBvZiB0ZXh0IGFsbG9jYXRpb25zIG5vdzoNCiAtIFRoZXNlIHR3byBCUEYgdHJhbXBvbGluZXMN
+CiAtIEJQRiBKSVRzDQogLSBNb2R1bGVzDQogLSBLcHJvYmVzDQogLSBGdHJhY2UNCg0KQWxsIGRv
+aW5nIChvciBzaG91bGQgYmUgZG9pbmcpIHByZXR0eSBtdWNoIHRoZSBzYW1lIHRoaW5nLiBJIGJl
+bGlldmUgSmVzc2ljYSBoYWQNCnNhaWQgYXQgb25lIHBvaW50IHRoYXQgc2hlIGRpZG4ndCBsaWtl
+IGFsbCB0aGUgb3RoZXIgZmVhdHVyZXMgdXNpbmcNCm1vZHVsZV9hbGxvYygpIGFzIGl0IHdhcyBz
+dXBwb3NlZCB0byBiZSBqdXN0IGZvciByZWFsIG1vZHVsZXMuIFdoZXJlIHdvdWxkIHRoZQ0KQVBJ
+IGxpdmU/DQoNCj4gPiANCj4gPiBBbHNvLCBpcyB0aGVyZSBhIHJlYXNvbiB5b3UgY291bGRuJ3Qg
+dXNlIHRleHRfcG9rZSgpIHRvIG1vZGlmeSB0aGUNCj4gPiB0cmFtcG9saW5lDQo+ID4gd2l0aCBh
+IHNpbmdsZSBmbHVzaD8NCj4gPiANCj4gDQo+IERvZXMgdGV4dF9wb2tlIHRvIGFuIElQSSB0aGVz
+ZSBkYXlzPw0KDQpJIGRvbid0IHRoaW5rIHNvIHNpbmNlIHRoZSBSVyBtYXBwaW5nIGlzIGp1c3Qg
+b24gYSBzaW5nbGUgQ1BVLiBUaGF0IHdhcyBvbmUgb2YNCnRoZSBiZW5lZml0cyBvZiB0aGUgdGVt
+cG9yYXJ5IG1tIHN0cnVjdCBiYXNlZCB0aGluZyBOYWRhdiBkaWQuIEkgaGF2ZW4ndCBsb29rZWQN
+CmludG8gUGV0ZXJaJ3MgY2hhbmdlcyB0aG91Z2guDQo=
