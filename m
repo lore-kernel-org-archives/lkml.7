@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7EDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE4BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F2F24679
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37600206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432123;
-	bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
+	s=default; t=1578432132;
+	bh=Rbq9ff1kEAgmg60+E1Ba2H3rPuwflhxi/vZb09xzZRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3jLrKEDDWtSUwrP1AwPfTGQnSwmKG0RYA+ccPzH/uirZsDMZXawmxoEs2bK1NQA6
-	 EztdozMf8C756NTeVP2s1G5dcfUONqaNwtc5leZ+E8mAAha3cR7oYMW5DytWrjv1ZD
-	 3MBoBJ2uLZ3YawZ2wVpSsQB8X2/h5JKvqCv1APFg=
+	b=hWWnKh9CQvOxZkOyphjPNB8cxvDkfl+p3W/kUWECt14RqMOhVSaXR8JVmYi+Kl60i
+	 ACNnH3e9X0x1OqOaUw9DZJr59pL7jzSZU6OHCj2UNXirusw6IjSImp5nGhA1e3+bD6
+	 atONLHpgMZmAc1vbLCUYvOgHlOsKwejEKt1cE+mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgAGVCv (ORCPT
+        id S1728760AbgAGVCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727752AbgAGVCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:47 -0500
+        id S1728752AbgAGVCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D3024656;
-        Tue,  7 Jan 2020 21:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98DE32187F;
+        Tue,  7 Jan 2020 21:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430966;
-        bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
+        s=default; t=1578430950;
+        bh=Rbq9ff1kEAgmg60+E1Ba2H3rPuwflhxi/vZb09xzZRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0NL5MQiYCD0En8CvjrG0NjAXBLSnycDy12GQSNGan+z/+XE0Nc0N4X24AYsrQwXWQ
-         7NrZqI78FvxqEDSlwjxqIfIUmy/C/OVsaPq8wBaQopVKuY++zkx5np9lLjP0N0QyPL
-         eKqfe9p/v8Itv3UJGi4UcTCS8rU5oADD1QvKKEEI=
+        b=WHj1NdRzUfpXbyvZpYwPRfXZWy2rkmOTyziarYJkQ/z4dFuA4JdepEWXN7o9nmo4X
+         I167MxH5DmOwJ/2ox3YCAfyVc/IhU6R1zz8qBVzLGG7NieDJmUefKvFjH/qNtce2hl
+         sl5A/nkMuYNv+S/TOMnLT+LmyhWJr7LkYmlqUMFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 5.4 163/191] media: flexcop-usb: ensure -EIO is returned on error condition
-Date:   Tue,  7 Jan 2020 21:54:43 +0100
-Message-Id: <20200107205341.707783845@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 126/191] ALSA: pcm: Yet another missing check of non-cached buffer type
+Date:   Tue,  7 Jan 2020 21:54:06 +0100
+Message-Id: <20200107205339.720940752@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,37 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
+commit 2406ff9b86aa1b77fe1a6d15f37195ac1fdb2a14 upstream.
 
-An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
-even though the an -EIO was intended to be returned in the case where
-ret != buflen.  Fix this by replacing the return 0 with the return of
-ret to return the error return code.
+For non-x86 architectures, SNDRV_DMA_TYPE_DEV_UC should be treated
+equivalent with SNDRV_DMA_TYPE_DEV, where the default mmap handler
+still checks only about SNDRV_DMA_TYPE_DEV.  Make the check more
+proper.
 
-Addresses-Coverity: ("Unused value")
+Note that all existing users of *_UC buffer types are x86-only, so
+this doesn't fix any bug, but just for consistency.
 
-Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 42e748a0b325 ("ALSA: memalloc: Add non-cached buffer type")
+Link: https://lore.kernel.org/r/20191108165626.5947-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/pcm_native.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -295,7 +295,7 @@ static int flexcop_usb_i2c_req(struct fl
- 
- 	mutex_unlock(&fc_usb->data_mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- /* actual bus specific access functions,
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -3408,7 +3408,8 @@ int snd_pcm_lib_default_mmap(struct snd_
+ #endif /* CONFIG_GENERIC_ALLOCATOR */
+ #ifndef CONFIG_X86 /* for avoiding warnings arch/x86/mm/pat.c */
+ 	if (IS_ENABLED(CONFIG_HAS_DMA) && !substream->ops->page &&
+-	    substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV)
++	    (substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV ||
++	     substream->dma_buffer.dev.type == SNDRV_DMA_TYPE_DEV_UC))
+ 		return dma_mmap_coherent(substream->dma_buffer.dev.dev,
+ 					 area,
+ 					 substream->runtime->dma_area,
 
 
