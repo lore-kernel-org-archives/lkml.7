@@ -2,98 +2,147 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4ACC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC8AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D0320848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nCuR6y8V"
+	by mail.kernel.org (Postfix) with ESMTP id 63DB5208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578429279;
+	bh=rOBrRkww+dpxH19H//3TaUngMuYnO8yIMvcGn9rynD4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=w85H91PMpFromR/1rO6eUDyQJQcYCXyYw0DScfTaAl5fpGkje91wB6AsWTgkr/+fF
+	 d8XyFQrXOwv+82kkjfzUuMPsEELy/covoOaHTPWpTpPnaV4/vBAHZfU2/JOA+toP9q
+	 WuEI+9H+jOZEQZ77nuHPdFBesKgJnbKTgJtWguOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgAGUd7 (ORCPT
+        id S1726803AbgAGUei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:33:59 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37735 "EHLO ozlabs.org"
+        Tue, 7 Jan 2020 15:34:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbgAGUd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:33:58 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726142AbgAGUei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:34:38 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47skcM2xFdz9sR0;
-        Wed,  8 Jan 2020 07:33:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578429235;
-        bh=OFs/IkFFrLcuDeusWvjaN3qFeCgRqQ1i+hTSsiEXdVk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nCuR6y8VmYxn0TbgxkCOmwNZwfaW13814iSF20y9jF6VHA/y+tNpIebCdCrzzfNOm
-         FC//9e8E+70v72HpAtDa6WE8uKxaGh3YWoGC/yMDla6LFzZoEJNwj6HHeEVH/crrCh
-         EjWSdcIkWggky5P+MYa9lGWKqLFlF9ntiDxe1wgOz1KawDxxH8n4DvJzTgoFCVkidc
-         wAZtiGYiqBfX5q5dwOSgmcuqdUoMydsgOYUzsZU3taGadMXi7dC9s+J5oUWzUT3cZ0
-         h4rsjMcmNpozbm/cDL9eyFy+1G1mdUuENEg3W+adhjV+HgmFq09CXkGd5NR20NO6Vf
-         F4fgsdOoEFjXQ==
-Date:   Wed, 8 Jan 2020 07:33:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: linux-next: Fixes tag needs some work in the rdma tree
-Message-ID: <20200108073349.2b270de3@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A04120848;
+        Tue,  7 Jan 2020 20:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578429277;
+        bh=rOBrRkww+dpxH19H//3TaUngMuYnO8yIMvcGn9rynD4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fAu2DDQ7WnHNfP5nv3mkFSN/d3MANIITxeySpJ+jBihRLhQzCZould8MkfzvrfoiC
+         wJoczFeEHm1Lz9Z7GMXvNZP5p3nk2+ECwyaG3trUJTCI3yrL2e9pjZBDrHh/xF+Bp8
+         mnMvqrFtP9X4GNx/vHT19MlQL8ggaxa/rKAWpyK8=
+Date:   Tue, 7 Jan 2020 14:34:35 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Message-ID: <20200107203435.GA137091@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LiN5NbM_U/GS/M5ePDbAkVD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB0438D3E2CFE64EBAA32AF691803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LiN5NbM_U/GS/M5ePDbAkVD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 06, 2020 at 03:48:06PM +0000, Nicholas Johnson wrote:
+> Remove checks for resource size in extend_bridge_window(). This is
+> necessary to allow the pci_bus_distribute_available_resources() to
+> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+> allocate resources. Because the kernel parameter sets the size of all
+> hotplug bridges to be the same, there are problems when nested hotplug
+> bridges are encountered. Fitting a downstream hotplug bridge with size X
+> and normal bridges with non-zero size Y into parent hotplug bridge with
+> size X is impossible, and hence the downstream hotplug bridge needs to
+> shrink to fit into its parent.
 
-Hi all,
+s/extend_bridge_window()/adjust_bridge_window()/ above
+s/to allow the/to allow/
 
-In commit
+If this patch allows pci_bus_distribute_available_resources() to
+function when pci=hpmemsize=nn is used, what happens *before* this
+patch?  The text implies that pci_bus_distribute_available_resources()
+doesn't function, but what happens?  Do we try to assign a downstream
+bridge requiring X+n inside an upstream window of size X and the
+assignment fails, leaving the downstream bridge unusable?
 
-  44ec5aa3c615 ("IB/hfi1: List all receive contexts from debugfs")
+> Add check for if bridge is extended or shrunken and reflect that in the
+> call to pci_dbg().
+> 
+> Reset the resource if its new size is zero (if we have run out of a
+> bridge window resource) to prevent the PCI resource assignment code from
+> attempting to assign a zero-sized resource.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>  drivers/pci/setup-bus.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 0c51f4937..e7e57bf72 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1836,18 +1836,25 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+>  				 struct list_head *add_list,
+>  				 resource_size_t new_size)
+>  {
+> -	resource_size_t add_size;
+> +	resource_size_t add_size, size = resource_size(res);
+>  
+>  	if (res->parent)
+>  		return;
+>  
+> -	if (resource_size(res) >= new_size)
+> -		return;
+> +	if (new_size > size) {
+> +		add_size = new_size - size;
+> +		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
+> +			&add_size);
+> +	} else if (new_size < size) {
+> +		add_size = size - new_size;
+> +		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+> +			&add_size);
+> +	}
 
-Fixes tag
+Where's the patch that changes the caller so "new_size" may be smaller
+than "size"?  I guess it must be "[3/3] PCI: Consider alignment of
+hot-added bridges ..." because that's the only one that makes a
+non-trivial change, right?
 
-  Fixes: bf808b5039c ("IB/hfi1: Add kernel receive context info to debugfs")
+> -	add_size = new_size - resource_size(res);
+> -	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
+>  	res->end = res->start + new_size - 1;
+>  	remove_from_list(add_list, res);
+> +	if (!new_size)
+> +		reset_resource(res);
 
-has these problem(s):
+I consider reset_resource() to be deprecated because it throws away
+res->flags, which tells us what kind of resource it is
+(mem/io/32-bit/64-bit/prefetchable).  We learn this during
+enumeration, and we shouldn't forget the information until we remove
+the device.
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
+If the resource assignment code doesn't do the right thing with a
+zero-sized resource, I think we should fix that code.  Clearing the
+resource struct does nothing with the hardware BAR or window
+registers, so the BAR/window remains enabled unless we do something
+more.  If we don't need a window and we want to disable it, we can do
+that, but it requires writing special values to the hardware
+registers.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LiN5NbM_U/GS/M5ePDbAkVD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4U6y0ACgkQAVBC80lX
-0GxrgQf9FLbTeg9iPajwYLHI4J2BJeP/gbu6sO0GH8j5iIerFgs6jdDhwFZyHuEa
-DZUAkNMljNnOAlaQAF5OU6O26fx37WFUSHUCTrN28PNB3y1C/vz8wwFbpW7atSLe
-DYwGCO6o2CEITfru8xr9C2vByKuDcHDPfkXmUCgjqCwmPNmuNjZxjmPJ03CVJyhJ
-j5X9pX7BXieYDQKEnCCTgblgcTZDLhMsr5XGzQqr4l3CeSi8vZx5fijjxmne9lhC
-mktutQb29p0d27ODa0MjwQcvCigjNhPK88dYeLqk9Ix/3KYWzXUqBEdHQ29+VgSw
-QdbBKrdn6SrJMzPSnyTyNSYV0feLWg==
-=chLr
------END PGP SIGNATURE-----
-
---Sig_/LiN5NbM_U/GS/M5ePDbAkVD--
+Bjorn
