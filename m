@@ -2,123 +2,116 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD0FC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E049DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783AB2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71DC2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tb/pEh7m"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k1hPWFn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgAGLwG (ORCPT
+        id S1728012AbgAGLwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:52:06 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54588 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgAGLwG (ORCPT
+        Tue, 7 Jan 2020 06:52:35 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56816 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgAGLwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:52:06 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b19so18581088wmj.4;
-        Tue, 07 Jan 2020 03:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1IdCp+152V00WOErsRkB6rIy+yW5jX9FlF/zgyki7Lc=;
-        b=Tb/pEh7m9Jj4VrIvPmRy9mhjGxM/6ucedJ+SjAZKLVTQBNGwyEcvjeiVJ7FMwZFYSb
-         SMi7DjXMxrWfJFtvgdk7/2HrKdgjskBKFNWFkvBgr6hn68LuztLJ5rW4IpvZvuAzo1z1
-         7Q4IK2JBNJZjyVzNS3DiIgaepKAFc2y5p5UTGbUjFyw+K7XmxR+9hmxSH7LLUHaL5MqZ
-         uMAb30l1cgvfGDS+SNahOyWU27KpSkmjZo8UYvSpGBj4E0F5aJRjKTx5bDVdsIPlYc68
-         olmu6TY09muhPu3kSdCGyvSdEUxYQsBttyMf59RyVC3iRtO5L4Ea1KIgEEY+TG53OUG4
-         3jBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1IdCp+152V00WOErsRkB6rIy+yW5jX9FlF/zgyki7Lc=;
-        b=RLxQv55bnMfQetXQofgl9dZXzvUXTuhIh8qf6/TIOQPZY4juLTI2Oy2KWN3exs/d+y
-         9U0o4sGYJuOQ0fslqVsEpLej/Hovt0KwXnCHh5kXl4WmrWbhxbKETYvH/8k16WaDPMl+
-         c3YFoA0tjX6cKxqhgB3f/3wMcwszFqjXp6awCARESDh/eAk0tSGiCHohJoFnxGkHHgMm
-         qdRQuovGOO070PazpIFvoZd2Ja0kysrurvihuPQS9O0FVHhzCQF2CVJtC1siyIhG7WNK
-         7xCFmFIZvV9zNXDDS81QWlYxRvM8fUfFAmm22sk4l3zLDbjoNmb5m/tKOSV8eH+8z4XP
-         DZYA==
-X-Gm-Message-State: APjAAAWIo4+Gr5cXW/KSyCXl2YHW39J4+VQihOgj2ynnQiglW0F7Tgec
-        S4Z4XpUbHEcoiTCtcw6plMA=
-X-Google-Smtp-Source: APXvYqzGkqsU4rE5bx3mL5nGETgA3WSI91fdY+KKbLOlbZK81M5sfoX009kOMr39/exXSQAOF7iU+g==
-X-Received: by 2002:a7b:c190:: with SMTP id y16mr40399910wmi.107.1578397924103;
-        Tue, 07 Jan 2020 03:52:04 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id s10sm76968698wrw.12.2020.01.07.03.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:52:03 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:52:02 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, tytso@mit.edu
-Subject: Re: [PATCH v9 10/13] exfat: add nls operations
-Message-ID: <20200107115202.shjpp6g3gsrhhkuy@pali>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
- <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
- <20200102082036.29643-11-namjae.jeon@samsung.com>
- <20200105165115.37dyrcwtgf6zgc6r@pali>
- <85woa4jrl2.fsf@collabora.com>
+        Tue, 7 Jan 2020 06:52:34 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007BqQfX107802;
+        Tue, 7 Jan 2020 05:52:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578397946;
+        bh=/n4geygpYCmBAVJrP9D1RQbQETJykF2u108T2+FxKjo=;
+        h=From:To:CC:Subject:Date;
+        b=k1hPWFn6Big/lJzkUmgjckDkEW991k2QpC99O9QgyWtsoPb+JaMppYnRlpripLn0d
+         bCHEKKXWPcJmzmBFEB2Ou3z1Ww6EWS072RLr3LCLssn0y3WQGW6R6UCtxjkks4o/+G
+         aEa+yFQvlyufbZohD2/5B8bIiqdATpZu1j99Fv9E=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BqQsW048276
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:52:26 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 05:52:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 05:52:25 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BqMQ7067156;
+        Tue, 7 Jan 2020 05:52:23 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <mchehab@kernel.org>, <hugues.fruchet@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] media: stm32-dcmi: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 7 Jan 2020 13:52:53 +0200
+Message-ID: <20200107115253.8351-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <85woa4jrl2.fsf@collabora.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 06 January 2020 14:46:33 Gabriel Krisman Bertazi wrote:
-> Pali Rohár <pali.rohar@gmail.com> writes:
-> 
-> > What do you think what should kernel's exfat driver do in this case?
-> >
-> > To prevent such thing we need to use some kind of Unicode normalization
-> > form here.
-> >
-> > CCing Gabriel as he was implementing some Unicode normalization for ext4
-> > driver and maybe should bring some light to new exfat driver too.
-> 
-> We have an in-kernel implementation of the canonical decomposition
-> normalization (NFD) in fs/unicode, which is what we use for f2fs and
-> ext4.  It is heated argument what is the best form for filesystem usage,
-> and from what I researched, every proprietary filesystem does a
-> different (and crazy in their unique way) thing.
-> 
-> For exfat, even though the specification is quite liberal, I think the
-> reasonable answer is to follow closely whatever behavior the Windows
-> implementation has, whether it does normalization at all or not. Even if
-> it is just an in-memory format used internally for lookups, assuming a
-> different format or treating differently invalid file names can result
-> in awkward results in a filesystem created on another operating system,
-> like filename collisions or false misses in lookups.
-> 
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-Hi Gabriel! Thank you for your input. AFAIK Windows exfat implementation
-does not do any Unicode normalization and allow to store any sequence of
-16bit numbers excluding some "bad chars" as filename (so including also
-unpaired half of UTF-16 surrogate pair) if such upper cased filename
-(according to upcase table stored in FS) does not conflict with another
-upper cased filename already stored in directory.
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-So based on your suggestion, I understood that we should not do any
-Unicode Normalization even just for comparing filenames if it exists.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
 
+Changes since v1:
+- Do not print error for EPROBE_DEFER
+
+Regards,
+Peter
+
+ drivers/media/platform/stm32/stm32-dcmi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 9392e3409fba..b63ff8d636ce 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1910,10 +1910,13 @@ static int dcmi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(mclk);
+ 	}
+ 
+-	chan = dma_request_slave_channel(&pdev->dev, "tx");
+-	if (!chan) {
+-		dev_info(&pdev->dev, "Unable to request DMA channel, defer probing\n");
+-		return -EPROBE_DEFER;
++	chan = dma_request_chan(&pdev->dev, "tx");
++	if (IS_ERR(chan)) {
++		ret = PTR_ERR(chan);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"Failed to request DMA channel: %d\n", ret);
++		return ret;
+ 	}
+ 
+ 	spin_lock_init(&dcmi->irqlock);
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
