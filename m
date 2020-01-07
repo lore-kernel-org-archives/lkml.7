@@ -2,60 +2,122 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E158C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88AAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1980B208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5952077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="guxvEz9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgAGLhr (ORCPT
+        id S1727834AbgAGLlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:37:47 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51818 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727177AbgAGLhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:37:46 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 845B656D4FB73F553C27;
-        Tue,  7 Jan 2020 19:37:44 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 7 Jan 2020
- 19:37:41 +0800
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: code cleanup for
- f2fs_statfs_project()
-To:     Chengguang Xu <cgxu519@mykernel.net>, <jaegeuk@kernel.org>,
-        <chao@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200104142004.12883-1-cgxu519@mykernel.net>
- <20200104142004.12883-2-cgxu519@mykernel.net>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <56985674-6c24-3332-7542-33e850942f57@huawei.com>
-Date:   Tue, 7 Jan 2020 19:37:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 7 Jan 2020 06:41:11 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34074 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgAGLlK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 06:41:10 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007Bewax036746;
+        Tue, 7 Jan 2020 05:40:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578397259;
+        bh=vvuEVTEP60g6vGoTy1dsIAc9SabmC4vbRrxUslsrNww=;
+        h=From:To:CC:Subject:Date;
+        b=guxvEz9vUw8vj/Gx/w6wIJ1uyPwbst3TUUsTcrA2wXfUCjAzcpQFnc2VVLzSwby3B
+         BP2ukvNINWR7mteVXMTMzQxu87lRF8gqdHlfDcvRxuEFa/aSAj8Dc3+dVBkIx8872p
+         h/s6c7YH5Mvk4kQAT8ab0npOMxWDTRuABXkcuIsE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BewDR032017
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:40:58 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 05:40:57 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 05:40:57 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BeskD048601;
+        Tue, 7 Jan 2020 05:40:55 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2] iio: adc: stm32-adc: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 7 Jan 2020 13:41:25 +0200
+Message-ID: <20200107114125.6095-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200104142004.12883-2-cgxu519@mykernel.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/4 22:20, Chengguang Xu wrote:
-> Calling min_not_zero() to simplify complicated prjquota
-> limit comparison in f2fs_statfs_project().
-> 
-> Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-Thanks,
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
+
+Changes since v1:
+- Fall back to IRQ mode only in case of ENODEV
+
+Regards,
+Peter
+
+ drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 3b291d72701c..df5f5d61f9f9 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1746,9 +1746,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+ 	struct dma_slave_config config;
+ 	int ret;
+ 
+-	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+-	if (!adc->dma_chan)
++	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
++	if (IS_ERR(adc->dma_chan)) {
++		ret = PTR_ERR(adc->dma_chan);
++		if (ret != -ENODEV) {
++			if (ret != -EPROBE_DEFER)
++				dev_err(&indio_dev->dev,
++					"DMA channel request failed with %d\n",
++					ret);
++			return ret;
++		}
++
++		/* Ignore errors to fall back to IRQ mode */
++		adc->dma_chan = NULL;
+ 		return 0;
++	}
+ 
+ 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+ 					 STM32_DMA_BUFFER_SIZE,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
