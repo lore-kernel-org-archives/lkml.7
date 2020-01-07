@@ -2,273 +2,121 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BECC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BF6C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4B32075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578400359;
-	bh=whTqOPoVs4aE1+Bss42a3TiJNvWckbMgIpKxsnk+SXE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zUDWwG0rtMEhNVmjAqxtUnFKAHSCM/YSfq2VJvZdC2TzfkkK+zq8e32ZKnyxmyx+h
-	 /j9tZf+BWsgVctsV66OD3m5QT+GK/XJi6IlLvIxPto9LU6ay+woq07dP1U1LV76MQ9
-	 JyWV8vT7yuh542fZZaNe9Bd5O1lhRvqluARCGIHI=
+	by mail.kernel.org (Postfix) with ESMTP id 587502072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cwJlYynO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgAGMci (ORCPT
+        id S1727944AbgAGMdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:32:38 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32805 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAGMci (ORCPT
+        Tue, 7 Jan 2020 07:33:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44709 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgAGMdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:32:38 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so54434087otp.0;
-        Tue, 07 Jan 2020 04:32:37 -0800 (PST)
+        Tue, 7 Jan 2020 07:33:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so14789158wrm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:33:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=GXTBxUXFf/0lblKnPV2tJJx5huyZR82ySCgLFN7gCSA=;
+        b=cwJlYynOcPBu0xjHXZZtpNCmwXosTzSWCtLwB3W1r1F0BYW1V+9cNdIXBOJ7v5ssmn
+         KxurqCUl8ttNr8KL4synUaSdUyAOcSW+XSv4HHYpnC+E6ctaLjgOPMHNm1kqUEGBTzEF
+         MkwoqzXCAQt2sJ1fAtXtdaHp1UaJ6OXabwQqaIjuQiS5gRHZJiW6HVMJFPHZdneDiwbj
+         LZ8RZRw1vpqaLW8KXieB2i+2arTsB0wBlFWVsIryoPlSJfdh58C8W+d5YHTc8iLfC3vf
+         bZVSd3eU9AzvXiPSUmUUzzwjELxsvKf37egkTVkqPmnkSJo5ucKHDyjDRzqvmB4KHxp6
+         pSSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o5e/JmBSMzegimQ6KFDlyRa11VfhKqCbkNcFqeT05vA=;
-        b=Tosvn08u86WXonFCe2nsZ52LuZ+5UkMTAF8xT3njn7WYigHHN1CsUkrixzA/p5aILQ
-         NqjWAovGAU+qBjNByWKILI7QbLiTKB+K3YL9girBBmY54cbRadrYpB/RfO67H9R78s57
-         exZLnuSVeIbYSQ25Py1OYFpNLpSMwslvEst+RYINMHWoLtxiJDLIwJhyiC17Hn3pRahc
-         YTHqvS6SRMrBRRQCKwGYz71PKR9cf+sFue2AQ8rH2O3tFT7sWf3BMKK+DmB8MxbPsJwU
-         KS37I40tiTReQ3cu2TLw043hMG31U88IODxs5WTRIMuaXq+gNSlhDNrbjIOFbu01JpgT
-         XDEg==
-X-Gm-Message-State: APjAAAUIbIT+v+o9fqpVpkZHMgn84PLbSv/ZPIjov6TQK+SSr2sziGN+
-        a0o3mId349XDpQpq1MhVIhMF5Njf3blTLuM4LaE=
-X-Google-Smtp-Source: APXvYqy3ZwDPk5VoQNqbbEUoomh3/EtTnA6ZffBTWvALzr6v6e3xW18Hk0zn86w7mr9BRk06Ai9ge2Q7rCGQbqHZxg8=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr111796263otk.189.1578400356588;
- Tue, 07 Jan 2020 04:32:36 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GXTBxUXFf/0lblKnPV2tJJx5huyZR82ySCgLFN7gCSA=;
+        b=h0Vghcbe/RWy2Vy48BqmECPJbG2mzeskI2NIR+wtu7JN2ALMm21DljGxKMOsjXdQwH
+         aVjzXglPcyYpJras+vm2JF6TC5bkSI1hQJEQDBOF3rFjXXv34rECNxeUD9CFE/z3M3tQ
+         MtvunBmP+XD5OH5UsJHJSMOENSUDy8bev1BjwRKrCcU4YYynZLXBmSKc6RbKj+JIr1Ly
+         lpngH5PBxdofdg/qXjtonfQ3efM6qeQto4LTqcgNJfGWDo5YHuRhYe04moJDB4qgI7lG
+         XX6mIHuidhqjvlUfQX2Jnr0P3HBMDZ2VKJSX4XypY5pdU8xpROZLtFpgsWbbW7rGqTth
+         +Hog==
+X-Gm-Message-State: APjAAAWiq+c+rAaefbjnRIdab4tL42WBP0ZGGtO5hNuGQiCDAo+w6514
+        rNRlZ88AJPBll3xaWoTF4/upPVxhDDM=
+X-Google-Smtp-Source: APXvYqy74uz9nvj2BIPxpdM20AIWwAe3Di+G7rYdWb/b+n9twWOnu7KnRC6p6sEYexCJAXfIfdL7xA==
+X-Received: by 2002:adf:dd4d:: with SMTP id u13mr110724265wrm.394.1578400430159;
+        Tue, 07 Jan 2020 04:33:50 -0800 (PST)
+Received: from ?IPv6:2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca? ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id f127sm26361528wma.4.2020.01.07.04.33.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 04:33:49 -0800 (PST)
+Subject: Re: [PATCH v4] bluetooth: hci_bcm: enable IRQ capability from node
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        BlueZ devel list <linux-bluetooth@vger.kernel.org>,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        khilman@baylibre.com
+References: <20191213105521.4290-1-glaroque@baylibre.com>
+ <20191213111702.GX10631@localhost>
+ <162e5588-a702-6042-6934-dd41b64fa1dc@baylibre.com>
+ <20191213134404.GY10631@localhost>
+ <08ae6108-0829-3bb4-f398-7e6a58719d29@baylibre.com>
+ <8EBBCE1B-688D-4097-A2AF-6E099A0AD68B@holtmann.org>
+From:   guillaume La Roque <glaroque@baylibre.com>
+Message-ID: <11747601-6d29-d2c8-7639-896d654280a4@baylibre.com>
+Date:   Tue, 7 Jan 2020 13:33:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200102231940.202896-1-semenzato@google.com> <20200102231940.202896-3-semenzato@google.com>
-In-Reply-To: <20200102231940.202896-3-semenzato@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jan 2020 13:32:25 +0100
-Message-ID: <CAJZ5v0gp0tkT+=whiE2-63KsJ9yjd=ekq14=AD2jnS7UbVZ5Tw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pm: add more logging on hibernation failure
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geoff Pike <gpike@google.com>, elliott@hpe.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8EBBCE1B-688D-4097-A2AF-6E099A0AD68B@holtmann.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 12:19 AM Luigi Semenzato <semenzato@google.com> wrote:
->
-> Hibernation fails when the kernel cannot allocate enough memory
-> to copy all pages in use.  This patch ensures that the failure
-> reason is clearly logged, and clearly attributable to the
-> hibernation module.
->
-> Signed-off-by: Luigi Semenzato <semenzato@google.com>
+Hi Marcel,
 
-Applied as 5.6 material with some minor changes in the subject and
-changelog, thanks!
+On 1/4/20 10:58 AM, Marcel Holtmann wrote:
+> Hi Guillaume,
+>
+>>>>>> @@ -1421,6 +1422,7 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
+>>>>>> #endif
+>>>>>> 	bcmdev->serdev_hu.serdev = serdev;
+>>>>>> 	serdev_device_set_drvdata(serdev, bcmdev);
+>>>>>> +	bcmdev->irq = of_irq_get(bcmdev->dev->of_node, 0);
+>>>>> Shouldn't you be used using of_irq_get_byname()?
+>>>> i can use it if you prefer but no other interrupt need to be defined
+>>> Maybe not needed then. Was just thinking it may make it more clear that
+>>> you now have two ways to specify the "host-wakeup" interrupt (and in
+>>> your proposed implementation the interrupts-property happens to take
+>>> priority). Perhaps that can be sorted out when you submit the binding
+>>> update for review.
+>> no problem i add a "host-wakeup" interrupt-name.
+>> you are right it will be more clear with name and we know why this interrupt is needed.
+> have I missed the v5 or are still sending it?
 
-> ---
->  kernel/power/hibernate.c | 23 ++++++++++++-----------
->  kernel/power/snapshot.c  | 24 +++++++++++++++---------
->  2 files changed, 27 insertions(+), 20 deletions(-)
+sorry i was in chrismas holidays .
+
+v5 was sent before holiday and you comment it [1] ;) , on v5 you ask me to send v6 with tag.
+
+
+Regards
+
+Guillaume
+
 >
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index 3c0a5a8170b0..6dbeedb7354c 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -9,7 +9,7 @@
->   * Copyright (C) 2012 Bojan Smojver <bojan@rexursive.com>
->   */
+> Regards
 >
-> -#define pr_fmt(fmt) "PM: " fmt
-> +#define pr_fmt(fmt) "PM: hibernation: " fmt
+> Marcel
 >
->  #include <linux/export.h>
->  #include <linux/suspend.h>
-> @@ -106,7 +106,7 @@ EXPORT_SYMBOL(system_entering_hibernation);
->  #ifdef CONFIG_PM_DEBUG
->  static void hibernation_debug_sleep(void)
->  {
-> -       pr_info("hibernation debug: Waiting for 5 seconds.\n");
-> +       pr_info("debug: Waiting for 5 seconds.\n");
->         mdelay(5000);
->  }
->
-> @@ -277,7 +277,7 @@ static int create_image(int platform_mode)
->
->         error = dpm_suspend_end(PMSG_FREEZE);
->         if (error) {
-> -               pr_err("Some devices failed to power down, aborting hibernation\n");
-> +               pr_err("Some devices failed to power down, aborting\n");
->                 return error;
->         }
->
-> @@ -295,7 +295,7 @@ static int create_image(int platform_mode)
->
->         error = syscore_suspend();
->         if (error) {
-> -               pr_err("Some system devices failed to power down, aborting hibernation\n");
-> +               pr_err("Some system devices failed to power down, aborting\n");
->                 goto Enable_irqs;
->         }
->
-> @@ -310,7 +310,7 @@ static int create_image(int platform_mode)
->         restore_processor_state();
->         trace_suspend_resume(TPS("machine_suspend"), PM_EVENT_HIBERNATE, false);
->         if (error)
-> -               pr_err("Error %d creating hibernation image\n", error);
-> +               pr_err("Error %d creating image\n", error);
->
->         if (!in_suspend) {
->                 events_check_enabled = false;
-> @@ -680,7 +680,7 @@ static int load_image_and_restore(void)
->         if (!error)
->                 hibernation_restore(flags & SF_PLATFORM_MODE);
->
-> -       pr_err("Failed to load hibernation image, recovering.\n");
-> +       pr_err("Failed to load image, recovering.\n");
->         swsusp_free();
->         free_basic_memory_bitmaps();
->   Unlock:
-> @@ -743,7 +743,7 @@ int hibernate(void)
->                 else
->                         flags |= SF_CRC32_MODE;
->
-> -               pm_pr_dbg("Writing image.\n");
-> +               pm_pr_dbg("Writing hibernation image.\n");
->                 error = swsusp_write(flags);
->                 swsusp_free();
->                 if (!error) {
-> @@ -755,7 +755,7 @@ int hibernate(void)
->                 in_suspend = 0;
->                 pm_restore_gfp_mask();
->         } else {
-> -               pm_pr_dbg("Image restored successfully.\n");
-> +               pm_pr_dbg("Hibernation image restored successfully.\n");
->         }
->
->   Free_bitmaps:
-> @@ -894,7 +894,7 @@ static int software_resume(void)
->                 goto Close_Finish;
->         }
->
-> -       pm_pr_dbg("Preparing processes for restore.\n");
-> +       pm_pr_dbg("Preparing processes for hibernation restore.\n");
->         error = freeze_processes();
->         if (error)
->                 goto Close_Finish;
-> @@ -903,7 +903,7 @@ static int software_resume(void)
->   Finish:
->         __pm_notifier_call_chain(PM_POST_RESTORE, nr_calls, NULL);
->         pm_restore_console();
-> -       pr_info("resume from hibernation failed (%d)\n", error);
-> +       pr_info("resume failed (%d)\n", error);
->         atomic_inc(&snapshot_device_available);
->         /* For success case, the suspend path will release the lock */
->   Unlock:
-> @@ -1068,7 +1068,8 @@ static ssize_t resume_store(struct kobject *kobj, struct kobj_attribute *attr,
->         lock_system_sleep();
->         swsusp_resume_device = res;
->         unlock_system_sleep();
-> -       pm_pr_dbg("Configured resume from disk to %u\n", swsusp_resume_device);
-> +       pm_pr_dbg("Configured hibernation resume from disk to %u\n",
-> +                 swsusp_resume_device);
->         noresume = 0;
->         software_resume();
->         return n;
-> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> index 26b9168321e7..dcd1376e8fdf 100644
-> --- a/kernel/power/snapshot.c
-> +++ b/kernel/power/snapshot.c
-> @@ -8,7 +8,7 @@
->   * Copyright (C) 2006 Rafael J. Wysocki <rjw@sisk.pl>
->   */
->
-> -#define pr_fmt(fmt) "PM: " fmt
-> +#define pr_fmt(fmt) "PM: hibernation: " fmt
->
->  #include <linux/version.h>
->  #include <linux/module.h>
-> @@ -1705,16 +1705,20 @@ int hibernate_preallocate_memory(void)
->         ktime_t start, stop;
->         int error;
->
-> -       pr_info("Preallocating image memory... ");
-> +       pr_info("Preallocating image memory\n");
->         start = ktime_get();
->
->         error = memory_bm_create(&orig_bm, GFP_IMAGE, PG_ANY);
-> -       if (error)
-> +       if (error) {
-> +               pr_err("Cannot allocate original bitmap\n");
->                 goto err_out;
-> +       }
->
->         error = memory_bm_create(&copy_bm, GFP_IMAGE, PG_ANY);
-> -       if (error)
-> +       if (error) {
-> +               pr_err("Cannot allocate copy bitmap\n");
->                 goto err_out;
-> +       }
->
->         alloc_normal = 0;
->         alloc_highmem = 0;
-> @@ -1804,8 +1808,11 @@ int hibernate_preallocate_memory(void)
->                 alloc -= pages;
->                 pages += pages_highmem;
->                 pages_highmem = preallocate_image_highmem(alloc);
-> -               if (pages_highmem < alloc)
-> +               if (pages_highmem < alloc) {
-> +                       pr_err("Image allocation is %lu pages short\n",
-> +                               alloc - pages_highmem);
->                         goto err_out;
-> +               }
->                 pages += pages_highmem;
->                 /*
->                  * size is the desired number of saveable pages to leave in
-> @@ -1836,13 +1843,12 @@ int hibernate_preallocate_memory(void)
->
->   out:
->         stop = ktime_get();
-> -       pr_cont("done (allocated %lu pages)\n", pages);
-> +       pr_info("Allocated %lu pages for shapshot\n", pages);
->         swsusp_show_speed(start, stop, pages, "Allocated");
->
->         return 0;
->
->   err_out:
-> -       pr_cont("\n");
->         swsusp_free();
->         return -ENOMEM;
->  }
-> @@ -1976,7 +1982,7 @@ asmlinkage __visible int swsusp_save(void)
->  {
->         unsigned int nr_pages, nr_highmem;
->
-> -       pr_info("Creating hibernation image:\n");
-> +       pr_info("Creating image:\n");
->
->         drain_local_pages(NULL);
->         nr_pages = count_data_pages();
-> @@ -2010,7 +2016,7 @@ asmlinkage __visible int swsusp_save(void)
->         nr_copy_pages = nr_pages;
->         nr_meta_pages = DIV_ROUND_UP(nr_pages * sizeof(long), PAGE_SIZE);
->
-> -       pr_info("Hibernation image created (%d pages copied)\n", nr_pages);
-> +       pr_info("Image created (%d pages copied)\n", nr_pages);
->
->         return 0;
->  }
-> --
-> 2.24.1.735.g03f4e72817-goog
->
+[1] : https://www.spinics.net/lists/linux-bluetooth/msg82424.html
