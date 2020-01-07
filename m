@@ -2,131 +2,135 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E54C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4534C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7882081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F3E2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lp6BmAU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgAGNMV (ORCPT
+        id S1728095AbgAGNNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:12:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:57608 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbgAGNMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:12:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2A2A31B;
-        Tue,  7 Jan 2020 05:12:19 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E901B3F703;
-        Tue,  7 Jan 2020 05:12:18 -0800 (PST)
-Subject: Re: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-Cc:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
- <14a39167-5704-f406-614d-4d25b8fe8c68@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340B5552@dggemm526-mbx.china.huawei.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <0bd0e87b-e1ad-79a4-d820-f234ec6960fa@arm.com>
-Date:   Tue, 7 Jan 2020 14:12:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 08:13:51 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44133 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbgAGNNu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:13:50 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so20446170qvg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 05:13:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P/SE5McdrTSka+bx/IZ5kkM57UgYz4XAyQjoMJHuUQs=;
+        b=lp6BmAU0n6esjFwvTsD7juffeuCaGxC1bSIiRNmFr/sUC7nD5ezvlMA1x7UHlOLYXZ
+         xDPoQt7suR7V6Rmb6dy09Qjh7HkEXo1/ev014cf5hflGFRxsp52Lr07pRFS+LElYp6K4
+         aCUJYZuW+cZyknx5s5p8l/Kd72gHgbGO1cM5KX3ge2uJhU9b8k+L0ZfXWym+zmpB93Xc
+         coCXwor7WgQCDiokAh0sCEoVPu3p6dBqfVfn8Z6jrrlp2MGxEuC+NKBDebCcPYg9hz4z
+         PIrQYpG7mvATEWjsO08YCVZmyl4udH1ZEyOukIzlb/dcM6B92e1rpsUaz3fNlbPPwKs6
+         eNAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P/SE5McdrTSka+bx/IZ5kkM57UgYz4XAyQjoMJHuUQs=;
+        b=qWDChhN+o1bVeESAORDLu5tzeXdnmW7mri42eJuM0hL993Nusu7v1GM3V8pD3+RNoU
+         ZJCapABSFuDigJaRNp4WoET+0dBZULQSFswnFFqoAxGGYMefpfCQOY8M8V3pAEePPoTr
+         WIV5+mMosEWhrVi0Qx1U5Iry2lV5kEYqsTcg5MxOlsU5hUtsrCdktXoUXLs1L3Zq0vsZ
+         SlxkNHOzePLxygrMFO5rnCJSUpp237csNWm+1us7zGwqzYJzmaPjzx2rpCBqs+olgmLF
+         INbQPsx586RJF4y0uzvGGveVtunsw1GoQUOmNzg8tmHp6to7+7x/ykOW1+RKoqIs7pIU
+         pcHw==
+X-Gm-Message-State: APjAAAV/pCn3RY/U7c4BYLLSuuVlVg2QKDt+JKeSPY8GPVOuSXrKp44k
+        04DccfTuR2lvlnT44zJYk05J6psM6iF29JTp2yih1A==
+X-Google-Smtp-Source: APXvYqxD8SqL3UJjUIuFxPcR3Me6JeA87ulj3MZhtnLa0lw2HLKk/7HlGnEg2mKYujkBBWSJY2LF26CwTxc/tN5acsw=
+X-Received: by 2002:a0c:cd8e:: with SMTP id v14mr83896788qvm.182.1578402829335;
+ Tue, 07 Jan 2020 05:13:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340B5552@dggemm526-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191210102437.19377-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191210102437.19377-1-benjamin.gaignard@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Tue, 7 Jan 2020 14:13:38 +0100
+Message-ID: <CA+M3ks7ha2PkznLJ8JO=ZLo9eN2Q3ijiR+Zw9x2PKPH3Vwbovw@mail.gmail.com>
+Subject: Re: [PATCH] drm/modes: tag unused variables to avoid warnings
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, yakui.zhao@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 02:35, Zengtao (B) wrote:
->> -----Original Message-----
->> From: Dietmar Eggemann [mailto:dietmar.eggemann@arm.com]
->> Sent: Tuesday, January 07, 2020 2:42 AM
->> To: Zengtao (B); sudeep.holla@arm.com
->> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
->> linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] cpu-topology: Skip the exist but not possible cpu
->> nodes
->>
->> On 02/01/2020 04:24, Zeng Tao wrote:
->>> When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the
->> device
->>> tree, the cpu node parsing will fail. And this is not reasonable for a
->>> legal device tree configs.
->>> In this patch, skip such cpu nodes rather than return an error.
->>
->> Is this extra code really necessary?
->>
->> Currently you get warnings indicating that CONFIG_NR_CPUS is too small
->> so you could correct the setup issue easily.
->>
-> 
-> Not only about warning messages, the problem is :
-> What we are expected to do if the CONFIG_NR_CPUS is too small? I think there
-> are two choices:
-> 1. Keep the dts parsing result, but skip the the CPU nodes whose id exceeds the 
-> the CONFIG_NR_CPUS, and this is what this patch do.
-> 2. Just abort all the CPU nodes parsing, and using MPIDR to guess the topology, 
-> and this is what the current code do.
+Le mer. 11 d=C3=A9c. 2019 =C3=A0 10:20, Benjamin Gaignard
+<benjamin.gaignard@st.com> a =C3=A9crit :
+>
+> Some variables are set but never used. To avoid warning when compiling
+> with W=3D1 and keep the algorithm like it is tag theses variables
+> with _maybe_unused macro.
 
-Ah, you're referring to:
+Gentle ping.
+Thanks,
+Benjamin
 
-530 void __init init_cpu_topology(void)
-531 {
-...
-540         else if (of_have_populated_dt() && parse_dt_topology())
-541 -->             reset_cpu_topology();
-
-With my Juno example (6 Cpus in DT but CONFIG_NR_CPUS=4):
-
-root@juno:~# dmesg | grep "\*\*\|mpidr"
-[    0.084760] ** get_cpu_for_node() cpu=1
-[    0.088706] ** get_cpu_for_node() cpu=2
-[    0.092592] ** get_cpu_for_node() cpu=0
-[    0.096550] ** get_cpu_for_node() cpu=3
-[    0.105578] ** get_cpu_for_node() cpu=-19
-[    0.116070] ** store_cpu_topology(): cpuid=0
-[    0.120355] CPU0: cluster 1 core 0 thread -1 mpidr 0x00000080000100
-[    0.242465] ** store_cpu_topology(): cpuid=1
-[    0.242471] CPU1: cluster 0 core 0 thread -1 mpidr 0x00000080000000
-[    0.286505] ** store_cpu_topology(): cpuid=2
-[    0.286510] CPU2: cluster 0 core 1 thread -1 mpidr 0x00000080000001
-[    0.330631] ** store_cpu_topology(): cpuid=3
-[    0.330637] CPU3: cluster 1 core 1 thread -1 mpidr 0x00000080000101
-
-and with your patch:
-
-root@juno:~# dmesg | grep "\*\*\|mpidr"
-[    0.084778] ** get_cpu_for_node() cpu=1
-[    0.088742] ** get_cpu_for_node() cpu=2
-[    0.092662] ** get_cpu_for_node() cpu=0
-[    0.096627] ** get_cpu_for_node() cpu=3
-[    0.107942] ** get_cpu_for_node() cpu=-19
-[    0.119429] ** get_cpu_for_node() cpu=-19
-[    0.123461] ** store_cpu_topology(): cpuid=0
-[    0.243571] ** store_cpu_topology(): cpuid=1
-[    0.287610] ** store_cpu_topology(): cpuid=2
-[    0.331737] ** store_cpu_topology(): cpuid=3
-
-so we bail out of store_cpu_topology() since 'cpuid_topo->package_id != -1'.
-
-> And i think choice 1 is better because:
-> 1. It's a legal dts, we should keep the same result whether CONFIG_NR_CPUS is
-> too small or not.
-> 2. In the function of_parse_and_init_cpus, we just do the same way as choice 1.
-> 
-> But i am open for the issue, any suggestions are welcomed.
-
-[...]
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> changes in this version:
+> - do not modify the code to remove the unused variables
+>   just prefix them with __maybe_unused macro.
+>
+>  drivers/gpu/drm/drm_modes.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+> index 88232698d7a0..70aed4e2990d 100644
+> --- a/drivers/gpu/drm/drm_modes.c
+> +++ b/drivers/gpu/drm/drm_modes.c
+> @@ -233,7 +233,7 @@ struct drm_display_mode *drm_cvt_mode(struct drm_devi=
+ce *dev, int hdisplay,
+>                 /* 3) Nominal HSync width (% of line period) - default 8 =
+*/
+>  #define CVT_HSYNC_PERCENTAGE   8
+>                 unsigned int hblank_percentage;
+> -               int vsyncandback_porch, vback_porch, hblank;
+> +               int vsyncandback_porch, __maybe_unused vback_porch, hblan=
+k;
+>
+>                 /* estimated the horizontal period */
+>                 tmp1 =3D HV_FACTOR * 1000000  -
+> @@ -386,9 +386,10 @@ drm_gtf_mode_complex(struct drm_device *dev, int hdi=
+splay, int vdisplay,
+>         int top_margin, bottom_margin;
+>         int interlace;
+>         unsigned int hfreq_est;
+> -       int vsync_plus_bp, vback_porch;
+> -       unsigned int vtotal_lines, vfieldrate_est, hperiod;
+> -       unsigned int vfield_rate, vframe_rate;
+> +       int vsync_plus_bp, __maybe_unused vback_porch;
+> +       unsigned int vtotal_lines, __maybe_unused vfieldrate_est;
+> +       unsigned int __maybe_unused hperiod;
+> +       unsigned int vfield_rate, __maybe_unused vframe_rate;
+>         int left_margin, right_margin;
+>         unsigned int total_active_pixels, ideal_duty_cycle;
+>         unsigned int hblank, total_pixels, pixel_freq;
+> --
+> 2.15.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
