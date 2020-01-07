@@ -2,119 +2,144 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC87C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518622080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sgrUNFm+"
+	by mail.kernel.org (Postfix) with ESMTP id 662482077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578393748;
+	bh=y/abBZ0/9ebLV1sY/b1FzoBX8fdpheX+nifIodwC4BA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YHCzZhdFjAo24G39tshAi++LC47NfwIQNCrvBHh4iZGphqAr2XyaUauaWpABse6F1
+	 KXr16aM2Du1qFu86kSyAPPGxr9enYf2Me7oDb8xIEyg7NlCB+C5YsU3xmyQjwwKhPe
+	 ERMqvQr5rY48YXSqS2a3qVIZJH3l3Mhar8b3Onoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgAGKk1 (ORCPT
+        id S1727806AbgAGKm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:40:27 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50226 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgAGKk1 (ORCPT
+        Tue, 7 Jan 2020 05:42:27 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43237 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:40:27 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007AeDDY083271;
-        Tue, 7 Jan 2020 04:40:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578393613;
-        bh=zvIW8/BtCQ5x8IHunoGoJlqB0iUARRig1KyivGH+pl8=;
-        h=From:To:CC:Subject:Date;
-        b=sgrUNFm+HFtu/0WLloZ6J1rLTAV5L3JDioCr933elKSaMrlRtRKw+7c5XjElhOn45
-         DAD2DoaZ8bbnE32ekkkGGnnU3G6O1SC8Y7g07OXg/any2ItmU99pjFqjNHSR8eR+al
-         mY8GFQsCbvzQE5NYFxcWrV4VEJxK23NQ3Kw+m55Y=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007AeDEC012098
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 04:40:13 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 04:40:12 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 04:40:12 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Ae96n032006;
-        Tue, 7 Jan 2020 04:40:09 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ulf.hansson@linaro.org>, <f.fainelli@gmail.com>,
-        <rjui@broadcom.com>, <sbranden@broadcom.com>,
-        <nsaenzjulienne@suse.de>
-CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2] mmc: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 7 Jan 2020 12:40:40 +0200
-Message-ID: <20200107104040.14500-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Jan 2020 05:42:27 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so39440114oth.10;
+        Tue, 07 Jan 2020 02:42:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nd8jgbCvZkL/081SlQ6LZjHh33JnnHni+WG4RTXiTgw=;
+        b=edlbGvO28MeGtUyxeKAMGb48F+V37DzH/JTE2+U4t1oQSehY+a7cNsI5+oarWXhCjg
+         8QOYcc5vdVFSeUWvP+AzznVEwYUZdmmnWLKqxMj+6rfpvd2JSa9K0SzRMC+/zV0M9FsC
+         LsGKa7iOI43UU6+30keebmE9faIdi6QtzTqQrvdjqfeQ7DjM3Yhy+NTJtXSJlpwkA/8T
+         sisMPGV8Z2c7xqW7fRSXmbAYpJvZmbABCHWhYcpiLT3W3cicCuW2mrWdUV8u4mCngapf
+         gndsfNhINV8N1BRK7iy5jhlC+lgaEyWea7IYQmEqXBU5uQVCRJaIu/oP0n17qmfdQcYM
+         nFPg==
+X-Gm-Message-State: APjAAAWJxFqeOAsd3uflXxjAXRoYQNa8xMnoE4M61qJ7cJCethCIEhPb
+        M3UsQqnsloNsGbJo7LuhGkM8ut6SgoXHpPGRftI=
+X-Google-Smtp-Source: APXvYqxhZ7xy5gDsh3CimaPszslaURcaXBI23q5xLEQB8oWuHipl9EqnxBuiyWQfiYgsVWI52Ni7PlFZ09sDvbDn9Lc=
+X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr118557717otr.262.1578393746844;
+ Tue, 07 Jan 2020 02:42:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200106163735.1826-1-cai@lca.pw> <20200106223500.GG8314@dtor-ws>
+In-Reply-To: <20200106223500.GG8314@dtor-ws>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jan 2020 11:42:15 +0100
+Message-ID: <CAJZ5v0j5EtDfP4ydVP0jbYytwQ3De5zo+cUUONwYub2Wq2oyqw@mail.gmail.com>
+Subject: Re: [PATCH -next] drivers/base/test: fix global-out-of-bounds error
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, Qian Cai <cai@lca.pw>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+On Mon, Jan 6, 2020 at 11:35 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Mon, Jan 06, 2020 at 11:37:35AM -0500, Qian Cai wrote:
+> > The commit c032ace71c29 ("software node: add basic tests for property
+> > entries") introduced a global-out-of-bounds error because it forgot to
+> > add a terminator of "nodes "for software_node_register_nodes() to
+> > process.
+> >
+> >       # Subtest: property-entry
+> >       1..7
+> >       ok 1 - pe_test_uints
+> >       ok 2 - pe_test_uint_arrays
+> >       ok 3 - pe_test_strings
+> >       ok 4 - pe_test_bool
+> >       ok 5 - pe_test_move_inline_u8
+> >       ok 6 - pe_test_move_inline_str
+> >  ==================================================================
+> >  BUG: KASAN: global-out-of-bounds in
+> >  software_node_register_nodes+0x41/0x80
+> >  Read of size 8 at addr ffffffff989ef250 by task kunit_try_catch/316
+> >
+> >  CPU: 17 PID: 316 Comm: kunit_try_catch Not tainted
+> >  5.5.0-rc4-next-20200106+ #1
+> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+> >  03/09/2018
+> >  Call Trace:
+> >   dump_stack+0xa0/0xea
+> >   print_address_description.constprop.5.cold.7+0x64/0x384
+> >   __kasan_report.cold.8+0x7a/0xc0
+> >   kasan_report+0x12/0x20
+> >   __asan_load8+0x71/0xa0
+> >   software_node_register_nodes+0x41/0x80
+> >   pe_test_reference+0x1eb/0x1200
+> >   kunit_try_run_case+0x6b/0xd1
+> >   kunit_generic_run_threadfn_adapter+0x29/0x50
+> >   kthread+0x1e6/0x210
+> >   ret_from_fork+0x27/0x50
+> >
+> >  The buggy address belongs to the variable:
+> >   nodes.21544+0x30/0x920
+> >
+> >  Memory state around the buggy address:
+> >   ffffffff989ef100: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 00 00
+> >   ffffffff989ef180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >  >ffffffff989ef200: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
+> >                                                   ^
+> >   ffffffff989ef280: 00 06 fa fa fa fa fa fa 00 00 04 fa fa fa fa fa
+> >   ffffffff989ef300: 00 00 fa fa fa fa fa fa 00 05 fa fa fa fa fa fa
+> >  ==================================================================
+> >  Disabling lock debugging due to kernel taint
+> >       ok 7 - pe_test_reference
+> >  ok 8 - property-entry
+> >
+> > Fixes: c032ace71c29 ("software node: add basic tests for property entries")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+>
+> Thanks Qian.
+>
+> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Applied, thanks!
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
-
-Changes since v1:
-- jump to err: instead of returning in case of EPROBE_DEFER
-
-Regards,
-Peter
-
- drivers/mmc/host/bcm2835.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 99f61fd2a658..c3d949847cbd 100644
---- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -1393,7 +1393,17 @@ static int bcm2835_probe(struct platform_device *pdev)
- 	host->dma_chan = NULL;
- 	host->dma_desc = NULL;
- 
--	host->dma_chan_rxtx = dma_request_slave_channel(dev, "rx-tx");
-+	host->dma_chan_rxtx = dma_request_chan(dev, "rx-tx");
-+	if (IS_ERR(host->dma_chan_rxtx)) {
-+		ret = PTR_ERR(host->dma_chan_rxtx);
-+		host->dma_chan_rxtx = NULL;
-+
-+		if (ret == -EPROBE_DEFER)
-+			goto err;
-+
-+		/* Ignore errors to fall back to PIO mode */
-+	}
-+
- 
- 	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk)) {
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> > ---
+> >  drivers/base/test/property-entry-test.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/base/test/property-entry-test.c b/drivers/base/test/property-entry-test.c
+> > index da812834b631..abe03315180f 100644
+> > --- a/drivers/base/test/property-entry-test.c
+> > +++ b/drivers/base/test/property-entry-test.c
+> > @@ -366,6 +366,7 @@ static void pe_test_reference(struct kunit *test)
+> >       static const struct software_node nodes[] = {
+> >               { .name = "1", },
+> >               { .name = "2", },
+> > +             { }
+> >       };
+> >
+> >       static const struct software_node_ref_args refs[] = {
+> > --
