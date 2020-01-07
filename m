@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC375C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85409C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7CD2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5686A214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431345;
-	bh=UcHpKJl6PsKK6e+oSbmbpIDx26PxKKmsRzq5pfrhOXI=;
+	s=default; t=1578431350;
+	bh=0qvwg7wr7w/Fkb/s8ijemyHsOCnZ++Y6lwmRapzSbSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zhg6XFhlLZ/Dt7Xg/1AA5K4iONpKy9qUNtCmPtVTad1amz+dMhUmUyAw+q+qDTj76
-	 pIVhN+PsEQQoShtW1GjsebrpB8hfpmepWgzXmBSjfMjey3MrZsYaBBKvEidW7Jetd8
-	 o7EULy0rlkbZ0Nbqtf1oNp/Xer59kmb6tzzazzyk=
+	b=s12MNgPFL3uJh27sGhHvSbsxEWddLTAGFVLJjwVCTWjfOOCLuYcPLGmphK4hkcKwR
+	 lsXj1QuotqKQaj2wzYGMpiH86vhCdC6OQMyCzrirmfhludLw5Gi6l1GtSHTnuNcbLG
+	 R1aYFMD9SwUsn29KLGPN+lCLGVC9nDEhIpTqo5R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgAGVJE (ORCPT
+        id S1729783AbgAGVJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbgAGVIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:54 -0500
+        id S1729754AbgAGVI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72A22077B;
-        Tue,  7 Jan 2020 21:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1892E2072A;
+        Tue,  7 Jan 2020 21:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431333;
-        bh=UcHpKJl6PsKK6e+oSbmbpIDx26PxKKmsRzq5pfrhOXI=;
+        s=default; t=1578431335;
+        bh=0qvwg7wr7w/Fkb/s8ijemyHsOCnZ++Y6lwmRapzSbSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boN8Kim9OmoSBRlLAEsc21r4ZaaPf/HwPR68OYt8V2mxB1fuMdL0TE9dtPCSe6MAW
-         uCsnlXaZwI6NcD8ypKUzWBJbK+MnIbJ0khG8sNuEDjRN3LMJVebhU5OaWQFGKiBmRl
-         Rg1v+xSVN9Ceqsj1JqGnaVmWre27OmfjAq1YcYhc=
+        b=2D2BUZhMOhtWQMCJPZPniitkYBlw2AZC0r2OiBR0weVxSZJ45NdNk9v9jtjne6zib
+         fte+O+CmRpkWNp++xjmDyH66HP6BKbRsKffQi7ji7QTjbBlVChLs/mnK+y1/8oCJEm
+         Yf1R7lt/KywB3lSIFPZqi8PKIayqhnrUQWIM2DCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/74] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-Date:   Tue,  7 Jan 2020 21:54:39 +0100
-Message-Id: <20200107205145.640285828@linuxfoundation.org>
+Subject: [PATCH 4.14 15/74] s390/cpum_sf: Avoid SBD overflow condition in irq handler
+Date:   Tue,  7 Jan 2020 21:54:40 +0100
+Message-Id: <20200107205146.991759745@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -62,71 +62,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
+[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
 
-Function perf_event_ever_overflow() and perf_event_account_interrupt()
-are called every time samples are processed by the interrupt handler.
-However function perf_event_account_interrupt() has checks to avoid being
-flooded with interrupts (more then 1000 samples are received per
-task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
-added to the perf data. The perf subsystem limit calculation is:
+The s390 CPU Measurement sampling facility has an overflow condition
+which fires when all entries in a SBD are used.
+The measurement alert interrupt is triggered and reads out all samples
+in this SDB. It then tests the successor SDB, if this SBD is not full,
+the interrupt handler does not read any samples at all from this SDB
+The design waits for the hardware to fill this SBD and then trigger
+another meassurement alert interrupt.
 
-    maximum sample frequency := 100000 --> 1 samples per 10 us
-    task_tick = 10ms = 10000us --> 1000 samples per task_tick
+This scheme works nicely until
+an perf_event_overflow() function call discards the sample due to
+a too high sampling rate.
+The interrupt handler has logic to read out a partially filled SDB
+when the perf event overflow condition in linux common code is met.
+This causes the CPUM sampling measurement hardware and the PMU
+device driver to operate on the same SBD's trailer entry.
+This should not happen.
 
-The work flow is
+This can be seen here using this trace:
+   cpumsf_pmu_add: tear:0xb5286000
+   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 1. interrupt
+   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 2. interrupt
+	... this goes on fine until...
+   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
+   perf_push_sample1: overflow
+      one or more samples read from the IRQ handler are rejected by
+      perf_event_overflow() and the IRQ handler advances to the next SDB
+      and modifies the trailer entry of a partially filled SDB.
+   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
+      timestamp: 14:32:52.519953
 
-measurement_alert() uses SDBT head and each SBDT points to 511
- SDB pages, each with 126 sample entries. After processing 8 SBDs
- and for each valid sample calling:
+Next time the IRQ handler is called for this SDB the trailer entry shows
+an overflow count of 19 missed entries.
+   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
+      timestamp: 14:32:52.970058
 
-     perf_event_overflow()
-       perf_event_account_interrupts()
-
-there is a considerable amount of samples being dropped, especially when
-the sample frequency is very high and near the 100000 limit.
-
-To avoid the high amount of samples being dropped near the end of a
-task_tick time frame, increment the sampling interval in case of
-dropped events. The CPU Measurement sampling facility on the s390
-supports only intervals, specifiing how many CPU cycles have to be
-executed before a sample is generated. Increase the interval when the
-samples being generated hit the task_tick limit.
+Remove access to a follow on SDB when event overflow happened.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 45304085b6ee..95c047bf4a12 100644
+index 95c047bf4a12..b652593d7de6 100644
 --- a/arch/s390/kernel/perf_cpum_sf.c
 +++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1306,6 +1306,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 	if (sampl_overflow)
- 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
- 						 sampl_overflow, 1 + num_sdb);
-+
-+	/* Perf_event_overflow() and perf_event_account_interrupt() limit
-+	 * the interrupt rate to an upper limit. Roughly 1000 samples per
-+	 * task tick.
-+	 * Hitting this limit results in a large number
-+	 * of throttled REF_REPORT_THROTTLE entries and the samples
-+	 * are dropped.
-+	 * Slightly increase the interval to avoid hitting this limit.
-+	 */
-+	if (event_overflow) {
-+		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
-+		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
-+				    __func__,
-+				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
-+	}
-+
- 	if (sampl_overflow || event_overflow)
- 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
- 				    "overflow stats: sample=%llu event=%llu\n",
+@@ -1294,12 +1294,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 		 */
+ 		if (flush_all && done)
+ 			break;
+-
+-		/* If an event overflow happened, discard samples by
+-		 * processing any remaining sample-data-blocks.
+-		 */
+-		if (event_overflow)
+-			flush_all = 1;
+ 	}
+ 
+ 	/* Account sample overflows in the event hardware structure */
 -- 
 2.20.1
 
