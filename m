@@ -2,206 +2,80 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8A5C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A42C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6160C24672
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578408152;
-	bh=cjW3VpEhanSDswDdaLUFwMz9ERKCfJDfRsdtFI71+44=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CIukMlid+Zsyj4SoWjTVbuhDK28SOj9hW01wc7DSKkULFt8B2nddzkIiKrDViB3/1
-	 37GMd1rF4V00zvg7lERzCluir6utzAjiag1693gPRr0isgPDqb/IbYDQNDgDzfrI9i
-	 z/bEhk6yaGZBM6YePFZZZXao8asWRc/4Mh5TK0SE=
+	by mail.kernel.org (Postfix) with ESMTP id 8DB072146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgAGOmb (ORCPT
+        id S1728192AbgAGOo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:42:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52806 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 09:44:58 -0500
+Received: from mga11.intel.com ([192.55.52.93]:62763 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbgAGOmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:42:31 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0540020715;
-        Tue,  7 Jan 2020 14:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578408149;
-        bh=cjW3VpEhanSDswDdaLUFwMz9ERKCfJDfRsdtFI71+44=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IOsSr1YWp5IM6PBsDfKTfKQefUs5X3Un5Y/MlPoY2wQetzIV5AiIFWrH1bmGgEzoF
-         nC+AG17GnzvFZ7rm0GjGf1HamA3fisnuebWNUs+bPullSwEHh1Iw9mXrftw0ZmKXJg
-         qz//K2gOHmKzkWVAE3d4H9VcP+fTOHB+rXeZ+BM8=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [BUGFIX PATCH] kprobes: Fix to cancel optimizing/unoptimizing kprobes correctly
-Date:   Tue,  7 Jan 2020 23:42:24 +0900
-Message-Id: <157840814418.7181.13478003006386303481.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        id S1726937AbgAGOo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:44:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:44:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="303213737"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 07 Jan 2020 06:44:55 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ioq6J-0005qn-VF; Tue, 07 Jan 2020 16:44:55 +0200
+Date:   Tue, 7 Jan 2020 16:44:55 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefani Seibold <stefani@seibold.net>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
+ status changes
+Message-ID: <20200107144455.GF32742@smile.fi.intel.com>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+ <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+ <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
+ <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-optimize_kprobe() and unoptimize_kprobe() cancels if given kprobe
-is on the optimizing_list or unoptimizing_list. However, since
-commit f66c0447cca1 ("kprobes: Set unoptimized flag after
-unoptimizing code") modified the update timing of the
-KPROBE_FLAG_OPTIMIZED, it doesn't work as expected anymore.
+On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
 
-The optimized_kprobe could be following states.
+...
 
-- [optimizing]: Before inserting jump instruction
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
+> Let's try to CC the actual author (Stefani Seibold) and see if the mail
+> address works and if he can look at it. Or did you already talk to
+> Stefani?
+> 
+> (git blame is always my best friend in cases like this, hehe)
 
-- [optimized]: jump inserted
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
+Recently I started to be smarted in such cases, i.e. I run also
+`git log --author='$AUTHOR'` to see if they are still active and
+what address had been used lately.
 
-- [unoptimizing]: Before removing jump instruction (including unused
-  optprobe)
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-- [unoptimized]: jump removed
-  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
-
-Current code mis-expects [unoptimizing] state doesn't have
-KPROBE_FLAG_OPTIMIZED, and that can cause wrong results.
-
-This introduces optprobe_queued_unopt() to distinguish [optimizing]
-and [unoptimizing] states and fixes logics in optimize_kprobe() and
-unoptimize_kprobe().
-
-Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/kprobes.c |   65 ++++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 41 insertions(+), 24 deletions(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 34e28b236d68..d898b633f1d6 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -612,6 +612,16 @@ void wait_for_kprobe_optimizer(void)
- 	mutex_unlock(&kprobe_mutex);
- }
- 
-+static bool optprobe_queued_unopt(struct optimized_kprobe *op)
-+{
-+	struct optimized_kprobe *_op;
-+
-+	list_for_each_entry(_op, &unoptimizing_list, list)
-+		if (op == _op)
-+			return true;
-+	return false;
-+}
-+
- /* Optimize kprobe if p is ready to be optimized */
- static void optimize_kprobe(struct kprobe *p)
- {
-@@ -633,17 +643,21 @@ static void optimize_kprobe(struct kprobe *p)
- 		return;
- 
- 	/* Check if it is already optimized. */
--	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
-+	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
-+		if (optprobe_queued_unopt(op)) {
-+			/* This is under unoptimizing. Just dequeue the probe */
-+			list_del_init(&op->list);
-+		}
- 		return;
-+	}
- 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
- 
--	if (!list_empty(&op->list))
--		/* This is under unoptimizing. Just dequeue the probe */
--		list_del_init(&op->list);
--	else {
--		list_add(&op->list, &optimizing_list);
--		kick_kprobe_optimizer();
--	}
-+	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
-+	if (WARN_ON_ONCE(!list_empty(&op->list)))
-+		return;
-+
-+	list_add(&op->list, &optimizing_list);
-+	kick_kprobe_optimizer();
- }
- 
- /* Short cut to direct unoptimizing */
-@@ -665,30 +679,33 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
- 		return; /* This is not an optprobe nor optimized */
- 
- 	op = container_of(p, struct optimized_kprobe, kp);
--	if (!kprobe_optimized(p)) {
--		/* Unoptimized or unoptimizing case */
--		if (force && !list_empty(&op->list)) {
--			/*
--			 * Only if this is unoptimizing kprobe and forced,
--			 * forcibly unoptimize it. (No need to unoptimize
--			 * unoptimized kprobe again :)
--			 */
--			list_del_init(&op->list);
--			force_unoptimize_kprobe(op);
--		}
-+	if (!kprobe_optimized(p))
- 		return;
--	}
- 
- 	if (!list_empty(&op->list)) {
--		/* Dequeue from the optimization queue */
--		list_del_init(&op->list);
-+		if (optprobe_queued_unopt(op)) {
-+			/* Queued in unoptimizing queue */
-+			if (force) {
-+				/*
-+				 * Forcibly unoptimize probe here, and queue it
-+				 * in freeing list for release probe afterwards.
-+				 */
-+				force_unoptimize_kprobe(op);
-+				list_move(&op->list, &freeing_list);
-+			}
-+		} else {
-+			/* Dequeue from the optimizing queue */
-+			list_del_init(&op->list);
-+			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
-+		}
- 		return;
- 	}
-+
- 	/* Optimized kprobe case */
--	if (force)
-+	if (force) {
- 		/* Forcibly update the code: this is a special case */
- 		force_unoptimize_kprobe(op);
--	else {
-+	} else {
- 		list_add(&op->list, &unoptimizing_list);
- 		kick_kprobe_optimizer();
- 	}
 
