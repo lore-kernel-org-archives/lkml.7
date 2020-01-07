@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7377DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A910AC33CA3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35741207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700632075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PR6tPgdZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mG+9fbuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgAGWrS (ORCPT
+        id S1728192AbgAGWra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:47:18 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4870 "EHLO
+        Tue, 7 Jan 2020 17:47:30 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4865 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727744AbgAGWqO (ORCPT
+        with ESMTP id S1727727AbgAGWqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 17:46:14 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e150a1c0000>; Tue, 07 Jan 2020 14:45:48 -0800
+        id <B5e150a1b0001>; Tue, 07 Jan 2020 14:45:48 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Tue, 07 Jan 2020 14:46:05 -0800
@@ -40,7 +40,7 @@ Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Tue, 7 Jan 2020 22:46:00 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e150a280002>; Tue, 07 Jan 2020 14:46:00 -0800
+        id <B5e150a280004>; Tue, 07 Jan 2020 14:46:00 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -73,10 +73,11 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         John Hubbard <jhubbard@nvidia.com>,
-        "Jason Gunthorpe" <jgg@mellanox.com>
-Subject: [PATCH v12 06/22] mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
-Date:   Tue, 7 Jan 2020 14:45:42 -0800
-Message-ID: <20200107224558.2362728-7-jhubbard@nvidia.com>
+        "Christoph Hellwig" <hch@lst.de>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH v12 08/22] mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+Date:   Tue, 7 Jan 2020 14:45:44 -0800
+Message-ID: <20200107224558.2362728-9-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107224558.2362728-1-jhubbard@nvidia.com>
 References: <20200107224558.2362728-1-jhubbard@nvidia.com>
@@ -85,264 +86,57 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578437148; bh=MKwa9FNUgW2GSdRoQWy4jgB881/WBtNchzrZ2I8BLbk=;
+        t=1578437148; bh=TKqZFchMOwUlq4p7fLQxPoHAtQiavcs6JsnhT764GJ8=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=PR6tPgdZL1rZ8ERmazBZHKe2L7e6KucH5piwq/QICqKp/Nfybqjpy68iOJhI+6ORp
-         fxAfPJ5IiCUXRD+25qtq60D75IqldEu69I4BO94cZsaPE2KjRW9XccRJQ8azADvZzf
-         d7OR4dlDqStDaQMJDWmWGKXRQ9Yy407eowZ0RYacMHVhNBC0i0/a4RbibwDEPyhIFE
-         irDGedVFLrPzqQPIvVGd/Zi3d+AD822Q4qPxSkWCuI32B3ZkZ1Tg8bZ1ZAxzUum2f5
-         WCqqFMRHNyMyrFKKSq3If9kXCCuFRO3z1S5cZ9P6HW11G32jMX1KQsJuoHpLGOVAFc
-         VEbkfZSb/UhFw==
+        b=mG+9fbuPmRlJzn1vkUiL8z+GBw7cTMpiOq//DKxiIsJyjBuW9nskzY9Db1uGxi6bP
+         3ZIAqNsLjmLRXPSbZYVOBFeMoUwUnDTSa2wxsZxFLuqr5GC9/g9zXt/3Cl7pp+uB71
+         +IADVEr0VJBH1KiohQW5IgXZN2GTRvi5Xhu9ckuMd8e+2RukQAYcLu5Bad1ZsQoRx5
+         Z3jS4qtWjHSMNbGSC8r3PEh6d5BoRfQGRPbEhr7FdaPV1nqridJwm1WzOvlvps8ckB
+         t1Bggqn6B8DKgBmn4XZpBuPSSSwSbgVZdTWliRoZQ/RSe00MsS0frDzgg6WKn0Gpod
+         Ob3FCZwyu+hXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it says in the updated comment in gup.c: current FOLL_LONGTERM
-behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
-FS DAX check requirement on vmas.
+Commit 817be129e6f2 ("mm: validate get_user_pages_fast flags") allowed
+only FOLL_WRITE and FOLL_LONGTERM to be passed to get_user_pages_fast().
+This, combined with the fact that get_user_pages_fast() falls back to
+"slow gup", which *does* accept FOLL_FORCE, leads to an odd situation:
+if you need FOLL_FORCE, you cannot call get_user_pages_fast().
 
-However, the corresponding restriction in get_user_pages_remote() was
-slightly stricter than is actually required: it forbade all
-FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
-that do not set the "locked" arg.
+There does not appear to be any reason for filtering out FOLL_FORCE.
+There is nothing in the _fast() implementation that requires that we
+avoid writing to the pages. So it appears to have been an oversight.
 
-Update the code and comments to loosen the restriction, allowing
-FOLL_LONGTERM in some cases.
+Fix by allowing FOLL_FORCE to be set for get_user_pages_fast().
 
-Also, copy the DAX check ("if a VMA is DAX, don't allow long term
-pinning") from the VFIO call site, all the way into the internals
-of get_user_pages_remote() and __gup_longterm_locked(). That is:
-get_user_pages_remote() calls __gup_longterm_locked(), which in turn
-calls check_dax_vmas(). This check will then be removed from the VFIO
-call site in a subsequent patch.
-
-Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
-and to Dan Williams for helping clarify the DAX refactoring.
-
-Tested-by: Alex Williamson <alex.williamson@redhat.com>
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jerome Glisse <jglisse@redhat.com>
+Fixes: 817be129e6f2 ("mm: validate get_user_pages_fast flags")
+Cc: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- mm/gup.c | 174 +++++++++++++++++++++++++++++--------------------------
- 1 file changed, 92 insertions(+), 82 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index 5938e29a5a8b..b61bd5c469ae 100644
+index b61bd5c469ae..a594bc708367 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -1111,88 +1111,6 @@ static __always_inline long __get_user_pages_locked(=
-struct task_struct *tsk,
- 	return pages_done;
- }
+@@ -2411,7 +2411,8 @@ int get_user_pages_fast(unsigned long start, int nr_p=
+ages,
+ 	unsigned long addr, len, end;
+ 	int nr =3D 0, ret =3D 0;
 =20
--/*
-- * get_user_pages_remote() - pin user pages in memory
-- * @tsk:	the task_struct to use for page fault accounting, or
-- *		NULL if faults are not to be recorded.
-- * @mm:		mm_struct of target mm
-- * @start:	starting user address
-- * @nr_pages:	number of pages from start to pin
-- * @gup_flags:	flags modifying lookup behaviour
-- * @pages:	array that receives pointers to the pages pinned.
-- *		Should be at least nr_pages long. Or NULL, if caller
-- *		only intends to ensure the pages are faulted in.
-- * @vmas:	array of pointers to vmas corresponding to each page.
-- *		Or NULL if the caller does not require them.
-- * @locked:	pointer to lock flag indicating whether lock is held and
-- *		subsequently whether VM_FAULT_RETRY functionality can be
-- *		utilised. Lock must initially be held.
-- *
-- * Returns either number of pages pinned (which may be less than the
-- * number requested), or an error. Details about the return value:
-- *
-- * -- If nr_pages is 0, returns 0.
-- * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-- * -- If nr_pages is >0, and some pages were pinned, returns the number of
-- *    pages pinned. Again, this may be less than nr_pages.
-- *
-- * The caller is responsible for releasing returned @pages, via put_page()=
-.
-- *
-- * @vmas are valid only as long as mmap_sem is held.
-- *
-- * Must be called with mmap_sem held for read or write.
-- *
-- * get_user_pages walks a process's page tables and takes a reference to
-- * each struct page that each user address corresponds to at a given
-- * instant. That is, it takes the page that would be accessed if a user
-- * thread accesses the given user virtual address at that instant.
-- *
-- * This does not guarantee that the page exists in the user mappings when
-- * get_user_pages returns, and there may even be a completely different
-- * page there in some cases (eg. if mmapped pagecache has been invalidated
-- * and subsequently re faulted). However it does guarantee that the page
-- * won't be freed completely. And mostly callers simply care that the page
-- * contains data that was valid *at some point in time*. Typically, an IO
-- * or similar operation cannot guarantee anything stronger anyway because
-- * locks can't be held over the syscall boundary.
-- *
-- * If gup_flags & FOLL_WRITE =3D=3D 0, the page must not be written to. If=
- the page
-- * is written to, set_page_dirty (or set_page_dirty_lock, as appropriate) =
-must
-- * be called after the page is finished with, and before put_page is calle=
-d.
-- *
-- * get_user_pages is typically used for fewer-copy IO operations, to get a
-- * handle on the memory by some means other than accesses via the user vir=
-tual
-- * addresses. The pages may be submitted for DMA to devices or accessed vi=
-a
-- * their kernel linear mapping (via the kmap APIs). Care should be taken t=
-o
-- * use the correct cache flushing APIs.
-- *
-- * See also get_user_pages_fast, for performance critical applications.
-- *
-- * get_user_pages should be phased out in favor of
-- * get_user_pages_locked|unlocked or get_user_pages_fast. Nothing
-- * should use get_user_pages because it cannot pass
-- * FAULT_FLAG_ALLOW_RETRY to handle_mm_fault.
-- */
--long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
--		unsigned long start, unsigned long nr_pages,
--		unsigned int gup_flags, struct page **pages,
--		struct vm_area_struct **vmas, int *locked)
--{
--	/*
--	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
--	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
--	 * vmas.  As there are no users of this flag in this call we simply
--	 * disallow this option for now.
--	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
--		return -EINVAL;
--
--	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
--				       locked,
--				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
--}
--EXPORT_SYMBOL(get_user_pages_remote);
--
- /**
-  * populate_vma_page_range() -  populate a range of pages in the vma.
-  * @vma:   target vma
-@@ -1626,6 +1544,98 @@ static __always_inline long __gup_longterm_locked(st=
-ruct task_struct *tsk,
- }
- #endif /* CONFIG_FS_DAX || CONFIG_CMA */
+-	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
++	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
++				       FOLL_FORCE)))
+ 		return -EINVAL;
 =20
-+/*
-+ * get_user_pages_remote() - pin user pages in memory
-+ * @tsk:	the task_struct to use for page fault accounting, or
-+ *		NULL if faults are not to be recorded.
-+ * @mm:		mm_struct of target mm
-+ * @start:	starting user address
-+ * @nr_pages:	number of pages from start to pin
-+ * @gup_flags:	flags modifying lookup behaviour
-+ * @pages:	array that receives pointers to the pages pinned.
-+ *		Should be at least nr_pages long. Or NULL, if caller
-+ *		only intends to ensure the pages are faulted in.
-+ * @vmas:	array of pointers to vmas corresponding to each page.
-+ *		Or NULL if the caller does not require them.
-+ * @locked:	pointer to lock flag indicating whether lock is held and
-+ *		subsequently whether VM_FAULT_RETRY functionality can be
-+ *		utilised. Lock must initially be held.
-+ *
-+ * Returns either number of pages pinned (which may be less than the
-+ * number requested), or an error. Details about the return value:
-+ *
-+ * -- If nr_pages is 0, returns 0.
-+ * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-+ * -- If nr_pages is >0, and some pages were pinned, returns the number of
-+ *    pages pinned. Again, this may be less than nr_pages.
-+ *
-+ * The caller is responsible for releasing returned @pages, via put_page()=
-.
-+ *
-+ * @vmas are valid only as long as mmap_sem is held.
-+ *
-+ * Must be called with mmap_sem held for read or write.
-+ *
-+ * get_user_pages walks a process's page tables and takes a reference to
-+ * each struct page that each user address corresponds to at a given
-+ * instant. That is, it takes the page that would be accessed if a user
-+ * thread accesses the given user virtual address at that instant.
-+ *
-+ * This does not guarantee that the page exists in the user mappings when
-+ * get_user_pages returns, and there may even be a completely different
-+ * page there in some cases (eg. if mmapped pagecache has been invalidated
-+ * and subsequently re faulted). However it does guarantee that the page
-+ * won't be freed completely. And mostly callers simply care that the page
-+ * contains data that was valid *at some point in time*. Typically, an IO
-+ * or similar operation cannot guarantee anything stronger anyway because
-+ * locks can't be held over the syscall boundary.
-+ *
-+ * If gup_flags & FOLL_WRITE =3D=3D 0, the page must not be written to. If=
- the page
-+ * is written to, set_page_dirty (or set_page_dirty_lock, as appropriate) =
-must
-+ * be called after the page is finished with, and before put_page is calle=
-d.
-+ *
-+ * get_user_pages is typically used for fewer-copy IO operations, to get a
-+ * handle on the memory by some means other than accesses via the user vir=
-tual
-+ * addresses. The pages may be submitted for DMA to devices or accessed vi=
-a
-+ * their kernel linear mapping (via the kmap APIs). Care should be taken t=
-o
-+ * use the correct cache flushing APIs.
-+ *
-+ * See also get_user_pages_fast, for performance critical applications.
-+ *
-+ * get_user_pages should be phased out in favor of
-+ * get_user_pages_locked|unlocked or get_user_pages_fast. Nothing
-+ * should use get_user_pages because it cannot pass
-+ * FAULT_FLAG_ALLOW_RETRY to handle_mm_fault.
-+ */
-+long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
-+		unsigned long start, unsigned long nr_pages,
-+		unsigned int gup_flags, struct page **pages,
-+		struct vm_area_struct **vmas, int *locked)
-+{
-+	/*
-+	 * Parts of FOLL_LONGTERM behavior are incompatible with
-+	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-+	 * vmas. However, this only comes up if locked is set, and there are
-+	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
-+	 * allow what we can.
-+	 */
-+	if (gup_flags & FOLL_LONGTERM) {
-+		if (WARN_ON_ONCE(locked))
-+			return -EINVAL;
-+		/*
-+		 * This will check the vmas (even if our vmas arg is NULL)
-+		 * and return -ENOTSUPP if DAX isn't allowed in this case:
-+		 */
-+		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
-+					     vmas, gup_flags | FOLL_TOUCH |
-+					     FOLL_REMOTE);
-+	}
-+
-+	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
-+				       locked,
-+				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
-+}
-+EXPORT_SYMBOL(get_user_pages_remote);
-+
- /*
-  * This is the same as get_user_pages_remote(), just with a
-  * less-flexible calling convention where we assume that the task
+ 	start =3D untagged_addr(start) & PAGE_MASK;
 --=20
 2.24.1
 
