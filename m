@@ -2,55 +2,57 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344EAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69647C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B7D214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EF824656
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431048;
-	bh=Gb3U+BDIxeNBJasnmv4gqizVlg4xZH5F5HJdwOqYW6k=;
+	s=default; t=1578431051;
+	bh=hOngF0NIEZ911Ya5pNIzRrZOqlZ9qqWel3xdXaqnWzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QhyoBysDxZiP3Gyfp9gr/kbvLcaHGxPt8zMH4+idq9gsCu5mjhgD9/kPxAPMqflm/
-	 g7uEKNOc5Ma2U+MtaFrvu9Oa8uh3M98LTcsVpYa0aFrlMPtZYMbDJKlMSWwAvxl/Q1
-	 afaW31nuK0YjzaOLEeBE2+3SmHwVBX6+Sx2qev08=
+	b=lN+Sni6YuB5MCwRysnd/X0IEpQw/icOnECxiwyO5mlMv6xUTetCh09/4+pvu3xfBY
+	 XIWU9UlkXc+C15kXRB9aqtut8HQAKS9xSl0wJHIygxIiVl7rEaUZgkSgb/If+p1SJS
+	 sLTKYKekYUUF1MfNAkrMrJEhB0u2mLSzgZvfqVTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgAGVEH (ORCPT
+        id S1729020AbgAGVEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:04:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47112 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgAGVD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:57 -0500
+        id S1727340AbgAGVEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:04:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53178208C4;
-        Tue,  7 Jan 2020 21:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D4BC214D8;
+        Tue,  7 Jan 2020 21:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431036;
-        bh=Gb3U+BDIxeNBJasnmv4gqizVlg4xZH5F5HJdwOqYW6k=;
+        s=default; t=1578431041;
+        bh=hOngF0NIEZ911Ya5pNIzRrZOqlZ9qqWel3xdXaqnWzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2PfTRVqXEBOe1mBjGzZtUDHadjFNJoXkrOWdoCa7VRyj0vMgqm8/eDz8/e7i97BD
-         iDMMrjk2WydRSwv55hF3nBq2jqxaw6R2BG6p4oxvfSFO0BSdjBsko1hdZbOfI24RoG
-         /cFAx6U2nJIgDWHYFO94nGsAjITxiWipoK1wE5jE=
+        b=npc3g+qzp0n9DiuspG9mN+plarOIyfxUB7vJQrVAcZS4DQLbP1Ipx2GLgsMhR4HGS
+         D4RvoJmnoOBEyEiCIRJ7VCTeW2b9DQVTszoZmTyHuRVZshm4ul1XdAHO14iHrluFcT
+         uI/89A1ii4qehu545V9IDc+ZyAh8DxfI4YhTp9CI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 5.4 162/191] arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
-Date:   Tue,  7 Jan 2020 21:54:42 +0100
-Message-Id: <20200107205341.655054153@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 002/115] nvme-fc: fix double-free scenarios on hw queues
+Date:   Tue,  7 Jan 2020 21:53:32 +0100
+Message-Id: <20200107205241.393386348@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,31 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 388a2772979b625042524d8b91280616ab4ff5ee upstream.
+[ Upstream commit c869e494ef8b5846d9ba91f1e922c23cd444f0c1 ]
 
-Fixes: 33344e2111a3 ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If an error occurs on one of the ios used for creating an
+association, the creating routine has error paths that are
+invoked by the command failure and the error paths will free
+up the controller resources created to that point.
 
+But... the io was ultimately determined by an asynchronous
+completion routine that detected the error and which
+unconditionally invokes the error_recovery path which calls
+delete_association. Delete association deletes all outstanding
+io then tears down the controller resources. So the
+create_association thread can be running in parallel with
+the error_recovery thread. What was seen was the LLDD received
+a call to delete a queue, causing the LLDD to do a free of a
+resource, then the transport called the delete queue again
+causing the driver to repeat the free call. The second free
+routine corrupted the allocator. The transport shouldn't be
+making the duplicate call, and the delete queue is just one
+of the resources being freed.
+
+To fix, it is realized that the create_association path is
+completely serialized with one command at a time. So the
+failed io completion will always be seen by the create_association
+path and as of the failure, there are no ios to terminate and there
+is no reason to be manipulating queue freeze states, etc.
+The serialized condition stays true until the controller is
+transitioned to the LIVE state. Thus the fix is to change the
+error recovery path to check the controller state and only
+invoke the teardown path if not already in the CONNECTING state.
+
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvme/host/fc.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -409,6 +409,9 @@
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
- 	};
- };
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index d567035571bf..1875f6b8a907 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -2894,10 +2894,22 @@ nvme_fc_reconnect_or_delete(struct nvme_fc_ctrl *ctrl, int status)
+ static void
+ __nvme_fc_terminate_io(struct nvme_fc_ctrl *ctrl)
+ {
+-	nvme_stop_keep_alive(&ctrl->ctrl);
++	/*
++	 * if state is connecting - the error occurred as part of a
++	 * reconnect attempt. The create_association error paths will
++	 * clean up any outstanding io.
++	 *
++	 * if it's a different state - ensure all pending io is
++	 * terminated. Given this can delay while waiting for the
++	 * aborted io to return, we recheck adapter state below
++	 * before changing state.
++	 */
++	if (ctrl->ctrl.state != NVME_CTRL_CONNECTING) {
++		nvme_stop_keep_alive(&ctrl->ctrl);
  
+-	/* will block will waiting for io to terminate */
+-	nvme_fc_delete_association(ctrl);
++		/* will block will waiting for io to terminate */
++		nvme_fc_delete_association(ctrl);
++	}
+ 
+ 	if (ctrl->ctrl.state != NVME_CTRL_CONNECTING &&
+ 	    !nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_CONNECTING))
+-- 
+2.20.1
+
 
 
