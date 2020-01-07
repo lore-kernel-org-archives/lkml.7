@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57040C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2503EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233992072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7B42072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431817;
-	bh=d0LqO0vrL2w/6NnlUQCVD3jiBBsm4uHXS+n2zv8EHXc=;
+	s=default; t=1578431824;
+	bh=GGD7cMCYVXparBQreXzD6AIEl/w57wcCsy3znaKzyhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ynYU458Z4fq00m+c9h4YpgQGXM/OM0xvx+6rgBQYF0lYO4Ue16pSBfl7YqRrqX+Rr
-	 k8u5Gxp4T8Woim7LpPlG7JI9dModXWaKrfI0Ov4bqHq3chSe1lD0RYwZcZ+mXCdGpS
-	 gzubl5AkQBgb2LNZY1MUUXZ8D3S373gPGwyPPzjI=
+	b=cs6jlzj/47qNp+6QD604y2WXuS+o6rfA4Bs96vDJsU0I9hvAHcgh7egwoO0MBJ1aY
+	 zHIKAE27+542JAKTtUPXhz6HjlZXM8OV/azhFOTKCTDTaiucfa79QDpyoxbZ8pogyG
+	 5E0lbu4Kta1ilR4ECz8cEvGGrbUS4vJYOtB4YQqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAGVGt (ORCPT
+        id S1729432AbgAGVRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:06:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:17:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729391AbgAGVGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:30 -0500
+        id S1729381AbgAGVG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60816208C4;
-        Tue,  7 Jan 2020 21:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7BA12087F;
+        Tue,  7 Jan 2020 21:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431189;
-        bh=d0LqO0vrL2w/6NnlUQCVD3jiBBsm4uHXS+n2zv8EHXc=;
+        s=default; t=1578431187;
+        bh=GGD7cMCYVXparBQreXzD6AIEl/w57wcCsy3znaKzyhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2HglTne0C6tNsDPOSMQQpXODSKUbF3DMLJyAGyz8FO1o7swVkZS+jMWQI6Q0/tHBX
-         v7P6o7JQY3A1g7v6ms7Vh6BBNS8mSTSUOkPlx5S9djKsprMBgrPMvHz3/W0HlRzE7K
-         pZvjKQPl9qlIZ7kT/9DxEGUYyOB6SL+v2iyd4DwA=
+        b=KAWtDEsVmUaOPkI0nF+TBmZq6ui3ig5sjjYOaVo3Sc4un0jiwphpPJMfGM85m53XO
+         fYvuRSo/mqcmTScEPauwXE8nnC3JCiFSln4CZb69CUTE/nmpVyZ5JLoM/tQWteDf8g
+         2HX3qPz13FATe9nmYZ1/iYByrCCtQudhj3iDdagQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>,
+        stable@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 070/115] tracing: Avoid memory leak in process_system_preds()
-Date:   Tue,  7 Jan 2020 21:54:40 +0100
-Message-Id: <20200107205303.879912341@linuxfoundation.org>
+Subject: [PATCH 4.19 069/115] tracing: Fix lock inversion in trace_event_enable_tgid_record()
+Date:   Tue,  7 Jan 2020 21:54:39 +0100
+Message-Id: <20200107205303.812869492@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,82 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+From: Prateek Sood <prsood@codeaurora.org>
 
-commit 79e65c27f09683fbb50c33acab395d0ddf5302d2 upstream.
+commit 3a53acf1d9bea11b57c1f6205e3fe73f9d8a3688 upstream.
 
-When failing in the allocation of filter_item, process_system_preds()
-goes to fail_mem, where the allocated filter is freed.
+       Task T2                             Task T3
+trace_options_core_write()            subsystem_open()
 
-However, this leads to memory leak of filter->filter_string and
-filter->prog, which is allocated before and in process_preds().
-This bug has been detected by kmemleak as well.
+ mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
 
-Fix this by changing kfree to __free_fiter.
+ set_tracer_flag()
 
-unreferenced object 0xffff8880658007c0 (size 32):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    63 6f 6d 6d 6f 6e 5f 70 69 64 20 20 3e 20 31 30  common_pid  > 10
-    00 00 00 00 00 00 00 00 65 73 00 00 00 00 00 00  ........es......
-  backtrace:
-    [<0000000067441602>] kstrdup+0x2d/0x60
-    [<00000000141cf7b7>] apply_subsystem_event_filter+0x378/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888060c22d00 (size 64):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 00 e8 d7 41 80 88 ff ff  ...........A....
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000b8c1b109>] process_preds+0x243/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888041d7e800 (size 512):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    70 bc 85 97 ff ff ff ff 0a 00 00 00 00 00 00 00  p...............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000001e04af34>] process_preds+0x71a/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
 
-Link: http://lkml.kernel.org/r/20191211091258.11310-1-keitasuzuki.park@sslab.ics.keio.ac.jp
+    mutex_lock(event_mutex)
 
-Cc: Ingo Molnar <mingo@redhat.com>
+This gives a circular dependency deadlock between trace_types_lock and
+event_mutex. To fix this invert the usage of trace_types_lock and
+event_mutex in trace_options_core_write(). This keeps the sequence of
+lock usage consistent.
+
+Link: http://lkml.kernel.org/r/0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com
+
 Cc: stable@vger.kernel.org
-Fixes: 404a3add43c9c ("tracing: Only add filter list when needed")
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_filter.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c        |    8 ++++++++
+ kernel/trace/trace_events.c |    8 ++++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1642,7 +1642,7 @@ static int process_system_preds(struct t
- 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 	return -EINVAL;
-  fail_mem:
--	kfree(filter);
-+	__free_filter(filter);
- 	/* If any call succeeded, we still need to sync */
- 	if (!fail)
- 		tracepoint_synchronize_unregister();
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4370,6 +4370,10 @@ int trace_keep_overwrite(struct tracer *
+ 
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
++	if ((mask == TRACE_ITER_RECORD_TGID) ||
++	    (mask == TRACE_ITER_RECORD_CMD))
++		lockdep_assert_held(&event_mutex);
++
+ 	/* do nothing if flag is already set */
+ 	if (!!(tr->trace_flags & mask) == !!enabled)
+ 		return 0;
+@@ -4435,6 +4439,7 @@ static int trace_set_options(struct trac
+ 		cmp += 2;
+ 	}
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = match_string(trace_options, -1, cmp);
+@@ -4445,6 +4450,7 @@ static int trace_set_options(struct trac
+ 		ret = set_tracer_flag(tr, 1 << ret, !neg);
+ 
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	/*
+ 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
+@@ -7457,9 +7463,11 @@ trace_options_core_write(struct file *fi
+ 	if (val != 0 && val != 1)
+ 		return -EINVAL;
+ 
++	mutex_lock(&event_mutex);
+ 	mutex_lock(&trace_types_lock);
+ 	ret = set_tracer_flag(tr, 1 << index, val);
+ 	mutex_unlock(&trace_types_lock);
++	mutex_unlock(&event_mutex);
+ 
+ 	if (ret < 0)
+ 		return ret;
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -327,7 +327,8 @@ void trace_event_enable_cmd_record(bool
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+@@ -341,7 +342,6 @@ void trace_event_enable_cmd_record(bool
+ 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
+ }
+ 
+ void trace_event_enable_tgid_record(bool enable)
+@@ -349,7 +349,8 @@ void trace_event_enable_tgid_record(bool
+ 	struct trace_event_file *file;
+ 	struct trace_array *tr;
+ 
+-	mutex_lock(&event_mutex);
++	lockdep_assert_held(&event_mutex);
++
+ 	do_for_each_event_file(tr, file) {
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
+ 			continue;
+@@ -363,7 +364,6 @@ void trace_event_enable_tgid_record(bool
+ 				  &file->flags);
+ 		}
+ 	} while_for_each_event_file();
+-	mutex_unlock(&event_mutex);
+ }
+ 
+ static int __ftrace_event_enable_disable(struct trace_event_file *file,
 
 
