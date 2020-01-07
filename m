@@ -2,133 +2,96 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D36C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BB4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45502072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="RfUbMuZM"
+	by mail.kernel.org (Postfix) with ESMTP id 9E99C2187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578419115;
+	bh=M513xx9aW4iTXzxgBQtHXhndgn/SODuepiJRUK+eM7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DRfC67fOpHvHoHrvjZ7c/IsO8+MvExSdJfVGQ/BaBjM/c/zrEkPeeG3rD7UCjhS3a
+	 ECm9eiLdcGuWoreOzI5/lSJqSEhNwc9wTGmZ7ExK9yAJkHyjIprTxQebDBJPziIybs
+	 DkqeG0Xu6bMUufJd3JD6M7n8PIKwvpGpfrocFWEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgAGRov (ORCPT
+        id S1728521AbgAGRpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:44:51 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35385 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbgAGRou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:44:50 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e12so471602qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:44:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l6Qo0K02qol2vT4XKfjT5PiBgjGoo2TpWJxoAhWK9HQ=;
-        b=RfUbMuZMnJ4s9dNKBIWKMN98q4/5vNSrzh7sYWLO0noyZdMBRnkVX0+VDebs/xwcY1
-         jnXj+yWjI6zLPknb/0Lrh4sSmuXuyeDDGTK8A6t5e34+wgMDcdIZX/sePGLWXvpB/EsR
-         hpSWyu5S25XHfI3dHW52YJFb8BwQfGKjAjopaNV2y5zlSwH3KdA5CmTAsbB5PgKnLfe9
-         6hZ0aXYwezvncz2fI8NLVMGg6ra93xeVzuzap5srw77egXzhbQO56HWpV+XyJU5PrvoX
-         ztZudKRdZQ6mGFfs+MVxkbElxsrixXfY+Mocc/UXMuaqTC5KN0krDP7hEDKWE9DVlAL3
-         2kPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l6Qo0K02qol2vT4XKfjT5PiBgjGoo2TpWJxoAhWK9HQ=;
-        b=WEwrjbSUxhNv1DjnLD1Ktn/ae+Jo8B5Q3hvdr9UsrPT+53xTiposUJOeA/2SBBpLBS
-         EcSOYrv+9ydqJ75yPVDHzfy/tFY1P4D3Z23UdZWe0XT90zP7rtYucOqhhm6QQgjEtZ6x
-         mdH3MFkiWGBRI/7qpJN3QcuMjn6tG84I6DmvwUBslaB3W8Ap/Rh5gSvG++v9eWcLQpRx
-         KMhwyQsLgP/naWBR3IH/pvGeY2w3mg3vZYyVtMR8aAXyrqCGC7foA5osnCR6N18uAdTv
-         WJ95qF6GvPwGrXM6agkWWIUkZ+97Wcaat+XZQr7kDSJrxuGtLphNCNxlieCj6vTgeU+n
-         Gvnw==
-X-Gm-Message-State: APjAAAXb2hEPv/Mjwwh7k3I18YjeuBfzVaLcjVxj1gOnftWoT9d/0hLH
-        B7HMaipAtRxkvahZuAuHgyX5MQ==
-X-Google-Smtp-Source: APXvYqwgkxv2aw15TpEfv2EE+J9tpTjQ/MgnWBR9K7t3IA5WmHgUMEnKjjZjbqmle8Hx8mIWrDkQTQ==
-X-Received: by 2002:ac8:5059:: with SMTP id h25mr141462qtm.20.1578419089641;
-        Tue, 07 Jan 2020 09:44:49 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 124sm137383qkn.58.2020.01.07.09.44.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 09:44:49 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iosuO-0007e2-GF; Tue, 07 Jan 2020 13:44:48 -0400
-Date:   Tue, 7 Jan 2020 13:44:48 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        users@linux.kernel.org
-Subject: Re: [kernel.org users] [RFC] tools lib traceevent: How to do library
- versioning being in the Linux kernel source?
-Message-ID: <20200107174448.GA26174@ziepe.ca>
-References: <20200102122004.216c85da@gandalf.local.home>
- <20200102234950.GA14768@krava>
- <20200102185853.0ed433e4@gandalf.local.home>
- <20200103133640.GD9715@krava>
- <20200103181614.7aa37f6d@gandalf.local.home>
- <20200106151902.GB236146@krava>
- <20200106162623.GA11285@kernel.org>
- <20200106113615.4545e3c5@gandalf.local.home>
- <20200106204715.GA22353@ziepe.ca>
- <20200106155232.4061d755@gandalf.local.home>
+        Tue, 7 Jan 2020 12:45:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728325AbgAGRpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:45:14 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD992087F;
+        Tue,  7 Jan 2020 17:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578419114;
+        bh=M513xx9aW4iTXzxgBQtHXhndgn/SODuepiJRUK+eM7I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YbkRh/JoQJSbTUir4FFdQGp2dTetaYhozBWn1KLHijLhjGocJSnXGTWmIXpssfckn
+         LKfYzP3x4Sa4MC3IMDOShFVS85iurs1AZtc2GpxehTzUHVG32MTJbf1okn+fAtFII6
+         kX0aRor1c/IMgN9KHEVY1m4OXGNi5jBEo0ArixDE=
+Date:   Tue, 7 Jan 2020 17:45:09 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Amanieu d'Antras <amanieu@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        keescook@chromium.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
+Message-ID: <20200107174508.GC32009@willie-the-truck>
+References: <20200102172413.654385-1-amanieu@gmail.com>
+ <20200102172413.654385-3-amanieu@gmail.com>
+ <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
+ <20200106173953.GB9676@willie-the-truck>
+ <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
+ <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200106155232.4061d755@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 03:52:32PM -0500, Steven Rostedt wrote:
-> On Mon, 6 Jan 2020 16:47:15 -0400
-> Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On Tue, Jan 07, 2020 at 10:02:27AM +0100, Christian Brauner wrote:
+> [Cc Kees in case he knows something about where arch specific tests live
+>  or whether we have a framework for this]
 > 
-> > If it is not tightly linked to the kernel and is just a normal
+> On Mon, Jan 06, 2020 at 07:03:32PM +0100, Amanieu d'Antras wrote:
+> > On Mon, Jan 6, 2020 at 6:39 PM Will Deacon <will@kernel.org> wrote:
+> > > I also ran the native and compat selftests but, unfortunately, they all
+> > > pass even without this patch. Do you reckon it would be possible to update
+> > > them to check the tls pointer?
+> > 
+> > Here's the program I used for testing on arm64. I considered adding it
+> > to the selftests but there is no portable way of reading the TLS
+> > register on all architectures.
 > 
-> Well, it's used by perf, trace-cmd, power-top and rasdaemon (and
-> perhaps even more). It lives in the kernel tree mainly because of perf.
+> I'm not saying you need to do this right now.
 
-I see
- 
-> > With github actions now able to provide a quite good CI it covers a
-> > lot of required stuff for a library in one place, in a way that
-> > doesn't silo all the build infrastucture.
-> 
-> Github has ways to help with libraries? I'm totally clueless about
-> this. I'm interested in hearing more.
+Agreed, these patches should be merged in their current state and my ack
+stands for that.
 
-These days it is a lot of work to get a library ready for the
-distributions and github now has a built-in CI (git hub actions) that
-lets projects run through all the build and in some cases runtime
-tests needed often and automatically.
+> It feels like we must've run into the "this is architecture
+> specific"-and-we-want-to-test-this issue before... Do we have a place
+> where architecture specific selftests live?
 
-For instance we build rdma-core for Centos 6,78, Fedora 31, Ubuntu,
-SuSe, cross compile on ARM and PPC, all automatically and all drive
-from a fairly short script in the source tree, so anyone can
-contribute.
+For arch-specific selftests there are tools/testing/selftests/$ARCH
+directories, although in this case maybe it's better to have an #ifdef
+in a header so that architectures with __builtin_thread_pointer can use
+that.
 
-The release process to .tar.gz (and distro packages if we wanted) is
-also automated via the same. Push a tag and all the release stuff is
-done and the right .tar.gz appears automatically in the right place.
-
-It is nothing so unique, but having everything nicely integrated in
-one place makes it possible for a project to spend a small amount of
-time on CI and administration stuff instead of a large amount :)
-
-Jason
+Will
