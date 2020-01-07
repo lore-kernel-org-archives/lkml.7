@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADED7C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62A0C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D32E20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772642087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431411;
-	bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
+	s=default; t=1578431415;
+	bh=4rvA4xy7n8lOc1+1pyA6Xx8lub7A20J3l8e/G3/YzHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRRriz9VnUY2WDmNTxYLD2R1o1H1fC6lJi0xKv9xO6a+FD6x3NiSuRwFDZEE82z3J
-	 ajTA6eiMiuPkmtdiSrVAcJ0n56HFxb3q2zGV8pN8Gp0jMtGOtmV3sn2ri1ZJCC53q6
-	 B9TiKmvZWQ1XxyOJ2IIRe0cK2fc7hdnXWIQAJvWU=
+	b=lLid2MBcde9fASfxifue5Sc9cicftw248/upFBWZL8o0+FPjUp0Y3r+ZC4cfBglC5
+	 o1++kqnyN6Co4uRF82dO5tvJNSyIpn/XJvYPBuHTfZwJj5rVbUhQ4LV4IoagZ5cV2A
+	 oXJhz37GqeR79vPZBys3jU9EJUisNVStEv67BHXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgAGVKJ (ORCPT
+        id S1729931AbgAGVKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:10:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:10:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgAGVKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:05 -0500
+        id S1729928AbgAGVKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0669E2077B;
-        Tue,  7 Jan 2020 21:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 737D920880;
+        Tue,  7 Jan 2020 21:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431405;
-        bh=FvAHbcoWqATo0vcYGrp4Vf8OlzqnBzekWMoDdjm14cU=;
+        s=default; t=1578431407;
+        bh=4rvA4xy7n8lOc1+1pyA6Xx8lub7A20J3l8e/G3/YzHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDcJCp7NFPKvl6o5xvNJzqY4aAhFP0B16ZTN5dE1XaES4EDE6P1QxHNpu3wstrHP+
-         pyoK3uNDZCqvBHaPjF++g8Bl+wNgAwpUoPdwFH7FA/kjbkmnbl7RV2NR+xQKi3yzHH
-         fKybdM5xD03NBkcnzXaNzHiLscOPJf4omAYUPMUM=
+        b=OJrwXGsXT9lmXklHBYzejsQKs99DHjkEGftWbOJwByGsFjIESjcBFnhgkf4Wj+cys
+         xG65ezGWe1747Lo88+EBAo844gLgAxDunz86ax7VJNsL9OJReQlhatlxbbD+1rprPd
+         35YHHmkBLVhKPHVUBhIJk3HhWkbgNMUEMk0LxOiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.14 26/74] media: pulse8-cec: fix lost cec_transmit_attempt_done() call
-Date:   Tue,  7 Jan 2020 21:54:51 +0100
-Message-Id: <20200107205155.720076902@linuxfoundation.org>
+        stable@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH 4.14 44/74] exit: panic before exit_mm() on global init exit
+Date:   Tue,  7 Jan 2020 21:55:09 +0100
+Message-Id: <20200107205210.841380914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,81 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-commit e5a52a1d15c79bb48a430fb263852263ec1d3f11 upstream.
+commit 43cf75d96409a20ef06b756877a2e72b10a026fc upstream.
 
-The periodic PING command could interfere with the result of
-a CEC transmit, causing a lost cec_transmit_attempt_done()
-call.
+Currently, when global init and all threads in its thread-group have exited
+we panic via:
+do_exit()
+-> exit_notify()
+   -> forget_original_parent()
+      -> find_child_reaper()
+This makes it hard to extract a useable coredump for global init from a
+kernel crashdump because by the time we panic exit_mm() will have already
+released global init's mm.
+This patch moves the panic futher up before exit_mm() is called. As was the
+case previously, we only panic when global init and all its threads in the
+thread-group have exited.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v4.10 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+[christian.brauner@ubuntu.com: fix typo, rewrite commit message]
+Link: https://lore.kernel.org/r/1576736993-10121-1-git-send-email-qiwuchen55@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/pulse8-cec/pulse8-cec.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ kernel/exit.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/media/usb/pulse8-cec/pulse8-cec.c
-+++ b/drivers/media/usb/pulse8-cec/pulse8-cec.c
-@@ -121,6 +121,7 @@ struct pulse8 {
- 	unsigned int vers;
- 	struct completion cmd_done;
- 	struct work_struct work;
-+	u8 work_result;
- 	struct delayed_work ping_eeprom_work;
- 	struct cec_msg rx_msg;
- 	u8 data[DATA_SIZE];
-@@ -142,8 +143,10 @@ static void pulse8_irq_work_handler(stru
- {
- 	struct pulse8 *pulse8 =
- 		container_of(work, struct pulse8, work);
-+	u8 result = pulse8->work_result;
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -577,10 +577,6 @@ static struct task_struct *find_child_re
+ 	}
  
--	switch (pulse8->data[0] & 0x3f) {
-+	pulse8->work_result = 0;
-+	switch (result & 0x3f) {
- 	case MSGCODE_FRAME_DATA:
- 		cec_received_msg(pulse8->adap, &pulse8->rx_msg);
- 		break;
-@@ -177,12 +180,12 @@ static irqreturn_t pulse8_interrupt(stru
- 		pulse8->escape = false;
- 	} else if (data == MSGEND) {
- 		struct cec_msg *msg = &pulse8->rx_msg;
-+		u8 msgcode = pulse8->buf[0];
+ 	write_unlock_irq(&tasklist_lock);
+-	if (unlikely(pid_ns == &init_pid_ns)) {
+-		panic("Attempted to kill init! exitcode=0x%08x\n",
+-			father->signal->group_exit_code ?: father->exit_code);
+-	}
  
- 		if (debug)
- 			dev_info(pulse8->dev, "received: %*ph\n",
- 				 pulse8->idx, pulse8->buf);
--		pulse8->data[0] = pulse8->buf[0];
--		switch (pulse8->buf[0] & 0x3f) {
-+		switch (msgcode & 0x3f) {
- 		case MSGCODE_FRAME_START:
- 			msg->len = 1;
- 			msg->msg[0] = pulse8->buf[1];
-@@ -191,14 +194,20 @@ static irqreturn_t pulse8_interrupt(stru
- 			if (msg->len == CEC_MAX_MSG_SIZE)
- 				break;
- 			msg->msg[msg->len++] = pulse8->buf[1];
--			if (pulse8->buf[0] & MSGCODE_FRAME_EOM)
-+			if (msgcode & MSGCODE_FRAME_EOM) {
-+				WARN_ON(pulse8->work_result);
-+				pulse8->work_result = msgcode;
- 				schedule_work(&pulse8->work);
-+				break;
-+			}
- 			break;
- 		case MSGCODE_TRANSMIT_SUCCEEDED:
- 		case MSGCODE_TRANSMIT_FAILED_LINE:
- 		case MSGCODE_TRANSMIT_FAILED_ACK:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_DATA:
- 		case MSGCODE_TRANSMIT_FAILED_TIMEOUT_LINE:
-+			WARN_ON(pulse8->work_result);
-+			pulse8->work_result = msgcode;
- 			schedule_work(&pulse8->work);
- 			break;
- 		case MSGCODE_HIGH_ERROR:
+ 	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+@@ -823,6 +819,14 @@ void __noreturn do_exit(long code)
+ 	acct_update_integrals(tsk);
+ 	group_dead = atomic_dec_and_test(&tsk->signal->live);
+ 	if (group_dead) {
++		/*
++		 * If the last thread of global init has exited, panic
++		 * immediately to get a useable coredump.
++		 */
++		if (unlikely(is_global_init(tsk)))
++			panic("Attempted to kill init! exitcode=0x%08x\n",
++				tsk->signal->group_exit_code ?: (int)code);
++
+ #ifdef CONFIG_POSIX_TIMERS
+ 		hrtimer_cancel(&tsk->signal->real_timer);
+ 		exit_itimers(tsk->signal);
 
 
