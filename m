@@ -2,177 +2,334 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611BDC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A377DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DAF206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C2920880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTexhIJX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1ISIrzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgAGHGX (ORCPT
+        id S1727185AbgAGHKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:06:23 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30804 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725914AbgAGHGW (ORCPT
+        Tue, 7 Jan 2020 02:10:10 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:40329 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGHKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:06:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578380780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/efjXzZHBg1iCroxSDJqHPrwvRqUs+JXRk92V6GEKaU=;
-        b=DTexhIJXIOMefzaoInUaxp09cs492MOYlRlr8IHFbB6Aj3wWCEY3SWr/eJa5O4HAdDjLYN
-        QZCZEA4Y6XPDHRNbjURIGkRiIYdsIDfK1LCO8iMYe86STWXZDJdwFLidx5UPbvKTpma2kG
-        ndjJ4lWIpkW34xEqOSdsF16WEHxUYpM=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-Yn_dcOQeO26PnkbIrYzksg-1; Tue, 07 Jan 2020 02:06:19 -0500
-X-MC-Unique: Yn_dcOQeO26PnkbIrYzksg-1
-Received: by mail-qv1-f70.google.com with SMTP id f16so36240771qvr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 23:06:19 -0800 (PST)
+        Tue, 7 Jan 2020 02:10:10 -0500
+Received: by mail-yw1-f65.google.com with SMTP id i126so23024656ywe.7;
+        Mon, 06 Jan 2020 23:10:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ey0lnzHzmQLwVLdwq6/tWTcwxcnW6GyoYXTGE3x4Qjk=;
+        b=X1ISIrzs4WaVMH2bPRjK2I9ifP9NY3VIPpdDmeYOA4KYErkRpzGKv7QWGKs2AE0Hmt
+         gzIz+qIAf0g7spCrQhrMzl7+yWq0ndUsTKUjgFsB84ZQxbCiteEAsb0hpWBkAJ508ITb
+         G6JFWOGK2Bcdu6mOf1nG+fWh+Q1p9x2NezxEKWhG53oZk59GLhVwRmZC4KaOUzwjKrF6
+         BK3WdUhI9pLbpJLMJjOK8d3QIdotRnd/W2nnxtFDdxGA9xAaBbp6ZAi4F0uQH68nQnWE
+         vrn8VM2AulKpK4wOa32KH6rFQiE7SoqwMZADrzWIMdRqVgEloUkKGOsXTNDR5cH1AV0i
+         ZOAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/efjXzZHBg1iCroxSDJqHPrwvRqUs+JXRk92V6GEKaU=;
-        b=t7QdaQ3OwxJIvmsyOoFYRW1MCTFg/IIQJuEXtqXoPesz6RvFLzsSo+y6jzvKEELaGI
-         kFp8460J+nK1lmE/7UqkPTE7MkOq5u3AQcLNJPUJX5ZZgXTDOHvmiQIHubJa+XizHv3S
-         euhCaPOX/X3RoBsSWhQNlN7+NbzT6tTRUDKpuxx5k7cnEnniA9vIKdx7lW8S2B89X+Ei
-         B+Sa/QbcUfne9GUa0V2oEbyecnxnZ/AvofP29Vv3zMDUjisDTwI0xr/V4GDPbCaRnA9Y
-         rAZfGnbCrJxrldRmosGFf0CSGoCNGEj6NaLS+uj2MenSSSZxQvg4D0B46FuLh/BE4zc7
-         3OYA==
-X-Gm-Message-State: APjAAAWqMAq4YG228GEWWfmHNnaDsp7O3UauNvBQt/6h5YTTDRiy0cpz
-        6b1VcLezZYwB+ppUkdOjCXms/mTuM5nTfPw3lGVxhvbb1gpHqXoJ9tBnfD7foJrz9rFJR9zRD4M
-        +DSe/3r8tv2+gD02h0v/6tCOH
-X-Received: by 2002:ac8:709a:: with SMTP id y26mr78234905qto.304.1578380779300;
-        Mon, 06 Jan 2020 23:06:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyK5Mb+pOAlU+KoIVfxx6YvoZ+HKotsgyRPL144jEGAH30ilnJpURC7Q9CI21MUoelMWJIJHQ==
-X-Received: by 2002:ac8:709a:: with SMTP id y26mr78234888qto.304.1578380779070;
-        Mon, 06 Jan 2020 23:06:19 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id o16sm21915243qkj.91.2020.01.06.23.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 23:06:18 -0800 (PST)
-Date:   Tue, 7 Jan 2020 02:06:13 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Alistair Delva <adelva@google.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-Message-ID: <20200107020303-mutt-send-email-mst@kernel.org>
-References: <20200105132120.92370-1-mst@redhat.com>
- <2d7053b5-295c-4051-a722-7656350bdb74@redhat.com>
- <20200106074426-mutt-send-email-mst@kernel.org>
- <eab75b06-453d-2e17-1e77-439a66c3c86a@redhat.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ey0lnzHzmQLwVLdwq6/tWTcwxcnW6GyoYXTGE3x4Qjk=;
+        b=TV5kXNYxJWfTAO5oeJIIcXifObMeCC9RiY4WwoIoKCW8QKz+As+hHEGwDkdBIqW6UH
+         yidlsJPyyXoG4qvquxMV4unQAu0uTWR3R8guHY4FRl/X4HocLx622WP77OSMwctgsD4i
+         Xnt5IYJcU/8bYZi6C6tSqKCrhJJPfs3TSHERW+opSRv1BhLbxHFpug+9fCikyZEuF2CR
+         Iimkpx/VOjUfb9S7oehsW53fVkSG//kfjzAE4hSFwu10VCyOP8Uvfk5JcgGmlIUiNzVR
+         ghIRsq1Sm3ga0nKwOk8kYd09gstzrJvOZALmp9OdEw387fSEuZ5IcXQg5zxxurHw5luu
+         kvWg==
+X-Gm-Message-State: APjAAAWozX6F35r2APbK6TQYiHEW1JHBJZCVTEE7UFW8zvjLwd/ilnZN
+        lytunH/f/nnSGGLDn6Squ7w=
+X-Google-Smtp-Source: APXvYqwYWWuHUFGCjaJ3Dp8C9Sh7NMVk8XWwJ7Q7W+dW5zCjo61qdP+bwW32G5MBa8TAV8HVhy1Wcw==
+X-Received: by 2002:a0d:cb48:: with SMTP id n69mr77694778ywd.48.1578381008693;
+        Mon, 06 Jan 2020 23:10:08 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id n3sm29593945ywd.35.2020.01.06.23.10.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 23:10:08 -0800 (PST)
+Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
+From:   Frank Rowand <frowand.list@gmail.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <20191230133852.5890-3-geert+renesas@glider.be>
+ <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
+Message-ID: <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+Date:   Tue, 7 Jan 2020 01:10:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eab75b06-453d-2e17-1e77-439a66c3c86a@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:29:08AM +0800, Jason Wang wrote:
+On 1/6/20 5:34 PM, Frank Rowand wrote:
+> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
+>> As GPIO hogs are configured at GPIO controller initialization time,
+>> adding/removing GPIO hogs in DT overlays does not work.
+>>
+>> Add support for GPIO hogs described in DT overlays by registering an OF
+>> reconfiguration notifier, to handle the addition and removal of GPIO hog
+>> subnodes to/from a GPIO controller device node.
+>>
+>> Note that when a GPIO hog device node is being removed, its "gpios"
+>> properties is no longer available, so we have to keep track of which
+>> node a hog belongs to, which is done by adding a pointer to the hog's
+>> device node to struct gpio_desc.
 > 
-> On 2020/1/6 下午8:54, Michael S. Tsirkin wrote:
-> > On Mon, Jan 06, 2020 at 10:47:35AM +0800, Jason Wang wrote:
-> > > On 2020/1/5 下午9:22, Michael S. Tsirkin wrote:
-> > > > The only way for guest to control offloads (as enabled by
-> > > > VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
-> > > > through CTRL_VQ. So it does not make sense to
-> > > > acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
-> > > > VIRTIO_NET_F_CTRL_VQ.
-> > > > 
-> > > > The spec does not outlaw devices with such a configuration, so we have
-> > > > to support it. Simply clear VIRTIO_NET_F_CTRL_GUEST_OFFLOADS.
-> > > > Note that Linux is still crashing if it tries to
-> > > > change the offloads when there's no control vq.
-> > > > That needs to be fixed by another patch.
-> > > > 
-> > > > Reported-by: Alistair Delva <adelva@google.com>
-> > > > Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > > Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > ---
-> > > > 
-> > > > Same patch as v1 but update documentation so it's clear it's not
-> > > > enough to fix the crash.
-> > > > 
-> > > >    drivers/net/virtio_net.c | 9 +++++++++
-> > > >    1 file changed, 9 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > > index 4d7d5434cc5d..7b8805b47f0d 100644
-> > > > --- a/drivers/net/virtio_net.c
-> > > > +++ b/drivers/net/virtio_net.c
-> > > > @@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
-> > > >    	if (!virtnet_validate_features(vdev))
-> > > >    		return -EINVAL;
-> > > > +	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-> > > > +	 * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
-> > > > +	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-> > > > +	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-> > > > +	 * not the former.
-> > > > +	 */
-> > > > +	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-> > > > +			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
-> > > 
-> > > If it's just because a bug of spec, should we simply fix the bug and fail
-> > > the negotiation in virtnet_validate_feature()?
-> > One man's bug is another man's feature: arguably leaving the features
-> > independent in the spec might allow reuse of the feature bit without
-> > breaking guests.
-> > 
-> > And even if we say it's a bug we can't simply fix the bug in the
-> > spec: changing the text for a future version does not change the fact
-> > that devices behaving according to the spec exist.
-> > 
-> > > Otherwise there would be inconsistency in handling feature dependencies for
-> > > ctrl vq.
-> > > 
-> > > Thanks
-> > That's a cosmetic problem ATM. It might be a good idea to generally
-> > change our handling of dependencies, and clear feature bits instead of
-> > failing probe on a mismatch.
+> If I have read the patches and the existing overlay source correctly,
+> then some observations:
 > 
+> - A gpio hog node added in an overlay will be properly processed.
 > 
-> Something like I proposed in the past ? [1]
+> - A gpio hog node already existing in the live devicetree, but with a
+>   non-active status will be properly processed if the status of the
+>   gpio hog node is changed to "ok" in the overlay.
 > 
-> [1] https://lore.kernel.org/patchwork/patch/519074/
+> - If a gpio hog node already exists in the live devicetree with an
+>   active status, then any updated or added properties in that gpio
+>   hog node in the overlay will have no effect.
+> 
+>   There is a scenario where the updated property would have an effect:
+>   apply a second overlay that sets the status to inactive, then apply
+>   a third overlay that sets the status back to active.  This is a
+>   rather contrived example and I think it should be documented as
+>   not supported and the result undefined.
 
+I went back and double checked the related code.  For gpio hog nodes
+that are in a non-overlay, the status property is checked because
+of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
+to search for gpio hog nodes, and for_each_available_child_of_node()
+checks the status property.  But in the case of a gpio hog node
+added by an overlay, of_gpio_notify() does not check the status
+property in the gpio hog node.  The check for the status property
+should be added to of_gpio_notify().
 
-No that still fails probe.
-
-I am asking whether it's more future proof to fail probe
-on feature combinations disallowed by spec, or to clear bits
-to get to an expected combination.
-
-In any case, we should probably document in the spec how
-drivers behave on such combinations.
-
+-Frank
 
 > 
-> >   It's worth thinking  - at the spec level -
-> > how we can best make the configuration extensible.
-> > But that's not something spec should worry about.
-> > 
-> > 
-> > > > +
-> > > >    	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
-> > > >    		int mtu = virtio_cread16(vdev,
-> > > >    					 offsetof(struct virtio_net_config,
+> It would be good to document this explicitly.
+> 
+> 
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>  drivers/gpio/gpiolib-of.c | 84 +++++++++++++++++++++++++++++++++++++++
+>>  drivers/gpio/gpiolib-of.h |  2 +
+>>  drivers/gpio/gpiolib.c    | 14 +++++--
+>>  drivers/gpio/gpiolib.h    |  3 ++
+>>  4 files changed, 100 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>> index dfae797846bb746b..89a6138ac0a4b506 100644
+>> --- a/drivers/gpio/gpiolib-of.c
+>> +++ b/drivers/gpio/gpiolib-of.c
+>> @@ -649,6 +649,10 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
+>>  		ret = gpiod_hog(desc, name, lflags, dflags);
+>>  		if (ret < 0)
+>>  			return ret;
+>> +
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +		desc->hog = hog;
+>> +#endif
+>>  	}
+>>  
+>>  	return 0;
+>> @@ -676,11 +680,91 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
+>>  			of_node_put(np);
+>>  			return ret;
+>>  		}
+>> +
+>> +		of_node_set_flag(np, OF_POPULATED);
+>>  	}
+>>  
+>>  	return 0;
+>>  }
+>>  
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +/**
+>> + * of_gpiochip_remove_hog - Remove all hogs in a hog device node
+>> + * @chip:	gpio chip to act on
+>> + * @hog:	device node describing the hogs
+>> + */
+>> +static void of_gpiochip_remove_hog(struct gpio_chip *chip,
+>> +				   struct device_node *hog)
+>> +{
+>> +	struct gpio_desc *descs = chip->gpiodev->descs;
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < chip->ngpio; i++) {
+>> +		if (test_bit(FLAG_IS_HOGGED, &descs[i].flags) &&
+>> +		    descs[i].hog == hog)
+>> +			gpiochip_free_own_desc(&descs[i]);
+>> +	}
+>> +}
+>> +
+>> +static int of_gpiochip_match_node(struct gpio_chip *chip, void *data)
+>> +{
+>> +	return chip->gpiodev->dev.of_node == data;
+>> +}
+>> +
+>> +static struct gpio_chip *of_find_gpiochip_by_node(struct device_node *np)
+>> +{
+>> +	return gpiochip_find(np, of_gpiochip_match_node);
+>> +}
+>> +
+>> +static int of_gpio_notify(struct notifier_block *nb, unsigned long action,
+>> +			  void *arg)
+>> +{
+>> +	struct of_reconfig_data *rd = arg;
+>> +	struct gpio_chip *chip;
+>> +	int ret;
+>> +
+>> +	switch (of_reconfig_get_state_change(action, arg)) {
+>> +	case OF_RECONFIG_CHANGE_ADD:
+>> +		if (!of_property_read_bool(rd->dn, "gpio-hog"))
+>> +			return NOTIFY_OK;	/* not for us */
+>> +
+>> +		if (of_node_test_and_set_flag(rd->dn, OF_POPULATED))
+>> +			return NOTIFY_OK;
+> 
+> I don't think OF_POPULATED could be already set.  It seems to be a
+> bug if it is.
+> 
+> 
+>> +
+>> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
+>> +		if (chip == NULL)
+>> +			return NOTIFY_OK;	/* not for us */
+> 
+> If I understand correctly, "not for us" is a misleading comment.
+> The notification is for the node rd->dn->parent, but the device
+> does not exist, so we can't do the hogging at the moment.  (If the
+> device is created later, then the gpio hog child node will exist,
+> and the init will "do the right thing" with the hog node -- so
+> not a problem.)
+> 
+>  
+>> +
+>> +		ret = of_gpiochip_add_hog(chip, rd->dn);
+>> +		if (ret < 0) {
+>> +			pr_err("%s: failed to add hogs for %pOF\n", __func__,
+>> +			       rd->dn);
+>> +			of_node_clear_flag(rd->dn, OF_POPULATED);
+>> +			return notifier_from_errno(ret);
+>> +		}
+>> +		break;
+>> +
+>> +	case OF_RECONFIG_CHANGE_REMOVE:
+>> +		if (!of_node_check_flag(rd->dn, OF_POPULATED))
+>> +			return NOTIFY_OK;	/* already depopulated */
+> 
+> I don't think OF_POPULATED could be already cleared.  It seems to be a
+> bug if it is.
+> 
+>> +
+>> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
+>> +		if (chip == NULL)
+>> +			return NOTIFY_OK;	/* not for us */
+> 
+> Again, a misleading comment.
+> 
+>> +
+>> +		of_gpiochip_remove_hog(chip, rd->dn);
+>> +		of_node_clear_flag(rd->dn, OF_POPULATED);
+>> +		break;
+>> +	}
+>> +
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>> +struct notifier_block gpio_of_notifier = {
+>> +	.notifier_call = of_gpio_notify,
+>> +};
+>> +#endif /* CONFIG_OF_DYNAMIC */
+>> +
+>>  /**
+>>   * of_gpio_simple_xlate - translate gpiospec to the GPIO number and flags
+>>   * @gc:		pointer to the gpio_chip structure
+>> diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
+>> index 9768831b1fe2f25b..ed26664f153782fc 100644
+>> --- a/drivers/gpio/gpiolib-of.h
+>> +++ b/drivers/gpio/gpiolib-of.h
+>> @@ -35,4 +35,6 @@ static inline bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
+>>  }
+>>  #endif /* CONFIG_OF_GPIO */
+>>  
+>> +extern struct notifier_block gpio_of_notifier;
+>> +
+>>  #endif /* GPIOLIB_OF_H */
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index bff5ac774d870b67..ef12cfcaf0962c1c 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -2952,6 +2952,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+>>  		clear_bit(FLAG_PULL_DOWN, &desc->flags);
+>>  		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
+>>  		clear_bit(FLAG_IS_HOGGED, &desc->flags);
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +		desc->hog = NULL;
+>> +#endif
+>>  		ret = true;
+>>  	}
+>>  
+>> @@ -5145,10 +5148,15 @@ static int __init gpiolib_dev_init(void)
+>>  	if (ret < 0) {
+>>  		pr_err("gpiolib: failed to allocate char dev region\n");
+>>  		bus_unregister(&gpio_bus_type);
+>> -	} else {
+>> -		gpiolib_initialized = true;
+>> -		gpiochip_setup_devs();
+>> +		return ret;
+>>  	}
+>> +
+>> +	gpiolib_initialized = true;
+>> +	gpiochip_setup_devs();
+>> +
+>> +	if (IS_ENABLED(CONFIG_OF_DYNAMIC))
+>> +		WARN_ON(of_reconfig_notifier_register(&gpio_of_notifier));
+>> +
+>>  	return ret;
+>>  }
+>>  core_initcall(gpiolib_dev_init);
+>> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+>> index a4a759920faa48ab..7af9931e8572304a 100644
+>> --- a/drivers/gpio/gpiolib.h
+>> +++ b/drivers/gpio/gpiolib.h
+>> @@ -118,6 +118,9 @@ struct gpio_desc {
+>>  	const char		*label;
+>>  	/* Name of the GPIO */
+>>  	const char		*name;
+>> +#ifdef CONFIG_OF_DYNAMIC
+>> +	struct device_node	*hog;
+>> +#endif
+>>  };
+>>  
+>>  int gpiod_request(struct gpio_desc *desc, const char *label);
+>>
+> 
+> 
 
