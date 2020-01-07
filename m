@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B3AC33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AA8C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66A92467F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31B520678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430845;
-	bh=L8LUNO8Rt6HHwTg4ZRRXBIGs/4zDe6CvPv46PyE6Fag=;
+	s=default; t=1578430848;
+	bh=cqmuP6+aWyyH4B13fvBC7PZfi6hpHU/Y2FNOvIebqFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/nOG2ot1JlJIuYfuiTdQNh3vKk/eFn3MRzNmcvGSLG7UqM/nfnJdSDfvy5cN5Kdz
-	 qi4zxdBeMsqhBu4+anIKILEdoFAIChQhReIAmhY4w6TkpbdD3CijhV6Ambh49QMkh+
-	 2Yl30l6A1JqdTsrZWQgPzKkVBoc4vW07+cuaUqhk=
+	b=coSI0Du1Xll2e49E0T9paill0EwARCBFTWFMGFI0T9ekppIgJMeOv+f1B4ykFJxzl
+	 QlTTjbS0FKm+JzdVY0qqBvpMg09V7EQuqfLEKrdIkfuYDV7OcsO5jOHlCLM2B3SK+z
+	 Ass/b+SmHSYdLO+SNDhBAzsYJW0GkORmFJ6y5nHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgAGVAo (ORCPT
+        id S1728004AbgAGVAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:00:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbgAGVAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:30 -0500
+        id S1727967AbgAGVAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D006124656;
-        Tue,  7 Jan 2020 21:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BCD821744;
+        Tue,  7 Jan 2020 21:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430829;
-        bh=L8LUNO8Rt6HHwTg4ZRRXBIGs/4zDe6CvPv46PyE6Fag=;
+        s=default; t=1578430831;
+        bh=cqmuP6+aWyyH4B13fvBC7PZfi6hpHU/Y2FNOvIebqFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyuDapPOnmwUjBbryi0BMjK9r7FT6ETsrOfMfxqpoNlDXggPMnTI8ODqj6oubLdZD
-         l5jPNLNYiwYpjekbbk4OX7FZhqqfmki1+SaJONrnfseRdgpzMlQLp+ASZGF2pbMt4V
-         ZThiw/0o3H7oZ5ExCYMMoEr0ZFTk+W3O4RsCNsxM=
+        b=D9T+9GG/KR4F46fneVlG9yq5b9mFLtstjo9ncaC11hU7P3Woyji1qRFPY5p35XWYv
+         4Zc+YkoOtJ2x5kZPlgKwyKenhTE+AN2tNwZJ2Qlt3KuUg6w3ouAD+QKXDAKgXYaAHK
+         NoQlh7PaSuS7XwJT71rVWMAIrGzUg+uEbn0UQ8Rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Zong Li <zong.li@sifive.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 5.4 112/191] clocksource: riscv: add notrace to riscv_sched_clock
-Date:   Tue,  7 Jan 2020 21:53:52 +0100
-Message-Id: <20200107205338.978465084@linuxfoundation.org>
+Subject: [PATCH 5.4 113/191] riscv: ftrace: correct the condition logic in function graph tracer
+Date:   Tue,  7 Jan 2020 21:53:53 +0100
+Message-Id: <20200107205339.031063867@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,56 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zong Li <zong.li@sifive.com>
 
-commit 9d05c18e8d7de566ff68f221fcae65e78708dd1d upstream.
+commit 1d8f65798240b6577d8c44d20c8ea8f1d429e495 upstream.
 
-When enabling ftrace graph tracer, it gets the tracing clock in
-ftrace_push_return_trace().  Eventually, it invokes riscv_sched_clock()
-to get the clock value.  If riscv_sched_clock() isn't marked with
-'notrace', it will call ftrace_push_return_trace() and cause infinite
-loop.
+The condition should be logical NOT to assign the hook address to parent
+address. Because the return value 0 of function_graph_enter upon
+success.
 
-The result of failure as follow:
-
-command: echo function_graph >current_tracer
-[   46.176787] Unable to handle kernel paging request at virtual address ffffffe04fb38c48
-[   46.177309] Oops [#1]
-[   46.177478] Modules linked in:
-[   46.177770] CPU: 0 PID: 256 Comm: $d Not tainted 5.5.0-rc1 #47
-[   46.177981] epc: ffffffe00035e59a ra : ffffffe00035e57e sp : ffffffe03a7569b0
-[   46.178216]  gp : ffffffe000d29b90 tp : ffffffe03a756180 t0 : ffffffe03a756968
-[   46.178430]  t1 : ffffffe00087f408 t2 : ffffffe03a7569a0 s0 : ffffffe03a7569f0
-[   46.178643]  s1 : ffffffe00087f408 a0 : 0000000ac054cda4 a1 : 000000000087f411
-[   46.178856]  a2 : 0000000ac054cda4 a3 : 0000000000373ca0 a4 : ffffffe04fb38c48
-[   46.179099]  a5 : 00000000153e22a8 a6 : 00000000005522ff a7 : 0000000000000005
-[   46.179338]  s2 : ffffffe03a756a90 s3 : ffffffe00032811c s4 : ffffffe03a756a58
-[   46.179570]  s5 : ffffffe000d29fe0 s6 : 0000000000000001 s7 : 0000000000000003
-[   46.179809]  s8 : 0000000000000003 s9 : 0000000000000002 s10: 0000000000000004
-[   46.180053]  s11: 0000000000000000 t3 : 0000003fc815749c t4 : 00000000000efc90
-[   46.180293]  t5 : ffffffe000d29658 t6 : 0000000000040000
-[   46.180482] status: 0000000000000100 badaddr: ffffffe04fb38c48 cause: 000000000000000f
-
+Fixes: e949b6db51dc (riscv/function_graph: Simplify with function_graph_enter())
 Signed-off-by: Zong Li <zong.li@sifive.com>
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-[paul.walmsley@sifive.com: cleaned up patch description]
-Fixes: 92e0d143fdef ("clocksource/drivers/riscv_timer: Provide the sched_clock")
 Cc: stable@vger.kernel.org
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clocksource/timer-riscv.c |    2 +-
+ arch/riscv/kernel/ftrace.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clocksource/timer-riscv.c
-+++ b/drivers/clocksource/timer-riscv.c
-@@ -41,7 +41,7 @@ static unsigned long long riscv_clocksou
- 	return get_cycles64();
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -142,7 +142,7 @@ void prepare_ftrace_return(unsigned long
+ 	 */
+ 	old = *parent;
+ 
+-	if (function_graph_enter(old, self_addr, frame_pointer, parent))
++	if (!function_graph_enter(old, self_addr, frame_pointer, parent))
+ 		*parent = return_hooker;
  }
  
--static u64 riscv_sched_clock(void)
-+static u64 notrace riscv_sched_clock(void)
- {
- 	return get_cycles64();
- }
 
 
