@@ -2,59 +2,96 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90374C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693AA20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143362072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578431779;
+	bh=34/IyFqFPD/e0Yuum+sb4oDXj/l6OoAwcd75+zSUQN8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DQORYF6XLY88E5k1Dd3Ww3Pk+fJ8+8Xs5KaJ9lz6HdFpzx7DknhXFbwPUoN0fzVPD
+	 kOPimRuEfzm73dNToDeysFDm86ViwCc677MhWTu40sHIdlccHWhqsF3hFMJMjLCvLc
+	 nWKGRtQRUkHnzQYeMJuyUjV96YpAp1/NLado51qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgAGVQN (ORCPT
+        id S1729524AbgAGVHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:16:13 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38140 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbgAGVQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:16:12 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2B11C15A15DD4;
-        Tue,  7 Jan 2020 13:16:11 -0800 (PST)
-Date:   Tue, 07 Jan 2020 13:16:10 -0800 (PST)
-Message-Id: <20200107.131610.393612253415658528.davem@davemloft.net>
-To:     bjorn.andersson@linaro.org
-Cc:     aneela@codeaurora.org, clew@codeaurora.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] net: qrtr: Implement outgoing flow control
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200107054713.3909260-3-bjorn.andersson@linaro.org>
-References: <20200107054713.3909260-1-bjorn.andersson@linaro.org>
-        <20200107054713.3909260-3-bjorn.andersson@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 07 Jan 2020 13:16:11 -0800 (PST)
+        Tue, 7 Jan 2020 16:07:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729364AbgAGVHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:19 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5A82072A;
+        Tue,  7 Jan 2020 21:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431238;
+        bh=34/IyFqFPD/e0Yuum+sb4oDXj/l6OoAwcd75+zSUQN8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KTwzRDe5KhlCbMSNdv3cOo2idmRrXwC6SROo6eKrMBswbJDe0nhNNFCDpetI20aqF
+         1QkmdFuoFs6epUvtdezIUmPyOkf4u+0v4XOFOKxfaFV+KwpDOwaVm/oG6LRoQFTyiH
+         Oqv4W3gu+QBjIdn2Ki/wa7It1zz2M92tMtdWOn6g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 091/115] media: usb: fix memory leak in af9005_identify_state
+Date:   Tue,  7 Jan 2020 21:55:01 +0100
+Message-Id: <20200107205306.791768542@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Date: Mon,  6 Jan 2020 21:47:10 -0800
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
->  static void __qrtr_node_release(struct kref *kref)
->  {
-> +	struct radix_tree_iter iter;
->  	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
-> +	void __rcu **slot;
+commit 2289adbfa559050d2a38bcd9caac1c18b800e928 upstream.
 
-Reverse christmas tree here, please.
+In af9005_identify_state when returning -EIO the allocated buffer should
+be released. Replace the "return -EIO" with assignment into ret and move
+deb_info() under a check.
 
-Thank you.
+Fixes: af4e067e1dcf ("V4L/DVB (5625): Add support for the AF9005 demodulator from Afatech")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/media/usb/dvb-usb/af9005.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -985,8 +985,9 @@ static int af9005_identify_state(struct
+ 	else if (reply == 0x02)
+ 		*cold = 0;
+ 	else
+-		return -EIO;
+-	deb_info("Identify state cold = %d\n", *cold);
++		ret = -EIO;
++	if (!ret)
++		deb_info("Identify state cold = %d\n", *cold);
+ 
+ err:
+ 	kfree(buf);
+
+
