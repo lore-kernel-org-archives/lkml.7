@@ -2,180 +2,150 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DB0C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15135C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9CA207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AB4207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATkBGevd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ELcm+RwL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbgAGIbR (ORCPT
+        id S1727658AbgAGIb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:31:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50002 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727167AbgAGIbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:31:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578385876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vF6sDbkc+WEm8XglHdUKDkPI3i4BPn8PiMseQ0QvR8o=;
-        b=ATkBGevdHF68SFb3kVeSSpt4S3vcDwjQeBFhLGoFB5Py39I3GdGKTrDHnIi39Ko17WBMlu
-        PIediQfsu2PiOsSkMil8RyizaNEvs18+htygO8Nthc2GAiUUVu2fqUx3BMs2HySpnBK/A6
-        IPtQYykVowxDxcWS8PfYoLAAKaJc03M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-0qH6OMJ0PnqNauFDKp8scQ-1; Tue, 07 Jan 2020 03:31:14 -0500
-X-MC-Unique: 0qH6OMJ0PnqNauFDKp8scQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B10F1807465;
-        Tue,  7 Jan 2020 08:31:13 +0000 (UTC)
-Received: from [10.72.12.248] (ovpn-12-248.pek2.redhat.com [10.72.12.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FE3F85EE6;
-        Tue,  7 Jan 2020 08:31:07 +0000 (UTC)
-Subject: Re: [PATCH v2] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Alistair Delva <adelva@google.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200105132120.92370-1-mst@redhat.com>
- <2d7053b5-295c-4051-a722-7656350bdb74@redhat.com>
- <20200106074426-mutt-send-email-mst@kernel.org>
- <eab75b06-453d-2e17-1e77-439a66c3c86a@redhat.com>
- <20200107020303-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6febe3fd-f243-13d2-b3cf-efd172f229c7@redhat.com>
-Date:   Tue, 7 Jan 2020 16:31:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200107020303-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 7 Jan 2020 03:31:58 -0500
+Received: from mail-am6eur05on2087.outbound.protection.outlook.com ([40.107.22.87]:28360
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726485AbgAGIb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 03:31:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VEo3OKRvo4RuthXlYHBOBZUoSsEOqJFmoOWI4MYa399YFnUbI0mz/RfNSzZHj0tRg8SlFENKpPy6dQ+JGISincrNsi9mJHzJsi6mqxs8KopGk9VqCkaEfUGlDyNL9zWFoC6nq2i/ZHNcfGHGnYq1zA9z9It1lt6h9y1WGQ7jVsSPlqe1NufyBvduPFvph26bqMP7/jPuXzy5i5JBFrCeSmDYz+9NEMnQlQV7iU18RntcyzNIWly8PvF7asUYqgj+CVMiuTJ9rc9m2XZR/qigWUdHCF0n7FhdtldZy69/5XXQkY/HlpUeexgULtf5EMa/+BSYqe0/fKDl4yOaeiIclQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EoYesY8cbHtBv0CDkJZmgycuW0WcBanZcHwPBkMW8Oc=;
+ b=RK+tpUIz6KusYM81oG1SbYd5f61WQzvD66FIz4h/P0ScQg1+blOgq4oiCTGdEqXdO+Xgf3Uu9OUijbAAiCNYGL1cFPgaJrJl4KtS8/rzbj/Ec0F8PvxTvA3rVjxSK++hEWXakCac4lK8+5T4TGUtYyVWHkzDLD3hn93FeaP7NFCTeiBJgQqPvvFAfql6I0lsDv4sYuLPB+MPIlRz0rQDz6nJdePA4jHWqRC58eQkhT71kaksm/PaRkBF3w2KgKYCA2o0Ki0iSV8vRsVl2Mwe0Aos9tW4mUi60c9OYgGDAuIGHmGmCk8UFF+nW+uXGJ4k2Z+0MCdmNXO+JNBFdJc9qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EoYesY8cbHtBv0CDkJZmgycuW0WcBanZcHwPBkMW8Oc=;
+ b=ELcm+RwLX6eJrQi93W9UIJCqDH8Kexui1g3zp3LGnQLCAMVkjEHafVVC3oI/rTnieJM+5oFLngD/FfLidPRJw7/EWYWuV1QEsh5AmzCLjPwvH1uru1gPAVGHYf7JaElB1sL+jOyLSb92VXufqeLGe8PL8mH5vfD4smjMgQRjSVU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3899.eurprd04.prod.outlook.com (52.134.71.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Tue, 7 Jan 2020 08:31:12 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d968:56ad:4c0c:616f]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d968:56ad:4c0c:616f%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
+ 08:31:12 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "olof@lixom.net" <olof@lixom.net>, Jacky Bai <ping.bai@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "will@kernel.org" <will@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/3] clk: imx: Add support for i.MX8MP clock driver
+Thread-Topic: [PATCH 2/3] clk: imx: Add support for i.MX8MP clock driver
+Thread-Index: AQHVvFuWiN3d+7pKeE+rF1Aj40+sqqfdAdWAgABZqkCAAZTXsA==
+Date:   Tue, 7 Jan 2020 08:31:12 +0000
+Message-ID: <DB3PR0402MB391625E9E0C5078C64DAA523F53F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1577412748-28213-1-git-send-email-Anson.Huang@nxp.com>
+ <1577412748-28213-2-git-send-email-Anson.Huang@nxp.com>
+ <20200106025914.A180E206F0@mail.kernel.org>
+ <DB3PR0402MB39164DCE1E5A819A5A614E86F53C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39164DCE1E5A819A5A614E86F53C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2c372a9b-7275-4dbe-a461-08d7934bf478
+x-ms-traffictypediagnostic: DB3PR0402MB3899:|DB3PR0402MB3899:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3899DE45153874971FA78443F53F0@DB3PR0402MB3899.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 027578BB13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(44832011)(7416002)(186003)(6506007)(5660300002)(7696005)(2906002)(26005)(52536014)(71200400001)(33656002)(8676002)(4326008)(478600001)(81156014)(81166006)(110136005)(86362001)(316002)(66476007)(66556008)(8936002)(9686003)(64756008)(66946007)(76116006)(66446008)(55016002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3899;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NsSk5t0DN8y+iksHCRlfyrVw6bYV5uyMJ14KmMU2CDcHlorWA13dSA3oOBrzz00qfJEE8SCPCKgcBP9LsqS5xQ7iGWwK2hzTFhEurN5gdAkNDGW1aN4Nfo5NqgSi45LnNvEUJjlnSzg3UpMtexDlOLqITivz2MKZLRlXnowo6hH/WiPqeFNC05Lk+N20IM9WDVkqcg05Iv+T7+3FnvK5lsz54wEj7Q+lmBMU6Q9k/AXy7em0Mih14CPJun4K/tScCX9liYQUNSshgF4QYun82BYCnq+mv76cJfIy8XRKnWscEmRxTDSC0fVhbwOEO1sKL7oyLn7INja+xmrKwQNH/KoriemD1DkvIg+v3TfvLSdvke4ebWX7C1LlDBEwy2nxGIK8T37UR0N1F6OcE0/qzvkaByMHHv2QhKGec7QtC5CgA/LbIpi8KFOFd34YVy8EQLO5hiot9NzC+a0PjC1abQeQoHx9e5wSiR38MTJ+9eFDuH92Y76pUyb5m6Ew/gZG
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c372a9b-7275-4dbe-a461-08d7934bf478
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 08:31:12.8282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yEBv6hhrOoIEVnQrdmIJMz82KCNkzfQpyu2mzoGSU34PRQG16pyRj9nNeYs0rWyxka4AOiZe+09hXbE3GZc0lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3899
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/1/7 =E4=B8=8B=E5=8D=883:06, Michael S. Tsirkin wrote:
-> On Tue, Jan 07, 2020 at 10:29:08AM +0800, Jason Wang wrote:
->> On 2020/1/6 =E4=B8=8B=E5=8D=888:54, Michael S. Tsirkin wrote:
->>> On Mon, Jan 06, 2020 at 10:47:35AM +0800, Jason Wang wrote:
->>>> On 2020/1/5 =E4=B8=8B=E5=8D=889:22, Michael S. Tsirkin wrote:
->>>>> The only way for guest to control offloads (as enabled by
->>>>> VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
->>>>> through CTRL_VQ. So it does not make sense to
->>>>> acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
->>>>> VIRTIO_NET_F_CTRL_VQ.
->>>>>
->>>>> The spec does not outlaw devices with such a configuration, so we h=
-ave
->>>>> to support it. Simply clear VIRTIO_NET_F_CTRL_GUEST_OFFLOADS.
->>>>> Note that Linux is still crashing if it tries to
->>>>> change the offloads when there's no control vq.
->>>>> That needs to be fixed by another patch.
->>>>>
->>>>> Reported-by: Alistair Delva <adelva@google.com>
->>>>> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
->>>>> Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if =
-possible on XDP set")
->>>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>>>> ---
->>>>>
->>>>> Same patch as v1 but update documentation so it's clear it's not
->>>>> enough to fix the crash.
->>>>>
->>>>>     drivers/net/virtio_net.c | 9 +++++++++
->>>>>     1 file changed, 9 insertions(+)
->>>>>
->>>>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
->>>>> index 4d7d5434cc5d..7b8805b47f0d 100644
->>>>> --- a/drivers/net/virtio_net.c
->>>>> +++ b/drivers/net/virtio_net.c
->>>>> @@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_de=
-vice *vdev)
->>>>>     	if (!virtnet_validate_features(vdev))
->>>>>     		return -EINVAL;
->>>>> +	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
->>>>> +	 * VIRTIO_NET_F_CTRL_VQ. Unfortunately spec forgot to
->>>>> +	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
->>>>> +	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
->>>>> +	 * not the former.
->>>>> +	 */
->>>>> +	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
->>>>> +			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
->>>> If it's just because a bug of spec, should we simply fix the bug and=
- fail
->>>> the negotiation in virtnet_validate_feature()?
->>> One man's bug is another man's feature: arguably leaving the features
->>> independent in the spec might allow reuse of the feature bit without
->>> breaking guests.
->>>
->>> And even if we say it's a bug we can't simply fix the bug in the
->>> spec: changing the text for a future version does not change the fact
->>> that devices behaving according to the spec exist.
->>>
->>>> Otherwise there would be inconsistency in handling feature dependenc=
-ies for
->>>> ctrl vq.
->>>>
->>>> Thanks
->>> That's a cosmetic problem ATM. It might be a good idea to generally
->>> change our handling of dependencies, and clear feature bits instead o=
-f
->>> failing probe on a mismatch.
->>
->> Something like I proposed in the past ? [1]
->>
->> [1] https://lore.kernel.org/patchwork/patch/519074/
->
-> No that still fails probe.
->
-> I am asking whether it's more future proof to fail probe
-> on feature combinations disallowed by spec, or to clear bits
-> to get to an expected combination.
-
-
-Sorry wrong link.
-
-It should be: https://lkml.org/lkml/2014/11/17/82
-
-
->
-> In any case, we should probably document in the spec how
-> drivers behave on such combinations.
-
-
-Yes.
-
-Thanks
-
-
->
->
->>>    It's worth thinking  - at the spec level -
->>> how we can best make the configuration extensible.
->>> But that's not something spec should worry about.
->>>
->>>
->>>>> +
->>>>>     	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
->>>>>     		int mtu =3D virtio_cread16(vdev,
->>>>>     					 offsetof(struct virtio_net_config,
-
+SGksIFN0ZXBoZW4NCg0KPiA+ID4gKyAgICAgICBjbGtzW0lNWDhNUF9BVURJT19QTEwxX09VVF0g
+PSBpbXhfY2xrX2dhdGUoImF1ZGlvX3BsbDFfb3V0IiwNCj4gPiAiYXVkaW9fcGxsMV9ieXBhc3Mi
+LCBiYXNlLCAxMyk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX0FVRElPX1BMTDJfT1VUXSA9
+IGlteF9jbGtfZ2F0ZSgiYXVkaW9fcGxsMl9vdXQiLA0KPiA+ICJhdWRpb19wbGwyX2J5cGFzcyIs
+IGJhc2UgKyAweDE0LCAxMyk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX1ZJREVPX1BMTDFf
+T1VUXSA9IGlteF9jbGtfZ2F0ZSgidmlkZW9fcGxsMV9vdXQiLA0KPiA+ICJ2aWRlb19wbGwxX2J5
+cGFzcyIsIGJhc2UgKyAweDI4LCAxMyk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX0RSQU1f
+UExMX09VVF0gPSBpbXhfY2xrX2dhdGUoImRyYW1fcGxsX291dCIsDQo+ID4gImRyYW1fcGxsX2J5
+cGFzcyIsIGJhc2UgKyAweDUwLCAxMyk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX0dQVV9Q
+TExfT1VUXSA9IGlteF9jbGtfZ2F0ZSgiZ3B1X3BsbF9vdXQiLA0KPiA+ICJncHVfcGxsX2J5cGFz
+cyIsIGJhc2UgKyAweDY0LCAxMSk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX1ZQVV9QTExf
+T1VUXSA9IGlteF9jbGtfZ2F0ZSgidnB1X3BsbF9vdXQiLA0KPiA+ICJ2cHVfcGxsX2J5cGFzcyIs
+IGJhc2UgKyAweDc0LCAxMSk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX0FSTV9QTExfT1VU
+XSA9IGlteF9jbGtfZ2F0ZSgiYXJtX3BsbF9vdXQiLA0KPiA+ICJhcm1fcGxsX2J5cGFzcyIsIGJh
+c2UgKyAweDg0LCAxMSk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX1NZU19QTEwxX09VVF0g
+PSBpbXhfY2xrX2dhdGUoInN5c19wbGwxX291dCIsDQo+ID4gInN5c19wbGwxX2J5cGFzcyIsIGJh
+c2UgKyAweDk0LCAxMSk7DQo+ID4gPiArICAgICAgIGNsa3NbSU1YOE1QX1NZU19QTEwyX09VVF0g
+PSBpbXhfY2xrX2dhdGUoInN5c19wbGwyX291dCIsDQo+ID4gInN5c19wbGwyX2J5cGFzcyIsIGJh
+c2UgKyAweDEwNCwgMTEpOw0KPiA+ID4gKyAgICAgICBjbGtzW0lNWDhNUF9TWVNfUExMM19PVVRd
+ID0gaW14X2Nsa19nYXRlKCJzeXNfcGxsM19vdXQiLA0KPiA+ID4gKyAic3lzX3BsbDNfYnlwYXNz
+IiwgYmFzZSArIDB4MTE0LCAxMSk7DQo+ID4NCj4gPiBBbnkgcmVhc29uIHdoeSB3ZSBjYW4ndCBn
+ZXQgYmFjayBjbGtfaHcgcG9pbnRlcnMgaW5zdGVhZCBhbmQgcmVnaXN0ZXINCj4gPiBhIGh3IGJh
+c2VkIHByb3ZpZGVyPw0KPiANCj4gQmVjYXVzZSBpLk1YOE0gc2VyaWVzIFNvQ3MgYXJlIHN0aWxs
+IE5PVCB1c2luZyBodyBiYXNlZCBjbG9jaw0KPiBpbXBsZW1lbnRhdGlvbiwgc29tZSBvZiB0aGUg
+QVBJcyBhcmUgc2hhcmVkLCBsaWtlIGlteF9jbGtfcGxsMTR4eCgpIGFuZA0KPiBpbXg4bV9jbGtf
+Y29tcG9zaXRlKCkgZXRjLiwgc28gSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8ga2VlcA0KPiB0aGVt
+KGkuTVg4TVEvaS5NWDhNTS9pLk1YOE1OL2kuTVg4TVApIGFsaWduZWQsIGFuZCBJIHdpbGwgZmlu
+ZCBhDQo+IGNoYW5jZSBzb29uIHRvIGRvIGEgcGF0Y2ggc2VyaWVzIHRvIHN3aXRjaCBhbGwgb2Yg
+dGhlbSB0byBodyBiYXNlZCBjbG9jaywNCj4gZG9lcyBpdCBtYWtlIHNlbnNlIHRvIHlvdT8NCg0K
+UGxlYXNlIGlnbm9yZSB0aGlzLCBJIHdpbGwgZG8gbmVjZXNzYXJ5IHBhdGNoZXMgdG9nZXRoZXIg
+aW4gdGhpcyBzZXJpZXMgdG8gc3VwcG9ydA0KaHcgY2xrIGJhc2VkIHByb3ZpZGVyIGZvciBpLk1Y
+OE0gU29DcywgaS5NWDhNUCB3aWxsIHVzZSBodyBiYXNlZCBwcm92aWRlciwNCmFuZCBvbGQgaS5N
+WDhNIFNvQ3Mgd2lsbCBiZSBoYW5kbGVkIGxhdGVyIHdpdGggc2VwYXJhdGUgcGF0Y2guDQoNClRo
+YW5rcywNCkFuc29uDQo=
