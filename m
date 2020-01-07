@@ -2,134 +2,110 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B144C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B58C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7572080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432280;
-	bh=Keft5cNz48ZkxfUyWXWdQD2X5bR09IZdkkQriQJCqzs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SypiRWEP8Y9Acu64RjWOHP88UkRqJ1iZ0t7YLqSgJRrROx8++Yq8F2mdH3Zf3Dvm/
-	 Y5s8NdHT6JLOXCeFY0JDIPDpREGnFtp+05/n3rlnhDp5kxR5786Fc7beDPWGPBHwTa
-	 VyBiHUySYZiLelLCDcG+EMbEAUSlr6ZoPXuh9Hcs=
+	by mail.kernel.org (Postfix) with ESMTP id 751AE2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuCRGwTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgAGVAT (ORCPT
+        id S1728616AbgAGVYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbgAGVAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA532081E;
-        Tue,  7 Jan 2020 21:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430809;
-        bh=Keft5cNz48ZkxfUyWXWdQD2X5bR09IZdkkQriQJCqzs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8iXkoFqePqcJHpO+KJ3yNRmtTQ5F+vNLwjHH8lVKpcp7/dm/t2Osq1CMOfJ8CIW6
-         NLX1hADxpZKL3+pOGzOlHqnwCj96+dWLF0iAJwHdjDAHsnjOKhQpUXm2g3BCef+ihG
-         OzHH+PiohgmGcss/KKjCyCcY3oQrri2/FucKBHzk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 105/191] ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
-Date:   Tue,  7 Jan 2020 21:53:45 +0100
-Message-Id: <20200107205338.610644493@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+        Tue, 7 Jan 2020 16:24:42 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38002 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbgAGVYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:24:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so493902pfc.5;
+        Tue, 07 Jan 2020 13:24:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ChcPdsdS9VGVsNLtdTOuWHWVcSN3lEieq0DFAH4Ts9s=;
+        b=CuCRGwThXc1osGY0Xfb21CElwWLVJREYbekDCFiDFhYRRZAeW/1dwjv3O0/mSzDU8F
+         R6ufgzbKArsZ8G35c+RLdwfQ6qoEZafxDEblhRLL2DS4eICBO8UJ8Ib1pnmaRO34flAv
+         vvzydiwo/KJKdRXHrSJCAgbS1fSGtydd6H6exBTnt+iqJWChu5wPOiufpIxxjYawrjfI
+         9vS+E2CtbJVUWFRMeCnJfFAEuh+LygBNhSAqd3cZyEAfQ8+zOXM6xesvPmv9qai9/D8p
+         Rwh7rR5cpPl+vGEGVCXDhJwzPJJEz70gPgANcFqmrlkhTdRgtD472SlKJydR2Gm1kbM+
+         PJVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ChcPdsdS9VGVsNLtdTOuWHWVcSN3lEieq0DFAH4Ts9s=;
+        b=j1FgVBdJ64SY6rFkoEWjH26NF/URz5E5Pg7hrUcAjIsKiGH9/knPo8Mm4Ku0v/LTny
+         38V2/OCH2c9S0CFGmwlDe9r7D5aPbjjGypAe0QgPqMGSxvcnBTB23eAOqJ0OM5wu0bRF
+         FQZWumjkaAfeV7js1RzzsqOc6tbi1xeSxmySxK+90gaClHpGSWQzodcywpEdLA8hi2N8
+         GZNk+Y6di91S7iLXjYQs8sv0rl3/WyNUSrZQo/ovukKx9v9UXWlsOxNfBIMp5iGt82jz
+         zpTSV29nhrQMu9r7eZVDgOarY2BPJN2y7p2kR1G/8uSJrsinb+WvxL5f5y1b4ywKAj3U
+         0xgg==
+X-Gm-Message-State: APjAAAWZY/0HVpO2iyd2vjiOLp1teyE+H7L1lure9AEgJbZmcNg4gae8
+        I9S+DNHf6WrHJdaaPIg3UBg=
+X-Google-Smtp-Source: APXvYqzRJMipEtd8UAW7X43YQuqABNkCkcIiKryfhUo8tJN+E6zzAZoKei3yP4vBI9cRsr7rm9QPhQ==
+X-Received: by 2002:aa7:96b6:: with SMTP id g22mr1364465pfk.206.1578432277766;
+        Tue, 07 Jan 2020 13:24:37 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 189sm515006pfw.73.2020.01.07.13.24.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 13:24:37 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:24:36 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
+Message-ID: <20200107212436.GA18475@roeck-us.net>
 References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, Jan 07, 2020 at 09:52:00PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.9 release.
+> There are 191 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.9-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
+> 
+[ ... ]
 
-commit 84b032dbfdf1c139cd2b864e43959510646975f8 upstream.
+> Ming Lei <ming.lei@redhat.com>
+>     block: fix splitting segments on boundary masks
+> 
 
-This reverts commit 6bb86fefa086faba7b60bb452300b76a47cde1a5
-("libahci_platform: Staticize ahci_platform_<en/dis>able_phys()") we are
-going to need ahci_platform_{enable,disable}_phys() in a subsequent
-commit for ahci_brcm.c in order to properly control the PHY
-initialization order.
+This patch causes a regression. See:
 
-Also make sure the function prototypes are declared in
-include/linux/ahci_platform.h as a result.
+https://lore.kernel.org/linux-block/20200107181145.GA22076@roeck-us.net/T/#m4607a04fde9ef2ed80d45efacef01c0b0e8d2bfd
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/ata/libahci_platform.c |    6 ++++--
- include/linux/ahci_platform.h  |    2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -43,7 +43,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_ops);
-  * RETURNS:
-  * 0 on success otherwise a negative error code
-  */
--static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
- {
- 	int rc, i;
- 
-@@ -74,6 +74,7 @@ disable_phys:
- 	}
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
- 
- /**
-  * ahci_platform_disable_phys - Disable PHYs
-@@ -81,7 +82,7 @@ disable_phys:
-  *
-  * This function disables all PHYs found in hpriv->phys.
-  */
--static void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
- {
- 	int i;
- 
-@@ -90,6 +91,7 @@ static void ahci_platform_disable_phys(s
- 		phy_exit(hpriv->phys[i]);
- 	}
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
- 
- /**
-  * ahci_platform_enable_clks - Enable platform clocks
---- a/include/linux/ahci_platform.h
-+++ b/include/linux/ahci_platform.h
-@@ -19,6 +19,8 @@ struct ahci_host_priv;
- struct platform_device;
- struct scsi_host_template;
- 
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
- void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
-
-
+Guenter
