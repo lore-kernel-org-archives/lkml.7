@@ -2,212 +2,179 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D887C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB2FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63A62072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BAF2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huOQleIp"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ggbb1w/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgAGWxD (ORCPT
+        id S1727506AbgAGWzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:53:03 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35951 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgAGWxC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:53:02 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so1009425edp.3;
-        Tue, 07 Jan 2020 14:53:00 -0800 (PST)
+        Tue, 7 Jan 2020 17:55:20 -0500
+Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:11167
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727046AbgAGWzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:55:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HrX7zaDsvhqA+S7zJ2pXvQCVGfA7krjLQtyknCQTcxXNaVKfC2JYTpAJtp8wWpAlAQAskSnL+Gyylxp5gh/he8lu5vkFejEXdmAUhaghOAuWhVB0sM5SGbnPiaLoQFA0fMlPhEm7HhhxFIfMWQooDqLkfja3nmoHRMaBSl0DXHmnwRCrO1CJLIwYlxoG5vgqg0D47dXmLatP6gUTe/W66ilc+GXEAxBehfO3i6nheDaPzt0uOOtenw75rZAFFwCy1yIymcR590x7oSQo+EUuz1Uj5QXP39icnhKIXWlIULl5xw9Ml6gk+VJa8slkdCAXuguv52TXc2LpB0S6gqvMWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g24uyAFCQflbr82Wg4okp4yY84A+nPTuPzIaTNTKzaY=;
+ b=bTyLK3zPR99aafV06reRUqST5DP8r3b938DbMXH5dhL3aPInyIXtSSJ9QX7HAb6y3McxyC+tjdmdu0M2upndUAQKs5KRw8s2nSNzlTo/O3F63cWHJBFyC8kuVmZ4elRo8IcNHyBhhKMg9tfDsUTRqNaRRAd99Vby79vG5McAkPVTqLF8tLjWR90XjdUTQb064IKE8lCC9CFFGXnX/igjU/v6o4x8tD47jwoskWuMiOCUY1WnWav5HOpHDcLm7iMD0g5gbjxe623piioRhwkX49/c+phkmDJP3+eJOPjknGQoVnIqQR9iIWXkX+kOM8mig8W26JzKCajTHR7ATPPrRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bLf9MRl/zEuO2K43L/4HQmzn+iRdGQ6WkPQMnmdAgZQ=;
-        b=huOQleIphTNE+eVRD2OVId9XW6a481/O+guS/D/Gpe5wkIMOHVEi+U+1Xi+OM+tnKa
-         AjaRBXED1HtnGGhLVrssRptfjilpnG7Ib/q7pqQ8c6B/Oal+NN9s/K1gDUkZghBCaLXv
-         4ykWVuLnnHYvdS98qCjqn4+hH6IvW+JQCxl/kWIrirPKczlECiIrMIGXAiPUXFIZpqGu
-         py6XD0W7zpIig3Gm4RmDZql1zIpIctnhOZSsR1+8WmDCFwtPVyqAQENiEkqFHnfrPaVF
-         ssmvIfKFM501PvaX+WBUbzyy28mkN2el/zJJO/5S52P7Jk02UQqb+XeSr/JqwqydCtyA
-         P1vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bLf9MRl/zEuO2K43L/4HQmzn+iRdGQ6WkPQMnmdAgZQ=;
-        b=M0tnHwFlVu+sJ5cvs2OgphfCTTyG4aj8vsJvKCd53s9g8iJ2v21Rpij2owSxHM+MOz
-         BqH6dMJ87Fm5/uaW2/zRQlEbyabs+/ke6oeDbONaAx84IOXZbWP1kQAwFun5sq9lDqd1
-         4N+lgxOAk+qYlUcV8BI3gmyV8HWgYeqwnHrYG7TfwDRUADsUbCQI6qDwIeerN56Ul8kd
-         tY4IbABoRBvj3uz3y+nv/aywHSQofAPfLtEBvR+abZAq25mu54xpXm+cMKJDP6xGF8YV
-         f/c8vQijutD8DrNzrqnqoCJA8VGgD69fTFQ2y/w6njrjeaSyb3TdbGDm/9Zk3gbsGnt2
-         IFTg==
-X-Gm-Message-State: APjAAAU5KM14KMnCqDxZNbuuWHW/KxqV80t+NrPdsI7qDTcnLNuGeRLZ
-        4XKjBaDytnLxF+xMFKc7ZT0t8mu3
-X-Google-Smtp-Source: APXvYqwD+m+tE9hNINU7r7t60XQOD/JnvvTaW1ZjdRq09KOiAvETtwFYY24f0+mqZzmGWOnVu8VbvA==
-X-Received: by 2002:aa7:dc48:: with SMTP id g8mr2368186edu.208.1578437579709;
-        Tue, 07 Jan 2020 14:52:59 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id md13sm24104ejb.85.2020.01.07.14.52.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 14:52:59 -0800 (PST)
-Subject: Re: [PATCH 2/2] ata: brcm: fix reset controller API usage
-To:     Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200107221506.2731280-1-arnd@arndb.de>
- <20200107221506.2731280-2-arnd@arndb.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <6fb53662-ebdb-55de-c470-0aa1c447bbd0@gmail.com>
-Date:   Tue, 7 Jan 2020 14:52:56 -0800
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g24uyAFCQflbr82Wg4okp4yY84A+nPTuPzIaTNTKzaY=;
+ b=Ggbb1w/nYAT+JFbTuHtF4+3mda/10admEAGU2LjBWz4n96Fijx0KFNY2S0TqYEobrChIuPqYZsySwOtN2p35/OCnSjO3CpS7E1IMwdgBoOTgklMaI20VckA/xU7Fu4BLkdFKtBpe9qcZdCWc+JwymGiy4mo4T12UtaHvl0PcrAk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6SPR01MB0105.namprd12.prod.outlook.com (20.179.164.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.8; Tue, 7 Jan 2020 22:54:37 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
+ 22:54:37 +0000
+Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
+ encryption is enabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
+ <20200106224931.GB12879@linux.intel.com>
+ <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
+ <20200106233846.GC12879@linux.intel.com>
+ <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
+ <20200107222813.GB16987@linux.intel.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <298352c6-7670-2929-9621-1124775bfaed@amd.com>
+Date:   Tue, 7 Jan 2020 16:54:34 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200107221506.2731280-2-arnd@arndb.de>
+In-Reply-To: <20200107222813.GB16987@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0201CA0052.namprd02.prod.outlook.com
+ (2603:10b6:803:20::14) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
+MIME-Version: 1.0
+Received: from [10.236.30.74] (165.204.77.1) by SN4PR0201CA0052.namprd02.prod.outlook.com (2603:10b6:803:20::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Tue, 7 Jan 2020 22:54:36 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c19c4852-4765-45de-b1e3-08d793c49226
+X-MS-TrafficTypeDiagnostic: DM6SPR01MB0105:|DM6SPR01MB0105:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6SPR01MB0105436C788E719EC305C406EC3F0@DM6SPR01MB0105.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 027578BB13
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(189003)(199004)(54906003)(316002)(66946007)(2906002)(31686004)(66556008)(16576012)(31696002)(478600001)(66476007)(4326008)(86362001)(5660300002)(956004)(53546011)(2616005)(8936002)(81166006)(26005)(52116002)(6916009)(6486002)(186003)(81156014)(16526019)(36756003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6SPR01MB0105;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xKCZ9wJL6YI5I2ZYV55ZWgcmdtxAPT8jQD1/A+6tdZzcUtL7+3xkSDMzUtcNg04GKUIvMDeltONosacKM9/gJM+9wJCiPzVXia7IYon8RFXIMmwn1XMIoFAOPlHzUYozVsrW730Z9Joci/OsgjRams5uAeDbLqIvT8F2w1AEHvHwSdmUpngT9NLqGNdix5Ok88BwcJaU7jL9Adhq+DRd3eBANATT5pp25YmNsOCGhBipXKrQ5zh2OBcDYobqKGiJHCRvhIAX8VjSzLyvqJ+dK1g3DOOt9w/7Gu0dSDoUnVBg+EzWjiLCPNq39A39pZkpOEr6sybbSOQiyC4byi1f7z6UFrePz97Qy43yUTCOU120mZLhbGr2RzbvH8KRTAiJqhEhPTwMJVSkQuo9DxHyMhsyOd7hVFoow6NuLYMiHA7YegTphSMIczZPe0wFgXuI
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c19c4852-4765-45de-b1e3-08d793c49226
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 22:54:37.3285
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SFTBXiN+rzKTCGPM5STcHqPKU/w4/e8GTeja7Pc25GJsXqNGj1LV57UDp/9GIlUS1rK/4szcx/4Ttkj14/Lglg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6SPR01MB0105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 2:15 PM, Arnd Bergmann wrote:
-> While fixing another issue in this driver I noticed it uses
-> IS_ERR_OR_NULL(), which is almost always a mistake.
+On 1/7/20 4:28 PM, Sean Christopherson wrote:
+> On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
+>> On 1/6/20 5:38 PM, Sean Christopherson wrote:
+>>> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
+>>>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
+>>>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
+>>>>> on a future processor, i.e. x86_phys_bits==52.
+>>>>
+>>>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
+>>>> always be a reduction in physical addressing (so I'm told).
+>>>
+>>> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
+>>> that reducing the PA space is optional.  Section 7.10.2 is especially
+>>> clear on this:
+>>>
+>>>   In implementations where the physical address size of the processor is
+>>>   reduced when memory encryption features are enabled, software must
+>>>   ensure it is executing from addresses where these upper physical address
+>>>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
+>>
+>> It's probably not likely, but given what is stated, I can modify my patch
+>> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
+>>
+>> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
+>> 	    boot_cpu_data.x86_phys_bits < 52) {
+>>
+>>>
+>>> But, hopefully the other approach I have in mind actually works, as it's
+>>> significantly less special-case code and would naturally handle either
+>>> case, i.e. make this a moot point.
+>>
+>> I'll hold off on the above and wait for your patch.
 > 
-> Change the driver to use the proper devm_reset_control_get_optional()
-> interface instead and remove the checks except for the one that
-> checks for a failure in that function.
+> Sorry for the delay, this is a bigger mess than originally thought.  Or
+> I'm completely misunderstanding the issue, which is also a distinct
+> possibility :-)
 > 
-> Fixes: 2b2c47d9e1fe ("ata: ahci_brcm: Allow optional reset controller to be used")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Due to KVM activating its L1TF mitigation irrespective of whether the CPU
+> is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
+> to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
+> uses those first five reserved PA bits to store the MMIO GFN.  Setting
+> BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
+> a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
 
-This is nearly equivalent to:
+The L1TF mitigation only gets applied when:
+  boot_cpu_data.x86_cache_bits < 52 - shadow_nonpresent_or_rsvd_mask_len
 
-https://lore.kernel.org/lkml/20200107183022.26224-2-f.fainelli@gmail.com/
+  and with shadow_nonpresent_or_rsvd_mask_len = 5, that means that means
+  boot_cpu_data.x86_cache_bits < 47.
 
-which was just submitted this morning. Thanks!
+On AMD processors that support memory encryption, the x86_cache_bits value
+is not adjusted, just the x86_phys_bits. So for AMD processors that have
+memory encryption support, this value will be at least 48 and therefore
+not activate the L1TF mitigation.
 
-> ---
->  drivers/ata/ahci_brcm.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 239333d11b88..7ac1141c6ad0 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -352,8 +352,7 @@ static int brcm_ahci_suspend(struct device *dev)
->  	else
->  		ret = 0;
->  
-> -	if (!IS_ERR_OR_NULL(priv->rcdev))
-> -		reset_control_assert(priv->rcdev);
-> +	reset_control_assert(priv->rcdev);
->  
->  	return ret;
->  }
-> @@ -365,8 +364,7 @@ static int __maybe_unused brcm_ahci_resume(struct device *dev)
->  	struct brcm_ahci_priv *priv = hpriv->plat_data;
->  	int ret = 0;
->  
-> -	if (!IS_ERR_OR_NULL(priv->rcdev))
-> -		ret = reset_control_deassert(priv->rcdev);
-> +	ret = reset_control_deassert(priv->rcdev);
->  	if (ret)
->  		return ret;
->  
-> @@ -454,9 +452,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  	else
->  		reset_name = "ahci";
->  
-> -	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
-> -	if (!IS_ERR_OR_NULL(priv->rcdev))
-> -		reset_control_deassert(priv->rcdev);
-> +	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-> +	if (IS_ERR(priv->rcdev))
-> +		return PTR_ERR(priv->rcdev);
-> +
-> +	reset_control_deassert(priv->rcdev);
->  
->  	hpriv = ahci_platform_get_resources(pdev, 0);
->  	if (IS_ERR(hpriv)) {
-> @@ -520,8 +520,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  out_disable_clks:
->  	ahci_platform_disable_clks(hpriv);
->  out_reset:
-> -	if (!IS_ERR_OR_NULL(priv->rcdev))
-> -		reset_control_assert(priv->rcdev);
-> +	reset_control_assert(priv->rcdev);
->  	return ret;
->  }
->  
+> The only sane approach I can think of is to activate the L1TF mitigation
+> based on whether the CPU is vulnerable to L1TF, as opposed to activating> the mitigation purely based on the max PA of the CPU.  Since all CPUs that
+> support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
+> should never be active at the same time.
+
+There is still the issue of setting a single bit that can conflict with
+the C-bit. As it is today, if the C-bit were to be defined as bit 51, then
+KVM would not take a nested page fault and MMIO would be broken.
+
+Thanks,
+Tom
+
 > 
-
-
--- 
-Florian
+> Patch should be incoming soon...
+> 
