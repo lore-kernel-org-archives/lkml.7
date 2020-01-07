@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C3DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CDDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94119214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383CC214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431012;
-	bh=jRRNJpXoS9bXhoOpUAEeX0aM+B3fJRWVrK0HbiutWO0=;
+	s=default; t=1578431016;
+	bh=RQwPlijfxf7jo2do6WvjL3xxdq2kbHIzLdvt0P3xetg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0b7vi0a5QGxpFEINt+rdk3khRiyEMaz2n4l0CX63QLHyyEXGNpsbn775m0TgZ2v06
-	 fqFdXooxWD6UPMp907kGCwVJvIrrzLRI5WSjVc3M3CLHCIWZAAFoCZKbhzagiyAJnu
-	 zpfDBxAbdCbRMxnmVSCIsXcbasduEWmm1705JF0w=
+	b=yOwv/P9qErkhIts2AqouuQ4Vdi+6J0b2SbPUga/B81zWsnHPGd17Jdfz0eErH4RFT
+	 uo9tXpEgZtIGSaJTXmzfKE0AyPLbF9kVMqjwRyx9F/YHZgxzd/SM/aRI6gZJW08hig
+	 MzgpIs/Xda/EtcigfKUJNyVdo6vX0uS9TXUzMY2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAGVDb (ORCPT
+        id S1728942AbgAGVDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:03:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbgAGVD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:28 -0500
+        id S1728929AbgAGVDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDC7214D8;
-        Tue,  7 Jan 2020 21:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEB92077B;
+        Tue,  7 Jan 2020 21:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431008;
-        bh=jRRNJpXoS9bXhoOpUAEeX0aM+B3fJRWVrK0HbiutWO0=;
+        s=default; t=1578431012;
+        bh=RQwPlijfxf7jo2do6WvjL3xxdq2kbHIzLdvt0P3xetg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+7vb4nuTjUy48/RVP8Ylp02wfoNH3unYPf/js77LLsezXrZdTGc2er+q1dmMnZyE
-         wa8QAxJu9nV5YBfPOYqY87DFy3DS09hu3KaeygZ+kMlLMYyd23WHYAVdXasq4Q2obE
-         CVIL2xWqms1x318PIyGgQTDQk0q2rwOXC2ssjRBE=
+        b=L34ZGhJ5OV0gWPeXG8qWk91hrqh6M4MvL5+E8Tt/GqxxENesz7ikoWCgrO50nSMsW
+         dgeRFASLiItw9wKJbmvMnlB6Um5Ptt8ZzgxRkKKxnQHEIXMRgsvX1IB7aRB+Mm1hqy
+         /az0Sq3wd2zRodavFYfRETZFTCYqo1GMcOVClGdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 187/191] net: annotate lockless accesses to sk->sk_pacing_shift
-Date:   Tue,  7 Jan 2020 21:55:07 +0100
-Message-Id: <20200107205342.996828677@linuxfoundation.org>
+Subject: [PATCH 5.4 189/191] hsr: fix error handling routine in hsr_dev_finalize()
+Date:   Tue,  7 Jan 2020 21:55:09 +0100
+Message-Id: <20200107205343.102463024@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,97 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 7c68fa2bddda6d942bd387c9ba5b4300737fd991 ]
+[ Upstream commit 1d19e2d53e8ed9e4c98fc95e0067492cda7288b0 ]
 
-sk->sk_pacing_shift can be read and written without lock
-synchronization. This patch adds annotations to
-document this fact and avoid future syzbot complains.
+hsr_dev_finalize() is called to create new hsr interface.
+There are some wrong error handling codes.
 
-This might also avoid unexpected false sharing
-in sk_pacing_shift_update(), as the compiler
-could remove the conditional check and always
-write over sk->sk_pacing_shift :
+1. wrong checking return value of debugfs_create_{dir/file}.
+These function doesn't return NULL. If error occurs in there,
+it returns error pointer.
+So, it should check error pointer instead of NULL.
 
-if (sk->sk_pacing_shift != val)
-	sk->sk_pacing_shift = val;
+2. It doesn't unregister interface if it fails to setup hsr interface.
+If it fails to initialize hsr interface after register_netdevice(),
+it should call unregister_netdevice().
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+3. Ignore failure of creation of debugfs
+If creating of debugfs dir and file is failed, creating hsr interface
+will be failed. But debugfs doesn't affect actual logic of hsr module.
+So, ignoring this is more correct and this behavior is more general.
+
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sock.h    | 4 ++--
- net/core/sock.c       | 2 +-
- net/ipv4/tcp_bbr.c    | 3 ++-
- net/ipv4/tcp_output.c | 4 ++--
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ net/hsr/hsr_debugfs.c | 15 +++++++--------
+ net/hsr/hsr_device.c  | 19 ++++++++++---------
+ net/hsr/hsr_main.h    | 11 ++++-------
+ 3 files changed, 21 insertions(+), 24 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index e09e2886a836..6c5a3809483e 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2589,9 +2589,9 @@ static inline int sk_get_rmem0(const struct sock *sk, const struct proto *proto)
+diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
+index 6135706f03d5..6618a9d8e58e 100644
+--- a/net/hsr/hsr_debugfs.c
++++ b/net/hsr/hsr_debugfs.c
+@@ -77,15 +77,14 @@ static const struct file_operations hsr_fops = {
+  * When debugfs is configured this routine sets up the node_table file per
+  * hsr device for dumping the node_table entries
   */
- static inline void sk_pacing_shift_update(struct sock *sk, int val)
+-int hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
++void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
  {
--	if (!sk || !sk_fullsock(sk) || sk->sk_pacing_shift == val)
-+	if (!sk || !sk_fullsock(sk) || READ_ONCE(sk->sk_pacing_shift) == val)
- 		return;
--	sk->sk_pacing_shift = val;
-+	WRITE_ONCE(sk->sk_pacing_shift, val);
+-	int rc = -1;
+ 	struct dentry *de = NULL;
+ 
+ 	de = debugfs_create_dir(hsr_dev->name, NULL);
+-	if (!de) {
++	if (IS_ERR(de)) {
+ 		pr_err("Cannot create hsr debugfs root\n");
+-		return rc;
++		return;
+ 	}
+ 
+ 	priv->node_tbl_root = de;
+@@ -93,13 +92,13 @@ int hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
+ 	de = debugfs_create_file("node_table", S_IFREG | 0444,
+ 				 priv->node_tbl_root, priv,
+ 				 &hsr_fops);
+-	if (!de) {
++	if (IS_ERR(de)) {
+ 		pr_err("Cannot create hsr node_table directory\n");
+-		return rc;
++		debugfs_remove(priv->node_tbl_root);
++		priv->node_tbl_root = NULL;
++		return;
+ 	}
+ 	priv->node_tbl_file = de;
+-
+-	return 0;
  }
  
- /* if a socket is bound to a device, check that the given device
-diff --git a/net/core/sock.c b/net/core/sock.c
-index ac78a570e43a..b4d1112174c1 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2918,7 +2918,7 @@ void sock_init_data(struct socket *sock, struct sock *sk)
+ /* hsr_debugfs_term - Tear down debugfs intrastructure
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index b01e1bae4ddc..e73549075a03 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -477,30 +477,31 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
  
- 	sk->sk_max_pacing_rate = ~0UL;
- 	sk->sk_pacing_rate = ~0UL;
--	sk->sk_pacing_shift = 10;
-+	WRITE_ONCE(sk->sk_pacing_shift, 10);
- 	sk->sk_incoming_cpu = -1;
+ 	res = hsr_add_port(hsr, hsr_dev, HSR_PT_MASTER);
+ 	if (res)
+-		goto err_add_port;
++		goto err_add_master;
  
- 	sk_rx_queue_clear(sk);
-diff --git a/net/ipv4/tcp_bbr.c b/net/ipv4/tcp_bbr.c
-index 32772d6ded4e..a6545ef0d27b 100644
---- a/net/ipv4/tcp_bbr.c
-+++ b/net/ipv4/tcp_bbr.c
-@@ -306,7 +306,8 @@ static u32 bbr_tso_segs_goal(struct sock *sk)
- 	/* Sort of tcp_tso_autosize() but ignoring
- 	 * driver provided sk_gso_max_size.
- 	 */
--	bytes = min_t(unsigned long, sk->sk_pacing_rate >> sk->sk_pacing_shift,
-+	bytes = min_t(unsigned long,
-+		      sk->sk_pacing_rate >> READ_ONCE(sk->sk_pacing_shift),
- 		      GSO_MAX_SIZE - 1 - MAX_TCP_HEADER);
- 	segs = max_t(u32, bytes / tp->mss_cache, bbr_min_tso_segs(sk));
+ 	res = register_netdevice(hsr_dev);
+ 	if (res)
+-		goto fail;
++		goto err_unregister;
  
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 0269584e9cf7..e4ba915c4bb5 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1728,7 +1728,7 @@ static u32 tcp_tso_autosize(const struct sock *sk, unsigned int mss_now,
- 	u32 bytes, segs;
+ 	res = hsr_add_port(hsr, slave[0], HSR_PT_SLAVE_A);
+ 	if (res)
+-		goto fail;
++		goto err_add_slaves;
++
+ 	res = hsr_add_port(hsr, slave[1], HSR_PT_SLAVE_B);
+ 	if (res)
+-		goto fail;
++		goto err_add_slaves;
  
- 	bytes = min_t(unsigned long,
--		      sk->sk_pacing_rate >> sk->sk_pacing_shift,
-+		      sk->sk_pacing_rate >> READ_ONCE(sk->sk_pacing_shift),
- 		      sk->sk_gso_max_size - 1 - MAX_TCP_HEADER);
++	hsr_debugfs_init(hsr, hsr_dev);
+ 	mod_timer(&hsr->prune_timer, jiffies + msecs_to_jiffies(PRUNE_PERIOD));
+-	res = hsr_debugfs_init(hsr, hsr_dev);
+-	if (res)
+-		goto fail;
  
- 	/* Goal is to send at least one packet per ms,
-@@ -2263,7 +2263,7 @@ static bool tcp_small_queue_check(struct sock *sk, const struct sk_buff *skb,
+ 	return 0;
  
- 	limit = max_t(unsigned long,
- 		      2 * skb->truesize,
--		      sk->sk_pacing_rate >> sk->sk_pacing_shift);
-+		      sk->sk_pacing_rate >> READ_ONCE(sk->sk_pacing_shift));
- 	if (sk->sk_pacing_status == SK_PACING_NONE)
- 		limit = min_t(unsigned long, limit,
- 			      sock_net(sk)->ipv4.sysctl_tcp_limit_output_bytes);
+-fail:
++err_add_slaves:
++	unregister_netdevice(hsr_dev);
++err_unregister:
+ 	list_for_each_entry_safe(port, tmp, &hsr->ports, port_list)
+ 		hsr_del_port(port);
+-err_add_port:
++err_add_master:
+ 	hsr_del_self_node(&hsr->self_node_db);
+ 
+ 	return res;
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index 96fac696a1e1..acab9c353a49 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -184,15 +184,12 @@ static inline u16 hsr_get_skb_sequence_nr(struct sk_buff *skb)
+ }
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+-int hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev);
++void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev);
+ void hsr_debugfs_term(struct hsr_priv *priv);
+ #else
+-static inline int hsr_debugfs_init(struct hsr_priv *priv,
+-				   struct net_device *hsr_dev)
+-{
+-	return 0;
+-}
+-
++static inline void hsr_debugfs_init(struct hsr_priv *priv,
++				    struct net_device *hsr_dev)
++{}
+ static inline void hsr_debugfs_term(struct hsr_priv *priv)
+ {}
+ #endif
 -- 
 2.20.1
 
