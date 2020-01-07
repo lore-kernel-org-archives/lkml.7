@@ -2,144 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E675CC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C0AC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D872087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB079207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 08:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgAGIQu (ORCPT
+        id S1727662AbgAGIQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Jan 2020 03:16:52 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:37139 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgAGIQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 03:16:50 -0500
-Received: from mout.perfora.net ([74.208.4.197]:51591 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgAGIQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:16:49 -0500
-Received: from marcel-pc.toradex.int ([31.10.206.124]) by mrelay.perfora.net
- (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id 1M8gu5-1ikb5n0Gif-004m1X;
- Tue, 07 Jan 2020 09:11:38 +0100
-Message-ID: <40295d6f803a76ed169506e2417357cccea4958f.camel@ziswiler.com>
-Subject: Re: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
-From:   Marcel Ziswiler <marcel@ziswiler.com>
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pci@vger.kernel.org
-Date:   Tue, 07 Jan 2020 09:11:35 +0100
-In-Reply-To: <20200102123822.GA1924669@ulmo>
-References: <20191230005209.1546434-1-marcel@ziswiler.com>
-         <20200102123822.GA1924669@ulmo>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MDhth-1ixE5X3eAp-00AmD0; Tue, 07 Jan 2020 09:16:49 +0100
+Received: by mail-qt1-f175.google.com with SMTP id n15so44692831qtp.5;
+        Tue, 07 Jan 2020 00:16:48 -0800 (PST)
+X-Gm-Message-State: APjAAAVLNlX09h5hPb2/cal2uS7lP3qsYeB+oOolGFQBBl+2Ou7Qyamk
+        7McbzSLWqRl3NdpAx4nPeW5IikTqLR7IvbkgkpE=
+X-Google-Smtp-Source: APXvYqy5Ck9gkPV52yg24WY0VrQ2y2C1CXBRF6Y6+8OBXLwg0dzkbS2jd5oixwoipa94cQmOYesNS9M2hLIm4uQS2qw=
+X-Received: by 2002:ac8:709a:: with SMTP id y26mr78397663qto.304.1578385007686;
+ Tue, 07 Jan 2020 00:16:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:PLPrRRMEyaBZaBDxY0OoJwssd+Z8aTY0h4imk7UzoXeYSK62VgJ
- Kfb49CXps328d0mFyTYU8mSijJag1G4KZxpu329IMIUf02kfq85b2kdXX9pDES3jrO1CUjW
- pxyAkfsan/sOBmOkDLCW35c+uPGYYlY0sLofapyp8VPp19Lq2nmtgsrG0R2rjYKflIJJ1tD
- g6SncQJMcZSEzkV2Dl6lA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qDq291wX9xo=:L4w7V7AUqB3ZJhP38cuvwt
- FG3fNY3BmKhOTYp9vtUB1K4G8MBj8pxFrep0yZKhx0mbREr3/cdxEecae+wsY63+mhq4QtgQa
- K8x3S3nMO+uu4ZzZ2RHjpWBL5qkTuznCdwSj5dYQ+g8IFBre5szfPeDHT9joKBDzm5vT/oDAR
- a8aMiVUSkBrt9MTBGkyUMeno+aby8w+wkrFOt15VFqCjQ0boV8TagH5P1NWg/vNjkpBNbV5XD
- NeRD1HRjFZjyi5Kv0S5lg4kJZOxyi5s51oZ56FgW3U2q4Y6bZEw02UKAHN1uDMPphoc9Y5+0W
- tAewOoZiEuLVItvq+JUEp+P6DvQKg7rvzAZSsoUUGx57t1t59I3IK9tuc1+BzrkghHMuh8u7i
- aRMl1n99hFPaf5L8iBkE47yIdYzvAldlRM72RUd5Y7X0L9aT8OErPHAQungWOWYgxsflI/b74
- UOuL5spvs8HgvTykUOi0J3B2AwtsUjYa+nQ8ZMLmaacZBBholZSRJJK/vHVQE7cQjtySVs5cC
- ZJR+3OLfUqGaBtCyyNzvvnknsR4Tu93SQE6RS3z/Zqf84RnlMzpgqmB6aAxUY/odVqqm2kERk
- y0PosJtyLnxxBbUM5FCmm8H9Sly2gk9uGwPbtKCH/Dgsn30brYeLDhZibclwgcV9+VLN56N6R
- fXfv2XmPX6hKWd9x4pUHqlxu9RoWSBElmc49Vn4fB0/W3qHpkYLXCHo/ST0LpRKkT2AX6iu4b
- /8M/1bSJHtBbXbTIBiLRl0guL1JO65U+9ZC/1ByF56J4ZzCNemKf0gmLBHOCWu3wHZ2huVUKO
- BQKRoP8R9EqUmu4X4CttgGqmOmkbZCKWpsthaMNPN0tokRPOWVaitcyXFGLIZhBxUm/INibme
- h9B6K/z4VO4GGFAPP2g33wj8odmq4enRQfXZpIX5I=
+References: <20191210195333.648018-1-arnd@arndb.de> <d739240f-aaa6-c310-9c68-16c1a08ce759@nvidia.com>
+ <9c9169cc-0da5-f247-c8f7-f6913ca2bfb5@linux.intel.com>
+In-Reply-To: <9c9169cc-0da5-f247-c8f7-f6913ca2bfb5@linux.intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Jan 2020 09:16:31 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1it2a1CmkkOfVqhLE33jmKWhHEtria+ESoz6uSkcP8_w@mail.gmail.com>
+Message-ID: <CAK8P3a1it2a1CmkkOfVqhLE33jmKWhHEtria+ESoz6uSkcP8_w@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rt5677: add SPI_MASTER dependency
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>,
+        Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        KaiChieh Chuang <kaichieh.chuang@mediatek.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:keaxXrj9ZK7CoS2HwsxwVxblkq5qp5kthzW2l815MQ+j0uJEsco
+ BY5/GhEFvapn3ptCQXm4ueSJyfi+cgyeJQRs9F6NXeA3pR2wimnqDrAxZvuRjE18qhZHVfK
+ QhaeMTYFwGGbXd7Q884jD6lx/TnRvOzJ/voBqGBAPIGrM/LYqJy99AZIvmHxKjrIpeAzrzH
+ N3fhx2WGc3sPIX4vRSBvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PgASF3VQxFE=:nKNVgxdHBtDervSUuG7Nd7
+ 5kSRCLp3DgCyN268JgfJEmkb4FAo8jum+RQxly5KMlytHt0n6fEGvkToPRaMCKDgtR9UKiCfn
+ MbM9uLeDF5sQqfneaw7Vdpt6WbPs0UkxDfjIHnROf0dUnvTr0Gf7/ojEhriSLCQfTZHEjdM80
+ o5MwJxOzfX7iFIaOtlAX/pdljspEJ5VgY5tjKD+x/pU3ULwaUjSeOmm08Ib/PMYv1PywqjARv
+ ZWFZ2ETdHWy51kzPYAdUNqFdiDCE8Jtye1TvWkQui3ZdyaAPD9EOJ8JGeqjpNwBichIe1ilOV
+ nPeseGXhkOXeVC+TrR7XyOEiirpzPCSy1hlzACg/ko6mr9LcjTnRficx9AdR92Ht+hOw8QZ8X
+ j9vAO32nHh6zpOwVg6AC1fVySu7j/EjA2PGrOQeGCo3XsUk/um7fNKQtMisrZ+hh9YKTRF5+/
+ k7mJFaNMKIZ+GVR19HGoiGe917q3FCRfdnon9nL8BqFLWR1YAg5q7zynwvcdtj/AeTR+0NL0K
+ Ol6aKcdlU9fvw790yPQzEHFukvE8jFZMzSaqePg9Gyg2/tmhj82VgRzWh7M+gagTssgsjLiug
+ KyaLYqgI3bEmhEIOTDQSuD6MuPPc/qpY84rRYcDImr6ANXHnLnZVXXCeSEZN6xfrzCdDI1zRA
+ K5tBisyjqP4zxn+Z8jMJYGjvSdIyIYrAWjaOca9Q0J72nlKAcEAJ2JpKSbkKx2vBTnvZz4Iz2
+ orreQUqdwnYMNh1wTq+OwMU0bIe13EVQTwjVyd8ev9l3TLXaOdFLjO6EBRv9EZA5jjl8oBWpC
+ 9sqagF1eG6rnVLLXZCHAbFQ6Mz/wmoxH8qX4Ih2pBljcUX2IDhxRMbWEhm5bWtZH84xdT8bh8
+ 1TMJ10IBSc5POVnyrxqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry
+On Mon, Jan 6, 2020 at 10:55 PM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
+> On 12/11/19 4:59 AM, Jon Hunter wrote:
+> >
+> > On 10/12/2019 19:52, Arnd Bergmann wrote:
+> >> When CONFIG_SPI is disabled, the newly added code for the DSP
+> >> firmware loading fails to link:
+> >>
+> >> ERROR: "rt5677_spi_hotword_detected" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
+> >> ERROR: "rt5677_spi_write" [sound/soc/codecs/snd-soc-rt5677.ko] undefined!
+> >
+> > Would it be better if the above functions or the functions that call
+> > these are conditional on CONFIG_SND_SOC_RT5677_SPI?
+>
+> they are already conditional, with a fallback provided:
+>
+> #if IS_ENABLED(CONFIG_SND_SOC_RT5677_SPI)
+> int rt5677_spi_read(u32 addr, void *rxbuf, size_t len);
 
-On Thu, 2020-01-02 at 13:38 +0100, Thierry Reding wrote:
-> On Mon, Dec 30, 2019 at 01:52:09AM +0100, Marcel Ziswiler wrote:
-> > Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the
-> > tegra20
-> > SoC struct where it erroneously got added by commit adb2653b3d2e
-> > ("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
-> > This fixes the AFI_PEX2_CTRL reg offset being uninitialised
-> > subsequently failing to bring up the third PCIe port.
-> > 
-> > Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
-> > 
-> > ---
-> > 
-> >  drivers/pci/controller/pci-tegra.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Hi Marcel,
-> 
-> the recipient list looks somewhat odd. Mailing lists typically go
-> into
-> the Cc: line and subsystem maintainers into the To: line. That way
-> you
-> increase chances of people's filters catching important emails.
+Right, this fixed the problem.
 
-I'm using U-Boot's patman with the same LKML configuration since years
-and nobody ever complained. I adjusted this now, thanks!
+> in theory if SPI is not enabled the fallback static inlines would always
+> be selected?
+>
+> Arnd, if you can share the .config that exposes this problem it'd be nice
 
-> You may also want to fix up the subject line to use the more standard
-> "PCI: tegra: " prefix. Also, maybe capitalize "fix" -> "Fix" to match
-> standard formatting rules for commit messages. In the subject and the
-> commit message, also, please spell "tegra20" and "tegra30" as
-> "Tegra20"
-> and "Tegra30", which can help when searching logs.
+I just tried it again and it seems that the issue was already fixed by
+commit fb3194413d1e ("ASoC: rt5677: Fix build error without CONFIG_SPI"),
+which had not been merged by the time I created my patch as an
+alternative workaround.
 
-While this whole capitalisation is utterly stupid and I remember in the
-old days we kinda agreed to just lower case (don't know when/why this
-suddenly changed) but this anyway should not matter if doing proper
-case insensitive searching (;-p). Anyway, I will also adhere to this in
-a v2, thanks!
-
-> With the above fixed, this looks good, so:
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-
-Thanks, Thierry.
-
-Cheers
-
-Marcel
-
-> > diff --git a/drivers/pci/controller/pci-tegra.c
-> > b/drivers/pci/controller/pci-tegra.c
-> > index 090b632965e2..ac93f5a0398e 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc
-> > tegra20_pcie = {
-> >  	.num_ports = 2,
-> >  	.ports = tegra20_pcie_ports,
-> >  	.msi_base_shift = 0,
-> > -	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > @@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc
-> > tegra30_pcie = {
-> >  	.num_ports = 3,
-> >  	.ports = tegra30_pcie_ports,
-> >  	.msi_base_shift = 8,
-> > +	.afi_pex2_ctrl = 0x128,
-> >  	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
-> >  	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
-> >  	.pads_refclk_cfg0 = 0xfa5cfa5c,
-> > -- 
-> > 2.24.1
-
+      Arnd
