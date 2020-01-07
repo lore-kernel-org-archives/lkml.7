@@ -2,116 +2,137 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D30C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0087CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92222073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlO9sELl"
+	by mail.kernel.org (Postfix) with ESMTP id CBE7B2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578389839;
+	bh=wfg56eQGQ83BBYfNqeCSpdlz8yZ4piJfxj1MitQPnqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ks9EtulVrjuRKshXU7WB0xxcfJRM8n6hzwywq7NDhxcBaj6XYqoVX1qSh8C7VvNJH
+	 24GEI1JsE+Ld9pV4c6qH+dsBvd7J3Z3Ec98guqvdw9INVDnvjW/11KZpa+2YNFwVsl
+	 Jc/rspsY4c/wgIHVJ8L7ym3SHm5LijbPpaljgwKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgAGJhQ (ORCPT
+        id S1727757AbgAGJhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:37:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36255 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGJhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:37:15 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r19so53992464ljg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:37:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EjaL6TQQ67z3Hiza8RIJBFEWpIcxuINQkeVUEw4p0bg=;
-        b=TlO9sELlXVwO6vHRNSdRj0yMgj7w5fcPcrhI59kz1i5xLmAPlByZzg6ceNKc51aFD+
-         z/ouDTFq9LN+RS6pHBrLleeFSV7kRH63Lqxr+sI7XG6VAeejnpmn3nxdPDv4qr5jfNtj
-         xNMAZVGIk56yodRwLq+KV1Ug7pVQIAG9DqD7F5AEM8NR+u1tdqp50WhSNyBxxPExIWt3
-         lBAGD5mSE5KkTla33goZBBg9B48WcRu95LEtmO6m/HMyHoVrsTXsfDzlKabFaSJ4+BaH
-         9dKIj+sF58tbGXkIgJPiMDbZ38NISl2YLtQdl1pn0HasmP0uM0FAEVd28rvFEYbkkysI
-         tzCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EjaL6TQQ67z3Hiza8RIJBFEWpIcxuINQkeVUEw4p0bg=;
-        b=ALZ37yxWDrH8HesqX4mLpQzq2z0hBatiwtAEWBvYwLiJV3RMxUGkfGQO5KKG6zT+qe
-         ZscEes8gy9LMFQpbjNwYtsHBEuD7zd15FtCfF+1TnYtD2DgojVKpKxd38hQOijjUrFei
-         CporlCPirG3h8g7jNfNV5bzOb8U0hfTn2jWh1xY/9q9GYYJwst+hEJsfsAb0moGUV3ER
-         LKS+udueI25fT8uCauonXE2jcctwCl9bc8900eC/O6hWVkqkogG4xQ4I0+3QsMf3FMas
-         CVNLD/vyE+HDOhHMqZia1wtKMYjBlFr187njk2nRP5c/p1ufUvsR8hgnB/Eyun4A/Jv0
-         IcWQ==
-X-Gm-Message-State: APjAAAWfkilWhg0FWm76Wnx9AlcQK8DrfApzTHMOuQsKYhwsyiHOlOqb
-        3BJK/mtq7kcXbcgz+GJo09Y0EJpw43Sfd9J0fB7Zaw==
-X-Google-Smtp-Source: APXvYqzB2j28WO/M2d32CA7lzxO2yvIBzwHpXUuZ9BN186aaxvzkAOxXfE5Y252VvGFkaL9F8nV8CDYVZ4plw7vK3w0=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr60204347ljh.42.1578389833544;
- Tue, 07 Jan 2020 01:37:13 -0800 (PST)
+        Tue, 7 Jan 2020 04:37:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgAGJhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:37:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B5962080A;
+        Tue,  7 Jan 2020 09:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578389838;
+        bh=wfg56eQGQ83BBYfNqeCSpdlz8yZ4piJfxj1MitQPnqg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C6DUrvEvwCgONeTEnJawdLcayKuJrqAoWblfiSpiqXBHH9BsTDvhbmnGC+C6Z/L4U
+         MCYoravqD2Wmd/f+kah0xufpNXZMmyclpazdHpBos9rWgI+DgeFFtubBJyPqK1cBH8
+         705/XpX3WavYf/xu/eFA9rZ9DIqaKkOjFOOtXaKo=
+Date:   Tue, 7 Jan 2020 10:37:15 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lucas Stach <dev@lynxeye.de>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: tegra: fix SDR50 tuning override
+Message-ID: <20200107093715.GB1028311@kroah.com>
+References: <245d569e4c258063dbd78bd30c7027638b30f059.1577960737.git.mirq-linux@rere.qmqm.pl>
+ <20200106120718.GA1955714@ulmo>
+ <20200106122745.GA3414443@kroah.com>
+ <20200106133703.GE1955714@ulmo>
 MIME-Version: 1.0
-References: <20191218132605.10594-1-baijiaju1990@gmail.com>
-In-Reply-To: <20191218132605.10594-1-baijiaju1990@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 10:37:02 +0100
-Message-ID: <CACRpkdY4JsvOsjQvB=hb=QPV=bLXkC3ekmPUXFiPMnj1NK-Jtg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context
- bugs in grgpio_irq_map/unmap()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Andreas Larsson <andreas@gaisler.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200106133703.GE1955714@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 2:26 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+On Mon, Jan 06, 2020 at 02:37:03PM +0100, Thierry Reding wrote:
+> On Mon, Jan 06, 2020 at 01:27:45PM +0100, Greg Kroah-Hartman wrote:
+> > On Mon, Jan 06, 2020 at 01:07:18PM +0100, Thierry Reding wrote:
+> > > On Thu, Jan 02, 2020 at 11:30:50AM +0100, Michał Mirosław wrote:
+> > > > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
+> > > > broke SDR50 tuning override. Use correct NVQUIRK_ name.
+> > > > 
+> > > > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
+> > > > Depends-on: 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is present")
+> > > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > > > ---
+> > > >  drivers/mmc/host/sdhci-tegra.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > Oh my... good catch!
+> > > 
+> > > Reviewed-by: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > I also ran this through our internal test system and all tests pass, so
+> > > also:
+> > > 
+> > > Tested-by: Thierry Reding <treding@nvidia.com>
+> > > 
+> > > I'm not sure if that "Depends-on:" tag is anything that's recognized
+> > > anywhere. It might be better to turn that into an additional "Fixes:"
+> > > line. Adding Greg to see if he has a standard way of dealing with this
+> > > kind of dependency.
+> > > 
+> > > Greg, what's your preferred way to handle these situations? I think the
+> > > intention here was to describe that the original error was introduced by
+> > > commit 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes"), but then commit
+> > > 4f6aa3264af4 ("mmc: tegra: Only advertise UHS modes if IO regulator is
+> > > present") moved that code around, so this patch here will only be back-
+> > > portable until the latter commit, but should be backported until the
+> > > former.
+> > 
+> > The stable kernel rules document says how to handle this, but the
+> > "depends on" commit id in the comment to the right of the stable@k.o cc:
+> > line in the changelog area.
+> 
+> That only mentions "static" prerequisites needed by the patch, but what
+> if the prerequisites change depending on version?
+> 
+> Could I do something like this:
+> 
+> 	Cc: <stable@vger.kernel.org> # 4.4.x: abcdef: ...
+> 	Cc: <stable@vger.kernel.org> # 4.9.x: bcdefa: ...
+> 	Cc: <stable@vger.kernel.org>
 
-> The driver may sleep while holding a spinlock.
-> The function call path (from bottom to top) in Linux 4.19 is:
->
-> drivers/gpio/gpio-grgpio.c, 261:
->         request_irq in grgpio_irq_map
-> drivers/gpio/gpio-grgpio.c, 255:
->         _raw_spin_lock_irqsave in grgpio_irq_map
->
-> drivers/gpio/gpio-grgpio.c, 318:
->         free_irq in grgpio_irq_unmap
-> drivers/gpio/gpio-grgpio.c, 299:
->         _raw_spin_lock_irqsave in grgpio_irq_unmap
->
-> request_irq() and free_irq() can sleep at runtime.
->
-> To fix these bugs, request_irq() and free_irq() are called without
-> holding the spinlock.
->
-> These bugs are found by a static analysis tool STCheck written by myself.
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Yes.
 
-I suppose this is correct, so patch applied.
+> Would that mean that the patch is selected for all stable releases
+> (because of the last line with no version prerequisite) but when applied
+> for stable-4.4 the abcdef patch gets pulled in and for stable-4.9 the
+> bcdefa dependency is applied before the patch?
 
-However there is a deeper problem, this code was added by Andreas
-Larsson in 2013 and at the time this was a hacky way to deal with
-an interrupt that is actually hierarchical.
+Yes.
 
-Since 2013 we have gained:
-- Hierarchical interrupt controllers
-- Hierarchical interrupt chip helpers in gpiolib
+> I suppose this is perhaps a bit of an exotic case, but it might be good
+> to document it specifically because it might be fairly rare. I can draft
+> a change if you think this is useful to add.
 
-So this code really needs to be modernized using a hierarchical
-irqchip.
+I thought this was already in there, as others have done it in the past.
 
-See for example commit:
-aa7d618ac65f ("gpio: ixp4xx: Convert to hierarchical GPIOLIB_IRQCHIP")
-for an example.
+It's a _very_ exotic case, I wouldn't worry about it, just document it
+like this, and if I have problems applying the patches to stable I'll be
+sure to let you know and you can always tell me then.  That's usually
+the easiest thing to do anyway :)
 
-Who is using grgpio these days and could work on fixing this up?
+thanks,
 
-Yours,
-Linus Walleij
+greg k-h
