@@ -2,318 +2,145 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E013C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEAAC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF342081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430812;
-	bh=3PtaTiUodMcPPffVP6nAw3FgU0zf85ORA6+K+x6Twqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrnPYO3NWH5I+vN0UnP2dKlaZkPnVzu2rE+O2MERxuIiQM2lurqaUoB4dPOICURTo
-	 Gk9TmP7ESippGXC1mCcFQ4rTKgBBzupMFnYOdvK/NnVlhrjcbTxmbNPscEhZjQJRu8
-	 aScSGytaZwD0PKTVd6UVbCAZKzhuzHWUiZqpPFLw=
+	by mail.kernel.org (Postfix) with ESMTP id 898BD2187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:00:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Lvr3Drg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgAGVAK (ORCPT
+        id S1727338AbgAGVAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727798AbgAGVAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:00:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A18214D8;
-        Tue,  7 Jan 2020 21:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430807;
-        bh=3PtaTiUodMcPPffVP6nAw3FgU0zf85ORA6+K+x6Twqc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DChyecJJ2XYSgyZRgYQFeJcsuzffKhEYooivwgEoe1F8CE7FjRs0SLWr0wphAqNhd
-         lSXR6uZQk4U+otk8tx8n9msM3H6dWGYH+q+WQno8MztQOr41slZm9u95N3UmLp7szZ
-         XHPxDWGMYDVgSvvTG3vS3yT995Xy3CxrROUTmUCM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 104/191] bpf: Fix precision tracking for unbounded scalars
-Date:   Tue,  7 Jan 2020 21:53:44 +0100
-Message-Id: <20200107205338.558010379@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-References: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jan 2020 16:00:15 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4752 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbgAGVAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:11 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e14f1260000>; Tue, 07 Jan 2020 12:59:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 13:00:06 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 Jan 2020 13:00:06 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 21:00:05 +0000
+Subject: Re: [PATCH] mm: pagewalk: fix unused variable warning
+To:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Price <steven.price@arm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Christian Borntraeger" <borntraeger@de.ibm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, "Ingo Molnar" <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200107204607.1533842-1-arnd@arndb.de>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <06c40b1a-7843-032e-0fdd-595a3218a93b@nvidia.com>
+Date:   Tue, 7 Jan 2020 13:00:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107204607.1533842-1-arnd@arndb.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578430758; bh=2y9SbDifCqydLsranHq2MGk1cgxqovEofk7PktM8JC4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Lvr3Drg7yMYsKKJHWyrxpA58jVSoQ31IKCrCRfMgYqWis1QhgtabJ7AUQlW/eaBMF
+         OAp4OrqBevGIRXv4cuuOmJz5B59a852m5k9DK5xvQhpRdT4jq7eIEobAcwExoT+tcS
+         /dlqYVNYJw9MnY+XTvfBwerIuAoEKkDVmpeyjRsfvgpzQyodXITiLdyF2vUBuU89vW
+         IyrpqSlhCbAlC7uqSAY36+8sHP4iq1Z6PaBrP9/gDO8IBlszoWbTpNSEMENRn9ziso
+         /blWeUywiNoQBaMJrg4E7Ugn3k0SxE3D5VsWFauBVq4PI9qMlEIkcdyguobm3f+O0f
+         FK4qpE5qnvDHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+On 1/7/20 12:45 PM, Arnd Bergmann wrote:
+> One of the pagewalk patches introduced a harmless warning:
+> 
+> mm/hmm.c: In function 'hmm_vma_walk_pud':
+> mm/hmm.c:478:9: error: unused variable 'pmdp' [-Werror=unused-variable]
+>   pmd_t *pmdp;
+>          ^~~~
+> mm/hmm.c:477:30: error: unused variable 'next' [-Werror=unused-variable]
+>   unsigned long addr = start, next;
+>                               ^~~~
+> 
+> Remove both of the now-unused variables.
+> 
+> Fixes: cb4d03d5fb4c ("mm: pagewalk: add p4d_entry() and pgd_entry()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  mm/hmm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
 
-commit f54c7898ed1c3c9331376c0337a5049c38f66497 upstream.
-
-Anatoly has been fuzzing with kBdysch harness and reported a hang in one
-of the outcomes. Upon closer analysis, it turns out that precise scalar
-value tracking is missing a few precision markings for unknown scalars:
-
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (b7) r0 = 0
-  1: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  1: (35) if r0 >= 0xf72e goto pc+0
-  --> only follow fallthrough
-  2: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  2: (35) if r0 >= 0x80fe0000 goto pc+0
-  --> only follow fallthrough
-  3: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  3: (14) w0 -= -536870912
-  4: R0_w=invP536870912 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  4: (0f) r1 += r0
-  5: R0_w=invP536870912 R1_w=inv(id=0) R10=fp0
-  5: (55) if r1 != 0x104c1500 goto pc+0
-  --> push other branch for later analysis
-  R0_w=invP536870912 R1_w=inv273421568 R10=fp0
-  6: R0_w=invP536870912 R1_w=inv273421568 R10=fp0
-  6: (b7) r0 = 0
-  7: R0=invP0 R1=inv273421568 R10=fp0
-  7: (76) if w1 s>= 0xffffff00 goto pc+3
-  --> only follow goto
-  11: R0=invP0 R1=inv273421568 R10=fp0
-  11: (95) exit
-  6: R0_w=invP536870912 R1_w=inv(id=0) R10=fp0
-  6: (b7) r0 = 0
-  propagating r0
-  7: safe
-  processed 11 insns [...]
-
-In the analysis of the second path coming after the successful exit above,
-the path is being pruned at line 7. Pruning analysis found that both r0 are
-precise P0 and both R1 are non-precise scalars and given prior path with
-R1 as non-precise scalar succeeded, this one is therefore safe as well.
-
-However, problem is that given condition at insn 7 in the first run, we only
-followed goto and didn't push the other branch for later analysis, we've
-never walked the few insns in there and therefore dead-code sanitation
-rewrites it as goto pc-1, causing the hang depending on the skb address
-hitting these conditions. The issue is that R1 should have been marked as
-precise as well such that pruning enforces range check and conluded that new
-R1 is not in range of old R1. In insn 4, we mark R1 (skb) as unknown scalar
-via __mark_reg_unbounded() but not mark_reg_unbounded() and therefore
-regs->precise remains as false.
-
-Back in b5dc0163d8fd ("bpf: precise scalar_value tracking"), this was not
-the case since marking out of __mark_reg_unbounded() had this covered as well.
-Once in both are set as precise in 4 as they should have been, we conclude
-that given R1 was in prior fall-through path 0x104c1500 and now is completely
-unknown, the check at insn 7 concludes that we need to continue walking.
-Analysis after the fix:
-
-  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
-  0: (b7) r0 = 0
-  1: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  1: (35) if r0 >= 0xf72e goto pc+0
-  2: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  2: (35) if r0 >= 0x80fe0000 goto pc+0
-  3: R0_w=invP0 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  3: (14) w0 -= -536870912
-  4: R0_w=invP536870912 R1=ctx(id=0,off=0,imm=0) R10=fp0
-  4: (0f) r1 += r0
-  5: R0_w=invP536870912 R1_w=invP(id=0) R10=fp0
-  5: (55) if r1 != 0x104c1500 goto pc+0
-  R0_w=invP536870912 R1_w=invP273421568 R10=fp0
-  6: R0_w=invP536870912 R1_w=invP273421568 R10=fp0
-  6: (b7) r0 = 0
-  7: R0=invP0 R1=invP273421568 R10=fp0
-  7: (76) if w1 s>= 0xffffff00 goto pc+3
-  11: R0=invP0 R1=invP273421568 R10=fp0
-  11: (95) exit
-  6: R0_w=invP536870912 R1_w=invP(id=0) R10=fp0
-  6: (b7) r0 = 0
-  7: R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  7: (76) if w1 s>= 0xffffff00 goto pc+3
-  R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  8: R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  8: (a5) if r0 < 0x2007002a goto pc+0
-  9: R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  9: (57) r0 &= -16316416
-  10: R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  10: (a6) if w0 < 0x1201 goto pc+0
-  11: R0_w=invP0 R1_w=invP(id=0) R10=fp0
-  11: (95) exit
-  11: R0=invP0 R1=invP(id=0) R10=fp0
-  11: (95) exit
-  processed 16 insns [...]
-
-Fixes: 6754172c208d ("bpf: fix precision tracking in presence of bpf2bpf calls")
-Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191222223740.25297-1-daniel@iogearbox.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/bpf/verifier.c |   43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
-
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -852,7 +852,8 @@ static const int caller_saved[CALLER_SAV
- 	BPF_REG_0, BPF_REG_1, BPF_REG_2, BPF_REG_3, BPF_REG_4, BPF_REG_5
- };
- 
--static void __mark_reg_not_init(struct bpf_reg_state *reg);
-+static void __mark_reg_not_init(const struct bpf_verifier_env *env,
-+				struct bpf_reg_state *reg);
- 
- /* Mark the unknown part of a register (variable offset or scalar value) as
-  * known to have the value @imm.
-@@ -890,7 +891,7 @@ static void mark_reg_known_zero(struct b
- 		verbose(env, "mark_reg_known_zero(regs, %u)\n", regno);
- 		/* Something bad happened, let's kill all regs */
- 		for (regno = 0; regno < MAX_BPF_REG; regno++)
--			__mark_reg_not_init(regs + regno);
-+			__mark_reg_not_init(env, regs + regno);
- 		return;
- 	}
- 	__mark_reg_known_zero(regs + regno);
-@@ -999,7 +1000,8 @@ static void __mark_reg_unbounded(struct
- }
- 
- /* Mark a register as having a completely unknown (scalar) value. */
--static void __mark_reg_unknown(struct bpf_reg_state *reg)
-+static void __mark_reg_unknown(const struct bpf_verifier_env *env,
-+			       struct bpf_reg_state *reg)
- {
- 	/*
- 	 * Clear type, id, off, and union(map_ptr, range) and
-@@ -1009,6 +1011,8 @@ static void __mark_reg_unknown(struct bp
- 	reg->type = SCALAR_VALUE;
- 	reg->var_off = tnum_unknown;
- 	reg->frameno = 0;
-+	reg->precise = env->subprog_cnt > 1 || !env->allow_ptr_leaks ?
-+		       true : false;
- 	__mark_reg_unbounded(reg);
- }
- 
-@@ -1019,19 +1023,16 @@ static void mark_reg_unknown(struct bpf_
- 		verbose(env, "mark_reg_unknown(regs, %u)\n", regno);
- 		/* Something bad happened, let's kill all regs except FP */
- 		for (regno = 0; regno < BPF_REG_FP; regno++)
--			__mark_reg_not_init(regs + regno);
-+			__mark_reg_not_init(env, regs + regno);
- 		return;
- 	}
--	regs += regno;
--	__mark_reg_unknown(regs);
--	/* constant backtracking is enabled for root without bpf2bpf calls */
--	regs->precise = env->subprog_cnt > 1 || !env->allow_ptr_leaks ?
--			true : false;
-+	__mark_reg_unknown(env, regs + regno);
- }
- 
--static void __mark_reg_not_init(struct bpf_reg_state *reg)
-+static void __mark_reg_not_init(const struct bpf_verifier_env *env,
-+				struct bpf_reg_state *reg)
- {
--	__mark_reg_unknown(reg);
-+	__mark_reg_unknown(env, reg);
- 	reg->type = NOT_INIT;
- }
- 
-@@ -1042,10 +1043,10 @@ static void mark_reg_not_init(struct bpf
- 		verbose(env, "mark_reg_not_init(regs, %u)\n", regno);
- 		/* Something bad happened, let's kill all regs except FP */
- 		for (regno = 0; regno < BPF_REG_FP; regno++)
--			__mark_reg_not_init(regs + regno);
-+			__mark_reg_not_init(env, regs + regno);
- 		return;
- 	}
--	__mark_reg_not_init(regs + regno);
-+	__mark_reg_not_init(env, regs + regno);
- }
- 
- #define DEF_NOT_SUBREG	(0)
-@@ -3066,7 +3067,7 @@ static int check_stack_boundary(struct b
- 		}
- 		if (state->stack[spi].slot_type[0] == STACK_SPILL &&
- 		    state->stack[spi].spilled_ptr.type == SCALAR_VALUE) {
--			__mark_reg_unknown(&state->stack[spi].spilled_ptr);
-+			__mark_reg_unknown(env, &state->stack[spi].spilled_ptr);
- 			for (j = 0; j < BPF_REG_SIZE; j++)
- 				state->stack[spi].slot_type[j] = STACK_MISC;
- 			goto mark;
-@@ -3706,7 +3707,7 @@ static void __clear_all_pkt_pointers(str
- 		if (!reg)
- 			continue;
- 		if (reg_is_pkt_pointer_any(reg))
--			__mark_reg_unknown(reg);
-+			__mark_reg_unknown(env, reg);
- 	}
- }
- 
-@@ -3734,7 +3735,7 @@ static void release_reg_references(struc
- 		if (!reg)
- 			continue;
- 		if (reg->ref_obj_id == ref_obj_id)
--			__mark_reg_unknown(reg);
-+			__mark_reg_unknown(env, reg);
- 	}
- }
- 
-@@ -4357,7 +4358,7 @@ static int adjust_ptr_min_max_vals(struc
- 		/* Taint dst register if offset had invalid bounds derived from
- 		 * e.g. dead branches.
- 		 */
--		__mark_reg_unknown(dst_reg);
-+		__mark_reg_unknown(env, dst_reg);
- 		return 0;
- 	}
- 
-@@ -4609,13 +4610,13 @@ static int adjust_scalar_min_max_vals(st
- 		/* Taint dst register if offset had invalid bounds derived from
- 		 * e.g. dead branches.
- 		 */
--		__mark_reg_unknown(dst_reg);
-+		__mark_reg_unknown(env, dst_reg);
- 		return 0;
- 	}
- 
- 	if (!src_known &&
- 	    opcode != BPF_ADD && opcode != BPF_SUB && opcode != BPF_AND) {
--		__mark_reg_unknown(dst_reg);
-+		__mark_reg_unknown(env, dst_reg);
- 		return 0;
- 	}
- 
-@@ -6746,7 +6747,7 @@ static void clean_func_state(struct bpf_
- 			/* since the register is unused, clear its state
- 			 * to make further comparison simpler
- 			 */
--			__mark_reg_not_init(&st->regs[i]);
-+			__mark_reg_not_init(env, &st->regs[i]);
- 	}
- 
- 	for (i = 0; i < st->allocated_stack / BPF_REG_SIZE; i++) {
-@@ -6754,7 +6755,7 @@ static void clean_func_state(struct bpf_
- 		/* liveness must not touch this stack slot anymore */
- 		st->stack[i].spilled_ptr.live |= REG_LIVE_DONE;
- 		if (!(live & REG_LIVE_READ)) {
--			__mark_reg_not_init(&st->stack[i].spilled_ptr);
-+			__mark_reg_not_init(env, &st->stack[i].spilled_ptr);
- 			for (j = 0; j < BPF_REG_SIZE; j++)
- 				st->stack[i].slot_type[j] = STACK_INVALID;
- 		}
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
 
 
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index a71295e99968..72e5a6d9a417 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -474,8 +474,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>  {
+>  	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+>  	struct hmm_range *range = hmm_vma_walk->range;
+> -	unsigned long addr = start, next;
+> -	pmd_t *pmdp;
+> +	unsigned long addr = start;
+>  	pud_t pud;
+>  	int ret = 0;
+>  	spinlock_t *ptl = pud_trans_huge_lock(pudp, walk->vma);
+> 
