@@ -2,92 +2,113 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E114AC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E80C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEEF207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4254B2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bgo00NBN"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fMBUW/c+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgAGKdH (ORCPT
+        id S1727868AbgAGKd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:33:07 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46264 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgAGKdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:33:07 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m26so51695928ljc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:33:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xC5eckw6LeHTQNvUicysdWSevFLO+gQO55vJ3inC8GY=;
-        b=bgo00NBNQ7QeyKuZRI5207V4LPSEALLJbm+Qn8vuLgkKgv9K+TOeYbAKoo0prDns7G
-         Jo+GtUnSf8YRyZD439tshC0l3HXLYNCzZaABHf4/caPDYRbEBVMGZxBbYdK8dkfJ3nVw
-         VrP0iudXFKJQRttAp1ZGziwLfB7y0if/JUc6vRi01i5kcyNjW6GRIhwsU0ATWv6YooWL
-         htma5HJh7LVrwR9jQnh/+I1KnCsSmRH310YNZ8sJSZX9C0nKa97voMLY9cwlEej0YtwC
-         r7QkfHmPzfG4HBCqluj4LpxzlkZgrteCAf3zUUEDWFuw5wn0bQ+yld5e/FpGL/NUsdzH
-         RBAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xC5eckw6LeHTQNvUicysdWSevFLO+gQO55vJ3inC8GY=;
-        b=jCfvktpLmjRaK1Q3/Nd4HHOaxu1IxLTHiR8X0MOBuJCo1eyiQNQjuXqQlY2gIkgGvU
-         LvEwuXPpNAiLBAOdJ6IL3sj/VDOHkCQwp78rSMor0ADt6vWj0+fqAnBMJOUitvbm+Z4w
-         D0nVXysWbZvQjKd6a1zO6FrD3Rn+/3/OBkRPw09Glm/cbk88XrnjmDOpDG64ZyWtYcyF
-         gqzmRjYURcga1eJkyP0iMs/k+pN0Okb0D9SHxdEQWBfkBUNum470hNbXEB8WU4eROtoh
-         2Pkbcv1ssJcVjjdTHUyXp0ioP/46n1MLshRTdknMhOLLgBtCqR5Vj4UWEUepJJlePyHH
-         JoAw==
-X-Gm-Message-State: APjAAAXnwrqvEdr9aYP13w27k1NPraYJMoCzM01M5uy+Qh+fkxzCDkwH
-        7NYxYrftFOTtwgUlB+TNtog9z9q+ppfUVE9vItD/Qg==
-X-Google-Smtp-Source: APXvYqzCDMEvzHlBYQDhP4F32AbSocRmoqo2rsOS+sKUN52oJaPqCY7ScGRgE9GJ3dyK1pDScgA8Sz7BOyh2aT/z3qg=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr64129889ljm.218.1578393185295;
- Tue, 07 Jan 2020 02:33:05 -0800 (PST)
+        Tue, 7 Jan 2020 05:33:26 -0500
+Received: from mail-eopbgr40106.outbound.protection.outlook.com ([40.107.4.106]:32154
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727177AbgAGKd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 05:33:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n5Dir4ECTNYNd+kujy5rZ8L+yLBRuztFRMDBcL5sINqe3HYSsXR338nSJh08bgloS7Em2/jcdfGkbOBaAWf05E+9EY1QLQjOyHXCC+hmOz6UUupfIhZNiuS82mTyREhtwidafSWCl5gQuqMSgOrr391Y96mlIDvfH/Fsl4+R3x7amgAEWQPZATJJrksw7VCxPa8HAJ2YwtN7+UWeLWT5BOPog0loCFWrz9qZuzC7rYPtz/N9Rj6o5vHeU+uR7l5izkqNyhpDKK+Do6Y0iHhkA6iKKXzu0N8ohXVdYL5HRukLb6TfP4PfS8X5NF8JlzeEB9Vw+tSUlNVwydkQrZM6GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gh9naxGfGRaafdhO7qqgZu5oHQRRdfIPBSmmzrPDFJw=;
+ b=BFK7wtx8rQna1tK8RVPGHdR2qsoYP7K3zaO1uPiABYhccrfOC1DjTeW/hVmP9m8PKjY9zt3OKNQXLzhhwbbUU7MthBYK7Wh72xx0nMsaTekr9T/9Dk3vGoL6+gj91aubIgTOJuTddI0OO65siO0OM3YlYvkvLvtwbRR8ug8Ycq91zVI/eQdKBeB11UsvKFkGb3YXGYPeKLe2rAiuFvK0nqhc0mwWOSqGmavaC9jsBtDpHtYCc2OED57ZNR2p7cwaS2n8XgEhI5/5l7X/gDLIXCeFqPYSGudReiX1lsVX84pRE/6eydXC0YXByr7W/clSqJs3uh71blW2BD7TBNVHsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gh9naxGfGRaafdhO7qqgZu5oHQRRdfIPBSmmzrPDFJw=;
+ b=fMBUW/c+qCo5dBImR/GuuaVbBVwZ/FrXyG+RjiO/eEFt96zH/CDuABfUT2EwdxQs4mBK1FlnQtSo0OBRG0Y1GAonpMp8jbHZPS5oOVX5j9uYx7zC7YrCr6spPV+2PJqYv6b7y8pxFI2Cm8wa04tcNBc4nLbmYpquZhkbWrWHmHU=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3435.eurprd02.prod.outlook.com (52.134.65.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Tue, 7 Jan 2020 10:33:22 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2602.015; Tue, 7 Jan 2020
+ 10:33:21 +0000
+Received: from [192.168.13.3] (213.112.138.4) by HE1PR06CA0146.eurprd06.prod.outlook.com (2603:10a6:7:16::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Tue, 7 Jan 2020 10:33:21 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Luca Ceresoli <luca@lucaceresoli.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/26] docs: i2c: call it "I2C" consistently
+Thread-Topic: [PATCH 04/26] docs: i2c: call it "I2C" consistently
+Thread-Index: AQHVxBqSvRIltpUk6kON4I7IxH2PsaffA4yA
+Date:   Tue, 7 Jan 2020 10:33:21 +0000
+Message-ID: <d154a959-a7bb-9d20-501d-757c566e3b5f@axentia.se>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+ <20200105225012.11701-1-luca@lucaceresoli.net>
+ <20200105225012.11701-4-luca@lucaceresoli.net>
+In-Reply-To: <20200105225012.11701-4-luca@lucaceresoli.net>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.4]
+x-clientproxiedby: HE1PR06CA0146.eurprd06.prod.outlook.com
+ (2603:10a6:7:16::33) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f1592c62-7a12-42fe-f463-08d7935d04b6
+x-ms-traffictypediagnostic: DB3PR0202MB3435:
+x-microsoft-antispam-prvs: <DB3PR0202MB3435F6425C24B64E9A3C7D56BC3F0@DB3PR0202MB3435.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 027578BB13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(39830400003)(366004)(189003)(199004)(52116002)(81166006)(53546011)(54906003)(81156014)(31686004)(36756003)(558084003)(110136005)(16526019)(2616005)(956004)(6486002)(8676002)(8936002)(31696002)(316002)(2906002)(186003)(5660300002)(86362001)(71200400001)(66476007)(66946007)(16576012)(66446008)(26005)(4326008)(508600001)(66556008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3435;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HSSchn40IgOh25VRvKlFwd/Ua0Thb9N742vNDVVhz7+1x9wmlkPxQSMVcTYNctlcdexzjxEuVCXEslcoD7DxtSvQiXSeL3kh35bR9lIBJPHiZdVJmhWX0rxmxi+3SluQpvo+69m6t8iC2nMeWDLAE6pcNLfAfbQ8FnnCWAgi7qDnXVC366zXSXmkxsgNTOmQSVdr8YVuycPXeWcPLA3ME3RezJc+3AO7vlTsv+/po8CnQCUZChT8qv7yu1eCIv4R/WlH269pDn0NZbGZTaPAeYGW5rkyEjKiVPM6NaaFgG6+sH6Y/iSAkFanuVSD5MfwojJxaxL5gIHfVQSSV+9YIRvmhrZzNqGC+Q+rVQWOi+0CIUBjLNind19IY9E/3R8fKbDe9Tk1K9teIApN5wttnSdc9W7u1lXYqV0OmQnXsMJi4mYQiPEftYzMmTxOM5q+
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A0D506F8311694E98A646E85E05B83D@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191229013059.495767-1-linus.walleij@linaro.org> <20191230102021.GF2628@lahna.fi.intel.com>
-In-Reply-To: <20191230102021.GF2628@lahna.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:32:54 +0100
-Message-ID: <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1592c62-7a12-42fe-f463-08d7935d04b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 10:33:21.8624
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cbACYdRJ5ee16qPupqCseE5G3WNfolCi5ai3kDdVz6KU5DxsMkN+47Nhmo4kHlne
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3435
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> > We need to convert all old gpio irqchips to pass the irqchip
-> > setup along when adding the gpio_chip. For more info see
-> > drivers/gpio/TODO.
-> >
-> > Set up the pin ranges using the new callback.
->
-> Maybe have this one split as a separate patch? Same what we do for
-> Baytrail and Cherryview.
-
-I'm afraid to do that since splitting the semantic ordering was
-something that broke a lot of times already, I was under the
-impression that doing the two things (moving to the callback
-and adding along with the gpio_chip) at the same time was
-the only way to preserve the semantic ordering.
-
-But more than anything I want someone to test it ...
-
-Yours,
-Linus Walleij
+T24gMjAyMC0wMS0wNSAyMzo0OSwgTHVjYSBDZXJlc29saSB3cm90ZToNCj4gVXBwZXJjYXNlICJJ
+MkMiIGlzIHVzZWQgYWxtb3N0IGV2ZXJ5d2hlcmUgaW4gdGhlIGRvY3MsIGJ1dCB0aGUgbG93ZXJj
+YXNlDQo+IHZlcnNpb24gImkyYyIgaXMgdXNlZCBzb21ld2hlcmUuIFVzZSB0aGUgdXBwZXJjYXNl
+IGZvcm0gY29uc2lzdGVudGx5Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTHVjYSBDZXJlc29saSA8
+bHVjYUBsdWNhY2VyZXNvbGkubmV0Pg0KDQpBY2tlZC1ieTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhl
+bnRpYS5zZT4NCg0KQ2hlZXJzLA0KUGV0ZXINCg==
