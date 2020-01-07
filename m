@@ -2,153 +2,128 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F76C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D33FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACE1206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A43C206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QrGRTgNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgAGMJb (ORCPT
+        id S1727950AbgAGMKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:09:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54203 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMJb (ORCPT
+        Tue, 7 Jan 2020 07:10:41 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:54696 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgAGMKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:09:31 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ionfq-00078D-RH; Tue, 07 Jan 2020 13:09:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ionfq-0001sM-8J; Tue, 07 Jan 2020 13:09:26 +0100
-Date:   Tue, 7 Jan 2020 13:09:26 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Message-ID: <20200107120926.cgrxk6b4rchf6i42@pengutronix.de>
-References: <20191230172113.17222-1-krzk@kernel.org>
- <20191230172113.17222-2-krzk@kernel.org>
- <20200107072645.ko247bwhh3ibdu73@pengutronix.de>
- <20200107082539.GA31827@pi3>
- <20200107104234.wq74fska3szrg4ii@pengutronix.de>
- <20200107110359.GA32423@pi3>
- <20200107113354.ggq6zarewq5ip354@pengutronix.de>
- <20200107115429.GA32632@pi3>
+        Tue, 7 Jan 2020 07:10:40 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007C4jgC070313;
+        Tue, 7 Jan 2020 12:10:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=fSKSjlLTPjWUAzNU/T9Nml0/rwLj5FBYEeuVAecNbms=;
+ b=QrGRTgNZh/Q51zDbQ+Ta514KXQS2KfaBVXsHvx6h1K89k6sDwBKV1MHn0kabLGwcXT97
+ RbFwJfrbLVljkf5WqHpb6z3WuixBpldjTmk0IDgOrpN9lHxCE3XDiZNS/ndSWzOimvBl
+ bogBlh8g1J/xDB719aE9qKJdWbijvfvXrtGrIxb8sJftZLmWKrU9g2P2bAy+LQd+Fc/F
+ Z0WCjvO1YaHD0CLTx3vKw06sId+//vUgJskX1VV5cTvDV/kO5QnHI2dlAaZWUG+JYY2c
+ Jg/cCx+Tu9S+xHSSsVY93Q+5ko3rUkvsuOydB6mjWgkig/LVfP6YEyXy1tEqx1RXb4NH bA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xaj4tw7tx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 12:10:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 007C9IGp187178;
+        Tue, 7 Jan 2020 12:10:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xcjvd1cr7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 12:10:23 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 007CAKYA017404;
+        Tue, 7 Jan 2020 12:10:20 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 04:10:19 -0800
+Date:   Tue, 7 Jan 2020 15:10:10 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2] usb: ohci-da8xx: ensure error return on variable
+ error is set
+Message-ID: <20200107121010.GN3911@kadam>
+References: <20200107103035.19481-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107115429.GA32632@pi3>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200107103035.19481-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070100
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Krzysztof,
-
-On Tue, Jan 07, 2020 at 12:54:29PM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Jan 07, 2020 at 12:33:54PM +0100, Uwe Kleine-König wrote:
-> > On Tue, Jan 07, 2020 at 12:03:59PM +0100, Krzysztof Kozlowski wrote:
-> > > On Tue, Jan 07, 2020 at 11:42:34AM +0100, Uwe Kleine-König wrote:
-> > > > > I guess other solution would be to add stubs for few clk functions...
-> > > > > 
-> > > > > > Also HAS_IOMEM is a typical requirement, but I tested with an ARCH=um
-> > > > > > config (which does't have HAS_IOMEM) and they all compile fine.
-> > > > > 
-> > > > > Because of !HAS_IOMEM, since some time ARCH=um does not support
-> > > > > COMPILE_TEST. Therefore HAS_IOMEM dependency is not needed for compile
-> > > > > testing (and for regular build it is selected by ARCH).
-> > > > 
-> > > > Hehe, I didn't notice because for testing I just dropped the "depends on
-> > > > ..." lines in Kconfig instead of adding "|| COMPILE_TEST" :-) Still they
-> > > > compile fine on UML.
-> > > > 
-> > > > Ah, since bc083a64b6c0 ("init/Kconfig: make COMPILE_TEST depend on
-> > > > !UML") == v4.8-rc1~52^2~83 COMPILE_TEST cannot be enabled on UML, but
-> > > > later 1bcbfbfdeb00 ("um: add dummy ioremap and iounmap functions")
-> > > > == v4.13-rc1~8^2~6 UM got a dummy implementation. So maybe we could
-> > > > revert bc083a64b6c0 today? (And if not, a comment about why near the
-> > > > "depends on !UML" in init/Kconfig would be great.)
-> > > > 
-> > > > Orthogonal to that, I wonder if depending on HAS_IOMEM is right even
-> > > > though the compile testers won't notice it missing. Or should HAS_IOMEM
-> > > > be dropped?
-> > > 
-> > > I think yes, it can be dropped, but this would require:
-> > > 1. Fixing any dependencies on HAS_IOMEM, e.g.:
-> > >     WARNING: unmet direct dependencies detected for MFD_SYSCON
-> > >       Depends on [n]: HAS_IOMEM [=n]
-> > >       Selected by [y]:
-> > >       - PHY_DA8XX_USB [=y] && (ARCH_DAVINCI_DA8XX || COMPILE_TEST [=y])
-> > 
-> > I don't understand that warning. What did you modify to trigger that?
-> > Probably related to the big "if HAS_IOMEM" in drivers/mfd/Kconfig?!
+On Tue, Jan 07, 2020 at 10:30:35AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> OK, that's actually from my other patch to illustrate the problem:
-> https://lore.kernel.org/linux-arm-kernel/20200103164710.4829-2-krzk@kernel.org/
+> Currently when an error in da8xx_ohci->oc_gpio occurs it causes an
+> uninitialized error return in variable 'error' to be returned.  Fix
+> this by ensuring the error variable is set to the error value in
+> da8xx_ohci->oc_gpio.
 > 
-> After reverting of bc083a64b6c0, every driver that selects MFD_SYSCON
-> (or some other parts) has to depend on HAS_IOMEM.
-
-OK, understood, thanks.
-
-> > > 2. Checking if all of stubs are implemented (not only IOMEM but maybe
-> > >    DMA as well). Also 1bcbfbfdeb00 brought only few stubs. Still we
-> > >    need devm_ioremap_resource() and others.
-> > 
-> > A problem is that it's unclear (to me at least) what the presence of
-> > HAS_IOMEM actually implies. I thought it's about ioremap + readl +
-> > writel (including their respective variants). Does it really include dma
-> > stuff, too?
-> > 
-> > > Quick test shows mentioned "unmet direct dependencies" and:
-> > >     phy-pxa-usb.c:(.text+0x2f5): undefined reference to `devm_ioremap_resource'
-> > >     dma-iommu.c:(.text+0x179): undefined reference to `dma_pgprot'
-> > 
-> > dma_pgprot seems to depend on HAS_DMA though, not HAS_IOMEM.
-> > 
-> > (Oh, HAS_DMA is defined using "depends on !NO_DMA" + "default y".
-> > NO_DMA has three different definitions. Two of them (in
-> > drivers/crypto/ccree/cc_hw_queue_defs.h and arch/arm/include/asm/dma.h)
-> > unrelated.)
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
 > 
-> Yes, HAS_DMA is the second missing piece for UM.
+> V2: fix typo and grammar in commit message
+> 
+> ---
+>  drivers/usb/host/ohci-da8xx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+> index 38183ac438c6..9cdf787055b7 100644
+> --- a/drivers/usb/host/ohci-da8xx.c
+> +++ b/drivers/usb/host/ohci-da8xx.c
+> @@ -415,8 +415,10 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	da8xx_ohci->oc_gpio = devm_gpiod_get_optional(dev, "oc", GPIOD_IN);
+> -	if (IS_ERR(da8xx_ohci->oc_gpio))
+> +	if (IS_ERR(da8xx_ohci->oc_gpio)) {
+> +		error = PTR_ERR(da8xx_ohci->oc_gpio);
+>  		goto err;
+> +	}
+>  
+>  	if (da8xx_ohci->oc_gpio) {
+>  		oc_irq = gpiod_to_irq(da8xx_ohci->oc_gpio);
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Also uninitialized here.
 
-So something like:
+regards,
+dan carpenter
 
-	# Usermode linux doesn't provide HAS_DMA and HAS_IOMEM.  To not have to
-	# clutter most dependencies with these just exclude UML from compile
-	# testing.
-
-as comment for COMPILE_TEST's depend line should be fine, right?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
