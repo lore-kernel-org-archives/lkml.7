@@ -2,95 +2,80 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCEC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A285FC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672522146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7040A2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578420189;
-	bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n7LqBH+ogqXfyF2hV8DFQ814SaCQqZ5+oikHDTI0wRyzxVixvnCwmSP4Y62jJbKn8
-	 TPD0vy8zFOhOgaPKCZBonSVTEIiyHWe5gHJ+3ooDx2RI3mrnmS2hFrH9dDK1QD8Zd1
-	 PcEYZX+M0Os6EBJmWXKilYxu7+Yr/zJaEnKjUrls=
+	s=default; t=1578420292;
+	bh=hZfs1VmlNn9lkKXWmR1EyNETRDH4pSYS5DmkTwkDhxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v/Fwe9QWLxdl8jnUAQWu4ajIpJUt9nj+E8J2Oc24oAV5d/aPkDJbaHOtEzpyun0ak
+	 3vQBbeKtIyv1pDHPK1zEPb/1TSean7PSjRdfCHJGFgfiWidS1/XWZ5tqS1+pnSTjj1
+	 W627+mymHZwd7g73gm9Vj8Xv3jjZEH5RLnhkRJ9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgAGSDI (ORCPT
+        id S1728519AbgAGSEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:03:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 13:04:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgAGSDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:03:08 -0500
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728365AbgAGSEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:04:51 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F1622146E;
-        Tue,  7 Jan 2020 18:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE092087F;
+        Tue,  7 Jan 2020 18:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578420187;
-        bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e2LzPBNXp3x9Bm5rMIEhqwZU81/LocL4/QqhOxwF/P+YoAWqVZI0jLC5EM8khBdqF
-         MioV+9WAdD3+dUiHdLpMCdx4wAXSTcy0PZCcO8yKcP2J4vJw+juDRuGFP5pNxv3pTQ
-         29KO2sWh0NSf5f3ZXEzDza38dv7g3MSSEJvAMvn8=
-Received: by mail-qt1-f173.google.com with SMTP id n15so502441qtp.5;
-        Tue, 07 Jan 2020 10:03:07 -0800 (PST)
-X-Gm-Message-State: APjAAAURryYFfymvWfxrvVZZkLs41BOLguW2QEjLcRRrUaEm3uUOtIFk
-        5ipif0b1PSO56d0bYgjZGpXOakCNBMreHmOR+Q==
-X-Google-Smtp-Source: APXvYqzYgPt2mmOM92fmtqc1Y7J5YrHICFVpYfLAMISsmbC9T8x4hClE7gReZJC7gNb4Eez9i67VoJZ6iFbj0o1RXfE=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr187365qtp.224.1578420186617;
- Tue, 07 Jan 2020 10:03:06 -0800 (PST)
+        s=default; t=1578420290;
+        bh=hZfs1VmlNn9lkKXWmR1EyNETRDH4pSYS5DmkTwkDhxY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UlCffCUsYQ2ZVM7wp+SaTFw95WWU54wH+IR7BKxznERqzPZ26cJkBFzNycOBVuiMV
+         VKwGyNTfHOQfgCJmGh43Zr2qa0FNrzoEE2U57+scNV34aNbCtoN3lrdG5VT95FdMBa
+         XeYQmAhvA3Vufr2GO1Nf8XX0Kku3IebJ9bmPDiLg=
+Date:   Tue, 7 Jan 2020 18:04:46 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Subject: Re: [PATCH v3] locking/qspinlock: Fix inaccessible URL of MCS lock
+ paper
+Message-ID: <20200107180445.GD32009@willie-the-truck>
+References: <20200107174914.4187-1-longman@redhat.com>
 MIME-Version: 1.0
-References: <20200107130903.14421-1-benjamin.gaignard@st.com>
- <20200107130903.14421-3-benjamin.gaignard@st.com> <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
-In-Reply-To: <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 12:02:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen
- to json-schema
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yannick Fertre <yannick.fertre@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107174914.4187-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 7:38 AM Bastien Nocera <hadess@hadess.net> wrote:
->
-> On Tue, 2020-01-07 at 14:09 +0100, Benjamin Gaignard wrote:
-> > Convert the Goodix binding to DT schema format using json-schema
->
-> I don't have an opinion on the migration itself, but this really should
-> not lose any of the descriptions that were in the old text file.
+On Tue, Jan 07, 2020 at 12:49:14PM -0500, Waiman Long wrote:
+> It turns out that the URL of the MCS lock paper listed in the source
+> code is no longer accessible. I did got question about where the paper
+> was. This patch updates the URL to BZ 206115 which contains a copy of
+> the paper from
+> 
+>   https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  kernel/locking/qspinlock.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 
-To some extent, yes. Any information specific to the device should be.
-Anything generic can be dropped. I see 2 cases that should be kept:
+Thanks!
 
-> > - - reg                       : I2C address of the chip. Should be
-> > 0x5d or 0x14
+Acked-by: Will Deacon <will@kernel.org>
 
-'I2C address of the chip' can be dropped as that's every 'reg'
-property for I2C devices. The addresses can be expressed as
-constraints.
-
-> > - - irq-gpios         : GPIO pin used for IRQ. The driver uses the
-> > -                       interrupt gpio pin as output to reset the
-> > device.
-
-Also useful info.
-
-Rob
+Will
