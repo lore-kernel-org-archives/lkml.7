@@ -2,95 +2,124 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B14C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6062EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C402081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329102081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432090;
+	bh=BwMZc9l3rW61PTP7woOXDslCuxBTnDgf4z7yxxprXNM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DpJyX0+JFDLhDcvqbojTbC+kA5w8kamekOFyxFEC5sM2reMFdP7VOm3Pu4cPQ55Vv
+	 jliZ0zcWdxSEvyShL6knoIlfsrfrbmznfKrTXqSXYuKrWeoFjNubFpjE/zmB5cQqTz
+	 S/8VCTzyK+MySnz4KiM7Y+iyC8+mUyJ4EbAhsy7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgAGVDM (ORCPT
+        id S1729087AbgAGVV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:03:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:33875 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgAGVDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:08 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MK3eI-1j87qh1y5m-00LZCF; Tue, 07 Jan 2020 22:02:57 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Jason Dillaman <dillaman@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rbd: work around -Wuninitialized warning
-Date:   Tue,  7 Jan 2020 22:01:04 +0100
-Message-Id: <20200107210256.2426176-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 16:21:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728178AbgAGVDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2822087F;
+        Tue,  7 Jan 2020 21:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578430996;
+        bh=BwMZc9l3rW61PTP7woOXDslCuxBTnDgf4z7yxxprXNM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X+vHFUmbWPEHMrMGcuq9csmlEZjQPg05Qf4UcnJHGd2NrIYjzPp/07rYOyJVNs2hm
+         d/gsm3W9kfQ10lb8K+/y3AbxPa3AXpS29HDb5fo7HY26JjTzlRkxdmI9hAKI+0YL7X
+         r2HPCBYuhr28b0nkS30BB0z98hV0Q9axIqfAzZco=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Oscar Salvador <OSalvador@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 182/191] mm/sparse.c: mark populate_section_memmap as __meminit
+Date:   Tue,  7 Jan 2020 21:55:02 +0100
+Message-Id: <20200107205342.733693882@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+References: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:qiBbNdWqGEMMIERlxqJELgdKzb8bJCMzjAWQ9HTgak9Ff2vxvog
- ZiKQ150VLDh9JWrAZooVqHelJQp11Bcb1+CNXSqkQDQ5sRKJxbgEOWMtteK73DtHqmRyONM
- XuUfU69io62lViiPJ2aYJR+QXe300SyxvfaTS/q7SZo+/bVQOrCU4ddHNeGOxxBML+IUjtl
- YruDPJn/MY3pY8Cm3Ekbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hziPz/VrV88=:vbym4h2BXvC60iOZqV3c2h
- O1BEGbiDBe0xht86RpkPm2j0b5Aq9nP58yihvmdmaAs52YAMUFSJQN6lDS5neHyMnJ8CwhTyp
- q/rUixeG4V50J54isuCECu+RaMN07YIVtYmZvSEIi7x//EvUSwn6U0Lp2n0nVWL61KTKeUK5w
- bL1Pi3P8Ox+LtG23J3WdbLl6E4SPfOLwY1ikjkvmalIdpPCNR7lAcTG3V69SGee1CyIvLD+47
- k3ByUp5plwat6dkBTeybDsS7BeOlk+ifWhyhS4brik6DBWh9gkd1GdTGLwsW7db43hNj1lnIv
- 0LM7pwxPT0QkX2dHM5R/yhB/YZFNz9Sjrys2YjpseeiESAvU/6bbOJtpakDVhHUODCv+08sN6
- WXkkcXsNc3lBp8AIvhlpjYv2bUyMaLakFP+A+0TP5bvSd1bgdhpJFLxe15QA85rfnVhZI11vk
- wqUOtz3j4YBROukCc3nky2cbvIrab/mS+eiZBdkbPLo6Zau/Z7mZR1ZWu8AOH+ra1mUCN0/MC
- osU6Gm2s6foPtPQsSkeP5Eo7/xVdSfyYQz4eVc2pOCS7IBm+6PYaotTcweBIcKfDoemjlimBj
- JwT1w1u0iW5U/+Cb0PSw2IEkxma7HutNJlAbKqOID4TwiKXfIOlK7umbn/NpWSlTgh8X7H0+U
- upd5CbeWgqxJVNAI5bNOTL4WsTdDmcKUkxS1ezhMi/4WllLaHkV1A/KAZTsa6DIWXLwR6w0fu
- anNIdc9Z35OIyHFmhn/4oEUM93rSg8co0ZrKCI9uXiEJzQU4mPH/ve3QLrQ5Hy5LO+9T3xqOF
- +rOFy+C8Yi7a1h56k44qj5gbp1eBFwMVG33nWa6NciNxm3PYswLJ/eCpea1WdD6UkN76PQn2e
- LkkHj/b+AE4EjXP1YI5g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc -O3 warns about a dummy variable that is passed
-down into rbd_img_fill_nodata without being initialized:
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
-drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
-  fctx->iter = *fctx->pos;
+[ Upstream commit 030eab4f9ffb469344c10a46bc02c5149db0a2a9 ]
 
-Since this is a dummy, I assume the warning is harmless, but
-it's better to initialize it anyway and avoid the warning.
+Building the kernel on s390 with -Og produces the following warning:
 
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+  WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
+  The function populate_section_memmap() references
+  the function __meminit __populate_section_memmap().
+  This is often because populate_section_memmap lacks a __meminit
+  annotation or the annotation of __populate_section_memmap is wrong.
+
+While -Og is not supported, in theory this might still happen with
+another compiler or on another architecture.  So fix this by using the
+correct section annotations.
+
+[iii@linux.ibm.com: v2]
+  Link: http://lkml.kernel.org/r/20191030151639.41486-1-iii@linux.ibm.com
+Link: http://lkml.kernel.org/r/20191028165549.14478-1-iii@linux.ibm.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Oscar Salvador <OSalvador@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/sparse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index 29be02838b67..070edc5983df 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
- 			       u64 off, u64 len)
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..c2c01b6330af 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ #endif
+ 
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-static struct page *populate_section_memmap(unsigned long pfn,
++static struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
  {
- 	struct ceph_file_extent ex = { off, len };
--	union rbd_img_fill_iter dummy;
-+	union rbd_img_fill_iter dummy = {};
- 	struct rbd_img_fill_ctx fctx = {
- 		.pos_type = OBJ_REQUEST_NODATA,
- 		.pos = &dummy,
+ 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+ 	vmemmap_free(start, end, NULL);
+ }
+ #else
+-struct page *populate_section_memmap(unsigned long pfn,
++struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	struct page *page, *ret;
 -- 
-2.20.0
+2.20.1
+
+
 
