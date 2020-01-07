@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92DAC33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7B2C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A3A21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC662081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgAGJea (ORCPT
+        id S1727840AbgAGJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 7 Jan 2020 04:34:30 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33204 "EHLO inva020.nxp.com"
+Received: from inva021.nxp.com ([92.121.34.21]:57420 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbgAGJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726485AbgAGJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 04:34:29 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D91CC1A020C;
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9637200734;
         Tue,  7 Jan 2020 10:34:27 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2651A1A0342;
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2479E200303;
         Tue,  7 Jan 2020 10:34:12 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 364B0402C4;
-        Tue,  7 Jan 2020 16:56:55 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 14F77402D9;
+        Tue,  7 Jan 2020 16:57:05 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -40,42 +40,39 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/5] clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
-Date:   Tue,  7 Jan 2020 16:53:13 +0800
-Message-Id: <1578387197-5750-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 5/5] arm64: defconfig: Enable CONFIG_CLK_IMX8MP by default
+Date:   Tue,  7 Jan 2020 16:53:17 +0800
+Message-Id: <1578387197-5750-5-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578387197-5750-1-git-send-email-Anson.Huang@nxp.com>
+References: <1578387197-5750-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of i.MX SoCs' clock driver use platform driver model,
-and they need to call imx_obtain_fixed_clk_hw() API, so
-imx_obtain_fixed_clk_hw() API should NOT be in .init section.
+Select CONFIG_CLK_IMX8MP by default to support i.MX8MP clock driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-New patch.
+No change.
 ---
- drivers/clk/imx/clk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
-index cfc05e4..e61d6d7 100644
---- a/drivers/clk/imx/clk.c
-+++ b/drivers/clk/imx/clk.c
-@@ -94,8 +94,8 @@ struct clk_hw * __init imx_obtain_fixed_clock_hw(
- 	return __clk_get_hw(clk);
- }
- 
--struct clk_hw * __init imx_obtain_fixed_clk_hw(struct device_node *np,
--					       const char *name)
-+struct clk_hw *imx_obtain_fixed_clk_hw(struct device_node *np,
-+					const char *name)
- {
- 	struct clk *clk;
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c7a94c4ff..8d9b9ce 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -701,6 +701,7 @@ CONFIG_COMMON_CLK_PWM=y
+ CONFIG_CLK_RASPBERRYPI=m
+ CONFIG_CLK_IMX8MM=y
+ CONFIG_CLK_IMX8MN=y
++CONFIG_CLK_IMX8MP=y
+ CONFIG_CLK_IMX8MQ=y
+ CONFIG_CLK_IMX8QXP=y
+ CONFIG_TI_SCI_CLK=y
 -- 
 2.7.4
 
