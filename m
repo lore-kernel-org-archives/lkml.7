@@ -2,110 +2,117 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B58C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A66C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751AE2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuCRGwTh"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1622080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgAGVYm (ORCPT
+        id S1729164AbgAGVYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:24:42 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38002 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgAGVYi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:24:38 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x185so493902pfc.5;
-        Tue, 07 Jan 2020 13:24:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ChcPdsdS9VGVsNLtdTOuWHWVcSN3lEieq0DFAH4Ts9s=;
-        b=CuCRGwThXc1osGY0Xfb21CElwWLVJREYbekDCFiDFhYRRZAeW/1dwjv3O0/mSzDU8F
-         R6ufgzbKArsZ8G35c+RLdwfQ6qoEZafxDEblhRLL2DS4eICBO8UJ8Ib1pnmaRO34flAv
-         vvzydiwo/KJKdRXHrSJCAgbS1fSGtydd6H6exBTnt+iqJWChu5wPOiufpIxxjYawrjfI
-         9vS+E2CtbJVUWFRMeCnJfFAEuh+LygBNhSAqd3cZyEAfQ8+zOXM6xesvPmv9qai9/D8p
-         Rwh7rR5cpPl+vGEGVCXDhJwzPJJEz70gPgANcFqmrlkhTdRgtD472SlKJydR2Gm1kbM+
-         PJVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ChcPdsdS9VGVsNLtdTOuWHWVcSN3lEieq0DFAH4Ts9s=;
-        b=j1FgVBdJ64SY6rFkoEWjH26NF/URz5E5Pg7hrUcAjIsKiGH9/knPo8Mm4Ku0v/LTny
-         38V2/OCH2c9S0CFGmwlDe9r7D5aPbjjGypAe0QgPqMGSxvcnBTB23eAOqJ0OM5wu0bRF
-         FQZWumjkaAfeV7js1RzzsqOc6tbi1xeSxmySxK+90gaClHpGSWQzodcywpEdLA8hi2N8
-         GZNk+Y6di91S7iLXjYQs8sv0rl3/WyNUSrZQo/ovukKx9v9UXWlsOxNfBIMp5iGt82jz
-         zpTSV29nhrQMu9r7eZVDgOarY2BPJN2y7p2kR1G/8uSJrsinb+WvxL5f5y1b4ywKAj3U
-         0xgg==
-X-Gm-Message-State: APjAAAWZY/0HVpO2iyd2vjiOLp1teyE+H7L1lure9AEgJbZmcNg4gae8
-        I9S+DNHf6WrHJdaaPIg3UBg=
-X-Google-Smtp-Source: APXvYqzRJMipEtd8UAW7X43YQuqABNkCkcIiKryfhUo8tJN+E6zzAZoKei3yP4vBI9cRsr7rm9QPhQ==
-X-Received: by 2002:aa7:96b6:: with SMTP id g22mr1364465pfk.206.1578432277766;
-        Tue, 07 Jan 2020 13:24:37 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 189sm515006pfw.73.2020.01.07.13.24.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 13:24:37 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:24:36 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
-Message-ID: <20200107212436.GA18475@roeck-us.net>
-References: <20200107205332.984228665@linuxfoundation.org>
+        Tue, 7 Jan 2020 16:24:47 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:51298 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728298AbgAGVAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:00:18 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iovxO-0007vt-Jx; Tue, 07 Jan 2020 14:00:12 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iovxI-0001zD-Oz; Tue, 07 Jan 2020 14:00:00 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Date:   Tue,  7 Jan 2020 13:59:55 -0700
+Message-Id: <20200107205959.7575-5-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200107205959.7575-1-logang@deltatee.com>
+References: <20200107205959.7575-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, dan.j.williams@intel.com, akpm@linux-foundation.org, hch@lst.de, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, david@redhat.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org, ebadger@gigaio.com, logang@deltatee.com, hpa@zytor.com, mhocko@kernel.org, will@kernel.org, luto@kernel.org, x86@kernel.org
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v2 4/8] x86/mm: Introduce _set_memory_prot()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:52:00PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.9 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
-> Pseudo-Shortlog of commits:
-> 
-[ ... ]
+For use in the 32bit arch_add_memory() to set the pgprot type of the
+memory to add.
 
-> Ming Lei <ming.lei@redhat.com>
->     block: fix splitting segments on boundary masks
-> 
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ arch/x86/include/asm/set_memory.h | 1 +
+ arch/x86/mm/pageattr.c            | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-This patch causes a regression. See:
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index 2ee8e469dcf5..d728c2f3ad96 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -34,6 +34,7 @@
+  * The caller is required to take care of these.
+  */
+ 
++int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+ int _set_memory_uc(unsigned long addr, int numpages);
+ int _set_memory_wc(unsigned long addr, int numpages);
+ int _set_memory_wt(unsigned long addr, int numpages);
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 1b99ad05b117..2f1934d7b8d9 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -1781,6 +1781,13 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
+ 		CPA_PAGES_ARRAY, pages);
+ }
+ 
++int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
++{
++	return change_page_attr_set_clr(&addr, numpages, prot,
++					__pgprot(~pgprot_val(prot)), 0, 0,
++					NULL);
++}
++
+ int _set_memory_uc(unsigned long addr, int numpages)
+ {
+ 	/*
+-- 
+2.20.1
 
-https://lore.kernel.org/linux-block/20200107181145.GA22076@roeck-us.net/T/#m4607a04fde9ef2ed80d45efacef01c0b0e8d2bfd
-
-Guenter
