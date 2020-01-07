@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C277C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07639C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374332081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE50D2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430646;
-	bh=QF+mbxtCzZTOEnlWwSMLV75Ubjlot7rN6MqEVhiZbtM=;
+	s=default; t=1578430649;
+	bh=l6nEf4vQfBED9d1RXxUJd2BaekDpRFJovsar23ILT6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3tH43caURDTsHZOtECO3o5EdUZzSIp9KvxsUr5co5CiI3cPRtTnyvZvleUR/gd8E
-	 AV1OHe2Ig9X/hjV9/SB2ScWN8S5Q2giKUeKRsxdgMcR/9Sne61MVm7/vhlmGYAp2af
-	 rKaaHzqVFLm9T2yyurTRxeQxgyZM6x+pO3dl4+Ss=
+	b=E70LTNvqgEWGTaQTA2V9Pktr1ffpKZT9KRPo68SZ1b0YhFDLUxtdLR6c/e0g7IVDl
+	 NFSgUlFMBLP9l6CvgQaTQ6snWOQ89FLzOQ7hr9svR820BcsNdJBDFM4NZBtO6OAXl5
+	 u6vmiPEkL6uvdqzeSmHqAx+CscU/9jKtxTqgJIpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgAGU5Y (ORCPT
+        id S1727599AbgAGU52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:57:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727526AbgAGU5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:57:19 -0500
+        id S1727562AbgAGU5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:57:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 810C020880;
-        Tue,  7 Jan 2020 20:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49E432081E;
+        Tue,  7 Jan 2020 20:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430638;
-        bh=QF+mbxtCzZTOEnlWwSMLV75Ubjlot7rN6MqEVhiZbtM=;
+        s=default; t=1578430642;
+        bh=l6nEf4vQfBED9d1RXxUJd2BaekDpRFJovsar23ILT6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V67Y8hpDZXuZknaJJ2OsslhEc6f9f4vyzFJwk+PfLZFQdIBISxr9r1VzCA9q+nDya
-         jXNkD6sCuzG4pLgIExSp1IJbRkHk+vpCoC+DYbw/WKfDI4Og3eKx0/oeReAVgwdQbZ
-         AQ6gzfJL2q9BT8r1ZNhbbSo9iPxRk5FrV/6Icp74=
+        b=Uww4aU8TMgDOptgcUen4hMeLe+e0Vq/fGbHRtJpQD9W1+doHmjEPPWlyeBucyQX+3
+         +TieFEmHNViEXkQOzhWCqTLiTkBs9F7E8kT1fwI+V5L88zHn4eYGFj5bHTszICr0TZ
+         OY/5wNK+gix6DwROG75Mwk4R0fj7//Y9+FLyV0OU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo Wu <wubo40@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/191] scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
-Date:   Tue,  7 Jan 2020 21:52:34 +0100
-Message-Id: <20200107205334.823722722@linuxfoundation.org>
+Subject: [PATCH 5.4 036/191] drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
+Date:   Tue,  7 Jan 2020 21:52:36 +0100
+Message-Id: <20200107205334.929300882@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -62,111 +60,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit bba340c79bfe3644829db5c852fdfa9e33837d6d ]
+[ Upstream commit 37a68eab4cd92b507c9e8afd760fdc18e4fecac6 ]
 
-In iscsi_if_rx func, after receiving one request through
-iscsi_if_recv_msg func, iscsi_if_send_reply will be called to try to
-reply to the request in a do-while loop.  If the iscsi_if_send_reply
-function keeps returning -EAGAIN, a deadlock will occur.
+Place the declaration of struct nouveau_conn_atom above that of
+struct nouveau_connector. This commit makes no changes to the moved
+block what so ever, it just moves it up a bit.
 
-For example, a client only send msg without calling recvmsg func, then
-it will result in the watchdog soft lockup.  The details are given as
-follows:
+This is a preparation patch to fix some issues with connector handling
+on pre nv50 displays (which do not use atomic modesetting).
 
-	sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI);
-	retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
-	while (1) {
-		state_msg = sendmsg(sock_fd, &msg, 0);
-		//Note: recvmsg(sock_fd, &msg, 0) is not processed here.
-	}
-	close(sock_fd);
-
-watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat:
-curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
-         TIMER:        992
-         SCHED:          8
-Sample irqstat:
-         irq    2: delta       1003, curr:    3103802, arch_timer
-CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40400005 (nZcv daif +PAN -UAO)
-pc : __alloc_skb+0x104/0x1b0
-lr : __alloc_skb+0x9c/0x1b0
-sp : ffff000033603a30
-x29: ffff000033603a30 x28: 00000000000002dd
-x27: ffff800b34ced810 x26: ffff800ba7569f00
-x25: 00000000ffffffff x24: 0000000000000000
-x23: ffff800f7c43f600 x22: 0000000000480020
-x21: ffff0000091d9000 x20: ffff800b34eff200
-x19: ffff800ba7569f00 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0001000101000100
-x13: 0000000101010000 x12: 0101000001010100
-x11: 0001010101010001 x10: 00000000000002dd
-x9 : ffff000033603d58 x8 : ffff800b34eff400
-x7 : ffff800ba7569200 x6 : ffff800b34eff400
-x5 : 0000000000000000 x4 : 00000000ffffffff
-x3 : 0000000000000000 x2 : 0000000000000001
-x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
-__alloc_skb+0x104/0x1b0
-iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-netlink_unicast+0x1e0/0x258
-netlink_sendmsg+0x310/0x378
-sock_sendmsg+0x4c/0x70
-sock_write_iter+0x90/0xf0
-__vfs_write+0x11c/0x190
-vfs_write+0xac/0x1c0
-ksys_write+0x6c/0xd8
-__arm64_sys_write+0x24/0x30
-el0_svc_common+0x78/0x130
-el0_svc_handler+0x38/0x78
-el0_svc+0x8/0xc
-
-Link: https://lore.kernel.org/r/EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_connector.h | 110 ++++++++++----------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 417b868d8735..ed8d9709b9b9 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -24,6 +24,8 @@
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
+index f43a8d63aef8..de9588420884 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.h
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
+@@ -29,6 +29,7 @@
  
- #define ISCSI_TRANSPORT_VERSION "2.0-870"
+ #include <nvif/notify.h>
  
-+#define ISCSI_SEND_MAX_ALLOWED  10
++#include <drm/drm_crtc.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_dp_helper.h>
+@@ -44,6 +45,60 @@ struct dcb_output;
+ struct nouveau_backlight;
+ #endif
+ 
++#define nouveau_conn_atom(p)                                                   \
++	container_of((p), struct nouveau_conn_atom, state)
 +
- #define CREATE_TRACE_POINTS
- #include <trace/events/iscsi.h>
++struct nouveau_conn_atom {
++	struct drm_connector_state state;
++
++	struct {
++		/* The enum values specifically defined here match nv50/gf119
++		 * hw values, and the code relies on this.
++		 */
++		enum {
++			DITHERING_MODE_OFF = 0x00,
++			DITHERING_MODE_ON = 0x01,
++			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
++			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
++			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
++			DITHERING_MODE_AUTO
++		} mode;
++		enum {
++			DITHERING_DEPTH_6BPC = 0x00,
++			DITHERING_DEPTH_8BPC = 0x02,
++			DITHERING_DEPTH_AUTO
++		} depth;
++	} dither;
++
++	struct {
++		int mode;	/* DRM_MODE_SCALE_* */
++		struct {
++			enum {
++				UNDERSCAN_OFF,
++				UNDERSCAN_ON,
++				UNDERSCAN_AUTO,
++			} mode;
++			u32 hborder;
++			u32 vborder;
++		} underscan;
++		bool full;
++	} scaler;
++
++	struct {
++		int color_vibrance;
++		int vibrant_hue;
++	} procamp;
++
++	union {
++		struct {
++			bool dither:1;
++			bool scaler:1;
++			bool procamp:1;
++		};
++		u8 mask;
++	} set;
++};
++
+ struct nouveau_connector {
+ 	struct drm_connector base;
+ 	enum dcb_connector_type type;
+@@ -121,61 +176,6 @@ extern int nouveau_ignorelid;
+ extern int nouveau_duallink;
+ extern int nouveau_hdmimhz;
  
-@@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
- 		struct nlmsghdr	*nlh;
- 		struct iscsi_uevent *ev;
- 		uint32_t group;
-+		int retries = ISCSI_SEND_MAX_ALLOWED;
- 
- 		nlh = nlmsg_hdr(skb);
- 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-@@ -3712,6 +3715,10 @@ iscsi_if_rx(struct sk_buff *skb)
- 				break;
- 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
- 						  ev, sizeof(*ev));
-+			if (err == -EAGAIN && --retries < 0) {
-+				printk(KERN_WARNING "Send reply failed, error %d\n", err);
-+				break;
-+			}
- 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
- 		skb_pull(skb, rlen);
- 	}
+-#include <drm/drm_crtc.h>
+-#define nouveau_conn_atom(p)                                                   \
+-	container_of((p), struct nouveau_conn_atom, state)
+-
+-struct nouveau_conn_atom {
+-	struct drm_connector_state state;
+-
+-	struct {
+-		/* The enum values specifically defined here match nv50/gf119
+-		 * hw values, and the code relies on this.
+-		 */
+-		enum {
+-			DITHERING_MODE_OFF = 0x00,
+-			DITHERING_MODE_ON = 0x01,
+-			DITHERING_MODE_DYNAMIC2X2 = 0x10 | DITHERING_MODE_ON,
+-			DITHERING_MODE_STATIC2X2 = 0x18 | DITHERING_MODE_ON,
+-			DITHERING_MODE_TEMPORAL = 0x20 | DITHERING_MODE_ON,
+-			DITHERING_MODE_AUTO
+-		} mode;
+-		enum {
+-			DITHERING_DEPTH_6BPC = 0x00,
+-			DITHERING_DEPTH_8BPC = 0x02,
+-			DITHERING_DEPTH_AUTO
+-		} depth;
+-	} dither;
+-
+-	struct {
+-		int mode;	/* DRM_MODE_SCALE_* */
+-		struct {
+-			enum {
+-				UNDERSCAN_OFF,
+-				UNDERSCAN_ON,
+-				UNDERSCAN_AUTO,
+-			} mode;
+-			u32 hborder;
+-			u32 vborder;
+-		} underscan;
+-		bool full;
+-	} scaler;
+-
+-	struct {
+-		int color_vibrance;
+-		int vibrant_hue;
+-	} procamp;
+-
+-	union {
+-		struct {
+-			bool dither:1;
+-			bool scaler:1;
+-			bool procamp:1;
+-		};
+-		u8 mask;
+-	} set;
+-};
+-
+ void nouveau_conn_attach_properties(struct drm_connector *);
+ void nouveau_conn_reset(struct drm_connector *);
+ struct drm_connector_state *
 -- 
 2.20.1
 
