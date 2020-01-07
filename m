@@ -2,119 +2,112 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16458C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05381C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E481C2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81FE2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hwcgrcRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgAGJNA (ORCPT
+        id S1727698AbgAGJNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:13:00 -0500
-Received: from outbound-smtp14.blacknight.com ([46.22.139.231]:39253 "EHLO
-        outbound-smtp14.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbgAGJNA (ORCPT
+        Tue, 7 Jan 2020 04:13:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58520 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgAGJNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:13:00 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.26])
-        by outbound-smtp14.blacknight.com (Postfix) with ESMTPS id 8C6D61C2D11
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Jan 2020 09:12:58 +0000 (GMT)
-Received: (qmail 21528 invoked from network); 7 Jan 2020 09:12:58 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 7 Jan 2020 09:12:58 -0000
-Date:   Tue, 7 Jan 2020 09:12:56 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Rik van Riel <riel@surriel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
-        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com,
-        Morten.Rasmussen@arm.com, parth@linux.ibm.com,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v3
-Message-ID: <20200107091256.GE3466@techsingularity.net>
-References: <20200106144250.GA3466@techsingularity.net>
- <04033a63f11a9c59ebd2b099355915e4e889b772.camel@surriel.com>
- <20200106163303.GC3466@techsingularity.net>
- <20200107015111.4836-1-hdanton@sina.com>
+        Tue, 7 Jan 2020 04:13:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LJedfaMXja7b+egF2xBxy81N7itSb3Uz7KEWlyYZZ/4=; b=hwcgrcRNri3U/OnBWYGvTnopP
+        OWv4vq07pGkfVvAAcnwbTSZMTPmgFaKryx7th7kDVUqJnPbVbYZ3OZQVktFdtlVXyIJo3M+iWbDRm
+        ZxCPOlYYJLguS2sRVOoSDZcHTYTJQqsDX3eKRqYOL6Xf8LOEKl1o2upPobvMsBp0VYOLLTQFED28a
+        uMtrr6N3OM8zgHWMK5WNkZCy6fD99xOuYodlZy+HlT3q/MkT2+Vzl5gs86Sx982Zw46HaL/4e8rCk
+        nYVBOH6sGSOeLz7uuyeJTZxQCqCmcuj2/CpmI5RKS+r8+iRuDrr+ytA37QHd4HcCLDJxVat5R3jH6
+        U6AxW9g6A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iokvN-0001RT-Gk; Tue, 07 Jan 2020 09:13:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 49F87304A59;
+        Tue,  7 Jan 2020 10:11:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BEBE72B284504; Tue,  7 Jan 2020 10:13:15 +0100 (CET)
+Date:   Tue, 7 Jan 2020 10:13:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Wanpeng Li <wanpeng.li@hotmail.com>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] sched/cputime: code cleanup in
+ irqtime_account_process_tick
+Message-ID: <20200107091315.GS2844@hirez.programming.kicks-ass.net>
+References: <1577959674-255537-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1577959674-255537-2-git-send-email-alex.shi@linux.alibaba.com>
+ <20200106155350.GB26097@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107015111.4836-1-hdanton@sina.com>
+In-Reply-To: <20200106155350.GB26097@lenoir>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:51:11AM +0800, Hillf Danton wrote:
-> 
-> Hi Folks
-> 
-> On Mon, 06 Jan 2020 11:44:57 -0500 Rik van Riel wrote:
-> > On Mon, 2020-01-06 at 16:33 +0000, Mel Gorman wrote:
-> > > On Mon, Jan 06, 2020 at 10:47:18AM -0500, Rik van Riel wrote:
-> > > > > +			imbalance_adj = (100 / (env->sd->imbalance_pct - 100)) - 1;
-> > > > > +
-> > > > > +			/*
-> > > > > +			 * Allow small imbalances when the busiest group has
-> > > > > +			 * low utilisation.
-> > > > > +			 */
-> > > > > +			imbalance_max = imbalance_adj << 1;
-> > > > > +			if (busiest->sum_nr_running < imbalance_max)
-> > > > > +				env->imbalance -= min(env->imbalance, imbalance_adj);
-> > > > > +		}
-> > > > > +
-> > > >
-> > > > Wait, so imbalance_max is a function only of
-> > > > env->sd->imbalance_pct, and it gets compared
-> > > > against busiest->sum_nr_running, which is related
-> > > > to the number of CPUs in the node?
-> > > >
-> > >
-> > > It's not directly related to the number of CPUs in the node. Are you
-> > > thinking of busiest->group_weight?
+On Mon, Jan 06, 2020 at 04:53:51PM +0100, Frederic Weisbecker wrote:
+> On Thu, Jan 02, 2020 at 06:07:53PM +0800, Alex Shi wrote:
+> > In this func, since account_system_time() considers guest time account
+> > and other system time.  we could fold the account_guest_time into
+> > account_system_time() to simply the code.
 > > 
-> > I am, because as it is right now that if condition
-> > looks like it might never be true for imbalance_pct 115.
+> > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Frederic Weisbecker <fweisbec@gmail.com>
+> > Cc: Wanpeng Li <wanpeng.li@hotmail.com>
+> > Cc: Anna-Maria Gleixner <anna-maria@linutronix.de>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  kernel/sched/cputime.c | 9 +++------
+> >  1 file changed, 3 insertions(+), 6 deletions(-)
 > > 
-> > Presumably you put that check there for a reason, and
-> > would like it to trigger when the amount by which a node
-> > is busy is less than 2 * (imbalance_pct - 100).
+> > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> > index cff3e656566d..46b837e94fce 100644
+> > --- a/kernel/sched/cputime.c
+> > +++ b/kernel/sched/cputime.c
+> > @@ -381,13 +381,10 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+> >  		account_system_index_time(p, cputime, CPUTIME_SOFTIRQ);
+> >  	} else if (user_tick) {
+> >  		account_user_time(p, cputime);
+> > -	} else if (p == this_rq()->idle) {
+> > +	} else if ((p != this_rq()->idle) || (irq_count() != HARDIRQ_OFFSET))
+> > +		account_system_time(p, HARDIRQ_OFFSET, cputime);
+> > +	else
 > 
-> 
-> If three per cent can make any sense in helping determine utilisation
-> low then the busy load has to meet
-> 
-> 	busiest->sum_nr_running < max(3, cpus in the node / 32);
-> 
+> I fear we can't really play the exact same game as account_process_tick() here.
+> Since this is irqtime precise accounting, we have already computed the
+> irqtime delta in account_other_time() (or we will at some point in the future)
+> and substracted it from the ticks to account. This means that the remaining cputime
+> to account has to be either utime/stime/gtime/idle-time but not interrupt time, or
+> we may account interrupt time twice. And account_system_time() tries to account
+> irq time, for example if we interrupt a softirq.
 
-Why 3% and why would the low utilisation cut-off depend on the number of
-CPUs in the node? That simply means that the cut-off scales to machine
-size and does not take into account any consideration between local memory
-latency and memory bandwidth.
-
-> And we can't skip pulling tasks from a numa node without comparing it
-> to the local load
-> 
-> 	local->sum_nr_running * env->sd->imbalance_pct <
-> 	busiest->sum_nr_running * 100;
-> 
-> with imbalance_pct taken into account.
-> 
-
-Again, why? In this context, an imbalance has already been calculated
-and whether based on running tasks or idle CPUs, it's not a negative
-number. The imbalance_adj used as already accounted for imbalance_pct
-albeit not as a ratio as it's normally used.
-
--- 
-Mel Gorman
-SUSE Labs
+OK, I've dropped 2 and 3. Thanks Frederic!
