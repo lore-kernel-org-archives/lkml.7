@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A66C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8455C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DB1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FC2207FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgAGHgl convert rfc822-to-8bit (ORCPT
+        id S1727627AbgAGHhE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:36:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44254 "EHLO
+        Tue, 7 Jan 2020 02:37:04 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44287 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbgAGHgk (ORCPT
+        with ESMTP id S1727327AbgAGHhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:36:40 -0500
+        Tue, 7 Jan 2020 02:37:04 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iojPc-0002Tl-Ka; Tue, 07 Jan 2020 08:36:24 +0100
+        id 1iojPs-0002Uz-Fh; Tue, 07 Jan 2020 08:36:42 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 170B11C2818;
-        Tue,  7 Jan 2020 08:36:24 +0100 (CET)
-Date:   Tue, 07 Jan 2020 07:36:23 -0000
-From:   "tip-bot2 for Shile Zhang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2544E1C2CCD;
+        Tue,  7 Jan 2020 08:36:40 +0100 (CET)
+Date:   Tue, 07 Jan 2020 07:36:40 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] x86/unwind/orc: Fix !CONFIG_MODULES build warning
-Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
+Subject: [tip: x86/asm] x86/context-tracking: Remove exception_enter/exit()
+ from do_page_fault()
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, rkrcmar@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com>
-References: <c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com>
+In-Reply-To: <20191227163612.10039-2-frederic@kernel.org>
+References: <20191227163612.10039-2-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157838258393.30329.5371781726464192052.tip-bot2@tip-bot2>
+Message-ID: <157838260004.30329.1599335012779534814.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,53 +66,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/objtool branch of tip:
+The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     22a7fa8848c5e881d87ef2f7f3c2ea77b286e6f9
-Gitweb:        https://git.kernel.org/tip/22a7fa8848c5e881d87ef2f7f3c2ea77b286e6f9
-Author:        Shile Zhang <shile.zhang@linux.alibaba.com>
-AuthorDate:    Mon, 16 Dec 2019 11:07:29 +08:00
+Commit-ID:     ee6352b2c47a24234398e06381edd93a8e965976
+Gitweb:        https://git.kernel.org/tip/ee6352b2c47a24234398e06381edd93a8e965976
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Fri, 27 Dec 2019 17:36:11 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 07 Jan 2020 08:15:11 +01:00
+CommitterDate: Tue, 07 Jan 2020 08:11:23 +01:00
 
-x86/unwind/orc: Fix !CONFIG_MODULES build warning
+x86/context-tracking: Remove exception_enter/exit() from do_page_fault()
 
-To fix follwowing warning due to ORC sort moved to build time:
+do_page_fault(), like other exceptions, is already covered by
+user_enter() and user_exit() when the exception triggers in userspace.
 
-  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
-  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
+As explained in:
 
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andy Lutomirski <luto@amacapital.net>
+  8c84014f3bbb11 ("x86/entry: Remove exception_enter() from most trap handlers")
+
+exception_enter/exit() only remained to handle possible page fault from
+kernel mode while context tracking is in CONTEXT_USER mode, ie: on
+kernel entry before we manage to call user_exit(). The only known
+offender was do_fast_syscall_32() fetching EBP register from where
+vDSO stashed it.
+
+Meanwhile this got fixed in:
+
+  9999c8c01f34c9 ("x86/entry: Call enter_from_user_mode() with IRQs off")
+
+that moved enter_from_user_mode() before the call to get_user().
+
+So we can safely remove it now.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Link: https://lkml.kernel.org/r/20191227163612.10039-2-frederic@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/fault.c | 39 ++++++++++++---------------------------
+ 1 file changed, 12 insertions(+), 27 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index abdf891..e9cc182 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -187,6 +187,8 @@ static struct orc_entry *orc_find(unsigned long ip)
- 	return orc_ftrace_find(ip);
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 304d31d..2b4ab28 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1486,27 +1486,6 @@ good_area:
+ }
+ NOKPROBE_SYMBOL(do_user_addr_fault);
+ 
+-/*
+- * Explicitly marked noinline such that the function tracer sees this as the
+- * page_fault entry point.
+- */
+-static noinline void
+-__do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
+-		unsigned long address)
+-{
+-	prefetchw(&current->mm->mmap_sem);
+-
+-	if (unlikely(kmmio_fault(regs, address)))
+-		return;
+-
+-	/* Was the fault on kernel-controlled part of the address space? */
+-	if (unlikely(fault_in_kernel_space(address)))
+-		do_kern_addr_fault(regs, hw_error_code, address);
+-	else
+-		do_user_addr_fault(regs, hw_error_code, address);
+-}
+-NOKPROBE_SYMBOL(__do_page_fault);
+-
+ static __always_inline void
+ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
+ 			 unsigned long address)
+@@ -1521,13 +1500,19 @@ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
  }
  
-+#ifdef CONFIG_MODULES
+ dotraplinkage void
+-do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
++do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
++		unsigned long address)
+ {
+-	enum ctx_state prev_state;
++	prefetchw(&current->mm->mmap_sem);
++	trace_page_fault_entries(regs, hw_error_code, address);
+ 
+-	prev_state = exception_enter();
+-	trace_page_fault_entries(regs, error_code, address);
+-	__do_page_fault(regs, error_code, address);
+-	exception_exit(prev_state);
++	if (unlikely(kmmio_fault(regs, address)))
++		return;
 +
- static void orc_sort_swap(void *_a, void *_b, int size)
- {
- 	struct orc_entry *orc_a, *orc_b;
-@@ -229,7 +231,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
- 	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
++	/* Was the fault on kernel-controlled part of the address space? */
++	if (unlikely(fault_in_kernel_space(address)))
++		do_kern_addr_fault(regs, hw_error_code, address);
++	else
++		do_user_addr_fault(regs, hw_error_code, address);
  }
- 
--#ifdef CONFIG_MODULES
- void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 			void *_orc, size_t orc_size)
- {
+ NOKPROBE_SYMBOL(do_page_fault);
