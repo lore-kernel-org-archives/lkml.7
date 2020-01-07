@@ -2,110 +2,61 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89323C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E0AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4538820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:54:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZkHnAqTK"
+	by mail.kernel.org (Postfix) with ESMTP id AB8C62077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgAGVy3 (ORCPT
+        id S1727558AbgAGVzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:54:29 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46764 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgAGVy2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:54:28 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCFC952F;
-        Tue,  7 Jan 2020 22:54:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1578434067;
-        bh=/4v7koUSMGC22Tz+qpJKBEp5rFtTL7KHEEbwdvvlN1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZkHnAqTKHEBCvE2W9mvM6wOJtvLqn2Udrn3ptppoH6KMRBF4QX01rbOseGJKsm2on
-         3uqKUKnsU/aHnDLqsNu0h8qv7e3zsMyDLAnMA6HEt30VmmdDbsO9jBQkkqahMP2xue
-         VkfAirHmSgCx16n6uaa0RP7wz2T5VtXfNDuioJ5g=
-Date:   Tue, 7 Jan 2020 23:54:14 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: of: fix link error
-Message-ID: <20200107215414.GA7869@pendragon.ideasonboard.com>
-References: <20200107213738.635906-1-arnd@arndb.de>
+        Tue, 7 Jan 2020 16:55:15 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:37234 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726462AbgAGVzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:55:15 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iowoh-0004t9-Ha; Tue, 07 Jan 2020 22:55:11 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-rockchip@lists.infradead.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: Use ABI name for write protect pin on veyron fievel/tiger
+Date:   Tue, 07 Jan 2020 22:55:10 +0100
+Message-ID: <3032277.n0uFTgx7BP@phil>
+In-Reply-To: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
+References: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200107213738.635906-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-Thank you for the patch.
-
-On Tue, Jan 07, 2020 at 10:37:32PM +0100, Arnd Bergmann wrote:
-> The new dummy helper is non-static, so every driver gets
-> its own copy, leading to a link failure:
+Am Montag, 6. Januar 2020, 22:52:13 CET schrieb Matthias Kaehlcke:
+> The flash write protect pin is currently named 'FW_WP_AP', which is
+> how the signal is called in the schematics. The Chrome OS ABI
+> requires the pin to be named 'AP_FLASH_WP_L', which is also how
+> it is called on all other veyron devices. Rename the pin to match
+> the ABI.
 > 
-> drivers/gpu/drm/imx/imx-ldb.o: In function `drm_of_lvds_get_dual_link_pixel_order':
-> imx-ldb.c:(.text+0x140): multiple definition of `drm_of_lvds_get_dual_link_pixel_order'
-> drivers/gpu/drm/imx/imx-drm-core.o:imx-drm-core.c:(.text+0x330): first defined here
-> drivers/gpu/drm/imx/dw_hdmi-imx.o: In function `drm_of_lvds_get_dual_link_pixel_order':
-> dw_hdmi-imx.c:(.text+0xd0): multiple definition of `drm_of_lvds_get_dual_link_pixel_order'
-> drivers/gpu/drm/imx/imx-drm-core.o:imx-drm-core.c:(.text+0x330): first defined here
-> drivers/gpu/drm/bridge/synopsys/dw-hdmi.o: In function `drm_of_lvds_get_dual_link_pixel_order':
-> dw-hdmi.c:(.text+0x3b90): multiple definition of `drm_of_lvds_get_dual_link_pixel_order'
-> drivers/gpu/drm/imx/imx-drm-core.o:imx-drm-core.c:(.text+0x330): first defined here
-> drivers/gpu/drm/etnaviv/etnaviv_drv.o: In function `drm_of_lvds_get_dual_link_pixel_order':
-> etnaviv_drv.c:(.text+0x9d0): multiple definition of `drm_of_lvds_get_dual_link_pixel_order'
-> drivers/gpu/drm/imx/imx-drm-core.o:imx-drm-core.c:(.text+0x330): first defined here
-> 
-> Add the missing 'static' keyword.
-> 
-> Fixes: 6529007522de ("drm: of: Add drm_of_lvds_get_dual_link_pixel_order")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-I've sent "[PATCH] drm: of: Fix linking when CONFIG_OF is not set" to
-fix this issue, back on December the 19th. Daniel, Dave, could you pick
-this up ? It couldn't be merged through drm-misc last time we checked as
-the offending patch wasn't there.
+applied for 5.6
 
-> ---
->  include/drm/drm_of.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
-> index 8ec7ca6d2369..3398be966021 100644
-> --- a/include/drm/drm_of.h
-> +++ b/include/drm/drm_of.h
-> @@ -92,7 +92,7 @@ static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
->  	return -EINVAL;
->  }
->  
-> -int drm_of_lvds_get_dual_link_pixel_order(const struct device_node *port1,
-> +static inline int drm_of_lvds_get_dual_link_pixel_order(const struct device_node *port1,
->  					  const struct device_node *port2)
->  {
->  	return -EINVAL;
+Thanks
+Heiko
 
--- 
-Regards,
 
-Laurent Pinchart
