@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A95FC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBB0C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BD82077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2CD2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430936;
-	bh=7YRSWAeP925XDAOHspxYHiU39ztDtMlWlOCjtxBYRoo=;
+	s=default; t=1578430940;
+	bh=0FstCUXHfmt/wPEtDm64QswSEukEzEeXl3fqYx9rozE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxFrVhSHZ++oExrC1VBV+xNlMECWwK8JX/58sgopphOL6ly00TLmXYMwhzmk2J4MS
-	 fEhcRE1273hePBQjIu2x0QJXkMzi0M6gaFYPICEePKGZKhNytEA2O2P/UUQ3t12qQj
-	 wbmrrgxv09Facq7d/fZhUqP4N86KRtsyvI9y0Guc=
+	b=QLewt6IdBwvxGA53YLZ+qKsYdIxwLDJkTJDQjGq2KD9cT9LcGk7EwXQ3jY4OGudrs
+	 0aBGPbJGA6eLE6Zf2EEEvSdgzUqNArKZlbkBRdoaof07WoeKF6FOHQJkxIcnP/mr0I
+	 TIpNrt9Ng3UE7NNSBBkseW8huLpUV0t+yeHlUa3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgAGVCQ (ORCPT
+        id S1728728AbgAGVCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbgAGVCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:11 -0500
+        id S1727431AbgAGVCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEDA2077B;
-        Tue,  7 Jan 2020 21:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DDCC20678;
+        Tue,  7 Jan 2020 21:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430930;
-        bh=7YRSWAeP925XDAOHspxYHiU39ztDtMlWlOCjtxBYRoo=;
+        s=default; t=1578430933;
+        bh=0FstCUXHfmt/wPEtDm64QswSEukEzEeXl3fqYx9rozE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8NBh1uFNoermZ/tP4xYjZKRfIFq7sylFrf2oexypmBM0Sx51rw8dLCWPfwlK2dTh
-         8nRug0fH9T5qE3mfpYFwtXy4W0vmW+Philsbp2BR6wiGQE5punyjiTiodynN3tBiTu
-         IEg1A3DE6ctiL3MV1e3S1+OfBn7MNAMtbMIA0xzA=
+        b=ohO1JH79BjYiFRr1jGjqcbT0pltTI0VaToedtnsQbA5mnjfOi8B2MuK4ijdrzvV7C
+         gIEvWNMUb6l0bI5zxi1PSr9OFFr8FFiqa6kjCSi/QOPJtiAluq8jwZsUnZqV9ACmbz
+         9+2vDZLQZK5H2jOgnF7TIjYwXS9oXK8PsLuKCqBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        stable@vger.kernel.org,
+        Keiji Hayashibara <hayashibara.keiji@socionext.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 154/191] regulator: bd70528: Remove .set_ramp_delay for bd70528_ldo_ops
-Date:   Tue,  7 Jan 2020 21:54:34 +0100
-Message-Id: <20200107205341.208013098@linuxfoundation.org>
+Subject: [PATCH 5.4 155/191] spi: uniphier: Fix FIFO threshold
+Date:   Tue,  7 Jan 2020 21:54:35 +0100
+Message-Id: <20200107205341.260078760@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,35 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-commit 6f1ff76154b8b36033efcbf6453a71a3d28f52cd upstream.
+commit 9cd34efbd3012171c102910ce17ee632a3cccb44 upstream.
 
-The .set_ramp_delay should be for bd70528_buck_ops only.
-Setting .set_ramp_delay for for bd70528_ldo_ops causes problem because
-BD70528_MASK_BUCK_RAMP (0x10) overlaps with BD70528_MASK_LDO_VOLT (0x1f).
-So setting ramp_delay for LDOs may change the voltage output, fix it.
+Rx threshold means the value to inform the receiver when the number of words
+in Rx FIFO is equal to or more than the value. Similarly, Tx threshold means
+the value to inform the sender when the number of words in Tx FIFO is equal
+to or less than the value. The controller triggers the driver to start
+the transfer.
 
-Fixes: 99ea37bd1e7d ("regulator: bd70528: Support ROHM BD70528 regulator block")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Link: https://lore.kernel.org/r/20200101022406.15176-1-axel.lin@ingics.com
+In case of Rx, the driver wants to detect that the specified number of words
+N are in Rx FIFO, so the value of Rx threshold should be N. In case of Tx,
+the driver wants to detect that the same number of spaces as Rx are in
+Tx FIFO, so the value of Tx threshold should be (FIFO size - N).
+
+For example, in order for the driver to receive at least 3 words from
+Rx FIFO, set 3 to Rx threshold.
+   +-+-+-+-+-+-+-+-+
+   | | | | | |*|*|*|
+   +-+-+-+-+-+-+-+-+
+
+In order for the driver to send at least 3 words to Tx FIFO, because
+it needs at least 3 spaces, set 8(FIFO size) - 3 = 5 to Tx threshold.
+   +-+-+-+-+-+-+-+-+
+   |*|*|*|*|*| | | |
+   +-+-+-+-+-+-+-+-+
+
+This adds new function uniphier_spi_set_fifo_threshold() to set
+threshold value to the register.
+
+And more, FIFO counts by 'words', so this renames 'fill_bytes' with
+'fill_words', and fixes the calculation using bytes_per_words.
+
+Fixes: 37ffab817098 ("spi: uniphier: introduce polling mode")
+Cc: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Link: https://lore.kernel.org/r/1577149107-30670-2-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/bd70528-regulator.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/spi/spi-uniphier.c |   31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
---- a/drivers/regulator/bd70528-regulator.c
-+++ b/drivers/regulator/bd70528-regulator.c
-@@ -101,7 +101,6 @@ static const struct regulator_ops bd7052
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.set_voltage_time_sel = regulator_set_voltage_time_sel,
--	.set_ramp_delay = bd70528_set_ramp_delay,
- };
+--- a/drivers/spi/spi-uniphier.c
++++ b/drivers/spi/spi-uniphier.c
+@@ -290,25 +290,32 @@ static void uniphier_spi_recv(struct uni
+ 	}
+ }
  
- static const struct regulator_ops bd70528_led_ops = {
+-static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
++static void uniphier_spi_set_fifo_threshold(struct uniphier_spi_priv *priv,
++					    unsigned int threshold)
+ {
+-	unsigned int fifo_threshold, fill_bytes;
+ 	u32 val;
+ 
+-	fifo_threshold = DIV_ROUND_UP(priv->rx_bytes,
+-				bytes_per_word(priv->bits_per_word));
+-	fifo_threshold = min(fifo_threshold, SSI_FIFO_DEPTH);
+-
+-	fill_bytes = fifo_threshold - (priv->rx_bytes - priv->tx_bytes);
+-
+-	/* set fifo threshold */
+ 	val = readl(priv->base + SSI_FC);
+ 	val &= ~(SSI_FC_TXFTH_MASK | SSI_FC_RXFTH_MASK);
+-	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, fifo_threshold);
+-	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, fifo_threshold);
++	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, SSI_FIFO_DEPTH - threshold);
++	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, threshold);
+ 	writel(val, priv->base + SSI_FC);
++}
++
++static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
++{
++	unsigned int fifo_threshold, fill_words;
++	unsigned int bpw = bytes_per_word(priv->bits_per_word);
++
++	fifo_threshold = DIV_ROUND_UP(priv->rx_bytes, bpw);
++	fifo_threshold = min(fifo_threshold, SSI_FIFO_DEPTH);
++
++	uniphier_spi_set_fifo_threshold(priv, fifo_threshold);
++
++	fill_words = fifo_threshold -
++		DIV_ROUND_UP(priv->rx_bytes - priv->tx_bytes, bpw);
+ 
+-	while (fill_bytes--)
++	while (fill_words--)
+ 		uniphier_spi_send(priv);
+ }
+ 
 
 
