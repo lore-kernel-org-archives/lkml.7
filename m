@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89365C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D896FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E23F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFFE2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431636;
-	bh=TH1ThpB6/nN9wvtvO/UM4yDorepWO1zLbfaBotEy2pk=;
+	s=default; t=1578431639;
+	bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2QRF1KAgW0urahWaQFJ5cS79jZWCXQFl7mSxmPdaM3rl9pOsKUImu6WrG9/c5WilB
-	 ekew7f6fScub6wVdnFaTxXRc2PZsS+iC/tUIz8oehWPp436+H35NhUjTb1whGyvMSU
-	 LOtZDprARDxJM55jAJ5iswufR3OOKCMWZg+kblwM=
+	b=LjAmFK7Z0iKYz4W5lui+LL70qlSlacJSHWMjmf+PIha9GU0IqKX1FQ9c0onwID+7c
+	 u9jiXXIjWJvBOlDGTYUZ9j2fvUVMXoiPpbHY9pCOZ7oi4JKWnNQI5jFmp5bN9wcLq5
+	 w5EQzQLtFJPaWlbaJH/uji0lqj56/dJTzLnnYvgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgAGVNz (ORCPT
+        id S1729881AbgAGVJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:13:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbgAGVJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:56 -0500
+        id S1729868AbgAGVJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B0162087F;
-        Tue,  7 Jan 2020 21:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D172077B;
+        Tue,  7 Jan 2020 21:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431395;
-        bh=TH1ThpB6/nN9wvtvO/UM4yDorepWO1zLbfaBotEy2pk=;
+        s=default; t=1578431383;
+        bh=xfY0Bi9UHxCB8JaSZ+qYTGH4RoqOvqbb5ZXpEwB30YU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzgC+ChjRCTMugomC2U/MpXBgsQmXIYEVJ6/q0VamfLwyc9x+PTp11ZHAqZ4qSpe2
-         nC1XSMsCs1GUGmToSr7/RnVDBH8DUy0fOHOUk9WahPDCkLSXMJJwAiu+MTp+5FyaxW
-         V/iklLtXVN7Dfsdkqsf59xUpXRYvdlAfNvojKPHk=
+        b=r/XiDxOAy5JvIU76f4+QLcwdDoFZPs2H5niP1hZ3ov8s/bwsLs4ErkoqJFn7XEKm3
+         g50J3whQPORGjglxLN5UagJDmrLKIcH7DrBLxWuKL+YJa+WUN8O4/uObDy7oZQL4df
+         JWLxSMAc/JYRxW0Q78pTJrYf3LUrr37q2Bw6pCuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prateek Sood <prsood@codeaurora.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 40/74] tracing: Fix lock inversion in trace_event_enable_tgid_record()
-Date:   Tue,  7 Jan 2020 21:55:05 +0100
-Message-Id: <20200107205209.114374966@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 35/74] compat_ioctl: block: handle BLKREPORTZONE/BLKRESETZONE
+Date:   Tue,  7 Jan 2020 21:55:00 +0100
+Message-Id: <20200107205205.266079507@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,117 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prateek Sood <prsood@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 3a53acf1d9bea11b57c1f6205e3fe73f9d8a3688 upstream.
+commit 673bdf8ce0a387ef585c13b69a2676096c6edfe9 upstream.
 
-       Task T2                             Task T3
-trace_options_core_write()            subsystem_open()
+These were added to blkdev_ioctl() but not blkdev_compat_ioctl,
+so add them now.
 
- mutex_lock(trace_types_lock)           mutex_lock(event_mutex)
-
- set_tracer_flag()
-
-   trace_event_enable_tgid_record()       mutex_lock(trace_types_lock)
-
-    mutex_lock(event_mutex)
-
-This gives a circular dependency deadlock between trace_types_lock and
-event_mutex. To fix this invert the usage of trace_types_lock and
-event_mutex in trace_options_core_write(). This keeps the sequence of
-lock usage consistent.
-
-Link: http://lkml.kernel.org/r/0101016eef175e38-8ca71caf-a4eb-480d-a1e6-6f0bbc015495-000000@us-west-2.amazonses.com
-
-Cc: stable@vger.kernel.org
-Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <stable@vger.kernel.org> # v4.10+
+Fixes: 3ed05a987e0f ("blk-zoned: implement ioctls")
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c        |    8 ++++++++
- kernel/trace/trace_events.c |    8 ++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ block/compat_ioctl.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4368,6 +4368,10 @@ int trace_keep_overwrite(struct tracer *
- 
- int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- {
-+	if ((mask == TRACE_ITER_RECORD_TGID) ||
-+	    (mask == TRACE_ITER_RECORD_CMD))
-+		lockdep_assert_held(&event_mutex);
-+
- 	/* do nothing if flag is already set */
- 	if (!!(tr->trace_flags & mask) == !!enabled)
- 		return 0;
-@@ -4433,6 +4437,7 @@ static int trace_set_options(struct trac
- 		cmp += 2;
- 	}
- 
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 
- 	for (i = 0; trace_options[i]; i++) {
-@@ -4447,6 +4452,7 @@ static int trace_set_options(struct trac
- 		ret = set_tracer_option(tr, cmp, neg);
- 
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	/*
- 	 * If the first trailing whitespace is replaced with '\0' by strstrip,
-@@ -7373,9 +7379,11 @@ trace_options_core_write(struct file *fi
- 	if (val != 0 && val != 1)
- 		return -EINVAL;
- 
-+	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 	ret = set_tracer_flag(tr, 1 << index, val);
- 	mutex_unlock(&trace_types_lock);
-+	mutex_unlock(&event_mutex);
- 
- 	if (ret < 0)
- 		return ret;
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -326,7 +326,8 @@ void trace_event_enable_cmd_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
-@@ -340,7 +341,6 @@ void trace_event_enable_cmd_record(bool
- 			clear_bit(EVENT_FILE_FL_RECORDED_CMD_BIT, &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- void trace_event_enable_tgid_record(bool enable)
-@@ -348,7 +348,8 @@ void trace_event_enable_tgid_record(bool
- 	struct trace_event_file *file;
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
-+	lockdep_assert_held(&event_mutex);
-+
- 	do_for_each_event_file(tr, file) {
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED))
- 			continue;
-@@ -362,7 +363,6 @@ void trace_event_enable_tgid_record(bool
- 				  &file->flags);
- 		}
- 	} while_for_each_event_file();
--	mutex_unlock(&event_mutex);
- }
- 
- static int __ftrace_event_enable_disable(struct trace_event_file *file,
+--- a/block/compat_ioctl.c
++++ b/block/compat_ioctl.c
+@@ -355,6 +355,8 @@ long compat_blkdev_ioctl(struct file *fi
+ 	 * but we call blkdev_ioctl, which gets the lock for us
+ 	 */
+ 	case BLKRRPART:
++	case BLKREPORTZONE:
++	case BLKRESETZONE:
+ 		return blkdev_ioctl(bdev, mode, cmd,
+ 				(unsigned long)compat_ptr(arg));
+ 	case BLKBSZSET_32:
 
 
