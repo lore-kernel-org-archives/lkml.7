@@ -2,94 +2,160 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E626C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA2CC33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA285207FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8951207FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 05:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fbiEa/m3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoOGQWVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgAGFRo (ORCPT
+        id S1726210AbgAGFSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:17:44 -0500
-Received: from ozlabs.org ([203.11.71.1]:36337 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgAGFRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 00:17:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 7 Jan 2020 00:18:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33715 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgAGFSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 00:18:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578374314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e+pMdW3YlNEjXyRDuZ2IYPHP1swSW2oY5Q3WONSeYK4=;
+        b=EoOGQWVC8ehdBW6pr9d9vbdetnikhy3qtuf5XsDkjk+HStpOKSDym4XzOLCo7DvUesiJsC
+        uZnmpKuGvWqNzrosSkkStqs+CCDbKJHHfrf/H9NWNdB5IpTwgSXsYJOxhNTWGSsw+SqUhv
+        GqmMT6LlOBi+xIMPANZh9qOXttavfTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-FJfdGUOEPeCfwn242bSx9A-1; Tue, 07 Jan 2020 00:18:31 -0500
+X-MC-Unique: FJfdGUOEPeCfwn242bSx9A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47sLH90KC5z9sRW;
-        Tue,  7 Jan 2020 16:17:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578374262;
-        bh=pTcoQe5Mf4v8GaNj8dG3LS6OS1hjdAmqQc7d5z4bEc0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fbiEa/m3sWvYiQackHEAN/xqfkt/+o8I5aExhh5yfWWb8m00uuREhvqB6EC9lyI0Y
-         vs/dmXyGXtA8oB3iPWtoA/S8uIXX3ODcaw+3NqvygMSEL0BhxgndE1A/l7cIPLIoa9
-         efRxaIdAEbgvIFwp0ZIHjFMd0VGSC2wEPajvd04yz55apgIOv6gNCJ0Mx9xj8hGrO9
-         tsvkMom2BZvBrrrvCD+2QUdrBmQshHhjKL5GiqcGf4IS+qw24Sd+EqBTHwrUXcjlX4
-         RldMCxQkqfcn9qpsnPaFMPz3KxQ/1DT2GWQwzYP0Vm3I7ky46r9etYjVQ7oE2LBhdr
-         JGY4zJ4CVrJ2Q==
-Date:   Tue, 7 Jan 2020 16:17:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AF4A1800D4E;
+        Tue,  7 Jan 2020 05:18:30 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-32.pek2.redhat.com [10.72.12.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7F541036D1B;
+        Tue,  7 Jan 2020 05:18:26 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 13:18:22 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: linux-next: build warning after merge of the phy-next tree
-Message-ID: <20200107161733.3c70149b@canb.auug.org.au>
+        Kexec Mailing List <kexec@lists.infradead.org>
+Subject: Re: [PATCH v4 3/4] efi: Fix efi_memmap_alloc() leaks
+Message-ID: <20200107051822.GB19080@dhcp-128-65.nay.redhat.com>
+References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157835763783.1456824.4013634516855823659.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200107035824.GA19080@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4jbf2WR2ZU55564fORxKLf8tGH1XbYBpRfTvPouGWk2mg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r2YbW=pVUp/+.iaUk/lk=Re";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jbf2WR2ZU55564fORxKLf8tGH1XbYBpRfTvPouGWk2mg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/r2YbW=pVUp/+.iaUk/lk=Re
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 01/06/20 at 08:24pm, Dan Williams wrote:
+> On Mon, Jan 6, 2020 at 7:58 PM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > On 01/06/20 at 04:40pm, Dan Williams wrote:
+> > > With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
+> > > updated and replaced multiple times. When that happens a previous
+> > > dynamically allocated efi memory map can be garbage collected. Use the
+> > > new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
+> > > allocated memory map is being replaced.
+> > >
+> > > Debug statements in efi_memmap_free() reveal:
+> > >
+> > >  efi: __efi_memmap_free:37: phys: 0x23ffdd580 size: 2688 flags: 0x2
+> > >  efi: __efi_memmap_free:37: phys: 0x9db00 size: 2640 flags: 0x2
+> > >  efi: __efi_memmap_free:37: phys: 0x9e580 size: 2640 flags: 0x2
+> > >
+> > > ...a savings of 7968 bytes on a qemu boot with 2 entries specified to
+> > > efi_fake_mem=.
+> > >
+> > > Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > >  drivers/firmware/efi/memmap.c |   24 ++++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > >
+> > > diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+> > > index 04dfa56b994b..bffa320d2f9a 100644
+> > > --- a/drivers/firmware/efi/memmap.c
+> > > +++ b/drivers/firmware/efi/memmap.c
+> > > @@ -29,6 +29,28 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+> > >       return PFN_PHYS(page_to_pfn(p));
+> > >  }
+> > >
+> > > +static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
+> > > +{
+> > > +     if (flags & EFI_MEMMAP_MEMBLOCK) {
+> > > +             if (slab_is_available())
+> > > +                     memblock_free_late(phys, size);
+> > > +             else
+> > > +                     memblock_free(phys, size);
+> > > +     } else if (flags & EFI_MEMMAP_SLAB) {
+> > > +             struct page *p = pfn_to_page(PHYS_PFN(phys));
+> > > +             unsigned int order = get_order(size);
+> > > +
+> > > +             free_pages((unsigned long) page_address(p), order);
+> > > +     }
+> > > +}
+> > > +
+> > > +static void __init efi_memmap_free(void)
+> > > +{
+> > > +     __efi_memmap_free(efi.memmap.phys_map,
+> > > +                     efi.memmap.desc_size * efi.memmap.nr_map,
+> > > +                     efi.memmap.flags);
+> > > +}
+> > > +
+> > >  /**
+> > >   * efi_memmap_alloc - Allocate memory for the EFI memory map
+> > >   * @num_entries: Number of entries in the allocated map.
+> > > @@ -100,6 +122,8 @@ static int __init __efi_memmap_init(struct efi_memory_map_data *data)
+> > >               return -ENOMEM;
+> > >       }
+> > >
+> > > +     efi_memmap_free();
+> > > +
+> >
+> > This seems still not safe,  see below function:
+> > arch/x86/platform/efi/efi.c:
+> > static void __init efi_clean_memmap(void)
+> > It use same memmap for both old and new, and filter out those invalid
+> > ranges in place, if the memory is freed then ..
+> 
+> In the efi_clean_memmap() case flags are 0, so efi_memmap_free() is a nop.
+> 
+> Would you feel better with an explicit?
+> 
+> WARN_ON(efi.memmap.phys_map == data->phys_map && (data->flags &
+> (EFI_MEMMAP_SLAB | EFI_MEMMAP_MEMBLOCK))
+> 
+> ...not sure it's worth it.
 
-Hi all,
+Ah, yes, sorry I did not see the flags, although it is not very obvious.
+Maybe add some code comment for efi_mem_alloc and efi_mem_init.
 
-After merging the phy-next tree, today's linux-next build (86_64
-allmodconfig) produced this warning:
+Let's defer the suggestion to Ard.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/phy/intel/phy-intel-e=
-mmc.o
-see include/linux/module.h for more information
+Thanks
+Dave
 
-Introduced by commit
-
-  95f1061f715e ("phy: intel-lgm-emmc: Add support for eMMC PHY")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/r2YbW=pVUp/+.iaUk/lk=Re
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4UFG0ACgkQAVBC80lX
-0GzAcgf/VjIlVtrKNiTQX9j5vjt1TuuyLB33fhyLNtxFDoz10cyFEaQ4D8uZLxo0
-RrnWENG2RpTBPGeD0/ue2oQ12hVb6g4OSyIqf2FW6FExTuR+aOQHP//+eoGGs5sB
-zWhr9+nKrNsI3+ehyJImx/BsR33++JvnpKSyS3j+2QqGc+izO2XvoOULQiTTm3lG
-eCE7TkvnGql3HXkg7TZhu32qcR1AAWi0+ToZrMJS6zYK05kuCM7LZNZTRgPeVx13
-EJQndE/dSXTkOhK2W2fqMujCl9BT8s6E2l6h+gq8GSRgGRdZUEVHko15yZu+oUly
-VkEmhQZw0uDCAen9OJ9OeQl7DmE6PA==
-=JJKu
------END PGP SIGNATURE-----
-
---Sig_/r2YbW=pVUp/+.iaUk/lk=Re--
