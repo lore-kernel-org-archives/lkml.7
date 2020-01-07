@@ -2,102 +2,115 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A832EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D41BC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F18D208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D8620848
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DetI79OZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YdmBOFP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgAGRgN (ORCPT
+        id S1728515AbgAGRgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:36:13 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33510 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbgAGRgN (ORCPT
+        Tue, 7 Jan 2020 12:36:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28372 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728470AbgAGRgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:36:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c13so12934pls.0;
-        Tue, 07 Jan 2020 09:36:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=biLJqx330MZclQKessEfLfXglMmNrWIIv270QImnfKc=;
-        b=DetI79OZZiQHKwD5ytiJKZTadN7iND/zQ69WntNloQLAuUnsnXLxQbxbT302EGkP0k
-         JKVSpJJWgoVaIKkfSKz+E8+2ap8U3uS+flJoget1HgVrMlQpsqaoZBLe6WZnuiWBzFks
-         qrrbwymrQDXDzQwOtRm47krEls20N/8pNSGrR2zjBPxaEPuoCIezIQY7wkRtH0ocALOW
-         p5ouOZ4Ztu4Zd/d5CSrAo51KYnMc0otMcQN0SBhHB8YgL4yR1F1OvT8tRizdRtmKMgs3
-         wZ97riPRtD5cQMMgmHYQoViL5wvfIBl51CHzszJHkWDCr9/36owjkqFCzcqn86Jc/ih+
-         Hn0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=biLJqx330MZclQKessEfLfXglMmNrWIIv270QImnfKc=;
-        b=eks5SbcH6iI74sE0POda+4g1L4Af1iPPGxxZZ42tLYYNqjEapJLTB6HCiKOoErxM2K
-         2GB1wmVtyQrvZRz0N+hgxu52xhsF2k1YH5ZPjb4Am/PkKlZ5+qU9e0m/wfNTxGxgO2/J
-         uA41+u/Cca1fnKT/jKLrrzRFBIWf+WPmSAbka7HS5sDJ0+7ZOQuaER+vehrAbXhuS1pK
-         xY314YUrF6Z8aOXPQbrodu0kr1/kSR8tqz8f9ZD9TZmUhZUlK6mdw8y4XtsenIMPA0OI
-         R5dVx2hwvcuFqT1ZLZznULdKONl0hFE4cCSQjEXNxLF9mRquic1zJURXbiC6w5UnQ/Mq
-         LupQ==
-X-Gm-Message-State: APjAAAWiC3d8u/p9He21U2fboT2AMTu3Nh39zdP+kznaVMMK0KStYMTx
-        9BjqJj5kmZlMnhf1AoiUGws=
-X-Google-Smtp-Source: APXvYqwufFongLMRCZQI7krPgU64ZUrZqMS981mDC0wZjM39AA/2YeOgJm3A7rVk2a6ElDanPjotbw==
-X-Received: by 2002:a17:90a:fb4f:: with SMTP id iq15mr961026pjb.86.1578418572370;
-        Tue, 07 Jan 2020 09:36:12 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee3:fd53:981d:523f:a647:bef8])
-        by smtp.gmail.com with ESMTPSA id d3sm130091pfn.113.2020.01.07.09.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 09:36:12 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
-        dledford@redhat.com, paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH 2/3] infiniband: hw: qib: qib_verbs: Use built-in RCU list checking
-Date:   Tue,  7 Jan 2020 23:05:09 +0530
-Message-Id: <20200107173510.20320-2-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
-References: <20200107173510.20320-1-madhuparnabhowmik04@gmail.com>
+        Tue, 7 Jan 2020 12:36:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578418602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VihdCZ5GwLlSJ5I8YuEgJBv1m9R/zhpqOr0AnZl/yZE=;
+        b=YdmBOFP5CI7G2TIKS+HJjtSCf6qkbAVHrBPaq/ZKbFg9f5g3qsaRyhce/sWhyvz8zZ3pYq
+        0iTL05Rd2JaQy/C4dDT06oc2gaTRxBeAVZ8TJt0U0CGWhcZ2ysTeE0TpitImAcf+MH5pk+
+        CCIRuwiD1n/z7eTGn0KWZxsImYKodzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-rzrttXOJNdWyIMZZ1M4qZw-1; Tue, 07 Jan 2020 12:36:38 -0500
+X-MC-Unique: rzrttXOJNdWyIMZZ1M4qZw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CEE3DB34;
+        Tue,  7 Jan 2020 17:36:37 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EA4F6106B;
+        Tue,  7 Jan 2020 17:36:36 +0000 (UTC)
+Subject: Re: [PATCH v2] locking/qspinlock: Fix inaccessible URL of MCS lock
+ paper
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+References: <20200107151619.20802-1-longman@redhat.com>
+ <20200107173443.GB32009@willie-the-truck>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dd29ceda-cc8f-f418-9cce-1be4e33ae6f1@redhat.com>
+Date:   Tue, 7 Jan 2020 12:36:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200107173443.GB32009@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On 1/7/20 12:34 PM, Will Deacon wrote:
+> On Tue, Jan 07, 2020 at 10:16:19AM -0500, Waiman Long wrote:
+>> It turns out that the URL of the MCS lock paper listed in the source
+>> code is no longer accessible. I did got question about where the paper
+>> was. This patch updates the URL to BZ 206115 which contains a copy of
+>> the paper from
+>>
+>>   https://www.cs.rochester.edu/u/scott/papers/1991_TOCS_synch.pdf
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  kernel/locking/qspinlock.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+>> index 2473f10c6956..ce75b2270b58 100644
+>> --- a/kernel/locking/qspinlock.c
+>> +++ b/kernel/locking/qspinlock.c
+>> @@ -31,10 +31,9 @@
+>>  /*
+>>   * The basic principle of a queue-based spinlock can best be understood
+>>   * by studying a classic queue-based spinlock implementation called the
+>> - * MCS lock. The paper below provides a good description for this kind
+>> - * of lock.
+>> + * MCS lock. A copy of the original MCS lock papaer is available at
+> s/papaer/paper/
+>
+> I think I reviewed the previous patch as you sent this version, but please
+> could you reword as suggested here [1]?
+>
+> Cheers,
+>
+> Will
+>
+> [1] https://lore.kernel.org/lkml/20200107172343.GA32009@willie-the-truck/T/#m0f9eaf53e509b87d0f6378e35514c9b120d8edc2
+>
+Sure. I will send out v3 shortly.
 
-Use built-in RCU and lock checking for list_for_each_entry_rcu
-by passing cond argument to it.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/infiniband/hw/qib/qib_verbs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/qib/qib_verbs.c b/drivers/infiniband/hw/qib/qib_verbs.c
-index 33778d451b82..4dc7514ce626 100644
---- a/drivers/infiniband/hw/qib/qib_verbs.c
-+++ b/drivers/infiniband/hw/qib/qib_verbs.c
-@@ -329,7 +329,8 @@ void qib_ib_rcv(struct qib_ctxtdata *rcd, void *rhdr, void *data, u32 tlen)
- 		if (mcast == NULL)
- 			goto drop;
- 		this_cpu_inc(ibp->pmastats->n_multicast_rcv);
--		list_for_each_entry_rcu(p, &mcast->qp_list, list)
-+		list_for_each_entry_rcu(p, &mcast->qp_list, list
-+								lock_is_held(&(ibp->rvp.lock).dep_map))
- 			qib_qp_rcv(rcd, hdr, 1, data, tlen, p->qp);
- 		/*
- 		 * Notify rvt_multicast_detach() if it is waiting for us
--- 
-2.17.1
+Cheers,
+Longman
 
