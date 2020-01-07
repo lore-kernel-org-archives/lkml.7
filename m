@@ -2,183 +2,178 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A2AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A017EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52E72081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7032081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vJ3QKVYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgAGUQZ (ORCPT
+        id S1728746AbgAGUQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:16:25 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:55413 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgAGUQZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:16:25 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MrQR7-1jS5Fh1b8x-00oVdi; Tue, 07 Jan 2020 21:16:06 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        Joe Eykholt <jeykholt@cisco.com>,
-        Mike Christie <michaelc@cs.wisc.edu>,
-        Abhijeet Joglekar <abjoglek@cisco.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fnic: fix invalid stack access
-Date:   Tue,  7 Jan 2020 21:15:49 +0100
-Message-Id: <20200107201602.4096790-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 7 Jan 2020 15:16:43 -0500
+Received: from mail-bn8nam11on2063.outbound.protection.outlook.com ([40.107.236.63]:43105
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728379AbgAGUQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:16:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CoIsC/cCBZ46AQUkQu1pKarxWQs+3Zl8ClgM8bn/ly5B7CYkR3WFiqz+3cJRwMXmcG0LcGlgTg4au9GQ8Wxniy4JruUqu0wdpmhpDhBhxfaHpOkodlGgda1KTqCr12yMFiMa8gy0CHMjpePsieYf33ZyXqznCWUVBKZyqHs8vWB5Mqlmg4+qg1H94XQeq6cEeQKukJZxUkEWBr+fdWXPqAhKRhtOAxHH71f2kfA+buWFXek9yULLPrHBEhi3VB/uaOvHz4KhcJmKIfnNqWg1MFfYUfNNPzYeT2Woe2B/SZ0IyROQ6N0hl3Dcg4G9Wlt7ownUnXCeo9k6xx+WJoaGeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SKHZ30Cvzabcrsk7Sy8A4LjLrswDhrdcGSXUfMUHsms=;
+ b=Of8y0k56lwYMDBO4Sn7WHtLqrqLOlndCSriaMe4DxilMWdpVXNxibW7VoZiMnYAfyC0d0I3Bqx/ZGFTE5HhnpNkQo3LoJIwpmfIqO97CC4VivoC0lAHosods18Tp/1wNqDyY7OqZuFzsPSo8lclpCuKNyUvRc0f9u2Lubsw4w3Bgc19qf4r8IXeNXxKnS9Wz3Q3O56ABXk5tQqf13ZjucpnwKKwGR5DAoFW9B9EfXE/rf0Ut1jJJlMPAM2843JiGRuLc+P67C03a1UzoARV+zd/vS40hV1cjWS4QiOqrrRP175T1XCnj/69fB+KBcnLarJKrANUIjLPZuvaiKxJVZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SKHZ30Cvzabcrsk7Sy8A4LjLrswDhrdcGSXUfMUHsms=;
+ b=vJ3QKVYMlpRTdsligrsG9W0ij0wMW2gWe1oeWobCBTM+zlVT/SG9gGt7wS2XZZGiBAAINjB0eEFvIbb8NQhj7lYL9kBUZankpcR+JjHGHiIXcMFtqvTu/Di4e/AUs4jaxdqRj+cEttp00tJFFIHlsXEuGX9i6H9GYvua5qAR+NI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB3355.namprd12.prod.outlook.com (20.178.29.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.13; Tue, 7 Jan 2020 20:16:39 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
+ 20:16:39 +0000
+Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
+ encryption is enabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
+ <20200106224931.GB12879@linux.intel.com>
+ <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
+ <20200106233846.GC12879@linux.intel.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
+Date:   Tue, 7 Jan 2020 14:16:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20200106233846.GC12879@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0006.prod.exchangelabs.com (2603:10b6:805:b6::19)
+ To DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:K1KYSV0cJGtVg+TJWCYsRWWJJ9TvxGO00fSnDNoLEwCbAThvW6P
- 0dOMljJLPjjYc+Ef3QERcKvOdSQPtNIYqOzoz0ePAIvHo3LyPF2z9aEDIblaaNo9Q039lxT
- nL84AyTp+yP8K4G7074F7xDIhxZkvKxqWidkBRzl59oZXq4hMKzTx3RiEEc0gTOVCXSnk9Y
- omOZEVzHuiAcso91Xthwg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Tp6NYtjwL5I=:k5WIeqKeseUq8u9a+e4+A5
- /g1BxYrgwFO6nUsqbTvLYi2uU5w7Gp23F3cSVNxW69ikv6dICD103Q5aDnGXDbHpoOcqJu8yS
- BgGSHmtSdwM99j1grgcJ+XN6UjAo4w8B2BL6it/ulAfdGiD2JBbh3ZjDzc+NL54UITYNMTpSV
- ick6WeAYF15S6FavgY917Z/Z2RREK2QX8cYghH7rLlstxkBZhUsOnurhoRCNXWw8ncPpS9qf1
- hnBIo1o/dxsEOQ6vW4fSoMyYYylRWzYz0jKTMDsdL+1Q/q5JEgBYN66xHQvAz+23utjUB4Uyo
- w0vhX/s307hp5K7SSAniDvWdN0HusAmsQLXMVprpvrzpo+OWzt2DGgH/8y+KTC9HHB8chzxr8
- FOCt8brzZ1tjuvNgz/EXJSRHTBq4dO05u+Ol/a4USuAXUPMVzGB93Rx2sAwIB3Qav06Q/MibK
- 3yxtCltDR34V6M0ekOQualyvnUaxmYqelYT2bpun7z4PA+MbkytweRLIZ+r2lt9os1JBnjS5L
- zM4YeJxSTp40irXhiPmDdEWm/sjmXhz9O9G1eEK32GnRf2h2eK0wQY1lwNlpGXkszzh6IZY2r
- sznsAkG4woV8FqaAe40CIR20zNMUU+7L6HUnbBvrCuLZWUHw1IuYHYLVMaykK7qEenijKoUpA
- klDdpw8t92Psp0Uz+HUphk114qYODoW9UI47ifTkEMf+oK9qDHLg5NbxGb72+rb3rIYDAd6cU
- HHQcRT6zZAu+hXUrjhczbxBTHXZ44VSbP9VdgTeIbNs3CxBpU4JC1Nak1yL3RlghMMEmTXXjV
- /ViHmUngA2ox8gOkCm6BuhTNI3UZXlKlKKmUB7BE8lKD+s3bHxLXJvldXc1hk83tHiUweWdBN
- kAFKkl2SuAkeDoiS/G5Q==
+Received: from [10.236.30.74] (165.204.77.1) by SN6PR01CA0006.prod.exchangelabs.com (2603:10b6:805:b6::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend Transport; Tue, 7 Jan 2020 20:16:38 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 27609db1-de51-4c75-11ef-08d793ae80ed
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3355:|DM6PR12MB3355:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3355DA22047940119A472C8EEC3F0@DM6PR12MB3355.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 027578BB13
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(81156014)(2906002)(6916009)(5660300002)(16576012)(8936002)(81166006)(316002)(8676002)(86362001)(31696002)(6486002)(2616005)(956004)(36756003)(26005)(186003)(4326008)(53546011)(31686004)(16526019)(66476007)(52116002)(66556008)(54906003)(478600001)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3355;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zMpvyS2xRvc1SOGTwolDzeL8T/g4PqcqR1+DvvKyx5ruqPG7WtD+E/I638xW606BmNxub88y0WqIDeGFug6jVutbkbj/+YwkGUBo9V7IrWeb6RlH/1P4bkb5P6dT07LhOa7IAkKhlQF3PQ3K//almIktCaI09C8c7a/+Vj3URrzIb7Vs+dt9Rr+oDSxA5okXF13uk4KjAUMjwhln+iwrk1ITQfvX990XQMUMRUzGWtLfJx2ho5yk1xAWwlv1knR9WzK7KHPfJbBwtm0WqbN8t8WX/pZsl+qAAtOj3i6Mja4cQSmDWBrJTukbjB+1c7FSQ4PmprqM4aX4dXLG/jjmXJgm7Kkv5EUBTpu0Ap5u+6SXoIp2pGo8PWne+O0j4P3Qxi4Zw1d0QfTeb5rpscQAHSkIXa3Rwi1ZRJ2mVb0Au8QE7PbLGqJjdn1qCJPNxPdU
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27609db1-de51-4c75-11ef-08d793ae80ed
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 20:16:39.4626
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qO7K0Fry01MG87+r8tSUSn5ZOaZOQBDGyCGzQOaEBepAf4JapITT5UNnhN+HdW6O7L+n7oW+nsxYdMbbut4Ncg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3355
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc -O3 warns that some local variables are not properly initialized:
+On 1/6/20 5:38 PM, Sean Christopherson wrote:
+> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
+>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
+>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
+>>> on a future processor, i.e. x86_phys_bits==52.
+>>
+>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
+>> always be a reduction in physical addressing (so I'm told).
+> 
+> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
+> that reducing the PA space is optional.  Section 7.10.2 is especially
+> clear on this:
+> 
+>   In implementations where the physical address size of the processor is
+>   reduced when memory encryption features are enabled, software must
+>   ensure it is executing from addresses where these upper physical address
+>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
 
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
-drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[0] = *a0;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
-  u64 a0, a1;
-      ^~
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
+It's probably not likely, but given what is stated, I can modify my patch
+to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
 
-Apparently the code relies on the local variables occupying
-adjacent memory locations in the same order, but this is of
-course not guaranteed.
+	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
+	    boot_cpu_data.x86_phys_bits < 52) {
 
-Use an array of two u64 variables where needed to make it work
-correctly.
+> 
+> But, hopefully the other approach I have in mind actually works, as it's
+> significantly less special-case code and would naturally handle either
+> case, i.e. make this a moot point.
 
-I suspect there is also an endianess bug here, but have not
-digged in deep enough to be sure.
+I'll hold off on the above and wait for your patch.
 
-Cc: stable@vger.kernel.org
-Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/fnic/vnic_dev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Thanks,
+Tom
 
-diff --git a/drivers/scsi/fnic/vnic_dev.c b/drivers/scsi/fnic/vnic_dev.c
-index 1f55b9e4e74a..1b88a3b53eee 100644
---- a/drivers/scsi/fnic/vnic_dev.c
-+++ b/drivers/scsi/fnic/vnic_dev.c
-@@ -688,26 +688,26 @@ int vnic_dev_soft_reset_done(struct vnic_dev *vdev, int *done)
- 
- int vnic_dev_hang_notify(struct vnic_dev *vdev)
- {
--	u64 a0, a1;
-+	u64 a0 = 0, a1 = 0;
- 	int wait = 1000;
- 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
- }
- 
- int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
- {
--	u64 a0, a1;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err, i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
- 		mac_addr[i] = 0;
- 
--	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
- 	if (err)
- 		return err;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		mac_addr[i] = ((u8 *)&a0)[i];
-+		mac_addr[i] = ((u8 *)&a)[i];
- 
- 	return 0;
- }
-@@ -732,30 +732,30 @@ void vnic_dev_packet_filter(struct vnic_dev *vdev, int directed, int multicast,
- 
- void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't add addr [%pM], %d\n", addr, err);
- }
- 
- void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't del addr [%pM], %d\n", addr, err);
- }
--- 
-2.20.0
-
+> 
+> 
+> Entry on SYSCFG:
+> 
+>   3.2.1 System Configuration Register (SYSCFG)
+> 
+>   ...
+> 
+>   MemEncryptionMode. Bit 23.  Setting this bit to 1 enables the SME and
+>   SEV memory encryption features.
+> 
+> The SME entry the above links to says:
+> 
+>   7.10.1 Determining Support for Secure Memory Encryption
+> 
+>   ...
+> 
+>   Additionally, in some implementations, the physical address size of the
+>   processor may be reduced when memory encryption features are enabled, for
+>   example from 48 to 43 bits. In this case the upper physical address bits are
+>   treated as reserved when the feature is enabled except where otherwise
+>   indicated. When memory encryption is supported in an implementation, CPUID
+>   Fn8000_001F[EBX] reports any physical address size reduction present. Bits
+>   reserved in this mode are treated the same as other page table reserved bits,
+>   and will generate a page fault if found to be non-zero when used for address
+>   translation.
+> 
+>   ...
+> 
+>   7.10.2 Enabling Memory Encryption Extensions
+> 
+>   Prior to using SME, memory encryption features must be enabled by setting
+>   SYSCFG MSR bit 23 (MemEncryptionModEn) to 1. In implementations where the
+>   physical address size of the processor is reduced when memory encryption
+>   features are enabled, software must ensure it is executing from addresses where
+>   these upper physical address bits are 0 prior to setting
+>   SYSCFG[MemEncryptionModEn]. Memory encryption is then further controlled via
+>   the page tables.
+> 
