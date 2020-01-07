@@ -2,111 +2,105 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5394FC32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96926C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204752072E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2862075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 01:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFmw+lIm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="go/i/cMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgAGBi2 (ORCPT
+        id S1727445AbgAGBjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 20:38:28 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33664 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbgAGBi2 (ORCPT
+        Mon, 6 Jan 2020 20:39:25 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34474 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbgAGBjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 20:38:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c13so22539042pls.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 17:38:27 -0800 (PST)
+        Mon, 6 Jan 2020 20:39:24 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so20923809pfc.1;
+        Mon, 06 Jan 2020 17:39:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LbxwARlz1ko3GWGQvzOFEv5MYg9xQq+ABogjlwJafkI=;
-        b=CFmw+lImzip0yS8uJHgBucjs8+wZAbSug4hsHCBoGUlc4ylZunBXcX6c/NV3OD7OAl
-         fi3inLrLTgvQDZZ9fZBeCwIkraXefcod7rG0f2WazGjw8pg6X07BAon7qcyQXySENw04
-         woFk6JT0HvR8Pq/BCjmnH6tFrxwoOEXDrBPoVO6bJdUdyhEylp9T3gTZAuR1i57xcpM3
-         RVGgsMiFsdfEbJP6Vv2km7ShVE2iVce4lYH4e8KlDQRfjg0KqW5r4bvjUjMr349+bnnc
-         9J9j2nYyvOhp/JIXTKMKUmBN5qxnwegT2FkzAE8D+Ezmpmf+zAWIkSFaW2PZa9c1xf42
-         tUhQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BcDQpu3fVXCp65bnUVYlKVk92q4FOMqEZL5EQW3/yP0=;
+        b=go/i/cMbOARRQVokioLhN/htb67IaDYlIXboEVmR1TbTKiQ2STY3u7h+OAlUGluGD9
+         nisE4oGOyJq2DU9BJziGyu5rlwdKzFeJ8Q99xx5LSTmq7kug3g4njnY6/IeKySSE6Rpw
+         J6XkW9JpUQXDpViYg4XB8n/79IPwt7hKekALIFpDbrOhptBoDWHnFaSk2B+YnAYdWu0y
+         qdFnXhGxKJgvsVSUR2YL+tGpYZNiXXKJ3JiYosEq6NEAqSX0pJDImRkoaRZPygFcq1BT
+         15fYgMMSzAoiREZHI9aSh1KDDnudMKMr0YNg7NLALjqLaxOkj4BPjHd54Cd94JuK2hTK
+         aODw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LbxwARlz1ko3GWGQvzOFEv5MYg9xQq+ABogjlwJafkI=;
-        b=n1gBZPzTJlqUCZ8DOkDmUCgxZ8bEJ9fhasgTJJ9cR9KzVPM5pF7v7kFiK01pCNrR8g
-         ArRgK2yIsL5H9JXJh1b1fsoMOhppq2JK49ypCKftZnUbc7mP8PIDUX0mbvowRY08x7he
-         uPMk2kmAjxIE6DEx0psc1WO95iqaEXV+jtJ+NhHhp4AgT95cYdw6hKAmdFYk2vuV0jej
-         1Wr0n1oyzlkyTN2u2/Z9c06SVimEbKEEfpInhSxBLvtldGiHm2mw7/kGgIfIiqULhBfi
-         MuymZDlgCY36bM8wN3maNmYazU7/2FW9bVSdlikfj/C97SqJumwToOd/sfnhtQsrc0Ve
-         cVfQ==
-X-Gm-Message-State: APjAAAUIrOmKRAg5OGYNZwQXpfAxnj6aR538MzdbbWby3wtpA8rnlbvY
-        1VoEWeE0GQjH37pWf2xzsDdRmg==
-X-Google-Smtp-Source: APXvYqxyvnxOxTcCe0dn7YHNv+cO5CLCfjxIjbcJ9S11/+aDP3p7Wq3EfQWT8J3xyOp5WDNaI9y5FQ==
-X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr45559857pjz.135.1578361107419;
-        Mon, 06 Jan 2020 17:38:27 -0800 (PST)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r7sm81049002pfg.34.2020.01.06.17.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 17:38:26 -0800 (PST)
-Date:   Mon, 6 Jan 2020 17:38:23 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] reset: Kconfig: Set CONFIG_RESET_QCOM_AOSS as tristate
-Message-ID: <20200107013823.GG1214176@minitux>
-References: <20200107010350.58657-1-john.stultz@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107010350.58657-1-john.stultz@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BcDQpu3fVXCp65bnUVYlKVk92q4FOMqEZL5EQW3/yP0=;
+        b=W2pOOyFJZNcJniknCcnNjUvdGYI3kVYh1f1S5Nk03dK2Moy3Ng/+vCZc4EXyiZSoSj
+         Azr1n1gDeiR9cF1cQyUzyKULD0hZGNUiRM3lFQmYIMrMfUGqq9IPSIj/r5+Bxv+Fvuea
+         ii02gF1IWBYCv/TMWDA10AYAuCwtqF9I8jv5tagcNKh+y0wv3D/2xIRThOdAKhzwACva
+         0Gg6gk4TMSP0rACSqcP6Qs0hJ0ROiuf61G9kAuxmwo5EabUE1AjTYwVQnccEN6zxLI+f
+         adinjThPPIlQBcKdVErI8XdMGpY+mgUQ+uxuDZvEcY1KDBEtvxabdPzOiqwLD0TsIP0Q
+         A22g==
+X-Gm-Message-State: APjAAAWxWPHINIdgHFiEsOT2XUvpk9GU8njHleD+sOZMBOSiYd0JX2Nw
+        e6Dv4nOOtSiw6IPvrDctRKTKwcc0
+X-Google-Smtp-Source: APXvYqyrC/hBUWYQWUfTch01WDIl59Zo5xgxUL1U3eB1k4mRKVaNtP7SHeVR+/2OMDkTHoKxKDx68w==
+X-Received: by 2002:aa7:96b7:: with SMTP id g23mr109012696pfk.108.1578361164098;
+        Mon, 06 Jan 2020 17:39:24 -0800 (PST)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id p23sm74779248pgh.83.2020.01.06.17.39.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Jan 2020 17:39:23 -0800 (PST)
+From:   liuyang34 <yangliuxm34@gmail.com>
+X-Google-Original-From: liuyang34 <liuyang34@xiaomi.com>
+To:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     liuyang34 <liuyang34@xiaomi.com>
+Subject: [PATCH v2] selinuxfs: use scnprinft to get real length for inode
+Date:   Tue,  7 Jan 2020 09:39:18 +0800
+Message-Id: <1578361158-27940-1-git-send-email-liuyang34@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06 Jan 17:03 PST 2020, John Stultz wrote:
+as the return value of snprintf maybe over the size of TMPBUFLEN, use scnprintf
+to instead of it in sel_read_class and sel_read_perm
 
-> Allow CONFIG_RESET_QCOM_AOSS to be set as as =m
-> to allow for the driver to be loaded from a modules.
-> 
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Alistair Delva <adelva@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
+---
+ security/selinux/selinuxfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
+index ee94fa4..376d2c0e 100644
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -1672,7 +1672,7 @@ static ssize_t sel_read_class(struct file *file, char __user *buf,
+ {
+ 	unsigned long ino = file_inode(file)->i_ino;
+ 	char res[TMPBUFLEN];
+-	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
++	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_class(ino));
+ 	return simple_read_from_buffer(buf, count, ppos, res, len);
+ }
+ 
+@@ -1686,7 +1686,7 @@ static ssize_t sel_read_perm(struct file *file, char __user *buf,
+ {
+ 	unsigned long ino = file_inode(file)->i_ino;
+ 	char res[TMPBUFLEN];
+-	ssize_t len = snprintf(res, sizeof(res), "%d", sel_ino_to_perm(ino));
++	ssize_t len = scnprintf(res, sizeof(res), "%d", sel_ino_to_perm(ino));
+ 	return simple_read_from_buffer(buf, count, ppos, res, len);
+ }
+ 
+-- 
+2.7.4
 
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/reset/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 3ad7817ce1f0..45e70524af36 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -99,7 +99,7 @@ config RESET_PISTACHIO
->  	  This enables the reset driver for ImgTec Pistachio SoCs.
->  
->  config RESET_QCOM_AOSS
-> -	bool "Qcom AOSS Reset Driver"
-> +	tristate "Qcom AOSS Reset Driver"
->  	depends on ARCH_QCOM || COMPILE_TEST
->  	help
->  	  This enables the AOSS (always on subsystem) reset driver
-> -- 
-> 2.17.1
-> 
