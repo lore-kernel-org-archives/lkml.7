@@ -2,89 +2,190 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1D2C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17F820656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D752081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:49:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dT99APbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgAGNto convert rfc822-to-8bit (ORCPT
+        id S1728080AbgAGNto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 7 Jan 2020 08:49:44 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49485 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727658AbgAGNto (ORCPT
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:17623 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgAGNtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:49:44 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-35-r-ymTIbtO2ia86kj15aT7g-1; Tue, 07 Jan 2020 13:49:41 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 7 Jan 2020 13:49:40 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 7 Jan 2020 13:49:40 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: ftrace trace_raw_pipe format
-Thread-Topic: ftrace trace_raw_pipe format
-Thread-Index: AdW0/hn3Ss2VXYeUS7iB4GPS8sdlIgAK/t2AACd1JMAD46PTkA==
-Date:   Tue, 7 Jan 2020 13:49:40 +0000
-Message-ID: <8b225fdcbe6e4cc7bba302d899e277ae@AcuMS.aculab.com>
-References: <e8f9744ddffc4527b222ce72d41c61a1@AcuMS.aculab.com>
- <20191217173403.61f4e2d8@gandalf.local.home>
- <3df0aa9c69ec4d2086b96eb032a1a0df@AcuMS.aculab.com>
-In-Reply-To: <3df0aa9c69ec4d2086b96eb032a1a0df@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 7 Jan 2020 08:49:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1578404984; x=1609940984;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=b7YvakxQUDhIYxvaIP9AWgD21Q+/Dpc5za+Ll0cvmyA=;
+  b=dT99APbDX8WMAzafx3B8f95/9xO4fvleBjqyIk6v96dvO6PO52gjVvPk
+   fRhhuA4cKDye1YfFrj70R5lTw62V0W6T3TvwxpNWrMoeCizEDVxphcWgS
+   U8ExARa4Bcw1TrbvWmprHDJ0MxIO30zr65nVPg+SkIo+Ujg/CSGh+PQvo
+   8=;
+IronPort-SDR: +Orc/lmc0ipZQOdDDcYTpgvJiEqgvHzto1KG0KJliFle6CUe+TAtUYAMMz6jQWJnzCEk4rpOsE
+ ncanrSeUR9wg==
+X-IronPort-AV: E=Sophos;i="5.69,406,1571702400"; 
+   d="scan'208";a="17221127"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Jan 2020 13:49:32 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id B2780141623;
+        Tue,  7 Jan 2020 13:49:27 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 7 Jan 2020 13:49:27 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.244) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 7 Jan 2020 13:49:23 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sj38.park@gmail.com>
+Subject: Re: Re: Re: What is the best way to compare an unsigned and a constant?
+Date:   Tue, 7 Jan 2020 14:49:10 +0100
+Message-ID: <20200107134910.20347-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAFd5g47-wi0duBAVxvevDKT7eb7WGT9JMFoKgCJQQSa0P0h9Jw@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: r-ymTIbtO2ia86kj15aT7g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.244]
+X-ClientProxiedBy: EX13D06UWC004.ant.amazon.com (10.43.162.97) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After reading the code in kbuffer-parse.c I can now get a sequence of trace entries
-with their timestamps.
+On   Tue, 7 Jan 2020 05:35:21 -0800   Brendan Higgins <brendanhiggins@google.com> wrote:
 
-I think there is a bug in the processing (skipping) of KBUFFER_TYPE_TIME_STAMP
-in translate_data().
-I assume a 64bit timestamp would follow, and 'data' should only be incremented
-by 8 (not 12) as there is an increment by 4 earlier.
-I'm pretty sure these are never generated - __next_event() doesn't loop.
+> Sorry for the delay, I was on vacation. (I still am, but I was too ;-).)
 
-It is ~impossible to match this parsing code to the generating code because none
-of the constants are in a shared header file.
+Happy new year, Brendan :)
 
-Back to my original problem:
+> 
+> On Tue, Jan 7, 2020 at 3:52 AM SeongJae Park <sjpark@amazon.com> wrote:
+> >
+> > On   Fri, 27 Dec 2019 13:52:27 +0100   Bernd Petrovitsch <bernd@petrovits=
+> ch.priv.at> wrote:
+> >
+> > > This is a multi-part message in MIME format.
+> > > --------------D98A0A31D62B0BC2939BAEE9
+> > > Content-Type: text/plain; charset=3Dutf-8
+> > > Content-Transfer-Encoding: quoted-printable
+> > >
+> > > Hi all!
+> > >
+> > > On 27/12/2019 13:39, SeongJae Park wrote:
+> > > [...]
+> > > > I have a function returning 'unsigned long', and would like to write =
+> a =3D
+> > > kunit
+> > > > test for the function, as below.
+> > > >=3D20
+> > > >     unsigned long foo(void)
+> > > >     {
+> > > >             return 42;
+> > > >     }
+> > > >=3D20
+> > > >     static void foo_test(struct kunit *test)
+> > > >     {
+> > > >         KUNIT_EXPECT_EQ(test, 42, foo());
+> > > >     }
+> > >
+> > > For this case: shouldn't=3D20
+> > > ----  snip  ----
+> > > static void foo_test(struct kunit *test)
+> > > {
+> > >      KUNIT_EXPECT_EQ(test, 42ul, foo());
+> > > }
+> > > ----  snip  ----
+> > > do the trick?
+> >
+> > Unfortunately, it doesn't works.
+> >
+> >     [13:04:58] Building KUnit Kernel ...
+> >     In file included from /.../linux/include/linux/list.h:9:0,
+> >                      from /.../linux/include/linux/wait.h:7,
+> >                      from /.../linux/include/linux/wait_bit.h:8,
+> >                      from /.../linux/include/linux/fs.h:6,
+> >                      from /.../linux/include/linux/debugfs.h:15,
+> >                      from /.../linux/mm/damon.c:12:
+> >     /.../linux/mm/damon-test.h: In function =E2=80=98damon_test_foo=E2=80=
+> =99:
+> >     /.../linux/include/linux/kernel.h:842:29: warning: comparison of dist=
+> inct pointer types lacks a cast
+> >        (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
+> >                                  ^
+> >     /.../linux/include/kunit/test.h:493:9: note: in expansion of macro =
+> =E2=80=98__typecheck=E2=80=99
+> >       ((void)__typecheck(__left, __right));           \
+> >              ^~~~~~~~~~~
+> >     /.../linux/include/kunit/test.h:517:2: note: in expansion of macro =
+> =E2=80=98KUNIT_BASE_BINARY_ASSERTION=E2=80=99
+> >       KUNIT_BASE_BINARY_ASSERTION(test,           \
+> >       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /.../linux/include/kunit/test.h:606:2: note: in expansion of macro =
+> =E2=80=98KUNIT_BASE_EQ_MSG_ASSERTION=E2=80=99
+> >       KUNIT_BASE_EQ_MSG_ASSERTION(test,           \
+> >       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /.../linux/include/kunit/test.h:616:2: note: in expansion of macro =
+> =E2=80=98KUNIT_BINARY_EQ_MSG_ASSERTION=E2=80=99
+> >       KUNIT_BINARY_EQ_MSG_ASSERTION(test,           \
+> >       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /.../linux/include/kunit/test.h:979:2: note: in expansion of macro =
+> =E2=80=98KUNIT_BINARY_EQ_ASSERTION=E2=80=99
+> >       KUNIT_BINARY_EQ_ASSERTION(test, KUNIT_EXPECTATION, left, right)
+> >       ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >     /.../linux/mm/damon-test.h:565:2: note: in expansion of macro =E2=80=
+> =98KUNIT_EXPECT_EQ=E2=80=99
+> >       KUNIT_EXPECT_EQ(test, 42ul, (int)foo());
+> >       ^~~~~~~~~~~~~~~
+> 
+> Isn't the issue here that you fixed the 42, but are now casting the
+> result of foo() to an int?
 
-I've a set of trace files that contain 4 4k blocks each.
-The 4 blocks are in time order, but I think there is a big time discontinuity
-between the first and second blocks.
-The second block has both MISSED_EVENTS and MISSED_STORED set.
-My suspicion is that the first block (partially filled) is the final block
-from the previous trace and its presence is a bug.
-So anything processing the trace must completely ignore the first
-block (if the second reports MISSED_EVENTS).
+Oh, right...  Removing the non-sense casting fixed the problem.  Thanks,
+Brendan!
 
-The 4th block is also partial - which is what I expect.
 
-	David
+Thanks,
+SeongJae Park
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> 
+> Or have you fixed that now too?
+> 
+> Worst case (gross) scenario, you could just cast 42 to whatever type
+> foo() returns.
+> 
+> > Some other thoughts?
+> >
+> >
+> > Thanks,
+> > SeongJae Park
+> >
+> >
+> > >
+> > > MfG,
+> > >       Bernd
+> > > --=3D20
+> > > "I dislike type abstraction if it has no real reason. And saving
+> > > on typing is not a good reason - if your typing speed is the main
+> > > issue when you're coding, you're doing something seriously wrong."
+> > >     - Linus Torvalds
+> 
