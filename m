@@ -2,76 +2,79 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205F3C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE8C24676
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B8C208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 13:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgAGNus (ORCPT
+        id S1728109AbgAGNwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:50:48 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9119 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727658AbgAGNus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:50:48 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 627125F4EBFE2DB72D19;
-        Tue,  7 Jan 2020 21:50:45 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 7 Jan 2020
- 21:50:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <ville.syrjala@linux.intel.com>, <chris@chris-wilson.co.uk>,
-        <tvrtko.ursulin@intel.com>, <yuehaibing@huawei.com>,
-        <matthew.auld@intel.com>
-CC:     <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] drm/i915: Add missing include file <linux/math64.h>
-Date:   Tue, 7 Jan 2020 21:50:14 +0800
-Message-ID: <20200107135014.36472-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 7 Jan 2020 08:52:20 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13439 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbgAGNwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:52:20 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 05:52:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="225675047"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 07 Jan 2020 05:52:17 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 07 Jan 2020 15:52:16 +0200
+Date:   Tue, 7 Jan 2020 15:52:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
+Message-ID: <20200107135216.GR465886@lahna.fi.intel.com>
+References: <20191229013059.495767-1-linus.walleij@linaro.org>
+ <20191230102021.GF2628@lahna.fi.intel.com>
+ <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build error:
-./drivers/gpu/drm/i915/selftests/i915_random.h: In function i915_prandom_u32_max_state:
-./drivers/gpu/drm/i915/selftests/i915_random.h:48:23: error:
- implicit declaration of function mul_u32_u32; did you mean mul_u64_u32_div? [-Werror=implicit-function-declaration]
-  return upper_32_bits(mul_u32_u32(prandom_u32_state(state), ep_ro));
+On Tue, Jan 07, 2020 at 11:32:54AM +0100, Linus Walleij wrote:
+> On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
+> > > We need to convert all old gpio irqchips to pass the irqchip
+> > > setup along when adding the gpio_chip. For more info see
+> > > drivers/gpio/TODO.
+> > >
+> > > Set up the pin ranges using the new callback.
+> >
+> > Maybe have this one split as a separate patch? Same what we do for
+> > Baytrail and Cherryview.
+> 
+> I'm afraid to do that since splitting the semantic ordering was
+> something that broke a lot of times already, I was under the
+> impression that doing the two things (moving to the callback
+> and adding along with the gpio_chip) at the same time was
+> the only way to preserve the semantic ordering.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 7ce5b6850b47 ("drm/i915/selftests: Use mul_u32_u32() for 32b x 32b -> 64b result")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/i915/selftests/i915_random.h | 1 +
- 1 file changed, 1 insertion(+)
+Well at least we do the same for others (add the callback in another
+patch and then pass irqchip in another) but no strong feelings. I'm fine
+with this one as well :)
 
-diff --git a/drivers/gpu/drm/i915/selftests/i915_random.h b/drivers/gpu/drm/i915/selftests/i915_random.h
-index 35cc69a..f650cfb 100644
---- a/drivers/gpu/drm/i915/selftests/i915_random.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_random.h
-@@ -26,6 +26,7 @@
- #define __I915_SELFTESTS_RANDOM_H__
- 
- #include <linux/random.h>
-+#include <linux/math64.h>
- 
- #include "../i915_selftest.h"
- 
--- 
-2.7.4
+> But more than anything I want someone to test it ...
 
-
+I quickly tested this on Whiskey Lake and SD card detection interrupt
+still works fine after this patch.
