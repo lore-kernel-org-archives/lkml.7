@@ -2,333 +2,97 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAD8C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E33C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898F3206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gf7XCgxS"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5AC2072E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 00:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgAGAAL (ORCPT
+        id S1727315AbgAGAKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 19:00:11 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41116 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgAGAAK (ORCPT
+        Mon, 6 Jan 2020 19:10:50 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54997 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbgAGAKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 19:00:10 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 755B252F;
-        Tue,  7 Jan 2020 01:00:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1578355207;
-        bh=9VHkNEnMxkNw7CIek1nfHpk8hjLtgRvsk9eM6Lgfkr4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gf7XCgxSRpHjF+Bq8d2Sg562EcBm2VSUxvBnhV/l/t+TaQuh15R+e9JQvEEUqNnZM
-         WttXVvA3957CmLL34BnX92BBdg/c8YbwWsj3hCJ2husoAkrR6+mlR5SdDGVCFtzCCt
-         XOFdDsgLzw/oIZgArzZeUseZDcSxiDeaMKQV/VW4=
-Date:   Tue, 7 Jan 2020 01:59:57 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
- yaml bindings
-Message-ID: <20200106235957.GA28230@pendragon.ideasonboard.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
- <20191227200116.2612137-9-helen.koike@collabora.com>
+        Mon, 6 Jan 2020 19:10:50 -0500
+Received: from dread.disaster.area (pa49-180-68-255.pa.nsw.optusnet.com.au [49.180.68.255])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D944A3A2B05;
+        Tue,  7 Jan 2020 11:10:45 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iocSG-0006iB-01; Tue, 07 Jan 2020 11:10:40 +1100
+Date:   Tue, 7 Jan 2020 11:10:39 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-mm@kvack.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+Message-ID: <20200107001039.GM23195@dread.disaster.area>
+References: <cover.1578225806.git.chris@chrisdown.name>
+ <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191227200116.2612137-9-helen.koike@collabora.com>
+In-Reply-To: <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=sbdTpStuSq8iNQE8viVliQ==:117 a=sbdTpStuSq8iNQE8viVliQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=bVpIlPjQrN2W4rbB-h8A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
-
-Thank you for the patch.
-
-On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
-> Add yaml DT bindings for Rockchip ISP1.
+On Sun, Jan 05, 2020 at 12:06:05PM +0000, Chris Down wrote:
+> The default is still set to inode32 for backwards compatibility, but
+> system administrators can opt in to the new 64-bit inode numbers by
+> either:
 > 
-> This was tested and verified with:
-> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 1. Passing inode64 on the command line when mounting, or
+> 2. Configuring the kernel with CONFIG_TMPFS_INODE64=y
 > 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
-> ---
-> 
-> Changes in v12:
-> - The commit replaces the following commit in previous series named
-> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
-> This new patch adds yaml binding and was verified with
-> make dtbs_check and make dt_binding_check
-> 
-> Changes in v11:
-> - add clock-names values
-> 
-> Changes in v10:
-> - unsquash
-> 
-> Changes in v9:
-> - squash
-> - move to staging
-> 
-> Changes in v8:
-> - fix title division style
-> 
-> Changes in v7:
-> - update document with new design and tested example
-> 
->  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
->  1 file changed, 193 insertions(+)
->  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> new file mode 100644
-> index 000000000000..4d1b2c67a4cd
-> --- /dev/null
-> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> @@ -0,0 +1,193 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SoC Image Signal Processing unit v1
-> +
-> +maintainers:
-> +  - Helen Koike <helen.koike@collabora.com>
-> +
-> +description: |
-> +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
-> +  which contains image processing, scaling, and compression funcitons.
-> +
-> +properties:
-> +  compatible:
-> +    const: rockchip,rk3399-cif-isp
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description: phandle for the PHY port
+> The inode64 and inode32 names are used based on existing precedent from
+> XFS.
 
-According to http://opensource.rock-chips.com/wiki_Camera_driver, RK3388
-can route either of DPHY RX0 or DPHY RX1 to the single ISP instance,
-while RK3399 has one PHY per ISP instance, with DPHY RX1 being shared
-with the display. Have you given any thought on how we will support this
-in a backward-compatible way in the DT bindings ?
+Please don't copy this misfeature of XFS.
 
-> +
-> +  phy-names:
-> +    const: dphy
-> +
-> +  clocks:
-> +    items:
-> +      - description: ISP clock
-> +      - description: ISP aclk clock
-> +      - description: ISP aclk wrapper clock
-> +      - description: ISP hclk clock
-> +      - description: ISP hclk wrapper clock
+The inode32/inode64 XFS options were a horrible hack made more than
+20 years ago when NFSv2 was still in use and 64 bit inodes could
+not be used for NFSv2 exports. It was then continued to be used
+because 32bit NFSv3 clients were unable to handle 64 bit inodes.
 
-I wonder what aclk and hclk stand far. In any case those names match the
-CRU documentation, so that seems fine.
+It took 15 years for us to be able to essentially deprecate
+inode32 (inode64 is the default behaviour), and we were very happy
+to get that albatross off our necks.  In reality, almost everything
+out there in the world handles 64 bit inodes correctly
+including 32 bit machines and 32bit binaries on 64 bit machines.
+And, IMNSHO, there no excuse these days for 32 bit binaries that
+don't using the *64() syscall variants directly and hence support
+64 bit inodes correctlyi out of the box on all platforms.
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clk_isp
-> +      - const: aclk_isp
-> +      - const: aclk_isp_wrap
-> +      - const: hclk_isp
-> +      - const: hclk_isp_wrap
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
+I don't think we should be repeating past mistakes by trying to
+cater for broken 32 bit applications on 64 bit machines in this day
+and age.
 
-I think this should have a description to tell what this port
-corresponds to.
+Cheers,
 
-> +
-> +        properties:
-> +          "#address-cells":
-> +            const: 1
-> +
-> +          "#size-cells":
-> +            const: 0
-> +
-> +          reg:
-> +            const: 0
-> +            description: port identifier.
-
-Here and for the endpoint below the description is probably not needed.
-
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              reg:
-> +                maxItems: 1
-> +                description: endpoint identifier.
-> +
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +    required:
-> +      - port@0
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - iommus
-> +  - phys
-> +  - phy-names
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/clock/rk3399-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/rk3399-power.h>
-> +
-> +    parent0: parent@0 {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        isp0: isp0@ff910000 {
-> +            compatible = "rockchip,rk3399-cif-isp";
-> +            reg = <0x0 0xff910000 0x0 0x4000>;
-> +            interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-> +            clocks = <&cru SCLK_ISP0>,
-> +                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
-> +                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
-> +            clock-names = "clk_isp",
-> +                          "aclk_isp", "aclk_isp_wrap",
-> +                          "hclk_isp", "hclk_isp_wrap";
-> +            power-domains = <&power RK3399_PD_ISP0>;
-> +            iommus = <&isp0_mmu>;
-> +            phys = <&dphy>;
-> +            phy-names = "dphy";
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    reg = <0>;
-> +
-> +                    mipi_in_wcam: endpoint@0 {
-> +                        reg = <0>;
-> +                        remote-endpoint = <&wcam_out>;
-> +                        data-lanes = <1 2>;
-> +                    };
-> +
-> +                    mipi_in_ucam: endpoint@1 {
-> +                        reg = <1>;
-> +                        remote-endpoint = <&ucam_out>;
-> +                        data-lanes = <1>;
-> +                    };
-
-Are those two cameras connected to the same CSI-2 lines with at most one
-sensor out of reset ?
-
-With the above small issues addressed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +                };
-> +            };
-> +        };
-> +
-> +        i2c7: i2c@ff160000 {
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            wcam: camera@36 {
-> +                compatible = "ovti,ov5695";
-> +                reg = <0x36>;
-> +
-> +                port {
-> +                    wcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_wcam>;
-> +                        data-lanes = <1 2>;
-> +                    };
-> +                };
-> +            };
-> +
-> +            ucam: camera@3c {
-> +                compatible = "ovti,ov2685";
-> +                reg = <0x3c>;
-> +
-> +                  port {
-> +                      ucam_out: endpoint {
-> +                          remote-endpoint = <&mipi_in_ucam>;
-> +                          data-lanes = <1>;
-> +                      };
-> +                  };
-> +            };
-> +        };
-> +    };
-
+Dave.
 -- 
-Regards,
-
-Laurent Pinchart
+Dave Chinner
+david@fromorbit.com
