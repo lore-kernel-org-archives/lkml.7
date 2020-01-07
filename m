@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F7EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB59C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C662077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26022077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431669;
-	bh=6UY2T6dWzU5eztkg4rE2iFcamizXIGPsVRx6/VMKGK4=;
+	s=default; t=1578431673;
+	bh=T4grm+Gyf6a3qOJuSCD/teJxU1kaNU2T/rbqhPvUWUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GAx06KrBQaoIAPymNylCLZQIUCzh8TPVhtR5exF+TrNA/Pjzkdc97zCniF6kSf3h7
-	 5R+YY+Z5vVL1kRJyKsrsLX+HQaVhnVvZYCY5urae9ajR4/AQcd8kmaHrHSRkHw9nqA
-	 wKZPQsPlkmAJZol0npu8O1Kb4Ba1yA3rVUWFqjwI=
+	b=B0YWC+PxQ7J1MMq5QMVlXdM9KnQroDbRg6p7wEg2a9DWBqisJfA1dEGp+tCy0R2cL
+	 nBU0pTPnkIvhH1rr6kWa+E/P5PrlWGdi9xdmrWZ/cYIa7V+T0A7rQtMcPEWHrxq9fa
+	 cBmaXNOAFs/rqQ0yQt3bYChHqCirJt1ZwHXQSH4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgAGVO2 (ORCPT
+        id S1729942AbgAGVOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:14:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:14:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729812AbgAGVJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:25 -0500
+        id S1729623AbgAGVJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B992072A;
-        Tue,  7 Jan 2020 21:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A89C20678;
+        Tue,  7 Jan 2020 21:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431364;
-        bh=6UY2T6dWzU5eztkg4rE2iFcamizXIGPsVRx6/VMKGK4=;
+        s=default; t=1578431359;
+        bh=T4grm+Gyf6a3qOJuSCD/teJxU1kaNU2T/rbqhPvUWUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ao1/5NOqAc7QkhFatHtHG9u3d+vsrNXi6pG+P7torummm4U4dwZMAt9uz1jKVxH1b
-         UULvqVMIwAGqFnhKVNMrON+CJG3nhZK8HSDQCL0CEzanDfpoMUwVRf6CeE0VTXbgA+
-         lfLmhsCzyVTWOZQL/PAkrCwk9LUIYAc2fHDVytW8=
+        b=LKpIUxy5sntGWWEnFKIgYy+OY7k9t3fo1D2lP6/9RHXsLAe2KKFFVPP3SHOGVIPqm
+         VkO8wkoHSa8H4hq4AyxMGsiLUbPMCrW/1Xo1DAw25osiNYcAOj2SuEG5arucE8L4gJ
+         +edMAXJKyxwC9pOjFWdERUnkMaPjNSsifhjYk358=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Wise <larrystevenwise@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/74] rxe: correctly calculate iCRC for unaligned payloads
-Date:   Tue,  7 Jan 2020 21:54:30 +0100
-Message-Id: <20200107205138.948448570@linuxfoundation.org>
+Subject: [PATCH 4.14 03/74] PM / devfreq: Dont fail devfreq_dev_release if not in list
+Date:   Tue,  7 Jan 2020 21:54:28 +0100
+Message-Id: <20200107205137.793147905@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -60,81 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <larrystevenwise@gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 2030abddec6884aaf5892f5724c48fc340e6826f ]
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
 
-If RoCE PDUs being sent or received contain pad bytes, then the iCRC
-is miscalculated, resulting in PDUs being emitted by RXE with an incorrect
-iCRC, as well as ingress PDUs being dropped due to erroneously detecting
-a bad iCRC in the PDU.  The fix is to include the pad bytes, if any,
-in iCRC computations.
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
 
-Note: This bug has caused broken on-the-wire compatibility with actual
-hardware RoCE devices since the soft-RoCE driver was first put into the
-mainstream kernel.  Fixing it will create an incompatibility with the
-original soft-RoCE devices, but is necessary to be compatible with real
-hardware devices.
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Steve Wise <larrystevenwise@gmail.com>
-Link: https://lore.kernel.org/r/20191203020319.15036-2-larrystevenwise@gmail.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_recv.c | 2 +-
- drivers/infiniband/sw/rxe/rxe_req.c  | 6 ++++++
- drivers/infiniband/sw/rxe/rxe_resp.c | 7 +++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
-index 83412df726a5..b7098f7bb30e 100644
---- a/drivers/infiniband/sw/rxe/rxe_recv.c
-+++ b/drivers/infiniband/sw/rxe/rxe_recv.c
-@@ -393,7 +393,7 @@ int rxe_rcv(struct sk_buff *skb)
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index dc9c0032c97b..7b510ef1d0dd 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -484,11 +484,6 @@ static void devfreq_dev_release(struct device *dev)
+ 	struct devfreq *devfreq = to_devfreq(dev);
  
- 	calc_icrc = rxe_icrc_hdr(pkt, skb);
- 	calc_icrc = rxe_crc32(rxe, calc_icrc, (u8 *)payload_addr(pkt),
--			      payload_size(pkt));
-+			      payload_size(pkt) + bth_pad(pkt));
- 	calc_icrc = (__force u32)cpu_to_be32(~calc_icrc);
- 	if (unlikely(calc_icrc != pack_icrc)) {
- 		if (skb->protocol == htons(ETH_P_IPV6))
-diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-index 9fd4f04df3b3..e6785b1ea85f 100644
---- a/drivers/infiniband/sw/rxe/rxe_req.c
-+++ b/drivers/infiniband/sw/rxe/rxe_req.c
-@@ -500,6 +500,12 @@ static int fill_packet(struct rxe_qp *qp, struct rxe_send_wqe *wqe,
- 			if (err)
- 				return err;
- 		}
-+		if (bth_pad(pkt)) {
-+			u8 *pad = payload_addr(pkt) + paylen;
-+
-+			memset(pad, 0, bth_pad(pkt));
-+			crc = rxe_crc32(rxe, crc, pad, bth_pad(pkt));
-+		}
- 	}
- 	p = payload_addr(pkt) + paylen + bth_pad(pkt);
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
  
-diff --git a/drivers/infiniband/sw/rxe/rxe_resp.c b/drivers/infiniband/sw/rxe/rxe_resp.c
-index 9207682b7a2e..a07a29b48863 100644
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@ -738,6 +738,13 @@ static enum resp_states read_reply(struct rxe_qp *qp,
- 	if (err)
- 		pr_err("Failed copying memory\n");
- 
-+	if (bth_pad(&ack_pkt)) {
-+		struct rxe_dev *rxe = to_rdev(qp->ibqp.device);
-+		u8 *pad = payload_addr(&ack_pkt) + payload;
-+
-+		memset(pad, 0, bth_pad(&ack_pkt));
-+		icrc = rxe_crc32(rxe, icrc, pad, bth_pad(&ack_pkt));
-+	}
- 	p = payload_addr(&ack_pkt) + payload + bth_pad(&ack_pkt);
- 	*p = ~icrc;
- 
+@@ -547,6 +542,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
 -- 
 2.20.1
 
