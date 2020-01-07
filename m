@@ -2,81 +2,91 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174C9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD35C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2B9206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5FB2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgAGTa6 (ORCPT
+        id S1728651AbgAGTb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:30:58 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35054 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgAGTa5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:30:57 -0500
-Received: from ip-109-41-1-29.web.vodafone.de ([109.41.1.29] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iouZ2-0004Mw-9L; Tue, 07 Jan 2020 19:30:52 +0000
-Date:   Tue, 7 Jan 2020 20:30:54 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Amanieu d'Antras <amanieu@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/7] arm64: Implement copy_thread_tls
-Message-ID: <20200107193054.t2d4txgz3fnrw3gn@wittgenstein>
-References: <20200102172413.654385-1-amanieu@gmail.com>
- <20200102172413.654385-3-amanieu@gmail.com>
- <20200102180130.hmpipoiiu3zsl2d6@wittgenstein>
- <20200106173953.GB9676@willie-the-truck>
- <CA+y5pbSBYLvZ46nJP0pSYZnRohtPxHitOHPEaLXq23-QrPKk2g@mail.gmail.com>
- <20200107090219.jl4py4u2zvofwnbh@wittgenstein>
- <20200107174508.GC32009@willie-the-truck>
- <202001071011.9517D9C0D@keescook>
+        Tue, 7 Jan 2020 14:31:27 -0500
+Received: from sauhun.de ([88.99.104.3]:54282 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728307AbgAGTb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:31:27 -0500
+Received: from localhost (p5486CF8B.dip0.t-ipconnect.de [84.134.207.139])
+        by pokefinder.org (Postfix) with ESMTPSA id F092A2C05BA;
+        Tue,  7 Jan 2020 20:31:25 +0100 (CET)
+Date:   Tue, 7 Jan 2020 20:31:25 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Peter Korsgaard <peter@korsgaard.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] i2c: ocores: convert to use i2c_new_client_device()
+Message-ID: <20200107193125.GA10117@ninjato>
+References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+ <20200107174748.9616-5-wsa+renesas@sang-engineering.com>
+ <87muazjewd.fsf@dell.be.48ers.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
 Content-Disposition: inline
-In-Reply-To: <202001071011.9517D9C0D@keescook>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87muazjewd.fsf@dell.be.48ers.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:12:39AM -0800, Kees Cook wrote:
-> On Tue, Jan 07, 2020 at 05:45:09PM +0000, Will Deacon wrote:
-> > On Tue, Jan 07, 2020 at 10:02:27AM +0100, Christian Brauner wrote:
-> > > [Cc Kees in case he knows something about where arch specific tests live
-> > >  or whether we have a framework for this]
-> > > [...]
-> > > It feels like we must've run into the "this is architecture
-> > > specific"-and-we-want-to-test-this issue before... Do we have a place
-> > > where architecture specific selftests live?
-> > 
-> > For arch-specific selftests there are tools/testing/selftests/$ARCH
-> > directories, although in this case maybe it's better to have an #ifdef
-> > in a header so that architectures with __builtin_thread_pointer can use
-> > that.
-> 
-> Yup, I agree: that's the current best-practice for arch-specific
-> selftests.
 
-Thanks! I think using #ifdef in this case with __builtin_thread_pointer
-sounds good.
-So the tests can be moved into the clone3() test-suite for those
-architectures.
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Christian
+Hi Peter,
+
+a happy new year to you!
+
+>  > Move away from the deprecated API and return the shiny new ERRPTR where
+>  > useful.
+>=20
+>  > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> I didn't follow the discussion, but I don't see any returns anywhere?
+
+Yeah, an ERRPTR is not "useful" here. However, the old API is going to
+be removed, so your driver is converted, too.
+
+Happy hacking,
+
+   Wolfram
+
+
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4U3IkACgkQFA3kzBSg
+KbZOQw/+KNbdLqPPRk+Teo1q6rmLAezU9VUKrLEycDckg/mvdKEvf7B+sV35KcVW
+ACqGYuYq9hzoMV4qi2JT/aX6Q6hVNxKQGBsVRTbtbjzqU3BeDC4P8CpR9trRB4N7
+EE5zBQEuIOdQH+F5O0kYC82xIHyQqxBnPPmX9nulKPeckdM/2RXSFs8cZb7gd2CZ
+vzTJCdVEQ3bTS1Vp7ugNuEQMtScscbiAfP4szmb4rzMPfEm9LccPHgIMEmTxY2Sb
+a8D9c/7xsaA1BQqwN568sfn8zFYYMS0hHFF4kIXkK/4bfYldBb47eNqwoaQjrs63
+7VRN9e357C1EA+ylZrJNKp2n1mrr68a5KvJuMLkWAFHNxO01nkib6KbdW9RHgVBa
+VuSNRDUgMmdREglrEu68xnFviKZkgPjw4+v0QdBdAkfSkPrF+ZfsxQ/IzxxpQCj4
+ipoLlt7ve2KJh61jMSp2xYriawMLq1QjRMdxUl9BAIAYICfvhRFaL+GEMo+WCK/r
+UHuSA5ACecxQPdh+C6adTX3tBSJvkwDReWJVWtyoNURZ+ETxKyIIXaki2YPt0kFj
+52faoD+ZBRrV43TGtIKldwJg/Ci5KzeoP+2rnuJZeaL0uvPGsqwVXV96Tb9iPcAv
+xMyUzzT9cRkO9v4Xd3Pfnx8njSA5OBQR9r/LQem6GDOHoVSe2t8=
+=6dcu
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
