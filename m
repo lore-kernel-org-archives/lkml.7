@@ -2,95 +2,185 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6681AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52388C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDCC20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431759;
-	bh=zUoUxVZ4HMU1GfpgdVvtlZA8DUP4zKyLlTEL+8c6ZzM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKJxKiRSRfLCcIyIiwxLLUXgUfuQkhNwhHOY8ySRVctHghzGISOP0Df2/3PtZrFlZ
-	 FvYRK45ae0JFFqNRc4oZPX4pQdbFAb0xQOuJ2T6xehuIz9jpjtCRTcnyb+0NSRogwn
-	 Bzbwx/nGrWC/Co6oDQZkgT+fJAkKrFtBgckaLGl4=
+	by mail.kernel.org (Postfix) with ESMTP id 1592120678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nET9u1hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgAGVP6 (ORCPT
+        id S1728767AbgAGVQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729542AbgAGVH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0FAC2087F;
-        Tue,  7 Jan 2020 21:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431248;
-        bh=zUoUxVZ4HMU1GfpgdVvtlZA8DUP4zKyLlTEL+8c6ZzM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nUd10dWNtIpwXUqfx28c1wdkdRN0vBmo5Jo0JDVaLi81OkCaIx1X6vc4XdwtqMwPn
-         cOPAH5gW+mCPeXNfJIV/5rFc2W4c8LHg2PJl2CG00Fh8tMeF3Eh7SwYepHMZUrpWIu
-         HQsQYd48JKMuzD5xJPYjuQz722pUQCRBqrJVYv04=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.19 095/115] fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
-Date:   Tue,  7 Jan 2020 21:55:05 +0100
-Message-Id: <20200107205307.097213619@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-References: <20200107205240.283674026@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Jan 2020 16:16:04 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42100 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729930AbgAGVQD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:16:03 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 4so474282pfz.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:16:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aH3BVcM50df5G1nQCXtC0QKONcgriIhHLD8BWRsnpVk=;
+        b=nET9u1hvWGviYYJ+/wTZQ2eFsZRKBNliZfmQXXO3ZptiJuiksmoXEXDBz/bDVwQt80
+         HFDli5ZYHMREC9aNjKyxr7RnwbxZ8/bHjW5gb/W3Xmxj3w6163iW6m2PWoWL2HQ3L2gn
+         YwutCfKQBrUM+4ojgdOgUIXkkXHbl+GL0MT41zdqnbkssW/i+4FHLzVEvYOs+6NDTPTf
+         mZvgpkRqS/wZOflWMcF3CFZpJXz3BEUoV0gzARxmbF5tZSOprJnG3eeg6/ldQDLKYQAq
+         H8mbDgem9xa/SuL+lzPiDlA3OiNLXSns8rvwSkBt/Ou4zD+Qg4Tfl+H0Y/14qkf0rsHE
+         9vRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aH3BVcM50df5G1nQCXtC0QKONcgriIhHLD8BWRsnpVk=;
+        b=eSCbenuiDxWx6LzLqmJfUkRk/VOR3dElgLVUyc+XOOXi/BLrvMY6pKnS2j7PwUieEM
+         Fwo4h272iF+sUIKgd3V9gKXHHiCiuAw91UgC8UpDQdL/ETS9GS3AZZVcK19gUh6pqh+K
+         ukTSrN4HC+7sXiBuuYHJRPKjIIfQIlBi7pgrD9EosH9e6wIWaoFb8nI+bi3/anWRia2Q
+         j5Q4x4A1iY5yvpXIOoxuvIErI2HybO3AdLVfTV7El8Yr6ohNGdAeY/GED50B0141W57N
+         KsMM1OqE9109Zg16qNwbCL0Y+Nj4HTh4RfHoRFFN6rG3zVeT7h3zMkjL8LixXwMQedsC
+         6j7g==
+X-Gm-Message-State: APjAAAVHOPe6KDg8dEV4vTbxcNWw7lKKTRVXJL138fpGWne9kYPVY3PU
+        CCs8u0/GhAGJR16Z6d/H0eAx4w==
+X-Google-Smtp-Source: APXvYqwKI2P9klMDEXPPIFpXdnapCHhs8o+rT/bfatbGhOdHFU+rXR5KH0IGNTSGWwHYzsC85KcBdw==
+X-Received: by 2002:a63:a019:: with SMTP id r25mr1467077pge.400.1578431761548;
+        Tue, 07 Jan 2020 13:16:01 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f81sm482916pfa.118.2020.01.07.13.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 13:16:00 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:15:58 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, digetx@gmail.com, jcrouse@codeaurora.org,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com
+Subject: Re: [PATCH 1/2] PM / devfreq: Add debugfs support with
+ devfreq_summary file
+Message-ID: <20200107211558.GA738324@yoga>
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+ <CGME20200107085812epcas1p12121f8ef6492ed78053dea4977216788@epcas1p1.samsung.com>
+ <20200107090519.3231-2-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107090519.3231-2-cw00.choi@samsung.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
 
-commit 6b2daec19094a90435abe67d16fb43b1a5527254 upstream.
+> Add debugfs interface to provide debugging information of devfreq device.
+> It contains 'devfreq_summary' entry to show the summary of registered
+> devfreq devices as following and the additional debugfs file will be added.
+> - /sys/kernel/debug/devfreq/devfreq_summary
+> 
+> [Detailed description of each field of 'devfreq_summary' debugfs file]
+> - dev_name	: Device name of h/w.
+> - dev		: Device name made by devfreq core.
+> - parent_dev	: If devfreq device uses the passive governor,
+> 		  show parent devfreq device name.
+> - governor	: Devfreq governor.
+> - polling_ms	: If devfreq device uses the simple_ondemand governor,
+> 		  polling_ms is necessary for the period. (unit: millisecond)
+> - cur_freq_hz	: Current Frequency (unit: hz)
+> - old_freq_hz	: Frequency before changing. (unit: hz)
+> - new_freq_hz	: Frequency after changed. (unit: hz)
+> 
+> [For example on Exynos5422-based Odroid-XU3 board]
+> - In order to show the multiple governors on devfreq_summay result,
+> change the governor of devfreq0 from simple_ondemand to userspace.
+> 
+> $ cat /sys/kernel/debug/devfreq/devfreq_summary
+> dev_name                       dev        parent_dev governor        polling_ms cur_freq_hz  min_freq_hz  max_freq_hz
+> ------------------------------ ---------- ---------- --------------- ---------- ------------ ------------ ------------
+> 10c20000.memory-controller     devfreq0              userspace       0          206000000    165000000    825000000
+> soc:bus_wcore                  devfreq1              simple_ondemand 50         532000000    88700000     532000000
+> soc:bus_noc                    devfreq2   devfreq1   passive         0          111000000    66600000     111000000
+> soc:bus_fsys_apb               devfreq3   devfreq1   passive         0          222000000    111000000    222000000
+> soc:bus_fsys                   devfreq4   devfreq1   passive         0          200000000    75000000     200000000
+> soc:bus_fsys2                  devfreq5   devfreq1   passive         0          200000000    75000000     200000000
+> soc:bus_mfc                    devfreq6   devfreq1   passive         0          333000000    83250000     333000000
+> soc:bus_gen                    devfreq7   devfreq1   passive         0          266000000    88700000     266000000
+> soc:bus_peri                   devfreq8   devfreq1   passive         0          66600000     66600000     66600000
+> soc:bus_g2d                    devfreq9   devfreq1   passive         0          0            83250000     333000000
+> soc:bus_g2d_acp                devfreq10  devfreq1   passive         0          0            66500000     266000000
+> soc:bus_jpeg                   devfreq11  devfreq1   passive         0          0            75000000     300000000
+> soc:bus_jpeg_apb               devfreq12  devfreq1   passive         0          0            83250000     166500000
+> soc:bus_disp1_fimd             devfreq13  devfreq1   passive         0          0            120000000    200000000
+> soc:bus_disp1                  devfreq14  devfreq1   passive         0          0            120000000    300000000
+> soc:bus_gscl_scaler            devfreq15  devfreq1   passive         0          0            150000000    300000000
+> soc:bus_mscl                   devfreq16  devfreq1   passive         0          0            84000000     666000000
 
-Unlike FICLONE, all of those take a pointer argument; they do need
-compat_ptr() applied to arg.
+This looks quite useful.
 
-Fixes: d79bdd52d8be ("vfs: wire up compat ioctl for CLONE/CLONE_RANGE")
-Fixes: 54dbc1517237 ("vfs: hoist the btrfs deduplication ioctl to the vfs")
-Fixes: ceac204e1da9 ("fs: make fiemap work from compat_ioctl")
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
 
----
- fs/compat_ioctl.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+May I ask how the build test robot came up with this idea?
 
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -1401,10 +1401,11 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned i
- #endif
- 
- 	case FICLONE:
-+		goto do_ioctl;
- 	case FICLONERANGE:
- 	case FIDEDUPERANGE:
- 	case FS_IOC_FIEMAP:
--		goto do_ioctl;
-+		goto found_handler;
- 
- 	case FIBMAP:
- 	case FIGETBSZ:
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/devfreq/devfreq.c | 80 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+[..]
+> +/**
+> + * devfreq_summary_show() - Show the summary of the registered devfreq devices
+> + *				via 'devfreq_summary' debugfs file.
 
+Please make this proper kerneldoc, i.e:
 
+ * func() - short description
+ * @s:
+ * @data:
+ * 
+ * Long description
+ * 
+ * Return: foo on bar
+
+[..]
+> @@ -1733,6 +1803,16 @@ static int __init devfreq_init(void)
+>  	}
+>  	devfreq_class->dev_groups = devfreq_groups;
+>  
+> +	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
+> +	if (PTR_ERR(devfreq_debugfs) != -ENODEV && IS_ERR(devfreq_debugfs)) {
+
+Don't PTR_ERR() before IS_ERR().
+
+> +		devfreq_debugfs = NULL;
+
+I don't think you need this, given that debugfs_create_file() will fail
+gracefully when passed and IS_ERR()
+
+> +		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
+
+Afaict debugfs_create_() won't fail without printing a message already.
+
+> +	} else {
+> +		debugfs_create_file("devfreq_summary", 0444,
+> +				devfreq_debugfs, NULL,
+> +				&devfreq_summary_fops);
+> +	}
+> +
+>  	return 0;
+>  }
+>  subsys_initcall(devfreq_init);
+
+Regards,
+Bjorn
