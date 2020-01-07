@@ -2,184 +2,146 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E06C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B2C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D4F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Jvncn3ti"
+	by mail.kernel.org (Postfix) with ESMTP id 962A82077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgAGOtJ (ORCPT
+        id S1728322AbgAGOtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:49:09 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45945 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgAGOtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:49:08 -0500
-Received: by mail-io1-f68.google.com with SMTP id i11so52796402ioi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:49:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xURPOfyF2UK2ImfN0jV4a8KRwy9Nblqyu9sgwhGxs5s=;
-        b=Jvncn3tijiI+u+3cvBj5W7Gb8ZHassVRprsVHpn6hdwsYUoJIf0J0zpAeyjjlzCKeH
-         nY+P3BP7Dw5q/F2TclcXczu+dhVPWcEesVllGg3V5LCZB1c/N5KqP2tOmpf9j7VMdQpK
-         KngmC4wGP2sX/E4BgHtDXa4zfoHX1IAC4kUp07/Odh23+CKkbfvPlLgEj7v/4Gl+BrTZ
-         2Vz+p8Oh5sXHSdNTbR4adTEz/1Zk5t8Lz9bx9c9jDMpuMPCAV2bhUfsgs8ABaF4ERObH
-         H+0nTbLsW1JugC37ccnnPMklDcH6g0yRp2vwGwKe0YuxHWinMCKYlxDscq+FsSIayYy1
-         eLxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xURPOfyF2UK2ImfN0jV4a8KRwy9Nblqyu9sgwhGxs5s=;
-        b=M2Mf7YueNyv9tENcMjuj36Ga2PLTW2b4sb2g6MQWjgmjta09qbJ/bR8iF5FVb/OOHQ
-         FFHgX0ByKgFc9KesXj1AFLLkPWoUMhABD48BQVkTrjk41ZzHs7By30DRpfTyxlIaE+7C
-         8NcrT6OQwilYBrpSo6TfP9WJ8kQCIqoAQX7e+UKjx4uqpSqjmGEsP3FVoIEhvoQGN5h6
-         u6UorcnRBfJ2NZneDqXp8/f4IQikFATMtEDOZkhCHOU8I8Vao2G1rfaZG9kf/8USz8pP
-         6eZTJyOTcm1Gbl2qupzlsRKdM4z3xsDV0WF3dCjms2g0YHF3maX7iP9gEQNaxo5qfRpm
-         hwfg==
-X-Gm-Message-State: APjAAAVfFyTaZebmjXAVF0qJrRmU7yduGWw3plgGNR+IFql/HUtRPwak
-        jdyThzURAH8TFLnc0cbhJjPo3ngPaNsLo41HbzcDpg==
-X-Google-Smtp-Source: APXvYqwETYMrSMTjdRtdmgSUVl74ByetyxJrK526VXRrVqCE2iVr2NU5SXb6JOM2nA3EHkb6x606TcaLA6Rbh2tg4BE=
-X-Received: by 2002:a6b:6e02:: with SMTP id d2mr75006830ioh.22.1578408548041;
- Tue, 07 Jan 2020 06:49:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191230102942.18395-1-jinpuwang@gmail.com> <20191230102942.18395-15-jinpuwang@gmail.com>
- <1ad8b279-1a45-1d70-39c7-acd42f28abca@acm.org>
-In-Reply-To: <1ad8b279-1a45-1d70-39c7-acd42f28abca@acm.org>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 7 Jan 2020 15:48:57 +0100
-Message-ID: <CAMGffEnzoo7Y-Bh4F7ZDONr1kE3U20Btr=763rQyiYu=+YMosA@mail.gmail.com>
-Subject: Re: [PATCH v6 14/25] rtrs: a bit of documentation
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
+        Tue, 7 Jan 2020 09:49:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:58672 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbgAGOts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:49:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAA5531B;
+        Tue,  7 Jan 2020 06:49:47 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C70A73F703;
+        Tue,  7 Jan 2020 06:49:46 -0800 (PST)
+Date:   Tue, 7 Jan 2020 14:49:40 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Zeng Tao <prime.zeng@hisilicon.com>
+Cc:     linuxarm@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] cpu-topology: Skip the exist but not possible cpu nodes
+Message-ID: <20200107144940.GA47473@bogus>
+References: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577935489-25245-1-git-send-email-prime.zeng@hisilicon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 12:19 AM Bart Van Assche <bvanassche@acm.org> wrote:
+On Thu, Jan 02, 2020 at 11:24:49AM +0800, Zeng Tao wrote:
+> When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the device
+> tree, the cpu node parsing will fail. And this is not reasonable for a
+> legal device tree configs.
+> In this patch, skip such cpu nodes rather than return an error.
+> 
+> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> ---
+>  drivers/base/arch_topology.c | 35 ++++++++++++++++++++++++++---------
+>  1 file changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 5fe44b3..4cddfeb 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -250,20 +250,34 @@ core_initcall(free_raw_capacity);
+>  #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+>  static int __init get_cpu_for_node(struct device_node *node)
+>  {
+> -	struct device_node *cpu_node;
+> +	struct device_node *cpu_node, *t;
+>  	int cpu;
+> +	bool found = false;
+>  
+>  	cpu_node = of_parse_phandle(node, "cpu", 0);
+>  	if (!cpu_node)
+> -		return -1;
+> +		return -EINVAL;
+> +
+> +	for_each_of_cpu_node(t)
+> +		if (t == cpu_node) {
+> +			found = true;
+> +			break;
+> +		}
+> +
+> +	if (!found) {
+> +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> +		return -EINVAL;
+> +	}
 >
-> On 2019-12-30 02:29, Jack Wang wrote:
-> > diff --git a/drivers/infiniband/ulp/rtrs/README b/drivers/infiniband/ulp/rtrs/README
->
-> Other kernel driver documentation exists under the Documentation/
-> directory. Should this README file perhaps be moved to a subdirectory of
-> the Documentation/ directory?
-I did check most of the drivers are in the drivers directory eg:
-find ./ -name README
-./fs/reiserfs/README
-./fs/qnx4/README
-./fs/qnx6/README
-./fs/cramfs/README
-./Documentation/ABI/README
-./Documentation/virt/kvm/devices/README
-./README
-./tools/usb/usbip/README
-./tools/virtio/ringtest/README
-./tools/virtio/virtio-trace/README
-./tools/power/pm-graph/README
-./tools/power/cpupower/README
-./tools/memory-model/README
-./tools/memory-model/scripts/README
-./tools/memory-model/litmus-tests/README
-./tools/testing/vsock/README
-./tools/testing/ktest/examples/README
-./tools/testing/selftests/ftrace/README
-./tools/testing/selftests/arm64/signal/README
-./tools/testing/selftests/arm64/README
-./tools/testing/selftests/android/ion/README
-./tools/testing/selftests/zram/README
-./tools/testing/selftests/livepatch/README
-./tools/testing/selftests/net/forwarding/README
-./tools/testing/selftests/futex/README
-./tools/testing/selftests/tc-testing/README
-./tools/thermal/tmon/README
-./tools/build/tests/ex/empty2/README
-./tools/perf/tests/attr/README
-./tools/perf/pmu-events/README
-./tools/perf/scripts/perl/Perf-Trace-Util/README
-./tools/io_uring/README
-./net/decnet/README
-./scripts/ksymoops/README
-./scripts/selinux/README
-./arch/powerpc/boot/README
-./arch/m68k/q40/README
-./arch/m68k/ifpsp060/README
-./arch/m68k/fpsp040/README
-./arch/parisc/math-emu/README
-./arch/x86/math-emu/README
-./drivers/bcma/README
-./drivers/char/mwave/README
-./drivers/staging/nvec/README
-./drivers/staging/wlan-ng/README
-./drivers/staging/axis-fifo/README
-./drivers/staging/fbtft/README
-./drivers/staging/fsl-dpaa2/ethsw/README
-./drivers/staging/goldfish/README
-./drivers/staging/gs_fpgaboot/README
-./drivers/staging/comedi/drivers/ni_routing/README
-./drivers/net/wireless/marvell/mwifiex/README
-./drivers/net/wireless/marvell/libertas/README
 
->
-> > +****************************
-> > +InfiniBand Transport (RTRS)
-> > +****************************
->
-> The abbreviation does not match the full title. Do you agree that this
-> is confusing?
->
-> > +RTRS is used by the RNBD (Infiniband Network Block Device) modules.
->
-> Is RNBD an RDMA or an InfiniBand network block device?
-will fix.
->
-> > +
-> > +==================
-> > +Transport protocol
-> > +==================
-> > +
-> > +Overview
-> > +--------
-> > +An established connection between a client and a server is called rtrs
-> > +session. A session is associated with a set of memory chunks reserved on the
-> > +server side for a given client for rdma transfer. A session
-> > +consists of multiple paths, each representing a separate physical link
-> > +between client and server. Those are used for load balancing and failover.
-> > +Each path consists of as many connections (QPs) as there are cpus on
-> > +the client.
-> > +
-> > +When processing an incoming rdma write or read request rtrs client uses memory
->
-> A quote from
-> https://linuxplumbersconf.org/event/4/contributions/367/attachments/331/555/LPC_2019_RMDA_MC_IBNBD_IBTRS_Upstreaming.pdf:
-> "Only RDMA writes with immediate". Has the wire protocol perhaps been
-> changed such that both RDMA reads and writes are used? I haven't found
-> any references to RDMA reads in the "IO path" section in this file. Did
-> I perhaps overlook something?
->
-> Thanks,
->
-> Bart.
-We do not use RDMA_READ, only RDMA_WRITE/RDMA_WRITE_WITH_IMM/SEND_WITH_IMM
-SEND_WITH_IMM was used only when always_invalidate=Y.
-Will extend the document.
+The whole extra logic added above sounds redundant, details below...
 
-Thanks Bart.
+>  	cpu = of_cpu_node_to_id(cpu_node);
+>  	if (cpu >= 0)
+>  		topology_parse_cpu_capacity(cpu_node, cpu);
+> -	else
+> -		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> +	else {
+> +		pr_warn("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
+> +			cpu_node, cpumask_pr_args(cpu_possible_mask));
+> +		cpu = -ENODEV;
+
+.. of_cpu_node_to_id returns -ENODEV anyways so above assignment is also
+redundant. All you achieved is explicit error message. I think we should
+be fine combining them. Just extend existing error log with both message.
+
+> +	}
+>  
+> -	of_node_put(cpu_node);
+>  	return cpu;
+>  }
+>  
+> @@ -287,10 +301,13 @@ static int __init parse_core(struct device_node *core, int package_id,
+>  				cpu_topology[cpu].core_id = core_id;
+>  				cpu_topology[cpu].thread_id = i;
+>  			} else {
+> -				pr_err("%pOF: Can't get CPU for thread\n",
+> -				       t);
+> +				if (cpu != -ENODEV)
+> +					pr_err("%pOF: Can't get CPU for thread\n",
+> +					       t);
+> +				else
+> +					cpu = 0;
+
+I would rather use another variable instead of reusing 'cpu'
+
+>  				of_node_put(t);
+> -				return -EINVAL;
+> +				return cpu;
+
+Shouldn't we continue here if cpu == -ENODEV instead of returning 0 ?
+
+>  			}
+>  			of_node_put(t);
+>  		}
+> @@ -307,7 +324,7 @@ static int __init parse_core(struct device_node *core, int package_id,
+>  
+>  		cpu_topology[cpu].package_id = package_id;
+>  		cpu_topology[cpu].core_id = core_id;
+> -	} else if (leaf) {
+> +	} else if (leaf && cpu != -ENODEV) {
+
+I am still not sure on the approach, it is based on -ENODEV as valid
+error and allow to continue. It may be fine, I just need to make sure.
+
+--
+Regards,
+Sudeep
