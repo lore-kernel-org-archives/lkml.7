@@ -2,203 +2,90 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C8C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D66C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34862087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20801208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUFCjzqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgAGOuv (ORCPT
+        id S1728196AbgAGO4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:50:51 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:55669 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgAGOuv (ORCPT
+        Tue, 7 Jan 2020 09:56:18 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56794 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727559AbgAGO4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:50:51 -0500
-Received: from [192.168.100.1] ([78.238.229.36]) by mrelayeu.kundenserver.de
- (mreue010 [213.165.67.103]) with ESMTPSA (Nemesis) id
- 1MUY5o-1jFLGv035U-00QRiD; Tue, 07 Jan 2020 15:50:45 +0100
-Subject: Re: [RFC v2] binfmt_misc: pass binfmt_misc flags to the interpreter
-To:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-References: <20191122150830.15855-1-laurent@vivier.eu>
-From:   Laurent Vivier <laurent@vivier.eu>
-Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b39e59a6-82f2-2122-5b22-4d8a77eda275@vivier.eu>
-Date:   Tue, 7 Jan 2020 15:50:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 7 Jan 2020 09:56:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578408977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AMsY+5AfULXXQPieaO9m1OwQcv8Xr5ZMsyyOrT8Fw9k=;
+        b=bUFCjzqC7th5UypWPVL/1R7VapYKerroS15saH+gE4GAJK5OEumhVeq5moKrYVC2LvXkpt
+        GWc5BgGELct9Hj8cJShD1lRICmmLYbMwU/yaI0Mp7fLa07ZwLHvqta7LRB8wisGgwxgNEX
+        E5UT1V0IyVvZbPqegwgoXUScMnL9mLw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-2BCXJcVsMTWMhcag17A0mg-1; Tue, 07 Jan 2020 09:56:15 -0500
+X-MC-Unique: 2BCXJcVsMTWMhcag17A0mg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49303100550E;
+        Tue,  7 Jan 2020 14:56:14 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CDB4C5D9CA;
+        Tue,  7 Jan 2020 14:56:10 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 15:56:08 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>
+Subject: Re: [PATCH v3 1/8] KVM: selftests: Create a demand paging test
+Message-ID: <20200107145608.ogi34nkyh2abdgrq@kamzik.brq.redhat.com>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-2-bgardon@google.com>
+ <20200107143334.GF219677@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20191122150830.15855-1-laurent@vivier.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:OqX2S4WP9lUC/EStzf0kOovmyDBz3za2mKyo7AHHuMIIsEJoF7X
- lmdB2EhCGGjot3UaCq/ic3IK18BnW4dSYxJhVe/lAReXKoIA1qTQhHsVO+IJCEiCQpvP/wL
- ImUgnKg6r4TboAsSrSHWK1psJHBdm8F08sdPm76VFpOFPnyuw6fimOcFxd6sOotmfEnfhY8
- mWOvL2tACfHJUA9H5Xwcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1F05uRVJcFg=:npOQxpVtNpn6poyqgk6U7l
- AT5ShfhSAej7Chv0cLGFKhP/7X93ZtSnLIoMhhRFAF2Y5GyQ8aTlbJuE/wjetsOGP1eZhho6G
- 4U2DYJcw+JxSkHhtGgQxZGsdMIcigEh8DLEH93ap+hjXkTlQhFo8E1LBPr0wLy+j7nSjlQKZz
- x7fhdIMDUntISol78g1/B9OySJjP2woSBK/oXLgyTeNHmv/52f82z4xpB+RA+fk01PCTVdOFE
- hNKgqlXtv8lS90NaRgCtLgYjFHGvVQiz9E6zgdGoPSietrP/qnaqXiBVR/YCZP7zOA0V+78nr
- 5wm4UUkEckcmbd0OZL+66k1LPdIxc5XDoJhhiSEejuqqRzAzLaA7q4FBY7l6vcl6COxgNlu8B
- HZv07u+sRm+gCZqyeDc0MsWRmOlN1U3Lgdm2EG99Ku5PbwviMADvry9UgplfSS6YWHISCXqCN
- /7WQmizodjgSLiSYS35z1TvsEpzgejtoyzKZZiU2YPPYQdL+i5iXJivtuJedbUKhYYLLC4TIM
- XMMaCoA9imFKB2mbgIkYu3DTYoNIuJ6qqOpZ5mmLqzKky/OW4Zfwjvk4n6P+dXgp5xTSpuEWC
- uZMH+UCln/FqhE7wo41uR3Ek4xykK3pn5WnZfWPvqK57lFC2Sdjfsq3PoMNBfCpqrIGGQXn6n
- vjTkLzDLp6mg7FPF7r9F9EKnAYU2xPVSU8nJRLvAgcp3C8DGF5aQ4SVWLjAgPz+cuD4fJzChA
- bd0vR7ws4wV6xowgK49XdBQ3rnnH7V3cIZz8k9ylQfsPW9uRzloTHjfxaR8MFjcwOGkjxf4nP
- outZ0XDbWvmuavm7ZifMt4i06+EmS+089GFRVPPQfi2pTeHru2Zxo4MyWnyaq6hmxEis9mKD8
- p7hBFDfiSJOJ81CJyizSDsgABPbs70wvdZcWMfsgw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107143334.GF219677@xz-x1>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jan 07, 2020 at 09:33:34AM -0500, Peter Xu wrote:
+> On Mon, Dec 16, 2019 at 01:38:54PM -0800, Ben Gardon wrote:
+> > While userfaultfd, KVM's demand paging implementation, is not specific
+> > to KVM, having a benchmark for its performance will be useful for
+> > guiding performance improvements to KVM. As a first step towards creating
+> > a userfaultfd demand paging test, create a simple memory access test,
+> > based on dirty_log_test.
+> > 
+> > Signed-off-by: Ben Gardon <bgardon@google.com>
+> 
+> It's fine to start with x86-only for this test, but imho it would be
+> better to mention that in cover letter, or reply to reviewer comments
+> on that you removed aarch64 from previous post.
 
-this change is simple, easy to read and understand but it is really
-needed by user space application interpreter to know the status of the
-system configuration.
-
-Could we have a comment saying if there is a problem or if it is good to
-be merged?
+I'd also prefer that if it's x86-only that it be put in the x86_64
+subdirectory and drop the arch #ifdefs. The question is why is it
+x86-only for now though? Will it take a lot of work to port it to
+other architectures? Or does it just need testing by someone with
+the hardware?
 
 Thanks,
-Laurent
-
-Le 22/11/2019 à 16:08, Laurent Vivier a écrit :
-> It can be useful to the interpreter to know which flags are in use.
-> 
-> For instance, knowing if the preserve-argv[0] is in use would
-> allow to skip the pathname argument.
-> 
-> This patch uses an unused auxiliary vector, AT_FLAGS,  to pass the
-> content of the binfmt flags (special flags: P, F, C, O).
-> 
-> Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-> ---
-> 
-> Notes:
->     v2: only pass special flags (remove Magic and Enabled flags)
-> 
->  fs/binfmt_elf.c         | 2 +-
->  fs/binfmt_elf_fdpic.c   | 2 +-
->  fs/binfmt_misc.c        | 6 ++++++
->  include/linux/binfmts.h | 2 +-
->  4 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index c5642bcb6b46..7a34c03e5857 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -250,7 +250,7 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
->  	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
->  	NEW_AUX_ENT(AT_BASE, interp_load_addr);
-> -	NEW_AUX_ENT(AT_FLAGS, 0);
-> +	NEW_AUX_ENT(AT_FLAGS, bprm->fmt_flags);
->  	NEW_AUX_ENT(AT_ENTRY, exec->e_entry);
->  	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-> index d86ebd0dcc3d..8fe839be125e 100644
-> --- a/fs/binfmt_elf_fdpic.c
-> +++ b/fs/binfmt_elf_fdpic.c
-> @@ -647,7 +647,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
->  	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
->  	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
->  	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
-> -	NEW_AUX_ENT(AT_FLAGS,	0);
-> +	NEW_AUX_ENT(AT_FLAGS,	bprm->fmt_flags);
->  	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
->  	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
->  	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index cdb45829354d..25a392f23409 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -48,6 +48,9 @@ enum {Enabled, Magic};
->  #define MISC_FMT_OPEN_BINARY (1 << 30)
->  #define MISC_FMT_CREDENTIALS (1 << 29)
->  #define MISC_FMT_OPEN_FILE (1 << 28)
-> +#define MISC_FMT_FLAGS_MASK (MISC_FMT_PRESERVE_ARGV0 | MISC_FMT_OPEN_BINARY | \
-> +			     MISC_FMT_CREDENTIALS | MISC_FMT_OPEN_FILE)
-> +
->  
->  typedef struct {
->  	struct list_head list;
-> @@ -149,6 +152,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
->  	if (!fmt)
->  		return retval;
->  
-> +	/* pass special flags to the interpreter */
-> +	bprm->fmt_flags = fmt->flags & MISC_FMT_FLAGS_MASK;
-> +
->  	/* Need to be able to load the file after exec */
->  	retval = -ENOENT;
->  	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index b40fc633f3be..dae0d0d7b84d 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -60,7 +60,7 @@ struct linux_binprm {
->  				   different for binfmt_{misc,script} */
->  	unsigned interp_flags;
->  	unsigned interp_data;
-> -	unsigned long loader, exec;
-> +	unsigned long loader, exec, fmt_flags;
->  
->  	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
->  
-> 
+drew
 
