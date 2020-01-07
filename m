@@ -2,105 +2,188 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ECC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6177C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CDA20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874E621744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 18:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szuMX3AM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V5yCte4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgAGSc7 (ORCPT
+        id S1728617AbgAGSdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:32:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36054 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgAGSc6 (ORCPT
+        Tue, 7 Jan 2020 13:33:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728584AbgAGSdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:32:58 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so624912ljg.3;
-        Tue, 07 Jan 2020 10:32:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
-        b=szuMX3AMHYI0gSMY6RihsVSowNacVcfSjmGJO7Syk9LEwBnI+H7cvhmHchoj6oPnpf
-         CQgUt6FfdHpM9YDs9NRCCuvW2lMoxK8IfABvzZg2oAiIVrSeo8yp1de76qAwMtpnd3jo
-         KaAhWqFzKl8W65Ih9gTzURdlbNYLjD6YZvZ+odOSnsTzz9MURnl4L9DPAZrV+U8nTs7Z
-         HlH6YSQMlCDQEVt6lbIkSHxSiUHBI4PTZKt0jROYhjeLpny38tsMc1JVRvxWWWhx8oiF
-         oE8UUJnja9w5sFmrmhZ/FtRNuGJMcWzOu8XvHG4zqrRNZCDoFTDshhJ4CZwndmt6lgZz
-         7sNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
-        b=IfkHpe5d4tivewWodnZ+xSK4bd0I39XfEI/iu2xlGtXiVGR8BeLir77ymdfKzlFjH9
-         kaYzarWvHYnkPxCGHUuCFA7lX/NhrpSwvcw9uu2SPpCYOnpIuwklCwNARuCURgwoImcm
-         ru/sYYHXsmPgsCPDnhl4LM2sOLlIgxdwX6WZNfu5aIvf/V6spkI2xKRrmSjVbcM9cBD3
-         fBhRjHc1uWMuoKF6v1wMU3fpe2JdPvgzO/7kMzSBzeOFCrOeMALwuwB8oynMSdEfMri3
-         8R7CKybDMA/DdJR03t0Bmi6jbbwH2wJauznhAi2/g8F0QUbsgM4mowZx5RhxL6zXHtMe
-         El4w==
-X-Gm-Message-State: APjAAAXK8YE3SV1weHjp2obpxUY8tNDHuSgH0YgwR4RjV4t87AITZP+I
-        TYoddXNKdSbxZ5rLpbyk0/b4iZB58NEtNQb1FVk=
-X-Google-Smtp-Source: APXvYqymzxa0E0fR2E3OuAmc/FP9tlpw0cmDmDeoe9mooWQr78VIdEE1uYFCuSRmYe08wrAPc9giPkKWA8L17KRVvGg=
-X-Received: by 2002:a05:651c:1b0:: with SMTP id c16mr510355ljn.236.1578421976485;
- Tue, 07 Jan 2020 10:32:56 -0800 (PST)
+        Tue, 7 Jan 2020 13:33:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578421998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o2v5kMDPXg2q4+QAcC/kCbrlQj05oGBBvgK3JOC1J3M=;
+        b=V5yCte4rgcV861M9EVonxcDrm4wSuMO88Pv89b56oH6H5TI1UJBW5wlFwnh1BvhLVIy7bB
+        lwqM/AbP+s/ulR/og01ufS2BoxLmnLGVuwqjF1Xw2kI2OD944YXT/ifniYXiZPuPkNF5uP
+        tuOCLRg7gEeRrU3NEC1n+dKU3qKSsVg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-U97v-XCQMkax5zcCnuUoeQ-1; Tue, 07 Jan 2020 13:33:14 -0500
+X-MC-Unique: U97v-XCQMkax5zcCnuUoeQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A55418C8C31;
+        Tue,  7 Jan 2020 18:33:13 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E0E4F7C35A;
+        Tue,  7 Jan 2020 18:33:07 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 6FF242202E9; Tue,  7 Jan 2020 13:33:07 -0500 (EST)
+Date:   Tue, 7 Jan 2020 13:33:07 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20200107183307.GD15920@redhat.com>
+References: <20190828175843.GB912@redhat.com>
+ <20190828225322.GA7777@dread.disaster.area>
+ <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
+ <20191216181014.GA30106@redhat.com>
+ <20200107125159.GA15745@infradead.org>
+ <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
+ <20200107170731.GA472641@magnolia>
+ <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
+ <20200107180101.GC15920@redhat.com>
+ <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200106130909.7697-1-matwey@sai.msu.ru> <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
- <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com> <20200106210509.GF5885@atomide.com>
-In-Reply-To: <20200106210509.GF5885@atomide.com>
-From:   Robert Nelson <robertcnelson@gmail.com>
-Date:   Tue, 7 Jan 2020 12:32:30 -0600
-Message-ID: <CAOCHtYhKUyUwunnWDT1CuRTpzS78d7xKq3qB3Phys7RgUZnM3w@mail.gmail.com>
-Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 3:05 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Matwey V. Kornilov <matwey@sai.msu.ru> [200106 20:48]:
-> > =D0=BF=D0=BD, 6 =D1=8F=D0=BD=D0=B2. 2020 =D0=B3. =D0=B2 23:44, Robert N=
-elson <robertcnelson@gmail.com>:
-> > >
-> > > On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru>=
- wrote:
+On Tue, Jan 07, 2020 at 10:07:18AM -0800, Dan Williams wrote:
+> On Tue, Jan 7, 2020 at 10:02 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >
+> > On Tue, Jan 07, 2020 at 09:29:17AM -0800, Dan Williams wrote:
+> > > On Tue, Jan 7, 2020 at 9:08 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 > > > >
-> > > > BeagleBone Black series is equipped with 512MB RAM
-> > > > whereas only 256MB is included from am335x-bone-common.dtsi
+> > > > On Tue, Jan 07, 2020 at 06:22:54AM -0800, Dan Williams wrote:
+> > > > > On Tue, Jan 7, 2020 at 4:52 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > > > > >
+> > > > > > On Mon, Dec 16, 2019 at 01:10:14PM -0500, Vivek Goyal wrote:
+> > > > > > > > Agree. In retrospect it was my laziness in the dax-device
+> > > > > > > > implementation to expect the block-device to be available.
+> > > > > > > >
+> > > > > > > > It looks like fs_dax_get_by_bdev() is an intercept point where a
+> > > > > > > > dax_device could be dynamically created to represent the subset range
+> > > > > > > > indicated by the block-device partition. That would open up more
+> > > > > > > > cleanup opportunities.
+> > > > > > >
+> > > > > > > Hi Dan,
+> > > > > > >
+> > > > > > > After a long time I got time to look at it again. Want to work on this
+> > > > > > > cleanup so that I can make progress with virtiofs DAX paches.
+> > > > > > >
+> > > > > > > I am not sure I understand the requirements fully. I see that right now
+> > > > > > > dax_device is created per device and all block partitions refer to it. If
+> > > > > > > we want to create one dax_device per partition, then it looks like this
+> > > > > > > will be structured more along the lines how block layer handles disk and
+> > > > > > > partitions. (One gendisk for disk and block_devices for partitions,
+> > > > > > > including partition 0). That probably means state belong to whole device
+> > > > > > > will be in common structure say dax_device_common, and per partition state
+> > > > > > > will be in dax_device and dax_device can carry a pointer to
+> > > > > > > dax_device_common.
+> > > > > > >
+> > > > > > > I am also not sure what does it mean to partition dax devices. How will
+> > > > > > > partitions be exported to user space.
+> > > > > >
+> > > > > > Dan, last time we talked you agreed that partitioned dax devices are
+> > > > > > rather pointless IIRC.  Should we just deprecate partitions on DAX
+> > > > > > devices and then remove them after a cycle or two?
+> > > > >
+> > > > > That does seem a better plan than trying to force partition support
+> > > > > where it is not needed.
+> > > >
+> > > > Question: if one /did/ have a partitioned DAX device and used kpartx to
+> > > > create dm-linear devices for each partition, will DAX still work through
+> > > > that?
 > > >
-> > > FYI: While all versions from the factory are 512MB, some 3rd parties
-> > > offered 1GB reballing upgrades..
->
-> So what's the conclusion, is it safe to bump the default size to
-> 512MB then?
->
-> The custom ones could use their own dts file if bootloader is not
-> setting the RAM.
+> > > The device-mapper support will continue, but it will be limited to
+> > > whole device sub-components. I.e. you could use kpartx to carve up
+> > > /dev/pmem0 and still have dax, but not partitions of /dev/pmem0.
+> >
+> > So we can't use fdisk/parted to partition /dev/pmem0. Given /dev/pmem0
+> > is a block device, I thought tools will expect it to be partitioned.
+> > Sometimes I create those partitions and use /dev/pmem0. So what's
+> > the replacement for this. People often have tools/scripts which might
+> > want to partition the device and these will start failing.
+> 
+> Partitioning will still work, but dax operation will be declined and
+> fall back to page-cache.
 
-Yeah this is safe for factory devices. Classic u-boot will update
-these for modified boards.
+Ok, so if I mount /dev/pmem0p1 with dax enabled, that might fail or
+filesystem will fall back to using page cache. (But dax will not be
+enabled).
 
-Regards,
+> 
+> > IOW, I do not understand that why being able to partition /dev/pmem0
+> > (which is a block device from user space point of view), is pointless.
+> 
+> How about s/pointless/redundant/. Persistent memory can already be
+> "partitioned" via namespace boundaries.
 
---=20
-Robert Nelson
-https://rcn-ee.com/
+But that's an entirely different way of partitioning. To me being able
+to use block devices (with dax capability) in same way as any other
+block device makes sense.
+
+> Block device partitioning is
+> then redundant and needlessly complicates, as you have found, the
+> kernel implementation.
+
+It does complicate kernel implementation. Is it too hard to solve the
+problem in kernel.
+
+W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
+dax code refers back to block device to figure out partition offset in
+dax device. If we create a dax object corresponding to "struct block_device"
+and store sector offset in that, then we could pass that object to dax
+code and not worry about referring back to bdev. I have written some
+proof of concept code and called that object "dax_handle". I can post
+that code if there is interest.
+
+IMHO, it feels useful to be able to partition and use a dax capable
+block device in same way as non-dax block device. It will be really
+odd to think that if filesystem is on /dev/pmem0p1, then dax can't
+be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
+will work.
+
+Thanks
+Vivek
+
+> 
+> The problem will be people that were on dax+ext4 on partitions. Those
+> people will see a hard failure at mount whereas XFS will fallback to
+> page cache with a warning in the log. I think ext4 must convert to the
+> xfs dax handling model before partition support is dropped.
+> 
+
