@@ -2,155 +2,101 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A2AC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E0C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7892087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kfLVBGmM";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="H+MMPLoU"
+	by mail.kernel.org (Postfix) with ESMTP id E5209207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgAGMgn (ORCPT
+        id S1727982AbgAGMh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:36:43 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37404 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727834AbgAGMgm (ORCPT
+        Tue, 7 Jan 2020 07:37:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:35257 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbgAGMhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:36:42 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D0DE3405EC;
-        Tue,  7 Jan 2020 12:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578400601; bh=HZEWeToSluP2P7XemVLVhSS2ICpKePUp1ZMffsTD9vA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=kfLVBGmMFSRtWGWJn6lODq9cORpGEfjMsIhcvbS/nQ4lv4dqfTYtFVeC4v/3FcXk4
-         rb/onrxgNZ4m/tlr1fZoxq4aK1Qc9SD3iNMYqNzqkCpO6+7sI21Tl3WbcthjZfIOFz
-         F3sH6z56QoloShYACS0DKoduRwGtjg2DaY7NHOuyyiwNW0sLoLu9MOE3Izj5uzRzit
-         765wlTyScYepTuZdZW5Io5iaPPD0t9OL1lITPUgz64NX45Mh7Sj/xvrb6g5zjoAQUb
-         OknHQutAYJS04zZeGQDNalT/N5Ff/XDTz7icmGDyUh1kP9Wvccqvy4HAPXXDOubHcI
-         SfRvycV5phpWw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 80ED0A007A;
-        Tue,  7 Jan 2020 12:36:39 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 Jan 2020 04:36:38 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 Jan 2020 04:36:37 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dyfaja/ZaRloGLABwSprA1hhAuy5gnO56R3r2SJ0VxjZa8LdgT9PByPD3HhJKPBNN9Or5DTsS7TOt19IFDVkh/g3mgKs9A6ljgwXKGaIIutozdIj6IHZWR5lnd15GBB1FTN7E7fc++uJalUC3LRY9vZQw8tbPwPovncsVy47l15Lra75q5HFkFonEt20kAWBjQSVUYCm80ZzB7jILI2Zp9TRdD6VWakIC+xHM6QmilEZq2ohmtKhIjvs88aMJd36/dnPgAEVlx5wywgnSx7BFPAKxmmlV5kzGLhAWI0jF2Lj+2AB238JimB0tg6TDMmN/hhdXbJO1DMbFRQmolMIIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HZEWeToSluP2P7XemVLVhSS2ICpKePUp1ZMffsTD9vA=;
- b=ixqql9ZOvWChegMCloPpGYU1eJNL3VAs/eVuP7BCQTupYclD+/Z70rm1vKjzPN9zBVWNt42i/jYauqLjKLK65TLbs19XzyaITpNt6llQOXDswCcdsPKJnOQYDD1S13XgkepFbbW5hFBGCS37tfhVNy0Gf4MOwFDoP0rx9Jo7o1YSIuCMBBQNjhTA7iAlP1lxthHmnC4cWqTcXyOgdzasaqMY6DBbKm9x3ETYtL4w2qBwvvETQHzd3F6AYwUtwKNpbdlwRM8pvTg5gHtlHR8DM8ZYvPCA68mUuNbMZfFi8i5Gy22onGg6LNL/41F8ahy+bMWIR8zPSaeDxvFHnpb41g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HZEWeToSluP2P7XemVLVhSS2ICpKePUp1ZMffsTD9vA=;
- b=H+MMPLoUFbVu0J1ptR8dpMa6AZI7+EvfmfrJbUgroNhlXAeakgW3Ms+7rXfUr8/vOzz6u/4HPOGHqWWQRFg/WOnehlGh/L46/yfXdlmtuHVvcQxPx+bjmtEkW0JpCyEcS0jm1V+TtrOuhoCQjeb55O/kROhd+q1IN4wtrlatuNQ=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3009.namprd12.prod.outlook.com (20.178.210.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11; Tue, 7 Jan 2020 12:36:32 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
- 12:36:32 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Sriram Dash <sriram.dash@samsung.com>,
-        'Robin Murphy' <robin.murphy@arm.com>,
-        'Florian Fainelli' <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        'Heiko Stuebner' <heiko@sntech.de>
-CC:     'Jayati Sahu' <jayati.sahu@samsung.com>,
-        'Alexandre Torgue' <alexandre.torgue@st.com>,
-        "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
-        "rcsekar@samsung.com" <rcsekar@samsung.com>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "mgalka@collabora.com" <mgalka@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pankaj.dubey@samsung.com" <pankaj.dubey@samsung.com>,
-        'Maxime Coquelin' <mcoquelin.stm32@gmail.com>,
-        "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "'Giuseppe Cavallaro'" <peppe.cavallaro@st.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "heiko@sntech.de" <heiko@sntech.de>
-Subject: RE: [PATCH net] Revert "net: stmmac: platform: Fix MDIO init for
- platforms without PHY"
-Thread-Topic: [PATCH net] Revert "net: stmmac: platform: Fix MDIO init for
- platforms without PHY"
-Thread-Index: AQHVxRimtok0wFzL+UGNRMlNrZMzLafesXQAgABWhwCAABXNgIAABhTw
-Date:   Tue, 7 Jan 2020 12:36:32 +0000
-Message-ID: <BN8PR12MB3266EC51599357258E6E2292D33F0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <CGME20200107050854epcas1p3c1a66e67f14802322063f6c9747f1986@epcas1p3.samsung.com>
-        <20200107050846.16838-1-f.fainelli@gmail.com>
-        <011a01d5c51d$d7482290$85d867b0$@samsung.com>
-        <59cb4087-6a71-9684-c4cf-d203600b45a9@arm.com>
- <014001d5c553$ff7f06d0$fe7d1470$@samsung.com>
-In-Reply-To: <014001d5c553$ff7f06d0$fe7d1470$@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7be4ce4-4321-4e75-1d96-08d7936e3a21
-x-ms-traffictypediagnostic: BN8PR12MB3009:
-x-microsoft-antispam-prvs: <BN8PR12MB30092DF05339C75A6EC5D0A0D33F0@BN8PR12MB3009.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 027578BB13
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(376002)(366004)(39860400002)(199004)(189003)(55016002)(478600001)(54906003)(110136005)(966005)(4326008)(6506007)(26005)(316002)(186003)(9686003)(71200400001)(81166006)(2906002)(5660300002)(7416002)(8936002)(81156014)(86362001)(33656002)(76116006)(66556008)(66476007)(66446008)(7696005)(66946007)(558084003)(64756008)(52536014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3009;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y8NsU4IZ7AB1nwFzf//h6MepTFJeUU81AW1r8PzSWnIoShfBRqtamYk2nIlN7lFUR6V1xnj895/x4p1Ksi53a8dOVmokrjENm3A6hhvspye0FEtMUDcNquOVR4wlxBgpMj6wbF9MW35CB+aCQKDuyWWfNafeF+obFebcpgqs8UQd+F1YRIiMK9BLLFfFKwyyuWiRbcRYaGKb5fMH0XIoW2dfPQsJ9DEVjVv7OS7ajrjyZEFW+/IP9pTgqsQiAKRY2WLx3HSJt8YnekuBL+vlBzkMuQYxHa5nYJyS4nXIBfPWOYoNKgNBx2iUsubqagCslGDhBhSMu4lhPS9QMJ+dHHbpBXeEQxjFqnYq5NREdwvF1tOFtzNARb8/PTy8Cd4YcuSVPc+GLL6CVuN0DKdCwp2GYiQAPzYxRKk0iFH6cZc1mS7pIs+1dwAJeMG67OECNVBR2rTNS6xZuVkB/c4zgzcQYALCWWh2CfSTlJSlINI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 7 Jan 2020 07:37:25 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N7zRz-1jkqIB1dp5-0151o3 for <linux-kernel@vger.kernel.org>; Tue, 07 Jan
+ 2020 13:37:24 +0100
+Received: by mail-qt1-f171.google.com with SMTP id l12so45106623qtq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 04:37:24 -0800 (PST)
+X-Gm-Message-State: APjAAAVCEY34XySqTBUCo6fb5D+W2vLg5EAoqOhLG7g8CjXI3I0CIi3X
+        2GFgzeXZzPFVQWqLnDbES0alWQ/wC8Ie0EGef/0=
+X-Google-Smtp-Source: APXvYqwGR+1ag/FOo5lFGNP2agZe8JgiRzCUJT/p2HcrAqJ11wxrKbu23yPKHpHtix875YAxzOB8d2DOP1xgp2mKHDU=
+X-Received: by 2002:ac8:6153:: with SMTP id d19mr78188452qtm.18.1578400643312;
+ Tue, 07 Jan 2020 04:37:23 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7be4ce4-4321-4e75-1d96-08d7936e3a21
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2020 12:36:32.5120
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4RoLGqUQSwR8N5j5cws/UuSJEIqG15q2OTZkA4DE1THboL5zj101BHRpX9vukOYE/gYGt5lC34o+qmkpMmgrCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3009
-X-OriginatorOrg: synopsys.com
+References: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab>
+In-Reply-To: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Jan 2020 13:37:07 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
+Message-ID: <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
+Subject: kunit stack usage, was: pmwg-ci report v5.5-rc4-147-gc62d43442481
+To:     PMWG CI <pmwg-ci@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Private Kernel Alias <private-kwg@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Rbyd3mjfyh0X9/KMjlisXksFIavCsu8Lr+cr03ZAUvU6+HL5YqN
+ hjWvwrTt+/FrSq1tQulDLzmwtcQHP7PfsCFHrXHiuZFB9Y9P5A2wotTCOXTJjxlqdNpvjFC
+ W+lko1z7ji4Ed9svpQ+IyfsjZ7kJ2KIIeSOb8HQpLTbwXSk8kqnTxkODhFlD5C0ml5Gv/pV
+ /2olj8Vb6uGRMSNFfcDJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qQZAqj7OKVo=:xgkie9o5LZfBqbCKPP8Rmh
+ xYwAzMYf8vIKhL3WWX2yJ34VsGm1c+uhieNBF3Ll1hIPzLakEppOUUnlfrCBoZH7La8UhPtZH
+ cJhz4RAUpSHpEKXkKkt1BTcAoMHtz1GD5yI0+0UfzOu6pobkO2oXvQMHPvzGIW86E01aKKpFF
+ 0/WeUezw88c0ZVqZ1qkXAB1qHkem0P3UAoAzg62mxEc+r0fUWsL7iVOHbWkOzZGOYdfAm/12g
+ DSBru8C/gGfkmZzl4S/4oWPmYc5PF6KcOEQfwKLkL2xpc+LBbZJ2DjOQmycOF3ztCIQWlgSvj
+ ltyme/DLSFvov/S6a6zfNEFWRouLU7K3l/AiZ6x0bx2Uys/QTs4BYjJW0dzEPlfPxuSGdp8Cc
+ T6M9XszNHKUhNDMno62qH2YolsB7ZDMvtqZ5xbamUFLUGw3THLlrYysLDDFpFdyWyh2DraeaM
+ wSgALnCh6GPJuRzUeaOerIAWZuaONyXjQFLXFACSo/BOeEx2wKekWj+DxWi7UrSsRrDUMhwum
+ 2OBEneqI0VwACeA46mVMIYLPNAHw9Xeypy6ekAf0hI9QP3tCutdlXiG9STd2eRx1CrwS8IVCF
+ bLYevQkwB3MTSw6i781lHH+d4wLWTWFlkpiI4uHg9z1GCCliOcLN7HKX7ZkHxmY41lED1qafO
+ x+i6aZ00vjeMxDHNRllNhP5wMAU8WYbd8DYe4fTKRngBmhEO6Br0V/cMzkzmWImFX7uR9X7kM
+ GB8uUzPGatCPxg3WBKJfnT9ZezhQtdQMVHRh+DM0KQcoU5U9Atas7lBEd/WsJW8epa6lqAe6m
+ WHJ6hHR6edL0SOr8qFuLlmnyoxZPWkJ+6QoeacxesEKWP7wH9ehb5VsTNTKQvVkeABc+YA1sD
+ 95ZOr2ZgNEQGPbg/RtpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU3JpcmFtIERhc2ggPHNyaXJhbS5kYXNoQHNhbXN1bmcuY29tPg0KRGF0ZTogSmFuLzA3
-LzIwMjAsIDEyOjE0OjE5IChVVEMrMDA6MDApDQoNCj4gQ2FuIHlvdSBndXlzIHBsZWFzZSB0ZXN0
-IHRoaXMgb24geW91ciBwbGF0Zm9ybXM/DQo+IFdlIGNhbiBwb3N0IGEgbW9yZSBjbGVhbmVyIHZl
-cnNpb24gb2YgdGhlIHBhdGNoIGlmIGFsbCBhZ3JlZSB0byBpdC4NCg0KQ2FuIHlvdSBhbHNvIHRl
-c3QgdGhpcyBvbmUgWzFdID8NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0
-Y2gvMTIxODc2Mi8NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCANCkFicmV1DQo=
+On Mon, Dec 30, 2019 at 6:16 PM PMWG CI <pmwg-ci@linaro.org> wrote:
+>
+>
+> The error/warning: 1 drivers/base/test/property-entry-test.c:214:1: warning: the frame size of 3128 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+> ... was introduced by commit:
+>
+> commit c032ace71c29d513bf9df64ace1885fe5ff24981
+> Author: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Date:   Wed Dec 4 10:53:15 2019 -0800
+>
+>     software node: add basic tests for property entries
+
+This problem is a result of the KUNIT_ASSERTION() definition that puts
+a local struct on the stack interacting badly with the structleak_plugin
+when CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL is set in
+allmodconfig:
+
+pe_test_uint_arrays() contains a couple of larger variables, plus 41
+instances of KUNIT_EXPECT_*() or KUNIT_ASSERT_*(), each one
+of these adds its own copy of the structure, eventually exceeding
+the warning limit.
+
+We can work around this locally by splitting up the largest four
+functions in this file (pe_test_uints, pe_test_uint_arrays, pe_test_strings,
+and pe_test_reference) into smaller functions that stay below the
+warning limit, but it would be nice to find a way for kunit to not
+use as much stack space. Any suggestions?
+
+        Arnd
