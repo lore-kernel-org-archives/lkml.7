@@ -2,126 +2,149 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47ECC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB25C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BA52073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632292087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rYlDokC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgAGRvg (ORCPT
+        id S1728517AbgAGRv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:51:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47554 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728211AbgAGRvg (ORCPT
+        Tue, 7 Jan 2020 12:51:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43582 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgAGRv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:51:36 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007HeR1x090890
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 12:51:35 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb97d2h8a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 12:51:34 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 7 Jan 2020 17:51:33 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Jan 2020 17:51:24 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007HpN7f58654844
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jan 2020 17:51:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 485AFA405C;
-        Tue,  7 Jan 2020 17:51:23 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4789EA4062;
-        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
-Received: from osiris (unknown [9.145.85.21])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
-Date:   Tue, 7 Jan 2020 18:51:20 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Robert Richter <rric@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oprofile-list@lists.sf.net, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all
- architectures
-References: <20200102145552.1853992-1-arnd@arndb.de>
- <20200102145552.1853992-3-arnd@arndb.de>
+        Tue, 7 Jan 2020 12:51:58 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so372670wre.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:51:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UbVULJcO0KoQ8UyAq3sKxvpp33IhKJl+pej7FZpNELY=;
+        b=rYlDokC29xG14NYShebx3kVbcGhDwOlg8dhocTJWxexmpjVOsu48vUbua8LU//f6bV
+         QXKcYKVtch0w36pWBBi5KBYZZhJqSBzBUnX6BZ50N/lqAxIW+rJClvHC/g0EszY77baN
+         9vyhAz9tU3V6EUBabm8d72cCJQh0LTFFUR5ipoacezcauI0W0hYKreE4PZR4Lvk4KtkC
+         bWW1LeWwABAbufmTvqQrJUiLvwkAQZAzPx85cF5qbX5MJyi1xT63YBL5emVNEBHqPz1I
+         TlzNY++WnMMyNtmQIdHUo6HG7wprzOx+xT2Yy3ZM7SY36t35VZJfHpofJfD9mGsoPmQG
+         Qb0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UbVULJcO0KoQ8UyAq3sKxvpp33IhKJl+pej7FZpNELY=;
+        b=m0QbUaqaBfjLnr5k/3mW+O910Me7tg9DT5kfT9GetgsbhHbiwkBkO5cIKf2EJGU9gc
+         pEXI0v7Tq1BgMORJw46T8SyxBeHuICKbK8SkpxiqlNQsAyVyK4ueKGeeFUtTv8+zWDLP
+         925IRwpQRM4zhBa0h2sQABqPwQTGdRWM4klRyHKceHW3Lk7nUDxuHeEA/N6mtO5PHl+H
+         +RRdoQ/vDlXhtN0XhZeoagUqF5k5qd5UJ5y3FC5mNCWUeF1Y23qMchE/ttu6DlQBOgSm
+         EhqGVy5g9xURl4e7jreGx6A35QUcp/HOfl2wlIObrgDc3b0JtZqaTX4/zRdX3y18jc/I
+         8laQ==
+X-Gm-Message-State: APjAAAUpvl+OAjEsRCZRP5kVYZhzp/24FN36nt8bHeCD2hn9/cMM1Cjb
+        90pHn6vKoEtOFY+k1q9D1vJk/YMh3LzJv1IjjsiB4g==
+X-Google-Smtp-Source: APXvYqyinGaD1+tRHAZo3zO3lRNIj8tetBCntRk3w2SI4OyoJYlkbvt4iiW3d7o8AhLEu7VBnd+o+XPv153tzuASdWQ=
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr276481wrs.200.1578419516354;
+ Tue, 07 Jan 2020 09:51:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
-X-TM-AS-GCONF: 00
-x-cbid: 20010717-0016-0000-0000-000002DB3EDC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010717-0017-0000-0000-0000333DB70D
-Message-Id: <20200107175120.GC4684@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1015
- suspectscore=1 mlxlogscore=416 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001070140
+References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157835764298.1456824.224151767362114611.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200107040415.GA19309@dhcp-128-65.nay.redhat.com> <CAPcyv4g_W4PoH6Wfj_SDGzGLpNLwxtoeGP7uwpzVMS4JWbXSTg@mail.gmail.com>
+ <20200107051919.GC19080@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200107051919.GC19080@dhcp-128-65.nay.redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 7 Jan 2020 18:51:45 +0100
+Message-ID: <CAKv+Gu-djB=3zTxjEbyjJXXpw=8NE6YA82hMW-JYyAQ2TSywtQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] efi: Fix handling of multiple efi_fake_mem= entries
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 03:55:20PM +0100, Arnd Bergmann wrote:
-> In order to avoid needless #ifdef CONFIG_COMPAT checks,
-> move the compat_ptr() definition to linux/compat.h
-> where it can be seen by any file regardless of the
-> architecture.
-> 
-> Only s390 needs a special definition, this can use the
-> self-#define trick we have elsewhere.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/include/asm/compat.h   | 17 -----------------
->  arch/mips/include/asm/compat.h    | 18 ------------------
->  arch/parisc/include/asm/compat.h  | 17 -----------------
->  arch/powerpc/include/asm/compat.h | 17 -----------------
->  arch/powerpc/oprofile/backtrace.c |  2 +-
->  arch/s390/include/asm/compat.h    |  6 +-----
->  arch/sparc/include/asm/compat.h   | 17 -----------------
->  arch/x86/include/asm/compat.h     | 17 -----------------
->  include/linux/compat.h            | 18 ++++++++++++++++++
->  9 files changed, 20 insertions(+), 109 deletions(-)
+On Tue, 7 Jan 2020 at 06:19, Dave Young <dyoung@redhat.com> wrote:
+>
+> On 01/06/20 at 08:16pm, Dan Williams wrote:
+> > On Mon, Jan 6, 2020 at 8:04 PM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > On 01/06/20 at 04:40pm, Dan Williams wrote:
+> > > > Dave noticed that when specifying multiple efi_fake_mem= entries only
+> > > > the last entry was successfully being reflected in the efi memory map.
+> > > > This is due to the fact that the efi_memmap_insert() is being called
+> > > > multiple times, but on successive invocations the insertion should be
+> > > > applied to the last new memmap rather than the original map at
+> > > > efi_fake_memmap() entry.
+> > > >
+> > > > Rework efi_fake_memmap() to install the new memory map after each
+> > > > efi_fake_mem= entry is parsed.
+> > > >
+> > > > This also fixes an issue in efi_fake_memmap() that caused it to litter
+> > > > emtpy entries into the end of the efi memory map. An empty entry causes
+> > > > efi_memmap_insert() to attempt more memmap splits / copies than
+> > > > efi_memmap_split_count() accounted for when sizing the new map. When
+> > > > that happens efi_memmap_insert() may overrun its allocation, and if you
+> > > > are lucky will spill over to an unmapped page leading to crash
+> > > > signature like the following rather than silent corruption:
+> > > >
+> > > >     BUG: unable to handle page fault for address: ffffffffff281000
+> > > >     [..]
+> > > >     RIP: 0010:efi_memmap_insert+0x11d/0x191
+> > > >     [..]
+> > > >     Call Trace:
+> > > >      ? bgrt_init+0xbe/0xbe
+> > > >      ? efi_arch_mem_reserve+0x1cb/0x228
+> > > >      ? acpi_parse_bgrt+0xa/0xd
+> > > >      ? acpi_table_parse+0x86/0xb8
+> > > >      ? acpi_boot_init+0x494/0x4e3
+> > > >      ? acpi_parse_x2apic+0x87/0x87
+> > > >      ? setup_acpi_sci+0xa2/0xa2
+> > > >      ? setup_arch+0x8db/0x9e1
+> > > >      ? start_kernel+0x6a/0x547
+> > > >      ? secondary_startup_64+0xb6/0xc0
+> > > >
+> > > > Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
+> > > > services data to fix kexec breakage" is listed in Fixes: since it
+> > > > introduces more occurrences where efi_memmap_insert() is invoked after
+> > > > an efi_fake_mem= configuration has been parsed. Previously the side
+> > > > effects of vestigial empty entries were benign, but with commit
+> > > > af1648984828 that follow-on efi_memmap_insert() invocation triggers
+> > > > efi_memmap_insert() overruns.
+> > > >
+> > > > Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
+> > > > Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
+> > >
+> > > A nitpick for the Fixes flags, as I replied in the thread below:
+> > > https://lore.kernel.org/linux-efi/CAPcyv4jLxqPaB22Ao9oV31Gm=b0+Phty+Uz33Snex4QchOUb0Q@mail.gmail.com/T/#m2bb2dd00f7715c9c19ccc48efef0fcd5fdb626e7
+> > >
+> > > I reproduced two other panics without the patches applied, so this issue
+> > > is not caused by either of the commits, maybe just drop the Fixes.
+> >
+> > Just the "Fixes: af1648984828", right? No objection from me. I'll let
+> > Ingo say if he needs a resend for that.
+> >
+> > The "Fixes: 0f96a99dab36" is valid because the original implementation
+> > failed to handle the multiple argument case from the beginning.
+>
+> Agreed, thanks!
+>
 
-For s390:
-
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-
+I'll queue this but without the fixes tags. The -stable maintainers
+are far too trigger happy IMHO, and this really needs careful review
+before being backported. efi_fake_mem is a debug feature anyway, so I
+don't see an urgent need to get this fixed retroactively in older
+kernels.
