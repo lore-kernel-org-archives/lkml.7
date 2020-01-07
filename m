@@ -2,136 +2,94 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074A3C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82FCC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6434206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QyKVUg/B"
+	by mail.kernel.org (Postfix) with ESMTP id 77E5F206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgAGTbn (ORCPT
+        id S1728861AbgAGTbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:31:43 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63895 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728760AbgAGTbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:31:42 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578425502; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=H1ad7rjFwqJKREdfqPrnUil+yQWGOMad6EBf7VMu6sw=;
- b=QyKVUg/BUcBvqqBLnXZtifEp7SpbpOg2+mX0Q4XmxiJQRHJYwiqjs+raJy9RKJgajy5UbWR4
- 40aXFAvJGLUlNRGmibqCQptxMlGKxi7FnJCz4bLXGCN1zLPCCHPn9fnI0g5Qxj7ZRHkR43+Q
- SonVDvET9cGuB+qAxy4Tkiab7LA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e14dc9c.7f2e05dbefb8-smtp-out-n03;
- Tue, 07 Jan 2020 19:31:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 959F1C43383; Tue,  7 Jan 2020 19:31:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D159CC433A2;
-        Tue,  7 Jan 2020 19:31:39 +0000 (UTC)
+        Tue, 7 Jan 2020 14:31:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34258 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728682AbgAGTbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:31:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9853BAC4A;
+        Tue,  7 Jan 2020 19:31:49 +0000 (UTC)
+Message-ID: <a2f77f1a8bb3b981d3e2fccd3fcb56733b63946a.camel@suse.de>
+Subject: [GIT PULL] bcm2835-dt-next-2020-01-07
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Date:   Tue, 07 Jan 2020 20:31:48 +0100
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-dPkd0/o+G6GVBoisjtIy"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jan 2020 01:01:39 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-In-Reply-To: <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
-References: <20191118154435.20357-1-sibis@codeaurora.org>
- <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
- <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
- <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
- <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
- <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
- <b11c2116-f247-17c5-69ca-071183365a01@codeaurora.org>
- <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
-Message-ID: <d2ceee796d27283506311a0b61f80931@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-08 00:44, Evan Green wrote:
-> On Mon, Dec 16, 2019 at 10:30 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
->> 
->> Hey Evan,
->> 
->> On 12/7/19 12:46 AM, Evan Green wrote:
->> > On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->> >>
->> >> Hey Evan/Georgi,
->> >>
->> >> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
->> >>
->> >> With the "Redefine interconnect provider
->> >> DT nodes for SDM845" series, wouldn't it
->> >> make more sense to define the OSM_L3 icc
->> >> nodes in the sdm845.c icc driver and have
->> >> the common helpers in osm_l3 driver? Though
->> >> we don't plan on linking the OSM L3 nodes
->> >> to the other nodes on SDM845/SC7180, we
->> >> might have GPU needing to be linked to the
->> >> OSM L3 nodes on future SoCs. Let me know
->> >> how you want this done.
->> >>
->> >> Anyway I'll re-spin the series once the
->> >> SDM845 icc re-work gets re-posted.
->> >
->> > I don't have a clear picture of the proposal. You'd put the couple of
->> > extra defines in sdm845.c for the new nodes. But then you'd need to do
->> > something in icc_set() of sdm845. Is that when you'd call out to the
->> > osm_l3 driver?
->> 
->> with sdm845 icc rework "https://patchwork.kernel.org/cover/11293399/"
->> osm l3 icc provider needs to know the total number of rsc icc nodes,
->> i.e I can define the total number of rsc nodes and continue using the
->> same design as v3 since on sdm845/sc7180 gpu is not cache coherent.
->> 
->> or have the osm l3 table population logic and osm icc_set as helpers
->> and have it called from the sdm845/sc7180 icc driver so that we would
->> be able to link osm_l3 with rsc nodes on future qcom SoCs.
-> 
-> I see, so if we use the same design as v3, then the number of nodes is
-> established at compile-time, and ends up being specific to sdm845. I'm
-> fine with either approach, maybe leaning towards the hardcoded
-> #defines you have now, and waiting to do the refactoring until you
-> actually have two SoCs that can use this.
-> -Evan
 
-Thanks will stick to the #defines
-for now.
+--=-dPkd0/o+G6GVBoisjtIy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Hi Florian,
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a=
+:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  https://github.com/vianpl/linux tags/bcm2835-dt-next-2020-01-07
+
+for you to fetch changes up to 530735df62582d5d1f41faf0e0d1ca7d21dca571:
+
+  ARM: dts: bcm2711: Enable HWRNG support (2020-01-07 20:11:51 +0100)
+
+----------------------------------------------------------------
+Stephen Brennan (2):
+      ARM: dts: bcm2835: Move rng definition to common location
+      ARM: dts: bcm2711: Enable HWRNG support
+
+ arch/arm/boot/dts/bcm2711.dtsi        | 6 ++----
+ arch/arm/boot/dts/bcm2835-common.dtsi | 6 ++++++
+ arch/arm/boot/dts/bcm283x.dtsi        | 6 ------
+ 3 files changed, 8 insertions(+), 10 deletions(-)
+
+
+--=-dPkd0/o+G6GVBoisjtIy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4U3KQACgkQlfZmHno8
+x/65SAf+NmZ2tYuGVZ1tPFBGugW+TKZ4/sZc8XrBeX8tDg1ozDZp27WsDe9umGb6
+ojqvPr7FUtSL1kG5PIBAqTIJl9upzCsmEECpLIp8ZES243ZcH7dWARjqM0SCBxVs
+OomJMI2NEuRyteq7s/7ibmVDyJGHSianm06hafyiups++fvjz0q8TrcZ6wM31Cu8
+eJ70koJNf+R/2xcMRKdqjAtu47NJ1c5ny7NxN6BGeRyuc99Owl7qyK+V8y0jnteK
+Ua4cW+EFy1DWILtDUT6tZpG+LEqdhcSM0V1f6KFPi3BwSDqtLPuszVMCf4iHkPCF
+LFgv6rKl1SrB/4es1gFccTV8lfV18w==
+=Hz8W
+-----END PGP SIGNATURE-----
+
+--=-dPkd0/o+G6GVBoisjtIy--
+
