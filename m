@@ -2,71 +2,120 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D219C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60900C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD0F2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E60E2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578432020;
+	bh=2fEuL8DFvNY9pTqPEb9r5kTK2censwIs22wtuyMPziw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iVbHiqi+04lC1ogLQ1GBXFauw4Iu0Onte6Klfdm93Sc+sJ2oW8ng7BbfNTgmeJm3M
+	 yHNGfD9Jo3PzSfecnHURIEK0MeQ8/2Q1n2bSvL5yCRcHNJUX1T0P7yyoyFJYbR1Z1L
+	 D17pdpZg+Podow+B0GZbeW8gns5n+60liemDHzgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgAGVUQ (ORCPT
+        id S1728809AbgAGVEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:20:16 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36466 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728167AbgAGVEh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:04:37 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 007L3U6Q024697
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Jan 2020 16:03:31 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 4E9094207DF; Tue,  7 Jan 2020 16:03:30 -0500 (EST)
-Date:   Tue, 7 Jan 2020 16:03:30 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: Re: [PATCH v3 6/8] random: Remove the blocking pool
-Message-ID: <20200107210330.GK3619@mit.edu>
-References: <cover.1577088521.git.luto@kernel.org>
- <511225a224bf0a291149d3c0b8b45393cd03ab96.1577088521.git.luto@kernel.org>
+        Tue, 7 Jan 2020 16:04:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728691AbgAGVE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:04:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B26924676;
+        Tue,  7 Jan 2020 21:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431065;
+        bh=2fEuL8DFvNY9pTqPEb9r5kTK2censwIs22wtuyMPziw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qVUICVKMGWXgHT8yHQ5EF13qwh7vzgeay2OeFVZhRorMe0ovdOPbWHD6OUrrOz5IC
+         oElC6CoS172udfYqs2D30cWn5RbAElhna0Ra9DREt3o8dHKW8fZVBII2aQexidmdwC
+         PPkCVLXoEfevTAdcC1n1y6fuC5PZUJEOekzrQx5g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 020/115] scsi: qla2xxx: Ignore PORT UPDATE after N2N PLOGI
+Date:   Tue,  7 Jan 2020 21:53:50 +0100
+Message-Id: <20200107205254.170962810@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <511225a224bf0a291149d3c0b8b45393cd03ab96.1577088521.git.luto@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:20:49AM -0800, Andy Lutomirski wrote:
-> There is no longer any interface to read data from the blocking
-> pool, so remove it.
-> 
-> This enables quite a bit of code deletion, much of which will be
-> done in subsequent patches.
-> 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-Applied, thanks.
+[ Upstream commit af22f0c7b052c5c203207f1e5ebd6aa65f87c538 ]
 
-					- Ted
+PORT UPDATE asynchronous event is generated on the host that issues PLOGI
+ELS (in the case of higher WWPN). In that case, the event shouldn't be
+handled as it sets unwanted DPC flags (i.e. LOOP_RESYNC_NEEDED) that
+trigger link flap.
+
+Ignore the event if the host has higher WWPN, but handle otherwise.
+
+Cc: Quinn Tran <qutran@marvell.com>
+Link: https://lore.kernel.org/r/20191125165702.1013-13-r.bolshakov@yadro.com
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Tested-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_mbx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index b01f69dd4b28..abef3b29fa10 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3871,6 +3871,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					vha->d_id.b24 = 0;
+ 					vha->d_id.b.al_pa = 1;
+ 					ha->flags.n2n_bigger = 1;
++					ha->flags.n2n_ae = 0;
+ 
+ 					id.b.al_pa = 2;
+ 					ql_dbg(ql_dbg_async, vha, 0x5075,
+@@ -3881,6 +3882,7 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 					    "Format 1: Remote login - Waiting for WWPN %8phC.\n",
+ 					    rptid_entry->u.f1.port_name);
+ 					ha->flags.n2n_bigger = 0;
++					ha->flags.n2n_ae = 1;
+ 				}
+ 				qla24xx_post_newsess_work(vha, &id,
+ 				    rptid_entry->u.f1.port_name,
+@@ -3892,7 +3894,6 @@ qla24xx_report_id_acquisition(scsi_qla_host_t *vha,
+ 			/* if our portname is higher then initiate N2N login */
+ 
+ 			set_bit(N2N_LOGIN_NEEDED, &vha->dpc_flags);
+-			ha->flags.n2n_ae = 1;
+ 			return;
+ 			break;
+ 		case TOPO_FL:
+-- 
+2.20.1
+
+
+
