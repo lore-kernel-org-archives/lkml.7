@@ -2,87 +2,97 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9B7C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96962C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204192081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KUF5X57A"
+	by mail.kernel.org (Postfix) with ESMTP id 614FD2081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 10:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578391496;
+	bh=z+k0k9XyF2XaC/1qm3SPSPIGtpCcVnSsT8xBIPL/GDs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gwwYeocqT60YGft5J0CE+ofFqPXGqxCVa7sSJqVupHnviT8p/l3TiPNw6of2caNKL
+	 SeAdM91F8hndxOMrNKdBE7RfFUyFFTXRxSzGWkrJpg8VXRaREcEpvoThw9RSqv/xek
+	 f7gF6gxShJA9F/ho/BweR/HNlSTmMr7QstZ9fZIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgAGKEp (ORCPT
+        id S1727826AbgAGKEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:04:45 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42081 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGKEo (ORCPT
+        Tue, 7 Jan 2020 05:04:55 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46090 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 05:04:44 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y4so39723163ljj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:04:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
-        b=KUF5X57AU3DbtjYe/SJSlIXKHq/AW+fspiJQdDmQh/3dgRJPXClQ0RhUBWo9mjC35Y
-         TWzWkhOYzLFoaQG127Wp8MjTvoh3hvfXSUa21dDfDpqVaNW4JsYoln5yh35extFkPx3G
-         FnOyXNGTVm9AgshgMy9yoAlgHpEOl+A9GCNX/VCNxe3X+F7b6WI14t1vF0oBS3wq3QOA
-         x380OnTuk0a/troAVSJmd060TG6m3MyVupFUqe+BDIU7HcZAajhURX7NjX0hQTexcfJg
-         4UAyVX0uW5MhfwD8a3KLRzF+X946f1PQMoHET3DsaEknPSbCejmajjWomMsKn4f+aNV7
-         5bxg==
+        Tue, 7 Jan 2020 05:04:55 -0500
+Received: by mail-oi1-f194.google.com with SMTP id p67so17371392oib.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 02:04:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
-        b=axz+aVDx1gucQ8A0NTyD5KpDNmm1ZQHmO1+KOKy/KWKZpJRMRXgeCO/t5oXAlBEZSK
-         tDFIxz4IZ+tLlnHMgKOEqdssHU9sXFalOnMmwTgPYdgyiZxkLS66fnpcdhCJ/Yj23COp
-         g7E1qY3htbhIhXNQMhmeO/J1HOYH2IPv86CAKQ7tg6y0rNau5dL5P//xIwvFcu4cQMW2
-         hb8R1s1A5m9/quJgvOZBl4nNZE/CziJTjeofYm5Pl2cnVZj2UkKGOvgPf/1GWUQHNNz9
-         joVlO8lxuyNC8NsHtpPiQfSAzcYlVzciL4x0YSRlDdnWC5JV2WEbZjMBFY8IvSlHDGQ2
-         o9pw==
-X-Gm-Message-State: APjAAAWaVl8HolwKuq4bU3ujng+94TOTAQwZ9LHBDRzt8XtYb0LAVHjD
-        c4lEFECJ+dBMCe/giDrOZAipvTCMtVgS6bQhPMCHJw==
-X-Google-Smtp-Source: APXvYqwhP3VEPWnGeEz/Hc9rMS1FTioxd80K5vd1QR8JwE74xEVc6SMpiOX950msPkXRl8zkspdirMkWDQZTZq+eHfk=
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr51901307ljj.77.1578391482661;
- Tue, 07 Jan 2020 02:04:42 -0800 (PST)
+        bh=P9OKbMZWRAmiTF6ODcRzRiBwtRnKeMsOcJnKTjB3BHc=;
+        b=gEPVAHVzzdOqXWzI19Y4TsUWCZsMvxsR2IzR939Zy6E2fpHd477Fk3K1tDzn84VqRF
+         3zcZWrnvgSW+hT7ZJZgw7IH/hQxTbL05M5nlsGw4nSDwsxvGLMqoSGG1YHyw9TaDYaDL
+         N5U2MNeng7CDjfLPekF/FTKjAvwfJhHh7RrIXMfKRN/jmwH4FHlWipFSNvv91cWZeZhv
+         NNZD5Mvhswq6/g16xOVDcbkWCfjXAYL95CIxvzUMgAMY9d03ZL7JmWy+wNF2OLAbu10T
+         rkZuqEE5djp+cyAbKVTyp1Gvx7FBjmuGAjhlspVSL5OdNjSVP6zOkqT/sxTWoJZOa1Mu
+         j7Mw==
+X-Gm-Message-State: APjAAAXE3rujs5fOJudbOHSYTnGnIINkxBrFF9G2SU2WGl6H+hJaYYOo
+        ZbkivWBh9kUkjk4IcrhNdQ3R58GsuEmTMotlwEI=
+X-Google-Smtp-Source: APXvYqyuID/tIK9mIb+yQZBB/bC/oQPe9u8oemmaCUDNeX4YehBT5sImEFsyMYn/0lipjpsQ9G820oWS1rko3emytaA=
+X-Received: by 2002:aca:cd92:: with SMTP id d140mr6575824oig.68.1578391494788;
+ Tue, 07 Jan 2020 02:04:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-6-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-6-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:04:31 +0100
-Message-ID: <CACRpkdb71=HkE-f=8_XJCvfE+wqMYAOMah=4ceMhyWeMNVF+zA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/13] gpiolib: use gpiochip_get_desc() in lineevent_create()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
+ <20200106125352.GB9198@dhcp22.suse.cz>
+In-Reply-To: <20200106125352.GB9198@dhcp22.suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Jan 2020 11:04:43 +0100
+Message-ID: <CAJZ5v0iJksVhrWwOCaSfg1HcmtTVTKAmF04iKuMvyO6vjm5rnA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Luigi Semenzato <semenzato@google.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Jan 6, 2020 at 1:53 PM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> Unduplicate the ngpio check by simply calling gpiochip_get_desc() and
-> checking its return value.
+> On Thu 26-12-19 14:02:04, Luigi Semenzato wrote:
+> [...]
+> > +Limitations of Hibernation
+> > +==========================
+> > +
+> > +When entering hibernation, the kernel tries to allocate a chunk of memory large
+> > +enough to contain a copy of all pages in use, to use it for the system
+> > +snapshot.  If the allocation fails, the system cannot hibernate and the
+> > +operation fails with ENOMEM.  This will happen, for instance, when the total
+> > +amount of anonymous pages (process data) exceeds 1/2 of total RAM.
+> > +
+> > +One possible workaround (besides terminating enough processes) is to force
+> > +excess anonymous pages out to swap before hibernating.  This can be achieved
+> > +with memcgroups, by lowering memory usage limits with ``echo <new limit> >
+> > +/dev/cgroup/memory/<group>/memory.mem.usage_in_bytes``.  However, the latter
+> > +operation is not guaranteed to succeed.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> I am not familiar with the hibernation process much. But what prevents
+> those allocations to reclaim memory and push out the anonymous memory to
+> the swap on demand during the hibernation's allocations?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Nothing in particular AFAICS, at least in theory.
 
-Yours,
-Linus Walleij
+The approach taken by the hibernation code is rather straightforward:
+allocate enough memory to store a copy of every page (in RAM) that
+needs to be saved.  These allocations are made one page at a time, so
+in theory they should not fail as long as there is enough swap space
+in the system, but I'm probably missing something here.
