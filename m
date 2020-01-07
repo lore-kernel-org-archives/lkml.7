@@ -2,51 +2,52 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00145C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E449F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87752080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431467;
-	bh=JewF3hFRuX/PkV+WWKtCR2vi4s3Yk9cy/ML2nD4xAf0=;
+	s=default; t=1578431469;
+	bh=NrTyM3JscxKOqkliLJGsY96VKupid5oZ1E87DHd5r5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9wGTdKdAcMsdqcc5BzGzR7558DT4FNBLyz14CKn39MN60/rXwXK5JLDPEwQTrmuC
-	 LWmfvN9d5ZBel0ROC4xgpXQ1Pn7nJx8Qkvb8gID2IbySdlpmo5qWrrYi6o7M5mvZCy
-	 ZT/s+a5No6ndAwuIG0E+yiMYpeN4pHnxdn8mqd6Q=
+	b=LwR1iTy8UlrwNq7Z4tz1rxP3s28B8ztgPPchyCc/kPBP5NHygJ2aGafzdHHJACFOU
+	 0ucu/9SYJeMVX2f6WTn0k3+LI64bvORDwmdHaiV8XlvEbSxrbKHsOUYyY8/a6OHu+U
+	 gU3+2ufzrjQaz1iKfkD6MzjsAd+qZ60MIFIJ0FJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgAGVLF (ORCPT
+        id S1729879AbgAGVLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:11:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbgAGVKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:10:47 -0500
+        id S1730035AbgAGVK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:10:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD752072A;
-        Tue,  7 Jan 2020 21:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A264208C4;
+        Tue,  7 Jan 2020 21:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431446;
-        bh=JewF3hFRuX/PkV+WWKtCR2vi4s3Yk9cy/ML2nD4xAf0=;
+        s=default; t=1578431456;
+        bh=NrTyM3JscxKOqkliLJGsY96VKupid5oZ1E87DHd5r5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Or21Lqc1ST+66x0wGb0XoXj1j/3jtUJRSQYmiCWbpKtEqSTdiEJQeEqqFtUSM7/wX
-         0vR3t0gU0q8YSlQNQn++LfcxemOAG9/QQCwxmfmrpfA4UdxQV9crpGxJazC6Zn2vVI
-         nHQNO82nCAZ15zYNVTkEhuynBqiQz2YQdeLQaB8M=
+        b=miQF0n9p2KZwtzWf0eoklhPSX8HBLhnVYeAxhlBy6mlVHG5lPWfug4aaVmhJhliSq
+         EyruOEvE7fChvKWn7gA6yGlDHjdWeIfeIxU8lV34GHhmEjXxsqCACBbqhBbP+JRwfr
+         Qb/bzmBjOu5x2ydRhucIRRc9bBhCRgPtQbJPgVx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 4.14 59/74] tty: serial: msm_serial: Fix lockup for sysrq and oops
-Date:   Tue,  7 Jan 2020 21:55:24 +0100
-Message-Id: <20200107205224.160680969@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 63/74] powerpc/pseries/hvconsole: Fix stack overread via udbg
+Date:   Tue,  7 Jan 2020 21:55:28 +0100
+Message-Id: <20200107205226.389662268@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,68 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e upstream.
+[ Upstream commit 934bda59f286d0221f1a3ebab7f5156a996cc37d ]
 
-As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
-has mentioned the uart driver might cause recursive locking between
-normal printing and the kernel debugging facilities (e.g. sysrq and
-oops).  In the commit it gave out suggestion for fixing recursive
-locking issue: "The solution is to avoid locking in the sysrq case
-and trylock in the oops_in_progress case."
+While developing KASAN for 64-bit book3s, I hit the following stack
+over-read.
 
-This patch follows the suggestion (also used the exactly same code with
-other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
-issue, this can avoid stuck caused by deadlock and print out log for
-sysrq and oops.
+It occurs because the hypercall to put characters onto the terminal
+takes 2 longs (128 bits/16 bytes) of characters at a time, and so
+hvc_put_chars() would unconditionally copy 16 bytes from the argument
+buffer, regardless of supplied length. However, udbg_hvc_putc() can
+call hvc_put_chars() with a single-byte buffer, leading to the error.
 
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  ==================================================================
+  BUG: KASAN: stack-out-of-bounds in hvc_put_chars+0xdc/0x110
+  Read of size 8 at addr c0000000023e7a90 by task swapper/0
 
+  CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.0-rc2-next-20190528-02824-g048a6ab4835b #113
+  Call Trace:
+    dump_stack+0x104/0x154 (unreliable)
+    print_address_description+0xa0/0x30c
+    __kasan_report+0x20c/0x224
+    kasan_report+0x18/0x30
+    __asan_report_load8_noabort+0x24/0x40
+    hvc_put_chars+0xdc/0x110
+    hvterm_raw_put_chars+0x9c/0x110
+    udbg_hvc_putc+0x154/0x200
+    udbg_write+0xf0/0x240
+    console_unlock+0x868/0xd30
+    register_console+0x970/0xe90
+    register_early_udbg_console+0xf8/0x114
+    setup_arch+0x108/0x790
+    start_kernel+0x104/0x784
+    start_here_common+0x1c/0x534
+
+  Memory state around the buggy address:
+   c0000000023e7980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   c0000000023e7a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
+  >c0000000023e7a80: f1 f1 01 f2 f2 f2 00 00 00 00 00 00 00 00 00 00
+                           ^
+   c0000000023e7b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   c0000000023e7b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ==================================================================
+
+Document that a 16-byte buffer is requred, and provide it in udbg.
+
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/pseries/hvconsole.c |  2 +-
+ drivers/tty/hvc/hvc_vio.c                  | 16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -1588,6 +1588,7 @@ static void __msm_console_write(struct u
- 	int num_newlines = 0;
- 	bool replaced = false;
- 	void __iomem *tf;
-+	int locked = 1;
- 
- 	if (is_uartdm)
- 		tf = port->membase + UARTDM_TF;
-@@ -1600,7 +1601,13 @@ static void __msm_console_write(struct u
- 			num_newlines++;
- 	count += num_newlines;
- 
--	spin_lock(&port->lock);
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock(&port->lock);
-+	else
-+		spin_lock(&port->lock);
-+
- 	if (is_uartdm)
- 		msm_reset_dm_count(port, count);
- 
-@@ -1636,7 +1643,9 @@ static void __msm_console_write(struct u
- 		iowrite32_rep(tf, buf, 1);
- 		i += num_chars;
- 	}
--	spin_unlock(&port->lock);
-+
-+	if (locked)
-+		spin_unlock(&port->lock);
+diff --git a/arch/powerpc/platforms/pseries/hvconsole.c b/arch/powerpc/platforms/pseries/hvconsole.c
+index 74da18de853a..73ec15cd2708 100644
+--- a/arch/powerpc/platforms/pseries/hvconsole.c
++++ b/arch/powerpc/platforms/pseries/hvconsole.c
+@@ -62,7 +62,7 @@ EXPORT_SYMBOL(hvc_get_chars);
+  * @vtermno: The vtermno or unit_address of the adapter from which the data
+  *	originated.
+  * @buf: The character buffer that contains the character data to send to
+- *	firmware.
++ *	firmware. Must be at least 16 bytes, even if count is less than 16.
+  * @count: Send this number of characters.
+  */
+ int hvc_put_chars(uint32_t vtermno, const char *buf, int count)
+diff --git a/drivers/tty/hvc/hvc_vio.c b/drivers/tty/hvc/hvc_vio.c
+index a1d272ac82bb..c33150fcd964 100644
+--- a/drivers/tty/hvc/hvc_vio.c
++++ b/drivers/tty/hvc/hvc_vio.c
+@@ -120,6 +120,14 @@ static int hvterm_raw_get_chars(uint32_t vtermno, char *buf, int count)
+ 	return got;
  }
  
- static void msm_console_write(struct console *co, const char *s,
++/**
++ * hvterm_raw_put_chars: send characters to firmware for given vterm adapter
++ * @vtermno: The virtual terminal number.
++ * @buf: The characters to send. Because of the underlying hypercall in
++ *       hvc_put_chars(), this buffer must be at least 16 bytes long, even if
++ *       you are sending fewer chars.
++ * @count: number of chars to send.
++ */
+ static int hvterm_raw_put_chars(uint32_t vtermno, const char *buf, int count)
+ {
+ 	struct hvterm_priv *pv = hvterm_privs[vtermno];
+@@ -232,6 +240,7 @@ static const struct hv_ops hvterm_hvsi_ops = {
+ static void udbg_hvc_putc(char c)
+ {
+ 	int count = -1;
++	unsigned char bounce_buffer[16];
+ 
+ 	if (!hvterm_privs[0])
+ 		return;
+@@ -242,7 +251,12 @@ static void udbg_hvc_putc(char c)
+ 	do {
+ 		switch(hvterm_privs[0]->proto) {
+ 		case HV_PROTOCOL_RAW:
+-			count = hvterm_raw_put_chars(0, &c, 1);
++			/*
++			 * hvterm_raw_put_chars requires at least a 16-byte
++			 * buffer, so go via the bounce buffer
++			 */
++			bounce_buffer[0] = c;
++			count = hvterm_raw_put_chars(0, bounce_buffer, 1);
+ 			break;
+ 		case HV_PROTOCOL_HVSI:
+ 			count = hvterm_hvsi_put_chars(0, &c, 1);
+-- 
+2.20.1
+
 
 
