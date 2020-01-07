@@ -2,149 +2,121 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB25C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79075C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632292087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rYlDokC2"
+	by mail.kernel.org (Postfix) with ESMTP id 5152C2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578419544;
+	bh=N8kKuZH+IiH6SzhPc6h2mqRI8IEhFlVh6ta+BjiG0PA=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=FsAcoQm5EB/fBqYJoKXpfdTA5c/ZuFiJXR9ptBntArkBXRwKnE7UCm+iLps08XQ3b
+	 HRJeuS6OgcWTaeymv4BapQE53KteHiRFCRjrvug92vkWMMcWcCXdGXUCUaOVuiojHz
+	 LVwLr1KXZ3LkC77MBKpbx7oiRP5PNveYkCKKxv7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgAGRv6 (ORCPT
+        id S1728548AbgAGRwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:51:58 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43582 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728430AbgAGRv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:51:58 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d16so372670wre.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 09:51:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UbVULJcO0KoQ8UyAq3sKxvpp33IhKJl+pej7FZpNELY=;
-        b=rYlDokC29xG14NYShebx3kVbcGhDwOlg8dhocTJWxexmpjVOsu48vUbua8LU//f6bV
-         QXKcYKVtch0w36pWBBi5KBYZZhJqSBzBUnX6BZ50N/lqAxIW+rJClvHC/g0EszY77baN
-         9vyhAz9tU3V6EUBabm8d72cCJQh0LTFFUR5ipoacezcauI0W0hYKreE4PZR4Lvk4KtkC
-         bWW1LeWwABAbufmTvqQrJUiLvwkAQZAzPx85cF5qbX5MJyi1xT63YBL5emVNEBHqPz1I
-         TlzNY++WnMMyNtmQIdHUo6HG7wprzOx+xT2Yy3ZM7SY36t35VZJfHpofJfD9mGsoPmQG
-         Qb0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UbVULJcO0KoQ8UyAq3sKxvpp33IhKJl+pej7FZpNELY=;
-        b=m0QbUaqaBfjLnr5k/3mW+O910Me7tg9DT5kfT9GetgsbhHbiwkBkO5cIKf2EJGU9gc
-         pEXI0v7Tq1BgMORJw46T8SyxBeHuICKbK8SkpxiqlNQsAyVyK4ueKGeeFUtTv8+zWDLP
-         925IRwpQRM4zhBa0h2sQABqPwQTGdRWM4klRyHKceHW3Lk7nUDxuHeEA/N6mtO5PHl+H
-         +RRdoQ/vDlXhtN0XhZeoagUqF5k5qd5UJ5y3FC5mNCWUeF1Y23qMchE/ttu6DlQBOgSm
-         EhqGVy5g9xURl4e7jreGx6A35QUcp/HOfl2wlIObrgDc3b0JtZqaTX4/zRdX3y18jc/I
-         8laQ==
-X-Gm-Message-State: APjAAAUpvl+OAjEsRCZRP5kVYZhzp/24FN36nt8bHeCD2hn9/cMM1Cjb
-        90pHn6vKoEtOFY+k1q9D1vJk/YMh3LzJv1IjjsiB4g==
-X-Google-Smtp-Source: APXvYqyinGaD1+tRHAZo3zO3lRNIj8tetBCntRk3w2SI4OyoJYlkbvt4iiW3d7o8AhLEu7VBnd+o+XPv153tzuASdWQ=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr276481wrs.200.1578419516354;
- Tue, 07 Jan 2020 09:51:56 -0800 (PST)
+        Tue, 7 Jan 2020 12:52:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728358AbgAGRwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:52:23 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5052073D;
+        Tue,  7 Jan 2020 17:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578419542;
+        bh=N8kKuZH+IiH6SzhPc6h2mqRI8IEhFlVh6ta+BjiG0PA=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=ybRlfiE8lpreqNDlmuq0T6s79Vk91yUUXBueGQJwCTKHg0CwwBoLldVavaNiR5c2i
+         bGGVFO9iCfDMwDucVKX23f2QJV9gtQw9fLOBSf4W7e0SGBSuEd16lAp5F8k9Uc2sV6
+         HRVEpzGgo5tFSXUv2uwUFX9Lr/mCTssneGSpO0g8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157835764298.1456824.224151767362114611.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200107040415.GA19309@dhcp-128-65.nay.redhat.com> <CAPcyv4g_W4PoH6Wfj_SDGzGLpNLwxtoeGP7uwpzVMS4JWbXSTg@mail.gmail.com>
- <20200107051919.GC19080@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20200107051919.GC19080@dhcp-128-65.nay.redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 7 Jan 2020 18:51:45 +0100
-Message-ID: <CAKv+Gu-djB=3zTxjEbyjJXXpw=8NE6YA82hMW-JYyAQ2TSywtQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] efi: Fix handling of multiple efi_fake_mem= entries
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200107120317.GB8083@onstation.org>
+References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org> <20200105083534.01EB12071A@mail.kernel.org> <20200107120317.GB8083@onstation.org>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+To:     Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 07 Jan 2020 09:52:21 -0800
+Message-Id: <20200107175222.6B5052073D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 at 06:19, Dave Young <dyoung@redhat.com> wrote:
->
-> On 01/06/20 at 08:16pm, Dan Williams wrote:
-> > On Mon, Jan 6, 2020 at 8:04 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > On 01/06/20 at 04:40pm, Dan Williams wrote:
-> > > > Dave noticed that when specifying multiple efi_fake_mem= entries only
-> > > > the last entry was successfully being reflected in the efi memory map.
-> > > > This is due to the fact that the efi_memmap_insert() is being called
-> > > > multiple times, but on successive invocations the insertion should be
-> > > > applied to the last new memmap rather than the original map at
-> > > > efi_fake_memmap() entry.
-> > > >
-> > > > Rework efi_fake_memmap() to install the new memory map after each
-> > > > efi_fake_mem= entry is parsed.
-> > > >
-> > > > This also fixes an issue in efi_fake_memmap() that caused it to litter
-> > > > emtpy entries into the end of the efi memory map. An empty entry causes
-> > > > efi_memmap_insert() to attempt more memmap splits / copies than
-> > > > efi_memmap_split_count() accounted for when sizing the new map. When
-> > > > that happens efi_memmap_insert() may overrun its allocation, and if you
-> > > > are lucky will spill over to an unmapped page leading to crash
-> > > > signature like the following rather than silent corruption:
-> > > >
-> > > >     BUG: unable to handle page fault for address: ffffffffff281000
-> > > >     [..]
-> > > >     RIP: 0010:efi_memmap_insert+0x11d/0x191
-> > > >     [..]
-> > > >     Call Trace:
-> > > >      ? bgrt_init+0xbe/0xbe
-> > > >      ? efi_arch_mem_reserve+0x1cb/0x228
-> > > >      ? acpi_parse_bgrt+0xa/0xd
-> > > >      ? acpi_table_parse+0x86/0xb8
-> > > >      ? acpi_boot_init+0x494/0x4e3
-> > > >      ? acpi_parse_x2apic+0x87/0x87
-> > > >      ? setup_acpi_sci+0xa2/0xa2
-> > > >      ? setup_arch+0x8db/0x9e1
-> > > >      ? start_kernel+0x6a/0x547
-> > > >      ? secondary_startup_64+0xb6/0xc0
-> > > >
-> > > > Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
-> > > > services data to fix kexec breakage" is listed in Fixes: since it
-> > > > introduces more occurrences where efi_memmap_insert() is invoked after
-> > > > an efi_fake_mem= configuration has been parsed. Previously the side
-> > > > effects of vestigial empty entries were benign, but with commit
-> > > > af1648984828 that follow-on efi_memmap_insert() invocation triggers
-> > > > efi_memmap_insert() overruns.
-> > > >
-> > > > Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-> > > > Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-> > >
-> > > A nitpick for the Fixes flags, as I replied in the thread below:
-> > > https://lore.kernel.org/linux-efi/CAPcyv4jLxqPaB22Ao9oV31Gm=b0+Phty+Uz33Snex4QchOUb0Q@mail.gmail.com/T/#m2bb2dd00f7715c9c19ccc48efef0fcd5fdb626e7
-> > >
-> > > I reproduced two other panics without the patches applied, so this issue
-> > > is not caused by either of the commits, maybe just drop the Fixes.
-> >
-> > Just the "Fixes: af1648984828", right? No objection from me. I'll let
-> > Ingo say if he needs a resend for that.
-> >
-> > The "Fixes: 0f96a99dab36" is valid because the original implementation
-> > failed to handle the multiple argument case from the beginning.
->
-> Agreed, thanks!
->
+Quoting Brian Masney (2020-01-07 04:03:17)
+> On Sun, Jan 05, 2020 at 12:35:33AM -0800, Stephen Boyd wrote:
+> > Quoting Brian Masney (2019-12-04 16:25:00)
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +    vibrator {
+> > > +        compatible =3D "clk-vibrator";
+> > > +
+> > > +        vcc-supply =3D <&pm8941_l19>;
+> > > +
+> > > +        clocks =3D <&mmcc CAMSS_GP1_CLK>;
+> > > +        clock-names =3D "core";
+> > > +        clock-frequency =3D <24000>;
+> > > +
+> > > +        enable-gpios =3D <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> > > +
+> > > +        pinctrl-names =3D "default";
+> > > +        pinctrl-0 =3D <&vibrator_pin>;
+> >=20
+> > I'm still trying to wrap my head around this. I think we can have a pwm
+> > provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
+> > then this 'clk-vibrator' binding wouldn't exist? Instead we would have
+> > some sort of binding for a device that expects a pwm and whatever else
+> > is required, like the enable gpio and power supply. Is there an actual
+> > hardware block that is this way? Does it have a real product id and is
+> > made by some company? Right now this looks a little too generic to not
+> > just be a catch-all for something that buzzes.
+>=20
+> So have some of the Qualcomm clocks like this one register with both the
+> clk and the pwm frameworks? I feel that approach would better represent
+> the hardware in device tree.
 
-I'll queue this but without the fixes tags. The -stable maintainers
-are far too trigger happy IMHO, and this really needs careful review
-before being backported. efi_fake_mem is a debug feature anyway, so I
-don't see an urgent need to get this fixed retroactively in older
-kernels.
+That is one option. Or another option would be to have another node that
+"adapts" a clk signal to a pwm provider. Similar to how we adapt a gpio
+to make a clk gate or mux. Something like:
+
+	gcc: clock-controller@f00d {
+		reg =3D <0xf00d 0xd00d>;
+		#clock-cells =3D <1>;
+	};
+
+
+	pwm {
+		compatible =3D "pwm-clk";
+		#pwm-cells =3D <0>;
+		clocks =3D <&gcc 45>;
+		assigned-clocks =3D <&gcc 45>;
+		assigned-clock-rates =3D <1400000>;
+	};
+
+And then the pwm-clk driver would adjust the duty cycle to generate a
+pwm.
+
+>=20
+> If we did that, then the pwm-vibra driver in the input subsystem could
+> be used.
+
