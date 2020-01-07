@@ -2,55 +2,52 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79600C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F02C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49135222D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D35C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431303;
-	bh=FFnxewB0PxNjiHj9jmXU04m/t7uLXJ/DPQUka9Y/FR0=;
+	s=default; t=1578431307;
+	bh=8wMR/L9fnfSwiwGUK6BsNMBdN7+S9sXEEAUFZet5tXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIcU2BtGVVOV/bLZQRiCjmI9RTEAeJqy2Dl78/PHa/+E2JlUyLFAbGXaDh5z6bPlm
-	 K5Xnp2uFpX51HuAUjboCkrnH2TyPvVIA6I1s0aLCQPsGnutgn3CLCKwXcd6RqZhhjC
-	 NqAtWn6V23tjeeIDrC+FVbVIckFeiokjMx1oc6kU=
+	b=dpUF71tjIcSIlTxXCNVreilAgnwO3xLv3yrqbKzM/YA7QIXl9iBizxbkVa8clsMdW
+	 B5Ln309BtajqCi7xhdSDNA78dGQFJZmDMpvsCwvd+8PTKmQq9hqF2Cl+LNI6KJv1OC
+	 qwb2bGzLMcXvnw0XiAyossppbluUodbLdlbLUfbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgAGVIW (ORCPT
+        id S1729692AbgAGVI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60460 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbgAGVIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:20 -0500
+        id S1728626AbgAGVIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E1224684;
-        Tue,  7 Jan 2020 21:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A91C24676;
+        Tue,  7 Jan 2020 21:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431299;
-        bh=FFnxewB0PxNjiHj9jmXU04m/t7uLXJ/DPQUka9Y/FR0=;
+        s=default; t=1578431304;
+        bh=8wMR/L9fnfSwiwGUK6BsNMBdN7+S9sXEEAUFZet5tXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqxtqp08rF0JkbqTPfQ2tx7zU/qwvhwBlavw0/HUUkYE/joKKZz6A0ljhcsQY9py2
-         JqXY8Y1PBMtzAR8b6PcbOcOpO4dh4lG8CuSwz41VTJlOGkEWYDYW7dwhYVZ2/LJ754
-         Vga2ca60Tln74oySA0anFbapJa5BkYiLnoCxcKvk=
+        b=YXVcUHqcOyzy1dt+JCQt+Ezxo5uI1+5wj1SJVcpLJKmjW/EDQIWv/O26omQyGOVUn
+         L1y4dn3fdk5a/AtTnHjO2lBXREc7hz+sWsXyYH5ojAW8EiXlM5P4YjlfKYECYxRCTs
+         q1mi56VALFqSd5vBITjHoNHZMrn65AyYVOIyr3G4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Woodhouse <dwmw@amazon.de>,
-        Maximilian Heyne <mheyne@amazon.de>,
-        Paul Durrant <pdurrant@amazon.co.uk>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        SeongJae Park <sjpark@amazon.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/115] xen/blkback: Avoid unmapping unmapped grant pages
-Date:   Tue,  7 Jan 2020 21:55:24 +0100
-Message-Id: <20200107205310.616222247@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Haener <michael.haener@siemens.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 085/115] platform/x86: pmc_atom: Add Siemens CONNECT X300 to critclk_systems DMI table
+Date:   Tue,  7 Jan 2020 21:54:55 +0100
+Message-Id: <20200107205305.902992767@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -63,69 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Michael Haener <michael.haener@siemens.com>
 
-[ Upstream commit f9bd84a8a845d82f9b5a081a7ae68c98a11d2e84 ]
+commit e8796c6c69d129420ee94a1906b18d86b84644d4 upstream.
 
-For each I/O request, blkback first maps the foreign pages for the
-request to its local pages.  If an allocation of a local page for the
-mapping fails, it should unmap every mapping already made for the
-request.
+The CONNECT X300 uses the PMC clock for on-board components and gets
+stuck during boot if the clock is disabled. Therefore, add this
+device to the critical systems list.
+Tested on CONNECT X300.
 
-However, blkback's handling mechanism for the allocation failure does
-not mark the remaining foreign pages as unmapped.  Therefore, the unmap
-function merely tries to unmap every valid grant page for the request,
-including the pages not mapped due to the allocation failure.  On a
-system that fails the allocation frequently, this problem leads to
-following kernel crash.
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Michael Haener <michael.haener@siemens.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
-  [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
-  [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
-  [  372.012562] Oops: 0002 [#1] SMP
-  [  372.012566] Modules linked in: act_police sch_ingress cls_u32
-  ...
-  [  372.012746] Call Trace:
-  [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
-  [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
-  ...
-  [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
-  ...
-  Decompressing Linux... Parsing ELF... done.
-  Booting the kernel.
-  [    0.000000] Initializing cgroup subsys cpuset
-
-This commit fixes this problem by marking the grant pages of the given
-request that didn't mapped due to the allocation failure as invalid.
-
-Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
-
-Reviewed-by: David Woodhouse <dwmw@amazon.de>
-Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
-Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkback/blkback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/pmc_atom.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index fd1e19f1a49f..3666afa639d1 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -936,6 +936,8 @@ next:
- out_of_memory:
- 	pr_alert("%s: out of memory\n", __func__);
- 	put_free_pages(ring, pages_to_gnt, segs_to_map);
-+	for (i = last_map; i < num; i++)
-+		pages[i]->handle = BLKBACK_INVALID_HANDLE;
- 	return -ENOMEM;
- }
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -452,6 +452,14 @@ static const struct dmi_system_id critcl
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
+ 		},
+ 	},
++	{
++		.ident = "CONNECT X300",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "A5E45074588"),
++		},
++	},
++
+ 	{ /*sentinel*/ }
+ };
  
--- 
-2.20.1
-
 
 
