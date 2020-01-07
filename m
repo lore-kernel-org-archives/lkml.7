@@ -2,126 +2,225 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663F9C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C66C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B0620880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431107;
-	bh=lEY/zFf0tyWfGy/nxIHf5jfmXXYqHFoUkKhKAbPKaZs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/2+g7CIsStSoFHGfVx/C10rkjiuWyy4xD4RheW1f93Rxh/cwwDVH92ShdrrHPR0N
-	 O7LU9j5z8MWoIV/knRHFID0FGYyfWlSJ/CGeOIr5XhSZyvYHC9HUdp6bAWniuZ52pK
-	 AvEmDE7OFKAbEugTSfJ8Fhcl08UpHmGaIKphy7DI=
+	by mail.kernel.org (Postfix) with ESMTP id BF95120880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dBkwfd2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgAGVFG (ORCPT
+        id S1729008AbgAGVFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbgAGVEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:04:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jan 2020 16:05:08 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:42403 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729140AbgAGVEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:04:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578431094; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=CRzf2OJHph3mX/NFa/qBi7u98FOdv2NaS1Fr0v0Cz/Q=; b=dBkwfd2gRElYKJiA3A4wkBk1UR/++fk+vm9IW2anOh7y2LY4ajh2i94rVFYxk+MH6K3Ata9k
+ eypSGKHRpTFcEz4S1pemj1hwW9IrNJiXo0Hxd627weOChOTb2jQcsDrAMX1EOaTg+4x8HxyU
+ /G2JmBrwQQJxPH4vbGLXqQMay0U=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e14f275.7f951be95c00-smtp-out-n03;
+ Tue, 07 Jan 2020 21:04:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4BB7C447A9; Tue,  7 Jan 2020 21:04:49 +0000 (UTC)
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22524214D8;
-        Tue,  7 Jan 2020 21:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431092;
-        bh=lEY/zFf0tyWfGy/nxIHf5jfmXXYqHFoUkKhKAbPKaZs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCVKnuExa+0qclsvjjcPuQHCZYAMbAYch5Ju52+FzNhhyHDfMoo/I9xaHNjAj2yfL
-         aSL86NkrOOspzWQII3cIlniv5HuhshKkGYtHEupVauTImNgFvTTAali7Hrd3ivvEkw
-         2AgAagO1FSHuZBGa9rq1eMFAOuZ9ekonl0Wb9tIA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/115] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Tue,  7 Jan 2020 21:54:00 +0100
-Message-Id: <20200107205301.127959222@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-References: <20200107205240.283674026@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0159DC447A4;
+        Tue,  7 Jan 2020 21:04:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0159DC447A4
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        swboyd@chromium.org, Stephan Gerhold <stephan@gerhold.net>
+Cc:     Elliot Berman <eberman@codeaurora.org>,
+        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        Brian Masney <masneyb@onstation.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 14/17] firmware: qcom_scm-32: Add device argument to atomic calls
+Date:   Tue,  7 Jan 2020 13:04:23 -0800
+Message-Id: <1578431066-19600-15-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
+References: <1578431066-19600-1-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+Add unused "device" parameter to reduce merge friction between SMCCC and
+legacy based conventions in an upcoming patch.
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
-
-Current code device add sequence is:
-
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
-
-Therefore, the remove sequence should be,
-
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
-
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Change-Id: Ie31b220d751ae08430b3e89d41de0217e5213435
+Tested-by: Brian Masney <masneyb@onstation.org> # arm32
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/firmware/qcom_scm-32.c | 18 ++++++++++--------
+ drivers/firmware/qcom_scm-64.c |  5 +++--
+ drivers/firmware/qcom_scm.c    |  5 +++--
+ drivers/firmware/qcom_scm.h    |  5 +++--
+ 4 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 0bbeaaae47e0..9386bb57b3d7 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3069,16 +3069,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 9729a8a..e9b396c 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -285,7 +285,8 @@ static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+  * This shall only be used with commands that are guaranteed to be
+  * uninterruptable, atomic and SMP safe.
+  */
+-static int qcom_scm_call_atomic(const struct qcom_scm_desc *desc,
++static int qcom_scm_call_atomic(struct device *unused,
++				const struct qcom_scm_desc *desc,
+ 				struct qcom_scm_res *res)
+ {
+ 	int context_id;
+@@ -316,7 +317,8 @@ static int qcom_scm_call_atomic(const struct qcom_scm_desc *desc,
+  * Set the cold boot address of the cpus. Any cpu outside the supported
+  * range would be removed from the cpu present mask.
+  */
+-int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
++int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
++				  const cpumask_t *cpus)
+ {
+ 	int flags = 0;
+ 	int cpu;
+@@ -345,7 +347,7 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+ 	desc.args[1] = virt_to_phys(entry);
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
  
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
+-	return qcom_scm_call_atomic(&desc, NULL);
++	return qcom_scm_call_atomic(dev, &desc, NULL);
+ }
  
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
-+
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
+ /**
+@@ -402,7 +404,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+  * the control would return from this function, otherwise, the cpu jumps to the
+  * warm boot entry point set for this cpu upon reset.
+  */
+-void __qcom_scm_cpu_power_down(u32 flags)
++void __qcom_scm_cpu_power_down(struct device *dev, u32 flags)
+ {
+ 	struct qcom_scm_desc desc = {
+ 		.svc = QCOM_SCM_SVC_BOOT,
+@@ -411,7 +413,7 @@ void __qcom_scm_cpu_power_down(u32 flags)
+ 		.arginfo = QCOM_SCM_ARGS(1),
+ 	};
+ 
+-	qcom_scm_call_atomic(&desc, NULL);
++	qcom_scm_call_atomic(dev, &desc, NULL);
+ }
+ 
+ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
+@@ -616,7 +618,7 @@ int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call_atomic(&desc, NULL);
++	return qcom_scm_call_atomic(dev, &desc, NULL);
+ }
+ 
+ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+@@ -687,7 +689,7 @@ int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr,
+ 	desc.args[0] = addr;
+ 	desc.arginfo = QCOM_SCM_ARGS(1);
+ 
+-	ret = qcom_scm_call_atomic(&desc, &res);
++	ret = qcom_scm_call_atomic(dev, &desc, &res);
+ 	if (ret >= 0)
+ 		*val = res.result[0];
+ 
+@@ -705,7 +707,7 @@ int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val)
+ 	desc.args[1] = val;
+ 	desc.arginfo = QCOM_SCM_ARGS(2);
+ 
+-	return qcom_scm_call_atomic(&desc, NULL);
++	return qcom_scm_call_atomic(dev, &desc, NULL);
+ }
+ 
+ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool enable)
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index 6bc7f69..9507047 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -239,7 +239,8 @@ static int qcom_scm_call_atomic(struct device *dev,
+  * Set the cold boot address of the cpus. Any cpu outside the supported
+  * range would be removed from the cpu present mask.
+  */
+-int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
++int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
++				  const cpumask_t *cpus)
+ {
+ 	return -ENOTSUPP;
+ }
+@@ -267,7 +268,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+  * the control would return from this function, otherwise, the cpu jumps to the
+  * warm boot entry point set for this cpu upon reset.
+  */
+-void __qcom_scm_cpu_power_down(u32 flags)
++void __qcom_scm_cpu_power_down(struct device *dev, u32 flags)
+ {
+ }
+ 
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 097f8b3..5efe729 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -94,7 +94,8 @@ static void qcom_scm_clk_disable(void)
+  */
+ int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+ {
+-	return __qcom_scm_set_cold_boot_addr(entry, cpus);
++	return __qcom_scm_set_cold_boot_addr(__scm ? __scm->dev : NULL, entry,
++					     cpus);
+ }
+ EXPORT_SYMBOL(qcom_scm_set_cold_boot_addr);
+ 
+@@ -122,7 +123,7 @@ EXPORT_SYMBOL(qcom_scm_set_warm_boot_addr);
+  */
+ void qcom_scm_cpu_power_down(u32 flags)
+ {
+-	__qcom_scm_cpu_power_down(flags);
++	__qcom_scm_cpu_power_down(__scm ? __scm->dev : NULL, flags);
+ }
+ EXPORT_SYMBOL(qcom_scm_cpu_power_down);
+ 
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index afcca16..a022556 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -13,11 +13,12 @@ extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
+ 
+ extern int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+ 		const cpumask_t *cpus);
+-extern int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus);
++extern int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
++		const cpumask_t *cpus);
+ 
+ #define QCOM_SCM_BOOT_TERMINATE_PC	0x2
+ #define QCOM_SCM_FLUSH_FLAG_MASK	0x3
+-extern void __qcom_scm_cpu_power_down(u32 flags);
++extern void __qcom_scm_cpu_power_down(struct device *dev, u32 flags);
+ 
+ #define QCOM_SCM_SVC_IO			0x5
+ #define QCOM_SCM_IO_READ		0x1
 -- 
-2.20.1
-
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
