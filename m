@@ -2,133 +2,185 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBC9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C4FC33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0772077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E41D2070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XWA0M3sm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZgoJYmZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgAGLpO (ORCPT
+        id S1727963AbgAGLr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:45:14 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56138 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgAGLpO (ORCPT
+        Tue, 7 Jan 2020 06:47:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55041 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727806AbgAGLr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:45:14 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007Bj55h105265;
-        Tue, 7 Jan 2020 05:45:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578397505;
-        bh=opRM3BxdJrwcWwYPbvHXI+kHoBYD6A8pkYN5zqXedA8=;
-        h=From:To:CC:Subject:Date;
-        b=XWA0M3smZhELM2OjQvdUE1JdjwBZ4QVCtv7vQATPRzSyQ0VbZ6/n40c9wBjLOEram
-         8m+HfoR9f2iI/AFlp6X2jG0SLk/vRrs/HzQ2Ef7h+HV1nbRkE4ULZRPtLoZxg4THLE
-         +M4e9JOZ1VOe3oRk1C6nyw0g70uFQpKo+RhDAMAs=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007Bj51m037384
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 05:45:05 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 05:45:04 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 05:45:04 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007Bj1Zv073150;
-        Tue, 7 Jan 2020 05:45:02 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 7 Jan 2020 13:45:32 +0200
-Message-ID: <20200107114532.6697-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 7 Jan 2020 06:47:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578397677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ajwwg1tTuaqvf2+iTZv4F7nVRs4fx4vlQX7SEEZvm5I=;
+        b=DZgoJYmZNJ3FmMRl/rHqxtw4+6HPduNl0WtgdLkJMQQbE3+PNVV3HnYstXkhOUPnRX5oYR
+        bw6OwuIQ5Ybzkvzs9qv7KGkSdKAjksS4RlG0ba3Hs5AVoLXd3xp/eq+GpIxizD04dmdATY
+        qrS3tSJbFEWCF7psE1nZnScbhfO/W1w=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-ve3MvSIuP4ml7K99zn0ZNQ-1; Tue, 07 Jan 2020 06:47:56 -0500
+X-MC-Unique: ve3MvSIuP4ml7K99zn0ZNQ-1
+Received: by mail-qt1-f198.google.com with SMTP id c8so36243075qte.22
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 03:47:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ajwwg1tTuaqvf2+iTZv4F7nVRs4fx4vlQX7SEEZvm5I=;
+        b=Jo4AhdMpXvd21ohbva0bvQWzJcR12thZ2oGUWL7mb19ZEuIjXk6Y3qqq1JujHx9RqG
+         xQR9lpNnLxMrZqRstRK2TDmpw3vR7pbODeUvxW8xSu65bTGqycuom2UvMsdlUy0rQ1Wr
+         4nYSKzdfS8/mvWiAHgkfHlB1OzMZEVaMprUMiBRaqfBURwytWD+/TQLWzhEwk1IDpPbi
+         HIrNZbkx09lSOkcTZxcIlQ+T1lQxcnNC2ISwUQ7tT8BZp9LsUgaTOmZDYEHoaUNAuT/K
+         WyYlCJ3k0kpQpKzfge8Aa0ji6l7VQsHM6lP7P8wInSHxJs9UGKYzQzSvTTfp3eFrYGyG
+         55Xg==
+X-Gm-Message-State: APjAAAUnuL6QpaYbhdLVA2oDdZ7/c/iNSmXOIiaYx020vkEo7gjeY9De
+        uLGgb9uhWbRnUx5/+hazzVB6RSL9Ucv2yEYz1dJsC5XLP0860KVnWkAZYrfWDs/N3knJDJ/GdU9
+        mGD5c9XbnpONTK+LnES/bjz9G
+X-Received: by 2002:a05:620a:548:: with SMTP id o8mr89001516qko.490.1578397676015;
+        Tue, 07 Jan 2020 03:47:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwPdW3bN5Qrk8jx6DNFsiQ6HbJh5wOHP1je7PYJ8IDXlHg3qat/Sw8UC73f0mXWvj1+oj563Q==
+X-Received: by 2002:a05:620a:548:: with SMTP id o8mr89001491qko.490.1578397675714;
+        Tue, 07 Jan 2020 03:47:55 -0800 (PST)
+Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
+        by smtp.gmail.com with ESMTPSA id f19sm22090879qkk.69.2020.01.07.03.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 03:47:54 -0800 (PST)
+Date:   Tue, 7 Jan 2020 06:47:49 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
+ crashes in KVM guests after reboot
+Message-ID: <20200107064113-mutt-send-email-mst@kernel.org>
+References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
+ <20191218100926-mutt-send-email-mst@kernel.org>
+ <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
+ <20200106054041-mutt-send-email-mst@kernel.org>
+ <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
+ <20200107042401-mutt-send-email-mst@kernel.org>
+ <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+On Tue, Jan 07, 2020 at 12:34:50PM +0100, Christian Borntraeger wrote:
+> 
+> 
+> On 07.01.20 10:39, Michael S. Tsirkin wrote:
+> > On Tue, Jan 07, 2020 at 09:59:16AM +0100, Christian Borntraeger wrote:
+> >>
+> >>
+> >> On 06.01.20 11:50, Michael S. Tsirkin wrote:
+> >>> On Wed, Dec 18, 2019 at 04:59:02PM +0100, Christian Borntraeger wrote:
+> >>>> On 18.12.19 16:10, Michael S. Tsirkin wrote:
+> >>>>> On Wed, Dec 18, 2019 at 03:43:43PM +0100, Christian Borntraeger wrote:
+> >>>>>> Michael,
+> >>>>>>
+> >>>>>> with 
+> >>>>>> commit db7286b100b503ef80612884453bed53d74c9a16 (refs/bisect/skip-db7286b100b503ef80612884453bed53d74c9a16)
+> >>>>>>     vhost: use batched version by default
+> >>>>>> plus
+> >>>>>> commit 6bd262d5eafcdf8cdfae491e2e748e4e434dcda6 (HEAD, refs/bisect/bad)
+> >>>>>>     Revert "vhost/net: add an option to test new code"
+> >>>>>> to make things compile (your next tree is not easily bisectable, can you fix that as well?).
+> >>>>>
+> >>>>> I'll try.
+> >>>>>
+> >>>>>>
+> >>>>>> I get random crashes in my s390 KVM guests after reboot.
+> >>>>>> Reverting both patches together with commit decd9b8 "vhost: use vhost_desc instead of vhost_log" to
+> >>>>>> make it compile again) on top of linux-next-1218 makes the problem go away.
+> >>>>>>
+> >>>>>> Looks like the batched version is not yet ready for prime time. Can you drop these patches until
+> >>>>>> we have fixed the issues?
+> >>>>>>
+> >>>>>> Christian
+> >>>>>>
+> >>>>>
+> >>>>> Will do, thanks for letting me know.
+> >>>>
+> >>>> I have confirmed with the initial reporter (internal test team) that <driver name='qemu'/> 
+> >>>> with a known to be broken linux next kernel also fixes the problem, so it is really the
+> >>>> vhost changes.
+> >>>
+> >>> OK I'm back and trying to make it more bisectable.
+> >>>
+> >>> I pushed a new tag "batch-v2".
+> >>> It's same code but with this bisect should get more information.
+> >>
+> >> I get the following with this tag
+> >>
+> >> drivers/vhost/net.c: In function ‘vhost_net_tx_get_vq_desc’:
+> >> drivers/vhost/net.c:574:7: error: implicit declaration of function ‘vhost_get_vq_desc_batch’; did you mean ‘vhost_get_vq_desc’? [-Werror=implicit-function-declaration]
+> >>   574 |   r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
+> >>       |       ^~~~~~~~~~~~~~~~~~~~~~~
+> >>       |       vhost_get_vq_desc
+> >>
+> > 
+> > Not sure why but I pushed a wrong commit. Sorry. Should be good now.
+> > 
+> 
+> during bisect:
+> 
+> drivers/vhost/vhost.c: In function ‘vhost_get_vq_desc_batch’:
+> drivers/vhost/vhost.c:2634:8: error: ‘id’ undeclared (first use in this function); did you mean ‘i’?
+>  2634 |  ret = id;
+>       |        ^~
+>       |        i
+> 
+> I changed that to i
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Hmm no that's wrong I think. Sorry about all the errors. Let me push a
+fixed v3.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
-
-Changes since v1:
-- Fall back to IRQ mode for ADC only in case of ENODEV
-
-Regards,
-Peter
-
- drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index e493242c266e..74a2211bdff4 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
- 
--	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
--	if (!adc->dma_chan)
--		return -EINVAL;
-+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	if (IS_ERR(adc->dma_chan)) {
-+		int ret = PTR_ERR(adc->dma_chan);
-+
-+		adc->dma_chan = NULL;
-+		return ret;
-+	}
- 
- 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
- 					 DFSDM_DMA_BUFFER_SIZE,
-@@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
- 	init_completion(&adc->completion);
- 
- 	/* Optionally request DMA */
--	if (stm32_dfsdm_dma_request(indio_dev)) {
-+	ret = stm32_dfsdm_dma_request(indio_dev);
-+	if (ret) {
-+		if (ret != -ENODEV) {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&indio_dev->dev,
-+					"DMA channel request failed with %d\n",
-+					ret);
-+			return ret;
-+		}
-+
- 		dev_dbg(&indio_dev->dev, "No DMA support\n");
- 		return 0;
- 	}
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> The last step then gave me  (on commit 50297a8480b439efc5f3f23088cb2d90b799acef vhost: use batched version by default)
+> net enc1: Unexpected TXQ (0) queue failure: -5
+> in the guest.
+> 
+> bisect log so far:
+> [cborntra@m83lp52 linux]$ git bisect log
+> git bisect start
+> # bad: [3131e79bb9e9892a5a6bd33513de9bc90b20e867] vhost: use vhost_desc instead of vhost_log
+> git bisect bad 3131e79bb9e9892a5a6bd33513de9bc90b20e867
+> # good: [d1281e3a562ec6a08f944a876481dd043ba739b9] virtio-blk: remove VIRTIO_BLK_F_SCSI support
+> git bisect good d1281e3a562ec6a08f944a876481dd043ba739b9
+> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
+> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
+> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
+> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
+> # bad: [1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79] vhost: batching fetches
+> git bisect bad 1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79
+> 
+> 
+> 
 
