@@ -2,99 +2,111 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEE3C33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C12C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDBB207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A89F2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 04:10:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="P7ZzXL12"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jElTaqMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgAGEJb (ORCPT
+        id S1727563AbgAGEKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:09:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42171 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbgAGEJa (ORCPT
+        Mon, 6 Jan 2020 23:10:48 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34864 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbgAGEKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 23:09:30 -0500
-Received: by mail-pg1-f194.google.com with SMTP id s64so27841354pgb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Jan 2020 20:09:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=UbDGfz+Zv6xQM4bcQDYbb7lyZLmyc5f8z1Itmiihj5E=;
-        b=P7ZzXL12d6nzFrfsOQH7cZ60lX/Skm8S2B2/8CYu7pgFaR84V4+X0XLgWZsQAIYV9Z
-         kXS9/VEgm5233KKw8jzFsG/PQgNvohqYMLSu6XS2HwF3LnGptQlDpDQ9/IGNmlV+sjTR
-         gwwTyZTy7ZKUbZIPS3eKJqDd6csG9+QyEImwI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UbDGfz+Zv6xQM4bcQDYbb7lyZLmyc5f8z1Itmiihj5E=;
-        b=lqWdCWSDoPEUHwxAwnlTnbOI3yK3tdsH9xOw0KoxWQO0H70GfArJnqyUjdcIrVIIE3
-         5NoqDqN9pm+K0xiwyeUNg5rUS8ul1V0w2lmB+lnXfqj59cOlaB8pii6UOuSCgRLUr1Ib
-         etEdOA8pqSp5wrs7cOMw5XBsekCT+eNhprRqQWRCINS9JiseExRnCJFAMXzvy5a6/OIc
-         9WTCWpp1m7WkN34SMI76aGGES/tC2yUQB/SZZdnGWF6NKyQHJ+FIh++ijvYc4JSfyT7d
-         m0duSN9YakNsa4XQqztqlMpFIl1iLdGr5s7Yvwatvh3lZBYNRBBhCb8U6qlgy8njg2st
-         24SA==
-X-Gm-Message-State: APjAAAUixGSd87kPlt9ib3PPiKjFwxzycn+AYWeanH3tAqCl9v+fE6Wh
-        8zY4v9JMbeXGJQzWDNjhGZDwIw==
-X-Google-Smtp-Source: APXvYqwCRqwSnTJPSRlsXvvZZojFZ5FxBSbE1N3+S2c5ISE5p/eR35zjbZydfXoqInwd86TvLoWRrg==
-X-Received: by 2002:aa7:874a:: with SMTP id g10mr94042109pfo.205.1578370170296;
-        Mon, 06 Jan 2020 20:09:30 -0800 (PST)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id x65sm82920355pfb.171.2020.01.06.20.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 20:09:29 -0800 (PST)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/1] spi: bcm-qspi: Use platform_get_irq_byname_optional() to avoid error message
-Date:   Tue,  7 Jan 2020 09:39:12 +0530
-Message-Id: <20200107040912.16426-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Jan 2020 23:10:47 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00749WVO088091;
+        Tue, 7 Jan 2020 04:10:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=A79SI0wBAntvD1EW3YYmYwTYNFp8rHgmaSMpBMWpWzg=;
+ b=jElTaqMsUI4VO3lilql8LaupxfRfny1Cx14T7tZ7kSy3MybWZErQWr8MKtvmQZNrKh0w
+ HfljcSxhYfc5ayutX8VvnsfhfntNnYq4Min6JJlD/O0xHK1YPlABTJ9zXzuCVhFTyAnN
+ 71kyAQtk8nMFv0AL6WhHnJqiLOUFTI3dZ2ewHHzmxDqdiB2SFibRyOOwzpl1Hk8+q8Lt
+ zZ28uptJu1LKY9S4npPQYBksoRP6rvj5tiL0oWWzJ/6WW8+RONAzLiAdyVCsulF2UWvf
+ h7tsY0pkZGS5ZcCv7iJSLOZfhTU6r/zTZ5S6Dz4VPwO1et0O8C7WsjsYVmtY+bkcqES4 HQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xaj4tu22h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 04:10:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00749T0u154649;
+        Tue, 7 Jan 2020 04:10:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xb47hq6uc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Jan 2020 04:10:19 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0074AI17007946;
+        Tue, 7 Jan 2020 04:10:18 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Jan 2020 20:10:18 -0800
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191215174509.1847-1-linux@roeck-us.net>
+        <20191215174509.1847-2-linux@roeck-us.net>
+        <yq1r211dvck.fsf@oracle.com> <20191219003256.GA28144@roeck-us.net>
+Date:   Mon, 06 Jan 2020 23:10:15 -0500
+In-Reply-To: <20191219003256.GA28144@roeck-us.net> (Guenter Roeck's message of
+        "Wed, 18 Dec 2019 16:32:57 -0800")
+Message-ID: <yq17e233o0o.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=866
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001070032
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=927 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001070032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use platform_get_irq_byname_optional() instead of platform_get_irq_byname()
-to avoid below error message during probe:
 
-[3.265115] bcm_iproc 68c70200.spi: IRQ spi_lr_fullness_reached not found
-[3.272121] bcm_iproc 68c70200.spi: IRQ spi_lr_session_aborted not found
-[3.284965] bcm_iproc 68c70200.spi: IRQ spi_lr_impatient not found
-[3.291344] bcm_iproc 68c70200.spi: IRQ spi_lr_session_done not found
-[3.297992] bcm_iproc 68c70200.spi: IRQ mspi_done not found
-[3.303742] bcm_iproc 68c70200.spi: IRQ mspi_halted not found
+Hi Guenter!
 
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/spi/spi-bcm-qspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>  - I still think sensor naming needs work. How and where are the
+>>    "drivetemp-scsi-8-140" names generated?
+>> 
+> Quick one: In libsensors, outside the kernel. The naming is generic,
+> along the line of <driver name>-<bus name>-<bus index>-<slot>.
 
-diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 85bad70f59e3..23d295f36c80 100644
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -1293,7 +1293,7 @@ int bcm_qspi_probe(struct platform_device *pdev,
- 		name = qspi_irq_tab[val].irq_name;
- 		if (qspi_irq_tab[val].irq_source == SINGLE_L2) {
- 			/* get the l2 interrupts */
--			irq = platform_get_irq_byname(pdev, name);
-+			irq = platform_get_irq_byname_optional(pdev, name);
- 		} else if (!num_ints && soc_intc) {
- 			/* all mspi, bspi intrs muxed to one L1 intr */
- 			irq = platform_get_irq(pdev, 0);
+I understand that there are sensors that may not have an obvious
+associated topology and therefore necessitate coming up with a suitable
+naming or enumeration scheme. But in this case we already have a
+well-defined SCSI device name. Any particular reason you don't shift the
+chip.addr back and print the H:C:T:L format that you used as input?
+
+However arcane H:C:T:L may seem, I think that predictable naming would
+make things a lot easier for users that need to identify which device
+matches which sensor...
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering
