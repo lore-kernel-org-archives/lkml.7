@@ -2,61 +2,55 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E0AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788C1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8C62077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAC82072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgAGVzP (ORCPT
+        id S1727361AbgAGV4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:55:15 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:37234 "EHLO gloria.sntech.de"
+        Tue, 7 Jan 2020 16:56:43 -0500
+Received: from mga05.intel.com ([192.55.52.43]:19383 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbgAGVzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:55:15 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iowoh-0004t9-Ha; Tue, 07 Jan 2020 22:55:11 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-rockchip@lists.infradead.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Use ABI name for write protect pin on veyron fievel/tiger
-Date:   Tue, 07 Jan 2020 22:55:10 +0100
-Message-ID: <3032277.n0uFTgx7BP@phil>
-In-Reply-To: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
-References: <20200106135142.1.I3f99ac8399a564c88ff48ae6290cc691b47c16ae@changeid>
+        id S1726462AbgAGV4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:56:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 13:56:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,407,1571727600"; 
+   d="scan'208";a="370748214"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 13:56:42 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 38ECA300EE8; Tue,  7 Jan 2020 13:56:42 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:56:42 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf test: Fix test case Merge cpu map
+Message-ID: <20200107215642.GN15478@tassilo.jf.intel.com>
+References: <20200107122150.9093-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107122150.9093-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 6. Januar 2020, 22:52:13 CET schrieb Matthias Kaehlcke:
-> The flash write protect pin is currently named 'FW_WP_AP', which is
-> how the signal is called in the schematics. The Chrome OS ABI
-> requires the pin to be named 'AP_FLASH_WP_L', which is also how
-> it is called on all other veyron devices. Rename the pin to match
-> the ABI.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-applied for 5.6
+Makes sense.
 
-Thanks
-Heiko
-
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 
