@@ -2,106 +2,160 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97E2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C1DC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B64E206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s4w3jYTG"
+	by mail.kernel.org (Postfix) with ESMTP id D2947206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgAGMTf (ORCPT
+        id S1727988AbgAGMVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:19:35 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38142 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:19:35 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007CJGsI050417;
-        Tue, 7 Jan 2020 06:19:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578399556;
-        bh=0lJyrfWaHAIClz/zSWrqyl3gjx9r8coTtg1Qa6uzAH4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s4w3jYTGCgYRMa22i9FZ4VKyAsn1aSA51X38BZzGWOh8+lawk2gkR7JuCtDuv7x8s
-         qukAFEtV829aOgKaaLhAkD5syTS9GTZ/xoagNo644QsWPiD6iwX14xxOz8Ep9T3zlH
-         NWmDr0gpmYl5SGxHp9G5lyTTl3IpxTedtJRKRgYk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007CJGYT084614
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 06:19:16 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 06:19:16 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 06:19:16 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007CJCbC042717;
-        Tue, 7 Jan 2020 06:19:13 -0600
-Subject: Re: [PATCH] iio: buffer-dmaengine: Use dma_request_chan() directly
- for channel request
-To:     Jonathan Cameron <jic23@kernel.org>, Vinod Koul <vkoul@kernel.org>
-CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pmeerw@pmeerw.net>
-References: <20191113092453.30838-1-peter.ujfalusi@ti.com>
- <20191114043318.GE952516@vkoul-mobl> <20191116162257.550f62d6@archlinux>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <4d4c4338-b028-e28b-a603-323eadebd261@ti.com>
-Date:   Tue, 7 Jan 2020 14:19:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191116162257.550f62d6@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 7 Jan 2020 07:21:05 -0500
+Received: from mga09.intel.com ([134.134.136.24]:13867 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727814AbgAGMVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:21:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:21:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="422475978"
+Received: from iov2.bj.intel.com ([10.238.145.72])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jan 2020 04:21:01 -0800
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, kwankhede@nvidia.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
+        baolu.lu@linux.intel.com
+Subject: [PATCH v4 00/12] vfio_pci: wrap pci device as a mediated device
+Date:   Tue,  7 Jan 2020 20:01:37 +0800
+Message-Id: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan,
+This patchset aims to add a vfio-pci-like meta driver as a demo
+user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+mediated device" patchset from Baolu Lu. Besides the test purpose,
+per Alex's comments, it could also be a good base driver for
+experimenting with device specific mdev migration.
 
-On 16/11/2019 18.22, Jonathan Cameron wrote:
-> On Thu, 14 Nov 2019 10:03:18 +0530
-> Vinod Koul <vkoul@kernel.org> wrote:
-> 
->> On 13-11-19, 11:24, Peter Ujfalusi wrote:
->>> dma_request_slave_channel_reason() is:
->>> #define dma_request_slave_channel_reason(dev, name) \
->>> 	dma_request_chan(dev, name)  
->>
->> Reviewed-by: Vinod Koul <vkoul@kernel.org>
->>
-> 
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to play with it.
+Specific interface tested in this proposal:
+ *) int mdev_set_iommu_device(struct device *dev,
+ 				struct device *iommu_device)
+    introduced in the patch as below:
+    "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
 
-The sole user in mainline for dma_request_slave_channel_reason() is
-industrialio-buffer-dmaengine.c (since v5.5-rc1, 5.4 had 36 users).
+Patch Overview:
+ *) patch 1 ~ 9: code refactor for existing vfio-pci module
+                 move the common codes from vfio_pci.c to
+                 vfio_pci_common.c
+ *) patch 10: build vfio-pci-common.ko
+ *) patch 11: add initial vfio-mdev-pci sample driver
+ *) patch 12: refine the sample driver
 
-Are you planning to queue this patch for 5.6 (not sure if it could be
-sent to -rc6) so I can retire it from the dmaengine.h?
+Links:
+ *) Link of "vfio/mdev: IOMMU aware mediated device"
+         https://lwn.net/Articles/780522/
+ *) Previous versions:
+         Patch v3: https://lkml.org/lkml/2019/11/22/1558
+         Patch v2: https://lkml.org/lkml/2019/9/6/115
+         Patch v1: https://www.spinics.net/lists/kvm/msg188952.html
+         RFC v3: https://lkml.org/lkml/2019/4/24/495
+         RFC v2: https://lkml.org/lkml/2019/3/13/113
+         RFC v1: https://lkml.org/lkml/2019/3/4/529
+ *) may try it with the codes in below repo
+    https://github.com/luxis1999/vfio-mdev-pci-sample-driver.git : v5.5-rc5-pci-mdev
 
-Regards,
-- Péter
+Please feel free give your comments.
 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+Thanks,
+Yi Liu
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Change log:
+  patch v3 -> patch v4:
+  - switched the sequence of
+    "vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header"
+    and
+    "vfio_pci: refine user config reference in vfio-pci module".
+  - refined "vfio_pci: refine vfio_pci_driver reference in vfio_pci.c"
+    per Alex's comments.
+  - split the vfio_pci_private.h file to be two files.
+  - Build vfio_pci_common.c to be vfio-pci-common.ko for code sharing
+    outside of drivers/vfio/pci/.
+  - moved vfio-mdev-pci driver to under samples/.
+  - dropped "vfio/pci: protect cap/ecap_perm bits alloc/free" as new
+    version builds vfio_pci_common.c to be a kernel module.
+
+  patch v2 -> patch v3:
+  - refresh the disable_idle_d3, disable_vga and nointxmask config
+    according to user config in device open.
+  - add a semaphore around the vfio-pci cap/ecap perm bits allocation/free
+  - drop the non-singleton iommu group support to keep it simple as it's
+    a sample driver for now.
+
+  patch v1 -> patch v2:
+  - the sample driver implementation refined
+  - the sample driver can work on non-singleton iommu groups
+  - the sample driver can work with vfio-pci, devices from a non-singleton
+    group can either be bound to vfio-mdev-pci or vfio-pci, and the
+    assignment of this group still follows current vfio assignment rule.
+
+  RFC v3 -> patch v1:
+  - split the patchset from 3 patches to 9 patches to better demonstrate
+    the changes step by step
+
+  rfc v2->v3:
+  - use vfio-mdev-pci instead of vfio-pci-mdev
+  - place the new driver under drivers/vfio/pci while define
+    Kconfig in samples/Kconfig to clarify it is a sample driver
+
+  rfc v1->v2:
+  - instead of adding kernel option to existing vfio-pci
+    module in v1, v2 follows Alex's suggestion to add a
+    separate vfio-pci-mdev module.
+  - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+
+Alex Williamson (1):
+  samples: refine vfio-mdev-pci driver
+
+Liu Yi L (11):
+  vfio_pci: refine user config reference in vfio-pci module
+  vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header file
+  vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
+  vfio_pci: make common functions be extern
+  vfio_pci: duplicate vfio_pci.c
+  vfio_pci: shrink vfio_pci_common.c
+  vfio_pci: shrink vfio_pci.c
+  vfio_pci: duplicate vfio_pci_private.h to include/linux
+  vfio: split vfio_pci_private.h into two files
+  vfio: build vfio_pci_common.c into a kernel module
+  samples: add vfio-mdev-pci driver
+
+ drivers/vfio/pci/Kconfig              |    9 +-
+ drivers/vfio/pci/Makefile             |   10 +-
+ drivers/vfio/pci/vfio_pci.c           | 1477 +-------------------------------
+ drivers/vfio/pci/vfio_pci_common.c    | 1512 +++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_private.h   |   94 +-
+ include/linux/vfio_pci_common.h       |  154 ++++
+ samples/Kconfig                       |   10 +
+ samples/Makefile                      |    1 +
+ samples/vfio-mdev-pci/Makefile        |    4 +
+ samples/vfio-mdev-pci/vfio_mdev_pci.c |  420 +++++++++
+ 10 files changed, 2128 insertions(+), 1563 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_pci_common.c
+ create mode 100644 include/linux/vfio_pci_common.h
+ create mode 100644 samples/vfio-mdev-pci/Makefile
+ create mode 100644 samples/vfio-mdev-pci/vfio_mdev_pci.c
+
+-- 
+2.7.4
+
