@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63775C33C9B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F165C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282562080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024A22080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431841;
-	bh=E9YejP0q1JBAbBCT8XUt7j/35G/ZSQogs0nU1uMbpwo=;
+	s=default; t=1578431845;
+	bh=RHOGp9HQeQyoK17jjlwbXxaBDWuYVfp1PcCIQL9KW2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLREpeJ1vAcmRpby6uQPYc01KN2Eqt8Tszlq8xq7eurNwrW0AgUyxSfTGGd6s5UVg
-	 XfMPEvdIHoY8fzfsW1V62RPAE60s4kMXvTkfn+2GOUJucU7EU4d5eWKSe53fIDY90y
-	 lMhBwC6E0B+lP6qvQytjGVFieu/KPMX7cqT2RbCY=
+	b=QJKWardupjSpVzpbts+FP/KrQ24Bky1RcwVzoG1/aiEKjMYYnpzKe6fdO6K5OAkWb
+	 me1q6GR+VyMS7ImEhr+rH5S6/Qu0gBymi0MDB43O4zFSEfohHSLqkNBVK/R1XPzMy4
+	 pqSDBVG4sEZUg6c/hrwe7Yszfi1TlhfMOY+vXqjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgAGVF4 (ORCPT
+        id S1728184AbgAGVFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgAGVFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:53 -0500
+        id S1728478AbgAGVFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D472077B;
-        Tue,  7 Jan 2020 21:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F339208C4;
+        Tue,  7 Jan 2020 21:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431153;
-        bh=E9YejP0q1JBAbBCT8XUt7j/35G/ZSQogs0nU1uMbpwo=;
+        s=default; t=1578431145;
+        bh=RHOGp9HQeQyoK17jjlwbXxaBDWuYVfp1PcCIQL9KW2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ZIUdRR7YlmARBHSXvnUFHrweRSOWV+x8fRBAUDlr3FB5cWAg8vow7YCW+sZMEb9g
-         QXg35gMZYSDobXEPoO/TaUmP4Lh5RJ9d5kt/2Ic1FDMeRbmJMGld5EOnMb5PZj3ntj
-         fnV1WQvmYsXwlVAYfEbu28LFARrKl5XY9Ss8UGrw=
+        b=0vCI+9ISt0OkFf4fKU8yR4sT7yolPDtsdA6SJCdRhIJ6v4wh4/X/vrX3dazS5iOG2
+         hDC1H1vBJJK2DzSavy3U6pvBB0YNXzsocgmHqzTcNDhongjtl1jE57KuedrL9wQIXr
+         IqQ66eEqFKWIVxhNHdm8YYJAuuNc8N/KKDLgSojg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 4.19 056/115] locks: print unsigned ino in /proc/locks
-Date:   Tue,  7 Jan 2020 21:54:26 +0100
-Message-Id: <20200107205302.905844138@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 053/115] memcg: account security cred as well to kmemcg
+Date:   Tue,  7 Jan 2020 21:54:23 +0100
+Message-Id: <20200107205302.692285245@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,31 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit 98ca480a8f22fdbd768e3dad07024c8d4856576c upstream.
+commit 84029fd04c201a4c7e0b07ba262664900f47c6f5 upstream.
 
-An ino is unsigned, so display it as such in /proc/locks.
+The cred_jar kmem_cache is already memcg accounted in the current kernel
+but cred->security is not.  Account cred->security to kmemcg.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Recently we saw high root slab usage on our production and on further
+inspection, we found a buggy application leaking processes.  Though that
+buggy application was contained within its memcg but we observe much
+more system memory overhead, couple of GiBs, during that period.  This
+overhead can adversely impact the isolation on the system.
+
+One source of high overhead we found was cred->security objects, which
+have a lifetime of at least the life of the process which allocated
+them.
+
+Link: http://lkml.kernel.org/r/20191205223721.40034-1-shakeelb@google.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Chris Down <chris@chrisdown.name>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/locks.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cred.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -2678,7 +2678,7 @@ static void lock_get_status(struct seq_f
- 	}
- 	if (inode) {
- 		/* userspace relies on this representation of dev_t */
--		seq_printf(f, "%d %02x:%02x:%ld ", fl_pid,
-+		seq_printf(f, "%d %02x:%02x:%lu ", fl_pid,
- 				MAJOR(inode->i_sb->s_dev),
- 				MINOR(inode->i_sb->s_dev), inode->i_ino);
- 	} else {
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -220,7 +220,7 @@ struct cred *cred_alloc_blank(void)
+ 	new->magic = CRED_MAGIC;
+ #endif
+ 
+-	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
++	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 
+ 	return new;
+@@ -279,7 +279,7 @@ struct cred *prepare_creds(void)
+ 	new->security = NULL;
+ #endif
+ 
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 	validate_creds(new);
+ 	return new;
+@@ -654,7 +654,7 @@ struct cred *prepare_kernel_cred(struct
+ #ifdef CONFIG_SECURITY
+ 	new->security = NULL;
+ #endif
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 
+ 	put_cred(old);
 
 
