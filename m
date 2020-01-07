@@ -2,249 +2,196 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FBFC47409
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D413CC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939E32077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W+8dwZIC"
+	by mail.kernel.org (Postfix) with ESMTP id AA7AC2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgAGWtZ (ORCPT
+        id S1727602AbgAGWvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:49:25 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4706 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgAGWqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:46:03 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e150a170001>; Tue, 07 Jan 2020 14:45:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 14:46:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Jan 2020 14:46:01 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 22:46:00 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 22:46:00 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 22:46:00 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e150a270008>; Tue, 07 Jan 2020 14:45:59 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        Tue, 7 Jan 2020 17:51:37 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:53472 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbgAGWvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:51:36 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1ioxhC-0001Un-62; Tue, 07 Jan 2020 15:51:31 -0700
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>
-Subject: [PATCH v12 03/22] mm: Cleanup __put_devmap_managed_page() vs ->page_free()
-Date:   Tue, 7 Jan 2020 14:45:39 -0800
-Message-ID: <20200107224558.2362728-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107224558.2362728-1-jhubbard@nvidia.com>
-References: <20200107224558.2362728-1-jhubbard@nvidia.com>
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20200107211338.GA31548@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <36e37fe2-f99e-4b86-dc84-006cd7787873@deltatee.com>
+Date:   Tue, 7 Jan 2020 15:51:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578437144; bh=EG/ndmk57WYqgnzxcjchAe4qv1nyLB8s4ZN10kfPz0g=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=W+8dwZIC5SbeUTQkZGgYicaoiQpw28m5WnycTWyhqWRzh8fydpnEnuHNg5A+XX3R9
-         BrdSJsnI71v0PxcwNP9tvmfDXqC3YPc+YWovrw/X0gnOHWS+TNplHbIgI0v2n9ey59
-         lNUYRdpjAR6ns6uR6N2CZn0PxmWMUiqREIZwOVNXePRhTaZZmhAaWAJu0BMAiSE0Dc
-         AG6iQ3PCEQgPbM1o7y5WpWdcvhNnW7gCGhBV4z4nUpWSIE2PMxinuyGcJtVQbWTJy1
-         lQLTzyqM+Ds7S9tIY+4qS+0ufv4PKzhYcDpueA2HUY2yb38EUbsQy3T0y0PAZ9OWJ3
-         voNNJO8WquVGA==
+In-Reply-To: <20200107211338.GA31548@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: mika.westerberg@linux.intel.com, nicholas.johnson-opensource@outlook.com.au, benh@kernel.crashing.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v4] PCI: Fix disabling of bridge BARs when assigning bus
+ resources
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
 
-After the removal of the device-public infrastructure there are only 2
-->page_free() call backs in the kernel. One of those is a device-private
-callback in the nouveau driver, the other is a generic wakeup needed in
-the DAX case. In the hopes that all ->page_free() callbacks can be
-migrated to common core kernel functionality, move the device-private
-specific actions in __put_devmap_managed_page() under the
-is_device_private_page() conditional, including the ->page_free()
-callback. For the other page types just open-code the generic wakeup.
 
-Yes, the wakeup is only needed in the MEMORY_DEVICE_FSDAX case, but it
-does no harm in the MEMORY_DEVICE_DEVDAX and MEMORY_DEVICE_PCI_P2PDMA
-case.
+On 2020-01-07 2:13 p.m., Bjorn Helgaas wrote:
+> On Tue, Jan 07, 2020 at 12:09:02PM -0700, Logan Gunthorpe wrote:
+>> One odd quirk of PLX switches is that their upstream bridge port has
+>> 256K of space allocated behind its BAR0 (most other bridge
+>> implementations do not report any BAR space). The lspci for such  device
+>> looks like:
+>>
+>>   04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+>>             Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+>> 	    (prog-if 00 [Normal decode])
+>>       Physical Slot: 1
+>>       Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+>>       Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+>>       Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+>>       I/O behind bridge: 00002000-00003fff
+>>       Memory behind bridge: 90000000-909fffff
+>>       Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+>>       Kernel driver in use: pcieport
+>>
+>> It's not clear what the purpose of the memory at 0x90a00000 is, and
+>> currently the kernel never actually uses it for anything. In most cases,
+>> it's safely ignored and does not cause a problem.
+>>
+>> However, when the kernel assigns the resource addresses (with the
+>> pci=realloc command line parameter, for example) it can inadvertently
+>> disable the struct resource corresponding to the bar. When this happens,
+>> lspci will report this memory as ignored:
+>>
+>>    Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+>>
+>> This is because the kernel reports a zero start address and zero flags
+>> in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+>> Investigation with 'lspci -x', however shows the bios-assigned address
+>> will still be programmed in the device's BAR registers.
+>>
+>> It's clearly a bug that the kernel's view of the registers differs from
+>> what's actually programmed in the BAR, but in most cases, this still
+>> won't result in a visibile issue because nothing uses the memory,
+>> so nothing is affected. However, a big problem shows up when an IOMMU
+>> is in use: the IOMMU will not reserve this space in the IOVA because the
+>> kernel no longer thinks the range is valid. (See
+>> dmar_init_reserved_ranges() for the Intel implementation of this.)
+>>
+>> Without the proper reserved range, we have a situation where a DMA
+>> mapping may occasionally allocate an IOVA which the PCI bus will actually
+>> route to a BAR in the PLX switch. This will result in some random DMA
+>> writes not actually writing to the RAM they are supposed to, or random
+>> DMA reads returning all FFs from the PLX BAR when it's supposed to have
+>> read from RAM.
+>>
+>> The problem is caused in pci_assign_unassigned_root_bus_resources().
+>> When any resource from a bridge device fails to get assigned, the code
+>> sets the resource's flags to zero. This makes sense for bridge resources,
+>> as they will be re-enabled later, but for regular BARs, it disables them
+>> permanently.
+>>
+>> The code in question seems to indent to check if "dev->subordinate" is
+>> zero to determine whether a device is a bridge, however this is not
+>> likely valid as there might be a bridge without a subordinate bus due to
+>> running out of bus numbers or other cases.
+>>
+>> To fix these issues we instead check that the idx is in the
+>> PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
+>> thus is sufficient for the "dev->subordinate" check and will also
+>> prevent the bug above from clobbering PLX devices' regular BARs.
+> 
+> s/bios/BIOS/
+> s/bar/BAR/
+> s/visibile/visible/
+> s/indent/intend/
+> 
+>> Reported-by: Kit Chow <kchow@gigaio.com>
+>> Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> ---
+>>  drivers/pci/setup-bus.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> This patch was last submitted back in June as part of a series. I've
+>> dropped the first patch in the series as a similar patch from Nicholas
+>> takes care of the bug.
+>>
+>> As a reminder, the previous discussion on this patch is here[1]. Per the
+>> feedback, I've updated the patch to remove the check on
+>> "dev->subordinate" entirely.
+>>
+>> The patch is based on v5.5-rc5 and a git branch is available here:
+>>
+>> https://github.com/sbates130272/linux-p2pmem pci_realloc_v4
+>>
+>> [1] https://lore.kernel.org/linux-pci/20190617135307.GA13533@google.com/
+>>
+>> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+>> index f279826204eb..23f6c95f3fd7 100644
+>> --- a/drivers/pci/setup-bus.c
+>> +++ b/drivers/pci/setup-bus.c
+>> @@ -1803,11 +1803,15 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+>>  	/* Restore size and flags */
+>>  	list_for_each_entry(fail_res, &fail_head, list) {
+>>  		struct resource *res = fail_res->res;
+>> +		int idx;
+>>
+>>  		res->start = fail_res->start;
+>>  		res->end = fail_res->end;
+>>  		res->flags = fail_res->flags;
+>> -		if (fail_res->dev->subordinate)
+>> +
+>> +		idx = res - &fail_res->dev->resource[0];
+>> +		if (idx >= PCI_BRIDGE_RESOURCES &&
+>> +		    idx <= PCI_BRIDGE_RESOURCE_END)
+>>  			res->flags = 0;
+> 
+> So I guess previously, for everything on the fail_head list, we
+> restored flags/start/end *and* we cleared flags for every BAR and
+> window of a bridge.
+> 
+> Now we'll clear flags for only for bridge windows.  I'm sure that was
+> the original intent, but I don't see why we bother.  The next thing we
+> do is go back to "again", where we call __pci_bus_size_bridges(),
+> where we immediately call pci_bridge_check_ranges(), which recomputes
+> the flags.
+> 
+> Is there actually any point in clearing res->flags, or could we just
+> do this:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/nvdimm/pmem.c |  6 ----
- mm/memremap.c         | 80 ++++++++++++++++++++++++-------------------
- 2 files changed, 44 insertions(+), 42 deletions(-)
+Hmm, well removing the check doesn't seem to cause any problems on my
+test box. But I'm not very confident that it's not required for some
+corner case. It was clearly added by someone for a reason that is not
+clear based on the information I can find in git blame.
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index ad8e4df1282b..4eae441f86c9 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -337,13 +337,7 @@ static void pmem_release_disk(void *__pmem)
- 	put_disk(pmem->disk);
- }
-=20
--static void pmem_pagemap_page_free(struct page *page)
--{
--	wake_up_var(&page->_refcount);
--}
--
- static const struct dev_pagemap_ops fsdax_pagemap_ops =3D {
--	.page_free		=3D pmem_pagemap_page_free,
- 	.kill			=3D pmem_pagemap_kill,
- 	.cleanup		=3D pmem_pagemap_cleanup,
- };
-diff --git a/mm/memremap.c b/mm/memremap.c
-index c51c6bd2fe34..f915d074ac20 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -27,7 +27,8 @@ static void devmap_managed_enable_put(void)
-=20
- static int devmap_managed_enable_get(struct dev_pagemap *pgmap)
- {
--	if (!pgmap->ops || !pgmap->ops->page_free) {
-+	if (pgmap->type =3D=3D MEMORY_DEVICE_PRIVATE &&
-+	    (!pgmap->ops || !pgmap->ops->page_free)) {
- 		WARN(1, "Missing page_free method\n");
- 		return -EINVAL;
- 	}
-@@ -414,44 +415,51 @@ void __put_devmap_managed_page(struct page *page)
- {
- 	int count =3D page_ref_dec_return(page);
-=20
--	/*
--	 * If refcount is 1 then page is freed and refcount is stable as nobody
--	 * holds a reference on the page.
--	 */
--	if (count =3D=3D 1) {
--		/* Clear Active bit in case of parallel mark_page_accessed */
--		__ClearPageActive(page);
--		__ClearPageWaiters(page);
-+	/* still busy */
-+	if (count > 1)
-+		return;
-=20
--		mem_cgroup_uncharge(page);
-+	/* only triggered by the dev_pagemap shutdown path */
-+	if (count =3D=3D 0) {
-+		__put_page(page);
-+		return;
-+	}
-=20
--		/*
--		 * When a device_private page is freed, the page->mapping field
--		 * may still contain a (stale) mapping value. For example, the
--		 * lower bits of page->mapping may still identify the page as
--		 * an anonymous page. Ultimately, this entire field is just
--		 * stale and wrong, and it will cause errors if not cleared.
--		 * One example is:
--		 *
--		 *  migrate_vma_pages()
--		 *    migrate_vma_insert_page()
--		 *      page_add_new_anon_rmap()
--		 *        __page_set_anon_rmap()
--		 *          ...checks page->mapping, via PageAnon(page) call,
--		 *            and incorrectly concludes that the page is an
--		 *            anonymous page. Therefore, it incorrectly,
--		 *            silently fails to set up the new anon rmap.
--		 *
--		 * For other types of ZONE_DEVICE pages, migration is either
--		 * handled differently or not done at all, so there is no need
--		 * to clear page->mapping.
--		 */
--		if (is_device_private_page(page))
--			page->mapping =3D NULL;
-+	/* notify page idle for dax */
-+	if (!is_device_private_page(page)) {
-+		wake_up_var(&page->_refcount);
-+		return;
-+	}
-=20
--		page->pgmap->ops->page_free(page);
--	} else if (!count)
--		__put_page(page);
-+	/* Clear Active bit in case of parallel mark_page_accessed */
-+	__ClearPageActive(page);
-+	__ClearPageWaiters(page);
-+
-+	mem_cgroup_uncharge(page);
-+
-+	/*
-+	 * When a device_private page is freed, the page->mapping field
-+	 * may still contain a (stale) mapping value. For example, the
-+	 * lower bits of page->mapping may still identify the page as an
-+	 * anonymous page. Ultimately, this entire field is just stale
-+	 * and wrong, and it will cause errors if not cleared.  One
-+	 * example is:
-+	 *
-+	 *  migrate_vma_pages()
-+	 *    migrate_vma_insert_page()
-+	 *      page_add_new_anon_rmap()
-+	 *        __page_set_anon_rmap()
-+	 *          ...checks page->mapping, via PageAnon(page) call,
-+	 *            and incorrectly concludes that the page is an
-+	 *            anonymous page. Therefore, it incorrectly,
-+	 *            silently fails to set up the new anon rmap.
-+	 *
-+	 * For other types of ZONE_DEVICE pages, migration is either
-+	 * handled differently or not done at all, so there is no need
-+	 * to clear page->mapping.
-+	 */
-+	page->mapping =3D NULL;
-+	page->pgmap->ops->page_free(page);
- }
- EXPORT_SYMBOL(__put_devmap_managed_page);
- #endif /* CONFIG_DEV_PAGEMAP_OPS */
---=20
-2.24.1
+I don't agree that pci_bridge_check_ranges() recomputes the flags... it
+only sets specific flags. So zeroing the flags may be intended to clear
+other flags like IORESOURCE_STARTALIGN or IORESOURCE_SIZEALIGN; though
+it's not super clear to me how those are used either.
 
+So I'd personally prefer to err on the side of caution here and not
+introduce any new subtle bugs.
+
+Logan
