@@ -2,123 +2,76 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0528C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106EC32771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70E82064C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QDSlbGup"
+	by mail.kernel.org (Postfix) with ESMTP id 1B3082073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578367624;
+	bh=X+2gVisxUGO+ou5FYDrr9uZg4m9jUcNFLB6+Fer2aIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XptjNLuGsp/VUR6B1Shs7mUIlai3MeUaoKv6434946EV4glTCkxQxJ1knJQ3HCr1B
+	 4awO3PUhRtChs7HoWPjmMEuCgGhEEpdJuh+DRiM5DRekLtnvgm/M3fEfZZmjQjBm4F
+	 BVGqhc14UirmeOj2FC6y8qd7Ue4R3/2FLtMFR3Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgAGDYy (ORCPT
+        id S1727496AbgAGD1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:24:54 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47188 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbgAGDYy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:24:54 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073EXIE025855;
-        Tue, 7 Jan 2020 03:24:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=eEDEB5cRiaDaMI401AFI3YVYzUZ8UFoQLMybywdErVQ=;
- b=QDSlbGupGflTHfqrIDNN0pRGV03FnSpuCfigptfoFqoaA1spKKkx9D4dFkT4G4dyADdK
- KTO58n7GOAw3kOHJ5OmGz/YSqQg9fDfUNSklRPcfXSCAqcfdiNi9SqY6ibt54v1OEe8o
- 9PP/h4km77fvB47MLrijeXfen1XxOvm/ZX15n+BOWpB/H+l1LbMKKx86T6uoq04LxhhH
- +rbvtc5p71h5DvFiZfvaDTlRYtzajq18gFUJdRJa1d47RvZshe2sbcrWXL8ZETcIHDyY
- Q3PgPRP0rHuCR0C+zmXK685klXj7A+DIwARvEDZYW2EhGqLzHOLmRyOBpZWxc9UyXaoV ew== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xajnpts86-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 03:24:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0073EOoh192221;
-        Tue, 7 Jan 2020 03:24:23 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xb4uq6njs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Jan 2020 03:24:22 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0073ODw1027853;
-        Tue, 7 Jan 2020 03:24:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Jan 2020 19:24:13 -0800
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com
-Subject: Re: [PATCH RFC 1/3] block: Add support for REQ_OP_ASSIGN_RANGE operation
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
-        <157599696813.12112.14140818972910110796.stgit@localhost.localdomain>
-        <yq1woatc8zd.fsf@oracle.com>
-        <3f2e341b-dea4-c5d0-8eb0-568b6ad2f17b@virtuozzo.com>
-        <yq1a77oc56s.fsf@oracle.com>
-        <625c9ee4-bedb-ff60-845e-2d440c4f58aa@virtuozzo.com>
-        <yq1pngh7blx.fsf@oracle.com>
-        <405b9106-0a97-0821-c41d-58ab8d0e2d09@virtuozzo.com>
-Date:   Mon, 06 Jan 2020 22:24:09 -0500
-In-Reply-To: <405b9106-0a97-0821-c41d-58ab8d0e2d09@virtuozzo.com> (Kirill
-        Tkhai's message of "Mon, 23 Dec 2019 11:51:34 +0300")
-Message-ID: <yq1o8vg2bl2.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 6 Jan 2020 22:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbgAGD1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:27:02 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 635782064C;
+        Tue,  7 Jan 2020 03:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578367621;
+        bh=X+2gVisxUGO+ou5FYDrr9uZg4m9jUcNFLB6+Fer2aIU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LfEW/4iZ8qnK1J5++lGjKJbiPZaOc1+mcQo0dJvAKKH1jqBgvCGa1FGuHumf9Tq/n
+         BzActTBfhUAou1qmgU78E2kBcxTbKq38S7CuCM6CLeBFkOwoGPX4Yd0kqEasQgDd+8
+         U2qAOBKtGl2nsmSISRbhuKhVbYCKGr4Hf8IPj9nQ=
+Date:   Mon, 6 Jan 2020 19:26:59 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 0/3] Fscrypt support for casefolded encryption
+Message-ID: <20200107032659.GB705@sol.localdomain>
+References: <20200107023323.38394-1-drosen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001070025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9492 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001070025
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107023323.38394-1-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 06, 2020 at 06:33:20PM -0800, Daniel Rosenberg wrote:
+> These patches are to prepare fscrypt to support casefolding and
+> encryption at the same time. Other patches will add those to the
+> vfs, ext4 and f2fs. These patches are against fscrypt/master
+> 
+> Daniel Rosenberg (3):
+>   fscrypt: Add siphash and hash key for policy v2
+>   fscrypt: Don't allow v1 policies with casefolding
+>   fscrypt: Change format of no-key token
+> 
 
-Kirill,
+I think you should send out the full series again so that people have the needed
+context when reviewing it.  It can still be on top of fscrypt.git#master if
+that's easiest.  We can consider taking these three patches for 5.6 before the
+fs/ext4/ and fs/f2fs/ parts in order to help avoid merge conflicts between git
+trees, but that doesn't mean you can't send out the full series.
 
-Sorry, the holiday break got in the way.
-
-> But I also worry about NOFALLBACK case. There are possible block
-> devices, which support write zeroes, but they can't allocate blocks
-> (block allocation are just not appliable for them, say, these are all
-> ordinary hdd).
-
-Correct. We shouldn't go down this path unless a device is thinly
-provisioned (i.e. max_discard_sectors > 0).
-
-> But won't it be a good thing to return EOPNOTSUPP right from
-> __blkdev_issue_write_zeroes() in case of block device can't allocate
-> blocks (q->limits.write_zeroes_can_allocate in the patch below)? Here
-> is just a way to underline block devices, which support write zeroes,
-> but allocation of blocks is meant nothing for them (wasting of time).
-
-I don't like "write_zeroes_can_allocate" because that makes assumptions
-about WRITE ZEROES being the command of choice. I suggest we call it
-"max_allocate_sectors" to mirror "max_discard_sectors". I.e. put
-emphasis on the semantic operation and not the plumbing.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+- Eric
