@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77497C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC94C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42595214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EE32077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430957;
-	bh=yc4EOZPFPEzXA/VNN41oGWVR1ukZwqiYOdknVIsvHE8=;
+	s=default; t=1578430960;
+	bh=2c6xTMe5hfYLYttq5dLYr2N3NmtZtKOH449yayFHZ/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TImOTldTuPjmBeWRmWKkbzw3CSFcQPj4ODz7You2C4wKdYwEHnqp0xI289hOGC9eA
-	 5Dafy/ueLGTtqsPslk6Uolv6De0nmZfiGctEDU7ex1AwnCLrae0kJ9dkAkwqQAwNWq
-	 2NlDYtOuKbEV6Yc37DFY3RkQ7GxkPiYAsE1lFr3o=
+	b=VCVGsedMwcDyi03+GgdtJ7wVnJz59Biwih49ZrFjhK++OOuR5aT+SS4Me/YeWUbOp
+	 nO/Y7wxUd3FJkSUAKgPwPSJDUYQV/pM5/gbpMFUVTXweTGTwdzNd3hJhJRyHRV0swe
+	 mS8t4NCWrSKdrgxce42ZpD1DHLPPmys18AkCJn14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgAGVCg (ORCPT
+        id S1728781AbgAGVCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42468 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:02:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgAGVCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:02:33 -0500
+        id S1728766AbgAGVCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08796214D8;
-        Tue,  7 Jan 2020 21:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7568620880;
+        Tue,  7 Jan 2020 21:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430952;
-        bh=yc4EOZPFPEzXA/VNN41oGWVR1ukZwqiYOdknVIsvHE8=;
+        s=default; t=1578430954;
+        bh=2c6xTMe5hfYLYttq5dLYr2N3NmtZtKOH449yayFHZ/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zypG9naqW7o39zJ1eivPDjxk5SYYZWZzjopGWIKCy83gS1DL+WKhLpFLWoHT2+XXO
-         qUvrI+Be2E+CdLA0UMY8fX9YkGjbUOyK3LbbC7rQUsvsi7UJE7laxghAR0W6EHr15E
-         vwtnMGcktMMAHf0SjHuj5kDJMUdFmEjQh4NxCqkI=
+        b=kkrzrM/QPp/OnHnduuGG/L4CkhOOmFDeEAWIBsLoSt3oXbPCD0qinxr7DEguW1ia5
+         sKDutZtbpK4bNwKN2H0JZM7XYQYIJ4OsHFPULYEw6GzWj2poKNaSt2Ci+RwpIOyNc3
+         186eGbLzmFoHOHgYQAU44Wo2KEiqFiy6UmyK+TrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 127/191] ALSA: firewire-motu: Correct a typo in the clock proc string
-Date:   Tue,  7 Jan 2020 21:54:07 +0100
-Message-Id: <20200107205339.773019672@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 128/191] scsi: lpfc: Fix rpi release when deleting vport
+Date:   Tue,  7 Jan 2020 21:54:08 +0100
+Message-Id: <20200107205339.824696476@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,32 +60,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 0929249e3be3bb82ee6cfec0025f4dde952210b3 upstream.
+commit 97acd0019d5dadd9c0e111c2083c889bfe548f25 upstream.
 
-Just fix a typo of "S/PDIF" in the clock name string.
+A prior use-after-free mailbox fix solved it's problem by null'ing a ndlp
+pointer.  However, further testing has shown that this change causes a
+later state change to occasionally be skipped, which results in a reference
+count never being decremented thus the rpi is never released, which causes
+a vport delete to never succeed.
 
-Fixes: 4638ec6ede08 ("ALSA: firewire-motu: add proc node to show current statuc of clock and packet formats")
-Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191030100921.3826-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Revise the fix in the prior patch to no longer null the ndlp. Instead the
+RELEASE_RPI flag is set which will drive the release of the rpi.
+
+Given the new code was added at a deep indentation level, refactor the code
+block using a new routine that avoids the indentation issues.
+
+Fixes: 	9b1640686470 ("scsi: lpfc: Fix use-after-free mailbox cmd completion")
+Link: https://lore.kernel.org/r/20190922035906.10977-6-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/motu-proc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c |   88 ++++++++++++++++++++++++++-------------
+ drivers/scsi/lpfc/lpfc_sli.c     |    2 
+ 2 files changed, 61 insertions(+), 29 deletions(-)
 
---- a/sound/firewire/motu/motu-proc.c
-+++ b/sound/firewire/motu/motu-proc.c
-@@ -16,7 +16,7 @@ static const char *const clock_names[] =
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT] = "S/PDIF on optical interface",
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT_A] = "S/PDIF on optical interface A",
- 	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_OPT_B] = "S/PDIF on optical interface B",
--	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_COAX] = "S/PCIF on coaxial interface",
-+	[SND_MOTU_CLOCK_SOURCE_SPDIF_ON_COAX] = "S/PDIF on coaxial interface",
- 	[SND_MOTU_CLOCK_SOURCE_AESEBU_ON_XLR] = "AESEBU on XLR interface",
- 	[SND_MOTU_CLOCK_SOURCE_WORD_ON_BNC] = "Word clock on BNC interface",
- };
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -4844,6 +4844,44 @@ lpfc_nlp_logo_unreg(struct lpfc_hba *phb
+ }
+ 
+ /*
++ * Sets the mailbox completion handler to be used for the
++ * unreg_rpi command. The handler varies based on the state of
++ * the port and what will be happening to the rpi next.
++ */
++static void
++lpfc_set_unreg_login_mbx_cmpl(struct lpfc_hba *phba, struct lpfc_vport *vport,
++	struct lpfc_nodelist *ndlp, LPFC_MBOXQ_t *mbox)
++{
++	unsigned long iflags;
++
++	if (ndlp->nlp_flag & NLP_ISSUE_LOGO) {
++		mbox->ctx_ndlp = ndlp;
++		mbox->mbox_cmpl = lpfc_nlp_logo_unreg;
++
++	} else if (phba->sli_rev == LPFC_SLI_REV4 &&
++		   (!(vport->load_flag & FC_UNLOADING)) &&
++		    (bf_get(lpfc_sli_intf_if_type, &phba->sli4_hba.sli_intf) >=
++				      LPFC_SLI_INTF_IF_TYPE_2) &&
++		    (kref_read(&ndlp->kref) > 0)) {
++		mbox->ctx_ndlp = lpfc_nlp_get(ndlp);
++		mbox->mbox_cmpl = lpfc_sli4_unreg_rpi_cmpl_clr;
++	} else {
++		if (vport->load_flag & FC_UNLOADING) {
++			if (phba->sli_rev == LPFC_SLI_REV4) {
++				spin_lock_irqsave(&vport->phba->ndlp_lock,
++						  iflags);
++				ndlp->nlp_flag |= NLP_RELEASE_RPI;
++				spin_unlock_irqrestore(&vport->phba->ndlp_lock,
++						       iflags);
++			}
++			lpfc_nlp_get(ndlp);
++		}
++		mbox->ctx_ndlp = ndlp;
++		mbox->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
++	}
++}
++
++/*
+  * Free rpi associated with LPFC_NODELIST entry.
+  * This routine is called from lpfc_freenode(), when we are removing
+  * a LPFC_NODELIST entry. It is also called if the driver initiates a
+@@ -4893,33 +4931,12 @@ lpfc_unreg_rpi(struct lpfc_vport *vport,
+ 
+ 			lpfc_unreg_login(phba, vport->vpi, rpi, mbox);
+ 			mbox->vport = vport;
+-			if (ndlp->nlp_flag & NLP_ISSUE_LOGO) {
+-				mbox->ctx_ndlp = ndlp;
+-				mbox->mbox_cmpl = lpfc_nlp_logo_unreg;
+-			} else {
+-				if (phba->sli_rev == LPFC_SLI_REV4 &&
+-				    (!(vport->load_flag & FC_UNLOADING)) &&
+-				    (bf_get(lpfc_sli_intf_if_type,
+-				     &phba->sli4_hba.sli_intf) >=
+-				      LPFC_SLI_INTF_IF_TYPE_2) &&
+-				    (kref_read(&ndlp->kref) > 0)) {
+-					mbox->ctx_ndlp = lpfc_nlp_get(ndlp);
+-					mbox->mbox_cmpl =
+-						lpfc_sli4_unreg_rpi_cmpl_clr;
+-					/*
+-					 * accept PLOGIs after unreg_rpi_cmpl
+-					 */
+-					acc_plogi = 0;
+-				} else if (vport->load_flag & FC_UNLOADING) {
+-					mbox->ctx_ndlp = NULL;
+-					mbox->mbox_cmpl =
+-						lpfc_sli_def_mbox_cmpl;
+-				} else {
+-					mbox->ctx_ndlp = ndlp;
+-					mbox->mbox_cmpl =
+-						lpfc_sli_def_mbox_cmpl;
+-				}
+-			}
++			lpfc_set_unreg_login_mbx_cmpl(phba, vport, ndlp, mbox);
++			if (mbox->mbox_cmpl == lpfc_sli4_unreg_rpi_cmpl_clr)
++				/*
++				 * accept PLOGIs after unreg_rpi_cmpl
++				 */
++				acc_plogi = 0;
+ 			if (((ndlp->nlp_DID & Fabric_DID_MASK) !=
+ 			    Fabric_DID_MASK) &&
+ 			    (!(vport->fc_flag & FC_OFFLINE_MODE)))
+@@ -5060,6 +5077,7 @@ lpfc_cleanup_node(struct lpfc_vport *vpo
+ 	struct lpfc_hba  *phba = vport->phba;
+ 	LPFC_MBOXQ_t *mb, *nextmb;
+ 	struct lpfc_dmabuf *mp;
++	unsigned long iflags;
+ 
+ 	/* Cleanup node for NPort <nlp_DID> */
+ 	lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
+@@ -5141,8 +5159,20 @@ lpfc_cleanup_node(struct lpfc_vport *vpo
+ 	lpfc_cleanup_vports_rrqs(vport, ndlp);
+ 	if (phba->sli_rev == LPFC_SLI_REV4)
+ 		ndlp->nlp_flag |= NLP_RELEASE_RPI;
+-	lpfc_unreg_rpi(vport, ndlp);
+-
++	if (!lpfc_unreg_rpi(vport, ndlp)) {
++		/* Clean up unregistered and non freed rpis */
++		if ((ndlp->nlp_flag & NLP_RELEASE_RPI) &&
++		    !(ndlp->nlp_rpi == LPFC_RPI_ALLOC_ERROR)) {
++			lpfc_sli4_free_rpi(vport->phba,
++					   ndlp->nlp_rpi);
++			spin_lock_irqsave(&vport->phba->ndlp_lock,
++					  iflags);
++			ndlp->nlp_flag &= ~NLP_RELEASE_RPI;
++			ndlp->nlp_rpi = LPFC_RPI_ALLOC_ERROR;
++			spin_unlock_irqrestore(&vport->phba->ndlp_lock,
++					       iflags);
++		}
++	}
+ 	return 0;
+ }
+ 
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2526,6 +2526,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *
+ 			} else {
+ 				__lpfc_sli_rpi_release(vport, ndlp);
+ 			}
++			if (vport->load_flag & FC_UNLOADING)
++				lpfc_nlp_put(ndlp);
+ 			pmb->ctx_ndlp = NULL;
+ 		}
+ 	}
 
 
