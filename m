@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48894C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344EAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CA1208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B7D214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431044;
-	bh=qQqkLG6E4zlxNyW71ejH7Xg6ZNSF3zn+NcXKNezev8k=;
+	s=default; t=1578431048;
+	bh=Gb3U+BDIxeNBJasnmv4gqizVlg4xZH5F5HJdwOqYW6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGtthZ9SHbkLKZbXT7K5Goh0rlZmBdq0G8Z2vgbwqd8y+oORT5KDnUqTHK8vMyA9L
-	 JdnrVTAYgYd9qTwtxSitP5ODF2o9/rNGzP+gOuBdUaZ93FN5e4z3hBDwTcKqGLE71o
-	 cEEpzLrDqKfBzCQ44qeCiLRJcLcgTFjpqu6lWXz8=
+	b=QhyoBysDxZiP3Gyfp9gr/kbvLcaHGxPt8zMH4+idq9gsCu5mjhgD9/kPxAPMqflm/
+	 g7uEKNOc5Ma2U+MtaFrvu9Oa8uh3M98LTcsVpYa0aFrlMPtZYMbDJKlMSWwAvxl/Q1
+	 afaW31nuK0YjzaOLEeBE2+3SmHwVBX6+Sx2qev08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgAGVEC (ORCPT
+        id S1728556AbgAGVEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:04:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:04:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbgAGVDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:54 -0500
+        id S1728506AbgAGVD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B7E2081E;
-        Tue,  7 Jan 2020 21:03:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53178208C4;
+        Tue,  7 Jan 2020 21:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431034;
-        bh=qQqkLG6E4zlxNyW71ejH7Xg6ZNSF3zn+NcXKNezev8k=;
+        s=default; t=1578431036;
+        bh=Gb3U+BDIxeNBJasnmv4gqizVlg4xZH5F5HJdwOqYW6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RiIr8yTyknmDAemZk5w80NFsfxsIcumO2e5cFw5mi8kurtfVb2Byb1TllYNA4dmdu
-         FZF634h8InI+9byBlAZ8pWtIpWHgUgbnytCUaLTmJt++swdxufgR1cJcOFts4yfppA
-         HMprsuvWtqvAXEfw8Lryus4dHzD4M6a8L+XllpWo=
+        b=j2PfTRVqXEBOe1mBjGzZtUDHadjFNJoXkrOWdoCa7VRyj0vMgqm8/eDz8/e7i97BD
+         iDMMrjk2WydRSwv55hF3nBq2jqxaw6R2BG6p4oxvfSFO0BSdjBsko1hdZbOfI24RoG
+         /cFAx6U2nJIgDWHYFO94nGsAjITxiWipoK1wE5jE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepa Dinamani <deepa.kernel@gmail.com>,
-        stfrench@microsoft.com, linux-cifs@vger.kernel.org
-Subject: [PATCH 5.4 171/191] fs: cifs: Fix atime update check vs mtime
-Date:   Tue,  7 Jan 2020 21:54:51 +0100
-Message-Id: <20200107205342.153253181@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 162/191] arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
+Date:   Tue,  7 Jan 2020 21:54:42 +0100
+Message-Id: <20200107205341.655054153@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,35 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepa Dinamani <deepa.kernel@gmail.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-commit 69738cfdfa7032f45d9e7462d24490e61cf163dd upstream.
+commit 388a2772979b625042524d8b91280616ab4ff5ee upstream.
 
-According to the comment in the code and commit log, some apps
-expect atime >= mtime; but the introduced code results in
-atime==mtime.  Fix the comparison to guard against atime<mtime.
-
-Fixes: 9b9c5bea0b96 ("cifs: do not return atime less than mtime")
-Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: stfrench@microsoft.com
-Cc: linux-cifs@vger.kernel.org
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 33344e2111a3 ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -163,7 +163,7 @@ cifs_fattr_to_inode(struct inode *inode,
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -409,6 +409,9 @@
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
+ 	};
+ };
  
- 	spin_lock(&inode->i_lock);
- 	/* we do not want atime to be less than mtime, it broke some apps */
--	if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime))
-+	if (timespec64_compare(&fattr->cf_atime, &fattr->cf_mtime) < 0)
- 		inode->i_atime = fattr->cf_mtime;
- 	else
- 		inode->i_atime = fattr->cf_atime;
 
 
