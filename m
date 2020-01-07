@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9580C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF7AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA542087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648772080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431149;
-	bh=E+EQLAk6PsgNrY6xQceMY5eimhfrpN7qa8vd0HS/aQo=;
+	s=default; t=1578431154;
+	bh=2zWao8QSzVN06CQem+gqpC3IhhdH24iP16vJ5U0VeVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvdTBhd/I/1evCd3wMagFW27D6+f5+ipM1cUzcJPH576i+bKF4nTM3Quvhjdoov65
-	 j+HogkCWS0TSVKi1JVaKJAGWm5I6ZXKkyOSpBJ8JTPKgM9Bg2b11yunAdi1gIcaSfR
-	 WtQ62JxFXi6IECC0dyUfoycDt6S39mgvn0JUzQKk=
+	b=dRhBllTDcZToul6ffHL1R/Q0/1MQ888BHLN0gv3Wi8HdWXbpQfmUJAJwkLuOHfSLL
+	 aKs5/TpYUyzJJcQJVErAPNOS0STZtANUmo6PogSdCxF3BZWmZuDwu0tpLvs8V85j2h
+	 PTWdOyA0ifJMZv1QT4QZ88Mj+MIGpl0zpIbpaSD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgAGVFs (ORCPT
+        id S1729138AbgAGVFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:05:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgAGVFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:45 -0500
+        id S1729048AbgAGVFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03D2C2081E;
-        Tue,  7 Jan 2020 21:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4B392080A;
+        Tue,  7 Jan 2020 21:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431143;
-        bh=E+EQLAk6PsgNrY6xQceMY5eimhfrpN7qa8vd0HS/aQo=;
+        s=default; t=1578431148;
+        bh=2zWao8QSzVN06CQem+gqpC3IhhdH24iP16vJ5U0VeVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YFz4nae+YI1LJ4kF7tQi1ppiwLldv+mutGiJEkOqYcHH2PxXNVSQPecDXRx/+21sZ
-         dyqwhojxcD0Ko7LfeQSBkO68mGsThOIuHWu2QTCWmgzIIOX1zRUS5z1V5Q2+Z9XGSF
-         t4r0q2qycrwZU7Wo5oHQ1U+Zm0F4RkQ2CjTML/mE=
+        b=Dq+/nZPQHakqnDXVY80/RKtQKax2dok69cn0k3igfBDgPRj6lkiQFHgNybpoTaDh9
+         b/tmGhUWLHHR6wQMl0xciXvlciPW853M3N6jkf2i+Skrqy1zJJBywunbva0prT9Q2V
+         qUvg2EXWeUKlMjypgdxlXIn6BtagHmSFbD9vA784=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 044/115] ALSA: usb-audio: set the interface format after resume on Dell WD19
-Date:   Tue,  7 Jan 2020 21:54:14 +0100
-Message-Id: <20200107205302.031798906@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Felix Abecassis <fabecassis@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 054/115] mm: move_pages: return valid node id in status if the page is already on the target node
+Date:   Tue,  7 Jan 2020 21:54:24 +0100
+Message-Id: <20200107205302.756204728@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -59,161 +66,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 92adc96f8eecd9522a907c197cc3d62e405539fe upstream.
+commit e0153fc2c7606f101392b682e720a7a456d6c766 upstream.
 
-Recently we found the headset-mic on the Dell Dock WD19 doesn't work
-anymore after s3 (s2i or deep), this problem could be workarounded by
-closing (pcm_close) the app and then reopening (pcm_open) the app, so
-this bug is not easy to be detected by users.
+Felix Abecassis reports move_pages() would return random status if the
+pages are already on the target node by the below test program:
 
-When problem happens, retire_capture_urb() could still be called
-periodically, but the size of captured data is always 0, it could be
-a firmware bug on the dock. Anyway I found after resuming, the
-snd_usb_pcm_prepare() will be called, and if we forcibly run
-set_format() to set the interface and its endpoint, the capture
-size will be normal again. This problem and workaound also apply to
-playback.
+  int main(void)
+  {
+	const long node_id = 1;
+	const long page_size = sysconf(_SC_PAGESIZE);
+	const int64_t num_pages = 8;
 
-To fix it in the kernel, add a quirk to let set_format() run
-forcibly once after resume.
+	unsigned long nodemask =  1 << node_id;
+	long ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask));
+	if (ret < 0)
+		return (EXIT_FAILURE);
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191218132650.6303-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	void **pages = malloc(sizeof(void*) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		pages[i] = mmap(NULL, page_size, PROT_WRITE | PROT_READ,
+				MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS,
+				-1, 0);
+		if (pages[i] == MAP_FAILED)
+			return (EXIT_FAILURE);
+	}
+
+	ret = set_mempolicy(MPOL_DEFAULT, NULL, 0);
+	if (ret < 0)
+		return (EXIT_FAILURE);
+
+	int *nodes = malloc(sizeof(int) * num_pages);
+	int *status = malloc(sizeof(int) * num_pages);
+	for (int i = 0; i < num_pages; ++i) {
+		nodes[i] = node_id;
+		status[i] = 0xd0; /* simulate garbage values */
+	}
+
+	ret = move_pages(0, num_pages, pages, nodes, status, MPOL_MF_MOVE);
+	printf("move_pages: %ld\n", ret);
+	for (int i = 0; i < num_pages; ++i)
+		printf("status[%d] = %d\n", i, status[i]);
+  }
+
+Then running the program would return nonsense status values:
+
+  $ ./move_pages_bug
+  move_pages: 0
+  status[0] = 208
+  status[1] = 208
+  status[2] = 208
+  status[3] = 208
+  status[4] = 208
+  status[5] = 208
+  status[6] = 208
+  status[7] = 208
+
+This is because the status is not set if the page is already on the
+target node, but move_pages() should return valid status as long as it
+succeeds.  The valid status may be errno or node id.
+
+We can't simply initialize status array to zero since the pages may be
+not on node 0.  Fix it by updating status with node id which the page is
+already on.
+
+Link: http://lkml.kernel.org/r/1575584353-125392-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Reported-by: Felix Abecassis <fabecassis@nvidia.com>
+Tested-by: Felix Abecassis <fabecassis@nvidia.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Christoph Lameter <cl@linux.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org>	[4.17+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/card.h         |    1 +
- sound/usb/pcm.c          |   21 +++++++++++++++++++--
- sound/usb/quirks-table.h |    3 ++-
- sound/usb/quirks.c       |   11 +++++++++++
- sound/usb/usbaudio.h     |    3 ++-
- 5 files changed, 35 insertions(+), 4 deletions(-)
+ mm/migrate.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -142,6 +142,7 @@ struct snd_usb_substream {
- 	struct snd_usb_endpoint *sync_endpoint;
- 	unsigned long flags;
- 	bool need_setup_ep;		/* (re)configure EP at prepare? */
-+	bool need_setup_fmt;		/* (re)configure fmt after resume? */
- 	unsigned int speed;		/* USB_SPEED_XXX */
- 
- 	u64 formats;			/* format bitmasks (all or'ed) */
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -517,11 +517,11 @@ static int set_format(struct snd_usb_sub
- 		return -EINVAL;
- 	altsd = get_iface_desc(alts);
- 
--	if (fmt == subs->cur_audiofmt)
-+	if (fmt == subs->cur_audiofmt && !subs->need_setup_fmt)
- 		return 0;
- 
- 	/* close the old interface */
--	if (subs->interface >= 0 && subs->interface != fmt->iface) {
-+	if (subs->interface >= 0 && (subs->interface != fmt->iface || subs->need_setup_fmt)) {
- 		if (!subs->stream->chip->keep_iface) {
- 			err = usb_set_interface(subs->dev, subs->interface, 0);
- 			if (err < 0) {
-@@ -535,6 +535,9 @@ static int set_format(struct snd_usb_sub
- 		subs->altset_idx = 0;
- 	}
- 
-+	if (subs->need_setup_fmt)
-+		subs->need_setup_fmt = false;
-+
- 	/* set interface */
- 	if (iface->cur_altsetting != alts) {
- 		err = snd_usb_select_mode_quirk(subs, fmt);
-@@ -1722,6 +1725,13 @@ static int snd_usb_substream_playback_tr
- 		subs->data_endpoint->retire_data_urb = retire_playback_urb;
- 		subs->running = 0;
- 		return 0;
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
-+			stop_endpoints(subs, true);
-+			subs->need_setup_fmt = true;
-+			return 0;
-+		}
-+		break;
- 	}
- 
- 	return -EINVAL;
-@@ -1754,6 +1764,13 @@ static int snd_usb_substream_capture_tri
- 		subs->data_endpoint->retire_data_urb = retire_capture_urb;
- 		subs->running = 1;
- 		return 0;
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
-+			stop_endpoints(subs, true);
-+			subs->need_setup_fmt = true;
-+			return 0;
-+		}
-+		break;
- 	}
- 
- 	return -EINVAL;
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3400,7 +3400,8 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
- 		.vendor_name = "Dell",
- 		.product_name = "WD19 Dock",
- 		.profile_name = "Dell-WD15-Dock",
--		.ifnum = QUIRK_NO_INTERFACE
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_SETUP_FMT_AFTER_RESUME
- 	}
- },
- 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -519,6 +519,16 @@ static int create_standard_mixer_quirk(s
- 	return snd_usb_create_mixer(chip, quirk->ifnum, 0);
- }
- 
-+
-+static int setup_fmt_after_resume_quirk(struct snd_usb_audio *chip,
-+				       struct usb_interface *iface,
-+				       struct usb_driver *driver,
-+				       const struct snd_usb_audio_quirk *quirk)
-+{
-+	chip->setup_fmt_after_resume_quirk = 1;
-+	return 1;	/* Continue with creating streams and mixer */
-+}
-+
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1508,9 +1508,11 @@ static int do_move_pages_to_node(struct
  /*
-  * audio-interface quirks
-  *
-@@ -557,6 +567,7 @@ int snd_usb_create_quirk(struct snd_usb_
- 		[QUIRK_AUDIO_EDIROL_UAXX] = create_uaxx_quirk,
- 		[QUIRK_AUDIO_ALIGN_TRANSFER] = create_align_transfer_quirk,
- 		[QUIRK_AUDIO_STANDARD_MIXER] = create_standard_mixer_quirk,
-+		[QUIRK_SETUP_FMT_AFTER_RESUME] = setup_fmt_after_resume_quirk,
- 	};
+  * Resolves the given address to a struct page, isolates it from the LRU and
+  * puts it to the given pagelist.
+- * Returns -errno if the page cannot be found/isolated or 0 when it has been
+- * queued or the page doesn't need to be migrated because it is already on
+- * the target node
++ * Returns:
++ *     errno - if the page cannot be found/isolated
++ *     0 - when it doesn't have to be migrated because it is already on the
++ *         target node
++ *     1 - when it has been queued
+  */
+ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+ 		int node, struct list_head *pagelist, bool migrate_all)
+@@ -1549,7 +1551,7 @@ static int add_page_for_migration(struct
+ 	if (PageHuge(page)) {
+ 		if (PageHead(page)) {
+ 			isolate_huge_page(page, pagelist);
+-			err = 0;
++			err = 1;
+ 		}
+ 	} else {
+ 		struct page *head;
+@@ -1559,7 +1561,7 @@ static int add_page_for_migration(struct
+ 		if (err)
+ 			goto out_putpage;
  
- 	if (quirk->type < QUIRK_TYPE_COUNT) {
---- a/sound/usb/usbaudio.h
-+++ b/sound/usb/usbaudio.h
-@@ -44,7 +44,7 @@ struct snd_usb_audio {
- 	wait_queue_head_t shutdown_wait;
- 	unsigned int txfr_quirk:1; /* Subframe boundaries on transfers */
- 	unsigned int tx_length_quirk:1; /* Put length specifier in transfers */
--	
-+	unsigned int setup_fmt_after_resume_quirk:1; /* setup the format to interface after resume */
- 	int num_interfaces;
- 	int num_suspended_intf;
- 	int sample_rate_read_error;
-@@ -107,6 +107,7 @@ enum quirk_type {
- 	QUIRK_AUDIO_EDIROL_UAXX,
- 	QUIRK_AUDIO_ALIGN_TRANSFER,
- 	QUIRK_AUDIO_STANDARD_MIXER,
-+	QUIRK_SETUP_FMT_AFTER_RESUME,
+-		err = 0;
++		err = 1;
+ 		list_add_tail(&head->lru, pagelist);
+ 		mod_node_page_state(page_pgdat(head),
+ 			NR_ISOLATED_ANON + page_is_file_cache(head),
+@@ -1636,8 +1638,17 @@ static int do_pages_move(struct mm_struc
+ 		 */
+ 		err = add_page_for_migration(mm, addr, current_node,
+ 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+-		if (!err)
++
++		if (!err) {
++			/* The page is already on the target node */
++			err = store_status(status, i, current_node, 1);
++			if (err)
++				goto out_flush;
+ 			continue;
++		} else if (err > 0) {
++			/* The page is successfully queued for migration */
++			continue;
++		}
  
- 	QUIRK_TYPE_COUNT
- };
+ 		err = store_status(status, i, err, 1);
+ 		if (err)
 
 
