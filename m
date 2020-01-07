@@ -2,144 +2,162 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F82C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466FCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA62120715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:07:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLrZOxXI"
+	by mail.kernel.org (Postfix) with ESMTP id 1C76A20715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgAGTHj (ORCPT
+        id S1728695AbgAGTJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:07:39 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33709 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgAGTHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:07:38 -0500
-Received: by mail-io1-f67.google.com with SMTP id z8so523763ioh.0;
-        Tue, 07 Jan 2020 11:07:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eL83IhmbYca+Npr1asR8CaaCAGTGwRjtX816LINHiJ4=;
-        b=RLrZOxXIMmF1MhE4PM1Sa8VQoZKrgU1LR5d0ldT6JogLbeCS661EUDG/pqgyvlDsFL
-         IoajV/fjjZ8J45uNX75f8fm7EM5gby4YnelGEZJCvyffXggqoBTZ4XtZSThHMeWog9gu
-         dfc/WoVFPLDElSvYXcqqusjISy6MAo/iLCHJVvxuAcTZLGY3WQyybVHmG/3n3Dmz6+z1
-         3NNEanzS2pZ91WFp3WFhZTFasbjePbmD2WkV56voSFwZ+0e1C/fyFn04Ru2wzRNiApuj
-         z3eY3fmCeK6TCAHnEJMZ2y+4WLY6NPuCrhlBV35zJ58i4meOBn4XDM+xv/SCUWcfrMwB
-         uVUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eL83IhmbYca+Npr1asR8CaaCAGTGwRjtX816LINHiJ4=;
-        b=pUzTw4Yf8/Qmv84hWtdcHMx4IASZzrm6Czhz1o+11IeBJfxiswRbJrryUdGzmUclQi
-         O0YwC3ENyg8cBe5NM8K7cDfbtt0mbXqlB7H2Thagpw4oKd9eLlCHbaDLPATUJkkIYZ+L
-         3RkwbDea/fNk5nTUnUClBP03N5WTug43bajJ42STzWVJZunNiZkv4WcqotaQVhz1Evq9
-         SUYoTLlB4BsICvww1tYLyuvpPVDlj97chCqILVHDVe313QTvZbGtx37Undztj0v2Tz8W
-         JKINopQctjRmz1lXwImB1pkKGS8u7A7nqgGvjtsi4uWA5qIKq5b2USvHUcJOu3qjSLnh
-         1k+w==
-X-Gm-Message-State: APjAAAXna0pbG3R1rVtUhkSvESUuyqPDIVbjIC5NlJKA1b6AhJUZAM2S
-        P58sco2eTjrAZgDMl2tb2VZ3CCUd2FXePpnpb8bolXnTZgU=
-X-Google-Smtp-Source: APXvYqysZuYS/1n72GZMQD9xKS7PrMAogGWhU3hvRiFtIkWkVbE9ikdKnVSN73EbKlebVJc4I/j1UwQV/tXXzYxNrl4=
-X-Received: by 2002:a05:6638:a2c:: with SMTP id 12mr961911jao.60.1578424058012;
- Tue, 07 Jan 2020 11:07:38 -0800 (PST)
+        Tue, 7 Jan 2020 14:09:09 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:49286 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728307AbgAGTJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:09:09 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iouDx-0005jg-Lf; Tue, 07 Jan 2020 12:09:07 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1iouDv-0001Ks-UQ; Tue, 07 Jan 2020 12:09:03 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kit Chow <kchow@gigaio.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Tue,  7 Jan 2020 12:09:02 -0700
+Message-Id: <20200107190902.5093-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200106191003.21584-1-tiny.windzz@gmail.com> <20200106191003.21584-2-tiny.windzz@gmail.com>
- <20200107090449.GA32007@pi3>
-In-Reply-To: <20200107090449.GA32007@pi3>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Wed, 8 Jan 2020 03:07:25 +0800
-Message-ID: <CAEExFWvJx82h1c1QBrQ+DpT4kgEZ0o3q_O7JLbk-1L-iuMGPEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: tiny4412: add proper panel node
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kchow@gigaio.com, benh@kernel.crashing.org, nicholas.johnson-opensource@outlook.com.au, mika.westerberg@linux.intel.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v4] PCI: Fix disabling of bridge BARs when assigning bus resources
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 5:04 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Mon, Jan 06, 2020 at 07:10:03PM +0000, Yangtao Li wrote:
-> > This patch add at070tn92 panel for tiny4412 board.
->
-> Please fix description as in patch 1.
->
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/exynos4412-tiny4412.dts | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > index 2b62cb27420c..57f9d09233ad 100644
-> > --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > @@ -66,6 +66,16 @@
-> >                       clock-frequency = <24000000>;
-> >               };
-> >       };
-> > +
-> > +     panel {
-> > +             compatible = "innolux,at070tn92";
-> > +
-> > +             port {
-> > +                     panel_input: endpoint {
-> > +                             remote-endpoint = <&lcdc_output>;
-> > +                     };
-> > +             };
-> > +     };
-> >  };
-> >
-> >  &fimd {
-> > @@ -74,6 +84,12 @@
-> >       #address-cells = <1>;
-> >       #size-cells = <0>;
-> >       status = "okay";
->
-> One empty space here.
->
-> > +     port@3 {
-> > +             reg = <3>;
->
-> Why starting from "3"? Why this is port@3, not just "port"?
+One odd quirk of PLX switches is that their upstream bridge port has
+256K of space allocated behind its BAR0 (most other bridge
+implementations do not report any BAR space). The lspci for such  device
+looks like:
 
-From samsung-fimd.txt:
+  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
+            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
+	    (prog-if 00 [Normal decode])
+      Physical Slot: 1
+      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
+      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
+      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
+      I/O behind bridge: 00002000-00003fff
+      Memory behind bridge: 90000000-909fffff
+      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+      Kernel driver in use: pcieport
+
+It's not clear what the purpose of the memory at 0x90a00000 is, and
+currently the kernel never actually uses it for anything. In most cases,
+it's safely ignored and does not cause a problem.
+
+However, when the kernel assigns the resource addresses (with the
+pci=realloc command line parameter, for example) it can inadvertently
+disable the struct resource corresponding to the bar. When this happens,
+lspci will report this memory as ignored:
+
+   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
+
+This is because the kernel reports a zero start address and zero flags
+in the corresponding sysfs resource file and in /proc/bus/pci/devices.
+Investigation with 'lspci -x', however shows the bios-assigned address
+will still be programmed in the device's BAR registers.
+
+It's clearly a bug that the kernel's view of the registers differs from
+what's actually programmed in the BAR, but in most cases, this still
+won't result in a visibile issue because nothing uses the memory,
+so nothing is affected. However, a big problem shows up when an IOMMU
+is in use: the IOMMU will not reserve this space in the IOVA because the
+kernel no longer thinks the range is valid. (See
+dmar_init_reserved_ranges() for the Intel implementation of this.)
+
+Without the proper reserved range, we have a situation where a DMA
+mapping may occasionally allocate an IOVA which the PCI bus will actually
+route to a BAR in the PLX switch. This will result in some random DMA
+writes not actually writing to the RAM they are supposed to, or random
+DMA reads returning all FFs from the PLX BAR when it's supposed to have
+read from RAM.
+
+The problem is caused in pci_assign_unassigned_root_bus_resources().
+When any resource from a bridge device fails to get assigned, the code
+sets the resource's flags to zero. This makes sense for bridge resources,
+as they will be re-enabled later, but for regular BARs, it disables them
+permanently.
+
+The code in question seems to indent to check if "dev->subordinate" is
+zero to determine whether a device is a bridge, however this is not
+likely valid as there might be a bridge without a subordinate bus due to
+running out of bus numbers or other cases.
+
+To fix these issues we instead check that the idx is in the
+PCI_BRIDGE_RESOURCES range which are only used for bridge windows and
+thus is sufficient for the "dev->subordinate" check and will also
+prevent the bug above from clobbering PLX devices' regular BARs.
+
+Reported-by: Kit Chow <kchow@gigaio.com>
+Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
 ---
-The device node can contain 'port' child nodes according to the bindings defined
-in [2]. The following are properties specific to those nodes:
-- reg: (required) port index, can be:
-                0 - for CAMIF0 input,
-                1 - for CAMIF1 input,
-                2 - for CAMIF2 input,
-                3 - for parallel output,
-                4 - for write-back interface
----
+ drivers/pci/setup-bus.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-I guess it is influenced here.
-https://elixir.bootlin.com/linux/v5.5-rc5/source/drivers/gpu/drm/exynos/exynos_drm_dpi.c#L170
-Without it, lcd is completely black.
+This patch was last submitted back in June as part of a series. I've
+dropped the first patch in the series as a similar patch from Nicholas
+takes care of the bug.
 
-Your,
-Yangtao
+As a reminder, the previous discussion on this patch is here[1]. Per the
+feedback, I've updated the patch to remove the check on
+"dev->subordinate" entirely.
 
->
-> Best regards,
-> Krzysztof
->
+The patch is based on v5.5-rc5 and a git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem pci_realloc_v4
+
+[1] https://lore.kernel.org/linux-pci/20190617135307.GA13533@google.com/
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index f279826204eb..23f6c95f3fd7 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1803,11 +1803,15 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+ 	/* Restore size and flags */
+ 	list_for_each_entry(fail_res, &fail_head, list) {
+ 		struct resource *res = fail_res->res;
++		int idx;
+
+ 		res->start = fail_res->start;
+ 		res->end = fail_res->end;
+ 		res->flags = fail_res->flags;
+-		if (fail_res->dev->subordinate)
++
++		idx = res - &fail_res->dev->resource[0];
++		if (idx >= PCI_BRIDGE_RESOURCES &&
++		    idx <= PCI_BRIDGE_RESOURCE_END)
+ 			res->flags = 0;
+ 	}
+ 	free_list(&fail_head);
+--
+2.20.1
