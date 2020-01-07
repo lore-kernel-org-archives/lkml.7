@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DAEC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AAA2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F17206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432147;
-	bh=nxVG0xH/nMQVbovLHgovXOgF85noBi++nkVrBvoedYw=;
+	s=default; t=1578432150;
+	bh=ZiwqsVStrh5XLJWgXBme2VY+hxWjwx2k0nG2DEFL674=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2gf9aYsuJCgdxEWjN55BYhJm9U9YuqYizW9tmMMLiTshoi4msx8B/XR3N4D9OYEA
-	 9iQF04he3v6PW50f2ZPTnzmXaGnjdTV3GHZZ80NikyNirbL5PHsA/AHdAS4jeMww8V
-	 6sjVOutKT8H7fOMdSzMr24AhxBCXiKVimr62Bf58=
+	b=Unsp+lQOsWY85uYCrJkcR28tMKN32M2LAwJx8P0gCssLnRGUwMm3nJKc0LyKXHX1J
+	 qXHw94FaCXpT8uqeArspdqPPZPhjrfXXECuUDGossRmhJeTimTnc3NFDz2qn/GTXNQ
+	 oPZP1owexzmRK2x04k7G1pBgs5WVacpxoBaNsTtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgAGVCN (ORCPT
+        id S1728689AbgAGVCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:02:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgAGVCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Jan 2020 16:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728160AbgAGVCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:02:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACCE12077B;
-        Tue,  7 Jan 2020 21:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE8120678;
+        Tue,  7 Jan 2020 21:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430928;
-        bh=nxVG0xH/nMQVbovLHgovXOgF85noBi++nkVrBvoedYw=;
+        s=default; t=1578430921;
+        bh=ZiwqsVStrh5XLJWgXBme2VY+hxWjwx2k0nG2DEFL674=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMVH7Ly4FjuE84K+LS5uZ48ii439Wcvw3UG1oCnUUeNbGB3vlNAJbKn1qtRy/b2Rg
-         nzwRS/h5ALXiohgyU0+cE2QfOWYQfvQfBRS2qPOgxXEObY5NoFbobCHBZ5yAxWfFbh
-         MdGSCea7Za89CB4UocatX52jPBC1yuB+QwJCsXi0=
+        b=gOGfuOpdb3/wQKBGoyhG6eyNZxEwaTvrjcZsA+09cE+60fpPj5FcxwDgBdWSry+Om
+         75KekESy+K1PsGitrXUolbCTM7uthAGLrb+JvfCDAjlkX3mCVeZLKf1/u3Ff3ibtvN
+         BGn5HYdysnJIeSOKZZ+SwWQ4BNJR0TNoBfBpWaWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 153/191] regulator: axp20x: Fix axp20x_set_ramp_delay
-Date:   Tue,  7 Jan 2020 21:54:33 +0100
-Message-Id: <20200107205341.155096010@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 151/191] net, sysctl: Fix compiler warning when only cBPF is present
+Date:   Tue,  7 Jan 2020 21:54:31 +0100
+Message-Id: <20200107205341.050025831@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,41 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit 71dd2fe5dec171b34b71603a81bb46c24c498fde upstream.
+commit 1148f9adbe71415836a18a36c1b4ece999ab0973 upstream.
 
-Current code set incorrect bits when set ramp_delay for AXP20X_DCDC2,
-fix it.
+proc_dointvec_minmax_bpf_restricted() has been firstly introduced
+in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
+under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
+ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
+allocations"), because a new sysctl, bpf_jit_limit, made use of it.
+Finally, this parameter has become long instead of integer with
+fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
+added.
 
-Fixes: d29f54df8b16 ("regulator: axp20x: add support for set_ramp_delay for AXP209")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20191221081049.32490-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+With this last change, we got back to that
+proc_dointvec_minmax_bpf_restricted() is used only under
+CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
+brought back.
+
+So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
+since v4.20 we have:
+
+  CC      net/core/sysctl_net_core.o
+net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
+  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
+
+Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/axp20x-regulator.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/core/sysctl_net_core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -413,10 +413,13 @@ static int axp20x_set_ramp_delay(struct
- 		int i;
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -288,6 +288,7 @@ static int proc_dointvec_minmax_bpf_enab
+ 	return ret;
+ }
  
- 		for (i = 0; i < rate_count; i++) {
--			if (ramp <= slew_rates[i])
--				cfg = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(i);
--			else
-+			if (ramp > slew_rates[i])
- 				break;
-+
-+			if (id == AXP20X_DCDC2)
-+				cfg = AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_RATE(i);
-+			else
-+				cfg = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(i);
- 		}
++# ifdef CONFIG_HAVE_EBPF_JIT
+ static int
+ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 				    void __user *buffer, size_t *lenp,
+@@ -298,6 +299,7 @@ proc_dointvec_minmax_bpf_restricted(stru
  
- 		if (cfg == 0xff) {
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
++# endif /* CONFIG_HAVE_EBPF_JIT */
+ 
+ static int
+ proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
 
 
