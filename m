@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3099EC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29EC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0424C2070E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBE62070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgAGMVe (ORCPT
+        id S1728137AbgAGMVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:21:34 -0500
-Received: from mga09.intel.com ([134.134.136.24]:13883 "EHLO mga09.intel.com"
+        Tue, 7 Jan 2020 07:21:25 -0500
+Received: from mga09.intel.com ([134.134.136.24]:13881 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgAGMV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:21:29 -0500
+        id S1728107AbgAGMVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:21:21 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:21:29 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:21:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="422476119"
+   d="scan'208";a="422476069"
 Received: from iov2.bj.intel.com ([10.238.145.72])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jan 2020 04:21:27 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jan 2020 04:21:19 -0800
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, kwankhede@nvidia.com
 Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
         baolu.lu@linux.intel.com, Liu Yi L <yi.l.liu@intel.com>
-Subject: [PATCH v4 12/12] samples: refine vfio-mdev-pci driver
-Date:   Tue,  7 Jan 2020 20:01:49 +0800
-Message-Id: <1578398509-26453-13-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v4 08/12] vfio_pci: duplicate vfio_pci_private.h to include/linux
+Date:   Tue,  7 Jan 2020 20:01:45 +0800
+Message-Id: <1578398509-26453-9-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
 References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
@@ -44,264 +44,253 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
-
-This patch refines the implementation of original vfio-mdev-pci driver.
-
-And the vfio-mdev-pci-type_name will be named per the following rule:
-
-	vmdev->attr.name = kasprintf(GFP_KERNEL,
-				     "%04x:%04x:%04x:%04x:%06x:%02x",
-				     pdev->vendor, pdev->device,
-				     pdev->subsystem_vendor,
-				     pdev->subsystem_device, pdev->class,
-				     pdev->revision);
-
-Before usage, check the /sys/bus/pci/devices/$bdf/mdev_supported_types/
-to ensure the final mdev_supported_types.
+This patch copies drivers/vfio/pci/vfio_pci_private.h to include/linux/
+for preparation of splitting vfio_pci_private.h into a private header
+file and a common header file, which is to support common vfio_pci code
+sharing outside drivers/vfio/pci/. No code change in this file copy.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
- samples/vfio-mdev-pci/vfio_mdev_pci.c | 123 ++++++++++++++++++++--------------
- 1 file changed, 73 insertions(+), 50 deletions(-)
+ include/linux/vfio_pci_common.h | 228 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 228 insertions(+)
+ create mode 100644 include/linux/vfio_pci_common.h
 
-diff --git a/samples/vfio-mdev-pci/vfio_mdev_pci.c b/samples/vfio-mdev-pci/vfio_mdev_pci.c
-index b180356..0377b5b 100644
---- a/samples/vfio-mdev-pci/vfio_mdev_pci.c
-+++ b/samples/vfio-mdev-pci/vfio_mdev_pci.c
-@@ -64,18 +64,22 @@ MODULE_PARM_DESC(disable_idle_d3,
- 
- static struct pci_driver vfio_mdev_pci_driver;
- 
--static ssize_t
--name_show(struct kobject *kobj, struct device *dev, char *buf)
--{
--	return sprintf(buf, "%s-type1\n", dev_name(dev));
--}
--
--MDEV_TYPE_ATTR_RO(name);
-+struct vfio_mdev_pci_device {
-+	struct vfio_pci_device vdev;
-+	struct mdev_parent_ops ops;
-+	struct attribute_group *groups[2];
-+	struct attribute_group attr;
-+	atomic_t avail;
+diff --git a/include/linux/vfio_pci_common.h b/include/linux/vfio_pci_common.h
+new file mode 100644
+index 0000000..499dd04
+--- /dev/null
++++ b/include/linux/vfio_pci_common.h
+@@ -0,0 +1,228 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2012 Red Hat, Inc.  All rights reserved.
++ *     Author: Alex Williamson <alex.williamson@redhat.com>
++ *
++ * Derived from original vfio:
++ * Copyright 2010 Cisco Systems, Inc.  All rights reserved.
++ * Author: Tom Lyon, pugs@cisco.com
++ */
++
++#include <linux/mutex.h>
++#include <linux/pci.h>
++#include <linux/irqbypass.h>
++#include <linux/types.h>
++
++#ifndef VFIO_PCI_PRIVATE_H
++#define VFIO_PCI_PRIVATE_H
++
++#define VFIO_PCI_OFFSET_SHIFT   40
++
++#define VFIO_PCI_OFFSET_TO_INDEX(off)	(off >> VFIO_PCI_OFFSET_SHIFT)
++#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
++#define VFIO_PCI_OFFSET_MASK	(((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
++
++/* Special capability IDs predefined access */
++#define PCI_CAP_ID_INVALID		0xFF	/* default raw access */
++#define PCI_CAP_ID_INVALID_VIRT		0xFE	/* default virt access */
++
++/* Cap maximum number of ioeventfds per device (arbitrary) */
++#define VFIO_PCI_IOEVENTFD_MAX		1000
++
++struct vfio_pci_ioeventfd {
++	struct list_head	next;
++	struct virqfd		*virqfd;
++	void __iomem		*addr;
++	uint64_t		data;
++	loff_t			pos;
++	int			bar;
++	int			count;
 +};
- 
- static ssize_t
- available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
- {
--	return sprintf(buf, "%d\n", 1);
-+	struct vfio_mdev_pci_device *vmdev;
 +
-+	vmdev = pci_get_drvdata(to_pci_dev(dev));
++struct vfio_pci_irq_ctx {
++	struct eventfd_ctx	*trigger;
++	struct virqfd		*unmask;
++	struct virqfd		*mask;
++	char			*name;
++	bool			masked;
++	struct irq_bypass_producer	producer;
++};
 +
-+	return sprintf(buf, "%d\n", atomic_read(&vmdev->avail));
- }
- 
- MDEV_TYPE_ATTR_RO(available_instances);
-@@ -89,64 +93,61 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
- MDEV_TYPE_ATTR_RO(device_api);
- 
- static struct attribute *vfio_mdev_pci_types_attrs[] = {
--	&mdev_type_attr_name.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_available_instances.attr,
- 	NULL,
- };
- 
--static struct attribute_group vfio_mdev_pci_type_group1 = {
--	.name  = "type1",
--	.attrs = vfio_mdev_pci_types_attrs,
--};
--
--struct attribute_group *vfio_mdev_pci_type_groups[] = {
--	&vfio_mdev_pci_type_group1,
--	NULL,
--};
--
- struct vfio_mdev_pci {
- 	struct vfio_pci_device *vdev;
- 	struct mdev_device *mdev;
--	unsigned long handle;
- };
- 
- static int vfio_mdev_pci_create(struct kobject *kobj, struct mdev_device *mdev)
- {
- 	struct device *pdev;
--	struct vfio_pci_device *vdev;
-+	struct vfio_mdev_pci_device *vmdev;
- 	struct vfio_mdev_pci *pmdev;
- 	int ret;
- 
- 	pdev = mdev_parent_dev(mdev);
--	vdev = dev_get_drvdata(pdev);
-+	vmdev = dev_get_drvdata(pdev);
++struct vfio_pci_device;
++struct vfio_pci_region;
 +
-+	if (atomic_dec_if_positive(&vmdev->avail) < 0)
-+		return -ENOSPC;
++struct vfio_pci_regops {
++	size_t	(*rw)(struct vfio_pci_device *vdev, char __user *buf,
++		      size_t count, loff_t *ppos, bool iswrite);
++	void	(*release)(struct vfio_pci_device *vdev,
++			   struct vfio_pci_region *region);
++	int	(*mmap)(struct vfio_pci_device *vdev,
++			struct vfio_pci_region *region,
++			struct vm_area_struct *vma);
++	int	(*add_capability)(struct vfio_pci_device *vdev,
++				  struct vfio_pci_region *region,
++				  struct vfio_info_cap *caps);
++};
 +
- 	pmdev = kzalloc(sizeof(struct vfio_mdev_pci), GFP_KERNEL);
--	if (pmdev == NULL) {
--		ret = -EBUSY;
--		goto out;
-+	if (!pmdev) {
-+		atomic_inc(&vmdev->avail);
-+		return -ENOMEM;
- 	}
- 
- 	pmdev->mdev = mdev;
--	pmdev->vdev = vdev;
-+	pmdev->vdev = &vmdev->vdev;
- 	mdev_set_drvdata(mdev, pmdev);
- 	ret = mdev_set_iommu_device(mdev_dev(mdev), pdev);
- 	if (ret) {
- 		pr_info("%s, failed to config iommu isolation for mdev: %s on pf: %s\n",
- 			__func__, dev_name(mdev_dev(mdev)), dev_name(pdev));
--		goto out;
-+		kfree(pmdev);
-+		atomic_inc(&vmdev->avail);
-+		return ret;
- 	}
- 
- 	pr_info("%s, creation succeeded for mdev: %s\n", __func__,
- 		     dev_name(mdev_dev(mdev)));
--out:
--	return ret;
-+	return 0;
- }
- 
- static int vfio_mdev_pci_remove(struct mdev_device *mdev)
- {
- 	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-+	struct vfio_mdev_pci_device *vmdev;
++struct vfio_pci_region {
++	u32				type;
++	u32				subtype;
++	const struct vfio_pci_regops	*ops;
++	void				*data;
++	size_t				size;
++	u32				flags;
++};
 +
-+	vmdev = container_of(pmdev->vdev, struct vfio_mdev_pci_device, vdev);
- 
- 	kfree(pmdev);
-+	atomic_inc(&vmdev->avail);
- 	pr_info("%s, succeeded for mdev: %s\n", __func__,
- 		     dev_name(mdev_dev(mdev)));
- 
-@@ -240,24 +241,12 @@ static ssize_t vfio_mdev_pci_write(struct mdev_device *mdev,
- 	return vfio_pci_write(pmdev->vdev, (char __user *)buf, count, ppos);
- }
- 
--static const struct mdev_parent_ops vfio_mdev_pci_ops = {
--	.supported_type_groups	= vfio_mdev_pci_type_groups,
--	.create			= vfio_mdev_pci_create,
--	.remove			= vfio_mdev_pci_remove,
--
--	.open			= vfio_mdev_pci_open,
--	.release		= vfio_mdev_pci_release,
--
--	.read			= vfio_mdev_pci_read,
--	.write			= vfio_mdev_pci_write,
--	.mmap			= vfio_mdev_pci_mmap,
--	.ioctl			= vfio_mdev_pci_ioctl,
--};
--
- static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
- 				       const struct pci_device_id *id)
- {
-+	struct vfio_mdev_pci_device *vmdev;
- 	struct vfio_pci_device *vdev;
-+	const struct mdev_parent_ops *ops;
- 	int ret;
- 
- 	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
-@@ -276,10 +265,38 @@ static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
- 		return -EBUSY;
- 	}
- 
--	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
--	if (!vdev)
-+	vmdev = kzalloc(sizeof(*vmdev), GFP_KERNEL);
-+	if (!vmdev)
- 		return -ENOMEM;
- 
-+	vmdev->attr.name = kasprintf(GFP_KERNEL,
-+				     "%04x:%04x:%04x:%04x:%06x:%02x",
-+				     pdev->vendor, pdev->device,
-+				     pdev->subsystem_vendor,
-+				     pdev->subsystem_device, pdev->class,
-+				     pdev->revision);
-+	if (!vmdev->attr.name) {
-+		kfree(vmdev);
-+		return -ENOMEM;
-+	}
++struct vfio_pci_dummy_resource {
++	struct resource		resource;
++	int			index;
++	struct list_head	res_next;
++};
 +
-+	atomic_set(&vmdev->avail, 1);
++struct vfio_pci_reflck {
++	struct kref		kref;
++	struct mutex		lock;
++};
 +
-+	vmdev->attr.attrs = vfio_mdev_pci_types_attrs;
-+	vmdev->groups[0] = &vmdev->attr;
++struct vfio_pci_device {
++	struct pci_dev		*pdev;
++	void __iomem		*barmap[PCI_STD_NUM_BARS];
++	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
++	u8			*pci_config_map;
++	u8			*vconfig;
++	struct perm_bits	*msi_perm;
++	spinlock_t		irqlock;
++	struct mutex		igate;
++	struct vfio_pci_irq_ctx	*ctx;
++	int			num_ctx;
++	int			irq_type;
++	int			num_regions;
++	struct vfio_pci_region	*region;
++	u8			msi_qmax;
++	u8			msix_bar;
++	u16			msix_size;
++	u32			msix_offset;
++	u32			rbar[7];
++	bool			pci_2_3;
++	bool			virq_disabled;
++	bool			reset_works;
++	bool			extended_caps;
++	bool			bardirty;
++	bool			has_vga;
++	bool			needs_reset;
++	bool			nointx;
++	bool			needs_pm_restore;
++	struct pci_saved_state	*pci_saved_state;
++	struct pci_saved_state	*pm_save;
++	struct vfio_pci_reflck	*reflck;
++	int			refcnt;
++	int			ioeventfds_nr;
++	struct eventfd_ctx	*err_trigger;
++	struct eventfd_ctx	*req_trigger;
++	struct list_head	dummy_resources_list;
++	struct mutex		ioeventfds_lock;
++	struct list_head	ioeventfds_list;
++	bool			nointxmask;
++#ifdef CONFIG_VFIO_PCI_VGA
++	bool			disable_vga;
++#endif
++	bool			disable_idle_d3;
++};
 +
-+	vmdev->ops.supported_type_groups = vmdev->groups;
-+	vmdev->ops.create = vfio_mdev_pci_create;
-+	vmdev->ops.remove = vfio_mdev_pci_remove;
-+	vmdev->ops.open	= vfio_mdev_pci_open;
-+	vmdev->ops.release = vfio_mdev_pci_release;
-+	vmdev->ops.read = vfio_mdev_pci_read;
-+	vmdev->ops.write = vfio_mdev_pci_write;
-+	vmdev->ops.mmap = vfio_mdev_pci_mmap;
-+	vmdev->ops.ioctl = vfio_mdev_pci_ioctl;
-+	ops = &vmdev->ops;
++#define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
++#define is_msi(vdev) (vdev->irq_type == VFIO_PCI_MSI_IRQ_INDEX)
++#define is_msix(vdev) (vdev->irq_type == VFIO_PCI_MSIX_IRQ_INDEX)
++#define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
++#define irq_is(vdev, type) (vdev->irq_type == type)
 +
-+	vdev = &vmdev->vdev;
- 	vdev->pdev = pdev;
- 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
- 	mutex_init(&vdev->igate);
-@@ -292,7 +309,7 @@ static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
- #endif
- 	vdev->disable_idle_d3 = disable_idle_d3;
- 
--	pci_set_drvdata(pdev, vdev);
-+	pci_set_drvdata(pdev, vmdev);
- 
- 	ret = vfio_pci_reflck_attach(vdev);
- 	if (ret) {
-@@ -323,7 +340,7 @@ static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
- 		vfio_pci_set_power_state(vdev, PCI_D3hot);
- 	}
- 
--	ret = mdev_register_device(&pdev->dev, &vfio_mdev_pci_ops);
-+	ret = mdev_register_device(&pdev->dev, ops);
- 	if (ret)
- 		pr_err("Cannot register mdev for device %s\n",
- 			dev_name(&pdev->dev));
-@@ -335,12 +352,17 @@ static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
- 
- static void vfio_mdev_pci_driver_remove(struct pci_dev *pdev)
- {
-+	struct vfio_mdev_pci_device *vmdev;
- 	struct vfio_pci_device *vdev;
- 
--	vdev = pci_get_drvdata(pdev);
--	if (!vdev)
-+	mdev_unregister_device(&pdev->dev);
++extern const struct pci_error_handlers vfio_err_handlers;
 +
-+	vmdev = pci_get_drvdata(pdev);
-+	if (!vmdev)
- 		return;
- 
-+	vdev = &vmdev->vdev;
++static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
++{
++	return (pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA;
++}
 +
- 	vfio_pci_reflck_put(vdev->reflck);
- 
- 	kfree(vdev->region);
-@@ -358,7 +380,8 @@ static void vfio_mdev_pci_driver_remove(struct pci_dev *pdev)
- 				VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM);
- 	}
- 
--	kfree(vdev);
-+	kfree(vmdev->attr.name);
-+	kfree(vmdev);
- }
- 
- static struct pci_driver vfio_mdev_pci_driver = {
++static inline bool vfio_vga_disabled(struct vfio_pci_device *vdev)
++{
++#ifdef CONFIG_VFIO_PCI_VGA
++	return vdev->disable_vga;
++#else
++	return true;
++#endif
++}
++
++extern void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
++				bool nointxmask, bool disable_idle_d3);
++
++extern void vfio_pci_intx_mask(struct vfio_pci_device *vdev);
++extern void vfio_pci_intx_unmask(struct vfio_pci_device *vdev);
++
++extern int vfio_pci_set_irqs_ioctl(struct vfio_pci_device *vdev,
++				   uint32_t flags, unsigned index,
++				   unsigned start, unsigned count, void *data);
++
++extern ssize_t vfio_pci_config_rw(struct vfio_pci_device *vdev,
++				  char __user *buf, size_t count,
++				  loff_t *ppos, bool iswrite);
++
++extern ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
++			       size_t count, loff_t *ppos, bool iswrite);
++
++extern ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
++			       size_t count, loff_t *ppos, bool iswrite);
++
++extern long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
++			       uint64_t data, int count, int fd);
++
++extern int vfio_pci_init_perm_bits(void);
++extern void vfio_pci_uninit_perm_bits(void);
++
++extern int vfio_config_init(struct vfio_pci_device *vdev);
++extern void vfio_config_free(struct vfio_pci_device *vdev);
++
++extern int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
++					unsigned int type, unsigned int subtype,
++					const struct vfio_pci_regops *ops,
++					size_t size, u32 flags, void *data);
++
++extern int vfio_pci_set_power_state(struct vfio_pci_device *vdev,
++				    pci_power_t state);
++extern unsigned int vfio_pci_set_vga_decode(void *opaque, bool single_vga);
++extern int vfio_pci_enable(struct vfio_pci_device *vdev);
++extern void vfio_pci_disable(struct vfio_pci_device *vdev);
++extern long vfio_pci_ioctl(void *device_data,
++			unsigned int cmd, unsigned long arg);
++extern ssize_t vfio_pci_read(void *device_data, char __user *buf,
++			size_t count, loff_t *ppos);
++extern ssize_t vfio_pci_write(void *device_data, const char __user *buf,
++			size_t count, loff_t *ppos);
++extern int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma);
++extern void vfio_pci_request(void *device_data, unsigned int count);
++extern void vfio_pci_fill_ids(char *ids, struct pci_driver *driver);
++extern int vfio_pci_reflck_attach(struct vfio_pci_device *vdev);
++extern void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck);
++extern void vfio_pci_probe_power_state(struct vfio_pci_device *vdev);
++
++#ifdef CONFIG_VFIO_PCI_IGD
++extern int vfio_pci_igd_init(struct vfio_pci_device *vdev);
++#else
++static inline int vfio_pci_igd_init(struct vfio_pci_device *vdev)
++{
++	return -ENODEV;
++}
++#endif
++#ifdef CONFIG_VFIO_PCI_NVLINK2
++extern int vfio_pci_nvdia_v100_nvlink2_init(struct vfio_pci_device *vdev);
++extern int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev);
++#else
++static inline int vfio_pci_nvdia_v100_nvlink2_init(struct vfio_pci_device *vdev)
++{
++	return -ENODEV;
++}
++
++static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
++{
++	return -ENODEV;
++}
++#endif
++#endif /* VFIO_PCI_PRIVATE_H */
 -- 
 2.7.4
 
