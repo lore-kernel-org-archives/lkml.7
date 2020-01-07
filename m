@@ -2,131 +2,103 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE20C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAD3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2E2206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9BYBAYH"
+	by mail.kernel.org (Postfix) with ESMTP id 336A1206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgAGVsk (ORCPT
+        id S1727318AbgAGVtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:48:40 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37703 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgAGVsk (ORCPT
+        Tue, 7 Jan 2020 16:49:55 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:36247 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgAGVtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:48:40 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so244437plz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:48:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2CcTg/o8UwCiVCitQqRQYGVJRDQWN4iLjNgNoNrzkRc=;
-        b=L9BYBAYHoSB1I8wnIns2wgv7M6rBeVuglYc8yQJUpOC1qGlhpAuBz8XixDgoJbAE3m
-         S2uedcF93wxsHV3qEnCCw2SHZq2fqcVhAsGVL/GLdEG9rwSfwNAwhX+P9v00RXWwsFZt
-         gmb8hSVkiEXFLk6TXrP/UoeZxdya4uH0AMO2jKIq+68Ql9r0brqg38Q2EbUGB7OMYnnk
-         UjBaLrUYIifwT6Vf+7VetRYdhawPEQ2MafCdGArgWioTaWA3Onj6FUHXYme8Bycv+k0E
-         z1R3KGA6dfs1DE7FPIwblt3vCKZb5cTrANz15SiXcaJiSuEGgjjiF8+xMrBE1RZdzJb7
-         3qbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2CcTg/o8UwCiVCitQqRQYGVJRDQWN4iLjNgNoNrzkRc=;
-        b=M1zR6bQFrZ9JnBtVxfUomO9zy92ZdKZDoik42VtnHCOgQb+tgsMQr5cf+0s5MoAZj0
-         Mi8zB3DcCbQrybriyka8LN8F+lz9Ld441k3a/HCQU/eH1FSn1WAb7yb6IzXgFwO4vuIW
-         hvYdC1QJRv+yibfJgt7f24FmIw1MTGbsNs4YG+moZAML2anXWw1l1WRcmF+t3+jZdSZz
-         1/h+WEsXOcgSaRXkMtoQyV0LBEp6tlDqxit+rV4veVWLE0pNEq8f2b5FzoCfvwPDuVPA
-         NybPQgMBLucxtbnLw4oqtC5hby6o9ZA4TNm8aLklOq+lN4KDntTsUVW47s4HxoGWS3/C
-         vc8g==
-X-Gm-Message-State: APjAAAUdzEPyMi0WLr7fDacAqpLtPwepE3LxdtVspi32zqUfdWIPlDXa
-        LqpJzhDzHhyljtwvLhGtOdv6LA==
-X-Google-Smtp-Source: APXvYqxeTpXMbsnJnCOtx1iWYJsGQRjwgp7O/48eAI0afmy7bdRAVVocuPCG6/35THSoAZD5+E7KXA==
-X-Received: by 2002:a17:902:ac97:: with SMTP id h23mr1848472plr.237.1578433719299;
-        Tue, 07 Jan 2020 13:48:39 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x11sm530623pfn.53.2020.01.07.13.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 13:48:37 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:48:34 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, jcrouse@codeaurora.org,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com
-Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
-Message-ID: <20200107214834.GB738324@yoga>
-References: <20200107090519.3231-1-cw00.choi@samsung.com>
- <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
- <20200107090519.3231-3-cw00.choi@samsung.com>
+        Tue, 7 Jan 2020 16:49:55 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MhDIw-1jK8o71gSg-00eM6j; Tue, 07 Jan 2020 22:48:49 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: gtm601: fix build warning
+Date:   Tue,  7 Jan 2020 22:48:35 +0100
+Message-Id: <20200107214846.1284981-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107090519.3231-3-cw00.choi@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:hgbuQXLAyzDG0JLdaoMrLoDWbahmQuVhsc4uo1Y42HSztF/U8X6
+ ljgOSi6NbIyjXc8pJuuPyyWWjY072XKl1nZa7gRqaSj3b4pZgsBevH/oICmQTvNFF9RE+UY
+ Yt/NlSvRPQ5SU/coEP7/isRi1nD3iTQ1/xutnEX1rWhdL8H9l3g4n8rxw3IdBgwzi/ZyyHL
+ nU2NpbirZydu/iaPee/Kw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jDD5zrkTayQ=:EN/mtN5KHU2cVxtZeZDCMk
+ xgZ8H2BYL/ixmxZ21NFKyG8bp3R+i/nAS3f2NjnUeasNXyDUXajUdENyH3nmi6yTtt3Dhvgre
+ Poh/0wVsfsDZ4DK9V4TnRa6Z68admVkVOfm0g1ek52Tu0+bRvK7lcMxIYVEFf553fR0c23Bvs
+ 86Gt00GpxtUp/oE7SckjPvm/uMZixOwkfIF4ZpGkWuvAuxdOaEPpdgm1nZuoVeDCGiydd+KOZ
+ 5YfjJ1gm86kTl8lsA92siTw93yXTQ955iv8g0zqd7uw+bvH7aBsaKHD3zEs6sM3GnuWN3BAqL
+ VRQbRvCmqm0ihoL8xVv3f/x4IeJOxSkt0ivi1akTjbnDTtvH/qQ6YlqGrgqMcmf5RD7jiIZ+l
+ E7/fLjM1L/P6Gw3nbmsMw5MQ6TnjH/XX7pt8EgvrFcRS7uT7vXBolHHTcwTDt4SGCdl/JHw7e
+ +oJ8ebXrMr+AP0RCNNANLnWpNuXAfMBnWXaumkfRKNRlpW72PdKAaPMoof/MxsdmSdCRuwQW2
+ 8a/ESpXM4Enx7dQqwGZ7qmrQAr7j9/RPaLKmlxhbqqxxvtevQWwpIjEZv2i+CIM+aBalhIFzv
+ 5VF69/WbcNqNGu/g0ANcsycf3hmgsb6p7KIqQHIQ95ifkcf7HWwbwf6Ej4iF/iqceGEVu370b
+ yBEB/v9uLgQKHn2yMXUGpmltxwyQXGavNZqrNKey0t9cMhdqID8AGx+MYerkako8yxFKjyIUN
+ OEn82awYzjE5t9T5Rd1L8qlkGeVaPelqx5rZGI8rQhCjeZz65uHTo0JXZHDIXTJ7s87lS3kIS
+ FgidAOeuevJObQ50bHXv4L660UbaB6NlG1LAyBViHHO+b6q9gwVkwRvlgR+gGpsPxvqsgIW8l
+ 6RkABryq024BZXlNUo7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
+The driver produces warnings without CONFIG_OF, and makes
+no sense without it either:
 
-> Add new devfreq_transitions debugfs file to track the frequency transitions
-> of all devfreq devices for the simple profiling as following:
-> - /sys/kernel/debug/devfreq/devfreq_transitions
-> 
-> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
-> in Kconfig in order to save the transition history.
-> 
-> [Detailed description of each field of 'devfreq_transitions' debugfs file]
-> - time_ms	: Change time of frequency transition. (unit: millisecond)
-> - dev_name	: Device name of h/w.
-> - dev		: Device name made by devfreq core.
-> - parent_dev	: If devfreq device uses the passive governor,
-> 		  show parent devfreq device name.
-> - load_%	: If devfreq device uses the simple_ondemand governor,
-> 		  load is used by governor whene deciding the new frequency.
-> 		  (unit: percentage)
-> - old_freq_hz	: Frequency before changing. (unit: hz)
-> - new_freq_hz	: Frequency after changed. (unit: hz)
-> 
-> [For example on Exynos5422-based Odroid-XU3 board]
-> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
-> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
-> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
-> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
-> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
-> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
-> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
-> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
-> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
-> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
-> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
-> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
-> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
-> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
-> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
-> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
-> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
-> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
-> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
-> [snip]
-> 
+sound/soc/codecs/gtm601.c:50:34: error: 'bm818_dai' defined but not used [-Werror=unused-variable]
+ static struct snd_soc_dai_driver bm818_dai = {
+                                  ^~~~~~~~~
+sound/soc/codecs/gtm601.c:32:34: error: 'gtm601_dai' defined but not used [-Werror=unused-variable]
+ static struct snd_soc_dai_driver gtm601_dai = {
+                                  ^~~~~~~~~~
 
-Wouldn't it make more sense to expose this through the tracing
-framework - like many other subsystems does?
+Remove the #ifdef check to avoid the warning.
 
-Regards,
-Bjorn
+Fixes: 057a317a8d94 ("ASoC: gtm601: add Broadmobi bm818 sound profile")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ sound/soc/codecs/gtm601.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/sound/soc/codecs/gtm601.c b/sound/soc/codecs/gtm601.c
+index 7f05ebcb88d1..ae9e1c70ca57 100644
+--- a/sound/soc/codecs/gtm601.c
++++ b/sound/soc/codecs/gtm601.c
+@@ -87,14 +87,12 @@ static int gtm601_platform_probe(struct platform_device *pdev)
+ 			(struct snd_soc_dai_driver *)dai_driver, 1);
+ }
+ 
+-#if defined(CONFIG_OF)
+ static const struct of_device_id gtm601_codec_of_match[] = {
+ 	{ .compatible = "option,gtm601", .data = (void *)&gtm601_dai },
+ 	{ .compatible = "broadmobi,bm818", .data = (void *)&bm818_dai },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, gtm601_codec_of_match);
+-#endif
+ 
+ static struct platform_driver gtm601_codec_driver = {
+ 	.driver = {
+-- 
+2.20.0
+
