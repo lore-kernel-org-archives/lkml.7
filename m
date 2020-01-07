@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D4C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF434C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9292080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBC82081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431791;
-	bh=yVSMHHClpJzlndkHCGKLUUq2inE9hgWKi9DMbgYa214=;
+	s=default; t=1578431798;
+	bh=IIrnIKkYQJ1/AWGWQTr0FmrNQ8UfpU6O7lqkk5rmz/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBCIuiYK2oTqu92iGalKCL4S5YAQazFtcdSp2R75uOO8WMTehJpjlJ6Nx/R41gzBA
-	 Mt0XhPFOHcOp8BvWfgw7OCyrIT78s3SDVzfNH/I7Ax13G5kmZtZPwrtJ52Lz2rEbUJ
-	 JtC+KfDNVHh9m+48HhlLG9IlAcowiShZBo5Baevw=
+	b=Bz5/GD1dHkfp7i7Xs+SAnQPVp7S6CZGptMYDVeWtEDTUbhOGL50wh+sXg8BkA/UIY
+	 Bn6h/25jjolp7wTdHzpGtESEwUiL7QQEPzXUkKbdi/vhpUmPZtRDyAGTsvs3W7On1F
+	 r8DmjRW1MYBLa1HFOiDThfopRtWlrhtMtb8dbFxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgAGVQa (ORCPT
+        id S1729726AbgAGVQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:16:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:16:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgAGVHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:07:11 -0500
+        id S1729151AbgAGVHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:07:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C83192072A;
-        Tue,  7 Jan 2020 21:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649C120678;
+        Tue,  7 Jan 2020 21:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431231;
-        bh=yVSMHHClpJzlndkHCGKLUUq2inE9hgWKi9DMbgYa214=;
+        s=default; t=1578431228;
+        bh=IIrnIKkYQJ1/AWGWQTr0FmrNQ8UfpU6O7lqkk5rmz/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dL7Asim48SLqw/Vb3Er6jAheQXp0lfHg1cbck8VsnSAxlI+ectj6qsdgOyHSCPzJt
-         260VHUerX6vlbHFvEouUUg34ti89PovYJeIoTaC98u8+cwpbBqJ4SB9bwRNVxWoTKq
-         jbFrBnsIQs9BEDQkaH6/aIvU0cg5lRQVMKHyCvNk=
+        b=GaLYcw8DL0mlSh9W0cynJed09BIZnrwgBHXJ04GBwIbuDOCfeQXFqUrxdMP8v72md
+         KTJnEgjW1+FQmiIRU49tn+oVtCqvTLrlmTMqHNpN2EYQW8rvuy5aUQmvOnaHnVcYsh
+         wgKBe1UqH38EjMkJ+Xm2Igpsz9PG7XY0h6VLERC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        Jinsuk Choi <jjinsuk.choi@lge.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 052/115] mm/zsmalloc.c: fix the migrated zspage statistics.
-Date:   Tue,  7 Jan 2020 21:54:22 +0100
-Message-Id: <20200107205302.628401027@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.19 051/115] media: cec: check transmit_in_progress, not transmitting
+Date:   Tue,  7 Jan 2020 21:54:21 +0100
+Message-Id: <20200107205302.545534110@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -63,42 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanho Min <chanho.min@lge.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit ac8f05da5174c560de122c499ce5dfb5d0dfbee5 upstream.
+commit ac479b51f3f4aaa852b5d3f00ecfb9290230cf64 upstream.
 
-When zspage is migrated to the other zone, the zone page state should be
-updated as well, otherwise the NR_ZSPAGE for each zone shows wrong
-counts including proc/zoneinfo in practice.
+Currently wait_event_interruptible_timeout is called in cec_thread_func()
+when adap->transmitting is set. But if the adapter is unconfigured
+while transmitting, then adap->transmitting is set to NULL. But the
+hardware is still actually transmitting the message, and that's
+indicated by adap->transmit_in_progress and we should wait until that
+is finished or times out before transmitting new messages.
 
-Link: http://lkml.kernel.org/r/1575434841-48009-1-git-send-email-chanho.min@lge.com
-Fixes: 91537fee0013 ("mm: add NR_ZSMALLOC to vmstat")
-Signed-off-by: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>        [4.9+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+As the original commit says: adap->transmitting is the userspace view,
+adap->transmit_in_progress reflects the hardware state.
+
+However, if adap->transmitting is NULL and adap->transmit_in_progress
+is true, then wait_event_interruptible is called (no timeout), which
+can get stuck indefinitely if the CEC driver is flaky and never marks
+the transmit-in-progress as 'done'.
+
+So test against transmit_in_progress when deciding whether to use
+the timeout variant or not, instead of testing against adap->transmitting.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: 32804fcb612b ("media: cec: keep track of outstanding transmits")
+Cc: <stable@vger.kernel.org>      # for v4.19 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/zsmalloc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/cec/cec-adap.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -2092,6 +2092,11 @@ static int zs_page_migrate(struct addres
- 		zs_pool_dec_isolated(pool);
- 	}
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -450,7 +450,7 @@ int cec_thread_func(void *_adap)
+ 		bool timeout = false;
+ 		u8 attempts;
  
-+	if (page_zone(newpage) != page_zone(page)) {
-+		dec_zone_page_state(page, NR_ZSPAGES);
-+		inc_zone_page_state(newpage, NR_ZSPAGES);
-+	}
-+
- 	reset_page(page);
- 	put_page(page);
- 	page = newpage;
+-		if (adap->transmitting) {
++		if (adap->transmit_in_progress) {
+ 			int err;
+ 
+ 			/*
+@@ -485,7 +485,7 @@ int cec_thread_func(void *_adap)
+ 			goto unlock;
+ 		}
+ 
+-		if (adap->transmitting && timeout) {
++		if (adap->transmit_in_progress && timeout) {
+ 			/*
+ 			 * If we timeout, then log that. Normally this does
+ 			 * not happen and it is an indication of a faulty CEC
+@@ -494,14 +494,18 @@ int cec_thread_func(void *_adap)
+ 			 * so much traffic on the bus that the adapter was
+ 			 * unable to transmit for CEC_XFER_TIMEOUT_MS (2.1s).
+ 			 */
+-			pr_warn("cec-%s: message %*ph timed out\n", adap->name,
+-				adap->transmitting->msg.len,
+-				adap->transmitting->msg.msg);
++			if (adap->transmitting) {
++				pr_warn("cec-%s: message %*ph timed out\n", adap->name,
++					adap->transmitting->msg.len,
++					adap->transmitting->msg.msg);
++				/* Just give up on this. */
++				cec_data_cancel(adap->transmitting,
++						CEC_TX_STATUS_TIMEOUT);
++			} else {
++				pr_warn("cec-%s: transmit timed out\n", adap->name);
++			}
+ 			adap->transmit_in_progress = false;
+ 			adap->tx_timeouts++;
+-			/* Just give up on this. */
+-			cec_data_cancel(adap->transmitting,
+-					CEC_TX_STATUS_TIMEOUT);
+ 			goto unlock;
+ 		}
+ 
 
 
