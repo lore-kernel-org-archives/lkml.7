@@ -2,94 +2,84 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CB4C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8D1C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E719F207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D85207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ktgUAwoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgAGMjK (ORCPT
+        id S1728204AbgAGMjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:39:10 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:44713 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbgAGMjJ (ORCPT
+        Tue, 7 Jan 2020 07:39:13 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11722 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbgAGMjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 07:39:09 -0500
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MYNeM-1jBEXB2e3e-00VQ1g; Tue, 07 Jan 2020 13:39:07 +0100
-Received: by mail-qk1-f179.google.com with SMTP id t129so42459063qke.10;
-        Tue, 07 Jan 2020 04:39:07 -0800 (PST)
-X-Gm-Message-State: APjAAAX/iQrxSoPerxUF0TjZBJE9YEzEfV/yb/nnrAkbToBtigb5W/u/
-        8MvE9X/WkI0R6MXosNejlvkPUG6fEk7r7jTtJqM=
-X-Google-Smtp-Source: APXvYqxj7f+t9CP5sp/36VUBLMUQTa+e3WyQMflR8nTwCW8t9pJYpNTyr+4ZiOuV0aweiM6aI/SDnWdyvZrQA34+sMU=
-X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr72172409qkj.352.1578400746409;
- Tue, 07 Jan 2020 04:39:06 -0800 (PST)
+        Tue, 7 Jan 2020 07:39:11 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e147bdd0000>; Tue, 07 Jan 2020 04:38:53 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 04:39:10 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 04:39:10 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 12:39:10 +0000
+Received: from [192.168.22.23] (10.124.1.5) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 7 Jan 2020 12:39:08 +0000
+From:   Thierry Reding <treding@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "Mikko Perttunen" <cyndis@kapsi.fi>,
+        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/9] i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to
+ I2C_PIO_MODE_PREFERRED_LEN
+In-Reply-To: <20200106010423.5890-6-digetx@gmail.com>
+References: <20200106010423.5890-6-digetx@gmail.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20191218163701.171914-1-arnd@arndb.de> <CACRpkdbqzLUNUjx_kt3-7JLZym2RZ47edW5qp0MgXmpW4-Xf9Q@mail.gmail.com>
- <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com> <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com>
-In-Reply-To: <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Jan 2020 13:38:50 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
-Message-ID: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: lochnagar: select GPIOLIB
-To:     Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, patches@opensource.cirrus.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:egrBH3XqHZeI3+RAO3CSGSoEMjHx/sJZdt+/cLh85iheKpqunxB
- 2uKXv+IrY0eQR2PFyA04ITiKatlefq+ofCLr+dKunGBzeHrsAV0JL4ojLJ6W0KuLmc0SCxL
- wKqJuz3nw04PGAnSkZDH7zyHFBE9s56RZjNi0gGaQeAdORmgBnYa6bdsAPpIjyl53ITTnV2
- wssAUfvaIaLg6GUDFycMw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mLl+FwD2Vzo=:wCVer+QXMXAeur0zS2F2Gu
- +wFfB/h0nchAyv2kpJq/1/91K4nQgF4xCq8bJGPSZBz0HzUnjU1bPfzuG0PifAInoLMOmFvgp
- OnGFA1X+ZsTrrCPeCOLTCdTjmyRjOvGR59fc1b75DJVSVAGlMtVuRJCa9VjyatElLamEZ3Ynu
- DI/WS1BHlgZ14Iz34OCFZwsT7BazkdNBVKlfZxjP9CHye+oYyCFTusTP4rjfRf7bwD8RQlvs2
- ozO/ulXgw/hmftkOAtuaYvEi7RcgTLPsUyaKm99foJZ3BEn7YvgcIRvNvcjK/AwJVBqnNa/Mv
- +oNAh4wpn6Bx0O+MvK+/E/tX2jOze6B2N1JgGj2TmpDWu7bYNByAE/g8vkXOCxnDoWR8Syxg8
- IiAi2aNCogJUzy/47WSTKBohAdMFDMy8dgQjTt1e8i9rELbOIb5Ml7mmb91UzkmW/d4OSuevg
- Suhdi6x/8LpWFMqkm8vjAd95ae8YZ5FqqaUJ63Usl4+EZPXaVh7oOna95srVySxu2dn9MCubH
- 7B8j+YThmCYu5Iltaj0finrMDdttJkOV/h4+Gakf8xEEWQpejQwmdFqu4Y0nfLJR6mIrlHj1y
- niu56LweLbxujx1ziMhTpG5HnYsnYXYQsl7NjJ3MmxS02a1OiAP4Rsp2Qv5j57wFSM/wZarhG
- b7qEa8Tkfi2SuORkM7+bcKHIRtsgR0A/mLWrMKy4UAHgDpe9GI5RRzFs3luEyS+RKHW/7U2cq
- bgo6S9gZAG2B75ufPbfy9/p376f8izZVnhw2xSJBYu/9nllXiCsBG2mtI3yOB7VehjMm50PhI
- zFfCRtEppsMn4prE0pZGvTguBSzKHIb+nw23DCfivsUqdCrpgWe0Ssdxc/VCRMtDNF7bf3Qw/
- j1SsT77lOTKSHzMx78Jg==
+Message-ID: <524a6623612e42638c198e64ba7afb8c@HQMAIL105.nvidia.com>
+Date:   Tue, 7 Jan 2020 12:39:08 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578400733; bh=waujjXovdS+MNBuMeexXtQRpJFaJSvSSlTTWtRiCDc8=;
+        h=X-PGP-Universal:From:To:CC:Subject:In-Reply-To:References:
+         X-NVConfidentiality:MIME-Version:Message-ID:Date:Content-Type:
+         Content-Transfer-Encoding;
+        b=ktgUAwoAC3m6d16S4o/KAp3Wih2iBYySuaLi230BhLbECIS7FNaE/h8gnOxPbxM4G
+         ls3td+166KM9qdalHdaUnTLZOenyU/f2ey40qfEko6UtU26vAh4ikpif7oBlTjvZIe
+         Ux/GL9ZNXKTMXr7DsuimUy7Iu7gyNBaTRq1dPJv/SAQ5knQtFlO4+pf4q2dhudwEDb
+         5w3aYoFwmd2JYO3Xu5KxuIkx2zl+TtoF4zuxcw9Mj1novWiwvulz54F+odsLJQm5GO
+         1j111boYNKw8dv/FZLLOhtplx33o6ERR8WuVgdtL5VCUfKy7F79/EtaeRXIPt21mRA
+         NiMThbr4LPh1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:58 PM Richard Fitzgerald
-<rf@opensource.cirrus.com> wrote:
-> On 07/01/2020 10:39, Arnd Bergmann wrote:
-> > On Tue, Jan 7, 2020 at 10:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >> On Wed, Dec 18, 2019 at 5:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>> I wonder if GPIOLIB should just become mandatory when enabling the pinctrl
-> >>> subsystem, or if there are still good reasons for leaving it disabled
-> >>> on any machine that uses CONFIG_PINCTRL.
-> >>
-> >> Hm that is a tricky question, they almost always come in pair but are
-> >> technically speaking separate subsystems.
-> >
-> > I think there are a number of use cases for GPIOLIB drivers without PINCTRL, but
-> > are there any examples of the reverse?
->
-> You could have muxable pins that aren't gpios. For example muxing
-> between i2c/spi signals. So a pinctrl driver doesn't imply gpio.
+On Mon, 06 Jan 2020 04:04:19 +0300, Dmitry Osipenko wrote:
+> DMA is preferred for a larger transfers, while PIO is preferred for a
+> smaller transfers to avoid unnecessary DMA overhead. There is no strict
+> size limitations for the PIO-mode transfers, so let's rename the constant
+> for clarity.
+> 
+> Tested-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-I understand that this is the case in theory, but what I was wondering about
-is whether there are any such users, or at least any that also want to
-save a few kilobytes of kernel size for gpiolib.
-
-          Arnd
+Tested-by: Thierry Reding <treding@nvidia.com>
