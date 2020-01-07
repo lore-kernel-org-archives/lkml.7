@@ -6,29 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504BFC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74711C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310B6214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F3E214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 17:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgAGRsi (ORCPT
+        id S1728576AbgAGRsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:48:38 -0500
-Received: from sauhun.de ([88.99.104.3]:53364 "EHLO pokefinder.org"
+        Tue, 7 Jan 2020 12:48:21 -0500
+Received: from sauhun.de ([88.99.104.3]:53350 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728568AbgAGRsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:48:22 -0500
+        id S1728553AbgAGRsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 12:48:20 -0500
 Received: from localhost (p5486CF8B.dip0.t-ipconnect.de [84.134.207.139])
-        by pokefinder.org (Postfix) with ESMTPSA id 0FF7A2C394D;
-        Tue,  7 Jan 2020 18:48:21 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 3D5822C3951;
+        Tue,  7 Jan 2020 18:48:18 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] i2c: i2c-core-of: convert to use i2c_new_client_device()
-Date:   Tue,  7 Jan 2020 18:47:44 +0100
-Message-Id: <20200107174748.9616-11-wsa+renesas@sang-engineering.com>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/12] i2c: powermac: convert to use i2c_new_client_device()
+Date:   Tue,  7 Jan 2020 18:47:39 +0100
+Message-Id: <20200107174748.9616-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
 References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
@@ -46,28 +49,35 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
 Build tested only.
 
- drivers/i2c/i2c-core-of.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-powermac.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index e4d296b40baa..6787c1f71483 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -75,11 +75,10 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
- 	if (ret)
- 		return ERR_PTR(ret);
+diff --git a/drivers/i2c/busses/i2c-powermac.c b/drivers/i2c/busses/i2c-powermac.c
+index 504f5bf0e625..973e5339033c 100644
+--- a/drivers/i2c/busses/i2c-powermac.c
++++ b/drivers/i2c/busses/i2c-powermac.c
+@@ -240,8 +240,8 @@ static void i2c_powermac_create_one(struct i2c_adapter *adap,
  
--	client = i2c_new_device(adap, &info);
--	if (!client) {
-+	client = i2c_new_client_device(adap, &info);
-+	if (IS_ERR(client))
- 		dev_err(&adap->dev, "of_i2c: Failure registering %pOF\n", node);
--		return ERR_PTR(-EINVAL);
--	}
-+
- 	return client;
- }
+ 	strncpy(info.type, type, sizeof(info.type));
+ 	info.addr = addr;
+-	newdev = i2c_new_device(adap, &info);
+-	if (!newdev)
++	newdev = i2c_new_client_device(adap, &info);
++	if (IS_ERR(newdev))
+ 		dev_err(&adap->dev,
+ 			"i2c-powermac: Failure to register missing %s\n",
+ 			type);
+@@ -359,8 +359,8 @@ static void i2c_powermac_register_devices(struct i2c_adapter *adap,
+ 		info.irq = irq_of_parse_and_map(node, 0);
+ 		info.of_node = of_node_get(node);
  
+-		newdev = i2c_new_device(adap, &info);
+-		if (!newdev) {
++		newdev = i2c_new_client_device(adap, &info);
++		if (IS_ERR(newdev)) {
+ 			dev_err(&adap->dev, "i2c-powermac: Failure to register"
+ 				" %pOF\n", node);
+ 			of_node_put(node);
 -- 
 2.20.1
 
