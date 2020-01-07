@@ -2,50 +2,76 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0C4C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451C7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5638A2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFB42073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 14:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBUN+/LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgAGOAt (ORCPT
+        id S1728218AbgAGOBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:00:49 -0500
-Received: from mga07.intel.com ([134.134.136.100]:60315 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbgAGOAt (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:00:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:00:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="225676433"
-Received: from xiangfum-mobl1.ccr.corp.intel.com (HELO [10.254.208.77]) ([10.254.208.77])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Jan 2020 06:00:46 -0800
-Subject: Re: [PATCH v2 2/3] perf util: Flexible to set block info output
- formats
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200106194525.12228-1-yao.jin@linux.intel.com>
- <20200106194525.12228-2-yao.jin@linux.intel.com>
- <20200107100637.GE290055@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <99bac5b2-4fa8-c3f4-e558-13b64de4378e@linux.intel.com>
-Date:   Tue, 7 Jan 2020 22:00:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 7 Jan 2020 09:01:18 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46209 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728080AbgAGOBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:01:18 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m8so50383059edi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 06:01:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+90cyf4uCue1WitBn6EURq8L8npermjRUJaY8IVQ3o0=;
+        b=DBUN+/LNYToXvlGc4wur3eoDDfxXHaJxAQSC9h9hO+wuGf3aIOmi/NIuVnQ9YZuGDC
+         OhkfM24emqJgy+MHAaLzlG1xjwkAPI+xun02gWQ5VtJieumgdSsLpxuKusWSe6jn8m6V
+         udwif7qLa6nGrXmBWlmhIP9Krk2+mAGVW3Pltww1RNeqFBv+wZZD5dsOAmCMSb3S5RMK
+         PrgY36/tpph59ezpzzSXS+VV+/Nb9v0xw+UYiCrJwAEKpNPKl439WHgtFZzrVlyVOtV8
+         hKNcNKJXq6w8XatSbefPePpj7Mb0fiHw6ST1dmgFcjtPSncF0fj+ChjvAWeR7lPLfJsQ
+         FX5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+90cyf4uCue1WitBn6EURq8L8npermjRUJaY8IVQ3o0=;
+        b=b2STIxFyz6fPbAZDyr39GsLG0gPLiz/H0gbpwQ6ouvqQmWOfxAqHy1fMuocfT234Dt
+         2WafGYHWkxQe9I8u2UE6N2ywci+FV5h+vNYWTNSPQYsslccPaN3HDUiq9wtbB/GSkPjJ
+         SM6mFA1GoxZv+wBOO58YyAUVz8g5fTwSXTRC9Gul3QQK2xtgBnBsrcEVKV35F1FF9Py8
+         5W4QyOxD2LJubvdunYJogwSk5ftkry2kRS8hyJjho5oDWPfPEmFAVIY84LIVO5ZkQ4MD
+         VB/Fzq7+gDVQl8WeR+qcW2Cm3JMSCfgd7thNPBeyrgwUMsNZNTGJlI6vK/VVc+c60I3s
+         VPfg==
+X-Gm-Message-State: APjAAAU2leS1zJe/0IOXgIg2VXhm5kkkgrNW+S0BqsY1ILNLzohQk5Hv
+        ygz1dT5ynOvvI1/HGEn80W3evw==
+X-Google-Smtp-Source: APXvYqwDb/Sw2bFEL+GZhLau62Pc/gbapCMPuZYvYm7i6neHzkD2rdCQTSQR01s2I5Z2FEmRbMdEfw==
+X-Received: by 2002:a17:906:4e07:: with SMTP id z7mr113972530eju.201.1578405676355;
+        Tue, 07 Jan 2020 06:01:16 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id b4sm6809527ejb.37.2020.01.07.06.01.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 06:01:15 -0800 (PST)
+Subject: Re: [PATCH V3 4/4] arm64: dts: sc7180: Add Venus firmware subnode
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
+ <1577971501-3732-5-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <7bf626f2-e943-5538-7405-b6edeb02bfba@linaro.org>
+Date:   Tue, 7 Jan 2020 16:01:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200107100637.GE290055@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1577971501-3732-5-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,85 +80,36 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 1/7/2020 6:06 PM, Jiri Olsa wrote:
-> On Tue, Jan 07, 2020 at 03:45:24AM +0800, Jin Yao wrote:
->> Currently we use a predefined array to set the
->> block info output formats, it's fixed and inflexible.
->>
->> This patch adds two parameters "block_hpps" and "nr_hpps"
->> in block_info__create_report and other static functions,
->> in order to let user decide which columns to report and
->> with specified report ordering. It should be more flexible.
->>
->> Buffers will be allocated to contain the new fmts, of course,
->> we need to release them before perf exits.
->>
->>   v2:
->>   ---
->>   New patch created in v2.
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/builtin-report.c  | 25 +++++++++++---
->>   tools/perf/util/block-info.c | 64 ++++++++++++++++++++++++++----------
->>   tools/perf/util/block-info.h | 12 +++++--
->>   3 files changed, 76 insertions(+), 25 deletions(-)
->>
->> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
->> index de988589d99b..81ae1f862d11 100644
->> --- a/tools/perf/builtin-report.c
->> +++ b/tools/perf/builtin-report.c
->> @@ -104,6 +104,7 @@ struct report {
->>   	bool			symbol_ipc;
->>   	bool			total_cycles_mode;
->>   	struct block_report	*block_reports;
->> +	int			nr_block_reports;
->>   };
->>   
->>   static int report__config(const char *var, const char *value, void *cb)
->> @@ -503,7 +504,7 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
->>   		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
->>   						 rep->min_percent, pos,
->>   						 &rep->session->header.env,
->> -						 &rep->annotation_opts);
->> +						 &rep->annotation_opts, true);
->>   		if (ret != 0)
->>   			return ret;
->>   	}
->> @@ -536,7 +537,7 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   		if (rep->total_cycles_mode) {
->>   			report__browse_block_hists(&rep->block_reports[i++].hist,
->>   						   rep->min_percent, pos,
->> -						   NULL, NULL);
->> +						   NULL, NULL, true);
->>   			continue;
->>   		}
->>   
->> @@ -966,8 +967,19 @@ static int __cmd_report(struct report *rep)
->>   	report__output_resort(rep);
->>   
->>   	if (rep->total_cycles_mode) {
->> +		int block_hpps[6] = {
->> +			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
->> +			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->> +			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->> +			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->> +			PERF_HPP_REPORT__BLOCK_RANGE,
->> +			PERF_HPP_REPORT__BLOCK_DSO,
->> +		};
+On 1/2/20 3:25 PM, Dikshita Agarwal wrote:
+> This adds Venus firmware subnode for non-TZ platform.
 > 
-> I'd understand this change if there was another place in the code using
-> this, but it's not part of this patchset.. is it comming later?
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
+
+Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 388f50a..2f82510 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -287,6 +287,12 @@
+>  	vdda-pll-supply = <&vreg_l4a_0p8>;
+>  };
+>  
+> +&venus {
+> +	video-firmware {
+> +		iommus = <&apps_smmu 0x0c42 0x0>;
+> +	};
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qspi_clk {
 > 
 
-Yes, you guessed it. :)
-
-I will have some follow-up patches, maybe post some weeks later.
-
-Thanks
-Jin Yao
-
-> thanks,
-> jirka
-> 
+-- 
+regards,
+Stan
