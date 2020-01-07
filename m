@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D055AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50CC2081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E972081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432416;
-	bh=0YOi9vHYnseL1AT4Pr6i58HzAA3uX582XqMpHJnmEIU=;
+	s=default; t=1578432420;
+	bh=a5JwpBB9jVORplUE4Cl0WF9azzaKIEA4qQ7p37Bo/WU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYm2+8QhxaDVq3/m4yCS5MZs+QQstTtHLyeOZDSSBAK+ksRKGeKDe0xh51PJ1Twz9
-	 cLjwvDcMn/BugulM6AL6v2hK3EewIZROs6P3hgGF0KaWtCN4Fp+n7182IkhsOAFL1D
-	 dOG5ffXzdt4a5SRGVkqbXMS3OhbobdbFfTFzKlnQ=
+	b=Pup2jdY7WytXuz17NDfw6I8s5ty0HJ30KXC7tA470E3X+MhJaxYIcCZlKWGTK2+9X
+	 +YeJln9SOhgIpRlwLBRrulKwNTM/XwMmtKetRIht7UFbv7XM6AewrrSYP0b2OvdDmC
+	 tVIMxPHxj8lNo7JkfJ/e8FxbJvYdQ8obKARRPkl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgAGU6Z (ORCPT
+        id S1727812AbgAGU6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgAGU6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:21 -0500
+        id S1727794AbgAGU6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E772087F;
-        Tue,  7 Jan 2020 20:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 104142081E;
+        Tue,  7 Jan 2020 20:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430700;
-        bh=0YOi9vHYnseL1AT4Pr6i58HzAA3uX582XqMpHJnmEIU=;
+        s=default; t=1578430693;
+        bh=a5JwpBB9jVORplUE4Cl0WF9azzaKIEA4qQ7p37Bo/WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=guCKb7/h4HUukI/bdQRvzbFx1eQLdU87nycq2cwVsbZNxPgR92kNegcKmWUNI2o0l
-         rNL5VLtFZ5QuARm1TCI4obWw7cnS1PdMpqdf3b6TqUxF5T3k4eJcvKSv862lIOSj84
-         LsNaKmrMsMf9qdot40aw2s56FjQo7C02pV7JDdHE=
+        b=l6TkUdVmWA4Nf643Rs6OFaCKfgGMJZUtDHVlkJKmPD2mbnAkKahp2o4ZU5ng6+blV
+         JKMIjK+heGq2USjYogSsy9eH4/UndpJR8PlUbmI9FXnHWqGiRVXEQFzKAhd4oSCBlc
+         yKCvYYOxWiTXFjgikDfeuteazYdw/atr6gjoSRPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/191] taskstats: fix data-race
-Date:   Tue,  7 Jan 2020 21:53:01 +0100
-Message-Id: <20200107205336.260207514@linuxfoundation.org>
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/191] ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen
+Date:   Tue,  7 Jan 2020 21:52:58 +0100
+Message-Id: <20200107205336.102253423@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -64,103 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Jaroslav Kysela <perex@perex.cz>
 
-[ Upstream commit 0b8d616fb5a8ffa307b1d3af37f55c15dae14f28 ]
+[ Upstream commit d2cd795c4ece1a24fda170c35eeb4f17d9826cbb ]
 
-When assiging and testing taskstats in taskstats_exit() there's a race
-when setting up and reading sig->stats when a thread-group with more
-than one thread exits:
+The auto-parser assigns the bass speaker to DAC3 (NID 0x06) which
+is without the volume control. I do not see a reason to use DAC2,
+because the shared output to all speakers produces the sufficient
+and well balanced sound. The stereo support is enough for this
+purpose (laptop).
 
-write to 0xffff8881157bbe10 of 8 bytes by task 7951 on cpu 0:
- taskstats_tgid_alloc kernel/taskstats.c:567 [inline]
- taskstats_exit+0x6b7/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- get_signal+0x2a2/0x1320 kernel/signal.c:2734
- do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
- exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
- prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
- do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff8881157bbe10 of 8 bytes by task 7949 on cpu 1:
- taskstats_tgid_alloc kernel/taskstats.c:559 [inline]
- taskstats_exit+0xb2/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- __do_sys_exit_group kernel/exit.c:994 [inline]
- __se_sys_exit_group kernel/exit.c:992 [inline]
- __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
- do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fix this by using smp_load_acquire() and smp_store_release().
-
-Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Marco Elver <elver@google.com>
-Reviewed-by: Will Deacon <will@kernel.org>
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Link: https://lore.kernel.org/r/20191009114809.8643-1-christian.brauner@ubuntu.com
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+Link: https://lore.kernel.org/r/20191129144027.14765-1-perex@perex.cz
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/taskstats.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ sound/pci/hda/patch_realtek.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-index 13a0f2e6ebc2..e2ac0e37c4ae 100644
---- a/kernel/taskstats.c
-+++ b/kernel/taskstats.c
-@@ -554,25 +554,33 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
- static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
- {
- 	struct signal_struct *sig = tsk->signal;
--	struct taskstats *stats;
-+	struct taskstats *stats_new, *stats;
- 
--	if (sig->stats || thread_group_empty(tsk))
--		goto ret;
-+	/* Pairs with smp_store_release() below. */
-+	stats = smp_load_acquire(&sig->stats);
-+	if (stats || thread_group_empty(tsk))
-+		return stats;
- 
- 	/* No problem if kmem_cache_zalloc() fails */
--	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-+	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
- 
- 	spin_lock_irq(&tsk->sighand->siglock);
--	if (!sig->stats) {
--		sig->stats = stats;
--		stats = NULL;
-+	stats = sig->stats;
-+	if (!stats) {
-+		/*
-+		 * Pairs with smp_store_release() above and order the
-+		 * kmem_cache_zalloc().
-+		 */
-+		smp_store_release(&sig->stats, stats_new);
-+		stats = stats_new;
-+		stats_new = NULL;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e849cf681e23..62a471b5fc87 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5547,6 +5547,16 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
  	}
- 	spin_unlock_irq(&tsk->sighand->siglock);
- 
--	if (stats)
--		kmem_cache_free(taskstats_cache, stats);
--ret:
--	return sig->stats;
-+	if (stats_new)
-+		kmem_cache_free(taskstats_cache, stats_new);
-+
-+	return stats;
  }
  
- /* Send pid data out on exit */
++/* force NID 0x17 (Bass Speaker) to DAC1 to share it with the main speaker */
++static void alc285_fixup_speaker2_to_dac1(struct hda_codec *codec,
++					  const struct hda_fixup *fix, int action)
++{
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		hda_nid_t conn[1] = { 0x02 };
++		snd_hda_override_conn_list(codec, 0x17, 1, conn);
++	}
++}
++
+ /* Hook to update amp GPIO4 for automute */
+ static void alc280_hp_gpio4_automute_hook(struct hda_codec *codec,
+ 					  struct hda_jack_callback *jack)
+@@ -5849,6 +5859,7 @@ enum {
+ 	ALC225_FIXUP_DISABLE_MIC_VREF,
+ 	ALC225_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC295_FIXUP_DISABLE_DAC3,
++	ALC285_FIXUP_SPEAKER2_TO_DAC1,
+ 	ALC280_FIXUP_HP_HEADSET_MIC,
+ 	ALC221_FIXUP_HP_FRONT_MIC,
+ 	ALC292_FIXUP_TPT460,
+@@ -6652,6 +6663,10 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc295_fixup_disable_dac3,
+ 	},
++	[ALC285_FIXUP_SPEAKER2_TO_DAC1] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_speaker2_to_dac1,
++	},
+ 	[ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -7241,6 +7256,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
++	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+@@ -7425,6 +7441,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC255_FIXUP_DELL_SPK_NOISE, .name = "dell-spk-noise"},
+ 	{.id = ALC225_FIXUP_DELL1_MIC_NO_PRESENCE, .name = "alc225-dell1"},
+ 	{.id = ALC295_FIXUP_DISABLE_DAC3, .name = "alc295-disable-dac3"},
++	{.id = ALC285_FIXUP_SPEAKER2_TO_DAC1, .name = "alc285-speaker2-to-dac1"},
+ 	{.id = ALC280_FIXUP_HP_HEADSET_MIC, .name = "alc280-hp-headset"},
+ 	{.id = ALC221_FIXUP_HP_FRONT_MIC, .name = "alc221-hp-mic"},
+ 	{.id = ALC298_FIXUP_SPK_VOLUME, .name = "alc298-spk-volume"},
 -- 
 2.20.1
 
