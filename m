@@ -2,51 +2,57 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556C8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0355C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4D320880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660E120880
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431662;
-	bh=MABIAo/8O2n9vUpWI2QDXB80LRbXfp1lWRL4aI2t6Dk=;
+	s=default; t=1578431664;
+	bh=83UnpEaEYc6jl04+yqxyEsqJlP/wWzChiWjUb2ScpEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CWgraRScewBs1Jj9LbOWiDmWG9Yru7P6Cex7W+ti5EOZS99m8sx0QKqHCliOOHQpq
-	 NjRsr4PKtN47KOEOuwJvpI/sJpmJkkp8bfy+pz2lP2zPuKFl33cJyUdn0Z896o12/0
-	 A9aqyEdvK7Q3HXdImVKjthaHUVBZfBxkACrrTdQc=
+	b=PaLuo9Ow/ut/F4OtK844fl5gDmwVHRBVCsfrjyAg5IaAMMvxMmnPANwJjK2KxG9i+
+	 +gCu884iV9R+duf45OQHSpIinMrtdKH0jVn3Ka5juyi6lEZOVfAsFelRFTZxGGrU0w
+	 N6d4bUo09wOk8KmNAPJgfRFMkZNPLEwtHQyMJpoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbgAGVJ2 (ORCPT
+        id S1729815AbgAGVJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34540 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgAGVJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:17 -0500
+        id S1729085AbgAGVJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4BFA20678;
-        Tue,  7 Jan 2020 21:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33A8C208C4;
+        Tue,  7 Jan 2020 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431357;
-        bh=MABIAo/8O2n9vUpWI2QDXB80LRbXfp1lWRL4aI2t6Dk=;
+        s=default; t=1578431354;
+        bh=83UnpEaEYc6jl04+yqxyEsqJlP/wWzChiWjUb2ScpEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/xznlZ2qIpvUthK59PjNyoMqpO/uOQWKyX9CT3I1w9vQ1QFe/XA3xtPLoejdc1KM
-         +XFPkV3AG/Q+aq2/QJU9d7rP1BE8/0nt9+QsjxEnzxvB6jOgx6yuwm/Vn/tCSOK62Y
-         sc9aeLP59Wj7FZZ9VlQ8p4h0AdKCLrhUtwtXQ4xU=
+        b=PGy7GSq8ZJuWe+9fCvdREOs929/B0fm3mfFga1Lq5jfrv2B56+9ddejeyGJ13fVmp
+         0jyXVWtdutNJJHkcZYI1wtF/Fh28D/GOTeRKQCjxpdVfBB7uXH0bW98PP2rXuRau+q
+         HzyjEe3P+f3kwsG6F4P2+ZbZAuKck8blTGUKnJrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 23/74] ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
-Date:   Tue,  7 Jan 2020 21:54:48 +0100
-Message-Id: <20200107205153.292567908@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>,
+        syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 22/74] drm: limit to INT_MAX in create_blob ioctl
+Date:   Tue,  7 Jan 2020 21:54:47 +0100
+Message-Id: <20200107205151.974994321@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
 References: <20200107205135.369001641@linuxfoundation.org>
@@ -59,64 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 0aec96f5897ac16ad9945f531b4bef9a2edd2ebd upstream.
+[ Upstream commit 5bf8bec3f4ce044a223c40cbce92590d938f0e9c ]
 
-Jia-Ju Bai reported a possible sleep-in-atomic scenario in the ice1724
-driver with Infrasonic Quartet support code: namely, ice->set_rate
-callback gets called inside ice->reg_lock spinlock, while the callback
-in quartet.c holds ice->gpio_mutex.
+The hardened usercpy code is too paranoid ever since commit 6a30afa8c1fb
+("uaccess: disallow > INT_MAX copy sizes")
 
-This patch fixes the invalid call: it simply moves the calls of
-ice->set_rate and ice->set_mclk callbacks outside the spinlock.
+Code itself should have been fine as-is.
 
-Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/5d43135e-73b9-a46a-2155-9e91d0dcdf83@gmail.com
-Link: https://lore.kernel.org/r/20191218192606.12866-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20191106164755.31478-1-daniel.vetter@ffwll.ch
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
+Fixes: 6a30afa8c1fb ("uaccess: disallow > INT_MAX copy sizes")
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/ice1712/ice1724.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/ice1712/ice1724.c
-+++ b/sound/pci/ice1712/ice1724.c
-@@ -661,6 +661,7 @@ static int snd_vt1724_set_pro_rate(struc
- 	unsigned long flags;
- 	unsigned char mclk_change;
- 	unsigned int i, old_rate;
-+	bool call_set_rate = false;
+diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
+index 78e630771214..9decd981d94e 100644
+--- a/drivers/gpu/drm/drm_property.c
++++ b/drivers/gpu/drm/drm_property.c
+@@ -540,7 +540,7 @@ drm_property_create_blob(struct drm_device *dev, size_t length,
+ 	struct drm_property_blob *blob;
+ 	int ret;
  
- 	if (rate > ice->hw_rates->list[ice->hw_rates->count - 1])
- 		return -EINVAL;
-@@ -684,7 +685,7 @@ static int snd_vt1724_set_pro_rate(struc
- 		 * setting clock rate for internal clock mode */
- 		old_rate = ice->get_rate(ice);
- 		if (force || (old_rate != rate))
--			ice->set_rate(ice, rate);
-+			call_set_rate = true;
- 		else if (rate == ice->cur_rate) {
- 			spin_unlock_irqrestore(&ice->reg_lock, flags);
- 			return 0;
-@@ -692,12 +693,14 @@ static int snd_vt1724_set_pro_rate(struc
- 	}
+-	if (!length || length > ULONG_MAX - sizeof(struct drm_property_blob))
++	if (!length || length > INT_MAX - sizeof(struct drm_property_blob))
+ 		return ERR_PTR(-EINVAL);
  
- 	ice->cur_rate = rate;
-+	spin_unlock_irqrestore(&ice->reg_lock, flags);
-+
-+	if (call_set_rate)
-+		ice->set_rate(ice, rate);
- 
- 	/* setting master clock */
- 	mclk_change = ice->set_mclk(ice, rate);
- 
--	spin_unlock_irqrestore(&ice->reg_lock, flags);
--
- 	if (mclk_change && ice->gpio.i2s_mclk_changed)
- 		ice->gpio.i2s_mclk_changed(ice);
- 	if (ice->gpio.set_pro_rate)
+ 	blob = kvzalloc(sizeof(struct drm_property_blob)+length, GFP_KERNEL);
+-- 
+2.20.1
+
 
 
