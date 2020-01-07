@@ -2,58 +2,51 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DB2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BFCC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CBC214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CEBB21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 20:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430717;
-	bh=VszkgkuGVtd5AejUcO16fOLaWvuil+mFODEPGFVBXYc=;
+	s=default; t=1578430725;
+	bh=X2T1xFRrwFRlw1ojEn4t8926BuDm9pmQVOKq6aHedYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p57rVRxplDcYOqWvpsjoAtEcyNnvpZfLJCEuQd7tQCjTKECNvveFkzEtXxs2Bhi5C
-	 /11aA0SZamPEtnelc2f0O3rw2lr1HpnHlnlmmpujVxJAtRdb9NK/a9AiHL6WfbGcAH
-	 1oJTkuA7B3vwEMRVHy0nC53zL1zKkF3zYg7UbyHs=
+	b=04p4ykdLTtHzQjKS98KNCXbMrNVk8Qd9txP+8yunt57FxWW9Bdx2KnhmYVByGXz3e
+	 yRDksTvDmm2uTWE4uOdgY4OX9O3IefwGw8Cis8Vn3qzEka0r+BVn3gRPajpFzM88Qf
+	 bYSRZ65ADsz3U2SlexWwaKo0L5Km9y5Havyhet2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgAGU6g (ORCPT
+        id S1727936AbgAGU6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:58:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 15:58:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727897AbgAGU6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 15:58:33 -0500
+        id S1726803AbgAGU6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 15:58:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46509208C4;
-        Tue,  7 Jan 2020 20:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96FD921744;
+        Tue,  7 Jan 2020 20:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430712;
-        bh=VszkgkuGVtd5AejUcO16fOLaWvuil+mFODEPGFVBXYc=;
+        s=default; t=1578430720;
+        bh=X2T1xFRrwFRlw1ojEn4t8926BuDm9pmQVOKq6aHedYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMhSKHNJgSS2Of2avEYMtTye0vh2QInQoWMe6gmXJv6dQnxnYHeukpnLdn/snFjxH
-         a4y9c0jN/gX4s2WP5LWL1hHe35aKVwQAW+C413bHWl882lFvHIII1WMPSPn/MAlka6
-         v2Oo3azLTBeRyJZFnloiQN0ihAiqGlurUDiC//Qk=
+        b=GoaOlbVsjGO5Y50jxwdIXeJYBvUwxug/Wr96ptK1FW/tSQhh1ejcn/b6BVZxccTus
+         Xx/SDCz0uqf/xbWyEj6JMFyJiUZhByc372pVONqvsxwUqbZzd66zNClpVInYoZ19B3
+         oO02VKQ45gkp1T9PssxsDKb4H8RhRIwQRhK7A/FY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/191] mm: drop mmap_sem before calling balance_dirty_pages() in write fault
-Date:   Tue,  7 Jan 2020 21:53:05 +0100
-Message-Id: <20200107205336.471219797@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 068/191] ALSA: usb-audio: set the interface format after resume on Dell WD19
+Date:   Tue,  7 Jan 2020 21:53:08 +0100
+Message-Id: <20200107205336.629523055@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -66,216 +59,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 89b15332af7c0312a41e50846819ca6613b58b4c ]
+commit 92adc96f8eecd9522a907c197cc3d62e405539fe upstream.
 
-One of our services is observing hanging ps/top/etc under heavy write
-IO, and the task states show this is an mmap_sem priority inversion:
+Recently we found the headset-mic on the Dell Dock WD19 doesn't work
+anymore after s3 (s2i or deep), this problem could be workarounded by
+closing (pcm_close) the app and then reopening (pcm_open) the app, so
+this bug is not easy to be detected by users.
 
-A write fault is holding the mmap_sem in read-mode and waiting for
-(heavily cgroup-limited) IO in balance_dirty_pages():
+When problem happens, retire_capture_urb() could still be called
+periodically, but the size of captured data is always 0, it could be
+a firmware bug on the dock. Anyway I found after resuming, the
+snd_usb_pcm_prepare() will be called, and if we forcibly run
+set_format() to set the interface and its endpoint, the capture
+size will be normal again. This problem and workaound also apply to
+playback.
 
-    balance_dirty_pages+0x724/0x905
-    balance_dirty_pages_ratelimited+0x254/0x390
-    fault_dirty_shared_page.isra.96+0x4a/0x90
-    do_wp_page+0x33e/0x400
-    __handle_mm_fault+0x6f0/0xfa0
-    handle_mm_fault+0xe4/0x200
-    __do_page_fault+0x22b/0x4a0
-    page_fault+0x45/0x50
+To fix it in the kernel, add a quirk to let set_format() run
+forcibly once after resume.
 
-Somebody tries to change the address space, contending for the mmap_sem in
-write-mode:
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191218132650.6303-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-    call_rwsem_down_write_failed_killable+0x13/0x20
-    do_mprotect_pkey+0xa8/0x330
-    SyS_mprotect+0xf/0x20
-    do_syscall_64+0x5b/0x100
-    entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-
-The waiting writer locks out all subsequent readers to avoid lock
-starvation, and several threads can be seen hanging like this:
-
-    call_rwsem_down_read_failed+0x14/0x30
-    proc_pid_cmdline_read+0xa0/0x480
-    __vfs_read+0x23/0x140
-    vfs_read+0x87/0x130
-    SyS_read+0x42/0x90
-    do_syscall_64+0x5b/0x100
-    entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-
-To fix this, do what we do for cache read faults already: drop the
-mmap_sem before calling into anything IO bound, in this case the
-balance_dirty_pages() function, and return VM_FAULT_RETRY.
-
-Link: http://lkml.kernel.org/r/20190924194238.GA29030@cmpxchg.org
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/filemap.c  | 21 ---------------------
- mm/internal.h | 21 +++++++++++++++++++++
- mm/memory.c   | 38 +++++++++++++++++++++++++++-----------
- 3 files changed, 48 insertions(+), 32 deletions(-)
+ sound/usb/card.h         |    1 +
+ sound/usb/pcm.c          |   21 +++++++++++++++++++--
+ sound/usb/quirks-table.h |    3 ++-
+ sound/usb/quirks.c       |   11 +++++++++++
+ sound/usb/usbaudio.h     |    3 ++-
+ 5 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 85b7d087eb45..1f5731768222 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2329,27 +2329,6 @@ EXPORT_SYMBOL(generic_file_read_iter);
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -145,6 +145,7 @@ struct snd_usb_substream {
+ 	struct snd_usb_endpoint *sync_endpoint;
+ 	unsigned long flags;
+ 	bool need_setup_ep;		/* (re)configure EP at prepare? */
++	bool need_setup_fmt;		/* (re)configure fmt after resume? */
+ 	unsigned int speed;		/* USB_SPEED_XXX */
  
- #ifdef CONFIG_MMU
- #define MMAP_LOTSAMISS  (100)
--static struct file *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
--					     struct file *fpin)
--{
--	int flags = vmf->flags;
--
--	if (fpin)
--		return fpin;
--
--	/*
--	 * FAULT_FLAG_RETRY_NOWAIT means we don't want to wait on page locks or
--	 * anything, so we only pin the file and drop the mmap_sem if only
--	 * FAULT_FLAG_ALLOW_RETRY is set.
--	 */
--	if ((flags & (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
--	    FAULT_FLAG_ALLOW_RETRY) {
--		fpin = get_file(vmf->vma->vm_file);
--		up_read(&vmf->vma->vm_mm->mmap_sem);
--	}
--	return fpin;
--}
--
- /*
-  * lock_page_maybe_drop_mmap - lock the page, possibly dropping the mmap_sem
-  * @vmf - the vm_fault for this fault.
-diff --git a/mm/internal.h b/mm/internal.h
-index 0d5f720c75ab..7dd7fbb577a9 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -362,6 +362,27 @@ vma_address(struct page *page, struct vm_area_struct *vma)
- 	return max(start, vma->vm_start);
+ 	u64 formats;			/* format bitmasks (all or'ed) */
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -510,11 +510,11 @@ static int set_format(struct snd_usb_sub
+ 		return -EINVAL;
+ 	altsd = get_iface_desc(alts);
+ 
+-	if (fmt == subs->cur_audiofmt)
++	if (fmt == subs->cur_audiofmt && !subs->need_setup_fmt)
+ 		return 0;
+ 
+ 	/* close the old interface */
+-	if (subs->interface >= 0 && subs->interface != fmt->iface) {
++	if (subs->interface >= 0 && (subs->interface != fmt->iface || subs->need_setup_fmt)) {
+ 		if (!subs->stream->chip->keep_iface) {
+ 			err = usb_set_interface(subs->dev, subs->interface, 0);
+ 			if (err < 0) {
+@@ -528,6 +528,9 @@ static int set_format(struct snd_usb_sub
+ 		subs->altset_idx = 0;
+ 	}
+ 
++	if (subs->need_setup_fmt)
++		subs->need_setup_fmt = false;
++
+ 	/* set interface */
+ 	if (iface->cur_altsetting != alts) {
+ 		err = snd_usb_select_mode_quirk(subs, fmt);
+@@ -1735,6 +1738,13 @@ static int snd_usb_substream_playback_tr
+ 		subs->data_endpoint->retire_data_urb = retire_playback_urb;
+ 		subs->running = 0;
+ 		return 0;
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
++			stop_endpoints(subs, true);
++			subs->need_setup_fmt = true;
++			return 0;
++		}
++		break;
+ 	}
+ 
+ 	return -EINVAL;
+@@ -1767,6 +1777,13 @@ static int snd_usb_substream_capture_tri
+ 		subs->data_endpoint->retire_data_urb = retire_capture_urb;
+ 		subs->running = 1;
+ 		return 0;
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		if (subs->stream->chip->setup_fmt_after_resume_quirk) {
++			stop_endpoints(subs, true);
++			subs->need_setup_fmt = true;
++			return 0;
++		}
++		break;
+ 	}
+ 
+ 	return -EINVAL;
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3466,7 +3466,8 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ 		.vendor_name = "Dell",
+ 		.product_name = "WD19 Dock",
+ 		.profile_name = "Dell-WD15-Dock",
+-		.ifnum = QUIRK_NO_INTERFACE
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_SETUP_FMT_AFTER_RESUME
+ 	}
+ },
+ /* MOTU Microbook II */
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -508,6 +508,16 @@ static int create_standard_mixer_quirk(s
+ 	return snd_usb_create_mixer(chip, quirk->ifnum, 0);
  }
  
-+static inline struct file *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
-+						    struct file *fpin)
++
++static int setup_fmt_after_resume_quirk(struct snd_usb_audio *chip,
++				       struct usb_interface *iface,
++				       struct usb_driver *driver,
++				       const struct snd_usb_audio_quirk *quirk)
 +{
-+	int flags = vmf->flags;
-+
-+	if (fpin)
-+		return fpin;
-+
-+	/*
-+	 * FAULT_FLAG_RETRY_NOWAIT means we don't want to wait on page locks or
-+	 * anything, so we only pin the file and drop the mmap_sem if only
-+	 * FAULT_FLAG_ALLOW_RETRY is set.
-+	 */
-+	if ((flags & (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
-+	    FAULT_FLAG_ALLOW_RETRY) {
-+		fpin = get_file(vmf->vma->vm_file);
-+		up_read(&vmf->vma->vm_mm->mmap_sem);
-+	}
-+	return fpin;
++	chip->setup_fmt_after_resume_quirk = 1;
++	return 1;	/* Continue with creating streams and mixer */
 +}
 +
- #else /* !CONFIG_MMU */
- static inline void clear_page_mlock(struct page *page) { }
- static inline void mlock_vma_page(struct page *page) { }
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..cb7c940cf800 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2227,10 +2227,11 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
+ /*
+  * audio-interface quirks
   *
-  * The function expects the page to be locked and unlocks it.
-  */
--static void fault_dirty_shared_page(struct vm_area_struct *vma,
--				    struct page *page)
-+static vm_fault_t fault_dirty_shared_page(struct vm_fault *vmf)
- {
-+	struct vm_area_struct *vma = vmf->vma;
- 	struct address_space *mapping;
-+	struct page *page = vmf->page;
- 	bool dirtied;
- 	bool page_mkwrite = vma->vm_ops && vma->vm_ops->page_mkwrite;
+@@ -546,6 +556,7 @@ int snd_usb_create_quirk(struct snd_usb_
+ 		[QUIRK_AUDIO_EDIROL_UAXX] = create_uaxx_quirk,
+ 		[QUIRK_AUDIO_ALIGN_TRANSFER] = create_align_transfer_quirk,
+ 		[QUIRK_AUDIO_STANDARD_MIXER] = create_standard_mixer_quirk,
++		[QUIRK_SETUP_FMT_AFTER_RESUME] = setup_fmt_after_resume_quirk,
+ 	};
  
-@@ -2245,16 +2246,30 @@ static void fault_dirty_shared_page(struct vm_area_struct *vma,
- 	mapping = page_rmapping(page);
- 	unlock_page(page);
+ 	if (quirk->type < QUIRK_TYPE_COUNT) {
+--- a/sound/usb/usbaudio.h
++++ b/sound/usb/usbaudio.h
+@@ -33,7 +33,7 @@ struct snd_usb_audio {
+ 	wait_queue_head_t shutdown_wait;
+ 	unsigned int txfr_quirk:1; /* Subframe boundaries on transfers */
+ 	unsigned int tx_length_quirk:1; /* Put length specifier in transfers */
+-	
++	unsigned int setup_fmt_after_resume_quirk:1; /* setup the format to interface after resume */
+ 	int num_interfaces;
+ 	int num_suspended_intf;
+ 	int sample_rate_read_error;
+@@ -98,6 +98,7 @@ enum quirk_type {
+ 	QUIRK_AUDIO_EDIROL_UAXX,
+ 	QUIRK_AUDIO_ALIGN_TRANSFER,
+ 	QUIRK_AUDIO_STANDARD_MIXER,
++	QUIRK_SETUP_FMT_AFTER_RESUME,
  
-+	if (!page_mkwrite)
-+		file_update_time(vma->vm_file);
-+
-+	/*
-+	 * Throttle page dirtying rate down to writeback speed.
-+	 *
-+	 * mapping may be NULL here because some device drivers do not
-+	 * set page.mapping but still dirty their pages
-+	 *
-+	 * Drop the mmap_sem before waiting on IO, if we can. The file
-+	 * is pinning the mapping, as per above.
-+	 */
- 	if ((dirtied || page_mkwrite) && mapping) {
--		/*
--		 * Some device drivers do not set page.mapping
--		 * but still dirty their pages
--		 */
-+		struct file *fpin;
-+
-+		fpin = maybe_unlock_mmap_for_io(vmf, NULL);
- 		balance_dirty_pages_ratelimited(mapping);
-+		if (fpin) {
-+			fput(fpin);
-+			return VM_FAULT_RETRY;
-+		}
- 	}
- 
--	if (!page_mkwrite)
--		file_update_time(vma->vm_file);
-+	return 0;
- }
- 
- /*
-@@ -2497,6 +2512,7 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
- 	__releases(vmf->ptl)
- {
- 	struct vm_area_struct *vma = vmf->vma;
-+	vm_fault_t ret = VM_FAULT_WRITE;
- 
- 	get_page(vmf->page);
- 
-@@ -2520,10 +2536,10 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
- 		wp_page_reuse(vmf);
- 		lock_page(vmf->page);
- 	}
--	fault_dirty_shared_page(vma, vmf->page);
-+	ret |= fault_dirty_shared_page(vmf);
- 	put_page(vmf->page);
- 
--	return VM_FAULT_WRITE;
-+	return ret;
- }
- 
- /*
-@@ -3567,7 +3583,7 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
- 		return ret;
- 	}
- 
--	fault_dirty_shared_page(vma, vmf->page);
-+	ret |= fault_dirty_shared_page(vmf);
- 	return ret;
- }
- 
--- 
-2.20.1
-
+ 	QUIRK_TYPE_COUNT
+ };
 
 
