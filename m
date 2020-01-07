@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3671C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320C0C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CC820678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA1E20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431168;
-	bh=3YajkWlGnlVSLlsI8KWCB4f2UnTJCeARHNTYQIc7B3E=;
+	s=default; t=1578431174;
+	bh=s4dJlHfvG3lTvGvTHMdUwLLQc2nWQ+zsBKgEgl7p50k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9PuIJhaZG8ZMVpVsfCe5WH7ujokV96T//7Ac5oenJecf9IMwxjanrheflAkfUO5b
-	 X0wjCbuB00lbTrIHMF4VK3EC7RL8PBqSHANSE1hrksR9rf3HDV9UxhWoIQM4AVKjpE
-	 9bOisDvZloTK8PqVZfsE6p+aiN8chO/sAm5xq3oo=
+	b=XF+297nA2OXo0WwIueSW6IEPgZxKQt+d0yLfIon4e3y/BDdTxQrt16yh2k70Z4c7V
+	 aGUUyElmvYMgvT1e1/TC722RUyd3Yf5ARW0cAQV07Zd0/frFONpkrJVNeducnHboHp
+	 xW0gyYFRDII4trdsXaNSA0kzVqXAL8xzO0Anw+zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgAGVGH (ORCPT
+        id S1729362AbgAGVGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:06:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:06:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgAGVGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:06:03 -0500
+        id S1729352AbgAGVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:06:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F362077B;
-        Tue,  7 Jan 2020 21:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA9FE20678;
+        Tue,  7 Jan 2020 21:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431163;
-        bh=3YajkWlGnlVSLlsI8KWCB4f2UnTJCeARHNTYQIc7B3E=;
+        s=default; t=1578431170;
+        bh=s4dJlHfvG3lTvGvTHMdUwLLQc2nWQ+zsBKgEgl7p50k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Va9ksbbgY0PnNbBSNGCcuTIsO3HAOqUiswXW8kn0HcTf4s4D0/rlHgLPm1aee1DQo
-         Nq6Al3g0eEhaHWy5Cj5FB6AdJKoa6fKHJqgXURRXaBB8NVdCxwourAbyDmgqUZ4zy3
-         oik5Xk+aLSj1b9Wbsoh+RgdWLdIMNitM5NfFwkP8=
+        b=KdemxxQi2IskTBrceczBOPeik8wVEsqdWtqf8Vj8HhqpoTDVyJ+449ZmhERbaBXwE
+         flMsc1GcbRvSNgRImzs6N7xrlwqwW2c8H2YYrUzOez1zpPqH/VORUb88smkKmxsK65
+         Xl5Jstdx51ovcc3929yZJikGIlpQMOLUKgdktUIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 060/115] ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
-Date:   Tue,  7 Jan 2020 21:54:30 +0100
-Message-Id: <20200107205303.221949031@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 045/115] ALSA: hda/realtek - Add headset Mic no shutup for ALC283
+Date:   Tue,  7 Jan 2020 21:54:15 +0100
+Message-Id: <20200107205302.088634775@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,76 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit 84b032dbfdf1c139cd2b864e43959510646975f8 upstream.
+commit 66c5d718e5a6f80153b5e8d6ad8ba8e9c3320839 upstream.
 
-This reverts commit 6bb86fefa086faba7b60bb452300b76a47cde1a5
-("libahci_platform: Staticize ahci_platform_<en/dis>able_phys()") we are
-going to need ahci_platform_{enable,disable}_phys() in a subsequent
-commit for ahci_brcm.c in order to properly control the PHY
-initialization order.
+Chrome machine had humming noise from external speaker plugin at
+codec D3 state.
 
-Also make sure the function prototypes are declared in
-include/linux/ahci_platform.h as a result.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/2692449396954c6c968f5b75e2660358@realtek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/libahci_platform.c |    6 ++++--
- include/linux/ahci_platform.h  |    2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -47,7 +47,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_ops);
-  * RETURNS:
-  * 0 on success otherwise a negative error code
-  */
--static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
- {
- 	int rc, i;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -513,6 +513,7 @@ static void alc_shutup_pins(struct hda_c
+ 	struct alc_spec *spec = codec->spec;
  
-@@ -72,6 +72,7 @@ disable_phys:
- 	}
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
- 
- /**
-  * ahci_platform_disable_phys - Disable PHYs
-@@ -79,7 +80,7 @@ disable_phys:
-  *
-  * This function disables all PHYs found in hpriv->phys.
-  */
--static void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
- {
- 	int i;
- 
-@@ -88,6 +89,7 @@ static void ahci_platform_disable_phys(s
- 		phy_exit(hpriv->phys[i]);
- 	}
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
- 
- /**
-  * ahci_platform_enable_clks - Enable platform clocks
---- a/include/linux/ahci_platform.h
-+++ b/include/linux/ahci_platform.h
-@@ -23,6 +23,8 @@ struct ahci_host_priv;
- struct platform_device;
- struct scsi_host_template;
- 
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
- void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
+ 	switch (codec->core.vendor_id) {
++	case 0x10ec0283:
+ 	case 0x10ec0286:
+ 	case 0x10ec0288:
+ 	case 0x10ec0298:
 
 
