@@ -2,124 +2,65 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6088AC33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F83C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368842081E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="gbdz0rmo"
+	by mail.kernel.org (Postfix) with ESMTP id 363E72087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 15:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgAGPuF (ORCPT
+        id S1728430AbgAGPvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 10:50:05 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38566 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbgAGPuF (ORCPT
+        Tue, 7 Jan 2020 10:51:05 -0500
+Received: from unsecure-smtp.soverin.net ([94.130.159.241]:34241 "EHLO
+        g02sm02.soverin.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727994AbgAGPvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:50:05 -0500
-Received: by mail-il1-f193.google.com with SMTP id f5so46081719ilq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 07:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dM+tQu6OkciIx8Fh2z8Ykuqej0TW6fLMjStC1bJEE7I=;
-        b=gbdz0rmofSp363r0EzVMTy17sWDBslvGlYGctVZO81OyGq0IouxgVn5Lxh2+ABsLEa
-         oMNNo9vvXeQQzj2xGg+AYuafuEFMsYmgC0VVs2vsNwV0cz1ufdlfWe+GWfH84y041Dye
-         E+3sZLggrsV5Yw8+ORjIr0f1e9pZAlrbbNcmdRo/BsDUR+mYCBxcyzcgbtQGuJ5moBi5
-         4SfxzVUvkftqvavqluEo9nRnNNV+19rqxUHZDi9/1Xc2nweL+7H1UKoMhiA/ribVYlwj
-         7K+zgyxbPeWczDKOixusCrBfBB2N+g9rtSjakbAxi9CL1U40tj5L3azFw1XnyocmtKNq
-         7gpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dM+tQu6OkciIx8Fh2z8Ykuqej0TW6fLMjStC1bJEE7I=;
-        b=hL4BMqz1whh3TK/aITcN515phXCwU5ixsg9imKZP0//dqIdRasm/h+INC5tUNRCoLJ
-         6Zx+ZKFGanmN5FbStUKKj7tfU2px7Ne9+BIz2C8Pq1fYsj1s8zQULK/IiaTGq1Ql4EbD
-         xD1YMmiGpmV8YYUdwuykK7HLSaqOdxQ6YKWLmsboeiktkVx0bRWnLjiI4DkihGd4K6Ni
-         HdflQtI35CLZh/oxm/FTzrIOI3tWwK/R6txG1qDAEc/DNrVcEn7Yu1q1XWvN7+bUwVYo
-         1CYw2KtUx/1DI7SlCo7RhPh/w0unpLplBCEHP6xUy0KnlEE02pR4ozg249Rx3CIBb3wV
-         MDVg==
-X-Gm-Message-State: APjAAAU/ToPNkLgtcJh+6pQ74PFBN9ZnDVcsCbr/DJy5n2SFKImLNikF
-        ILREaEqXN2+mlCCRrbNc/rKWrZOGgQsVAzcACVKOfw==
-X-Google-Smtp-Source: APXvYqwtSiv4QVl4s0rBRLRrvIZh5ldy/c7Mu44zSQXNlW/uEb7q2Mf6MgtVf91SCmamEWosUmvRp+1ZqbmgKp8akac=
-X-Received: by 2002:a92:8d88:: with SMTP id w8mr93382387ill.71.1578412203147;
- Tue, 07 Jan 2020 07:50:03 -0800 (PST)
+        Tue, 7 Jan 2020 10:51:04 -0500
+X-Greylist: delayed 386 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 10:51:03 EST
+Received: from soverin.net by soverin.net
+From:   Jack Mitchell <ml@embed.me.uk>
+Cc:     ml@embed.me.uk, Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] watchdog: dw_wdt: ping watchdog to reset countdown before start
+Date:   Tue,  7 Jan 2020 15:50:53 +0000
+Message-Id: <20200107155054.278444-1-ml@embed.me.uk>
 MIME-Version: 1.0
-References: <20191230102942.18395-1-jinpuwang@gmail.com> <20191230102942.18395-15-jinpuwang@gmail.com>
- <bb668d4e-f768-a408-c541-d862d1a2f959@acm.org>
-In-Reply-To: <bb668d4e-f768-a408-c541-d862d1a2f959@acm.org>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 7 Jan 2020 16:49:52 +0100
-Message-ID: <CAMGffEmrHbw8wnsTD0BZV9O38-pJ0Yv7VLkNMJwGoRyOp9Yqfg@mail.gmail.com>
-Subject: Re: [PATCH v6 14/25] rtrs: a bit of documentation
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jack Wang <jinpuwang@gmail.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>, rpenyaev@suse.de,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Virus-Scanned: clamav-milter 0.99.2 at g02sm02
+X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 11:21 PM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 12/30/19 2:29 AM, Jack Wang wrote:
-> > diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-client b/Documentation/ABI/testing/sysfs-class-rtrs-client
-> > new file mode 100644
-> > index 000000000000..8b219cf6c5c4
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-class-rtrs-client
-> > @@ -0,0 +1,190 @@
-> > +What:                /sys/class/rtrs-client
-> > +Date:                Jan 2020
-> > +KernelVersion:       5.6
-> > +Contact:     Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
-> > +Description:
-> > +When a user of RTRS API creates a new session, a directory entry with
-> > +the name of that session is created under /sys/class/rtrs-client/<session-name>/
->
-> Thank you for having included this ABI description. This is very
-> helpful. Please follow the format documented in Documentation/ABI/README
-> and make sure that all text, including the description, start in column
-> 17 and please use tabs for indentation.
-will fix.
->
-> > diff --git a/drivers/infiniband/ulp/rtrs/README b/drivers/infiniband/ulp/rtrs/README
-> > new file mode 100644
-> > index 000000000000..59ad60318a18
-> > --- /dev/null
-> > +++ b/drivers/infiniband/ulp/rtrs/README
-> > @@ -0,0 +1,149 @@
-> > +****************************
-> > +InfiniBand Transport (RTRS)
-> > +****************************
-> > +
-> > +RTRS (InfiniBand Transport) is a reliable high speed transport library
-> > +which provides support to establish optimal number of connections
-> > +between client and server machines using RDMA (InfiniBand, RoCE, iWarp)
-> > +transport. It is optimized to transfer (read/write) IO blocks.
->
-> Is it explained somewhere how the optimal number of connections is
-> determined and also according to which metric the number of connections
-> is optimized? Is the number of connections chosen to minimize latency,
-> maximize IOPS or perhaps to optimize yet another metric?
-RTRS creates one connection per CPU, optimize for minimizing latency
-and maximizing IOPS, I would say.
->
-> Thanks,
->
-> Bart.
-Thanks Bart.
+Currently on an rk3288 SoC when trying to use the watchdog the SoC will
+instantly reset. This is due to the watchdog countdown counter being set
+to its initial value of 0x0. Reset the watchdog counter before start in
+order to correctly start the countdown timer from the right position.
+
+Signed-off-by: Jack Mitchell <ml@embed.me.uk>
+---
+ drivers/watchdog/dw_wdt.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index fef7c61f5555..4a902d015bc2 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -135,6 +135,7 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+ 	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+ 
+ 	dw_wdt_set_timeout(wdd, wdd->timeout);
++	dw_wdt_ping(&dw_wdt->wdd);
+ 	dw_wdt_arm_system_reset(dw_wdt);
+ 
+ 	return 0;
+-- 
+2.24.1
+
