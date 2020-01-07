@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CBDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BC6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1894E2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131BD2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578432104;
-	bh=bdTfHbXrSAgAnMP3Fhjwl4O1KnISGipcmSYtsztw+hU=;
+	s=default; t=1578432113;
+	bh=Oony4nhR0CUaLPhPdDdo3DGyFRDYU36KwiIehavZGXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVfBXfdkVFrZeUT1jjdK2YC69gTIxrf0YTfh1jap0Qbswo/+cc5OHrB/NqWSkEdwM
-	 V5Xi7279pWP7VAnmQkPH3d/IqtFa8djlcHcp8aujE0khmqT2anU41VxLrU8NFjN1Cq
-	 wZgzHNhtddbz7vUO5dvLUIgjTgWrmFYT71CU4jT0=
+	b=fCy+utLRfjO2fPZA9RHolI3jilhr/ouMUps6xoywfolQlgyoEm7WBrr5LsHAan4Vu
+	 1m3vkgs9pOYsKXfgdpvJ4YuZQ5y8oLV0aQXo0/2o0OQ4cWHyO43x1/b/kvGoJXwEqv
+	 Qmfory8JOsy1icJgiD+7pdYdPFtLnT/schclDaFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgAGVVm (ORCPT
+        id S1729112AbgAGVVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:21:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44378 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:21:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgAGVDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:03:10 -0500
+        id S1728572AbgAGVDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:03:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 577F42077B;
-        Tue,  7 Jan 2020 21:03:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CFF20678;
+        Tue,  7 Jan 2020 21:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430988;
-        bh=bdTfHbXrSAgAnMP3Fhjwl4O1KnISGipcmSYtsztw+hU=;
+        s=default; t=1578430981;
+        bh=Oony4nhR0CUaLPhPdDdo3DGyFRDYU36KwiIehavZGXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOXZWnM+VzdihQyTY5+1h/c25fzkc73M1/J63OOQs5/xu0e4/ZO0M9iHg6oSzmbPc
-         tZqGcHBg77WnH2s9Pf577nkGlvpsJ7JjB72/US532hWoI0RkuiEWC/zAgE7w+jBxLv
-         sBLkW+Qu0C7dYLDgTwLStRGeGpqukemWNy031hSk=
+        b=ab8w0N1Co1f0/gLCTfluAkkbq6+nwWQtoGoyvQAe92tJ3Yb7KW2G2AHh8QaQZH4Cs
+         GkCsKDCG4KgB5go1Fuwpw1Hfi1g4jxsnt8OeQLayAgJ1HsRU8GI1DP3LmOjMswkpqw
+         47uUSLYToJyVqHjG+g0nkrgDbkun0cOUb/KTzvzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 180/191] Btrfs: only associate the locked page with one async_chunk struct
-Date:   Tue,  7 Jan 2020 21:55:00 +0100
-Message-Id: <20200107205342.628178029@linuxfoundation.org>
+Subject: [PATCH 5.4 177/191] net: add annotations on hh->hh_len lockless accesses
+Date:   Tue,  7 Jan 2020 21:54:57 +0100
+Message-Id: <20200107205342.470440157@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -60,188 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Mason <clm@fb.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 1d53c9e6723022b12e4a5ed4b141f67c834b7f6f ]
+[ Upstream commit c305c6ae79e2ce20c22660ceda94f0d86d639a82 ]
 
-The btrfs writepages function collects a large range of pages flagged
-for delayed allocation, and then sends them down through the COW code
-for processing.  When compression is on, we allocate one async_chunk
-structure for every 512K, and then run those pages through the
-compression code for IO submission.
+KCSAN reported a data-race [1]
 
-writepages starts all of this off with a single page, locked by the
-original call to extent_write_cache_pages(), and it's important to keep
-track of this page because it has already been through
-clear_page_dirty_for_io().
+While we can use READ_ONCE() on the read sides,
+we need to make sure hh->hh_len is written last.
 
-The btrfs async_chunk struct has a pointer to the locked_page, and when
-we're redirtying the page because compression had to fallback to
-uncompressed IO, we use page->index to decide if a given async_chunk
-struct really owns that page.
+[1]
 
-But, this is racey.  If a given delalloc range is broken up into two
-async_chunks (chunkA and chunkB), we can end up with something like
-this:
+BUG: KCSAN: data-race in eth_header_cache / neigh_resolve_output
 
- compress_file_range(chunkA)
- submit_compress_extents(chunkA)
- submit compressed bios(chunkA)
- put_page(locked_page)
+write to 0xffff8880b9dedcb8 of 4 bytes by task 29760 on cpu 0:
+ eth_header_cache+0xa9/0xd0 net/ethernet/eth.c:247
+ neigh_hh_init net/core/neighbour.c:1463 [inline]
+ neigh_resolve_output net/core/neighbour.c:1480 [inline]
+ neigh_resolve_output+0x415/0x470 net/core/neighbour.c:1470
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ ndisc_send_skb+0x459/0x5f0 net/ipv6/ndisc.c:505
+ ndisc_send_ns+0x207/0x430 net/ipv6/ndisc.c:647
+ rt6_probe_deferred+0x98/0xf0 net/ipv6/route.c:615
+ process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+ worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
-				 compress_file_range(chunkB)
-				 ...
+read to 0xffff8880b9dedcb8 of 4 bytes by task 29572 on cpu 1:
+ neigh_resolve_output net/core/neighbour.c:1479 [inline]
+ neigh_resolve_output+0x113/0x470 net/core/neighbour.c:1470
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ NF_HOOK include/linux/netfilter.h:305 [inline]
+ ndisc_send_skb+0x459/0x5f0 net/ipv6/ndisc.c:505
+ ndisc_send_ns+0x207/0x430 net/ipv6/ndisc.c:647
+ rt6_probe_deferred+0x98/0xf0 net/ipv6/route.c:615
+ process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+ worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
-Or:
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 29572 Comm: kworker/1:4 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events rt6_probe_deferred
 
- async_cow_submit
-  submit_compressed_extents <--- falls back to buffered writeout
-   cow_file_range
-    extent_clear_unlock_delalloc
-     __process_pages_contig
-       put_page(locked_pages)
-
-					    async_cow_submit
-
-The end result is that chunkA is completed and cleaned up before chunkB
-even starts processing.  This means we can free locked_page() and reuse
-it elsewhere.  If we get really lucky, it'll have the same page->index
-in its new home as it did before.
-
-While we're processing chunkB, we might decide we need to fall back to
-uncompressed IO, and so compress_file_range() will call
-__set_page_dirty_nobufers() on chunkB->locked_page.
-
-Without cgroups in use, this creates as a phantom dirty page, which
-isn't great but isn't the end of the world. What can happen, it can go
-through the fixup worker and the whole COW machinery again:
-
-in submit_compressed_extents():
-  while (async extents) {
-  ...
-    cow_file_range
-    if (!page_started ...)
-      extent_write_locked_range
-    else if (...)
-      unlock_page
-    continue;
-
-This hasn't been observed in practice but is still possible.
-
-With cgroups in use, we might crash in the accounting code because
-page->mapping->i_wb isn't set.
-
-  BUG: unable to handle kernel NULL pointer dereference at 00000000000000d0
-  IP: percpu_counter_add_batch+0x11/0x70
-  PGD 66534e067 P4D 66534e067 PUD 66534f067 PMD 0
-  Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
-  CPU: 16 PID: 2172 Comm: rm Not tainted
-  RIP: 0010:percpu_counter_add_batch+0x11/0x70
-  RSP: 0018:ffffc9000a97bbe0 EFLAGS: 00010286
-  RAX: 0000000000000005 RBX: 0000000000000090 RCX: 0000000000026115
-  RDX: 0000000000000030 RSI: ffffffffffffffff RDI: 0000000000000090
-  RBP: 0000000000000000 R08: fffffffffffffff5 R09: 0000000000000000
-  R10: 00000000000260c0 R11: ffff881037fc26c0 R12: ffffffffffffffff
-  R13: ffff880fe4111548 R14: ffffc9000a97bc90 R15: 0000000000000001
-  FS:  00007f5503ced480(0000) GS:ffff880ff7200000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000000d0 CR3: 00000001e0459005 CR4: 0000000000360ee0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   account_page_cleaned+0x15b/0x1f0
-   __cancel_dirty_page+0x146/0x200
-   truncate_cleanup_page+0x92/0xb0
-   truncate_inode_pages_range+0x202/0x7d0
-   btrfs_evict_inode+0x92/0x5a0
-   evict+0xc1/0x190
-   do_unlinkat+0x176/0x280
-   do_syscall_64+0x63/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x42/0xb7
-
-The fix here is to make asyc_chunk->locked_page NULL everywhere but the
-one async_chunk struct that's allowed to do things to the locked page.
-
-Link: https://lore.kernel.org/linux-btrfs/c2419d01-5c84-3fb4-189e-4db519d08796@suse.com/
-Fixes: 771ed689d2cd ("Btrfs: Optimize compressed writeback and reads")
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Chris Mason <clm@fb.com>
-[ update changelog from mail thread discussion ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c |  2 +-
- fs/btrfs/inode.c     | 25 +++++++++++++++++++++----
- 2 files changed, 22 insertions(+), 5 deletions(-)
+ drivers/firewire/net.c  | 6 +++++-
+ include/net/neighbour.h | 2 +-
+ net/core/neighbour.c    | 4 ++--
+ net/ethernet/eth.c      | 7 ++++++-
+ 4 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index be9dc78aa727..33c6b191ca59 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -1899,7 +1899,7 @@ static int __process_pages_contig(struct address_space *mapping,
- 			if (page_ops & PAGE_SET_PRIVATE2)
- 				SetPagePrivate2(pages[i]);
- 
--			if (pages[i] == locked_page) {
-+			if (locked_page && pages[i] == locked_page) {
- 				put_page(pages[i]);
- 				pages_locked++;
- 				continue;
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index dc14fc2e4206..0b2758961b1c 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -712,10 +712,12 @@ cleanup_and_bail_uncompressed:
- 	 * to our extent and set things up for the async work queue to run
- 	 * cow_file_range to do the normal delalloc dance.
- 	 */
--	if (page_offset(async_chunk->locked_page) >= start &&
--	    page_offset(async_chunk->locked_page) <= end)
-+	if (async_chunk->locked_page &&
-+	    (page_offset(async_chunk->locked_page) >= start &&
-+	     page_offset(async_chunk->locked_page)) <= end) {
- 		__set_page_dirty_nobuffers(async_chunk->locked_page);
- 		/* unlocked later on in the async handlers */
-+	}
- 
- 	if (redirty)
- 		extent_range_redirty_for_io(inode, start, end);
-@@ -795,7 +797,7 @@ retry:
- 						  async_extent->start +
- 						  async_extent->ram_size - 1,
- 						  WB_SYNC_ALL);
--			else if (ret)
-+			else if (ret && async_chunk->locked_page)
- 				unlock_page(async_chunk->locked_page);
- 			kfree(async_extent);
- 			cond_resched();
-@@ -1264,10 +1266,25 @@ static int cow_file_range_async(struct inode *inode, struct page *locked_page,
- 		async_chunk[i].inode = inode;
- 		async_chunk[i].start = start;
- 		async_chunk[i].end = cur_end;
--		async_chunk[i].locked_page = locked_page;
- 		async_chunk[i].write_flags = write_flags;
- 		INIT_LIST_HEAD(&async_chunk[i].extents);
- 
-+		/*
-+		 * The locked_page comes all the way from writepage and its
-+		 * the original page we were actually given.  As we spread
-+		 * this large delalloc region across multiple async_chunk
-+		 * structs, only the first struct needs a pointer to locked_page
-+		 *
-+		 * This way we don't need racey decisions about who is supposed
-+		 * to unlock it.
-+		 */
-+		if (locked_page) {
-+			async_chunk[i].locked_page = locked_page;
-+			locked_page = NULL;
-+		} else {
-+			async_chunk[i].locked_page = NULL;
-+		}
+diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
+index b132ab9ad607..715e491dfbc3 100644
+--- a/drivers/firewire/net.c
++++ b/drivers/firewire/net.c
+@@ -250,7 +250,11 @@ static int fwnet_header_cache(const struct neighbour *neigh,
+ 	h = (struct fwnet_header *)((u8 *)hh->hh_data + HH_DATA_OFF(sizeof(*h)));
+ 	h->h_proto = type;
+ 	memcpy(h->h_dest, neigh->ha, net->addr_len);
+-	hh->hh_len = FWNET_HLEN;
 +
- 		btrfs_init_work(&async_chunk[i].work, async_cow_start,
- 				async_cow_submit, async_cow_free);
++	/* Pairs with the READ_ONCE() in neigh_resolve_output(),
++	 * neigh_hh_output() and neigh_update_hhs().
++	 */
++	smp_store_release(&hh->hh_len, FWNET_HLEN);
  
+ 	return 0;
+ }
+diff --git a/include/net/neighbour.h b/include/net/neighbour.h
+index 5e679c8dae0b..8ec77bfdc1a4 100644
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -467,7 +467,7 @@ static inline int neigh_hh_output(const struct hh_cache *hh, struct sk_buff *skb
+ 
+ 	do {
+ 		seq = read_seqbegin(&hh->hh_lock);
+-		hh_len = hh->hh_len;
++		hh_len = READ_ONCE(hh->hh_len);
+ 		if (likely(hh_len <= HH_DATA_MOD)) {
+ 			hh_alen = HH_DATA_MOD;
+ 
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 08ebc3ac5343..f2452496ad9f 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -1194,7 +1194,7 @@ static void neigh_update_hhs(struct neighbour *neigh)
+ 
+ 	if (update) {
+ 		hh = &neigh->hh;
+-		if (hh->hh_len) {
++		if (READ_ONCE(hh->hh_len)) {
+ 			write_seqlock_bh(&hh->hh_lock);
+ 			update(hh, neigh->dev, neigh->ha);
+ 			write_sequnlock_bh(&hh->hh_lock);
+@@ -1473,7 +1473,7 @@ int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
+ 		struct net_device *dev = neigh->dev;
+ 		unsigned int seq;
+ 
+-		if (dev->header_ops->cache && !neigh->hh.hh_len)
++		if (dev->header_ops->cache && !READ_ONCE(neigh->hh.hh_len))
+ 			neigh_hh_init(neigh);
+ 
+ 		do {
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index 17374afee28f..9040fe55e0f5 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -244,7 +244,12 @@ int eth_header_cache(const struct neighbour *neigh, struct hh_cache *hh, __be16
+ 	eth->h_proto = type;
+ 	memcpy(eth->h_source, dev->dev_addr, ETH_ALEN);
+ 	memcpy(eth->h_dest, neigh->ha, ETH_ALEN);
+-	hh->hh_len = ETH_HLEN;
++
++	/* Pairs with READ_ONCE() in neigh_resolve_output(),
++	 * neigh_hh_output() and neigh_update_hhs().
++	 */
++	smp_store_release(&hh->hh_len, ETH_HLEN);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(eth_header_cache);
 -- 
 2.20.1
 
