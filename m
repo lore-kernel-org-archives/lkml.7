@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819E9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB10EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529B4214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCCF2187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578430904;
-	bh=8GcbSDgy6eK9FBFp8P48mgRgmME/4nkm7gYC2ckulrQ=;
+	s=default; t=1578430908;
+	bh=1Wx8C2XCvaYqkGNttzgM3mP6mB/ZBZD1qkXNpbJxbdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GHryNTbHE9HNbVlU/zcuQXRazF9waGXMulKyz2/BWhabVScu9v5t9jwvjr7+YjOt3
-	 Skz0Wzf3bZTu+UijRne8KqtKvZF25nmcX1ilyZ65Cid0STAN7i0xONjah9d7M3htdH
-	 4uwDtvlldN5LeGZv7rAX3TMeubdmD8W90Q7cbQp4=
+	b=rx5MPGbsl62fUJvdrDHSIGMzlcrN6OTXQLw5rkbvjIAz6qekcjOhnoR3AksS0rPWV
+	 HBw3LPJQgha/oo9z06gsIJAWIw03RPBpKAlca17w4DHGnclyW0Imbhvd7C8nFI1hBr
+	 7XzESl1EexA+3Uu1UwyaZr8JZb5XnHz6KnwNJUPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgAGVBn (ORCPT
+        id S1728143AbgAGVBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:01:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgAGVBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:01:39 -0500
+        id S1728254AbgAGVBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:01:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D13E20678;
-        Tue,  7 Jan 2020 21:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08026214D8;
+        Tue,  7 Jan 2020 21:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578430899;
-        bh=8GcbSDgy6eK9FBFp8P48mgRgmME/4nkm7gYC2ckulrQ=;
+        s=default; t=1578430901;
+        bh=1Wx8C2XCvaYqkGNttzgM3mP6mB/ZBZD1qkXNpbJxbdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/cxCn7u5QfzYowdGKP+f2u7J6HKv8EdDzbhW46tBc0IgZAU/cZ4aEyhIo9+ANlnq
-         fMgXck2JePPF2r1aR2cbVQ0Ek3/MjeZFgHmrnFdLV4e3aPqFK2fxaMJwvcQlZtlDhE
-         /ddoXKmFKU1PKJWy7yleyaNw8rhBuGuH50I2ZU9M=
+        b=EmbnwgnZ+TpNSrSWnJyn1DEDfogNUdxjxCazMw4gwk6zCzpijGkg1n9HJzvi8Nj+u
+         FX891KTGA3lYUI4cK3W3o8LLj6EKF0Or8hty6sY/cvLCUuerRqdggzmCUdmmPiSp04
+         2zUJ9JDa5W6ud+e45hZJn4XbWtDwxdFjO6oWKDJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 142/191] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-Date:   Tue,  7 Jan 2020 21:54:22 +0100
-Message-Id: <20200107205340.576727851@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 5.4 143/191] perf callchain: Fix segfault in thread__resolve_callchain_sample()
+Date:   Tue,  7 Jan 2020 21:54:23 +0100
+Message-Id: <20200107205340.628805216@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
 References: <20200107205332.984228665@linuxfoundation.org>
@@ -59,72 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit a7583e72a5f22470d3e6fd3b6ba912892242339f upstream.
+commit aceb98261ea7d9fe38f9c140c5531f0b13623832 upstream.
 
-The commit 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel
-parameter cover all GPEs") says:
-  "Use a bitmap of size 0xFF instead of a u64 for the GPE mask so 256
-   GPEs can be masked"
+Do not dereference 'chain' when it is NULL.
 
-But the masking of GPE 0xFF it not supported and the check condition
-"gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of gpe is
-u8.
+  $ perf record -e intel_pt//u -e branch-misses:u uname
+  $ perf report --itrace=l --branch-history
+  perf: Segmentation fault
 
-So modify the macro ACPI_MASKABLE_GPE_MAX to 0x100, and drop the "gpe >
-ACPI_MASKABLE_GPE_MAX" check. In addition, update the docs "Format" for
-acpi_mask_gpe parameter.
-
-Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-[ rjw: Use u16 as gpe data type in acpi_gpe_apply_masked_gpes() ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: e9024d519d89 ("perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191114142538.4097-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |    2 +-
- drivers/acpi/sysfs.c                            |    6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/machine.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -113,7 +113,7 @@
- 			the GPE dispatcher.
- 			This facility can be used to prevent such uncontrolled
- 			GPE floodings.
--			Format: <int>
-+			Format: <byte>
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2403,7 +2403,7 @@ static int thread__resolve_callchain_sam
+ 	}
  
- 	acpi_no_auto_serialize	[HW,ACPI]
- 			Disable auto-serialization of AML methods
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -819,14 +819,14 @@ end:
-  * interface:
-  *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
-  */
--#define ACPI_MASKABLE_GPE_MAX	0xFF
-+#define ACPI_MASKABLE_GPE_MAX	0x100
- static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
- 
- static int __init acpi_gpe_set_masked_gpes(char *val)
- {
- 	u8 gpe;
- 
--	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
-+	if (kstrtou8(val, 0, &gpe))
- 		return -EINVAL;
- 	set_bit(gpe, acpi_masked_gpes_map);
- 
-@@ -838,7 +838,7 @@ void __init acpi_gpe_apply_masked_gpes(v
- {
- 	acpi_handle handle;
- 	acpi_status status;
--	u8 gpe;
-+	u16 gpe;
- 
- 	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
- 		status = acpi_get_gpe_device(gpe, &handle);
+ check_calls:
+-	if (callchain_param.order != ORDER_CALLEE) {
++	if (chain && callchain_param.order != ORDER_CALLEE) {
+ 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
+ 					&cpumode, chain->nr - first_call);
+ 		if (err)
 
 
