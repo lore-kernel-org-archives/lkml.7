@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B81C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15014C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9682072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BE82072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431298;
-	bh=fXjGtSfV8QP65VDuktsocMkzXUFmWK/vAVxuE/HBZLg=;
+	s=default; t=1578431300;
+	bh=1nSAcOTbn4Xrm6vWrmZaTMYd7JKsm0xF7V7jnK58Zss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZd2yZ9Ord4nPRd3TKj0k+MQ+XzjSe6doG0D8OE+uA2+wk2fU+yDbn8rtI76QsgHr
-	 qikuD0yg0DgJeXgYhmgwS/8bNABZQqgvg48b7RJFABbCcio4BKaqkbx52P3VRytMYb
-	 xBn/11Gwn5Mjd1XTPkvEOPCa7+JqzaqEW5QvvpgY=
+	b=D6Q5zfOX/p7Rdn74UtC0M2s6cqEs+/ZBVNcAXOxx3Mh/wRq2LqZ8VACqVZgGX5ZX1
+	 hPPed1jy50QOt2dX/JAVi+skAGvA+WRt/Ft8g459UViUuIpuE8GIvLTGrd7aXm5Wvu
+	 MOlGjr5Ie50r5BFT8x+c1t0zrnjFJlwwn3nB2yik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgAGVIR (ORCPT
+        id S1729657AbgAGVIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:08:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:08:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbgAGVIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:08:14 -0500
+        id S1729647AbgAGVIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:08:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3012072A;
-        Tue,  7 Jan 2020 21:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B74214D8;
+        Tue,  7 Jan 2020 21:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431294;
-        bh=fXjGtSfV8QP65VDuktsocMkzXUFmWK/vAVxuE/HBZLg=;
+        s=default; t=1578431296;
+        bh=1nSAcOTbn4Xrm6vWrmZaTMYd7JKsm0xF7V7jnK58Zss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m75l9ijrQWAB2LgAn43qpnA9Y9W8R5zDAl9O8niY/Y/zPhc8BeYVjRq9PfrNYJkqj
-         r473BWzU3ej0gfA8EEyQD5DQBWFTlhR7jOC69+pnHbKMCp3ZA4XrH+D3ybhbG2ppSp
-         B+JxPRIVzoE074567x104yaAs/T6aLMCXkyyHR5w=
+        b=C6S1ahAiaCFNHOQdcPAsr+P6vXbagBimm0Mbs24jiDSpsbaj0W+bsehZ7/4J0j+j9
+         ODzl9V1zXi37+x2x6pt5dxX4CFzVo2qCG6w9MCUWN8HNVt02oCW1YqO5CJ07La3iZ4
+         yHjKfjU92QfXPkgFZUWQiCywJphRbNx2qXpMDEFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/115] ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
-Date:   Tue,  7 Jan 2020 21:55:22 +0100
-Message-Id: <20200107205310.309945803@linuxfoundation.org>
+Subject: [PATCH 4.19 113/115] s390/smp: fix physical to logical CPU map for SMT
+Date:   Tue,  7 Jan 2020 21:55:23 +0100
+Message-Id: <20200107205310.388128358@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,152 +60,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-[ Upstream commit 6abf57262166b4f4294667fb5206ae7ba1ba96f5 ]
+[ Upstream commit 72a81ad9d6d62dcb79f7e8ad66ffd1c768b72026 ]
 
-Running stress-test test_2 in mtd-utils on ubi device, sometimes we can
-get following oops message:
+If an SMT capable system is not IPL'ed from the first CPU the setup of
+the physical to logical CPU mapping is broken: the IPL core gets CPU
+number 0, but then the next core gets CPU number 1. Correct would be
+that all SMT threads of CPU 0 get the subsequent logical CPU numbers.
 
-  BUG: unable to handle page fault for address: ffffffff00000140
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 280a067 P4D 280a067 PUD 0
-  Oops: 0000 [#1] SMP
-  CPU: 0 PID: 60 Comm: kworker/u16:1 Kdump: loaded Not tainted 5.2.0 #13
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Workqueue: writeback wb_workfn (flush-ubifs_0_0)
-  RIP: 0010:rb_next_postorder+0x2e/0xb0
-  Code: 80 db 03 01 48 85 ff 0f 84 97 00 00 00 48 8b 17 48 83 05 bc 80 db
-  03 01 48 83 e2 fc 0f 84 82 00 00 00 48 83 05 b2 80 db 03 01 <48> 3b 7a
-  10 48 89 d0 74 02 f3 c3 48 8b 52 08 48 83 05 a3 80 db 03
-  RSP: 0018:ffffc90000887758 EFLAGS: 00010202
-  RAX: ffff888129ae4700 RBX: ffff888138b08400 RCX: 0000000080800001
-  RDX: ffffffff00000130 RSI: 0000000080800024 RDI: ffff888138b08400
-  RBP: ffff888138b08400 R08: ffffea0004a6b920 R09: 0000000000000000
-  R10: ffffc90000887740 R11: 0000000000000001 R12: ffff888128d48000
-  R13: 0000000000000800 R14: 000000000000011e R15: 00000000000007c8
-  FS:  0000000000000000(0000) GS:ffff88813ba00000(0000)
-  knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffff00000140 CR3: 000000013789d000 CR4: 00000000000006f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-    destroy_old_idx+0x5d/0xa0 [ubifs]
-    ubifs_tnc_start_commit+0x4fe/0x1380 [ubifs]
-    do_commit+0x3eb/0x830 [ubifs]
-    ubifs_run_commit+0xdc/0x1c0 [ubifs]
+This is important since a lot of code (like e.g. the CPU topology
+code) assumes that CPU maps are setup like this. If the mapping is
+broken the system will not IPL due to broken topology masks:
 
-Above Oops are due to the slab-out-of-bounds happened in do-while of
-function layout_in_gaps indirectly called by ubifs_tnc_start_commit. In
-function layout_in_gaps, there is a do-while loop placing index nodes
-into the gaps created by obsolete index nodes in non-empty index LEBs
-until rest index nodes can totally be placed into pre-allocated empty
-LEBs. @c->gap_lebs points to a memory area(integer array) which records
-LEB numbers used by 'in-the-gaps' method. Whenever a fitable index LEB
-is found, corresponding lnum will be incrementally written into the
-memory area pointed by @c->gap_lebs. The size
-((@c->lst.idx_lebs + 1) * sizeof(int)) of memory area is allocated before
-do-while loop and can not be changed in the loop. But @c->lst.idx_lebs
-could be increased by function ubifs_change_lp (called by
-layout_leb_in_gaps->ubifs_find_dirty_idx_leb->get_idx_gc_leb) during the
-loop. So, sometimes oob happens when number of cycles in do-while loop
-exceeds the original value of @c->lst.idx_lebs. See detail in
-https://bugzilla.kernel.org/show_bug.cgi?id=204229.
-This patch fixes oob in layout_in_gaps.
+[    1.716341] BUG: arch topology broken
+[    1.716342]      the SMT domain not a subset of the MC domain
+[    1.716343] BUG: arch topology broken
+[    1.716344]      the MC domain not a subset of the BOOK domain
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+This scenario can usually not happen since LPARs are always IPL'ed
+from CPU 0 and also re-IPL is intiated from CPU 0. However older
+kernels did initiate re-IPL on an arbitrary CPU. If therefore a re-IPL
+from an old kernel into a new kernel is initiated this may lead to
+crash.
+
+Fix this by setting up the physical to logical CPU mapping correctly.
+
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/tnc_commit.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ arch/s390/kernel/smp.c | 80 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 26 deletions(-)
 
-diff --git a/fs/ubifs/tnc_commit.c b/fs/ubifs/tnc_commit.c
-index dba87d09b989..95630f9f40dd 100644
---- a/fs/ubifs/tnc_commit.c
-+++ b/fs/ubifs/tnc_commit.c
-@@ -219,7 +219,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
- /**
-  * layout_leb_in_gaps - layout index nodes using in-the-gaps method.
-  * @c: UBIFS file-system description object
-- * @p: return LEB number here
-+ * @p: return LEB number in @c->gap_lebs[p]
-  *
-  * This function lays out new index nodes for dirty znodes using in-the-gaps
-  * method of TNC commit.
-@@ -228,7 +228,7 @@ static int is_idx_node_in_use(struct ubifs_info *c, union ubifs_key *key,
-  * This function returns the number of index nodes written into the gaps, or a
-  * negative error code on failure.
-  */
--static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
-+static int layout_leb_in_gaps(struct ubifs_info *c, int p)
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index df2413f26a8f..ecd24711f3aa 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -715,39 +715,67 @@ static void __ref smp_get_core_info(struct sclp_core_info *info, int early)
+ 
+ static int smp_add_present_cpu(int cpu);
+ 
+-static int __smp_rescan_cpus(struct sclp_core_info *info, int sysfs_add)
++static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
++			bool configured, bool early)
  {
- 	struct ubifs_scan_leb *sleb;
- 	struct ubifs_scan_node *snod;
-@@ -243,7 +243,7 @@ static int layout_leb_in_gaps(struct ubifs_info *c, int *p)
- 		 * filled, however we do not check there at present.
- 		 */
- 		return lnum; /* Error code */
--	*p = lnum;
-+	c->gap_lebs[p] = lnum;
- 	dbg_gc("LEB %d", lnum);
- 	/*
- 	 * Scan the index LEB.  We use the generic scan for this even though
-@@ -362,7 +362,7 @@ static int get_leb_cnt(struct ubifs_info *c, int cnt)
-  */
- static int layout_in_gaps(struct ubifs_info *c, int cnt)
- {
--	int err, leb_needed_cnt, written, *p;
-+	int err, leb_needed_cnt, written, p = 0, old_idx_lebs, *gap_lebs;
+ 	struct pcpu *pcpu;
+-	cpumask_t avail;
+-	int cpu, nr, i, j;
++	int cpu, nr, i;
+ 	u16 address;
  
- 	dbg_gc("%d znodes to write", cnt);
- 
-@@ -371,9 +371,9 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 	if (!c->gap_lebs)
- 		return -ENOMEM;
- 
--	p = c->gap_lebs;
-+	old_idx_lebs = c->lst.idx_lebs;
- 	do {
--		ubifs_assert(c, p < c->gap_lebs + c->lst.idx_lebs);
-+		ubifs_assert(c, p < c->lst.idx_lebs);
- 		written = layout_leb_in_gaps(c, p);
- 		if (written < 0) {
- 			err = written;
-@@ -399,9 +399,29 @@ static int layout_in_gaps(struct ubifs_info *c, int cnt)
- 		leb_needed_cnt = get_leb_cnt(c, cnt);
- 		dbg_gc("%d znodes remaining, need %d LEBs, have %d", cnt,
- 		       leb_needed_cnt, c->ileb_cnt);
-+		/*
-+		 * Dynamically change the size of @c->gap_lebs to prevent
-+		 * oob, because @c->lst.idx_lebs could be increased by
-+		 * function @get_idx_gc_leb (called by layout_leb_in_gaps->
-+		 * ubifs_find_dirty_idx_leb) during loop. Only enlarge
-+		 * @c->gap_lebs when needed.
-+		 *
-+		 */
-+		if (leb_needed_cnt > c->ileb_cnt && p >= old_idx_lebs &&
-+		    old_idx_lebs < c->lst.idx_lebs) {
-+			old_idx_lebs = c->lst.idx_lebs;
-+			gap_lebs = krealloc(c->gap_lebs, sizeof(int) *
-+					       (old_idx_lebs + 1), GFP_NOFS);
-+			if (!gap_lebs) {
-+				kfree(c->gap_lebs);
-+				c->gap_lebs = NULL;
-+				return -ENOMEM;
+ 	nr = 0;
+-	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
+-	cpu = cpumask_first(&avail);
+-	for (i = 0; (i < info->combined) && (cpu < nr_cpu_ids); i++) {
+-		if (sclp.has_core_type && info->core[i].type != boot_core_type)
++	if (sclp.has_core_type && core->type != boot_core_type)
++		return nr;
++	cpu = cpumask_first(avail);
++	address = core->core_id << smp_cpu_mt_shift;
++	for (i = 0; (i <= smp_cpu_mtid) && (cpu < nr_cpu_ids); i++) {
++		if (pcpu_find_address(cpu_present_mask, address + i))
+ 			continue;
+-		address = info->core[i].core_id << smp_cpu_mt_shift;
+-		for (j = 0; j <= smp_cpu_mtid; j++) {
+-			if (pcpu_find_address(cpu_present_mask, address + j))
+-				continue;
+-			pcpu = pcpu_devices + cpu;
+-			pcpu->address = address + j;
+-			pcpu->state =
+-				(cpu >= info->configured*(smp_cpu_mtid + 1)) ?
+-				CPU_STATE_STANDBY : CPU_STATE_CONFIGURED;
+-			smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
+-			set_cpu_present(cpu, true);
+-			if (sysfs_add && smp_add_present_cpu(cpu) != 0)
+-				set_cpu_present(cpu, false);
+-			else
+-				nr++;
+-			cpu = cpumask_next(cpu, &avail);
+-			if (cpu >= nr_cpu_ids)
++		pcpu = pcpu_devices + cpu;
++		pcpu->address = address + i;
++		if (configured)
++			pcpu->state = CPU_STATE_CONFIGURED;
++		else
++			pcpu->state = CPU_STATE_STANDBY;
++		smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
++		set_cpu_present(cpu, true);
++		if (!early && smp_add_present_cpu(cpu) != 0)
++			set_cpu_present(cpu, false);
++		else
++			nr++;
++		cpumask_clear_cpu(cpu, avail);
++		cpu = cpumask_next(cpu, avail);
++	}
++	return nr;
++}
++
++static int __smp_rescan_cpus(struct sclp_core_info *info, bool early)
++{
++	struct sclp_core_entry *core;
++	cpumask_t avail;
++	bool configured;
++	u16 core_id;
++	int nr, i;
++
++	nr = 0;
++	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
++	/*
++	 * Add IPL core first (which got logical CPU number 0) to make sure
++	 * that all SMT threads get subsequent logical CPU numbers.
++	 */
++	if (early) {
++		core_id = pcpu_devices[0].address >> smp_cpu_mt_shift;
++		for (i = 0; i < info->configured; i++) {
++			core = &info->core[i];
++			if (core->core_id == core_id) {
++				nr += smp_add_core(core, &avail, true, early);
+ 				break;
 +			}
-+			c->gap_lebs = gap_lebs;
-+		}
- 	} while (leb_needed_cnt > c->ileb_cnt);
- 
--	*p = -1;
-+	c->gap_lebs[p] = -1;
- 	return 0;
+ 		}
+ 	}
++	for (i = 0; i < info->combined; i++) {
++		configured = i < info->configured;
++		nr += smp_add_core(&info->core[i], &avail, configured, early);
++	}
+ 	return nr;
  }
  
+@@ -793,7 +821,7 @@ void __init smp_detect_cpus(void)
+ 
+ 	/* Add CPUs present at boot */
+ 	get_online_cpus();
+-	__smp_rescan_cpus(info, 0);
++	__smp_rescan_cpus(info, true);
+ 	put_online_cpus();
+ 	memblock_free_early((unsigned long)info, sizeof(*info));
+ }
+@@ -1145,7 +1173,7 @@ int __ref smp_rescan_cpus(void)
+ 	smp_get_core_info(info, 0);
+ 	get_online_cpus();
+ 	mutex_lock(&smp_cpu_state_mutex);
+-	nr = __smp_rescan_cpus(info, 1);
++	nr = __smp_rescan_cpus(info, false);
+ 	mutex_unlock(&smp_cpu_state_mutex);
+ 	put_online_cpus();
+ 	kfree(info);
 -- 
 2.20.1
 
