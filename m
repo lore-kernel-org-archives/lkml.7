@@ -2,129 +2,116 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E122EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4725C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EF220880
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3EB20715
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgAGWCI (ORCPT
+        id S1727339AbgAGWCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:02:08 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49054 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgAGWCH (ORCPT
+        Tue, 7 Jan 2020 17:02:10 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:45299 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgAGWCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:02:07 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C7EC91C259A; Tue,  7 Jan 2020 23:02:05 +0100 (CET)
-Date:   Tue, 7 Jan 2020 23:02:05 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 006/115] iio: adc: max9611: Fix too short conversion
- time delay
-Message-ID: <20200107220204.GA619@amd>
-References: <20200107205240.283674026@linuxfoundation.org>
- <20200107205243.776152935@linuxfoundation.org>
+        Tue, 7 Jan 2020 17:02:09 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mnq0I-1jV62E0WDK-00pJRv; Tue, 07 Jan 2020 23:02:08 +0100
+Received: by mail-qk1-f174.google.com with SMTP id c17so870958qkg.7;
+        Tue, 07 Jan 2020 14:02:07 -0800 (PST)
+X-Gm-Message-State: APjAAAVmyp6DYZFpIooyRX9xZdKLs52EKWz3pfwPDoteYdmaGUU3lebv
+        ScR+3OB84OyVfxU4b2CdI5fATdk7QjwnFVXLwS8=
+X-Google-Smtp-Source: APXvYqxUa5xLov61G7xm+YWKKvTkhYFC6JphHNq61xoPNx93avyQNM5C0YyDy1+zQvWClcWhfIrpGJ17Carlg/CFYCg=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr1513012qka.286.1578434526938;
+ Tue, 07 Jan 2020 14:02:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Content-Disposition: inline
-In-Reply-To: <20200107205243.776152935@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200107200659.3538375-1-arnd@arndb.de> <20200107124417.5239a6cf@cakuba.netronome.com>
+In-Reply-To: <20200107124417.5239a6cf@cakuba.netronome.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Jan 2020 23:01:50 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
+Message-ID: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
+Subject: Re: [PATCH] netronome: fix ipv6 link error
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <simon.horman@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        oss-drivers@netronome.com, Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rzlzUU8mzkmleUvVMkVLWK0UMnNe01XsywHdmS48EjSFO8XTmXF
+ f2u8Nv4DBDqci4s9VP9LxPmPZmMnFqwb1V2ebGOrvJv3L8jO/XXs7vf5AhdbLJn3vFJOui2
+ hE9XALeDuvTGn2v3N7Kc5O64dUuTLsjnkhaKxfM6z9sIzeqMH5hh69MgBaTla+nqiQ/bPCD
+ DV5hPs64dkcMoBO8kZIZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mIzPHufBjyk=:kN0xZSMR54Jg0jHTlHowia
+ NqrF6MUpCluK4yjnsWfPLfy/+WLOFzAsbGA52X4aCDWzOaOQWxcB0JGi2OrbyXhVGroRR/79E
+ /Mnzw3dcox/WElhgPWwOsl6Xfl78lYQ+SbLdb5YOCZ0W+4eZZMf29QT/zXl9EhpQQLsrljLX3
+ DsP/9wk6wnewDYjoarYzJzOQ8DXKorYrUotcBAlWXmnqDhGWwSfR+QV3aAh/ag6PqEkt3GEG5
+ AT1DcujCVZt+UeC2FKgdQnbv4hmlzumoIxhpc/AhROKf8M7nMV3cDwQfvy8vTyTA+9D7i6izt
+ 6dvEsQfdclPtZaB1ausqkmyw94iUSoj7rXQI6rbdTGsbkZSgTeLlDVCWjvKCbtIFRkPMSRaSD
+ IUAM++sLQa1sMK7U1QPaYizxc9rwj7rC+8edhl7Rl/Ony7v/5h2dAyxWQEeJF4lpnGL2o3Ku5
+ UPsrJdKLldcQFlxyvRkJgzKIeRMn3MIEA7OKB4qAP05JsrbIkoURNi/Py2K345/fe1ux/rJXk
+ 7PHCRHXaXDKJ9JljEAWxibhGBUULWfxpTq/UAe7qUQb/lAzv5N9KSEZIgAgXS+hHtEy6pNIKo
+ AZg3RdLMhMOn2ryocjAc2+I57O0gx/qCunbGGygCfjvtgdqBLDJ9vDJNYU/p836IZDjkWQLas
+ qUAEUiVhheraSebD3BfcTIHnbw27/dDmHYmSfZPxNb4qmjJelnl5aRMILbuqgmxePpa3JY0X1
+ dgo/p/Z+AydsAOGJN+4HA1jayZ3LsWE0y1bLpi8AVjY2snCdeO7LxNlTy49J16N6qsRxUDOGA
+ 71gFXIQrJ6u58UA0uMuTVPfM6+LjDsWs5h6/HPKZro61Zu/h/qgJtabwbwbdgeUzk2RAKjOO1
+ OLVZka63q2Ffcb24jbWQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 7, 2020 at 9:44 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Tue,  7 Jan 2020 21:06:40 +0100, Arnd Bergmann wrote:
+> > When the driver is built-in but ipv6 is a module, the flower
+> > support produces a link error:
+> >
+> > drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.o: In function `nfp_tunnel_keep_alive_v6':
+> > tunnel_conf.c:(.text+0x2aa8): undefined reference to `nd_tbl'
+>
+> Damn, I guess the v2 of that patch set did not solve _all_ v6 linking
+> issues :/ Thanks for the patch.
+>
+> > Add a Kconfig dependency to avoid that configuration.
+> >
+> > Fixes: 9ea9bfa12240 ("nfp: flower: support ipv6 tunnel keep-alive messages from fw")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/net/ethernet/netronome/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/net/ethernet/netronome/Kconfig b/drivers/net/ethernet/netronome/Kconfig
+> > index bac5be4d4f43..dcb02ce28460 100644
+> > --- a/drivers/net/ethernet/netronome/Kconfig
+> > +++ b/drivers/net/ethernet/netronome/Kconfig
+> > @@ -31,6 +31,7 @@ config NFP_APP_FLOWER
+> >       bool "NFP4000/NFP6000 TC Flower offload support"
+> >       depends on NFP
+> >       depends on NET_SWITCHDEV
+> > +     depends on IPV6 != m || NFP =m
+>
+> Could we perhaps do the more standard:
+>
+>         depends on IPV6 || IPV6=n
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That would have to be on CONFIG_NFP instead of CONFIG_NFP_APP_FLOWER
+then, making the entire driver a module if IPV6=m but always allowing
+CONFIG_NFP_APP_FLOWER.
 
-Hi!
+> The whitespace around = and != seems a little random as is..
 
->=20
-> Fix this by increasing the delay from 1000-2000 =B5s to 3000-3300 =B5s.
->=20
-> Note that this issue has always been present, but it was exposed by the
-> aformentioned commit.
+Yep, my mistake. I can send a fixed version, please let me know which
+version you want, or fix it up yourself if you find that easier.
 
-> +++ b/drivers/iio/adc/max9611.c
-> @@ -92,6 +92,12 @@
->  #define MAX9611_TEMP_SCALE_NUM		1000000
->  #define MAX9611_TEMP_SCALE_DIV		2083
-> =20
-> +/*
-> + * Conversion time is 2 ms (typically) at Ta=3D25 degreeC
-> + * No maximum value is known, so play it safe.
-> + */
-> +#define MAX9611_CONV_TIME_US_RANGE	3000, 3300
-> +
->  struct max9611_dev {
->  	struct device *dev;
->  	struct i2c_client *i2c_client;
-
-This is evil. It looks like a constant, but it is two
-constants. Just... don't do this.
-
-What about
-
-     static inline usleep_conversion(void) { usleep_range(3000, 3300); }
-
-? (Plus, normally we use bigger ranges to make the job of highres
-infrastructure easier. 3 to 6ms would be typical.)..
-
-Best regards,
-								Pavel
-
-> -	/*
-> -	 * need a delay here to make register configuration
-> -	 * stabilize. 1 msec at least, from empirical testing.
-> -	 */
-> -	usleep_range(1000, 2000);
-> +	/* need a delay here to make register configuration stabilize. */
-> +
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
-> =20
->  	ret =3D i2c_smbus_read_word_swapped(max9611->i2c_client, reg_addr);
->  	if (ret < 0) {
-> @@ -510,7 +514,7 @@ static int max9611_init(struct max9611_dev *max9611)
->  			MAX9611_REG_CTRL2, 0);
->  		return ret;
->  	}
-> -	usleep_range(1000, 2000);
-> +	usleep_range(MAX9611_CONV_TIME_US_RANGE);
-> =20
->  	return 0;
->  }
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4U/9wACgkQMOfwapXb+vKcAACglAXT31mK/lo5WLqTEKvReuTq
-YHkAnRU+WnTCfgTyv5+c05Omvtus0oRk
-=Kz86
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+     Arnd
