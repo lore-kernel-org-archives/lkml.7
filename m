@@ -2,124 +2,137 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFC1C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8496C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E313208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1918208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkQzotOI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EDhJgHdD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgAGTPM (ORCPT
+        id S1728827AbgAGTPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:15:12 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34675 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbgAGTPM (ORCPT
+        Tue, 7 Jan 2020 14:15:40 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44955 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728651AbgAGTPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:15:12 -0500
-Received: by mail-io1-f68.google.com with SMTP id z193so539853iof.1;
-        Tue, 07 Jan 2020 11:15:11 -0800 (PST)
+        Tue, 7 Jan 2020 14:15:39 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u71so684488lje.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:15:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yl2wbUAzHAKbcOb1Vl7UvKqELmoqXyVI0Xh3B+s9l6w=;
-        b=rkQzotOI2WHHWwl7HXrjtEqiFBUizAnXJy0V8EQAuovXuZcIet+WvPqNR5SjCRKpX3
-         RBOmcSr49Rvp4qGRrH8iXEmGIh1XxFKeoUYJC3G0jk3Ln6y1IfZjD6/eLB3cwp6f9L8B
-         V5xp35Kp4/+p+M+E/8RZ7RVnE289Ouaw8GJ/JTCsju3xsMP9NfaE8X4KXapOYPEOFbx9
-         8c1UEuszme5mHl5SDsWoFPTH89wgrj0jW9rjSb06Enjkys1L2KrVbLlRB6qEJiCUkvjm
-         jTv08XipmW3TZppSYqz1ljOQawAKLULX/rRIeXP6mAV1b6DoU12kV8x5Uzfj0ZhR0DV6
-         WhCg==
+        bh=f1zqqKzCp+fQXlk6LschxocOmKVvhkA/tqAPfE1DRwg=;
+        b=EDhJgHdD+dDxLcD1C/3itQ2bO29EgOrdBk/t20nJfDdtrlsPNTIDxDbM+Ez0gX8F+0
+         k4fZo6HGwZo+GOY7ukLPoURF/FqujJ5g1MhjZOKRRohMhjOqBs0fgWToJLdXqWCwmVTj
+         RI1rFaO2sYMwFiks9NCAHqPrqQO/BQ/LhGA7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yl2wbUAzHAKbcOb1Vl7UvKqELmoqXyVI0Xh3B+s9l6w=;
-        b=j5QiUShOfDHIRnT9AKN1VJ+RPrMDSwRcB7Xy6rZQezNLQkngJWPZhyymAbOaLJx3iA
-         Wr0Vn9RscRWCmFzPEchSq+wL+PRpywbOKuAyXuhj0o2xL9tQBSDJgkQBdun0rArpx7p4
-         fmAQgNfp/jXABGvRxh+9qjhEG9NIe0hEuHOJpz+HYKURf3pI2OZJ7CWVifgNOfb1/2r+
-         bAgBDQAQXgDQv4j6idLYP/P0Hu/W9c/2e9VxMFSLInxMeICbC1edAt5GYMaDySeiXjcP
-         8B8KT6M8Df5+7AMYxvOeiB3OAyP8PE6gS7UM8Q4uWmh6R0ca90O80lDAnA3wlZ+cZeL/
-         mrpg==
-X-Gm-Message-State: APjAAAWWvI0TZUFyjMqa0s7dRD/ankYDFiHSiQ8xBIdLFdhS7qNNlp9P
-        stmD1dEj6srUe7qWW+OrcSUm0/Fg3q3S2epWh1n0wfONJ3A=
-X-Google-Smtp-Source: APXvYqz9PvnXo6JBf/ETXrEq1+jj6hv8iMvI1zUApsw3LhkJjvDhAUAxswe1B7GebdiWNs1qbym12yJE7R7vujQvTMM=
-X-Received: by 2002:a6b:c8c8:: with SMTP id y191mr430846iof.104.1578424511057;
- Tue, 07 Jan 2020 11:15:11 -0800 (PST)
+        bh=f1zqqKzCp+fQXlk6LschxocOmKVvhkA/tqAPfE1DRwg=;
+        b=NHdMHT9tltp50Q5f5zHOaP+DqycGqV80Gpzg1ZIHdaA3UFvxEETsQCg1YmHCmsar+M
+         vzXev5kLLmwPZFeSfSyIBaPgfBhZAtd2gjqOLyZgHVwXXGxza8r7SvoTBnngBstAuu6D
+         /OHDDMXwNxTEFEwvpI/U9Ru+1M9cZ7Bai7CYDBGV7q39I6PMUDy2+dJWKmvdYKWcYhEl
+         JkfKLmCgDKohPldhAKuXTdti2XWVZ4yp7e0fy82D8Y8ZUbkULCLesGMHGhvLFetGzDHZ
+         Dom6AsiPt8v1CRwRJWd8al3qTn7ByRYHhb7+nTEkCNS++AZ0e42+P/gXQn2hlNyLjPkh
+         3rQw==
+X-Gm-Message-State: APjAAAUGrH7EiURBELB5zYGUv1hlOS/UKlJjLjnMdx6aX6IpuaHIMFar
+        xru4/2uCsgtiROLBcuhG8qZg57ksXOc=
+X-Google-Smtp-Source: APXvYqxkUmRfOP0DYiPFebKhtieCeeME4ucQXnYLrXl2L3CLcJEULq/zfYUYggRxHabeUXcmp6h57A==
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr587609ljb.150.1578424537146;
+        Tue, 07 Jan 2020 11:15:37 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id i1sm216126lji.71.2020.01.07.11.15.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 11:15:35 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id y6so770573lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:15:35 -0800 (PST)
+X-Received: by 2002:a05:651c:232:: with SMTP id z18mr497045ljn.85.1578424535265;
+ Tue, 07 Jan 2020 11:15:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200106203700.21009-1-tony@atomide.com> <CAOesGMiNbyUXwPFsG-ipTn-xfEs+A2hG8Q8MTcSLz5794GCv0g@mail.gmail.com>
-In-Reply-To: <CAOesGMiNbyUXwPFsG-ipTn-xfEs+A2hG8Q8MTcSLz5794GCv0g@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Wed, 8 Jan 2020 03:14:59 +0800
-Message-ID: <CAEExFWuQuTHNsjABpSBAa46NzftHS0+nLLG=qdEcaeatLZFLeQ@mail.gmail.com>
-Subject: Re: [PATCH] clocksource: timer-ti-dm: Fix regression
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20191118154435.20357-1-sibis@codeaurora.org> <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
+ <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+ <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
+ <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+ <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com> <b11c2116-f247-17c5-69ca-071183365a01@codeaurora.org>
+In-Reply-To: <b11c2116-f247-17c5-69ca-071183365a01@codeaurora.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Tue, 7 Jan 2020 11:14:58 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
+Message-ID: <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 5:07 AM Olof Johansson <olof@lixom.net> wrote:
+On Mon, Dec 16, 2019 at 10:30 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> On Mon, Jan 6, 2020 at 12:37 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
-> > platform_get_irq") caused a regression where we now try to access
-> > uninitialized data for timer:
-> >
-> > drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
-> > drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
-> > uninitialized in this function [-Wmaybe-uninitialized]
-> >
-> > On boot we now get:
-> >
-> > Unable to handle kernel NULL pointer dereference at virtual address
-> > 00000004
-> > ...
-> > (omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
-> > (platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
-> > (really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
-> >
-> > Let's fix the issue by moving platform_get_irq to happen after timer has
-> > been allocated.
-> >
-> > Fixes: 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
-> > Cc: Yangtao Li <tiny.windzz@gmail.com>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Hey Evan,
 >
-> Acked-by: Olof Johansson <olof@lixom.net>
+> On 12/7/19 12:46 AM, Evan Green wrote:
+> > On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> >>
+> >> Hey Evan/Georgi,
+> >>
+> >> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
+> >>
+> >> With the "Redefine interconnect provider
+> >> DT nodes for SDM845" series, wouldn't it
+> >> make more sense to define the OSM_L3 icc
+> >> nodes in the sdm845.c icc driver and have
+> >> the common helpers in osm_l3 driver? Though
+> >> we don't plan on linking the OSM L3 nodes
+> >> to the other nodes on SDM845/SC7180, we
+> >> might have GPU needing to be linked to the
+> >> OSM L3 nodes on future SoCs. Let me know
+> >> how you want this done.
+> >>
+> >> Anyway I'll re-spin the series once the
+> >> SDM845 icc re-work gets re-posted.
+> >
+> > I don't have a clear picture of the proposal. You'd put the couple of
+> > extra defines in sdm845.c for the new nodes. But then you'd need to do
+> > something in icc_set() of sdm845. Is that when you'd call out to the
+> > osm_l3 driver?
+>
+> with sdm845 icc rework "https://patchwork.kernel.org/cover/11293399/"
+> osm l3 icc provider needs to know the total number of rsc icc nodes,
+> i.e I can define the total number of rsc nodes and continue using the
+> same design as v3 since on sdm845/sc7180 gpu is not cache coherent.
+>
+> or have the osm l3 table population logic and osm icc_set as helpers
+> and have it called from the sdm845/sc7180 icc driver so that we would
+> be able to link osm_l3 with rsc nodes on future qcom SoCs.
 
-Acked-by: Yangtao Li <tiny.windzz@gmail.com>
-
-I am sorry. I will pay attention next time.
-
->
-> > ---
-> >
-> > I did not notice simlar issue with other patches in the series, but
-> > please do double check Yangtao.
->
-> Yeah, this even seems to be caught at build (but our builds have been
-> so noisy with warnings lately that they're hard to spot):
->
-> /build/drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
-> /build/drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may
-> be used uninitialized in this function [-Wmaybe-uninitialized]
->   798 |  timer->irq = platform_get_irq(pdev, 0);
->       |  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
->
->
-> -Olof
+I see, so if we use the same design as v3, then the number of nodes is
+established at compile-time, and ends up being specific to sdm845. I'm
+fine with either approach, maybe leaning towards the hardcoded
+#defines you have now, and waiting to do the refactoring until you
+actually have two SoCs that can use this.
+-Evan
