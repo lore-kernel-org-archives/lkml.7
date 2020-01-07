@@ -2,185 +2,85 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C4FC33C99
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36899C33C99
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E41D2070E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZgoJYmZ"
+	by mail.kernel.org (Postfix) with ESMTP id F05CA2070E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 11:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578397687;
+	bh=8qjeX9MrQkMNc6hDd0oVrXP9gV7Uba7daKUNl7o3omQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xCHi+DBscM6jyk3oNiak/OeyRkt/TDU9hC+AqPDkZb/FSKNEbrsH2fc+P+PkKXWWK
+	 5Hqhe3uH3yNdXdq02kdJ0rgrUpKNgKVXlUblJA7DUjFumpD+sOKWssuelp25wAfAO2
+	 q1bf2WDBsKEuVHKM20cI2/OgceA702pKm6FKuaIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgAGLr7 (ORCPT
+        id S1727985AbgAGLsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:47:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55041 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727806AbgAGLr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 06:47:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578397677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ajwwg1tTuaqvf2+iTZv4F7nVRs4fx4vlQX7SEEZvm5I=;
-        b=DZgoJYmZNJ3FmMRl/rHqxtw4+6HPduNl0WtgdLkJMQQbE3+PNVV3HnYstXkhOUPnRX5oYR
-        bw6OwuIQ5Ybzkvzs9qv7KGkSdKAjksS4RlG0ba3Hs5AVoLXd3xp/eq+GpIxizD04dmdATY
-        qrS3tSJbFEWCF7psE1nZnScbhfO/W1w=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-ve3MvSIuP4ml7K99zn0ZNQ-1; Tue, 07 Jan 2020 06:47:56 -0500
-X-MC-Unique: ve3MvSIuP4ml7K99zn0ZNQ-1
-Received: by mail-qt1-f198.google.com with SMTP id c8so36243075qte.22
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 03:47:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ajwwg1tTuaqvf2+iTZv4F7nVRs4fx4vlQX7SEEZvm5I=;
-        b=Jo4AhdMpXvd21ohbva0bvQWzJcR12thZ2oGUWL7mb19ZEuIjXk6Y3qqq1JujHx9RqG
-         xQR9lpNnLxMrZqRstRK2TDmpw3vR7pbODeUvxW8xSu65bTGqycuom2UvMsdlUy0rQ1Wr
-         4nYSKzdfS8/mvWiAHgkfHlB1OzMZEVaMprUMiBRaqfBURwytWD+/TQLWzhEwk1IDpPbi
-         HIrNZbkx09lSOkcTZxcIlQ+T1lQxcnNC2ISwUQ7tT8BZp9LsUgaTOmZDYEHoaUNAuT/K
-         WyYlCJ3k0kpQpKzfge8Aa0ji6l7VQsHM6lP7P8wInSHxJs9UGKYzQzSvTTfp3eFrYGyG
-         55Xg==
-X-Gm-Message-State: APjAAAUnuL6QpaYbhdLVA2oDdZ7/c/iNSmXOIiaYx020vkEo7gjeY9De
-        uLGgb9uhWbRnUx5/+hazzVB6RSL9Ucv2yEYz1dJsC5XLP0860KVnWkAZYrfWDs/N3knJDJ/GdU9
-        mGD5c9XbnpONTK+LnES/bjz9G
-X-Received: by 2002:a05:620a:548:: with SMTP id o8mr89001516qko.490.1578397676015;
-        Tue, 07 Jan 2020 03:47:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwPdW3bN5Qrk8jx6DNFsiQ6HbJh5wOHP1je7PYJ8IDXlHg3qat/Sw8UC73f0mXWvj1+oj563Q==
-X-Received: by 2002:a05:620a:548:: with SMTP id o8mr89001491qko.490.1578397675714;
-        Tue, 07 Jan 2020 03:47:55 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id f19sm22090879qkk.69.2020.01.07.03.47.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 03:47:54 -0800 (PST)
-Date:   Tue, 7 Jan 2020 06:47:49 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-Message-ID: <20200107064113-mutt-send-email-mst@kernel.org>
-References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
- <20191218100926-mutt-send-email-mst@kernel.org>
- <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
- <20200106054041-mutt-send-email-mst@kernel.org>
- <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
- <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+        Tue, 7 Jan 2020 06:48:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:56490 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727973AbgAGLsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 06:48:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56BC7328;
+        Tue,  7 Jan 2020 03:48:05 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7B983F534;
+        Tue,  7 Jan 2020 03:48:04 -0800 (PST)
+Date:   Tue, 7 Jan 2020 11:48:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] coccinnelle: Remove ptr_ret script
+Message-ID: <20200107114801.GB4877@sirena.org.uk>
+References: <20200107073629.325249-1-maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+In-Reply-To: <20200107073629.325249-1-maxime@cerno.tech>
+X-Cookie: Will Rogers never met you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 12:34:50PM +0100, Christian Borntraeger wrote:
-> 
-> 
-> On 07.01.20 10:39, Michael S. Tsirkin wrote:
-> > On Tue, Jan 07, 2020 at 09:59:16AM +0100, Christian Borntraeger wrote:
-> >>
-> >>
-> >> On 06.01.20 11:50, Michael S. Tsirkin wrote:
-> >>> On Wed, Dec 18, 2019 at 04:59:02PM +0100, Christian Borntraeger wrote:
-> >>>> On 18.12.19 16:10, Michael S. Tsirkin wrote:
-> >>>>> On Wed, Dec 18, 2019 at 03:43:43PM +0100, Christian Borntraeger wrote:
-> >>>>>> Michael,
-> >>>>>>
-> >>>>>> with 
-> >>>>>> commit db7286b100b503ef80612884453bed53d74c9a16 (refs/bisect/skip-db7286b100b503ef80612884453bed53d74c9a16)
-> >>>>>>     vhost: use batched version by default
-> >>>>>> plus
-> >>>>>> commit 6bd262d5eafcdf8cdfae491e2e748e4e434dcda6 (HEAD, refs/bisect/bad)
-> >>>>>>     Revert "vhost/net: add an option to test new code"
-> >>>>>> to make things compile (your next tree is not easily bisectable, can you fix that as well?).
-> >>>>>
-> >>>>> I'll try.
-> >>>>>
-> >>>>>>
-> >>>>>> I get random crashes in my s390 KVM guests after reboot.
-> >>>>>> Reverting both patches together with commit decd9b8 "vhost: use vhost_desc instead of vhost_log" to
-> >>>>>> make it compile again) on top of linux-next-1218 makes the problem go away.
-> >>>>>>
-> >>>>>> Looks like the batched version is not yet ready for prime time. Can you drop these patches until
-> >>>>>> we have fixed the issues?
-> >>>>>>
-> >>>>>> Christian
-> >>>>>>
-> >>>>>
-> >>>>> Will do, thanks for letting me know.
-> >>>>
-> >>>> I have confirmed with the initial reporter (internal test team) that <driver name='qemu'/> 
-> >>>> with a known to be broken linux next kernel also fixes the problem, so it is really the
-> >>>> vhost changes.
-> >>>
-> >>> OK I'm back and trying to make it more bisectable.
-> >>>
-> >>> I pushed a new tag "batch-v2".
-> >>> It's same code but with this bisect should get more information.
-> >>
-> >> I get the following with this tag
-> >>
-> >> drivers/vhost/net.c: In function ‘vhost_net_tx_get_vq_desc’:
-> >> drivers/vhost/net.c:574:7: error: implicit declaration of function ‘vhost_get_vq_desc_batch’; did you mean ‘vhost_get_vq_desc’? [-Werror=implicit-function-declaration]
-> >>   574 |   r = vhost_get_vq_desc_batch(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-> >>       |       ^~~~~~~~~~~~~~~~~~~~~~~
-> >>       |       vhost_get_vq_desc
-> >>
-> > 
-> > Not sure why but I pushed a wrong commit. Sorry. Should be good now.
-> > 
-> 
-> during bisect:
-> 
-> drivers/vhost/vhost.c: In function ‘vhost_get_vq_desc_batch’:
-> drivers/vhost/vhost.c:2634:8: error: ‘id’ undeclared (first use in this function); did you mean ‘i’?
->  2634 |  ret = id;
->       |        ^~
->       |        i
-> 
-> I changed that to i
 
-Hmm no that's wrong I think. Sorry about all the errors. Let me push a
-fixed v3.
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> The last step then gave me  (on commit 50297a8480b439efc5f3f23088cb2d90b799acef vhost: use batched version by default)
-> net enc1: Unexpected TXQ (0) queue failure: -5
-> in the guest.
-> 
-> bisect log so far:
-> [cborntra@m83lp52 linux]$ git bisect log
-> git bisect start
-> # bad: [3131e79bb9e9892a5a6bd33513de9bc90b20e867] vhost: use vhost_desc instead of vhost_log
-> git bisect bad 3131e79bb9e9892a5a6bd33513de9bc90b20e867
-> # good: [d1281e3a562ec6a08f944a876481dd043ba739b9] virtio-blk: remove VIRTIO_BLK_F_SCSI support
-> git bisect good d1281e3a562ec6a08f944a876481dd043ba739b9
-> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
-> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
-> # good: [5b00aab5b6332a67e32dace1dcd3a198ab94ed56] vhost: option to fetch descriptors through an independent struct
-> git bisect good 5b00aab5b6332a67e32dace1dcd3a198ab94ed56
-> # bad: [1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79] vhost: batching fetches
-> git bisect bad 1414d7ee3d10d2ec2bc4ee652d1d90ec91da1c79
-> 
-> 
-> 
+On Tue, Jan 07, 2020 at 08:36:29AM +0100, Maxime Ripard wrote:
+> The ptr_ret script script addresses a number of situations where we end up
+> testing an error pointer, and if it's an error returning it, or return 0
+> otherwise to transform it into a PTR_ERR_OR_ZERO call.
 
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4Ub/EACgkQJNaLcl1U
+h9AFuwf/fsXO9OUgtdPDsnD/4fMNSl2/bkAK7o5sd+/TPgPzv/q/IGJ7FcFXwjs6
+ONuvBPB+h2paciCSU9VsIfHswdcD96K5sqD/D3h5Ou1rJyccz1sYO16R7q6HSpAD
+VpJYOq6vNuMZir1UaIDEnPHwfVZjkfwPWtv8pWA48VfKFvJ8J6GhsrYDmUed71FA
+7XXhVWffVr6OJlCDyqdExS3nB8p/xQjymz+VoEA6pGAZhvfOIXdkEuNFP6et9LEa
+lI5abF8+hX1e14JsznU08pAJ4PGpsLDpfIyR6pOxbv20Tb+KPIjHALPthTJUEtkh
+kz42yOtNeEzHJp33SuP/egBXI6eVJw==
+=kvo0
+-----END PGP SIGNATURE-----
+
+--OwLcNYc0lM97+oe1--
