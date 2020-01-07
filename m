@@ -2,126 +2,108 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD01C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4F3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411B1208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KuhBgkhm"
+	by mail.kernel.org (Postfix) with ESMTP id C78A72080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 19:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAGTTK (ORCPT
+        id S1728780AbgAGTTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:19:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38008 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728649AbgAGTTJ (ORCPT
+        Tue, 7 Jan 2020 14:19:50 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11552 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728633AbgAGTTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:19:09 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so336666pfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 11:19:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TU5y0uOd04v29R1ldy4aCdHRn60AIShQAfhIrYqvct4=;
-        b=KuhBgkhmzY+be0c7oA/ma8hxZhuoHjFirs176QvXXz/8TxiRr6YQ8GknYwFMLw1MtL
-         G5mycKgbz64sOLtaaTynzyLMeFAlctWwoDdtIulNgI4aCVpmcAoiQHuYr8f0bWNv+jqv
-         HMu/z7+GvtaFoAMV6thwF4A7WTUJ9Rh4KO08NaZEOaHv52TRRWsWMRLudoMK6W0PHaJx
-         OIPAG5RU+91Q4CX0/TyPnG7ydKx5ImuveytiD5wUcjBK9KGUXWJ4XHpEaDPSpM9CljDW
-         OiMqRWyN7ID3K0FkcOD4TS+Ieou2h7qp9XyN6u4X/M1xbFRYfk3/iyRYvjiQYb5MpBaN
-         fy4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TU5y0uOd04v29R1ldy4aCdHRn60AIShQAfhIrYqvct4=;
-        b=EojqY7JA/DthqWRPbB3Cay0pTrYsMpAmXzwv3PdPZjgyJ3HF+hHgOdtGCvqqVE1ms8
-         oD50JprDt876cUqJrk9b2rb6ShCHqTASpb3fyFb/AE1MujKWhqLWcL60h/0DWf4neV3K
-         Ujm1PtPC0WgybL6kouOGnZqVJF/QvIw4nilWkXqLAFttDX4FPU3X4WnzaDyRvM4UNJAj
-         nYfe4aAuyWD5aNuIc18/JaU0AdLBk/0WBETmSpjSNnOa84+P8o5+KDZCo9khBPd2yCed
-         Oq4LoTq6UBYufz058QgM6ViCEFq5+WQgfHb7shSivUbg4uFnglDt2RTE1Nsv/FBTysfc
-         G2yQ==
-X-Gm-Message-State: APjAAAVKMYaJNV/lLzgsExdd4MOww5eceGj1usPn1HIa1Xiq5vDQ/tya
-        zL4bePfdGpAwp6UP7opDY4anYw==
-X-Google-Smtp-Source: APXvYqz3hHvhtKQxlmnApv3yxgqZQM3teHJBcT4UloZ5gm4T7Df1KmGi/QM9c96hmThP+tfqKucIyA==
-X-Received: by 2002:a62:f94d:: with SMTP id g13mr825176pfm.60.1578424749010;
-        Tue, 07 Jan 2020 11:19:09 -0800 (PST)
-Received: from gnomeregan01.cam.corp.google.com ([2620:15c:6:14:50b7:ffca:29c4:6488])
-        by smtp.googlemail.com with ESMTPSA id i2sm485165pgi.94.2020.01.07.11.19.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 11:19:08 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jason.zeng@intel.com
-References: <20191212182238.46535-1-brho@google.com>
- <20191212182238.46535-3-brho@google.com>
- <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
- <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
- <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
- <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
- <20191213171950.GA31552@linux.intel.com>
- <e012696f-f13e-5af1-2b14-084607d69bfa@google.com>
- <20200107190522.GA16987@linux.intel.com>
-From:   Barret Rhoden <brho@google.com>
-Message-ID: <08a36944-ad5a-ca49-99b3-d3908ce0658b@google.com>
-Date:   Tue, 7 Jan 2020 14:19:06 -0500
+        Tue, 7 Jan 2020 14:19:49 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007JH4Vd173752;
+        Tue, 7 Jan 2020 14:18:36 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xb8sa441s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 14:18:35 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 007JI0QY019239;
+        Tue, 7 Jan 2020 19:18:35 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02dal.us.ibm.com with ESMTP id 2xajb6w3md-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jan 2020 19:18:35 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007JIX2X48431424
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jan 2020 19:18:33 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 700006E052;
+        Tue,  7 Jan 2020 19:18:33 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10D296E050;
+        Tue,  7 Jan 2020 19:18:32 +0000 (GMT)
+Received: from [9.163.26.112] (unknown [9.163.26.112])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jan 2020 19:18:32 +0000 (GMT)
+Subject: Re: [PATCH 3/3] video: aspeed: Update copyright information
+To:     Joel Stanley <joel@jms.id.au>,
+        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200107034324.38073-1-joel@jms.id.au>
+ <20200107034324.38073-4-joel@jms.id.au>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <48c5f0dd-4fa3-919c-9dd7-91afb5da8840@linux.ibm.com>
+Date:   Tue, 7 Jan 2020 13:18:32 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200107190522.GA16987@linux.intel.com>
+In-Reply-To: <20200107034324.38073-4-joel@jms.id.au>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ spamscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001070152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi -
 
-On 1/7/20 2:05 PM, Sean Christopherson wrote:
-> On Mon, Dec 16, 2019 at 11:05:26AM -0500, Barret Rhoden wrote:
->> On 12/13/19 12:19 PM, Sean Christopherson wrote:
->>> Teaching thp_adjust() how to handle 1GB wouldn't be a bad thing.  It's
->>> unlikely THP itself will support 1GB pages any time soon, but having the
->>> logic there wouldn't hurt anything.
->>>
->>
->> Cool.  This was my main concern - I didn't want to break THP.
->>
->> I'll rework the series based on all of your comments.
-> 
-> Hopefully you haven't put too much effort into the rework, because I want
-> to commandeer the proposed changes and use them as the basis for a more
-> aggressive overhaul of KVM's hugepage handling.  Ironically, there's a bug
-> in KVM's THP handling that I _think_ can be avoided by using the DAX
-> approach of walking the host PTEs.
-> 
-> I'm in the process of testing, hopefully I'll get a series sent out later
-> today.  If not, I should at least be able to provide an update.
-
-Nice timing.  I was just about to get back to this, so I haven't put any 
-time in yet.  =)
-
-Please CC me, and I'll try your patches out on my end.
-
-Thanks,
-
-Barret
+On 1/6/20 9:43 PM, Joel Stanley wrote:
+> Use the preferred form for GPL2+, and add IBM and Intel as the authors.
+> The driver was initially upstreamed by Eddie from IBM, and has had major
+> contributions from Jae at Intel.
 
 
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
 
+
+>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>   drivers/media/platform/aspeed-video.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+> index d70b893fd4cf..71e0dbdb37dc 100644
+> --- a/drivers/media/platform/aspeed-video.c
+> +++ b/drivers/media/platform/aspeed-video.c
+> @@ -1,4 +1,6 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +// Copyright 2020 IBM Corp.
+> +// Copyright (c) 2019 Intel Corporation
+>   
+>   #include <linux/atomic.h>
+>   #include <linux/bitfield.h>
