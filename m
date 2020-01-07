@@ -2,207 +2,407 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC2C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08E6C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831FA2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766EE2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431380;
-	bh=10+L5mGMJmdCExlrHob+ZT1FHuyMtgBPRYa1uDx1N5k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zrhGltonFB5YqYcxMqlURhZPfCL2zAK9dV78u2We3kbErtWvX1bvXfVhqLPmJkzMU
-	 Gd1KzRYXk7DJCbfQCDYZMNNultM+NsZa4MDSyoUwB/2zHO9suEUmvujkBs03K0Ja6L
-	 +nuATE5Uy6zHJlU4MzmpwX/wdSWf4KV5xfnGoaTo=
+	s=default; t=1578431383;
+	bh=RjJZF4jJUti91nurhuYEgg0HvWKbhj8q5dVfUjyk164=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pn7iBf7nF/F2SURjXAyyvxO4fU3O9TgoJ5fp+nDsicYhmSKohE5MdIbz+Vg5w2AiC
+	 Is0HUyn3993tilyh6Nip4KPJ9vdsh8zktj94fHojrbp0jL5Z99eXT3dmgj7uWfS+92
+	 6WF9MDY7RpjIQS9p1SUiuczdYB8OPtS0IcdBQI5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgAGVJj (ORCPT
+        id S1729862AbgAGVJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:09:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35168 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:09:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729845AbgAGVJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:09:34 -0500
+        id S1729696AbgAGVJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:09:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D5CA222D9;
-        Tue,  7 Jan 2020 21:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EA72072A;
+        Tue,  7 Jan 2020 21:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431374;
-        bh=10+L5mGMJmdCExlrHob+ZT1FHuyMtgBPRYa1uDx1N5k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVk0yvt3t1gaLOZAruZQ4Zm1RED3Agzp3lAO5xlt+WXWdfZMZuLyYie8e/Hib0Vdr
-         v40XyU7duBXXZs6EMLXi5YhJqlb4v6MGAXCI8eWdX74ss3cTYPk+M1zRdFaD9+STBf
-         1uytrkDmgnxKwfBNLqNL432hRTmx7RIUhocjQCR8=
+        s=default; t=1578431376;
+        bh=RjJZF4jJUti91nurhuYEgg0HvWKbhj8q5dVfUjyk164=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uA2+ge5oExHnf1uvtBr3rllox82q8PauNUP4YO2inOTN+IIRZ68D9RX20AlW7Megm
+         WA03MwWZE6pFTDP9h0GThYp9FXLP9p/yoMh60rXNK67F22Zjq2czF84Q1yYTf3yJI5
+         jbgAsvNs4QPJtYeytuzTygkFUmo/Q88mIbAius3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Chuan <gaochuan4@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/74] scsi: libsas: stop discovering if oob mode is disconnected
-Date:   Tue,  7 Jan 2020 21:54:34 +0100
-Message-Id: <20200107205141.329810979@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/74] 4.14.163-stable review
+Date:   Tue,  7 Jan 2020 21:54:25 +0100
+Message-Id: <20200107205135.369001641@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
-References: <20200107205135.369001641@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.163-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.163-rc1
+X-KernelTest-Deadline: 2020-01-09T20:52+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+This is the start of the stable review cycle for the 4.14.163 release.
+There are 74 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit f70267f379b5e5e11bdc5d72a56bf17e5feed01f ]
+Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+Anything received after that time might be too late.
 
-The discovering of sas port is driven by workqueue in libsas. When libsas
-is processing port events or phy events in workqueue, new events may rise
-up and change the state of some structures such as asd_sas_phy.  This may
-cause some problems such as follows:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.163-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-==>thread 1                       ==>thread 2
+thanks,
 
-                                  ==>phy up
-                                  ==>phy_up_v3_hw()
-                                    ==>oob_mode = SATA_OOB_MODE;
-                                  ==>phy down quickly
-                                  ==>hisi_sas_phy_down()
-                                    ==>sas_ha->notify_phy_event()
-                                    ==>sas_phy_disconnected()
-                                      ==>oob_mode = OOB_NOT_CONNECTED
-==>workqueue wakeup
-==>sas_form_port()
-  ==>sas_discover_domain()
-    ==>sas_get_port_device()
-      ==>oob_mode is OOB_NOT_CONNECTED and device
-         is wrongly taken as expander
+greg k-h
 
-This at last lead to the panic when libsas trying to issue a command to
-discover the device.
+-------------
+Pseudo-Shortlog of commits:
 
-[183047.614035] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000058
-[183047.622896] Mem abort info:
-[183047.625762]   ESR = 0x96000004
-[183047.628893]   Exception class = DABT (current EL), IL = 32 bits
-[183047.634888]   SET = 0, FnV = 0
-[183047.638015]   EA = 0, S1PTW = 0
-[183047.641232] Data abort info:
-[183047.644189]   ISV = 0, ISS = 0x00000004
-[183047.648100]   CM = 0, WnR = 0
-[183047.651145] user pgtable: 4k pages, 48-bit VAs, pgdp =
-00000000b7df67be
-[183047.657834] [0000000000000058] pgd=0000000000000000
-[183047.662789] Internal error: Oops: 96000004 [#1] SMP
-[183047.667740] Process kworker/u16:2 (pid: 31291, stack limit =
-0x00000000417c4974)
-[183047.675208] CPU: 0 PID: 3291 Comm: kworker/u16:2 Tainted: G
-W  OE 4.19.36-vhulk1907.1.0.h410.eulerosv2r8.aarch64 #1
-[183047.687015] Hardware name: N/A N/A/Kunpeng Desktop Board D920S10,
-BIOS 0.15 10/22/2019
-[183047.695007] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
-[183047.700999] pstate: 20c00009 (nzCv daif +PAN +UAO)
-[183047.705864] pc : prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.711510] lr : prep_ata_v3_hw+0xb0/0x230 [hisi_sas_v3_hw]
-[183047.717153] sp : ffff00000f28ba60
-[183047.720541] x29: ffff00000f28ba60 x28: ffff8026852d7228
-[183047.725925] x27: ffff8027dba3e0a8 x26: ffff8027c05fc200
-[183047.731310] x25: 0000000000000000 x24: ffff8026bafa8dc0
-[183047.736695] x23: ffff8027c05fc218 x22: ffff8026852d7228
-[183047.742079] x21: ffff80007c2f2940 x20: ffff8027c05fc200
-[183047.747464] x19: 0000000000f80800 x18: 0000000000000010
-[183047.752848] x17: 0000000000000000 x16: 0000000000000000
-[183047.758232] x15: ffff000089a5a4ff x14: 0000000000000005
-[183047.763617] x13: ffff000009a5a50e x12: ffff8026bafa1e20
-[183047.769001] x11: ffff0000087453b8 x10: ffff00000f28b870
-[183047.774385] x9 : 0000000000000000 x8 : ffff80007e58f9b0
-[183047.779770] x7 : 0000000000000000 x6 : 000000000000003f
-[183047.785154] x5 : 0000000000000040 x4 : ffffffffffffffe0
-[183047.790538] x3 : 00000000000000f8 x2 : 0000000002000007
-[183047.795922] x1 : 0000000000000008 x0 : 0000000000000000
-[183047.801307] Call trace:
-[183047.803827]  prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.809127]  hisi_sas_task_prep+0x750/0x888 [hisi_sas_main]
-[183047.814773]  hisi_sas_task_exec.isra.7+0x88/0x1f0 [hisi_sas_main]
-[183047.820939]  hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
-[183047.826757]  smp_execute_task_sg+0xec/0x218
-[183047.831013]  smp_execute_task+0x74/0xa0
-[183047.834921]  sas_discover_expander.part.7+0x9c/0x5f8
-[183047.839959]  sas_discover_root_expander+0x90/0x160
-[183047.844822]  sas_discover_domain+0x1b8/0x1e8
-[183047.849164]  process_one_work+0x1b4/0x3f8
-[183047.853246]  worker_thread+0x54/0x470
-[183047.856981]  kthread+0x134/0x138
-[183047.860283]  ret_from_fork+0x10/0x18
-[183047.863931] Code: f9407a80 528000e2 39409281 72a04002 (b9405800)
-[183047.870097] kernel fault(0x1) notification starting on CPU 0
-[183047.875828] kernel fault(0x1) notification finished on CPU 0
-[183047.881559] Modules linked in: unibsp(OE) hns3(OE) hclge(OE)
-hnae3(OE) mem_drv(OE) hisi_sas_v3_hw(OE) hisi_sas_main(OE)
-[183047.892418] ---[ end trace 4cc26083fc11b783  ]---
-[183047.897107] Kernel panic - not syncing: Fatal exception
-[183047.902403] kernel fault(0x5) notification starting on CPU 0
-[183047.908134] kernel fault(0x5) notification finished on CPU 0
-[183047.913865] SMP: stopping secondary CPUs
-[183047.917861] Kernel Offset: disabled
-[183047.921422] CPU features: 0x2,a2a00a38
-[183047.925243] Memory Limit: none
-[183047.928372] kernel reboot(0x2) notification starting on CPU 0
-[183047.934190] kernel reboot(0x2) notification finished on CPU 0
-[183047.940008] ---[ end Kernel panic - not syncing: Fatal exception
-]---
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.163-rc1
 
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Link: https://lore.kernel.org/r/20191206011118.46909-1-yanaijie@huawei.com
-Reported-by: Gao Chuan <gaochuan4@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/libsas/sas_discover.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    perf/x86/intel/bts: Fix the use of page_private()
 
-diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
-index 60de66252fa2..b200edc665a5 100644
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -97,12 +97,21 @@ static int sas_get_port_device(struct asd_sas_port *port)
- 		else
- 			dev->dev_type = SAS_SATA_DEV;
- 		dev->tproto = SAS_PROTOCOL_SATA;
--	} else {
-+	} else if (port->oob_mode == SAS_OOB_MODE) {
- 		struct sas_identify_frame *id =
- 			(struct sas_identify_frame *) dev->frame_rcvd;
- 		dev->dev_type = id->dev_type;
- 		dev->iproto = id->initiator_bits;
- 		dev->tproto = id->target_bits;
-+	} else {
-+		/* If the oob mode is OOB_NOT_CONNECTED, the port is
-+		 * disconnected due to race with PHY down. We cannot
-+		 * continue to discover this port
-+		 */
-+		sas_put_device(dev);
-+		pr_warn("Port %016llx is disconnected when discovering\n",
-+			SAS_ADDR(port->attached_sas_addr));
-+		return -ENODEV;
- 	}
- 
- 	sas_init_dev(dev);
--- 
-2.20.1
+SeongJae Park <sjpark@amazon.de>
+    xen/blkback: Avoid unmapping unmapped grant pages
 
+Heiko Carstens <heiko.carstens@de.ibm.com>
+    s390/smp: fix physical to logical CPU map for SMT
+
+Eric Dumazet <edumazet@google.com>
+    net: add annotations on hh->hh_len lockless accesses
+
+Anand Moon <linux.amoon@gmail.com>
+    arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power failed warning
+
+Masashi Honma <masashi.honma@gmail.com>
+    ath9k_htc: Discard undersized packets
+
+Masashi Honma <masashi.honma@gmail.com>
+    ath9k_htc: Modify byte order for an error message
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix possible NULL pointer access in ICMP handling
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    coresight: etb10: Do not call smp_processor_id from preemptible
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    coresight: tmc-etf: Do not call smp_processor_id from preemptible
+
+Florian Westphal <fw@strlen.de>
+    selftests: rtnetlink: add addresses with fixed life time
+
+Daniel Axtens <dja@axtens.net>
+    powerpc/pseries/hvconsole: Fix stack overread via udbg
+
+Imre Deak <imre.deak@intel.com>
+    drm/mst: Fix MST sideband up-reply failure handling
+
+Chad Dupuis <cdupuis@marvell.com>
+    scsi: qedf: Do not retry ELS request if qedf_alloc_cmd fails
+
+Al Viro <viro@zeniv.linux.org.uk>
+    fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
+
+Leo Yan <leo.yan@linaro.org>
+    tty: serial: msm_serial: Fix lockup for sysrq and oops
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix typo in example
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    media: usb: fix memory leak in af9005_identify_state
+
+Stephan Gerhold <stephan@gerhold.net>
+    regulator: ab8500: Remove AB8505 USB regulator
+
+Colin Ian King <colin.king@canonical.com>
+    media: flexcop-usb: ensure -EIO is returned on error condition
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    Bluetooth: Fix memory leak in hci_connect_le_scan
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    Bluetooth: delete a stray unlock
+
+Oliver Neukum <oneukum@suse.com>
+    Bluetooth: btusb: fix PM leak in error case of setup
+
+Michael Haener <michael.haener@siemens.com>
+    platform/x86: pmc_atom: Add Siemens CONNECT X300 to critclk_systems DMI table
+
+Omar Sandoval <osandov@fb.com>
+    xfs: don't check for AG deadlock for realtime files in bunmapi
+
+Roman Bolshakov <r.bolshakov@yadro.com>
+    scsi: qla2xxx: Drop superfluous INIT_WORK of del_work
+
+Scott Mayhew <smayhew@redhat.com>
+    nfsd4: fix up replay_matches_cache()
+
+Leonard Crestez <leonard.crestez@nxp.com>
+    PM / devfreq: Check NULL governor in available_governors_show
+
+Catalin Marinas <catalin.marinas@arm.com>
+    arm64: Revert support for execute-only user mappings
+
+Wen Yang <wenyang@linux.alibaba.com>
+    ftrace: Avoid potential division by zero in function profiler
+
+chenqiwu <chenqiwu@xiaomi.com>
+    exit: panic before exit_mm() on global init exit
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: firewire-motu: Correct a typo in the clock proc string
+
+Colin Ian King <colin.king@canonical.com>
+    ALSA: cs4236: fix error return comparison of an unsigned integer
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    tracing: Have the histogram compare functions convert to u64 first
+
+Prateek Sood <prsood@codeaurora.org>
+    tracing: Fix lock inversion in trace_event_enable_tgid_record()
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    gpiolib: fix up emulated open drain outputs
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ata: ahci_brcm: Fix AHCI resources management
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ata: ahci_brcm: Allow optional reset controller to be used
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+
+Arnd Bergmann <arnd@arndb.de>
+    compat_ioctl: block: handle BLKREPORTZONE/BLKRESETZONE
+
+Arnd Bergmann <arnd@arndb.de>
+    compat_ioctl: block: handle Persistent Reservations
+
+Lukas Wunner <lukas@wunner.de>
+    dmaengine: Fix access to uninitialized dma_slave_caps
+
+Amir Goldstein <amir73il@gmail.com>
+    locks: print unsigned ino in /proc/locks
+
+Aleksandr Yashkin <a.yashkin@inango-systems.com>
+    pstore/ram: Write new dumps to start of recycled zones
+
+Shakeel Butt <shakeelb@google.com>
+    memcg: account security cred as well to kmemcg
+
+Chanho Min <chanho.min@lge.com>
+    mm/zsmalloc.c: fix the migrated zspage statistics.
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: cec: avoid decrementing transmit_queue_sz if it is 0
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: cec: CEC 2.0-only bcast messages were ignored
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    media: pulse8-cec: fix lost cec_transmit_attempt_done() call
+
+Paul Burton <paulburton@kernel.org>
+    MIPS: Avoid VDSO ABI breakage due to global register variable
+
+Stefan Mavrodiev <stefan@olimex.com>
+    drm/sun4i: hdmi: Remove duplicate cleanup calls
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
+
+Daniel Vetter <daniel.vetter@ffwll.ch>
+    drm: limit to INT_MAX in create_blob ioctl
+
+Christian Brauner <christian.brauner@ubuntu.com>
+    taskstats: fix data-race
+
+Brian Foster <bfoster@redhat.com>
+    xfs: fix mount failure crash on invalid iclog memory access
+
+Andy Whitcroft <apw@canonical.com>
+    PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
+
+Juergen Gross <jgross@suse.com>
+    xen/balloon: fix ballooned page accounting without hotplug enabled
+
+Paul Durrant <pdurrant@amazon.com>
+    xen-blkback: prevent premature module unload
+
+Parav Pandit <parav@mellanox.com>
+    IB/mlx4: Follow mirror sequence of device add during device removal
+
+Thomas Richter <tmricht@linux.ibm.com>
+    s390/cpum_sf: Avoid SBD overflow condition in irq handler
+
+Thomas Richter <tmricht@linux.ibm.com>
+    s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+
+Zhiqiang Liu <liuzhiqiang26@huawei.com>
+    md: raid1: check rdev before reference in raid1_sync_request func
+
+Jens Axboe <axboe@kernel.dk>
+    net: make socket read/write_iter() honor IOCB_NOWAIT
+
+EJ Hsu <ejh@nvidia.com>
+    usb: gadget: fix wrong endpoint desc
+
+Hans de Goede <hdegoede@redhat.com>
+    drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
+
+Jason Yan <yanaijie@huawei.com>
+    scsi: libsas: stop discovering if oob mode is disconnected
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    scsi: iscsi: qla4xxx: fix double free in probe
+
+Roman Bolshakov <r.bolshakov@yadro.com>
+    scsi: qla2xxx: Don't call qlt_async_event twice
+
+Bo Wu <wubo40@huawei.com>
+    scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+
+Steve Wise <larrystevenwise@gmail.com>
+    rxe: correctly calculate iCRC for unaligned payloads
+
+Chuhong Yuan <hslester96@gmail.com>
+    RDMA/cma: add missed unregister_pernet_subsys in init failure
+
+Leonard Crestez <leonard.crestez@nxp.com>
+    PM / devfreq: Don't fail devfreq_dev_release if not in list
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    iio: adc: max9611: Fix too short conversion time delay
+
+James Smart <jsmart2021@gmail.com>
+    nvme_fc: add module to ops template to allow module references
+
+
+-------------
+
+Diffstat:
+
+ .../bindings/clock/renesas,rcar-usb2-clock-sel.txt |   2 +-
+ Makefile                                           |   4 +-
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |   4 +-
+ arch/arm64/include/asm/pgtable-prot.h              |   5 +-
+ arch/arm64/include/asm/pgtable.h                   |  10 +-
+ arch/arm64/mm/fault.c                              |   2 +-
+ arch/mips/include/asm/thread_info.h                |  20 +++-
+ arch/powerpc/platforms/pseries/hvconsole.c         |   2 +-
+ arch/s390/kernel/perf_cpum_sf.c                    |  22 ++--
+ arch/s390/kernel/smp.c                             |  80 ++++++++++-----
+ arch/x86/events/intel/bts.c                        |  16 ++-
+ block/compat_ioctl.c                               |  11 ++
+ drivers/ata/ahci_brcm.c                            | 112 +++++++++++++++------
+ drivers/ata/libahci_platform.c                     |   6 +-
+ drivers/block/xen-blkback/blkback.c                |   2 +
+ drivers/block/xen-blkback/xenbus.c                 |  10 ++
+ drivers/bluetooth/btusb.c                          |   3 +-
+ drivers/devfreq/devfreq.c                          |   8 +-
+ drivers/firewire/net.c                             |   6 +-
+ drivers/gpio/gpiolib.c                             |   8 ++
+ drivers/gpu/drm/drm_dp_mst_topology.c              |   6 +-
+ drivers/gpu/drm/drm_property.c                     |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_connector.h        | 110 ++++++++++----------
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   2 -
+ drivers/hwtracing/coresight/coresight-etb10.c      |   4 +-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c    |   4 +-
+ drivers/iio/adc/max9611.c                          |  16 +--
+ drivers/infiniband/core/cma.c                      |   1 +
+ drivers/infiniband/hw/mlx4/main.c                  |   9 +-
+ drivers/infiniband/sw/rxe/rxe_recv.c               |   2 +-
+ drivers/infiniband/sw/rxe/rxe_req.c                |   6 ++
+ drivers/infiniband/sw/rxe/rxe_resp.c               |   7 ++
+ drivers/md/raid1.c                                 |   2 +-
+ drivers/media/cec/cec-adap.c                       |  20 +++-
+ drivers/media/usb/b2c2/flexcop-usb.c               |   2 +-
+ drivers/media/usb/dvb-usb/af9005.c                 |   5 +-
+ drivers/media/usb/pulse8-cec/pulse8-cec.c          |  17 +++-
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c      |  23 ++++-
+ drivers/nvme/host/fc.c                             |  14 ++-
+ drivers/nvme/target/fcloop.c                       |   1 +
+ drivers/platform/x86/pmc_atom.c                    |   8 ++
+ drivers/regulator/ab8500.c                         |  17 ----
+ drivers/scsi/libsas/sas_discover.c                 |  11 +-
+ drivers/scsi/lpfc/lpfc_bsg.c                       |  15 +--
+ drivers/scsi/lpfc/lpfc_nvme.c                      |   2 +
+ drivers/scsi/qedf/qedf_els.c                       |  16 +--
+ drivers/scsi/qla2xxx/qla_isr.c                     |   4 -
+ drivers/scsi/qla2xxx/qla_nvme.c                    |   1 +
+ drivers/scsi/qla2xxx/qla_target.c                  |   1 -
+ drivers/scsi/qla4xxx/ql4_os.c                      |   1 -
+ drivers/tty/hvc/hvc_vio.c                          |  16 ++-
+ drivers/tty/serial/msm_serial.c                    |  13 ++-
+ drivers/usb/gadget/function/f_ecm.c                |   6 +-
+ drivers/usb/gadget/function/f_rndis.c              |   1 +
+ drivers/xen/balloon.c                              |   3 +-
+ fs/compat_ioctl.c                                  |   3 +-
+ fs/locks.c                                         |   2 +-
+ fs/nfsd/nfs4state.c                                |  15 ++-
+ fs/pstore/ram.c                                    |  11 ++
+ fs/xfs/libxfs/xfs_bmap.c                           |   2 +-
+ fs/xfs/xfs_log.c                                   |   2 +
+ include/linux/ahci_platform.h                      |   2 +
+ include/linux/dmaengine.h                          |   5 +-
+ include/linux/nvme-fc-driver.h                     |   4 +
+ include/linux/regulator/ab8500.h                   |   1 -
+ include/net/neighbour.h                            |   2 +-
+ kernel/cred.c                                      |   6 +-
+ kernel/exit.c                                      |  12 ++-
+ kernel/power/snapshot.c                            |   9 +-
+ kernel/taskstats.c                                 |  30 ++++--
+ kernel/trace/ftrace.c                              |   6 +-
+ kernel/trace/trace.c                               |   8 ++
+ kernel/trace/trace_events.c                        |   8 +-
+ kernel/trace/tracing_map.c                         |   4 +-
+ mm/mmap.c                                          |   6 --
+ mm/zsmalloc.c                                      |   5 +
+ net/bluetooth/hci_conn.c                           |   4 +-
+ net/bluetooth/l2cap_core.c                         |   4 +-
+ net/core/neighbour.c                               |   4 +-
+ net/ethernet/eth.c                                 |   7 +-
+ net/rxrpc/peer_event.c                             |   3 +
+ net/socket.c                                       |   4 +-
+ sound/firewire/motu/motu-proc.c                    |   2 +-
+ sound/isa/cs423x/cs4236.c                          |   3 +-
+ sound/pci/ice1712/ice1724.c                        |   9 +-
+ tools/testing/selftests/net/rtnetlink.sh           |  21 ++++
+ 86 files changed, 610 insertions(+), 295 deletions(-)
 
 
