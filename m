@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F37EC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD58C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508D12072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6172072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578431877;
-	bh=McbvTobzyC0pAT1LhARxNTpZOgqqYc8/Yj0GOxRKUzs=;
+	s=default; t=1578431880;
+	bh=ynGWq8qZ8ZqNA77DDnTStpAONr6IU9TwXKtbwqjra10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BScgjjxmOge5mYan5QGk8RVJ9poS7CHqL525BV4C2UPFrdwj7LGugq/E5pHq+MlMF
-	 E34FcyZ+zFE/szrKSBFVPlepfXdC3NcQLhd0mwyN+sqWUKnKlYyRnIFFD7qfd1fo54
-	 33k+t9/SvqzDPXSQBTYTY4OiuDu7UcpH4XPnbd28=
+	b=YdZqexpoBzF4ZXx93dhMxW1hbS3Z9SROFP71F7t6imMktpzLgCHYIw7FWgmGmcU96
+	 mAauZVCewgNQA9Ybb8mnAX7fVfjFmdbA4XHkxSIrPlnk6y8dWEG430PDQ7Kptl5zj3
+	 PSjD8QXKbJKxjjDIaD3WbrqeICv+KiVVQ5msCRwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgAGVR4 (ORCPT
+        id S1729230AbgAGVFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:17:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 16:05:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbgAGVFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:05:32 -0500
+        id S1729195AbgAGVFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:05:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B96CC20880;
-        Tue,  7 Jan 2020 21:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3C220880;
+        Tue,  7 Jan 2020 21:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578431131;
-        bh=McbvTobzyC0pAT1LhARxNTpZOgqqYc8/Yj0GOxRKUzs=;
+        s=default; t=1578431109;
+        bh=ynGWq8qZ8ZqNA77DDnTStpAONr6IU9TwXKtbwqjra10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuRf82hWEKdF4q1XgQjJGlgtisYoX1nvdwcZHp67ToFTypNmQ9tWXWv3hu+cYimrQ
-         0Oj6K3n37Be+CxnyDc6ztAudsulm/9YxD2tvvip+Lv/nIPt8TDRPSsxCuB8YhZX1VU
-         wXPFfxwSowCVvW2HeqSZoUkspa1ww1Y7OHFuBa3g=
+        b=CKTwbqNZGRYfb68gSdxdC/Q0ACTr+xXqei3nBfPL6TLHM2JXI5KmtcQGvGSfbNOnw
+         1Xa+qQOLfXLneBF5ZVzSrMZbt5xW73m5xD5TCULxhm5Lvoi6pvpquDmPkME+ln3mi/
+         Wp6U1S0b1d2bTFtWN+7pNgTl3sxZIB0dO6tsz3hY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/115] afs: Fix afs_find_server lookups for ipv4 peers
-Date:   Tue,  7 Jan 2020 21:53:40 +0100
-Message-Id: <20200107205246.338082294@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/115] ALSA: hda/realtek - Enable the bass speaker of ASUS UX431FLC
+Date:   Tue,  7 Jan 2020 21:54:06 +0100
+Message-Id: <20200107205301.502847920@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
 References: <20200107205240.283674026@linuxfoundation.org>
@@ -60,93 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+From: Chris Chiu <chiu@endlessm.com>
 
-[ Upstream commit 9bd0160d12370a076e44f8d1320cde9c83f2c647 ]
+[ Upstream commit 48e01504cf5315cbe6de9b7412e792bfcc3dd9e1 ]
 
-afs_find_server tries to find a server that has an address that
-matches the transport address of an rxrpc peer.  The code assumes
-that the transport address is always ipv6, with ipv4 represented
-as ipv4 mapped addresses, but that's not the case.  If the transport
-family is AF_INET, srx->transport.sin6.sin6_addr.s6_addr32[] will
-be beyond the actual ipv4 address and will always be 0, and all
-ipv4 addresses will be seen as matching.
+ASUS reported that there's an bass speaker in addition to internal
+speaker and it uses DAC 0x02. It was not enabled in the commit
+436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS
+UX431FLC") which only enables the amplifier and the front speaker.
+This commit enables the bass speaker on top of the aforementioned
+work to improve the acoustic experience.
 
-As a result, the first ipv4 address seen on any server will be
-considered a match, and the server returned may be the wrong one.
-
-One of the consequences is that callbacks received over ipv4 will
-only be correctly applied for the server that happens to have the
-first ipv4 address on the fs_addresses4 list.  Callbacks over ipv4
-from all other servers are dropped, causing the client to serve stale
-data.
-
-This is fixed by looking at the transport family, and comparing ipv4
-addresses based on a sockaddr_in structure rather than a sockaddr_in6.
-
-Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS UX431FLC")
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191230031118.95076-1-chiu@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/server.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ sound/pci/hda/patch_realtek.c | 38 +++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/fs/afs/server.c b/fs/afs/server.c
-index 1d329e6981d5..2c7f6211c360 100644
---- a/fs/afs/server.c
-+++ b/fs/afs/server.c
-@@ -34,18 +34,11 @@ static void afs_dec_servers_outstanding(struct afs_net *net)
- struct afs_server *afs_find_server(struct afs_net *net,
- 				   const struct sockaddr_rxrpc *srx)
- {
--	const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
- 	const struct afs_addr_list *alist;
- 	struct afs_server *server = NULL;
- 	unsigned int i;
--	bool ipv6 = true;
- 	int seq = 0, diff;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 9cd0cef9ec27..0c007d14588a 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5702,11 +5702,12 @@ enum {
+ 	ALC256_FIXUP_ASUS_HEADSET_MIC,
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
+-	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+ 	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
+-	ALC294_FIXUP_ASUS_INTSPK_GPIO,
+ 	ALC289_FIXUP_DELL_SPK2,
+ 	ALC289_FIXUP_DUAL_SPK,
++	ALC294_FIXUP_SPK2_TO_DAC1,
++	ALC294_FIXUP_ASUS_DUAL_SPK,
++
+ };
  
--	if (srx->transport.sin6.sin6_addr.s6_addr32[0] == 0 ||
--	    srx->transport.sin6.sin6_addr.s6_addr32[1] == 0 ||
--	    srx->transport.sin6.sin6_addr.s6_addr32[2] == htonl(0xffff))
--		ipv6 = false;
--
- 	rcu_read_lock();
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6750,16 +6751,6 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		}
+ 	},
+-	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
+-		.type = HDA_FIXUP_PINS,
+-		.v.pins = (const struct hda_pintbl[]) {
+-			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
+-			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
+-			{ }
+-		},
+-		.chained = true,
+-		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
+-	},
+ 	[ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -6770,13 +6761,6 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
+-	[ALC294_FIXUP_ASUS_INTSPK_GPIO] = {
+-		.type = HDA_FIXUP_FUNC,
+-		/* The GPIO must be pulled to initialize the AMP */
+-		.v.func = alc_fixup_gpio4,
+-		.chained = true,
+-		.chain_id = ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
+-	},
+ 	[ALC289_FIXUP_DELL_SPK2] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -6792,6 +6776,20 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC289_FIXUP_DELL_SPK2
+ 	},
++	[ALC294_FIXUP_SPK2_TO_DAC1] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_speaker2_to_dac1,
++		.chained = true,
++		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
++	},
++	[ALC294_FIXUP_ASUS_DUAL_SPK] = {
++		.type = HDA_FIXUP_FUNC,
++		/* The GPIO must be pulled to initialize the AMP */
++		.v.func = alc_fixup_gpio4,
++		.chained = true,
++		.chain_id = ALC294_FIXUP_SPK2_TO_DAC1
++	},
++
+ };
  
- 	do {
-@@ -54,7 +47,8 @@ struct afs_server *afs_find_server(struct afs_net *net,
- 		server = NULL;
- 		read_seqbegin_or_lock(&net->fs_addr_lock, &seq);
- 
--		if (ipv6) {
-+		if (srx->transport.family == AF_INET6) {
-+			const struct sockaddr_in6 *a = &srx->transport.sin6, *b;
- 			hlist_for_each_entry_rcu(server, &net->fs_addresses6, addr6_link) {
- 				alist = rcu_dereference(server->addresses);
- 				for (i = alist->nr_ipv4; i < alist->nr_addrs; i++) {
-@@ -70,15 +64,16 @@ struct afs_server *afs_find_server(struct afs_net *net,
- 				}
- 			}
- 		} else {
-+			const struct sockaddr_in *a = &srx->transport.sin, *b;
- 			hlist_for_each_entry_rcu(server, &net->fs_addresses4, addr4_link) {
- 				alist = rcu_dereference(server->addresses);
- 				for (i = 0; i < alist->nr_ipv4; i++) {
--					b = &alist->addrs[i].transport.sin6;
--					diff = ((u16 __force)a->sin6_port -
--						(u16 __force)b->sin6_port);
-+					b = &alist->addrs[i].transport.sin;
-+					diff = ((u16 __force)a->sin_port -
-+						(u16 __force)b->sin_port);
- 					if (diff == 0)
--						diff = ((u32 __force)a->sin6_addr.s6_addr32[3] -
--							(u32 __force)b->sin6_addr.s6_addr32[3]);
-+						diff = ((u32 __force)a->sin_addr.s_addr -
-+							(u32 __force)b->sin_addr.s_addr);
- 					if (diff == 0)
- 						goto found;
- 				}
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6953,7 +6951,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+-	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_GPIO),
++	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPK),
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
 -- 
 2.20.1
 
