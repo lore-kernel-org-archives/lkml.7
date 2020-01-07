@@ -6,117 +6,124 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B481C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4B5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157C22073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C342087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 22:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbgAGWPS (ORCPT
+        id S1727512AbgAGWP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:15:18 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:45955 "EHLO
+        Tue, 7 Jan 2020 17:15:29 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:47015 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgAGWPR (ORCPT
+        with ESMTP id S1726142AbgAGWP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:15:17 -0500
+        Tue, 7 Jan 2020 17:15:28 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MG9wg-1iuW631tIC-00Gbup; Tue, 07 Jan 2020 23:15:07 +0100
+ 1Miqvq-1jIoEP0oqq-00eu3b; Tue, 07 Jan 2020 23:15:13 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Jens Axboe <axboe@kernel.dk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ata: brcm: mark PM functions as __maybe_unused
-Date:   Tue,  7 Jan 2020 23:14:59 +0100
-Message-Id: <20200107221506.2731280-1-arnd@arndb.de>
+Subject: [PATCH 2/2] ata: brcm: fix reset controller API usage
+Date:   Tue,  7 Jan 2020 23:15:00 +0100
+Message-Id: <20200107221506.2731280-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200107221506.2731280-1-arnd@arndb.de>
+References: <20200107221506.2731280-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DovMoR4b0nCpsdlDujncpNJUI2J0ouf307+Lf21R7sM5u6OzvUg
- gJq6cbUMas+EN4O5Js+6Rmp7Bhl/HHPDxn2nyrB1sd6DkRxKYG/5+o/6PeapiCX8nucTQ7g
- S3QM9wm0QdEW2/NFoNbIErNW88BxtKqnPeCu1nDUCzCvj7bOKldXuHSJN1l7WZROWiWde0n
- sw7oi82zk/quPS4mUExNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qchDad6Zzps=:mnwYVMD1anhgN4O0Kjzm5z
- PLKaLb1ESjAwVHCh8ct35hH+95LNEtDCew/25yEm10Ifoev9p+cdrKI0S+q88FSb8HqBHhZ6X
- sG8Vjg6dgxh3LJU1o6bocPobKKF8bJBh9InqZlxzKnOn2TMNrAcz+Ajn1VB2vK/DzLQwLvI0d
- bc767CIPQo9cfpUxps3qGM6EantmELhf4Km09aIVOjsgwB+A+9wPvioViREby64QFCXJ6qqnx
- tjqTd4n+BS960mOI9e+vMhCB6H/wiR9p0l5RHKXwUcmkXaVevMzrRs1IXQXtI77R617CPgCbo
- t/olOzJOGOLqCQ4B0ZxSAVxwNB6vu8ERkhIFiAV6me4UJKs4lblSCNedtf4a4AsKeJdBr281q
- CeQdWw46RL1Qr6bbWgwrP72FCsPQLCV1oPF05JL6GqsJVYrmG54jEQPYLxWfDqgJg7R15ZBid
- rMXwnaT///N5BhmEUkU8u5XEJWvfvzTbT2ZErj0ltqdBUG8JRGQO1TJL1hLSxaXOBExi4W/YP
- BJUM2W2BFw+NpKJQ3L0Dj7olwjmmVeBxpelX43vXwatgBOXoZMFKj81Vbd/ppsOB/Z4f2be1B
- /fRkKunIxjydl++V4qWL8Wc3Qrf1molEoSz2wvxw5dFrwTf9eZS4RJfBnXwYBQag5bCPh7IPF
- OHryOi3zknhMYc0HXQ/mWZgAD1AgG8uFAGfH1xktMUKdym7Flz1kd6s1aLGdKQ/CrNfMIwAr8
- YYKoQOJ4CTn/yBpR9Z7EBDf2KTZAVtwabB78JNRAkAgOxOQB/0W5zu03g6pKbESKEoO2WDmjd
- 1URLJEDO2q/OBVIFqlv47XCObtn0mVOJ+g5g6NyB7C5Hq8PBzaQb8kWmf/THGx31kWUBqGZlt
- N2m/7APz0vfhqa0hFFsg==
+X-Provags-ID: V03:K1:NmmCTE4SXgwe7dUPXnI9R0WefSBAKTAyb3PWuBBiYqWyYG90CIG
+ 0a8RCDIQQ+Vd26gby7ZP3c2cW27ewxbB9iSPYUfA9EXVptS9kj5H0ENFlg31yYVdEBOj6sV
+ acRO95sS1zZ6ZPeXqR8IRsnKduiT840K+cilEHftOVYbb5d6tsZbUbs3pmjvwPyFlFYG8kD
+ veSvtvARr3CEDyBPO1AOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MVAdRrNCLEs=:KAngBEb356Ra2Eto7yZgT+
+ iK2PfTImBXwfmwyBHC9TKyZgr8yiFTgG85pjfdAL9MpXWLEjAwHkiTi7q+B6ijTEUljlDxrlq
+ /eLrS+y644W6iBzlHLnYiZY1NXYeeHjqs1HbPiSJCZgyDlFPZVPfz+i83NRwBrwFl8UZVCvhH
+ NtqcgNB2MI/GPxHYw+yhp77ATL2+EfKPth+p3coW4rTzIjNcMq8mDAwv2UP2ruqD56hDj89gI
+ iQb5vVzy/TvLj43PuAU8+jcPZ9WHMqzybrZdAN/50squZjxlzbrMfQeNE/wftSj4IhtHhE963
+ zHl7NP3yNS1Ys/BFHY/KyQq3nrktYAuCe1P2wDTXqpu72LTWUfiivwRh1NdbzSkprAdYL2ciH
+ /2v2DRQpAPsMH9l66Ery6vP8lTEAd/EDN5UuNL6fu10zw/G059jeAmSygj/MSVP7EEjus5SYy
+ YBytvtfQXNJOPBOM2X+9J7mLNY2mecBwgdTz025IWvYc0j84WUG3FtcXInqJGquAkuwnUg8p0
+ NEXgCgje0oSn1nvcJc2UvxpFn53Lx2wa5eg4U5kesL5/AvOGf0Uj5jBEk+hQU8kdH94J7GfeI
+ GrYLbMA4hIJBSLKSo+f2LRYPrwLvhOQ8MBJ6LV+4jXtaiVtWOty2jGx7uQSH0qGzFHKQ2Ml6O
+ 8atGV3xDiQ7Ofd47roRsJ0G7x8UgROHTjHU2u6QjA/wDpoTVQxCd6zpSG8Wb3/02SfgFX2wWn
+ OrTI5rgxmJTvlmS2d8PcQHl0V8sNNry7nF62tKqtQyntmXjj3l9nKfhSEA6AEcAtk0r6I426Y
+ kya9rlzWEyCT+V0o9ePI2nS3kkwUF9la10AAmPWad3nK1rfJdiag+1LE0IeOiX1HTp9laSJfZ
+ 0NkMrQcShznSWX6fWYxg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new shutdown callback causes a link failure:
+While fixing another issue in this driver I noticed it uses
+IS_ERR_OR_NULL(), which is almost always a mistake.
 
-drivers/ata/ahci_brcm.c: In function 'brcm_ahci_shutdown':
-drivers/ata/ahci_brcm.c:552:8: error: implicit declaration of function 'brcm_ahci_suspend'; did you mean 'brcm_ahci_shutdown'? [-Werror=implicit-function-declaration]
-  ret = brcm_ahci_suspend(&pdev->dev);
-        ^~~~~~~~~~~~~~~~~
+Change the driver to use the proper devm_reset_control_get_optional()
+interface instead and remove the checks except for the one that
+checks for a failure in that function.
 
-Remove the incorrect #ifdef and use __maybe_unused annotations
-instead to make this more robust.
-
-Fixes: 7de9b1688c1d ("ata: ahci_brcm: Add a shutdown callback")
+Fixes: 2b2c47d9e1fe ("ata: ahci_brcm: Allow optional reset controller to be used")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/ata/ahci_brcm.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/ata/ahci_brcm.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 13ceca687104..239333d11b88 100644
+index 239333d11b88..7ac1141c6ad0 100644
 --- a/drivers/ata/ahci_brcm.c
 +++ b/drivers/ata/ahci_brcm.c
-@@ -338,7 +338,6 @@ static const struct ata_port_info ahci_brcm_port_info = {
- 	.port_ops	= &ahci_brcm_platform_ops,
- };
+@@ -352,8 +352,7 @@ static int brcm_ahci_suspend(struct device *dev)
+ 	else
+ 		ret = 0;
  
--#ifdef CONFIG_PM_SLEEP
- static int brcm_ahci_suspend(struct device *dev)
- {
- 	struct ata_host *host = dev_get_drvdata(dev);
-@@ -348,7 +347,10 @@ static int brcm_ahci_suspend(struct device *dev)
+-	if (!IS_ERR_OR_NULL(priv->rcdev))
+-		reset_control_assert(priv->rcdev);
++	reset_control_assert(priv->rcdev);
  
- 	brcm_sata_phys_disable(priv);
- 
--	ret = ahci_platform_suspend(dev);
-+	if (IS_ENABLED(CONFIG_PM_SLEEP))
-+		ret = ahci_platform_suspend(dev);
-+	else
-+		ret = 0;
- 
- 	if (!IS_ERR_OR_NULL(priv->rcdev))
- 		reset_control_assert(priv->rcdev);
-@@ -356,7 +358,7 @@ static int brcm_ahci_suspend(struct device *dev)
  	return ret;
  }
+@@ -365,8 +364,7 @@ static int __maybe_unused brcm_ahci_resume(struct device *dev)
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
+ 	int ret = 0;
  
--static int brcm_ahci_resume(struct device *dev)
-+static int __maybe_unused brcm_ahci_resume(struct device *dev)
- {
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
-@@ -405,7 +407,6 @@ static int brcm_ahci_resume(struct device *dev)
+-	if (!IS_ERR_OR_NULL(priv->rcdev))
+-		ret = reset_control_deassert(priv->rcdev);
++	ret = reset_control_deassert(priv->rcdev);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -454,9 +452,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 	else
+ 		reset_name = "ahci";
+ 
+-	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
+-	if (!IS_ERR_OR_NULL(priv->rcdev))
+-		reset_control_deassert(priv->rcdev);
++	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
++	if (IS_ERR(priv->rcdev))
++		return PTR_ERR(priv->rcdev);
++
++	reset_control_deassert(priv->rcdev);
+ 
+ 	hpriv = ahci_platform_get_resources(pdev, 0);
+ 	if (IS_ERR(hpriv)) {
+@@ -520,8 +520,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ out_disable_clks:
  	ahci_platform_disable_clks(hpriv);
+ out_reset:
+-	if (!IS_ERR_OR_NULL(priv->rcdev))
+-		reset_control_assert(priv->rcdev);
++	reset_control_assert(priv->rcdev);
  	return ret;
  }
--#endif
  
- static struct scsi_host_template ahci_platform_sht = {
- 	AHCI_SHT(DRV_NAME),
 -- 
 2.20.0
 
