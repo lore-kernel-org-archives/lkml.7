@@ -2,119 +2,129 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7033C32771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9338E207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578366872;
-	bh=E9/8p5B7oPg0uiqg4UpaYHTvWRDU095e/2vCZwqujMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SD4v4RIQQg4maqv24j4grjaRbl2McCLOLqTn0M5GLjh14rRkpdEuzdcG3UMDOhX3V
-	 UG65XMR/c33rAfSwLSEeA46i2Eb5ZwQZHNr0P4CNt6pFs/AwdogzIQW45+pJCAPWJM
-	 ctnK8NXQzsk+9zujxv1TuLkNNCJYM2iVGGN0uS/I=
+	by mail.kernel.org (Postfix) with ESMTP id A6356214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 03:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgAGDOb (ORCPT
+        id S1727506AbgAGDPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Jan 2020 22:14:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgAGDOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Jan 2020 22:14:31 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B182F2075A;
-        Tue,  7 Jan 2020 03:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578366871;
-        bh=E9/8p5B7oPg0uiqg4UpaYHTvWRDU095e/2vCZwqujMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z73zzkF7jkeYbFC1ete0J7l5Gs1w/r8FTSQEiafb0NuioT7quruDw+3kM6BpBpB3P
-         5A0xQEbQIlIOOPmDr/RHVoIEmGG8ADIOlTINhJA4sUh0qUVolTKFCP8CWq+HBKWG62
-         RtNasi6iojBE7PtSQRqDL6hGnHWoD/uHrWr0+9DQ=
-Date:   Mon, 6 Jan 2020 19:14:29 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     zhou_xianrong <zhou_xianrong@sohu.com>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org, agk@redhat.com,
-        snitzer@redhat.com, wanbin.wang@transsion.com,
-        haizhou.song@transsion.com,
-        "xianrong.zhou" <xianrong.zhou@transsion.com>,
-        "yuanjiong . gao" <yuanjiong.gao@transsion.com>,
-        "ruxian . feng" <ruxian.feng@transsion.com>
-Subject: Re: [PATCH] dm-verity:unnecessary data blocks that need not read
- hash blocks
-Message-ID: <20200107031429.GA705@sol.localdomain>
-References: <20200107024843.8660-1-zhou_xianrong@sohu.com>
+        Mon, 6 Jan 2020 22:15:18 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35805 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgAGDPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Jan 2020 22:15:18 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so5635320edv.2;
+        Mon, 06 Jan 2020 19:15:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WwYzJpEY0xHNICmPe/YVUqO8DBJUmW8ge7lSsx3XN8c=;
+        b=lUs2wTekElsiMukFGGFxbOAM40oeY8zHubtZKA+9FcZwulK98OGmLQNZV4C+fbkwjp
+         1TAXpFQqbINWHsq8Uzb2YMjuu9Vs9nGwggwboFigGb6QOcAft0qCZXVFmBZ3Zwl/SXA1
+         +hrHAPlk3SZQ9asAo9GPVvw+fMlg3wzgJp+KCYhY9iCehpNJTj82zWEU71WECytuGkfw
+         Gkxb4lC32K0ugglzbgsTuV/jL/1ziNPx2Knk3lLTCK0ogS8iWM1n5/2jOI6Dnmc/7moa
+         5jTTXZVfrKpQlSGq/6JaRl6FfJhSQh1gpstPX/aTxMpFJLJBi1gd6lFDhY2SKGWLAbQU
+         J24g==
+X-Gm-Message-State: APjAAAVDC8Ny9BMnOzjRvfPTNxj51YzC9zCBz5Q5jYGRuJgzXo9HeDZU
+        9HCEr034AMlLofcjz9wl8Ui35MmwplE=
+X-Google-Smtp-Source: APXvYqw4r5I9/jxWbaWc2wj612MjM59cL5ggP5M5yhw2YW6JyInCoE8uUdLtKa+UzxWJDCcsEs1e3w==
+X-Received: by 2002:a05:6402:168c:: with SMTP id a12mr97883092edv.43.1578366916168;
+        Mon, 06 Jan 2020 19:15:16 -0800 (PST)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id n10sm7925456ejc.58.2020.01.06.19.15.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 19:15:15 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id z3so52304683wru.3;
+        Mon, 06 Jan 2020 19:15:15 -0800 (PST)
+X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr108514108wrx.178.1578366915409;
+ Mon, 06 Jan 2020 19:15:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107024843.8660-1-zhou_xianrong@sohu.com>
+References: <20191228171904.24618-1-tiny.windzz@gmail.com> <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
+ <CAEExFWtkPBhqT-wteE0_bC=QqaTyuvAcj_4SMOLjYAdc6p4tkg@mail.gmail.com>
+In-Reply-To: <CAEExFWtkPBhqT-wteE0_bC=QqaTyuvAcj_4SMOLjYAdc6p4tkg@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 7 Jan 2020 11:15:04 +0800
+X-Gmail-Original-Message-ID: <CAGb2v673PM_3QazNWBKYd=4pumyyyE3XFmwa4LY7qFt2=QwEVQ@mail.gmail.com>
+Message-ID: <CAGb2v673PM_3QazNWBKYd=4pumyyyE3XFmwa4LY7qFt2=QwEVQ@mail.gmail.com>
+Subject: Re: [PATCH] thermal: sun8i: Add hwmon support
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:48:43AM +0800, zhou_xianrong wrote:
+On Tue, Jan 7, 2020 at 12:14 AM Frank Lee <tiny.windzz@gmail.com> wrote:
+>
+> HI Chen-Yu.
+>
+> On Mon, Jan 6, 2020 at 12:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Sun, Dec 29, 2019 at 1:19 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > >
+> > > Expose sun8i thermal as a HWMON device.
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  drivers/thermal/sun8i_thermal.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > > index 23a5f4aa4be4..619e75cb41b0 100644
+> > > --- a/drivers/thermal/sun8i_thermal.c
+> > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > @@ -20,6 +20,8 @@
+> > >  #include <linux/slab.h>
+> > >  #include <linux/thermal.h>
+> > >
+> > > +#include "thermal_hwmon.h"
+> > > +
+> > >  #define MAX_SENSOR_NUM 4
+> > >
+> > >  #define FT_TEMP_MASK                           GENMASK(11, 0)
+> > > @@ -477,6 +479,10 @@ static int sun8i_ths_register(struct ths_device *tmdev)
+> > >                                                              &ths_ops);
+> > >                 if (IS_ERR(tmdev->sensor[i].tzd))
+> > >                         return PTR_ERR(tmdev->sensor[i].tzd);
+> > > +
+> > > +               if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
+> > > +                       dev_warn(tmdev->dev,
+> > > +                                "Failed to add hwmon sysfs attributes\n");
+> >
+> > Maybe you want a hard failure instead?
+>
+> I don't quite understand what you mean.
+> What do you think should be done?
 
-> Subject: [PATCH] dm-verity:unnecessary data blocks that need not read
+Return an error instead of just printing a warning.
 
-Please use a proper commit subject.  It should begin with "dm verity: " and use
-the imperative tense to describe the change, e.g.
+ChenYu
 
-	dm verity: don't prefetch hash blocks for already-verified data
-
-Also this should have been "PATCH v2", not simply PATCH, since you already sent
-out a previous version.
-
-You also sent out multiple copies of this email for some reason, so I just chose
-one arbitrarily to reply to...
-
-> diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-> index 4fb33e7..4127711 100644
-> --- a/drivers/md/dm-verity-target.c
-> +++ b/drivers/md/dm-verity-target.c
-> @@ -611,8 +611,27 @@ static void verity_prefetch_io(struct work_struct *work)
->  
->  static void verity_submit_prefetch(struct dm_verity *v, struct dm_verity_io *io)
->  {
-> +	sector_t block = io->block;
-> +	unsigned int n_blocks = io->n_blocks;
->  	struct dm_verity_prefetch_work *pw;
->  
-> +	if (v->validated_blocks) {
-> +		while (n_blocks) {
-> +			if (unlikely(!test_bit(block, v->validated_blocks)))
-> +				break;
-> +			block++;
-> +			n_blocks--;
-> +		}
-> +		while (n_blocks) {
-> +			if (unlikely(!test_bit(block + n_blocks - 1,
-> +				v->validated_blocks)))
-> +				break;
-> +			n_blocks--;
-> +		}
-> +		if (!n_blocks)
-> +			return;
-> +	}
-
-This looks fine now, though it's a bit more verbose than necessary, and I don't
-think unlikely() will make any difference here.  Consider simplifying it to:
-
-	if (v->validated_blocks) {
-		while (n_blocks && test_bit(block, v->validated_blocks)) {
-			block++;
-			n_blocks--;
-		}
-		while (n_blocks && test_bit(block + n_blocks - 1,
-					    v->validated_blocks))
-			n_blocks--;
-		if (!n_blocks)
-			return;
-	}
+> MBR,
+> Yangtao
+>
+> >
+> > ChenYu
+> >
+> > >         }
+> > >
+> > >         return 0;
+> > > --
+> > > 2.17.1
+> > >
