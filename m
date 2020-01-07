@@ -2,205 +2,131 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD62C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE20C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1E724679
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578433688;
-	bh=HYXtPWiExIvmXN8sRzAJ6Hbzti2Pmd9+VN7SsmWvlIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nxsjpy8pjWxtCp2xAUzlRzlD6bgfLc6SusPjKX0rMeVIu8SCryFyw9WpZX/wYYzIj
-	 +igMoGF91//Soy9y6E/ELe3cfALpCwU7bWQcFYKvZ5VNEEVZLzSr4YvxcsIP1ct0Kk
-	 dIeloJH/Pkc561ECbWr3vdndf9wFnaVk6p6z0PKI=
+	by mail.kernel.org (Postfix) with ESMTP id 3A2E2206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 21:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9BYBAYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgAGVsG (ORCPT
+        id S1727527AbgAGVsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 16:48:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33973 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbgAGVsF (ORCPT
+        Tue, 7 Jan 2020 16:48:40 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37703 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgAGVsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 16:48:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so1262965wrr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:48:04 -0800 (PST)
+        Tue, 7 Jan 2020 16:48:40 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so244437plz.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 13:48:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2CcTg/o8UwCiVCitQqRQYGVJRDQWN4iLjNgNoNrzkRc=;
+        b=L9BYBAYHoSB1I8wnIns2wgv7M6rBeVuglYc8yQJUpOC1qGlhpAuBz8XixDgoJbAE3m
+         S2uedcF93wxsHV3qEnCCw2SHZq2fqcVhAsGVL/GLdEG9rwSfwNAwhX+P9v00RXWwsFZt
+         gmb8hSVkiEXFLk6TXrP/UoeZxdya4uH0AMO2jKIq+68Ql9r0brqg38Q2EbUGB7OMYnnk
+         UjBaLrUYIifwT6Vf+7VetRYdhawPEQ2MafCdGArgWioTaWA3Onj6FUHXYme8Bycv+k0E
+         z1R3KGA6dfs1DE7FPIwblt3vCKZb5cTrANz15SiXcaJiSuEGgjjiF8+xMrBE1RZdzJb7
+         3qbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uqTwG7GMHoSbizcHPVACfQSquX5LQFYhMQGPdUwVoLA=;
-        b=DmT/GATU1hrdenP5n6EOV2K3ufSP2/cYjmZ6rO9LJU64LNot2+Ws3F6e3nGyZUdUBL
-         WadCmZ+ABTJXu5cfpwdgucmvjngN05gMSqtRRpRw+Wd2bgskfZ0hZZV1K/XieiysyvYZ
-         FPhG56VC4CjSNkDNuybppT3qL+RXRV8hWu9Qu6UwhzfO+i42P/2WXSJxTkBMYfk1VSp1
-         yQkGNiTTrWi6KdZJ+49xSp2/DHREgoAwS0u/fn3Yu0ZiGwo5LW5N0VhQGYnLmbfQtmIW
-         zGRynRCiNE8gxAoiZeN8X6YkWufMlWECuxytx6dvkfcgANmlDV7kRLqeEP4vka+KS2gt
-         iRqw==
-X-Gm-Message-State: APjAAAWtzVP4B7bhOkgP5CaFwnTF0Gj9PoPPcwlUV/NdIG0yloKU8WXv
-        R9tNYY8unKVKwrV24qyGgLI=
-X-Google-Smtp-Source: APXvYqygQ0cxb/6LjxaayZ1X+wFAyHADcfaZhdbJwv5f6EUAo/Ymo4f4sXzagKrpZf9MMBK33u6wyw==
-X-Received: by 2002:adf:c145:: with SMTP id w5mr1095296wre.205.1578433683614;
-        Tue, 07 Jan 2020 13:48:03 -0800 (PST)
-Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
-        by smtp.gmail.com with ESMTPSA id s8sm1434644wrt.57.2020.01.07.13.48.02
+        bh=2CcTg/o8UwCiVCitQqRQYGVJRDQWN4iLjNgNoNrzkRc=;
+        b=M1zR6bQFrZ9JnBtVxfUomO9zy92ZdKZDoik42VtnHCOgQb+tgsMQr5cf+0s5MoAZj0
+         Mi8zB3DcCbQrybriyka8LN8F+lz9Ld441k3a/HCQU/eH1FSn1WAb7yb6IzXgFwO4vuIW
+         hvYdC1QJRv+yibfJgt7f24FmIw1MTGbsNs4YG+moZAML2anXWw1l1WRcmF+t3+jZdSZz
+         1/h+WEsXOcgSaRXkMtoQyV0LBEp6tlDqxit+rV4veVWLE0pNEq8f2b5FzoCfvwPDuVPA
+         NybPQgMBLucxtbnLw4oqtC5hby6o9ZA4TNm8aLklOq+lN4KDntTsUVW47s4HxoGWS3/C
+         vc8g==
+X-Gm-Message-State: APjAAAUdzEPyMi0WLr7fDacAqpLtPwepE3LxdtVspi32zqUfdWIPlDXa
+        LqpJzhDzHhyljtwvLhGtOdv6LA==
+X-Google-Smtp-Source: APXvYqxeTpXMbsnJnCOtx1iWYJsGQRjwgp7O/48eAI0afmy7bdRAVVocuPCG6/35THSoAZD5+E7KXA==
+X-Received: by 2002:a17:902:ac97:: with SMTP id h23mr1848472plr.237.1578433719299;
+        Tue, 07 Jan 2020 13:48:39 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x11sm530623pfn.53.2020.01.07.13.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 13:48:02 -0800 (PST)
-Date:   Tue, 7 Jan 2020 22:48:01 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>, nathanl@linux.ibm.com,
-        ricklind@linux.vnet.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-Message-ID: <20200107214801.GN32178@dhcp22.suse.cz>
-References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
- <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
+        Tue, 07 Jan 2020 13:48:37 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:48:34 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, digetx@gmail.com, jcrouse@codeaurora.org,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+Message-ID: <20200107214834.GB738324@yoga>
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+ <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+ <20200107090519.3231-3-cw00.choi@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
+In-Reply-To: <20200107090519.3231-3-cw00.choi@samsung.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Andrew]
+On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
 
-On Tue 17-12-19 13:32:38, Scott Cheloha wrote:
-> Searching for a particular memory block by id is slow because each block
-> device is kept in an unsorted linked list on the subsystem bus.
-
-Noting that this is O(N^2) would be useful.
-
-> Lookup is much faster if we cache the blocks in a radix tree.
-
-While this is really easy and straightforward, is there any reason why
-subsys_find_device_by_id has to use such a slow lookup? I suspect nobody
-simply needed a more optimized data structure for that purpose yet.
-Would it be too hard to use radix tree for all lookups rather than
-adding a shadow copy for memblocks?
-
-> Memory
-> subsystem initialization and hotplug/hotunplug is at least a little faster
-> for any machine with more than ~100 blocks, and the speedup grows with
-> the block count.
-
-If we are onlining one memblock after another and there are many of them
-then this is going to help a some. Some numbers would be really nice.
-If there are too many blocks then the biggest part of the overhead is
-still there when registering each memblock though because that operation
-is just very expensinve (e.g. udev notification).
-
-> Signed-off-by: Scott Cheloha <cheloha@linux.vnet.ibm.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
-> v2 incorporates suggestions from David Hildenbrand.
+> Add new devfreq_transitions debugfs file to track the frequency transitions
+> of all devfreq devices for the simple profiling as following:
+> - /sys/kernel/debug/devfreq/devfreq_transitions
 > 
-> v3 changes:
->   - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
+> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+> in Kconfig in order to save the transition history.
 > 
->   - Be conservative: don't use radix_tree_for_each_slot() in
->     walk_memory_blocks() yet.  It introduces RCU which could
->     change behavior.  Walking the tree "by hand" with
->     find_memory_block_by_id() is slower but keeps the patch
->     simple.
+> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+> - time_ms	: Change time of frequency transition. (unit: millisecond)
+> - dev_name	: Device name of h/w.
+> - dev		: Device name made by devfreq core.
+> - parent_dev	: If devfreq device uses the passive governor,
+> 		  show parent devfreq device name.
+> - load_%	: If devfreq device uses the simple_ondemand governor,
+> 		  load is used by governor whene deciding the new frequency.
+> 		  (unit: percentage)
+> - old_freq_hz	: Frequency before changing. (unit: hz)
+> - new_freq_hz	: Frequency after changed. (unit: hz)
 > 
->  drivers/base/memory.c | 36 +++++++++++++++++++++++-------------
->  1 file changed, 23 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 799b43191dea..8902930d5ef2 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -19,6 +19,7 @@
->  #include <linux/memory.h>
->  #include <linux/memory_hotplug.h>
->  #include <linux/mm.h>
-> +#include <linux/radix-tree.h>
->  #include <linux/stat.h>
->  #include <linux/slab.h>
->  
-> @@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
->  	.offline = memory_subsys_offline,
->  };
->  
-> +/*
-> + * Memory blocks are cached in a local radix tree to avoid
-> + * a costly linear search for the corresponding device on
-> + * the subsystem bus.
-> + */
-> +static RADIX_TREE(memory_blocks, GFP_KERNEL);
-> +
->  static BLOCKING_NOTIFIER_HEAD(memory_chain);
->  
->  int register_memory_notifier(struct notifier_block *nb)
-> @@ -572,20 +580,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
->  /* A reference for the returned memory block device is acquired. */
->  static struct memory_block *find_memory_block_by_id(unsigned long block_id)
->  {
-> -	struct device *dev;
-> +	struct memory_block *mem;
->  
-> -	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
-> -	return dev ? to_memory_block(dev) : NULL;
-> +	mem = radix_tree_lookup(&memory_blocks, block_id);
-> +	if (mem)
-> +		get_device(&mem->dev);
-> +	return mem;
->  }
->  
-> -/*
-> - * For now, we have a linear search to go find the appropriate
-> - * memory_block corresponding to a particular phys_index. If
-> - * this gets to be a real problem, we can always use a radix
-> - * tree or something here.
-> - *
-> - * This could be made generic for all device subsystems.
-> - */
->  struct memory_block *find_memory_block(struct mem_section *section)
->  {
->  	unsigned long block_id = base_memory_block_id(__section_nr(section));
-> @@ -628,9 +630,15 @@ int register_memory(struct memory_block *memory)
->  	memory->dev.offline = memory->state == MEM_OFFLINE;
->  
->  	ret = device_register(&memory->dev);
-> -	if (ret)
-> +	if (ret) {
->  		put_device(&memory->dev);
-> -
-> +		return ret;
-> +	}
-> +	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
-> +	if (ret) {
-> +		put_device(&memory->dev);
-> +		device_unregister(&memory->dev);
-> +	}
->  	return ret;
->  }
->  
-> @@ -688,6 +696,8 @@ static void unregister_memory(struct memory_block *memory)
->  	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
->  		return;
->  
-> +	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
-> +
->  	/* drop the ref. we got via find_memory_block() */
->  	put_device(&memory->dev);
->  	device_unregister(&memory->dev);
-> -- 
-> 2.24.0
+> [For example on Exynos5422-based Odroid-XU3 board]
+> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+> [snip]
 > 
 
--- 
-Michal Hocko
-SUSE Labs
+Wouldn't it make more sense to expose this through the tracing
+framework - like many other subsystems does?
+
+Regards,
+Bjorn
