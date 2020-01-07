@@ -2,85 +2,164 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBE8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA9C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0C72075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509552075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgAGH3j (ORCPT
+        id S1727599AbgAGH3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:29:39 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:59622 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgAGH3j (ORCPT
+        Tue, 7 Jan 2020 02:29:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58543 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgAGH3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 02:29:39 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iojIh-00023F-2M; Tue, 07 Jan 2020 08:29:15 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 0077TENG016760
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 7 Jan 2020 08:29:14 +0100
-Subject: Re: [PATCH 2/5] regulator: mp8859: add config option and build entry
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200106211633.2882-1-m.reichl@fivetechno.de>
- <20200106211633.2882-3-m.reichl@fivetechno.de> <6648097.OAGuGJg3er@diego>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Organization: five technologies GmbH
-Message-ID: <4ec799d7-9404-f61d-3db7-446fb8bd45a2@fivetechno.de>
-Date:   Tue, 7 Jan 2020 08:29:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 7 Jan 2020 02:29:49 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iojJA-00017Y-Fs; Tue, 07 Jan 2020 08:29:44 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iojJ8-0002Cm-Uj; Tue, 07 Jan 2020 08:29:42 +0100
+Date:   Tue, 7 Jan 2020 08:29:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20200107072942.mvfoi7yjnx63wafz@pengutronix.de>
+References: <20191219093947.15502-1-u.kleine-koenig@pengutronix.de>
+ <20191219093947.15502-4-u.kleine-koenig@pengutronix.de>
+ <20191221184047.GC32732@amd>
+ <20191223100828.bqtda4zilc74fqfk@pengutronix.de>
+ <20200106185918.GB597279@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <6648097.OAGuGJg3er@diego>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578382178;468f51eb;
-X-HE-SMSGID: 1iojIh-00023F-2M
+In-Reply-To: <20200106185918.GB597279@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
-Am 06.01.20 um 22:22 schrieb Heiko StÃ¼bner:
-> Am Montag, 6. Januar 2020, 22:16:25 CET schrieb Markus Reichl:
->> Add entries for the mp8859 regulator driver
->> to the build system.
->> 
->> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+On Mon, Jan 06, 2020 at 07:59:18PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Dec 23, 2019 at 11:08:28AM +0100, Uwe Kleine-König wrote:
+> > Hello Pavel,
+> > 
+> > On Sat, Dec 21, 2019 at 07:40:47PM +0100, Pavel Machek wrote:
+> > > > +++ b/Documentation/ABI/testing/sysfs-class-led-trigger-tty
+> > > > @@ -0,0 +1,6 @@
+> > > > +What:		/sys/class/leds/<led>/dev
+> > > > +Date:		Dec 2019
+> > > > +KernelVersion:	5.6
+> > > > +Contact:	linux-leds@vger.kernel.org
+> > > > +Description:
+> > > > +		Specifies $major:$minor of the triggering tty
+> > > 
+> > > Ok, sounds reasonable.
+> > > 
+> > > > +static ssize_t dev_store(struct device *dev,
+> > > > +			 struct device_attribute *attr, const char *buf,
+> > > > +			 size_t size)
+> > > > +{
+> > > > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
+> > > > +	struct tty_struct *tty;
+> > > > +	unsigned major, minor;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
+> > > > +		tty = NULL;
+> > > > +	} else {
+> > > > +		ret = sscanf(buf, "%u:%u", &major, &minor);
+> > > > +		if (ret < 2)
+> > > > +			return -EINVAL;
+> > > 
+> > > If user writes 1:2:badparsingofdata into the file, it will pass, right?
+> > 
+> > Yes, and it will have the same effect as writing 1:2. I wonder if this
+> > is bad.
+> > 
+> > > > +		tty = tty_kopen_shared(MKDEV(major, minor));
+> > > > +		if (IS_ERR(tty))
+> > > > +			return PTR_ERR(tty);
+> > > > +	}
+> > > 
+> > > Do you need to do some kind of tty_kclose()? What happens if the
+> > > device disappears, for example because the USB modem is unplugged?
+> > 
+> > Only tty_kref_put is needed to close.
+> > 
+> > > > +static void ledtrig_tty_work(struct work_struct *work)
+> > > > +{
+> > > > +	struct ledtrig_tty_data *trigger_data =
+> > > > +		container_of(work, struct ledtrig_tty_data, dwork.work);
+> > > > +	struct serial_icounter_struct icount;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!trigger_data->tty) {
+> > > > +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
+> > > > +		return;
+> > > > +	}
+> > > > +
+> > > > +	ret = tty_get_icount(trigger_data->tty, &icount);
+> > > > +	if (ret)
+> > > > +		return;
+> > > > +
+> > > > +	if (icount.rx != trigger_data->rx ||
+> > > > +	    icount.tx != trigger_data->tx) {
+> > > > +		unsigned long delay_on = 100, delay_off = 100;
+> > > > +
+> > > > +		led_blink_set_oneshot(trigger_data->led_cdev,
+> > > > +				      &delay_on, &delay_off, 0);
+> > > > +
+> > > > +		trigger_data->rx = icount.rx;
+> > > > +		trigger_data->tx = icount.tx;
+> > > > +	}
+> > > 
+> > > Since you are polling this, anyway, can you just manipulate brightness
+> > > directly instead of using _oneshot()? _oneshot() will likely invoke
+> > > another set of workqueues.
+> > 
+> > I copied that from the netdev trigger. I failed to find a suitable
+> > helper function, did I miss that or does it need creating?
+> >  
+> > > LED triggers were meant to operate directly from the events, not based
+> > > on statistics like this.
+> > 
+> > Ditto; just copied from the netdev trigger. I tried to find a suitable
+> > place to add a trigger in the core, but this is hard without having to
+> > modify all drivers; additionally this is in thier hot path. So I
+> > considered using statistics a good idea. Greg also liked it and someone
+> > before us for the network trigger, too ...
 > 
-> this still should get merged into patch1 :-)
+> This still looks ok to me, any objections to me merging it in my tty
+> tree?
 
-Will merge them in next version.
+Thanks for caring. If Pavel objects in principle to using statistics to
+trigger the trigger, there will be no user of the new tty functions. I
+don't care much about this, so feel free to apply the tty part, but I
+would have expected that "no user" would be a stopper.
 
-> 
-> Heiko
-> 
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+Best regards
+Uwe
 
-GruÃŸ,
 -- 
-Markus Reichl
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
