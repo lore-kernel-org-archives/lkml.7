@@ -2,92 +2,91 @@ Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF319C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77F2C33C9B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD162087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1E32081E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RI1VjAZW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtI5LJo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgAGJrj (ORCPT
+        id S1727733AbgAGJs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:47:39 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:40353 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgAGJri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:47:38 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47sSGb5vpxz39;
-        Tue,  7 Jan 2020 10:47:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578390456; bh=mQhGMrMqAWw47NECxXln208dkF/GHmMTdjSqLfREAeI=;
-        h=Date:From:Subject:To:Cc:From;
-        b=RI1VjAZW/5oEzniE4siJGYElmPhb/QAKViy2c/5A3PX8nhSyhy7A8+Sb2t0XGri1N
-         9v5jifgL5K8Wt0RTqNsfbg8yZ72vpVMh0Mkb0lv8NVb2DE2QnGXH+0FmaOSmna2Fcx
-         8JQDtdvAfZjqq32gexokiMkdQzk1/syjk3Ux6gc+tHzdAW23vIvodkVo7DIvfnQ95A
-         tXLLGFJMZzuHbJd5TDroP0Rglg0d21lB51WrPzggSqM08QpqiiUWEdc3kca1aWloyI
-         rIjssdpdfZegcd9adbJ6kv1yl2GutIHps2DUj3dyDRtbtHDD2PPoq9qfKJf5azJiX/
-         aEPZ7iPtMQecA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Tue, 07 Jan 2020 10:47:34 +0100
-Message-Id: <9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3] mmc: tegra: fix SDR50 tuning override
+        Tue, 7 Jan 2020 04:48:27 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40161 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbgAGJs1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:48:27 -0500
+Received: by mail-lf1-f68.google.com with SMTP id i23so38423726lfo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 01:48:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
+        b=qtI5LJo3/WvWrVIOP518oxDc3sCuQZBRfr9C5k+6doCxp3MzxLMN6EKtFZgGos+b45
+         LkDrzheTzcH8ElGC1D31coYR3J0ag0BydTOCnkr0keaP+7TP+453ZoSSijAkFO2Jn1ns
+         DNdC6m9acz9YM+LvrQD5aWwTHN9J/0xtaN/wa6UdUP77zaUcnKO8GMK4A0X+UZtyuYfn
+         Dojan9A7M8+5unJ7aoUrDc47Ap1APgA/gtyvSA7dLOqWIWFwN1g/8EJ7ozI0vLP2h50c
+         GKOWEwNT6+mgWVJ7cN5Kj5Q8b64XwtQVqTm3ZukPYVhj6NAOIjZbqLym6VSOgAH+u1qH
+         GQ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
+        b=CyX0tEZxM10gsoNK2ONWpAoYJdSAlP8lAQVU/QtzslJK60LTk44RuPEy/gkIwEw7xt
+         0OEPes4RHr0i+XWIGsDrBc8X08NzopKS2iJzah4ZN7+woG8oTSgEOdjbhfxXAv9lHm00
+         uuU+CJVLU+KDfOkA/emzLLU1hljP3lDGA9p+AlRkiSqPhv8DUKvSTi7ZOM8ZaZ9vi87C
+         hGDoTPJ5+/UuvD9WvfSRvJXzwOxmQ/UU836KQyHbf/wOuzK3o0vL3drOyCb6DqmEXbQ6
+         xNJByQGowVcVC6uv93pLDLN3qQDSpvMKbKW/1/lMInxdofVtfafpR73DfpybiWK6AD+x
+         HYog==
+X-Gm-Message-State: APjAAAVP60IS+Ej9xmMKbHSsKjqo+eyXFkA0xst3+/8DdLVifsvoT/oJ
+        4AyY2+uJe2vutlBg8cx2Aa1laHEITDqyQzldgI/rUA==
+X-Google-Smtp-Source: APXvYqwJ4NEleHWVj49bXWx9f2Reukpm63SdKPnvrbrbdsGZZiFUSvBsk8NVHRhgjrknGj8ifWCADNENNBxCswle48I=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr58882108lff.44.1578390504987;
+ Tue, 07 Jan 2020 01:48:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lucas Stach <dev@lynxeye.de>
-Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org> <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 10:48:14 +0100
+Message-ID: <CACRpkdaoU9B+981iF4wvLgY-QNNnsNUE=CYVmfX8zNtUuOtKfQ@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-broke SDR50 tuning override. Use correct NVQUIRK_ name.
+On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 
-Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
-Cc: <stable@vger.kernel.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> This patch adds support to wcd934x gpio block found in
+> WCD9340/WC9341 Audio codecs.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
----
- v3: added Thierry's signs that were missing in v2
- v2: converted 'Depends-On' tag to proper 'Cc: stable' lines
+I think I reviewed an earlier version of the patch set yesterday,
+the comments are still valid for this version.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/mmc/host/sdhci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for lag in my reviews :/
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 7bc950520fd9..403ac44a7378 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -386,7 +386,7 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_DDR50;
- 		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR104)
- 			misc_ctrl |= SDHCI_MISC_CTRL_ENABLE_SDR104;
--		if (soc_data->nvquirks & SDHCI_MISC_CTRL_ENABLE_SDR50)
-+		if (soc_data->nvquirks & NVQUIRK_ENABLE_SDR50)
- 			clk_ctrl |= SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE;
- 	}
- 
--- 
-2.20.1
-
+Yours,
+Linus Walleij
