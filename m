@@ -2,112 +2,89 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14CEC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EE0C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2782072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F273120880
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578502729;
+	bh=ev4OtAv5m7KBEoeVj5ulwIojbIh9mARQUXB6SdZeY1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mZbgjwjf4mbsdo5TGDHO9ula9bIh9XrzyVEhWNRt/wQnaYuCyaOe1DW+Nsg76Zp/u
+	 tkPW33paEPWuI6iTC+JXeHYuaIl1JzBXXOptXPsra9vQjDEfIBCVr4oavwbwopsXPH
+	 TrePPmjQN/poiRRL4lqzTVs6tfM/pK6OGavl2y1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgAHQ6d (ORCPT
+        id S1729626AbgAHQ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:58:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:22870 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgAHQ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:58:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:58:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="216008936"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 08:58:28 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEf6-0005gm-7m; Wed, 08 Jan 2020 18:58:28 +0200
-Date:   Wed, 8 Jan 2020 18:58:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 33/36] platform/x86: intel_pmc_ipc: Use octal
- permissions in sysfs attributes
-Message-ID: <20200108165828.GQ32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-34-mika.westerberg@linux.intel.com>
+        Wed, 8 Jan 2020 11:58:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45543 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729581AbgAHQ6r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:58:47 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so3195964oie.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:58:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TEWqrKckxXi7QmpFNDQI2lr/8vlOr4RUJSG6WcBUQm8=;
+        b=Mun5Ycx9Ta8NdTSMYQZDWQlXYAAU+9t6Y3rmrf582ZZDERua7oLJRs2/JgU5MeizVJ
+         MJpJcxH5VuoRQrm8qp/X9408iwr0ot9MxszYZnCcll8GJDiRm/va3AZUqEzIXkG7U1nj
+         QMMWMt+RBfdyuVL3Z4mzywjpWsgqIPP+m6Kc3pfS/q++q4AGBkhUeRax88If9XpVZDAi
+         spEb+xQnI5TIDSH09z3m6V+u9URCZQAFOdaAqz3jHDF44gRr6quPBz7d+jowv5nQI/r3
+         c1KyNaIHBVWn+0CNBlxTricaE+fOCeJYwxe7v8VrXOmHb1t80S+Zdk/VvF3Ja0g1Safp
+         vgQw==
+X-Gm-Message-State: APjAAAUBL+lYD/wVduBfYKFx57Yn66CBl3/eXN9PgnuronLmgg42x456
+        X9uie/hq5XS3py99mY96eUu8nps=
+X-Google-Smtp-Source: APXvYqzF7jj1fQpDwfgrousSnrWTkzLM/X96frmc68A1q7iy5mqARNoJIIA0WKKcxTauk8t1vBQG0A==
+X-Received: by 2002:aca:5fc1:: with SMTP id t184mr4124043oib.20.1578502727125;
+        Wed, 08 Jan 2020 08:58:47 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a19sm1283259oto.60.2020.01.08.08.58.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:58:46 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220333
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 10:58:45 -0600
+Date:   Wed, 8 Jan 2020 10:58:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com,
+        Fabien Parent <fparent@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iommu: Add binding for MediaTek MT8167
+ IOMMU
+Message-ID: <20200108165845.GA8360@bogus>
+References: <20200103162632.109553-1-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-34-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200103162632.109553-1-fparent@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:58PM +0300, Mika Westerberg wrote:
-> This is the current preferred way so replace the S_IWUSR with the
-> corresponding octal value. While there move the attributes to follow
-> directly their store functions.
+On Fri,  3 Jan 2020 17:26:31 +0100, Fabien Parent wrote:
+> This commit adds IOMMU binding documentation for the MT8167 SoC.
 > 
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  drivers/platform/x86/intel_pmc_ipc.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index acec1c6d2069..20a4bb72aeac 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -215,6 +215,7 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
->  	}
->  	return (ssize_t)count;
->  }
-> +static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
->  
->  static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
->  					     struct device_attribute *attr,
-> @@ -240,11 +241,7 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
->  	}
->  	return (ssize_t)count;
->  }
-> -
-> -static DEVICE_ATTR(simplecmd, S_IWUSR,
-> -		   NULL, intel_pmc_ipc_simple_cmd_store);
-> -static DEVICE_ATTR(northpeak, S_IWUSR,
-> -		   NULL, intel_pmc_ipc_northpeak_store);
-> +static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
->  
->  static struct attribute *intel_ipc_attrs[] = {
->  	&dev_attr_northpeak.attr,
-> -- 
-> 2.24.1
+>  Documentation/devicetree/bindings/iommu/mediatek,iommu.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Rob Herring <robh@kernel.org>
