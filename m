@@ -2,130 +2,134 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF25AC33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340D2C33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879B32075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2140206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R842ZIDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgAHCTV (ORCPT
+        id S1726368AbgAHC1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 21:19:21 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2982 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgAHCTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 21:19:21 -0500
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 0AB3E2A886DD3E53896B;
-        Wed,  8 Jan 2020 10:19:19 +0800 (CST)
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.143]) by
- DGGEMM405-HUB.china.huawei.com ([10.3.20.213]) with mapi id 14.03.0439.000;
- Wed, 8 Jan 2020 10:19:08 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Morten Rasmussen" <morten.rasmussen@arm.com>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//7niAgAAVeoCAAFV+gIAENd2QgABR3QCAAtw2YA==
-Date:   Wed, 8 Jan 2020 02:19:06 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340B8644@dggemm526-mbx.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <7b375d79-2d3c-422b-27a6-68972fbcbeaf@arm.com>
- <66943c82-2cfd-351b-7f36-5aefdb196a03@arm.com>
- <c0e82c31-8ed6-4739-6b01-2594c58df95a@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340B3203@dggemm526-mbx.china.huawei.com>
- <51a7d543-e35f-6492-fa51-02828832c154@arm.com>
-In-Reply-To: <51a7d543-e35f-6492-fa51-02828832c154@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 7 Jan 2020 21:27:44 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39969 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgAHC1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 21:27:43 -0500
+Received: by mail-pj1-f68.google.com with SMTP id bg7so399156pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 18:27:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TxCBIIGREavpCVrRs9QNlaW6niSLc1GB+TRhNf+Qpmo=;
+        b=R842ZIDzQUYEND1R5s7cntI/r/5WU1Mlc62dtk1Wrbk7IdDkynyqhS/SeUXFyzPXUN
+         1Nk47N4euErxEnpMFOUkTdtGvi/lQ41Dwo0VbusHkEI+5/LaHz45hTiKDFAap8hgdFg4
+         CEB/UqMZtUqwfpExLHBKwe2lYBXPb0fMW5L4A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TxCBIIGREavpCVrRs9QNlaW6niSLc1GB+TRhNf+Qpmo=;
+        b=HWltELONXdXV5E0akv7tyC16SMAd7Eyakg3YJWPhj6eCrg80q0UNKgZb17/sXXKV4q
+         hImL4svkSHuNa4+81Gs/tLQl4J54Hu32aKqLU3aKuXetqp1blnz3R7TWfSfcDtFVrSN7
+         GoU5/TM3k1rUFlKh3FlVcGB0bV1FaC3DIBZRUiaDA2k+igmPmgoVk8lY16SmlNohcsnv
+         BxyBXBkcfpaMZT71mNpds+SWBbinxNmE6ti384SVV1vjmoRPyyTQEvdaHCd2Xrr2Ll6W
+         b4bba72M47qf4OOCTVMTypexZ5YQB6VOrpPwCI4rxs2J9NZGtNuodbTtoD+30+PLPpIX
+         QF5g==
+X-Gm-Message-State: APjAAAVv98HXDsJUl0SwVj2I0AjcL8ZPR0hUP/zBtoQ7jFp8mThaVmVr
+        yTf2zX5SyjSqrwAc4TBDtj/rgQ==
+X-Google-Smtp-Source: APXvYqyApuWFuZqGIyOf5rbM7brHnaEX2kHU+YLA3DErCW/+r7iApFECfrvpBxwUNNbksYTQ0nXytg==
+X-Received: by 2002:a17:90b:f0f:: with SMTP id br15mr1822086pjb.138.1578450463118;
+        Tue, 07 Jan 2020 18:27:43 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id b15sm925307pft.58.2020.01.07.18.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 18:27:42 -0800 (PST)
+Date:   Wed, 8 Jan 2020 11:27:41 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 00/15] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
+Message-ID: <20200108022741.GA7366@google.com>
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217032034.54897-1-senozhatsky@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEaWV0bWFyIEVnZ2VtYW5uIFtt
-YWlsdG86ZGlldG1hci5lZ2dlbWFubkBhcm0uY29tXQ0KPiBTZW50OiBNb25kYXksIEphbnVhcnkg
-MDYsIDIwMjAgMTA6MzEgUE0NCj4gVG86IFplbmd0YW8gKEIpOyBWYWxlbnRpbiBTY2huZWlkZXI7
-IFN1ZGVlcCBIb2xsYQ0KPiBDYzogTGludXhhcm07IEdyZWcgS3JvYWgtSGFydG1hbjsgUmFmYWVs
-IEouIFd5c29ja2k7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE1vcnRlbiBSYXNt
-dXNzZW4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gY3B1LXRvcG9sb2d5OiB3YXJuIGlmIE5VTUEg
-Y29uZmlndXJhdGlvbnMgY29uZmxpY3RzDQo+IHdpdGggbG93ZXIgbGF5ZXINCj4gDQo+IE9uIDA2
-LzAxLzIwMjAgMDI6NDgsIFplbmd0YW8gKEIpIHdyb3RlOg0KPiANCj4gWy4uLl0NCj4gDQo+ID4+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IERpZXRtYXIgRWdnZW1hbm4g
-W21haWx0bzpkaWV0bWFyLmVnZ2VtYW5uQGFybS5jb21dDQo+ID4+IFNlbnQ6IFNhdHVyZGF5LCBK
-YW51YXJ5IDA0LCAyMDIwIDE6MjEgQU0NCj4gPj4gVG86IFZhbGVudGluIFNjaG5laWRlcjsgWmVu
-Z3RhbyAoQik7IFN1ZGVlcCBIb2xsYQ0KPiA+PiBDYzogTGludXhhcm07IEdyZWcgS3JvYWgtSGFy
-dG1hbjsgUmFmYWVsIEouIFd5c29ja2k7DQo+ID4+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IE1vcnRlbiBSYXNtdXNzZW4NCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSF0gY3B1LXRvcG9s
-b2d5OiB3YXJuIGlmIE5VTUEgY29uZmlndXJhdGlvbnMNCj4gY29uZmxpY3RzDQo+ID4+IHdpdGgg
-bG93ZXIgbGF5ZXINCj4gPj4NCj4gPj4gT24gMDMvMDEvMjAyMCAxMzoxNCwgVmFsZW50aW4gU2No
-bmVpZGVyIHdyb3RlOg0KPiA+Pj4gT24gMDMvMDEvMjAyMCAxMDo1NywgVmFsZW50aW4gU2NobmVp
-ZGVyIHdyb3RlOg0KPiANCj4gPj4gU3RpbGwgZG9uJ3Qgc2VlIHRoZSBhY3R1YWwgcHJvYmxlbSBj
-YXNlLiBUaGUgY2xvc2VzdCBJIGNhbWUgaXM6DQo+ID4+DQo+ID4+IHFlbXUtc3lzdGVtLWFhcmNo
-NjQgLWtlcm5lbCAuLi4gLWFwcGVuZCAnIC4uLiBsb2dsZXZlbD04IHNjaGVkX2RlYnVnJw0KPiA+
-PiAtc21wIGNvcmVzPTQsc29ja2V0cz0yIC4uLiAtbnVtYSBub2RlLGNwdXM9MC0yLG5vZGVpZD0w
-DQo+ID4+IC1udW1hIG5vZGUsY3B1cz0zLTcsbm9kZWlkPTENCj4gPj4NCj4gPg0KPiA+IEl0J3Mg
-cmVsYXRlZCB0byB0aGUgSFcgdG9wb2xvZ3ksIGlmIHlvdSBodyBoYXZlIGdvdCAyIGNsdXN0ZXJz
-IDB+MywgNH43LA0KPiA+IHdpdGggdGhlIG1haW5saW5lIHFlbXUsIHlvdSB3aWxsIHNlZSB0aGUg
-aXNzdWUuDQo+ID4gSSB0aGluayB5b3UgY2FuIG1hbnVhbGx5IG1vZGlmeSB0aGUgTVBJRFIgcGFy
-c2luZyB0byByZXByb2R1Y2UgdGhlDQo+ID4gaXNzdWUuDQo+ID4gTGludXggd2lsbCB1c2UgdGhl
-IE1QSURSIHRvIGd1ZXNzIHRoZSBNQyB0b3BvbG9neSBzaW5jZSBjdXJyZW50bHkgcWVtdQ0KPiA+
-IGRvbid0IHByb3ZpZGUgaXQuDQo+ID4gUmVmZXIgdG86IGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFi
-cy5vcmcvY292ZXIvOTM5MzAxLw0KPiANCj4gVGhhdCBtYWtlcyBzZW5zZSB0byBtZS4gVmFsZW50
-aW4gYW5kIEkgYWxyZWFkeSBkaXNjdXNzZWQgdGhpcyBzZXR1cCBhcyBhDQo+IHBvc3NpYmxlIHN5
-c3RlbSB3aGVyZSB0aGlzIGlzc3VlIGNhbiBoYXBwZW4uDQo+IA0KPiBJIGFscmVhZHkgc3VzcGVj
-dGVkIHRoYXQgdmlydCBtYWNoaW5lcyBvbmx5IHN1cHBvcnQgZmxhdCBjcHUgdG9wbG9neS4NCj4g
-R29vZCB0byBrbm93LiBBbHRob3VnaCBJIHdhcyBhYmxlIHRvIHRvIHBhc3MgJy4uLiAtc21wIGNv
-cmVzPTggLWR0Yg0KPiBmb28uZHRiIC4uLicgaW50byBtYWlubGluZSBxZW11IHRvIGFjaGlldmUg
-YSAyIGNsdXN0ZXIgc3lzdGVtIChNQyBhbmQNCj4gRElFIHNkIGxldmVsKSB3aXRoIGFuIGV4dHJh
-IGNwdS1tYXAgZW50cnkgaW4gdGhlIGR0cyBmaWxlOg0KPiANCj4gICAgICAgICAgICAgICAgY3B1
-LW1hcCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGNsdXN0ZXIwIHsNCj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb3JlMCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBjcHUgPSA8JkE1M18wPjsNCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC4uLg0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-Y2x1c3RlcjEgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvcmUwIHsNCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNwdSA9IDwmQTUzXzQ+Ow0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLi4uDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICAgICAg
-ICAgICAgICAgICB9Ow0KPiANCj4gQnV0IEkgZGlkbid0IHN1Y2NlZWQgaW4gY29tYmluaW5nIHRo
-aXMgd2l0aCB0aGUgJy4uLiAtbnVtYQ0KPiBub2RlLGNwdXM9MC0zLG5vZGVpZD0wIC1udW1hIG5v
-ZGUsY3B1cz00LTcsbm9kZWlkPTEgLi4uJyBwYXJhbXMgdG8NCj4gY3JlYXRlIGEgc3lzdGVtIGxp
-a2UgeW91cnMuDQoNCkkgZ3Vlc3QgdGhhdCB5b3UgaGF2ZSB1c2VkIHlvdXIgb3duIGR0Yiwgc28g
-bWF5YmUgeW91IG5lZWQgdG8gc3BlY2lmeSB0aGUgDQpudW1hX25vZGVfaWQgaW4gdGhlIGRldmlj
-ZSB0cmVlLg0KTWF5YmUgeW91IGNhbiByZWZlciB0bzoNCkRvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9udW1hLnR4dA0KDQo+IA0KPiBZb3VyIGlzc3VlIGlzIHJlbGF0ZWQgdG8gdGhl
-ICdudW1hIG1hc2sgY2hlY2sgZm9yIHNjaGVkdWxlciBNQw0KPiBzZWxlY3Rpb24nIGZ1bmN0aW9u
-YWxpdHkuICBJdCB3YXMgaW50cm9kdWNlZCBieSBjb21taXQgMzdjM2VjMmQ4MTBmIGFuZA0KPiBy
-ZS1pbnRyb2R1Y2VkIGJ5IGNvbW1pdCBlNjdlY2Y2NDcwMjAgbGF0ZXIuIEkgZG9uJ3Qga25vdyB3
-aHkgd2UgbmVlZA0KPiB0aGlzIGZ1bmN0aW9uYWxpdHk/DQo+IA0KPiBIb3cgZG9lcyB5b3VyIHNl
-dHVwIGJlaGF2ZSB3aGVuIHlvdSByZXZlcnQgY29tbWl0IGU2N2VjZjY0NzAyMD8gT3INCj4gZG8N
-Cj4geW91IHdhbnQgYW4gZXhwbGljaXQgd2FybmluZyBpbiBjYXNlIG9mIE5VTUEgYm91bmRhcmll
-cyBub3QgcmVzcGVjdGluZw0KPiBwaHlzaWNhbCB0b3BvbG9neT8NCg0KSSB3aWxsIG5lZWQgdG8g
-aGF2ZSBhIGxvb2sgdG8gY29tbWl0IGU2N2VjZjY0NzAyMA0KVGhhbmtzIA0KDQpSZWdhcmRzDQpa
-ZW5ndGFvIA0KDQo=
+On (19/12/17 12:20), Sergey Senozhatsky wrote:
+> Hello,
+> 
+> 	RFC
+> 
+> 	This is a reworked version of the vb2 cache hints
+> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> support patch series which previsouly was developed by Sakari and
+> Laurent [0].
+> 
+> The patch set attempts to preserve the existing behvaiour - cache
+> sync is performed in ->prepare() and ->finish() (unless the buffer
+> is DMA exported). User space can request “default behavior” override
+> with cache management hints, which are handled on a per-buffer basis
+> and should be supplied with v4l2_buffer ->flags during buffer
+> preparation. There are two possible hints:
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+> 	No cache sync on ->finish()
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
+> 	No cache sync on ->prepare()
+> 
+> In order to keep things on the safe side, we also require driver
+> to explicitly state which of its queues (if any) support user space
+> cache management hints (such queues should have ->allow_cache_hints
+> bit set).
+> 
+> The patch set also (to some extent) simplifies allocators' ->prepare()
+> and ->finish() callbacks. Namely, we move cache management decision
+> making to the upper - core - layer. For example, if, previously, we
+> would have something like this
+> 
+> 	vb2_buffer_done()
+> 	  vb2_dc_finish()
+> 	    if (buf->db_attach)
+> 	       return;
+> 
+> where each allocators' ->finish() callback would either bail
+> out (DMA exported buffer, for instance) or sync, now that "bail
+> out or sync" decision is made before we call into the allocator.
+> 
+> Along with cache management hints, user space is also able to
+> adjust queue's memory consistency attributes. Memory consistency
+> attribute (dma_attrs) is per-queue, yet it plays its role on the
+> allocator level, when we allocate buffers’ private memory (planes).
+> For the time being, only one consistency attribute is supported:
+> DMA_ATTR_NON_CONSISTENT.
+
+Gentle ping.
+
+	-ss
