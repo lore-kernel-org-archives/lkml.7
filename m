@@ -2,132 +2,100 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3877EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21597C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D3E20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E663F20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUDO+As9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgAHTQQ (ORCPT
+        id S1730328AbgAHTSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:16:16 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38638 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgAHTQQ (ORCPT
+        Wed, 8 Jan 2020 14:18:34 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38968 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgAHTSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:16:16 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so85112wmc.3;
-        Wed, 08 Jan 2020 11:16:14 -0800 (PST)
+        Wed, 8 Jan 2020 14:18:33 -0500
+Received: by mail-lj1-f196.google.com with SMTP id l2so4505528lja.6;
+        Wed, 08 Jan 2020 11:18:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=71tYmvlt1/OOqPFBAI/jjpMMYNxkMt5zcCbmPmd2ETA=;
+        b=PUDO+As9UymSnClBvDvqSFYHVAkKXUizQpgRHB1mEJKNdaTeowHIAxh41LlWDvHlsa
+         OG57rciwPJ3lFnKvgwp9Xy5Bl8BQ+DiURyp1g1S+N/Sekjn1RDo/NrcvoOJyGaC+9/VA
+         3NB4+isxt8Ku5KSf2AAwp7wHmIQ/mrVO2Rq4JekZBlmlvxEh8gBtmi7dQ4TxcgPguXTL
+         THJyoZK92dkKs44FZrVD5kWt11ASdvh+LHnCbJnAVA3oj73NeYwhdedfe2uQORl2CMYz
+         svKrSfQ/vM1svExi9UZ3yyjO1Mv5ncNW7plUA9yl5gO9tkRQ25D9EMfwXXarhdm85DDD
+         sLtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=36jJmMym6/gPFXjbjo3iUPDmu6L1c+Uay/qLqZ4J7aI=;
-        b=VqvjqT88YP/n0P0cWitEb1wYeu/CvOIF/x0ijYIZ3lP+nCbD1Jt2L06g1TpmCxqu63
-         TTm9TZyy0RckESXGxxtDcax6S5Is373nZ+V1tnLZE5SXkraDrN0BfUhdMF1wgSaudzgc
-         DJ9gqT7jYwo7JnYISeloO1Mau/Q5nibySjOUH+txLTKiqn034I9TDxdRmimaJhnF68qx
-         K0K7SplYQoDh1rCLNmSFyfPsg0Ebn0AuJTTnHCTSt03kiirTgTCfQAYUIp1eD8NJm6X9
-         2SyMDT4hd1b7AjTEqCwe8OqvOTgrGYfZZUMy0+Do/ZGG+hJ/RseyfvRmP++fMlP2lmaZ
-         zJWA==
-X-Gm-Message-State: APjAAAXCy/UMCRdWANheiMRoDiI/WCatBdNnTaAl8hVIT46gmtwk5dVm
-        k0rHDW4ZVFlhFoVxfVAxvho=
-X-Google-Smtp-Source: APXvYqwmLbKd65cVkoq7X93kB6uk6sHQvjfaqHg81VOZcOBcr63wxm8Do7eYnkrZ+uCCVrMRSIaUHQ==
-X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr177182wmj.4.1578510973649;
-        Wed, 08 Jan 2020 11:16:13 -0800 (PST)
-Received: from darkstar ([2a04:ee41:4:500b:c62:197d:80dc:1629])
-        by smtp.gmail.com with ESMTPSA id g21sm5577384wrb.48.2020.01.08.11.16.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 11:16:12 -0800 (PST)
-Date:   Wed, 8 Jan 2020 20:16:00 +0100
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200108191600.GC9635@darkstar>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200107134234.GA158998@google.com>
- <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
- <20200108095108.GA153171@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=71tYmvlt1/OOqPFBAI/jjpMMYNxkMt5zcCbmPmd2ETA=;
+        b=Cn8gYgYV84infd/xIrjbTN/DfEu+q7Mz7nrHIqQjnDgger/UfeLwXeMv1hQXU2Rvxp
+         ErxuPZLyvuI2KQZ4hV+aJpf6oJ7YOgV4cIrtVuttDNQsHqZv8a8ZknHkuxyKJBuoQaZL
+         ACnqYpL67BoyHSENK1CgflnzY6NlVOzbPs3dpWDmFhOVvpkOyBOTAMjUCBx5Ejdk9hr/
+         JIA+KcyqfZRtsW0B+XFH8DCI0S/Noeox2x1lhde974XSMQYgj62TN9/tEq3mSqI7CO9m
+         ItmCKwWlaSWHxDQezKQpoPgzWYF/aEBV191ocrZrYSirxj0jDNAtfSp7jLbAMxooewZ4
+         EOsA==
+X-Gm-Message-State: APjAAAVSX3ig8qVVwz7WLamvunVe+IdhYULco/yhxSHB5OPhxRXxIzzD
+        e/2AzYjPSmhPAMBr9OxWqDwCBOAU
+X-Google-Smtp-Source: APXvYqx/i2fcvteVjDObebNcYyRRkA/45O12bIrSnU7Foob/eK5/fQZ2csTYr2BtD92U/8h3E/J1RA==
+X-Received: by 2002:a2e:884f:: with SMTP id z15mr3801293ljj.46.1578511110777;
+        Wed, 08 Jan 2020 11:18:30 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id n3sm1849852lfk.61.2020.01.08.11.18.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 11:18:29 -0800 (PST)
+Subject: Re: [PATCH v7 03/21] dt-bindings: clock: tegra: Add DT id for OSC
+ clock
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <1578457515-3477-4-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f78cc952-a582-e84c-4f80-8baac4ecb111@gmail.com>
+Date:   Wed, 8 Jan 2020 22:18:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108095108.GA153171@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1578457515-3477-4-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-Jan 09:51, Quentin Perret wrote:
-> On Tuesday 07 Jan 2020 at 20:30:36 (+0100), Dietmar Eggemann wrote:
-> > On 07/01/2020 14:42, Quentin Perret wrote:
-> > > Hi Qais,
-> > > 
-> > > On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
-> > 
-> > [...]
-> > 
-> > >> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > >> index e591d40fd645..19572dfc175b 100644
-> > >> --- a/kernel/sched/rt.c
-> > >> +++ b/kernel/sched/rt.c
-> > >> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
-> > >>   */
-> > >>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
-> > >>  {
-> > >> +	/*
-> > >> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
-> > >> +	 * we apply any new value on the next wakeup, which is here.
-> > >> +	 */
-> > >> +	uclamp_rt_sync_default_util_min(p);
-> > > 
-> > > The task has already been enqueued and sugov has been called by then I
-> > > think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
-
-No, the above sync should neven be done.
-
-For CFS tasks is currenly working by computing the effective clamp
-from core.c::enqueue_task() before calling into the scheduling class
-callback.
-
-We should use a similar approach for RT tasks thus avoiding rt.c
-specific code and ensuring correct effective values are _aggregated_
-out of task's _requests_ and system-wide's _constraints_ before
-calling sugov.
-
-> > That's probably better.
-> > Just to be sure ...we want this feature (an existing rt task gets its
-> > UCLAMP_MIN value set when the sysctl changes)
-
-No, that's not a feature. That's an hack I would avoid.
-
-> > because there could be rt tasks running before the sysctl is set?
+08.01.2020 07:24, Sowjanya Komatineni пишет:
+> OSC is one of the parent for Tegra clocks clk_out_1, clk_out_2, and
+> clk_out_3.
 > 
-> Yeah, I was wondering the same thing, but I'd expect sysadmin to want
-> this. We could change the min clamp of existing RT tasks in userspace
-> instead, but given how simple Qais' lazy update code is, the in-kernel
-> looks reasonable to me. No strong opinion, though.
+> This patch adds DT id for OSC clock to allow parent configuration
+> through device tree.
 > 
-> Thanks,
-> Quentin
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
 
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
