@@ -2,91 +2,97 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C49BC33CA7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BBDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AE220643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fQqtl4VO"
+	by mail.kernel.org (Postfix) with ESMTP id A203620692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgAHU0j (ORCPT
+        id S1727226AbgAHU0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:26:39 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53215 "EHLO ozlabs.org"
+        Wed, 8 Jan 2020 15:26:55 -0500
+Received: from mga14.intel.com ([192.55.52.115]:41770 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgAHU0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:26:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tLPS07cRz9sPJ;
-        Thu,  9 Jan 2020 07:26:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578515196;
-        bh=qtqQsfsb2WUiSdrCNexZ5+okx6btpBO9RQhZm9Cq9hE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fQqtl4VOSZYzB9G7bj671U6OzCdh+xaLyfGUaoyMMYZyVHzbJKMrvSuJE+ybk+Zup
-         PLciHZtz89tc8SnOMqF+unOkE9DV3e9G2zBAmk6AkxTwZrKN4zZfT+euPC1QGMTfiK
-         FzB99j8zkKrrDg/GPH7iXl3uEjvjoQnDRmpBtExHYlwIjQ2BxeK9cHVf76Mve/7xqD
-         dGJONNNufsuVXJLrlIBixEdF+QI1Ld18YkqitE+wE5ozQ0/Llm/dWTCVSX7wvlNx9I
-         LtarZBr+V7S8MDmRDDEqFqIKwY4NG5B4Gv1ky6vroDLJhRpE+Df8YESuLFDWmvcxkc
-         LmfWWkGa5FKAg==
-Date:   Thu, 9 Jan 2020 07:26:20 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the v4l-dvb-fixes
- tree
-Message-ID: <20200109072620.6df67c98@canb.auug.org.au>
+        id S1725446AbgAHU0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:26:55 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:26:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
+   d="scan'208";a="223651674"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 12:26:53 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipHuo-0007Zo-5R; Wed, 08 Jan 2020 22:26:54 +0200
+Date:   Wed, 8 Jan 2020 22:26:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v1 1/2] lib/test_bitmap: Correct test data offsets for
+ 32-bit
+Message-ID: <20200108202654.GJ32742@smile.fi.intel.com>
+References: <20200108184611.7065-1-andriy.shevchenko@linux.intel.com>
+ <20200108192437.GA13872@yury-thinkpad>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Fe0Ejl.HRUgqhHS/udTLhWC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108192437.GA13872@yury-thinkpad>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Fe0Ejl.HRUgqhHS/udTLhWC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 08, 2020 at 11:24:37AM -0800, Yury Norov wrote:
+> On Wed, Jan 08, 2020 at 08:46:10PM +0200, Andy Shevchenko wrote:
+> > On 32-bit platform the size of long is only 32 bits which makes wrong offset
+> > in the array of 64 bit size.
+> > 
+> > Calculate offset based on BITS_PER_LONG.
+> > 
+> > Fixes: 30544ed5de43 ("lib/bitmap: introduce bitmap_replace() helper")
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hi all,
+> >  	unsigned int nbits = 64;
+> > +	unsigned int step = DIV_ROUND_UP(nbits, BITS_PER_LONG);
+> 
+> Step is already defined in this file:
+>         #define step (sizeof(u64) / sizeof(unsigned long))
 
-Commit
+...and later undefined.
 
-  21d116949e95 ("Revert "media: pulse8-cec: fix lost cec_transmit_attempt_d=
-one() call"")
+> to avoid the same problem in other test cases. Introducing another variant of 
+> it looks messy.
 
-is missing a Signed-off-by from its author and committer.
+I don't see any problem.
 
-Reverts are commits too and, as such, should have reasonable commit
-messages and be signed off.
+> 
+> >  	DECLARE_BITMAP(bmap, 1024);
+> >  
+> >  	bitmap_zero(bmap, 1024);
+> > -	bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
+> > +	bitmap_replace(bmap, &exp2[0 * step], &exp2[1 * step], exp2_to_exp3_mask, nbits);
+> >  	expect_eq_bitmap(bmap, exp3_0_1, nbits);
+> 
+> If nbits is always 64, why don't you pass 64 directly?
 
---=20
-Cheers,
-Stephen Rothwell
+We may use any setting. For now it's 64, but nothing prevents us to extend to,
+let's say, 75.
 
---Sig_/Fe0Ejl.HRUgqhHS/udTLhWC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+With Best Regards,
+Andy Shevchenko
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WOuwACgkQAVBC80lX
-0GxoEgf/SFBTJRQPDWLB2Sjt8QltGnKLzWi3uRvPqcBoj9NWArXP0FDcj1VS0cWO
-yPCbijtuMnAjTLdKpNu+Y2KhvfanjBLG+uKfiZCVtGhv/tmhqHwRZIBSb/fYY31A
-gKgZbIURYUKbDkYhlF2NBZTKMw0cHeeYm8LUNAmDNgGwpay/zkvDeCHYtuahHXHi
-N+TiPv6p1+Rwya3CAVCwSTQT0QmB0tua2DNEraA1vgs2hP7EmoL1VSBMPN4tP64b
-lyG0ezXBsi6Rr0Gx40nQh4QzWc7+3MC73mFzaycFPI2Rus3nWoKIfhLPLdwQYuNp
-YCCVJsBX/L1YkfhG7Tjq/MbgVlQ/tg==
-=yrTV
------END PGP SIGNATURE-----
-
---Sig_/Fe0Ejl.HRUgqhHS/udTLhWC--
