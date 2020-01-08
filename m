@@ -2,117 +2,133 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CF5C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D55C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8883E20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="biuLjm7a"
+	by mail.kernel.org (Postfix) with ESMTP id 93A4320692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgAHPKe (ORCPT
+        id S1728290AbgAHPOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:10:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37269 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbgAHPKe (ORCPT
+        Wed, 8 Jan 2020 10:14:05 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:53111 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgAHPOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:10:34 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o13so3687920ljg.4;
-        Wed, 08 Jan 2020 07:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8N6auOkOUI9EBQePB/gLYAhFAr4sHXqpFT+qTfELYHM=;
-        b=biuLjm7aMHQWJyjiDU1z8tHxoz2PkBpj3EllPwynYOXp3U1b25Y37N3fL9m7uYZBYJ
-         wJpmwVJne4XkIWn42w+2OG0Of24f3SMqDKrqnwRsXzkZAHWc8WWb2+MDv+E+vrb0zg07
-         Cz02hrb27HfQxgHSFsmPGfhRIQTZ1xOKgl5wAyQXEyTT2qK+IZVCHyHLefop8tfRJR3v
-         6uybFPww8NPheKBFGyGvMD9jmxfFxDX+kh5R7bomsX+oWTiD2lZF2eDYSDOWCpdkIAxe
-         io9hazK7DVZGv3sT7COO7Zr0nVDeLo4VrgFN8IHWwcOvqb0efqHNe7W3FHx3xiqNdzgO
-         fxVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8N6auOkOUI9EBQePB/gLYAhFAr4sHXqpFT+qTfELYHM=;
-        b=sIjdA926Gyk9YmhZa1uyxRipN8Qr0qGSHhfmIJkN+oYYfntZg4x9n53FFBHYvaKjTb
-         rbSxa7q0cuAaNlzzgjFuqb3MDRRojM/woJGOvjUg28O9jKyapTzk2rsdRX47/QS29ey1
-         2TspNE4TaNxXR11oI5lGxksqj2LuMdrXpurBoUeC8+2B9Dq/v55oMrNm0smHqGTOU0Ot
-         4M+d734LcZvdAns30KodVxnRCCdgO3L2VdkwXGx4MZkaunu3s1GA75J6U4nnPj7dWh/O
-         Wc8kbG7EDUHi9QwsVE2lt+W6+9cPdtpnrHVf3qomEXxJD4k07k91+Q0agj0sgE84Nvk+
-         b/Uw==
-X-Gm-Message-State: APjAAAXwsv/dwhsRmaKNg5dm2aCILuBmW3hRyEYGuuPvSU90P1Vk8CYy
-        gTOCXOw/8erqAs+703Bx2X8YVjE1
-X-Google-Smtp-Source: APXvYqxxccz+shxx6y4OUo6Cf2u0jOQFiHInlXXrdSYyWuxBoQ7/f9jW62bqg8Lu1WdVGt+EXIU3sg==
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr3162824ljo.41.1578496231767;
-        Wed, 08 Jan 2020 07:10:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r26sm1512029lfm.82.2020.01.08.07.10.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 07:10:31 -0800 (PST)
-Subject: Re: [PATCH v3 09/13] dmaengine: tegra-apb: Remove runtime PM usage
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200106011708.7463-1-digetx@gmail.com>
- <20200106011708.7463-10-digetx@gmail.com>
- <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
- <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
- <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c077c687-57dc-c33f-f434-57918492c789@gmail.com>
-Date:   Wed, 8 Jan 2020 18:10:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jan 2020 10:14:05 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Myevl-1jcDe22sbV-00yvPz for <linux-kernel@vger.kernel.org>; Wed, 08 Jan
+ 2020 16:14:03 +0100
+Received: by mail-qk1-f172.google.com with SMTP id a203so2935490qkc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:14:03 -0800 (PST)
+X-Gm-Message-State: APjAAAXV093Vinni+XRya+IgwuvIkPuxM3cfYySZpTH5xux646XEkSXw
+        TR2eIVCayteptPRMepG9cDodzwk+NE+2M8W9qSo=
+X-Google-Smtp-Source: APXvYqz3CC+B2rmf+STNhEJll7RchhhMWz3hcMNuw3sVJWjAK9HUGtsoGX+yCGR/I2SGoRy4zIP4sz1OpgfEVPBYogA=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr4864685qka.286.1578496442498;
+ Wed, 08 Jan 2020 07:14:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab>
+ <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com> <CAFd5g46YYiC-aeAGumqOMiNZ71h2dGH==F_bdj+pwQ5YOHo3GA@mail.gmail.com>
+In-Reply-To: <CAFd5g46YYiC-aeAGumqOMiNZ71h2dGH==F_bdj+pwQ5YOHo3GA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 16:13:46 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0cZQ-8sX=_2Oa_GQeHeMxsQpdJH=zUoeRXyM-7_MmE9g@mail.gmail.com>
+Message-ID: <CAK8P3a0cZQ-8sX=_2Oa_GQeHeMxsQpdJH=zUoeRXyM-7_MmE9g@mail.gmail.com>
+Subject: Re: kunit stack usage, was: pmwg-ci report v5.5-rc4-147-gc62d43442481
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, PMWG CI <pmwg-ci@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Private Kernel Alias <private-kwg@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mThdcVCQm/1JBc3ApNozt0Nz9g0tEjIrhQkwMl0t0UEuChZ6JFT
+ wwMr/Qw5oJMCUp/ywVRDqR/nDbZT/7W2LpYQ5KPzgQ8iPLUVzY4mtADi27Gdt1K6DHjGFR9
+ w1sXwep4v/WqSZ64HxhEx1St0TIkyxS/kzn/Iv1a2xxLeqvtEgJcl4/1KpOs0IkQq5sUYIG
+ Gwf+ikg7l+m+aQpoXz5nw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f+6xnR9/pXc=:hrwOMtk2JhHyVkbIUjpc6h
+ SQJYmD0WnH5TPFbNYgvOPdXNGB5H4WCzha1EIuSOIwuOH2ovbfZsmSJ/XxEnvbpcHFBybVudP
+ IzWG79IfzXVLgLVqz1GLhHM3wOQ3Tm3hvC7Q9yVC76ICEQfsVtbt0rHBjPy6/XyrAK6moX91Z
+ 2RksBOfR2PA6Zx4bZGgsea7QUSt+oa5Ss7FqFYShjoZfhzHNS64n3DlXoyhxvn14e5hqPQT1a
+ MKRpIEWOqyb3tLnRK/Qx/ovvUq7Wc9acgPP6m2CLa8dlcKI0b1nUgSV7pqniXarJAP8FSdiP6
+ NJFSJYYzBqeNkx5J9Yni45+cTWKt9Fn5gpwkI3l9Nh3vjMIt9ZMaoqhCFRcT95wALhiyNcniV
+ 6dIiJk3YomUFahwC1dAQIwy7HM68M3SYzjro6PH9dbyg4kOT0R/iRfkFqV99lQbgXj+1uHcHr
+ EQ2Mzn/+fUUl1W02tpmfh788JsaepW8Rept7ssKw8p0xqf3QLXbRTrEX7wJYjVS+I2yuhI6ae
+ SSXa8n8bg9/djWTzCoDWWHrJvVg8gVKAqichCMtPSM48RqC7H4l1vcZdm6CDdroF7plsZ78Mc
+ arYef37ZPWfvb2UFnwSe4q2VEME5ex/zGNcHx52hvWnc6ybKvkuhqM6tCXNgMDOkPkkFIJDGo
+ /DEAXCyksN9ovt8UkmRUXQ/QJp04UNt0cNQtbzsZSmQnOkC3ApcRcrKGb+oNlT9Lr2u8/Ihox
+ GyvK3qSL34p8U61FDJxOe9thL6zFgQI/Gr0pTK03eDBbKj+33VrgXBYqwwPMWgACs5tTQBww0
+ ybbTLnbL4KRgaEynaHJRiqCpxjkmt3hOWqqtr9guVxFHBovVpJTCM4ikgGJZfVnyhAoOt4QBc
+ iK/4MllI4GjzKAdBMEGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.01.2020 21:38, Jon Hunter пишет:
-> 
-> On 07/01/2020 17:12, Dmitry Osipenko wrote:
->> 07.01.2020 18:13, Jon Hunter пишет:
->>>
->>> On 06/01/2020 01:17, Dmitry Osipenko wrote:
->>>> There is no benefit from runtime PM usage for the APB DMA driver because
->>>> it enables clock at the time of channel's allocation and thus clock stays
->>>> enabled all the time in practice, secondly there is benefit from manually
->>>> disabled clock because hardware auto-gates it during idle by itself.
->>>
->>> This assumes that the channel is allocated during a driver
->>> initialisation. That may not always be the case. I believe audio is one
->>> case where channels are requested at the start of audio playback.
->>
->> At least serial, I2C, SPI and T20 FUSE are permanently keeping channels
->> allocated, thus audio is an exception here. I don't think that it's
->> practical to assume that there is a real-world use-case where audio
->> driver is the only active DMA client.
->>
->> The benefits of gating the DMA clock are also dim, do you have any
->> power-consumption numbers that show that it's really worth to care about
->> the clock-gating?
-> 
-> No, but at the same time, I really don't see the point in this. In fact,
-> I think it is a step backwards. If we wanted to only enable clocks while
-> DMA channels are active we could. So I request you drop this.
+On Wed, Jan 8, 2020 at 3:41 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+> On Tue, Jan 7, 2020 at 4:37 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Dec 30, 2019 at 6:16 PM PMWG CI <pmwg-ci@linaro.org> wrote:
+> > pe_test_uint_arrays() contains a couple of larger variables, plus 41
+> > instances of KUNIT_EXPECT_*() or KUNIT_ASSERT_*(), each one
+> > of these adds its own copy of the structure, eventually exceeding
+> > the warning limit.
+>
+> Uh oh, sorry about that.
 
-I'll take a look at making RPM active only during the time of DMA
-activity, otherwise it's pretty much a dead code as it is now.
+No worries, I don't think anyone could have foreseen that bug.
+
+> Another idea, the struct just exists to pack up data and ship it off
+> to a function which handles the expectation/assertion. Consequently,
+> the struct is only used inside the expectation/assertion macro; it is
+> not needed before the macro block and is not needed after it. So could
+> we maybe make some kind of expectation/assertion union so that we know
+> they are all the same size, and then somehow tag the stack allocation
+> so that we only ever have one copy in a stack frame? I am not sure if
+> that kind of compiler magic exists. I guess one way to accomplish this
+> is to make a dummy function in KUnit whose job it is to call the unit
+> test function, which allocates the object, and then calls the unit
+> test function with a reference to the object allocation; then we could
+> just reuse that allocation and we can avoid making a bunch of
+> piecemeal heap allocations.
+>
+> What do people think? Any other ideas?
+
+The idea of annotating it got me thinking about what could be
+done to improve the structleak plugin, and that in turn got me on
+the right track to a silly but trivial fix for the issue: The only thing
+that structleak does here is to initialize the implied padding in
+the kunit_binary_assert structure. If there is no padding, it all
+works out find and the structures don't get pinned to the stack
+because the plugin can simply ignore them.
+
+I tried out this patch and it works:
+
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+index db6a0fca09b4..5b09439fa8ae 100644
+--- a/include/kunit/assert.h
++++ b/include/kunit/assert.h
+@@ -200,8 +200,9 @@ struct kunit_binary_assert {
+        struct kunit_assert assert;
+        const char *operation;
+        const char *left_text;
+-       long long left_value;
+        const char *right_text;
++       long __pad;
++       long long left_value;
+        long long right_value;
+ };
+
+There may also be a problem in 'struct kunit_assert' depending on the
+architecture, if there are any on which the 'enum kunit_assert_type'
+type is 64 bit wide (which I think is allowed in C, but may not happen
+on any toolchain that builds kernels).
+
+      Arnd
