@@ -2,92 +2,79 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6798C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B163C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0B02070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E/y1Xc4d"
+	by mail.kernel.org (Postfix) with ESMTP id 2190C206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbgAHL2v (ORCPT
+        id S1727156AbgAHL3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:28:51 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60162 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHL2v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:28:51 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008BSePi107657;
-        Wed, 8 Jan 2020 05:28:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578482920;
-        bh=4VlFsH0x4nyhfaCnO0v3sjcb4oaBGAFeq3JnlX2SVYM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=E/y1Xc4dBJ6FaL/brdE0+rP3R/FG7dVzVkw9u2sHH2sBnGAYsAlXGlnrVmJI+X01E
-         Isvfmo5V49gbVkhi0vzOZcHPsKOPSdB8bztiOqONtXiPI6bLwaHW7IEyx2lPJDeFqU
-         Smf7yIDQUoEQHa4jTdJJfW+auCjGC6TpMAHYv4uQ=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008BSebV049301
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 05:28:40 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 05:28:39 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 05:28:39 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008BSbfv103074;
-        Wed, 8 Jan 2020 05:28:38 -0600
-Subject: Re: [PATCH 0/3] Fix issues with command queuing in arasan controllers
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <shawn.lin@rock-chips.com>
-References: <20191230092343.30692-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <837996b2-c69f-1446-fda4-5577e28ba8e1@ti.com>
-Date:   Wed, 8 Jan 2020 17:00:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 06:29:34 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9125 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726098AbgAHL3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:29:33 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8AAB3A4388C290F79247;
+        Wed,  8 Jan 2020 19:29:31 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 8 Jan 2020 19:29:24 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@gmail.com>,
+        <jmorris@namei.org>
+CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH] ima: use kmemdup
+Date:   Wed, 8 Jan 2020 19:25:13 +0800
+Message-ID: <20200108112513.39715-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191230092343.30692-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix memdup.cocci warnings:
+./security/integrity/ima/ima_policy.c:268:10-17: WARNING opportunity for kmemdup
 
-On 30/12/19 2:53 pm, Faiz Abbas wrote:
-> In some Arasan SDHCI controllers, after tuning, the tuning pattern data
-> is leftover in the sdhci buffer. This leads to issues with future data
-> commands, especially when command queuing is enabled. The following
-> patches help fix this issue by resetting data lines after tuning is
-> finished. The first two patches have been tested with TI's am65x and
-> j721e SoCs using the sdhci_am654 driver.
-> 
-> I have a strong suspicion that this is the same issue with
-> the sdhci-of-arasan driver where they are forced to dump data from the
-> buffer before enabling command queuing. I need help from someone with a
-> compatible platform to test this.
-> 
+Use kmemdup rather than duplicating its implementation.
 
-I had some discussions with our hardware team and they say we should be
-asserting both SRC and SRD reset after tuning to start from a clean
-state. Will update the patches to do that in v2.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ security/integrity/ima/ima_policy.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks,
-Faiz
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index ef8dfd4..e31649c 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -265,7 +265,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	struct ima_rule_entry *nentry;
+ 	int i, result;
+ 
+-	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
++	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
+ 	if (!nentry)
+ 		return NULL;
+ 
+@@ -273,7 +273,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	 * Immutable elements are copied over as pointers and data; only
+ 	 * lsm rules can change
+ 	 */
+-	memcpy(nentry, entry, sizeof(*nentry));
+ 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ 
+ 	for (i = 0; i < MAX_LSM_RULES; i++) {
+-- 
+2.7.4
+
