@@ -2,100 +2,92 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4FCC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69C6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00F62072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJQ8FtDd"
+	by mail.kernel.org (Postfix) with ESMTP id 7CF272070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578499104;
+	bh=fw+89dHRX0u3D17yqMyJYJnWWkPYy/HQk2TD7x07IDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ENPXbyPXAkNGwo0jV5EWOHFWHIJw/oVY/iKtVN/ZLPLmDnLt7fVBdazDQP+UoEbrh
+	 UoTq4ctt9RqBfgrlfENLsyTvJp827udYnho3n+ZusYZTDwjQ5rz5YmCiLoq5j/aPiS
+	 JPMDJLRXG7+Jnr6JaeK32vTzJ5483q0kutdgEwPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgAHP5E (ORCPT
+        id S1727878AbgAHP6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:57:04 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:34316 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgAHP5D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:57:03 -0500
-Received: by mail-qv1-f67.google.com with SMTP id o18so1616531qvf.1;
-        Wed, 08 Jan 2020 07:57:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t/UXz8NG4xnRGEkWWnp+LB0XowepG1LsOEgscvBtqw8=;
-        b=EJQ8FtDdQTBPrXUSXKgmb8BW+YZGbW61mtfANUOLXYLpyPfxP7A5P6KGEEVbiK94zy
-         zVUGP6LIc1FrZGIpJ4S/ZXeje0VekEh9yGO1+VLakKafWLryI4oKB2ik1LwGv0yhF1I5
-         ceGl7SC8KzxmjQyJh+2o/NqAKpFhheFQbEjakKMqgATx3TxkYm8yQ/5NBSMVsxRpBpkp
-         +HQXhPkeR+P+nNMKgP2JTnal6g0Byi3PWtQNyD+SJt/F4bdhMv8czTX8TtQa7qFLlrum
-         mSUgT6hjnM9ul24SDZ1UlQFOktqMhSi0pS7TKbHBr9hcXloyUvKRjuNzauhJQVSyVWSf
-         ea9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t/UXz8NG4xnRGEkWWnp+LB0XowepG1LsOEgscvBtqw8=;
-        b=lpfhR3euWxU2GJStxFb5USxWl++4JNaPLjAERwCkJC+nn3NlQ+2vdn6zFBaiDuj2ZF
-         3zcPY7ufcHeUd8SJE6TodfIVPSXULfTweM2Ak6yK0Rrcue39NbeeIlyRqyCRY0SPTtbW
-         ifR9IP1sHGtnQxHuew4BlQpp/z8vkvMhGBUzmqQlOQAzdhjyTbMsecs6raU0imgqiHbu
-         wQTEAmQZYQQ2dLUbLu2iUl/A57HjiUdP7T5VbwF4FyBwYfGOSToItMKarA82Ne6DBPga
-         sQx4teJIRUWvXJ/8AGnHEdnkuD/tguMtdMNl2fe1NZ0SDAWuIasfmRFYUhh+Gkx+w+iQ
-         uSWg==
-X-Gm-Message-State: APjAAAV7TE3ZeM4Hy3WOnmRho7+H87aOXbdDBCssb1d+rEZOzciFysTX
-        NK9PzCZPQKDUPfuNs5z6t3o=
-X-Google-Smtp-Source: APXvYqy/KEWQlsH9ih86XYm09pFRk+5mRemhYPCGqdvP3frNrtbfAPBfs4zSROyXjiJQeYF8B8GgrA==
-X-Received: by 2002:a0c:da08:: with SMTP id x8mr4712828qvj.166.1578499022473;
-        Wed, 08 Jan 2020 07:57:02 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id f19sm1534040qkk.69.2020.01.08.07.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 07:57:02 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 8 Jan 2020 10:57:00 -0500
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/3] x86/boot/compressed: force hidden visibility for
- all symbol references
-Message-ID: <20200108155700.GA2602122@rani.riverdale.lan>
-References: <20200108102304.25800-1-ardb@kernel.org>
- <20200108102304.25800-3-ardb@kernel.org>
- <20200108154031.GA2512498@rani.riverdale.lan>
- <CAKv+Gu8AOukQL3qokt+Rz3PKBRWWnSULGUr=+yxg_HPM8-uodw@mail.gmail.com>
+        Wed, 8 Jan 2020 10:58:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:46506 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727221AbgAHP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:58:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C863131B;
+        Wed,  8 Jan 2020 07:58:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51A6D3F534;
+        Wed,  8 Jan 2020 07:58:22 -0800 (PST)
+Date:   Wed, 8 Jan 2020 15:58:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add an entry for Monolithic Power
+ System, MPS
+Message-ID: <20200108155820.GB4036@sirena.org.uk>
+References: <20200108131234.24128-1-sravanhome@gmail.com>
+ <20200108131234.24128-2-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8AOukQL3qokt+Rz3PKBRWWnSULGUr=+yxg_HPM8-uodw@mail.gmail.com>
+In-Reply-To: <20200108131234.24128-2-sravanhome@gmail.com>
+X-Cookie: My vaseline is RUNNING...
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:47:51PM +0100, Ard Biesheuvel wrote:
-> The EFI stub already sets the hidden visibility attribute for the few
-> external symbol references that it contains, so it is not needed in
-> the context of this series.
-> 
-> In the future, we can revisit this if we want to get rid of the
-> various __pure getter functions, but that requires thorough testing on
-> other architectures and toolchains, so I'd prefer to leave that for
-> later.
 
-We don't need it for the stub right now, but then this bit in the cover
-letter is not yet true, we still need to be careful about libstub code.
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ...we can start using ordinary external symbol references in the EFI
-> stub without running the risk of boot regressions.
+On Wed, Jan 08, 2020 at 02:12:31PM +0100, Saravanan Sekar wrote:
+
+>    "^mitsubishi,.*":
+>      description: Mitsubishi Electric Corporation
+> +  "^mps,.*":
+> +    description: Monolithic Power Systems, Inc.
+>    "^mosaixtech,.*":
+
+This isn't sorted properly, since someone else already added MPS in the
+correct place I'll just drop this.
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4V/BwACgkQJNaLcl1U
+h9By3wf/YYMc9sjiEySnW17B8F3RVOkg5bgEkSuVhF/8h0kW0tIn0tOEezWbrj7f
+sfbwrQS1Wi8tAMhDcSzCTXWUHImnaFZ++X46xm0K818/GBS0Dj3lt5LGUBfS3XVS
+wYB6TH0g75fcqlnAPIu8QVgaN7NZeyjpCpwkQ+qCuPGKTyCUjrazLIbrUVZVwPqu
+nrOwtiqEtU1qhQcshzXavIa+XlqkdGkR3iW0TzLYvxdzpZtHNTMGnZL2vAt8lIXg
+355T7ykJ7DzvQwpSg6CrOTuFEAeiCAMWBxm4rnkMoEHabc+fHYdIP5E4yTDLf364
+3l9KPT6h6uWNcXsdAISI2JtCqR4BkQ==
+=4QhW
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
