@@ -2,98 +2,87 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210A9C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B460C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82132073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578466778;
-	bh=lopF8Y27P3s8f9qJIWHeW1cbGQtBdCZSw/gJCdDsJ7w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J/2rJv5KiS6AtUl226ZTZUoMp2hyrvL1O6VJGDhzQsczTBupIVqSP2jsgzYQmLcSm
-	 9DN/IeffbO4KZhqMteJLuMADsY8olT/0ZH92Z/ApVldW2tTtYvoV7ZdmiAzi6kibx3
-	 gprGz+hYQUlqdVrP5AEXzgcytcS1LN97VCoUF8/4=
+	by mail.kernel.org (Postfix) with ESMTP id 33B292077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgAHG7h (ORCPT
+        id S1726594AbgAHHAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:59:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgAHG7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:59:36 -0500
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A2D2077B;
-        Wed,  8 Jan 2020 06:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578466776;
-        bh=lopF8Y27P3s8f9qJIWHeW1cbGQtBdCZSw/gJCdDsJ7w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GNkwrS5CxX2TGwNIz+6KbLNgnct/6+I+i7bNNbEFckhuc8n8eC5yCRMSj/OxiwOs9
-         LhoEkhCXP70Ck6Fjp0z7kIVSiDOAwEidiAM6SQrdodink5MfoIk8g9zd1T0vlj7Niq
-         vhn5w5haSSPXYPKl+hyYoZ38OMBdVUB5nNCNgl2w=
-Received: by mail-lj1-f180.google.com with SMTP id y6so2226065lji.0;
-        Tue, 07 Jan 2020 22:59:35 -0800 (PST)
-X-Gm-Message-State: APjAAAV/Y+AIIAyD8xUuOtacatlRXn6cCudSNYDMQceDWSki4SUSVrom
-        +n1deWTMLcWmZ0P1kqZvC6QnVRZIS+zmZI3DpkI=
-X-Google-Smtp-Source: APXvYqwJ5OZrNLuxSSWJYxq/eTEZqpTwXVEVRSy5xlNfXiWb1ThbuyJkkJerK1aGtDzoII3scqi1c6/V50JbxaUvlXY=
-X-Received: by 2002:a2e:9196:: with SMTP id f22mr2050869ljg.18.1578466773920;
- Tue, 07 Jan 2020 22:59:33 -0800 (PST)
+        Wed, 8 Jan 2020 02:00:36 -0500
+Received: from mail.parknet.co.jp ([210.171.160.6]:47122 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgAHHAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 02:00:35 -0500
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 6D12315CBE2;
+        Wed,  8 Jan 2020 16:00:34 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00870Xa2011512
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Wed, 8 Jan 2020 16:00:34 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00870Wqc046780
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Wed, 8 Jan 2020 16:00:32 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 00870HJl046772;
+        Wed, 8 Jan 2020 16:00:17 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-cifs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Sterba <dsterba@suse.com>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Jan Kara <jack@suse.com>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: Unification of filesystem encoding options
+References: <20200102211855.gg62r7jshp742d6i@pali>
+        <20200107133233.GC25547@quack2.suse.cz>
+        <20200107173842.ciskn4ahuhiklycm@pali>
+Date:   Wed, 08 Jan 2020 16:00:17 +0900
+In-Reply-To: <20200107173842.ciskn4ahuhiklycm@pali> ("Pali
+ =?iso-8859-1?Q?Roh=E1r=22's?= message of
+        "Tue, 7 Jan 2020 18:38:42 +0100")
+Message-ID: <87y2uiigam.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <20200107215406.1632417-1-arnd@arndb.de>
-In-Reply-To: <20200107215406.1632417-1-arnd@arndb.de>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 8 Jan 2020 07:59:22 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPfYYyBWED-f67-suWPOzwRjB3VtncnkDPeiTMiankTR8w@mail.gmail.com>
-Message-ID: <CAJKOXPfYYyBWED-f67-suWPOzwRjB3VtncnkDPeiTMiankTR8w@mail.gmail.com>
-Subject: Re: [PATCH] i2c: s3c24xx: allow compile-testing
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>, Stefan Roese <sr@denx.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-i2c@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 at 22:54, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The PHY_EXYNOS5250_SATA driver can now be selected on
-> any platform for compile testing, but this results in a Kconfig
-> warning:
->
-> WARNING: unmet direct dependencies detected for I2C_S3C2410
->   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
->   Selected by [y]:
->   - PHY_EXYNOS5250_SATA [=y] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
->
-> Allow the I2C driver to be compile-tested as well.
->
-> Fixes: 1544133d48c3 ("phy: Enable compile testing for some of drivers")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Pali Rohár <pali.rohar@gmail.com> writes:
 
-Hi,
+>> > 3) Add support for iocharset= and codepage= options for msdos
+>> > filesystem. It shares lot of pars of code with vfat driver.
+>> 
+>> I guess this is for msdos filesystem maintainers to decide.
+>
+> Yes!
 
-I already posted this with my first patchset of compile test addons:
-v2: https://lore.kernel.org/lkml/1578384779-15487-1-git-send-email-krzk@kernel.org/
-v1: https://lore.kernel.org/lkml/20191230172751.17985-5-krzk@kernel.org/
+Of course, it's ok to add though. If someone really wants to use, and
+someone works for it...
 
-Best regards,
-Krzysztof
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
