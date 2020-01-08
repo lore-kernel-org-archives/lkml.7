@@ -2,144 +2,124 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB498C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4033EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B97206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E3520643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OLeVYVei"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE1Ze7d2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgAHM7t (ORCPT
+        id S1727369AbgAHNA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:59:49 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41462 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgAHM7s (ORCPT
+        Wed, 8 Jan 2020 08:00:56 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39253 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgAHNA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:59:48 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so2460704eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 04:59:47 -0800 (PST)
+        Wed, 8 Jan 2020 08:00:56 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so3283644wrt.6;
+        Wed, 08 Jan 2020 05:00:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZaemZRWcMq37fip2p7cOsBNJ6/qsTNjchTCq1eUTMrE=;
-        b=OLeVYVeiMpzCyt95hwX/CBNv7CSsvpQa+k8fhgTtUUZhaDS6qc5EcVCP0vVsd3+T/f
-         WQvlgCX5DfHKkRq7zrUfZc4+IRK5s/DgLIvp9k8k7m2L2DsOr8PKhIF2rLsAQt3NmpCQ
-         c1uaK2C/84QmvjPW7tIdEusjIEjt0zpd82h8U=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8s6MBY17dmKuqB1spd1Y2svCKY1mGBybzjzWrguhdKw=;
+        b=gE1Ze7d22HE5Q5vnTBA9TJ3sklMoxYoqc4qi5fHipRECxI0AbbTe7yOGYletjJPSmG
+         +ni93Xnu1tzfiZFnXRrNN7/9U4sSHQNRhWB3u0H5/5LgIBx8y6JZ2dvG6K9UzFfeIs+t
+         ucmWMwc34F1bCjWif80BBpDX+NigheLltnGLMjReolPZ5SDW/DH4dUm+wUq5r/jUmJ7s
+         e2m0AP/4myXBS3YYO7G6r3U33CARN3WLrhMxJEK0ZB3mfe/XXCblny9ZEPEACVa0kLmj
+         3U+hwLGgcCpRcrE4b/ohDwhGIOeoYtr9t3UJp9qpLX3nPDKIaslKdYClYnIKHOhib/Rq
+         UFDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZaemZRWcMq37fip2p7cOsBNJ6/qsTNjchTCq1eUTMrE=;
-        b=QcstSkK3oclZ5css3qFfFYymaKxJRn3GKXNVj8HRtpZBH7ZZwNl9svuGpBSilerbYD
-         D8KVTPRfqZeHhksAUa9KqO/5HEDX36lDVWO0L5bl342U0IavQBe3MlBmINC9c7Vb8QZy
-         5uAsEHwAUF3Pe3eEkhnDHTbTWV1QJ6WGnfdtLs+knvItWB1WUdRb111Sh6kZkzBVHNNY
-         87Tst2apwVGeuBhia9u2azeT4bbGr4SlD/frKMmX/urtWrRbtL6tjrG7PISniR+2Hyhh
-         GXF6I5S9xS6rCw2XTe3wJxhyO0mdatCNSN6jhR6w+tl6xlfbz1Rgn0Wx26L+d01jYONK
-         2QhA==
-X-Gm-Message-State: APjAAAX0tYEoos1v8DdxBCCKGQcSSqw1Apsy2JSLQquH7T83hPCiVzTk
-        TD7EGnL62Zmw07v0zLWnpSa6xWPTSE8pWw==
-X-Google-Smtp-Source: APXvYqy/i8CfP4OTBUs/hHMralqpymLHIaQ0wWQWItHggU8D2x7g431MJdaEFhJLvju+FJ0OqwZ6kA==
-X-Received: by 2002:a17:906:2e41:: with SMTP id r1mr4747651eji.127.1578488386243;
-        Wed, 08 Jan 2020 04:59:46 -0800 (PST)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id b27sm47243ejg.40.2020.01.08.04.59.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 04:59:45 -0800 (PST)
-Received: by mail-wm1-f46.google.com with SMTP id p9so2384984wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 04:59:45 -0800 (PST)
-X-Received: by 2002:a1c:2355:: with SMTP id j82mr3863056wmj.135.1578488384818;
- Wed, 08 Jan 2020 04:59:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8s6MBY17dmKuqB1spd1Y2svCKY1mGBybzjzWrguhdKw=;
+        b=WLRDx7XdT8aISbMtxkGJiGKOLQzF5MLWtzeGKcl0LB0TePAZpkDVsbmQ0Ggm9uiw9i
+         QmRAheHtCZYATd1+48okNROIuuPDrts7uad/AR4/JUWzg1VoGKmI/qyE0uQsRi5qnPGG
+         6MBst1df5+qg6sJOQzYC0bvDAn5WVLmUA4TvCbjulvGzwE78XZHkjJRGue07r089GQTP
+         h9EI7krNuV3XZwlYXkAdK5N8kZlj/WshjYj/XSHJ+fJcJWC/3Mlv0CzjBKa2KCa/WyQ/
+         sK9VmxQWG1C3lDkFJOjeJzHA9Hn8fDPUfppXi2RPDlL4gA17WF73vtrGqZPubDfJFohx
+         50Og==
+X-Gm-Message-State: APjAAAUmgnelRaGlVdwrhxjPtS9t0crHGwc5pU8m7tM3WeenmmvRSpQt
+        ObPKcIRGhXdwC7AK69MwIb3zJcd6
+X-Google-Smtp-Source: APXvYqyiUk9DjLJLQC9p0jB9yqPCOOzRwx8SecHw6EXXSg6lP6Y/JDhW00O/AZmFm6lHLnBCa9UkDg==
+X-Received: by 2002:a05:6000:cf:: with SMTP id q15mr4321652wrx.393.1578488454567;
+        Wed, 08 Jan 2020 05:00:54 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id x7sm3931711wrq.41.2020.01.08.05.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 05:00:53 -0800 (PST)
+Date:   Wed, 8 Jan 2020 14:00:52 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 1/2] pwm: Fix minor Kconfig whitespace issues
+Message-ID: <20200108130052.GF1993114@ulmo>
+References: <20191230172113.17222-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <HE1PR06MB4011EDD5F2686A05BC35F61CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191106223408.2176-1-jonas@kwiboo.se> <HE1PR06MB4011FF930111A869E4645C8CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <CAAFQd5CSWea=DNjySJxZmVi+2c5U4EKVPa1mf3vHh70+YrAQCA@mail.gmail.com> <7b92111b0c6443653de45f1eeec867645c127f32.camel@collabora.com>
-In-Reply-To: <7b92111b0c6443653de45f1eeec867645c127f32.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 8 Jan 2020 21:59:32 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CZo5g2gtuvU+OuoRj18ZcCH8XEinGyAjRxqUXRfSQhgg@mail.gmail.com>
-Message-ID: <CAAFQd5CZo5g2gtuvU+OuoRj18ZcCH8XEinGyAjRxqUXRfSQhgg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] media: hantro: Reduce H264 extra space for motion vectors
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Content-Disposition: inline
+In-Reply-To: <20191230172113.17222-1-krzk@kernel.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 3:11 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> On Wed, 2019-11-20 at 21:44 +0900, Tomasz Figa wrote:
-> > Hi Jonas,
-> >
-> > On Thu, Nov 7, 2019 at 7:34 AM Jonas Karlman <jonas@kwiboo.se> wrote:
-> > > A decoded 8-bit 4:2:0 frame need memory for up to 448 bytes per
-> > > macroblock with additional 32 bytes on multi-core variants.
-> > >
-> > > Memory layout is as follow:
-> > >
-> > > +---------------------------+
-> > > > Y-plane   256 bytes x MBs |
-> > > +---------------------------+
-> > > > UV-plane  128 bytes x MBs |
-> > > +---------------------------+
-> > > > MV buffer  64 bytes x MBs |
-> > > +---------------------------+
-> > > > MC sync          32 bytes |
-> > > +---------------------------+
-> > >
-> > > Reduce the extra space allocated now that motion vector buffer offset no
-> > > longer is based on the extra space.
-> > >
-> > > Only allocate extra space for 64 bytes x MBs of motion vector buffer
-> > > and 32 bytes for multi-core sync.
-> > >
-> > > Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
-> > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> > > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > ---
-> > > Changes in v3:
-> > >   - add memory layout to code comment (Boris)
-> > > Changes in v2:
-> > >   - updated commit message
-> > > ---
-> > >  drivers/staging/media/hantro/hantro_v4l2.c | 20 ++++++++++++++++++--
-> > >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > >
-> >
-> > Thanks for the patch!
-> >
-> > What platform did you test it on and how? Was it tested with IOMMU enabled?
->
-> Hello Tomasz,
->
-> Please note that this series has been picked-up and is merged
-> in v5.5-rc1.
->
-> IIRC, we tested these patches on RK3399 and RK3288 (that means
-> with an IOMMU). I've just ran some more extensive tests on RK3288,
-> on media/master; and I plan to test some more on RK3399 later this week.
->
-> Do you have any specific concern in mind?
 
-I specifically want to know whether we're 100% sure that those sizes
-are correct. The IOMMU still works on page granularity so it's
-possible that the allocation could be just big enough by luck.
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Tomasz
+On Mon, Dec 30, 2019 at 06:21:12PM +0100, Krzysztof Kozlowski wrote:
+> Remove double whitespace after "config" keyword.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pwm/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Applied, thanks.
+
+Thierry
+
+--+jhVVhN62yS6hEJ8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4V0oQACgkQ3SOs138+
+s6GW+RAAqt7l9DVUT1XZy2TgE7UeLRkeCbnVtYRqr1q4kqqjW1uRyRc2gbd6Q15a
+Orl53tUGiuE+Fr/t+UpQSLOmsc93zRIqkhbyMdfyTXJRGhzU5UCx2BuBDkelvmZ/
+ZcTgvi8IkXRVh7SJx6E2i956iFXifCQQKd/pbS3oPZbUCeRPJuhCTgmfD7NAKvCR
+YsaDo4MWHuuulx05CCLeZ+g915YEGXCV5nKr5RdY9/uf1ifS1waeUZK8+C+uwAy6
+17J7Ee4+27mydyVzsutgTLAWfnNf3wcwDzbYaR61G4dKZXHWZBlzjq1hAlyfLrfI
+Ue9fAv71KPfLULXpotqvoVkzKeTzW5SSnbtsi22wLJfmu5RI2ZCS2gXdRN0Z5f8y
+9M59CBmSSOvoQ7b/nBbOCxxlUqZTXGjnlJCXqrqGmomCMQvKZIJBNBILlFoQDDtZ
+wCVV+XXEHq3j4qvgsjgkAHLGyxkjmryg6fOFe9mqCGwk1huV5NYbI4aP1xiSCmTt
+00wLZMd67PnKuPv1GAgvRW+BLif97N1U7g2OP5ewhYXPj7cd1DVQHsgwbKnKkz1H
+UWG3gn+7n3KcstFfKsgS3X8fhKQ2+HalnX9hBfeORhPef5cCtIURILtOU/sS/pvZ
+f30UWoLal+Aylqbsc01nUJmxg27i/m0q4+v7waQmAJlE0L+1c6o=
+=p5N4
+-----END PGP SIGNATURE-----
+
+--+jhVVhN62yS6hEJ8--
