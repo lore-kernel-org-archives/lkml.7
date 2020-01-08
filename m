@@ -2,131 +2,141 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F4CC33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD5C33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BC82075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NbXXyF7G"
+	by mail.kernel.org (Postfix) with ESMTP id D969E2080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578452576;
+	bh=W6HEc1BQoIiWlJA9SIyta0MUSBglN9e1a7/Yb5joxrk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IOLl0vAE6i/J/f1T7vnfzDcUintPozpWPvrVXv4f8T9E3Es8WiOiAY5ZK7F7KVADT
+	 dMB/OYp+nGtRv+XiW1Vc3rnv6Hb1S4BsW527vKIQrOu8i34/ewsyg01he9Elfpyhb2
+	 vCaJsDlJi/ysw0466ZxXQe/0QjRsZ77zdRUxSASI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgAHDCt (ORCPT
+        id S1726637AbgAHDC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 22:02:49 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40743 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726111AbgAHDCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 22:02:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578452568; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qCbnHjpRfsfku5ISLdGOv0VGeBZjX2wwBV7P+4U5hl4=;
- b=NbXXyF7GoFIyIcml7JRgxGD9SKf8mWRH4pKMApI5Sz+WLqTYuCNJJjl/MHJvbBJsRZF67iET
- GcHqietd5Lk8MDf9P+3V780BME+wjWvLD1AEPAeh9QfiE3X4kx6x89RzsfOsOwVM/Nn349Oh
- W2ZFrgjbBz++6OSUMu1zxqUa/Fs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e154657.7f828a469a40-smtp-out-n02;
- Wed, 08 Jan 2020 03:02:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 421DAC4479F; Wed,  8 Jan 2020 03:02:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 7 Jan 2020 22:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbgAHDCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 22:02:55 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AAFF6C43383;
-        Wed,  8 Jan 2020 03:02:45 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 08 Jan 2020 11:02:45 +0800
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Add qca_power_on() API to support
- both wcn399x and Rome power up
-In-Reply-To: <20200107173149.GD89495@google.com>
-References: <20200107052601.32216-1-rjliao@codeaurora.org>
- <20200107173149.GD89495@google.com>
-Message-ID: <67e12177f1dc95f1387c5c3ee138343c@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A9E2075A;
+        Wed,  8 Jan 2020 03:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578452575;
+        bh=W6HEc1BQoIiWlJA9SIyta0MUSBglN9e1a7/Yb5joxrk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n57mDStE2+vKfuvNCDQ/Aotjv8v0CZqgnznTKqM/gTrmrsj0RKlR7QhvoeE4jYtZZ
+         GNgs1XC9V2BlTnAdEEf2UsiCin+qCgkjXKYhJ37+WVGvTZgN7rqtjwjr3j/UgjCq2S
+         YWDQFtqTrsRVSsx+o1YRk2wA7af/Qo+IWF9Ggcx0=
+Date:   Wed, 8 Jan 2020 12:02:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [BUGFIX PATCH] kprobes: Fix to cancel optimizing/unoptimizing
+ kprobes correctly
+Message-Id: <20200108120249.99d5a6d5201d1401e24447bc@kernel.org>
+In-Reply-To: <20200107183907.3c87500a@gandalf.local.home>
+References: <157840814418.7181.13478003006386303481.stgit@devnote2>
+        <20200107183907.3c87500a@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matt,
+On Tue, 7 Jan 2020 18:39:07 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-在 2020-01-08 01:31，Matthias Kaehlcke 写道：
-> Hi Rocky,
+> On Tue,  7 Jan 2020 23:42:24 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
 > 
-> On Tue, Jan 07, 2020 at 01:26:01PM +0800, Rocky Liao wrote:
->> This patch adds a unified API qca_power_on() to support both wcn399x 
->> and
->> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
->> regulators, and for Rome it pulls up the bt_en GPIO to power up the 
->> btsoc.
->> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 9392cc7f9908..f6555bd1adbc 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart 
->> *hu)
->>  	return 0;
->>  }
->> 
->> +static int qca_power_on(struct hci_dev *hdev)
->> +{
->> +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
->> +	struct qca_serdev *qcadev;
->> +	int ret = 0;
+> > optimize_kprobe() and unoptimize_kprobe() cancels if given kprobe
+> > is on the optimizing_list or unoptimizing_list. However, since
+> > commit f66c0447cca1 ("kprobes: Set unoptimized flag after
+> > unoptimizing code") modified the update timing of the
+> > KPROBE_FLAG_OPTIMIZED, it doesn't work as expected anymore.
+> > 
+> > The optimized_kprobe could be following states.
+> > 
+> > - [optimizing]: Before inserting jump instruction
+> >   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+> >   op->list is not empty.
+> > 
+> > - [optimized]: jump inserted
+> >   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+> >   op->list is empty.
+> > 
+> > - [unoptimizing]: Before removing jump instruction (including unused
+> >   optprobe)
+> >   op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+> >   op->list is not empty.
+> > 
+> > - [unoptimized]: jump removed
+> >   op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
+> >   op->list is empty.
+> > 
+> > Current code mis-expects [unoptimizing] state doesn't have
+> > KPROBE_FLAG_OPTIMIZED, and that can cause wrong results.
+> > 
+> > This introduces optprobe_queued_unopt() to distinguish [optimizing]
+> > and [unoptimizing] states and fixes logics in optimize_kprobe() and
+> > unoptimize_kprobe().
+> > 
+> > Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> another option would be to return directly from the if/else branches,
-> but either way is fine.
+> Looks good.
 > 
->> +
->> +	if (qca_is_wcn399x(soc_type)) {
->> +		ret = qca_wcn3990_init(hu);
->> +	} else {
->> +		if (hu->serdev) {
->> +			qcadev = serdev_device_get_drvdata(hu->serdev);
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +			/* Controller needs time to bootup. */
->> +			msleep(150);
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
-> 
-> I expected qca_power_on() would be called from qca_open(), but as is
-> this would only work for ROME, and not WCN399x, which only enables
-> the regulators in qca_open(), qca_wcn3990_init() is called from
-> qca_setup(). Is there a particular reason for this assymmetry between
-> the ROME and WCN399x initialization (i.e. one is fully powered up after
-> open(), the other not)?
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-I prefer to move the power on call from qca_open() to qca_setup() for 
-Rome,
-I don't see any reason for this difference with wcn399x.I will send 
-patch for
-this if you have no concern.
+Thank you!
+
+> 
+> 
+> >  		return;
+> >  	}
+> > +
+> >  	/* Optimized kprobe case */
+> > -	if (force)
+> > +	if (force) {
+> >  		/* Forcibly update the code: this is a special case */
+> >  		force_unoptimize_kprobe(op);
+> > -	else {
+> > +	} else {
+> >  		list_add(&op->list, &unoptimizing_list);
+> >  		kick_kprobe_optimizer();
+> >  	}
+> 
+> I see you added some clean up to this patch.
+
+Yeah, I felt somewhat uncomfortable for that. 
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
