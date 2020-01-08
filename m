@@ -2,125 +2,109 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BFAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C17AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17827206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x68cq71G"
+	by mail.kernel.org (Postfix) with ESMTP id D6B4C2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgAHIHv (ORCPT
+        id S1726989AbgAHILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:07:51 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36582 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgAHIHv (ORCPT
+        Wed, 8 Jan 2020 03:11:51 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42778 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgAHILv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:07:51 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00887X51031711;
-        Wed, 8 Jan 2020 02:07:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578470854;
-        bh=0LePNPhQjsmvdB/jZvsH1FkQ9eB2wIq3NeRdkh9stOI=;
-        h=From:To:CC:Subject:Date;
-        b=x68cq71G1ZrJDnEb6xr6XEElxXdouhAOMrrfbhF4udA+QkkBpxSv2IEdh/b5sjQpv
-         coZyuJeDPGrfLlfSnRNA3gD8Xs6tlHtCTZ5IXtX+aZvJK7aDFxmnj3xFlAtslKKejw
-         GAFA9uHtuAhSKkA11/VI0Y5YJ3KFKu+z0UEWW9ss=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00887XRG002530;
-        Wed, 8 Jan 2020 02:07:33 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 02:07:33 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 02:07:33 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00887UcT009067;
-        Wed, 8 Jan 2020 02:07:31 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v3] iio: adc: stm32-adc: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Wed, 8 Jan 2020 10:08:01 +0200
-Message-ID: <20200108080801.14144-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 8 Jan 2020 03:11:51 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 5DE561C259B; Wed,  8 Jan 2020 09:11:49 +0100 (CET)
+Date:   Wed, 8 Jan 2020 09:11:48 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 040/115] drm: limit to INT_MAX in create_blob ioctl
+Message-ID: <20200108081148.GC619@amd>
+References: <20200107205240.283674026@linuxfoundation.org>
+ <20200107205301.771918206@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
+Content-Disposition: inline
+In-Reply-To: <20200107205301.771918206@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+--TYecfFk8j8mZq+dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
-Hi,
+On Tue 2020-01-07 21:54:10, Greg Kroah-Hartman wrote:
+> From: Daniel Vetter <daniel.vetter@ffwll.ch>
+>=20
+> [ Upstream commit 5bf8bec3f4ce044a223c40cbce92590d938f0e9c ]
+>=20
+> The hardened usercpy code is too paranoid ever since commit 6a30afa8c1fb
+> ("uaccess: disallow > INT_MAX copy sizes")
 
-Changes since v2:
-- Replace the comment as suggested by Fabrice
+> Code itself should have been fine as-is.
+>=20
+> Link: http://lkml.kernel.org/r/20191106164755.31478-1-daniel.vetter@ffwll=
+=2Ech
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
+> Fixes: 6a30afa8c1fb ("uaccess: disallow > INT_MAX copy sizes")
 
-Changes since v1:
-- Fall back to IRQ mode only in case of ENODEV
+There is no such thing as commit 6a30afa8c1fb. Apparently this is
+talking about commit "6d13de1489b6bf539695f96d945de3860e6d5e17", but
+that one is not in 4.19-stable.
 
-Regards,
-Peter
+Do we need this in 4.19-stable?
+								Pavel
 
- drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+> +++ b/drivers/gpu/drm/drm_property.c
+> @@ -556,7 +556,7 @@ drm_property_create_blob(struct drm_device *dev, size=
+_t length,
+>  	struct drm_property_blob *blob;
+>  	int ret;
+> =20
+> -	if (!length || length > ULONG_MAX - sizeof(struct drm_property_blob))
+> +	if (!length || length > INT_MAX - sizeof(struct drm_property_blob))
+>  		return ERR_PTR(-EINVAL);
+> =20
+>  	blob =3D kvzalloc(sizeof(struct drm_property_blob)+length, GFP_KERNEL);
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 3b291d72701c..a8d2414ee2eb 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1746,9 +1746,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
- 	struct dma_slave_config config;
- 	int ret;
- 
--	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
--	if (!adc->dma_chan)
-+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	if (IS_ERR(adc->dma_chan)) {
-+		ret = PTR_ERR(adc->dma_chan);
-+		if (ret != -ENODEV) {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&indio_dev->dev,
-+					"DMA channel request failed with %d\n",
-+					ret);
-+			return ret;
-+		}
-+
-+		/* DMA is optional: fall back to IRQ mode */
-+		adc->dma_chan = NULL;
- 		return 0;
-+	}
- 
- 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
- 					 STM32_DMA_BUFFER_SIZE,
--- 
-Peter
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--TYecfFk8j8mZq+dy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4VjsQACgkQMOfwapXb+vKqNQCgiNkwp3nBb4NgjoP6vToJP2Wn
+hpYAoLmFv3iKEeTaZ0Kw9mGusDOM2zxx
+=UxKP
+-----END PGP SIGNATURE-----
+
+--TYecfFk8j8mZq+dy--
