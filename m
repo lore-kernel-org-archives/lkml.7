@@ -2,98 +2,125 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D171C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D1C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4FE206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jjra4u+J"
+	by mail.kernel.org (Postfix) with ESMTP id EF775206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgAHR03 (ORCPT
+        id S1729763AbgAHR2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:26:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:37106 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbgAHR02 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:26:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1578504384; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D1C87d/9wmB9b0Kh7sgb9rQjZKP4LGxrzK55NGLAZA8=;
-        b=jjra4u+J1Z5T6DcXVIQheaaHeylugxiEeeDAuYtZSP2E5iljr4QiSvUXc3b7oLP9ERVUu6
-        lZUeQgQLQhnUa3cXEfHhuCaolWDsPvA3D7e1nc92PzFlhJgocBmP+QDlCGXmVUBy8VBXVN
-        DYJwjxMBuxPe9tirwc45ueb9fGBdKGE=
-Date:   Wed, 08 Jan 2020 14:26:10 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register charger
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1578504370.3.1@crapouillou.net>
-In-Reply-To: <20200108165323.GA2506374@kroah.com>
-References: <20200107002901.940297-1-paul@crapouillou.net>
-        <20200108165323.GA2506374@kroah.com>
+        Wed, 8 Jan 2020 12:28:30 -0500
+Received: from mga14.intel.com ([192.55.52.115]:26056 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727579AbgAHR2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:28:30 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:28:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="225940503"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Jan 2020 09:28:25 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipF85-0005yq-Cs; Wed, 08 Jan 2020 19:28:25 +0200
+Date:   Wed, 8 Jan 2020 19:28:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 24/36] platform/x86: intel_scu_ipc: Add function to
+ remove SCU IPC
+Message-ID: <20200108172825.GV32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-25-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-25-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Jan 08, 2020 at 02:41:49PM +0300, Mika Westerberg wrote:
+> Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
+> support those in this driver add a new function that can be called to
+> remove the SCU IPC if the driver is unloaded.
+> 
 
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Le mer., janv. 8, 2020 at 17:53, Greg Kroah-Hartman=20
-<gregkh@linuxfoundation.org> a =E9crit :
-> On Tue, Jan 07, 2020 at 01:29:01AM +0100, Paul Cercueil wrote:
->>  Register a power supply charger, whose online state depends on=20
->> whether
->>  the USB role is set to device or not.
->=20
-> That says _what_ you are doing, but I have no idea _why_ you want to=20
-> do
-> this.
->=20
-> What is this going to cause to have happen?  What new userspace api is
-> going to result?  What will a user do with this?
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  arch/x86/include/asm/intel_scu_ipc.h |  1 +
+>  drivers/platform/x86/intel_scu_ipc.c | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+> index 9895b60386c5..250127eb1e38 100644
+> --- a/arch/x86/include/asm/intel_scu_ipc.h
+> +++ b/arch/x86/include/asm/intel_scu_ipc.h
+> @@ -32,6 +32,7 @@ struct intel_scu_ipc_pdata {
+>  
+>  struct intel_scu_ipc_dev *
+>  intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
+> +void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu);
+>  
+>  struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
+>  void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index cc29f504adcf..9fa0ea95198b 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -566,3 +566,21 @@ intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata)
+>  	return scu;
+>  }
+>  EXPORT_SYMBOL_GPL(intel_scu_ipc_probe);
+> +
+> +/**
+> + * intel_scu_ipc_remove() - Remove SCU IPC
+> + * @scu: SCU IPC handle
+> + *
+> + * This unregisters the SCU IPC device and releases the interrupt.
+> + */
+> +void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu)
+> +{
+> +	mutex_lock(&ipclock);
+> +	if (!WARN_ON(!scu->dev)) {
+> +		if (scu->irq > 0)
+> +			devm_free_irq(scu->dev, scu->irq, scu);
+> +		scu->dev = NULL;
+> +	}
+> +	mutex_unlock(&ipclock);
+> +}
+> +EXPORT_SYMBOL_GPL(intel_scu_ipc_remove);
+> -- 
+> 2.24.1
+> 
 
-This is useful when the USB role is the only way to know if the device=20
-is charging from USB.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The API is the standard power supply charger API, you get a=20
-/sys/class/power_supply/xxx/online node which tells you the state of=20
-the charger.
-
-The sole purpose of this is to give userspace applications a way to=20
-know whether or not the charger is plugged.
-
-> Is this going to always show up, no matter if the role is not even
-> relevant for a power supply?
-
-I guess it'd always show up, yes. In which case would the role not be=20
-relevant for a power supply? Is gpio-b-connector not always used for=20
-OTG connectors?
-
-Cheers,
--Paul
-
-
-> You need a lot more text here to make this mergable.
->=20
-> thanks,
->=20
-> greg k-h
-
-=
 
