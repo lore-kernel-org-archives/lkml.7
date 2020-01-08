@@ -2,94 +2,197 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7694FC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497BDC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2852070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="IWDofTtA"
+	by mail.kernel.org (Postfix) with ESMTP id 224AE2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgAHTrc (ORCPT
+        id S1729141AbgAHTra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:47:32 -0500
-Received: from mail-qk1-f169.google.com ([209.85.222.169]:44810 "EHLO
-        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgAHTrW (ORCPT
+        Wed, 8 Jan 2020 14:47:30 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43832 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730483AbgAHTqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:47:22 -0500
-Received: by mail-qk1-f169.google.com with SMTP id w127so3742252qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=6IdzXEjAqc3SzjG3DOyHv5lZ8YNCLuWwDx3dJsNyC9M=;
-        b=IWDofTtAey2FIP2gPmZnFH9ea+/3z0vav6bCVBLb1VWPaxLPBF8NlyBSIAKQzMwx9j
-         +3kTzyGv3FHZJ/1pt1ZOXD1HP69wLPxebCb81Dks3hV84TCElepy2bzylXtMHW6WCcTw
-         2tHRkekqI+fAyF/3aVGec2Qr9PYLbpI5931q8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=6IdzXEjAqc3SzjG3DOyHv5lZ8YNCLuWwDx3dJsNyC9M=;
-        b=Ck445sOi5Y3DFp7xvs1SgKa+0oCWAgMuFzbmPkuoBr3bO8TdGmXU0fI15ZdhTMTh0S
-         RTyeHElm6TLOCRCrMISLI8gjneBqPVxVWpqwKseUP5iPl2JFGBg6Fj0Ic9P/ZeUNvMsA
-         ItF/Q45jmy2YM/z11Baufr1vxZROrWmjh4R8b0RamK28bIUFRhj1bd/Fnkha5obA4zYX
-         l1ef3Bm9Zwx6Sy+5p1gGraZzcIvRbAqCOs3K04P35a6mw4wpqSv2wzWi8F9R7ERzpgvK
-         6Y73Xh0J2T/vIe3vAvDEe7l7baGPUNgD6z6a60R8a5pSWeIL7bjKy88H29KJDsWlX67P
-         xEpg==
-X-Gm-Message-State: APjAAAVzYl5lvB6surrJgWvVfY8i3tFLs9dgdLiYCZY9EtLZETHwQyU5
-        FyDLL7S98S4GB9JFx29cg+fNTcvts5Ud7FBvmbHAL7evsuh0bg==
-X-Google-Smtp-Source: APXvYqwhh03BE0rg64u29BK8WcfTtXo3JPfaLKujwZynWURBxhgIMqo/9QtycipodBIL5ZoGIS5kNGp8ipaOf4LiDXg=
-X-Received: by 2002:a05:620a:228:: with SMTP id u8mr6030326qkm.88.1578512841317;
- Wed, 08 Jan 2020 11:47:21 -0800 (PST)
-MIME-Version: 1.0
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Wed, 8 Jan 2020 11:47:10 -0800
-Message-ID: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
-Subject: Lower than expected CPU pressure in PSI
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     kernel-team <kernel-team@cloudflare.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+        Wed, 8 Jan 2020 14:46:05 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipHHE-0006on-4A; Wed, 08 Jan 2020 19:46:00 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipHHD-007dpa-JO; Wed, 08 Jan 2020 19:45:59 +0000
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Jason Yan" <yanaijie@huawei.com>,
+        "John Garry" <john.garry@huawei.com>,
+        "Gao Chuan" <gaochuan4@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Wed, 08 Jan 2020 19:44:01 +0000
+Message-ID: <lsq.1578512578.643033814@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 63/63] scsi: libsas: stop discovering if oob mode is
+ disconnected
+In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We added reporting for PSI in cgroups and results are somewhat surprising.
+3.16.81-rc1 review patch.  If anyone has any objections, please let me know.
 
-My test setup consists of 3 services:
+------------------
 
-* stress-cpu1-no-contention.service : taskset -c 1 stress --cpu 1
-* stress-cpu2-first-half.service    : taskset -c 2 stress --cpu 1
-* stress-cpu2-second-half.service   : taskset -c 2 stress --cpu 1
+From: Jason Yan <yanaijie@huawei.com>
 
-First service runs unconstrained, the other two compete for CPU.
+commit f70267f379b5e5e11bdc5d72a56bf17e5feed01f upstream.
 
-As expected, I can see 500ms/s sched delay for the latter two and
-aggregated 1000ms/s delay for /system.slice, no surprises here.
+The discovering of sas port is driven by workqueue in libsas. When libsas
+is processing port events or phy events in workqueue, new events may rise
+up and change the state of some structures such as asd_sas_phy.  This may
+cause some problems such as follows:
 
-However, CPU pressure reported by PSI says that none of my services
-have any pressure on them. I can see around 434ms/s pressure on
-/unified/system.slice and 425ms/s pressure on /unified cgroup, which
-is surprising for three reasons:
+==>thread 1                       ==>thread 2
 
-* Pressure is absent for my services (I expect it to match scheed delay)
-* Pressure on /unified/system.slice is lower than both 500ms/s and 1000ms/s
-* Pressure on root cgroup is lower than on system.slice
+                                  ==>phy up
+                                  ==>phy_up_v3_hw()
+                                    ==>oob_mode = SATA_OOB_MODE;
+                                  ==>phy down quickly
+                                  ==>hisi_sas_phy_down()
+                                    ==>sas_ha->notify_phy_event()
+                                    ==>sas_phy_disconnected()
+                                      ==>oob_mode = OOB_NOT_CONNECTED
+==>workqueue wakeup
+==>sas_form_port()
+  ==>sas_discover_domain()
+    ==>sas_get_port_device()
+      ==>oob_mode is OOB_NOT_CONNECTED and device
+         is wrongly taken as expander
 
-I'm running Linux 5.4.8 with hybrid cgroup hierarchy under systemd.
+This at last lead to the panic when libsas trying to issue a command to
+discover the device.
 
-P.S.: ./scripts/get_maintainer.pl kernel/sched/psi.c does not say
-Johannes Weiner is a maintainer
+[183047.614035] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000058
+[183047.622896] Mem abort info:
+[183047.625762]   ESR = 0x96000004
+[183047.628893]   Exception class = DABT (current EL), IL = 32 bits
+[183047.634888]   SET = 0, FnV = 0
+[183047.638015]   EA = 0, S1PTW = 0
+[183047.641232] Data abort info:
+[183047.644189]   ISV = 0, ISS = 0x00000004
+[183047.648100]   CM = 0, WnR = 0
+[183047.651145] user pgtable: 4k pages, 48-bit VAs, pgdp =
+00000000b7df67be
+[183047.657834] [0000000000000058] pgd=0000000000000000
+[183047.662789] Internal error: Oops: 96000004 [#1] SMP
+[183047.667740] Process kworker/u16:2 (pid: 31291, stack limit =
+0x00000000417c4974)
+[183047.675208] CPU: 0 PID: 3291 Comm: kworker/u16:2 Tainted: G
+W  OE 4.19.36-vhulk1907.1.0.h410.eulerosv2r8.aarch64 #1
+[183047.687015] Hardware name: N/A N/A/Kunpeng Desktop Board D920S10,
+BIOS 0.15 10/22/2019
+[183047.695007] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
+[183047.700999] pstate: 20c00009 (nzCv daif +PAN +UAO)
+[183047.705864] pc : prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
+[183047.711510] lr : prep_ata_v3_hw+0xb0/0x230 [hisi_sas_v3_hw]
+[183047.717153] sp : ffff00000f28ba60
+[183047.720541] x29: ffff00000f28ba60 x28: ffff8026852d7228
+[183047.725925] x27: ffff8027dba3e0a8 x26: ffff8027c05fc200
+[183047.731310] x25: 0000000000000000 x24: ffff8026bafa8dc0
+[183047.736695] x23: ffff8027c05fc218 x22: ffff8026852d7228
+[183047.742079] x21: ffff80007c2f2940 x20: ffff8027c05fc200
+[183047.747464] x19: 0000000000f80800 x18: 0000000000000010
+[183047.752848] x17: 0000000000000000 x16: 0000000000000000
+[183047.758232] x15: ffff000089a5a4ff x14: 0000000000000005
+[183047.763617] x13: ffff000009a5a50e x12: ffff8026bafa1e20
+[183047.769001] x11: ffff0000087453b8 x10: ffff00000f28b870
+[183047.774385] x9 : 0000000000000000 x8 : ffff80007e58f9b0
+[183047.779770] x7 : 0000000000000000 x6 : 000000000000003f
+[183047.785154] x5 : 0000000000000040 x4 : ffffffffffffffe0
+[183047.790538] x3 : 00000000000000f8 x2 : 0000000002000007
+[183047.795922] x1 : 0000000000000008 x0 : 0000000000000000
+[183047.801307] Call trace:
+[183047.803827]  prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
+[183047.809127]  hisi_sas_task_prep+0x750/0x888 [hisi_sas_main]
+[183047.814773]  hisi_sas_task_exec.isra.7+0x88/0x1f0 [hisi_sas_main]
+[183047.820939]  hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
+[183047.826757]  smp_execute_task_sg+0xec/0x218
+[183047.831013]  smp_execute_task+0x74/0xa0
+[183047.834921]  sas_discover_expander.part.7+0x9c/0x5f8
+[183047.839959]  sas_discover_root_expander+0x90/0x160
+[183047.844822]  sas_discover_domain+0x1b8/0x1e8
+[183047.849164]  process_one_work+0x1b4/0x3f8
+[183047.853246]  worker_thread+0x54/0x470
+[183047.856981]  kthread+0x134/0x138
+[183047.860283]  ret_from_fork+0x10/0x18
+[183047.863931] Code: f9407a80 528000e2 39409281 72a04002 (b9405800)
+[183047.870097] kernel fault(0x1) notification starting on CPU 0
+[183047.875828] kernel fault(0x1) notification finished on CPU 0
+[183047.881559] Modules linked in: unibsp(OE) hns3(OE) hclge(OE)
+hnae3(OE) mem_drv(OE) hisi_sas_v3_hw(OE) hisi_sas_main(OE)
+[183047.892418] ---[ end trace 4cc26083fc11b783  ]---
+[183047.897107] Kernel panic - not syncing: Fatal exception
+[183047.902403] kernel fault(0x5) notification starting on CPU 0
+[183047.908134] kernel fault(0x5) notification finished on CPU 0
+[183047.913865] SMP: stopping secondary CPUs
+[183047.917861] Kernel Offset: disabled
+[183047.921422] CPU features: 0x2,a2a00a38
+[183047.925243] Memory Limit: none
+[183047.928372] kernel reboot(0x2) notification starting on CPU 0
+[183047.934190] kernel reboot(0x2) notification finished on CPU 0
+[183047.940008] ---[ end Kernel panic - not syncing: Fatal exception
+]---
+
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Link: https://lore.kernel.org/r/20191206011118.46909-1-yanaijie@huawei.com
+Reported-by: Gao Chuan <gaochuan4@huawei.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/scsi/libsas/sas_discover.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/libsas/sas_discover.c
++++ b/drivers/scsi/libsas/sas_discover.c
+@@ -97,12 +97,21 @@ static int sas_get_port_device(struct as
+ 		else
+ 			dev->dev_type = SAS_SATA_DEV;
+ 		dev->tproto = SAS_PROTOCOL_SATA;
+-	} else {
++	} else if (port->oob_mode == SAS_OOB_MODE) {
+ 		struct sas_identify_frame *id =
+ 			(struct sas_identify_frame *) dev->frame_rcvd;
+ 		dev->dev_type = id->dev_type;
+ 		dev->iproto = id->initiator_bits;
+ 		dev->tproto = id->target_bits;
++	} else {
++		/* If the oob mode is OOB_NOT_CONNECTED, the port is
++		 * disconnected due to race with PHY down. We cannot
++		 * continue to discover this port
++		 */
++		sas_put_device(dev);
++		pr_warn("Port %016llx is disconnected when discovering\n",
++			SAS_ADDR(port->attached_sas_addr));
++		return -ENODEV;
+ 	}
+ 
+ 	sas_init_dev(dev);
+
