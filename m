@@ -2,117 +2,92 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC9C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80B520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA0F2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="be/0HgRE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sulR5QUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgAHPsF (ORCPT
+        id S1727553AbgAHPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:48:05 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38667 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHPsE (ORCPT
+        Wed, 8 Jan 2020 10:48:25 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46048 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgAHPsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:48:04 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so3011172wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:48:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KrHsQAP0a9eh1NM9sOVdFPeaeyaEh108A3v2h0i3x0E=;
-        b=be/0HgREopOPW+2tP9ai/6DG9k194a1evqoodK9bIBc3vz7RTuMFmpvx7YvMURM5+j
-         /WfI9/uYzboJbd4o0O0nLDJ9+DcfHOY4/XH6QArnNld2yqZas8y3GJqdqqy1reHM3uMs
-         M0dIbzPeNLNZrbUYAHWfYJEsssmZPAGKUi0ggzMFLAxOg86ZjaZifHm0/KHB+isTebos
-         bHnq13duf8YWMA+Zhg/OuOjEy86QXkuphb9cZXKwnkcQIuumgHLIPPjMQDnC9bD66Lox
-         018PiSNZ1dXZhSEWycjVxWW7z+2AeT6M8LODMD+KI0/cY0Lz2dWIhYD3vFGVpuiqu7LO
-         s4XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KrHsQAP0a9eh1NM9sOVdFPeaeyaEh108A3v2h0i3x0E=;
-        b=uOBbQvwK7xvN7jHrKK2pyIWBn/uFTvbq7FgJ/g97VFLimlRB3TIFeS7/GH8hQ/QFgc
-         WykdXymbQ3s0w9vfNUbQg7brair5WT2CbHjuTl9BSg1WNo9qwXep0IQxasy21mHRG4mZ
-         IBbmo7q34xKX1xqwEPegRRcBYuLbETGekTq0bCmYKrqHZInfIJsQP33LTR6UjYXGbTw/
-         GmlkJP1x1MsnHEphQsDoZoFmul5Cdeq94+sAfbyaxjcAl9/cuNtJ3XLSXYAz1v6ysI9+
-         gYER+0J5PKfPWWuich20f/6PHujFvpq2xpmAchviXtkax9zhkAKz5d6jAGduf0GphYOc
-         auqQ==
-X-Gm-Message-State: APjAAAXVU57yjFpa7xG7NfXO+3dXNRq6QrJx/yMILqWF20npXLdMLAal
-        sMfZVkQyrLPVfZCndKEuDtZuav7XZKVxezgLFhTWQg==
-X-Google-Smtp-Source: APXvYqwKFiQyMCwL4AAPWd45y4MGjnhAiXJlP/5iP6Dw1GbxR2/pOuvKAU+O8dyrtdNHiAG2Ca7K6Fn60xTPEWb6G2A=
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr4477316wma.95.1578498482821;
- Wed, 08 Jan 2020 07:48:02 -0800 (PST)
+        Wed, 8 Jan 2020 10:48:25 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008FmJK2094943;
+        Wed, 8 Jan 2020 09:48:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578498499;
+        bh=V1EPe8CdnEJ6MYQ1MpiwIv4wmbt5R/B8TrFTBBmy8SQ=;
+        h=From:To:CC:Subject:Date;
+        b=sulR5QUCbG6tdUlEFss5GfhjqLbnZZtHTwnSI1VqEwCwnbVqIdHH6dKAHZQd0HHsF
+         VjTfsx0O2FhE/5VWsdUMbV73z41es/+g2JDDVab0wOI6YSDuP+DL/6FGmRO0LaeN1w
+         uC1C85avIKV1SugCRfr/TrmgAzNcQSXq4oZrA7FI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008FmJi7056048
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 09:48:19 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 09:48:18 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 09:48:18 -0600
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008FmGlB125706;
+        Wed, 8 Jan 2020 09:48:17 -0600
+From:   Roger Quadros <rogerq@ti.com>
+To:     <olof@lixom.net>
+CC:     <nm@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] arm64: defconfig: Enable CDNS3 USB controller
+Date:   Wed, 8 Jan 2020 17:48:15 +0200
+Message-ID: <20200108154815.2994-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200108102304.25800-1-ardb@kernel.org> <20200108102304.25800-3-ardb@kernel.org>
- <20200108154031.GA2512498@rani.riverdale.lan>
-In-Reply-To: <20200108154031.GA2512498@rani.riverdale.lan>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 8 Jan 2020 16:47:51 +0100
-Message-ID: <CAKv+Gu8AOukQL3qokt+Rz3PKBRWWnSULGUr=+yxg_HPM8-uodw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] x86/boot/compressed: force hidden visibility for
- all symbol references
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jan 2020 at 16:40, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Jan 08, 2020 at 11:23:03AM +0100, Ard Biesheuvel wrote:
-> > Eliminate all GOT entries in the decompressor binary, by forcing hidden
-> > visibility for all symbol references, which informs the compiler that
-> > such references will be resolved at link time without the need for
-> > allocating GOT entries.
-> >
-> > To ensure that no GOT entries will creep back in, add an assertion to
-> > the decompressor linker script that will fire if the .got section has
-> > a non-zero size.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/boot/compressed/Makefile      |  1 +
-> >  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
-> >  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
-> >  3 files changed, 21 insertions(+)
-> >
-> > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> > index 56aa5fa0a66b..361df91b2288 100644
-> > --- a/arch/x86/boot/compressed/Makefile
-> > +++ b/arch/x86/boot/compressed/Makefile
-> > @@ -39,6 +39,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> >  KBUILD_CFLAGS += -Wno-pointer-sign
-> >  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-> > +KBUILD_CFLAGS += -include hidden.h
-> >
->
-> This should be added to drivers/firmware/efi/libstub as well in case
-> future code changes bring in global references there?
+TI's J721E platform requires this USB controller driver.
 
-The EFI stub already sets the hidden visibility attribute for the few
-external symbol references that it contains, so it is not needed in
-the context of this series.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm64/configs/defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-In the future, we can revisit this if we want to get rid of the
-various __pure getter functions, but that requires thorough testing on
-other architectures and toolchains, so I'd prefer to leave that for
-later.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6a83ba2aea3e..1f964f1587e6 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -590,6 +590,10 @@ CONFIG_USB_RENESAS_USBHS=m
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_MUSB_HDRC=y
+ CONFIG_USB_MUSB_SUNXI=y
++CONFIG_USB_CDNS3=m
++CONFIG_USB_CDNS3_GADGET=y
++CONFIG_USB_CDNS3_HOST=y
++CONFIG_USB_CDNS3_TI=m
+ CONFIG_USB_DWC3=y
+ CONFIG_USB_DWC2=y
+ CONFIG_USB_CHIPIDEA=y
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
