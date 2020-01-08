@@ -2,166 +2,90 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93874C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015B5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E3D206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS/D3ze8"
+	by mail.kernel.org (Postfix) with ESMTP id CB1CD206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578486421;
+	bh=bdV7UZyxDSFjWGmbyUPJYulPJkb85zdzG2rMiGkHtgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dybXlR8E7GrFbc+w6uZe7ThTJRobKPmfq6SM6zFVnoBRmB4+pRGYLI6o7G2PA8QFy
+	 0e9foqSnDd9Ni9pmPErMKvjNhEqK/FAa86sypLytCg+BJFMLsNysKs7g8mLbob+8g8
+	 1XMZkg+PJCkkEDxYBNnU9+1EMo0T7W++SF3qBv8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgAHMYD (ORCPT
+        id S1727778AbgAHM1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:24:03 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43964 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgAHMYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:24:03 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k197so1490926pga.10;
-        Wed, 08 Jan 2020 04:24:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FimBHJzaK0+hvUwMczWq5KMiQgEkmFVQr2l4bwrxpl4=;
-        b=fS/D3ze8BLHvhSfqLds0RkX7mXGktHNcVEswaRStYZJnSvbhdBV73qiau2+qscPAw/
-         xycIgCoaR7TsK2pJwBcdpu6Nuvf5Wgya7LEZy/ejCBFZ/3ZS0B74gngIIYAhUHjNj/zi
-         DgmWz+JaPD+4sKxXXvXbBfAaRNIMrrPZecYLwUhBj6WQgJiMMyhfdJEcuZ1+On3HkuWj
-         xurCM0haEuiqqBIkkQdgz5AMtig8lU8ZToMjYRF0aQH+nAgoE36FDoH8V+68+JKeT+o9
-         pAr+5vKjGntCFF9vMI/m4cM1vvB958SBdV/G5/KFwBj0Sj3bpfd0f94CZnQSZ7zbPlul
-         JA3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FimBHJzaK0+hvUwMczWq5KMiQgEkmFVQr2l4bwrxpl4=;
-        b=hshUb+DRe/6mpQN0nR+OXswFLXiv3W5gxdovDvH6ZKeM3QccGtdnPz1CvT9gN7/gmL
-         UurY9Mi0VgkEQc5gvd2z0aZq310qNO/ctxx+7Vq11iytwqjRCrNedZTYbHCqwVxTyoQn
-         Dhfgr8CRljklOWc7X0/6HeRB/ozFmBlxYqU7mlpbGRknm7L8Zs3DjLjfd5SqOpz/+xj5
-         BArgaoZwgKOD5c5isAnBioa3njwPAscUKmKjLoqPQ0gDHEvCaGIuZpwnKVYkRxJxIYqe
-         gwbC5jAKAyA3urGuuf5tId00h1XHG/QN2B7rvroca7X+F7OJCmmLz1kQCp97FHX9cEZI
-         bNYw==
-X-Gm-Message-State: APjAAAXvxSPDet+Ggj6WLbTPpck91rR3p0oMqDR22Z3A3TGerDbB3HjK
-        I84S/UudwfCM8EYLgFSrSwBMAVH85yfaOU8Ca3M=
-X-Google-Smtp-Source: APXvYqwgoDXCANBomqGXARmKolSKbug3Em9RM2qXD8GXaDBp3/kR8EEcBZZd8Q3yFTAZHTAHICsaspNFthhzS43Udtk=
-X-Received: by 2002:a65:5242:: with SMTP id q2mr4844790pgp.74.1578486242452;
- Wed, 08 Jan 2020 04:24:02 -0800 (PST)
+        Wed, 8 Jan 2020 07:27:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbgAHM1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:27:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE74206DB;
+        Wed,  8 Jan 2020 12:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578486420;
+        bh=bdV7UZyxDSFjWGmbyUPJYulPJkb85zdzG2rMiGkHtgI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pItVJT6GR9aLVvs23xo3EJ+kba/XPUzhbw1mwc6TFE+GQwRKWl8MILQkpeMy3yxL6
+         k2DIEJEJYgdmVD7LlcK8iUKi2/cMwcocFyKw+FVmQZFemY8OGl+gn/4soSOtq/X/xw
+         UDpt++iYVw5G4Zd+fqY5ZVJYCKw+ed/sZe8d0/sI=
+Date:   Wed, 8 Jan 2020 13:26:58 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luo Jiaxing <luojiaxing@huawei.com>
+Cc:     saravanak@google.com, jejb@linux.ibm.com, James.Bottomley@suse.de,
+        James.Bottomley@hansenpartnership.com, john.garry@huawei.com,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
+ device_links_purge()
+Message-ID: <20200108122658.GA2365903@kroah.com>
+References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
 MIME-Version: 1.0
-References: <20200106144219.525215-1-hdegoede@redhat.com>
-In-Reply-To: <20200106144219.525215-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jan 2020 14:23:53 +0200
-Message-ID: <CAHp75Vdqd9GQ8eM9mk+4jr54MojySH+ZKGZSJ7mNBHy567XGPQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: GPD pocket fan: Use default values when
- wrong modparams are given
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Jason Anderson <jasona.594@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 4:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Use our default values when wrong module-parameters are given, instead of
-> refusing to load. Refusing to load leaves the fan at the BIOS default
-> setting, which is "Off". The CPU's thermal throttling should protect the
-> system from damage, but not-loading is really not the best fallback in this
-> case.
->
-> This commit fixes this by re-setting module-parameter values to their
-> defaults if they are out of range, instead of failing the probe with
-> -EINVAL.
->
-> Cc: stable@vger.kernel.org
-> Cc: Jason Anderson <jasona.594@gmail.com>
-> Reported-by: Jason Anderson <jasona.594@gmail.com>
-> Fixes: 594ce6db326e ("platform/x86: GPD pocket fan: Use a min-speed of 2 while charging")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/gpd-pocket-fan.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-> index be85ed966bf3..1e6a42f2ea8a 100644
-> --- a/drivers/platform/x86/gpd-pocket-fan.c
-> +++ b/drivers/platform/x86/gpd-pocket-fan.c
-> @@ -16,17 +16,26 @@
->
->  #define MAX_SPEED 3
->
-> -static int temp_limits[3] = { 55000, 60000, 65000 };
-> +#define TEMP_LIMIT0_DEFAULT    55000
-> +#define TEMP_LIMIT1_DEFAULT    60000
-> +#define TEMP_LIMIT2_DEFAULT    65000
-> +
-> +#define HYSTERESIS_DEFAULT     3000
-> +
-> +#define SPEED_ON_AC_DEFAULT    2
-> +
-> +static int temp_limits[3] = {
-> +       TEMP_LIMIT0_DEFAULT, TEMP_LIMIT1_DEFAULT, TEMP_LIMIT2_DEFAULT };
+On Wed, Jan 08, 2020 at 07:34:04PM +0800, Luo Jiaxing wrote:
+> We found that enabling kernel compilation options CONFIG_SCSI_ENCLOSURE and
+> CONFIG_ENCLOSURE_SERVICES, repeated initialization and deletion of the same
+> SCSI device will cause system panic, as follows:
+> [72.425705] Unable to handle kernel paging request at virtual address
+> dead000000000108
+> ...
+> [72.595093] Call trace:
+> [72.597532] device_del + 0x194 / 0x3a0
+> [72.601012] enclosure_remove_device + 0xbc / 0xf8
+> [72.605445] ses_intf_remove + 0x9c / 0xd8
+> [72.609185] device_del + 0xf8 / 0x3a0
+> [72.612576] device_unregister + 0x14 / 0x30
+> [72.616489] __scsi_remove_device + 0xf4 / 0x140
+> [72.620747] scsi_remove_device + 0x28 / 0x40
+> [72.624745] scsi_remove_target + 0x1c8 / 0x220
+> 
+> After analysis, we see that in the error scenario, the ses module has the
+> following calling sequence:
+> device_register() -> device_del() -> device_add() -> device_del().
+> The first call to device_del() is fine, but the second call to device_del()
+> will cause a system panic.
 
-I would rather put }; on the next line.
-But okay, I'll do it myself when applying.
+Is this all on the same device structure?  If so, that's not ok, you
+can't do that, once device_del() is called on the memory location, you
+can not call device_add() on it again.
 
->  module_param_array(temp_limits, int, NULL, 0444);
->  MODULE_PARM_DESC(temp_limits,
->                  "Millicelsius values above which the fan speed increases");
->
-> -static int hysteresis = 3000;
-> +static int hysteresis = HYSTERESIS_DEFAULT;
->  module_param(hysteresis, int, 0444);
->  MODULE_PARM_DESC(hysteresis,
->                  "Hysteresis in millicelsius before lowering the fan speed");
->
-> -static int speed_on_ac = 2;
-> +static int speed_on_ac = SPEED_ON_AC_DEFAULT;
->  module_param(speed_on_ac, int, 0444);
->  MODULE_PARM_DESC(speed_on_ac,
->                  "minimum fan speed to allow when system is powered by AC");
-> @@ -120,18 +129,21 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
->                 if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
->                         dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
->                                 temp_limits[i]);
-> -                       return -EINVAL;
-> +                       temp_limits[0] = TEMP_LIMIT0_DEFAULT;
-> +                       temp_limits[1] = TEMP_LIMIT1_DEFAULT;
-> +                       temp_limits[2] = TEMP_LIMIT2_DEFAULT;
-> +                       break;
->                 }
->         }
->         if (hysteresis < 1000 || hysteresis > 10000) {
->                 dev_err(&pdev->dev, "Invalid hysteresis %d (must be between 1000 and 10000)\n",
->                         hysteresis);
-> -               return -EINVAL;
-> +               hysteresis = HYSTERESIS_DEFAULT;
->         }
->         if (speed_on_ac < 0 || speed_on_ac > MAX_SPEED) {
->                 dev_err(&pdev->dev, "Invalid speed_on_ac %d (must be between 0 and 3)\n",
->                         speed_on_ac);
-> -               return -EINVAL;
-> +               speed_on_ac = SPEED_ON_AC_DEFAULT;
->         }
->
->         fan = devm_kzalloc(&pdev->dev, sizeof(*fan), GFP_KERNEL);
-> --
-> 2.24.1
->
+How are you triggering this from userspace?
 
+thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
