@@ -2,111 +2,195 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C3AC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6087C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3FF20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNhBQkNi"
+	by mail.kernel.org (Postfix) with ESMTP id 8CA0D2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgAHSIY (ORCPT
+        id S1730156AbgAHSJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:08:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32939 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgAHSIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:08:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id d139so222886wmd.0;
-        Wed, 08 Jan 2020 10:08:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TsH7XwJsxGx79w1TgjxocPZkHP3L9pmyXlSJue7R1zY=;
-        b=bNhBQkNipNM+U5oZXVkCtwzbIMtrif3bevutws45HsRlSt5Ziefr5nGdo+G7EbrC98
-         7Lv81PAZcYVvdd9DEhte3LKDhZl3Y7lRb3S27Uql405vwHRXxtianeqMGmrA/rnhFIDX
-         Xif0pvfmVPLcn3HeGuYqC7Nb2A2TFCnrW/qKCclTXEqw/qMlHRVIAHpfjJxVcJH4qvkT
-         xPeryvhcWkbdDOYUw6xAnCuCA8CsBtbuHfA/nrMGPDO+h03dIH5RSCM+iWWlk8o3iJVb
-         rEb1dk/ZSSnXHpATqpZWWWO5osDkwP2WxE50+Fwxfg6JV0NTspnf4NcfjiN3Vw38ZB+D
-         ceCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TsH7XwJsxGx79w1TgjxocPZkHP3L9pmyXlSJue7R1zY=;
-        b=cVI59f+abh6O4elXakPRseBv9mRe/hQLigROpV6haebHR6CPhrDjDquENj2xrnbaNG
-         0vEl4TXe3+xkpAPm+xmtMka8kWEYYu6sCrypCu5/2PBIEaouNR3Q01QnZaHRn6GupOzk
-         iShLF+7Odv56EpFA5aPVkXiff3HOd4i0l5A91LoXZ4bw8cRW6SayNdNwPwUsub3oablo
-         B6f5T+1raktgxdvjclfcjbvr+NHIV3GbXs9ucD6sTdRw0AUq+3Rs19AGBAehCd62X/Sq
-         EEKMnvqnCODM3koi4FLI8nLRwFaIRyP5sOgwQq0HQroKj8Xsp5Y9jVJBZYPaTGKeAkk7
-         vaHw==
-X-Gm-Message-State: APjAAAUCF4Q1vyldPNbPMqBU2IT8OcidvKBay9YF1Vu/7OeQiahQvu4n
-        ZeDGXnXnBwysphp2IiAztrI=
-X-Google-Smtp-Source: APXvYqzb52ciHpxWj4S2VreD0O8TqU8VrrYGL79+Si8Y/iUp06P6U3SIIUXSDmrNiB0vrqBEtzpBLw==
-X-Received: by 2002:a7b:ce98:: with SMTP id q24mr5037527wmj.41.1578506901791;
-        Wed, 08 Jan 2020 10:08:21 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id u13sm4828628wmd.36.2020.01.08.10.08.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 10:08:20 -0800 (PST)
-Date:   Wed, 8 Jan 2020 19:08:19 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-Subject: Re: [v8 08/13] exfat: add exfat cache
-Message-ID: <20200108180819.3gt6ihm4w2haustn@pali>
-References: <CAKYAXd8Ed18OYYrEgwpDZooNdmsKwFqakGhTyLUgjgfQK39NpQ@mail.gmail.com>
- <f253ed6a-3aae-b8df-04cf-7d5c0b3039f2@web.de>
+        Wed, 8 Jan 2020 13:09:01 -0500
+Received: from mga05.intel.com ([192.55.52.43]:52644 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgAHSJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:09:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 10:09:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="421521020"
+Received: from tfeiten-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.37.105])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2020 10:08:56 -0800
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id B962521EDA; Wed,  8 Jan 2020 20:08:54 +0200 (EET)
+Date:   Wed, 8 Jan 2020 20:08:54 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
+ yaml bindings
+Message-ID: <20200108180854.GA5438@kekkonen.localdomain>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <20191227200116.2612137-9-helen.koike@collabora.com>
+ <20200107140115.GQ19828@paasikivi.fi.intel.com>
+ <ad9d8ef7-5b52-d27e-ac95-db07dc1d443c@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="derhsrcp37i5wips"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f253ed6a-3aae-b8df-04cf-7d5c0b3039f2@web.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <ad9d8ef7-5b52-d27e-ac95-db07dc1d443c@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 08, 2020 at 01:50:38PM -0300, Helen Koike wrote:
+> Hi,
+> 
+> Thank you for your review.
+> 
+> On 1/7/20 12:01 PM, Sakari Ailus wrote:
+> > Hi Helen,
+> > 
+> > On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
+> >> Add yaml DT bindings for Rockchip ISP1.
+> >>
+> >> This was tested and verified with:
+> >> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
+> >> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >>
+> >> Changes in v12:
+> >> - The commit replaces the following commit in previous series named
+> >> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
+> >> This new patch adds yaml binding and was verified with
+> >> make dtbs_check and make dt_binding_check
+> >>
+> >> Changes in v11:
+> >> - add clock-names values
+> >>
+> >> Changes in v10:
+> >> - unsquash
+> >>
+> >> Changes in v9:
+> >> - squash
+> >> - move to staging
+> >>
+> >> Changes in v8:
+> >> - fix title division style
+> >>
+> >> Changes in v7:
+> >> - update document with new design and tested example
+> >>
+> >>  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
+> >>  1 file changed, 193 insertions(+)
+> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >>
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> new file mode 100644
+> >> index 000000000000..4d1b2c67a4cd
+> >> --- /dev/null
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> @@ -0,0 +1,193 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Rockchip SoC Image Signal Processing unit v1
+> >> +
+> >> +maintainers:
+> >> +  - Helen Koike <helen.koike@collabora.com>
+> >> +
+> >> +description: |
+> >> +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> >> +  which contains image processing, scaling, and compression funcitons.
+> > 
+> > "functions"
+> > 
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: rockchip,rk3399-cif-isp
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  iommus:
+> >> +    maxItems: 1
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +  phys:
+> >> +    maxItems: 1
+> >> +    description: phandle for the PHY port
+> >> +
+> >> +  phy-names:
+> >> +    const: dphy
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: ISP clock
+> >> +      - description: ISP aclk clock
+> >> +      - description: ISP aclk wrapper clock
+> >> +      - description: ISP hclk clock
+> >> +      - description: ISP hclk wrapper clock
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: clk_isp
+> >> +      - const: aclk_isp
+> >> +      - const: aclk_isp_wrap
+> >> +      - const: hclk_isp
+> >> +      - const: hclk_isp_wrap
+> >> +
+> >> +  # See ./video-interfaces.txt for details
+> >> +  ports:
+> >> +    type: object
+> >> +    additionalProperties: false
+> >> +
+> >> +    properties:
+> >> +      "#address-cells":
+> >> +        const: 1
+> >> +
+> >> +      "#size-cells":
+> >> +        const: 0
+> >> +
+> >> +      port@0:
+> > 
+> > If you only have a single port node, you could drop reg as well as @0 on
+> > the port node.
+> 
+> After the discussions, we have a single port for now, but we might have port@1
+> for tx1rx1 in the future.
 
---derhsrcp37i5wips
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ack. Please keep it as-is then.
 
-On Thursday 02 January 2020 11:19:26 Markus Elfring wrote:
-> > I am planning to change to share stuff included cache with fat after
-> > exfat upstream.
->=20
-> Can unwanted code duplication be avoided before?
-
-+1 Could it be possible?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---derhsrcp37i5wips
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXhYakQAKCRCL8Mk9A+RD
-UuliAKCXKFoMYqa11qTgZaLSQ+MrN6cbjgCeLKReEtMg7naHIq8LizLpDyGSRKM=
-=Udmx
------END PGP SIGNATURE-----
-
---derhsrcp37i5wips--
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
