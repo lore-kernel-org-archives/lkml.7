@@ -2,122 +2,197 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D30EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8DD20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WrillX3l"
+	by mail.kernel.org (Postfix) with ESMTP id 7D8A820643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgAHUXb (ORCPT
+        id S1726869AbgAHUYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:23:31 -0500
-Received: from mail-mw2nam10on2087.outbound.protection.outlook.com ([40.107.94.87]:1281
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725881AbgAHUXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:23:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZtfuGoXpNGFQCzla6d41RvdnXte6oEBu7XKam5VqKa1BvhllhBWbH7GMmkzHb4OtQVKkUNieroz0LSHaiIzBVV6X9Oq/NUu4ewUmvJFn4mDKTvSwX/MNntBR5uu+c986UlbfSvqGnm8mUJKBEkaOOMB8VQYRqCcyQxMz6GcbR7xFVviL4Mr7TYjWDN2TgXqm65Dj/yUEYxRpUwEzxtPdm65PNBH68/Q5JkcfaHztz8EF64SLpj7qpCbwLTY0rAYRmT7iuQDK5YdX8pIgkq0aGaLwjKhY8gX62eu8PtfQXRAmRgdOQHUhb6Oa0+SA7tNH7purSwtwdAjLSPgsuNDqFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9LDRqAYmrb6YtYfNNe3jSO7o6EVgEE8oUpJVmqEfT04=;
- b=DKqYBFdtBP2eVaOi7zZFWEWVMKPvfzseC1OQJuYZI+86kNhFHGlC00hErBVuyOgBy+U90govkKcSh+KbtvG+jiXLbcPG4sl/TsKmMgkJ7h9It0q55pQdjPWVqS92LTA6NWk0puiuSkVKRKjS3msR4YAIXkvwnNfj9eGT1NR4MpmSNIkYvfC/BH2+gyKO+uPKt0jn7cqqdQ/celY3vCVWDZeoIhU3AvGgUCBx/Lx02bhPe5f4iz4ViYML5ewo7Z4jUFNyT8bv/bLtIpe2q5qlGaixMpn/a9GqXyjXK8MgKs7mGq75SjA6vx4E0HXqXT0c5fg+BSZNROuIMe/Dt9QIsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9LDRqAYmrb6YtYfNNe3jSO7o6EVgEE8oUpJVmqEfT04=;
- b=WrillX3lMezolfdl5Gzm1McUXZkEDDjuMCCg6FuT4YSMfOcVSDuEtWjk7pyd71DMdLsXgLGDnxIUMe8U4LaOfgsZ81fNoa8NstslKrUWoDv1o273ZmuYWRwdrm46GzFdkDTNGshMpoe/CrkCZdS9nq/Lbi7plK4Es5oTzNe10b4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
- SN6PR12MB2781.namprd12.prod.outlook.com (52.135.99.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 8 Jan 2020 20:23:26 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::48af:8c71:edee:5bc]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::48af:8c71:edee:5bc%7]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
- 20:23:26 +0000
-Subject: Re: [PATCH internal v2] perf/x86/amd: Add missing L2 misses event
- spec to AMD Family 17h's event map
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Babu Moger <babu.moger@amd.com>
-References: <20200108193455.29834-1-kim.phillips@amd.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <03e5fd9e-5662-c4a5-5792-c64146225dc8@amd.com>
-Date:   Wed, 8 Jan 2020 14:23:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20200108193455.29834-1-kim.phillips@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0401CA0027.namprd04.prod.outlook.com
- (2603:10b6:803:2a::13) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+        Wed, 8 Jan 2020 15:24:11 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:52460 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgAHUYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:24:11 -0500
+Received: by mail-io1-f72.google.com with SMTP id d10so2797967iod.19
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:24:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GVyssDLFxQI959y01fNygLsmfKd3ROHK3Ad8toVgtQY=;
+        b=LzkK9JOSTg6YSjCBhbOrvmqypjuCpnxSUBPsDHuZF5DMhIeOT6qb76Yy1BQFQTPNKM
+         ewJeXeG6CGdRqdvt0OYsI8Kpg20H7cBXBwMuXABy0oA6xcpQ/Vw901na9slUzJtvgUpw
+         z7Olm9Ag2Hs3bYEetMHozZkpZR9+WVzHGukAMPwymCB13qddGaxrjl9w2ZtZSpLxl3mn
+         g/ZBpatSYtBIAH61xbSWxdow4P6V0+fMEK9WPXf4YasXwKenzrzIlTmWwaxgtcAVqrYX
+         t+sDuvM1bhXXiLVbr/H9Ql18n5n46wohvEsLGSXRFjaTZf41Wj7qw5VWwdP/H8rj+fT6
+         jiOA==
+X-Gm-Message-State: APjAAAVHhcm84m2+aHsBXknvEiYxCteflgSP1czaIGfMnzwlTgnV90Nz
+        9bTUtUxSsoa1uUWl8IFxHnKB3ff70XLk0WaXIccjgbkvmaua
+X-Google-Smtp-Source: APXvYqyrzrk7LZE87usAyPXhFDdakLa5pq1NK+nqagWQYrm0vR1eCjRYKJXoTDm/Vum3Zn+GUflvzjFoS5D6SFMcFbRw/Hp1/jcM
 MIME-Version: 1.0
-Received: from [10.236.136.247] (165.204.77.1) by SN4PR0401CA0027.namprd04.prod.outlook.com (2603:10b6:803:2a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Wed, 8 Jan 2020 20:23:26 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 02f3b658-7fd2-4d94-8537-08d794789e1a
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2781:|SN6PR12MB2781:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB278116499EC0C66AAEE0DADA873E0@SN6PR12MB2781.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 02760F0D1C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(44832011)(31696002)(2616005)(5660300002)(558084003)(26005)(66556008)(66476007)(66946007)(956004)(53546011)(52116002)(86362001)(16526019)(54906003)(81166006)(81156014)(16576012)(110136005)(4326008)(31686004)(8936002)(2906002)(8676002)(6486002)(186003)(36756003)(498600001)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2781;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Fj/I6yKhad3l0Irnhyo3mdQ4oVqhsDtwdApXlUjLROK1/+nTNy7OQApFqIpJ3HL7NN6tO1VIiZINFUwqE8p1yK+EhLAq7adn2E4GKfvHWfFKwH+ecxBLtf8Gt2ZJT+QMqi9FBQkCag7qEQIAqB+7XcCtXGY5OKEejbGaMyd9LmJl4xxelz9lDM0UhL7bNLexLrQBxBFM+xI/tVJW0QImwL4fCX/vRor0irDdqhAYleWOG6ZyAgiN7oUSkRqAj3ur6alFzIaBiXe8PcXZVDArstVbEGSfT2nZX3WkquVi1HNU4z4T8hCsKzT5Ri26Bdx5cabYQ0U7D5dpVrGjWAqvhOVPDRQPerU4sDf639nNgPIlRP9KDEjFHOtEAav3yMuB5BZozy3SRFU1Il/3ZQruZcyG154NlA0Stdr9CHL4fA+9KVz98JCD5qE2TKGIlE1Y
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02f3b658-7fd2-4d94-8537-08d794789e1a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 20:23:26.7078
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YX5ElSg6qCFI90TXaGkjNJzAx+ihjuLdy42rvjyeeGtmf2jhywO6tmmDG25e35VFLMluGc9a0DahmXVLdBwfuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2781
+X-Received: by 2002:a02:9a08:: with SMTP id b8mr5557555jal.1.1578515050611;
+ Wed, 08 Jan 2020 12:24:10 -0800 (PST)
+Date:   Wed, 08 Jan 2020 12:24:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de50d7059ba6acd5@google.com>
+Subject: KASAN: use-after-free Read in v4l2_release (3)
+From:   syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, bnvandana@gmail.com,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/20 1:34 PM, Kim Phillips wrote:
-> Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+Hello,
 
-Hi, I neglected to remove the "internal v2" from the $SUBJECT.
+syzbot found the following crash on:
 
-This is not an internal patch, it is intended to be an upstream submission.
+HEAD commit:    ae179410 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=132aa915e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=57adcee0a60380e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=75287f75e2fedd69d680
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Please consider applying it.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com
 
-Kim
+usbvision_radio_close: Final disconnect
+==================================================================
+BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390  
+drivers/media/v4l2-core/v4l2-dev.c:459
+Read of size 4 at addr ffff8881d13b5068 by task v4l_id/20136
+
+CPU: 1 PID: 20136 Comm: v4l_id Not tainted 5.5.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xef/0x16e lib/dump_stack.c:118
+  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
+  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:639
+  v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x4e0/0x5c0 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f70446a32b0
+Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
+07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+RSP: 002b:00007ffee1722fd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f70446a32b0
+RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+R13: 00007ffee1723130 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 14633:
+  save_stack+0x1b/0x80 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1315 [inline]
+  usbvision_probe.cold+0x5c5/0x1f21  
+drivers/media/usb/usbvision/usbvision-video.c:1469
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x141f/0x1bc0 drivers/base/core.c:2487
+  usb_set_configuration+0xe38/0x16c0 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0x141f/0x1bc0 drivers/base/core.c:2487
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
+  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+  port_event drivers/usb/core/hub.c:5470 [inline]
+  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
+  process_scheduled_works kernel/workqueue.c:2326 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 20136:
+  save_stack+0x1b/0x80 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x129/0x170 mm/kasan/common.c:474
+  slab_free_hook mm/slub.c:1425 [inline]
+  slab_free_freelist_hook mm/slub.c:1458 [inline]
+  slab_free mm/slub.c:3005 [inline]
+  kfree+0xda/0x310 mm/slub.c:3957
+  usbvision_release+0x181/0x1c0  
+drivers/media/usb/usbvision/usbvision-video.c:1364
+  usbvision_radio_close.cold+0x2b/0x74  
+drivers/media/usb/usbvision/usbvision-video.c:1130
+  v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x4e0/0x5c0 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881d13b4000
+  which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 4200 bytes inside of
+  8192-byte region [ffff8881d13b4000, ffff8881d13b6000)
+The buggy address belongs to the page:
+page:ffffea000744ec00 refcount:1 mapcount:0 mapping:ffff8881da40c500  
+index:0x0 compound_mapcount: 0
+raw: 0200000000010200 ffffea0007392a00 0000000300000003 ffff8881da40c500
+raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d13b4f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d13b4f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881d13b5000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                           ^
+  ffff8881d13b5080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d13b5100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
