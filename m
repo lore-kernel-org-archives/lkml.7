@@ -2,117 +2,122 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083E5C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D34C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD21620692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DF220720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQebebDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHWNNR+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgAHRlN (ORCPT
+        id S1727456AbgAHRpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:41:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49089 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727537AbgAHRlN (ORCPT
+        Wed, 8 Jan 2020 12:45:03 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38385 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHRpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:41:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578505272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0sTGKEIISyGluaZPtnr2/ulkq7UdSDvBR5TeoAxjPMQ=;
-        b=BQebebDVBR/v1BThfwz7eNBJEU+3p19eqUb2fRuA/jFae/YY7O1P8QB8lEGxGOX6jKHAni
-        osk1mZRp4Kxap59x3xTieGFnhOJE+eeFqQxEC9nraonSgek/SzlY+AFa+BufXc5nIrIg5s
-        1QVnRO9gp43ZssQ9GM27PcbDrTj+Hk4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-mzPkE4cFN1mr2xOc0jp-iw-1; Wed, 08 Jan 2020 12:41:10 -0500
-X-MC-Unique: mzPkE4cFN1mr2xOc0jp-iw-1
-Received: by mail-wm1-f69.google.com with SMTP id 18so1105426wmp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:41:10 -0800 (PST)
+        Wed, 8 Jan 2020 12:45:03 -0500
+Received: by mail-io1-f68.google.com with SMTP id v3so4130640ioj.5;
+        Wed, 08 Jan 2020 09:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6hyJ1DuoNTvMLECij7nJ1OuGNCS8kZHJfhmP/ffNYNo=;
+        b=CHWNNR+eRdSuev8lOSlzlfo0DqL0/14B/lQMMIXS8/wk98dXoJpY8XgCHzeWjHT5iY
+         tVsjpxXn0AUANrnGOetRgdK7Popro7hl/DCKpNkkMc10uAd3MzxQTKxS1dFu41GPwYw+
+         ne2lWuZEtEbY1U/jxD83f9t86+TanI8htugq7A5ST9feiRyLuL10XukaOqVO4hCchwRa
+         ekW5yXKAVeeglSkAin8PvxqUhRCm3/jyc6x/t/3PLsKRNXDybdIcrGYXpWNjT53NxePz
+         oLTWoiNn3gocDh7HyJWE2SnhR4+3n8MJyVwc8NDQXaTN7h0R6qs1IuCfwtAY5/JVBawM
+         15ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0sTGKEIISyGluaZPtnr2/ulkq7UdSDvBR5TeoAxjPMQ=;
-        b=EqbreegSDJ7NRy/hJkJaNss+yNto+uuV7BuSfN1tjJals6BS8hlkERzATiY36dExTr
-         8IaPB+obZiBWAFG0z5MzfBEzReP60s3xi3wbhN/8wqnZcIL2nPsSnHtS50Al8zxl3XQO
-         9qYQMHLDUfLNGPGo4de5KCS/LSrogKsZ7VZq+y1n5y6OWyKE1phiX0gLn4R/bP0FR4mV
-         8zuBdho03DnR+xPAOIUKJbcGch+5T9Ho2XtTaBracg8aAr70zmqgy78yE3wX+B+E3hfE
-         BIDpJe0+T2gD4QCmg+5ggQuJdWXG2D6N2ZYb1jekjIVPEXOwnwTU8EHVWqQt5Rr/pVVK
-         6zdw==
-X-Gm-Message-State: APjAAAWyohBl9bhYXfVjqzvkhxxvxzFrSwS68sXC+OCphkvRINf9J2Zb
-        EH0uHhPIEDhuYSLevrsKgOYc//xkCY2SNGH15SUCOPk14moB16rYHJ16GDpLO0cY+6k+XPQI/qc
-        iaHS8/G6khhk0X23gnmaXp0FR
-X-Received: by 2002:adf:e290:: with SMTP id v16mr6250479wri.16.1578505269428;
-        Wed, 08 Jan 2020 09:41:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzPQtvQ+CfdZxLPT34g2/xZ1MRZci6Z0IM3bcacXC6lg/3LGlEHM0jH40To5MeilhL7Rjg5Fg==
-X-Received: by 2002:adf:e290:: with SMTP id v16mr6250452wri.16.1578505269112;
-        Wed, 08 Jan 2020 09:41:09 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
-        by smtp.gmail.com with ESMTPSA id k13sm4808771wrx.59.2020.01.08.09.41.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 09:41:08 -0800 (PST)
-Subject: Re: [PATCH RESEND v2 08/17] KVM: X86: Implement ring-based dirty
- memory tracking
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-9-peterx@redhat.com> <20200108155210.GA7096@xz-x1>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9f7582b1-cfba-d096-2216-c5b06edc6ca9@redhat.com>
-Date:   Wed, 8 Jan 2020 18:41:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6hyJ1DuoNTvMLECij7nJ1OuGNCS8kZHJfhmP/ffNYNo=;
+        b=CTOXxR9ls66crwtAN91KlZlP8Bw+pC7mEW3TB3co515FPs6vfdCVsqSx9cFQtboxWT
+         vrgmc3Ms1RcvE6I0NrCUunSYL9rsfpEZ49bCLZqZxp7QBDjAGDSGbSUBV3AKyH6m6lg4
+         KNm9mOlOC87eIhEJBJfZQWq1SPkL/Naa+JNEltFtVjrWMXA1/C6mJHs6NIj3gBGpLhbp
+         DRBvVLBg/8wwCiv9gtRnWvBR1jQz8BJZ7NQe/OK9y19ZV9hT4pSBa2mukki9SwVyTNuu
+         gh21txvLlwzRCV4WPjxxx3SALV9Y5xtrjZAhBv8OtLbOCD6oAkpBZ2cfwizMtritHt5v
+         XqGg==
+X-Gm-Message-State: APjAAAUiA3OwlUuSQnx9IYeQAVPZV0r6j6lomQluR6vu9UGf5/A08OaW
+        0l0O2pgfg4f7Em/n5XCJ9xc8yy+EpiCfezyPM9o=
+X-Google-Smtp-Source: APXvYqwdYoScam5JjtndbUpnijDwNfOgvcdpE+6bCGzbFM8VdqjmP4MaatuGDnWxG42J3U8AieJXYw3Z4SMHKfxRdog=
+X-Received: by 2002:a6b:7117:: with SMTP id q23mr4093934iog.153.1578505502409;
+ Wed, 08 Jan 2020 09:45:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200108155210.GA7096@xz-x1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200104225052.27275-1-deepa.kernel@gmail.com>
+ <20200106135455.GA104407@google.com> <CABeXuvownNp7ngp38vHzCgQfLA-tnH7FFT5pQQeHF3tLizmxcg@mail.gmail.com>
+In-Reply-To: <CABeXuvownNp7ngp38vHzCgQfLA-tnH7FFT5pQQeHF3tLizmxcg@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 8 Jan 2020 09:44:50 -0800
+Message-ID: <CABeXuvrJ-zZsw03BB+d-823xUc5xcQVHX8otJ=9_ESs6HUF7Zw@mail.gmail.com>
+Subject: Re: [PATCH] pci: Warn if BME cannot be turned off during kexec
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
+        logang@deltatee.com, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/20 16:52, Peter Xu wrote:
-> here, which is still a bit tricky to makeup the kvmgt issue.
-> 
-> Now we still have the waitqueue but it'll only be used for
-> no-vcpu-context dirtyings, so:
-> 
-> - For no-vcpu-context: thread could wait in the waitqueue if it makes
->   vcpu0's ring soft-full (note, previously it was hard-full, so here
->   we make it easier to wait so we make sure )
-> 
-> - For with-vcpu-context: we should never wait, guaranteed by the fact
->   that KVM_RUN will return now if soft-full for that vcpu ring, and
->   above waitqueue will make sure even vcpu0's waitqueue won't be
->   filled up by kvmgt
-> 
-> Again this is still a workaround for kvmgt and I think it should not
-> be needed after the refactoring.  It's just a way to not depend on
-> that work so this should work even with current kvmgt.
+On Mon, Jan 6, 2020 at 11:38 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> On Mon, Jan 6, 2020 at 5:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > Hi Deepa,
+> >
+> > Thanks for the patches.  Since these two patches touch the same piece
+> > of code in pci_device_shutdown(), they conflict with each other.  I
+> > could resolve this myself, but maybe you could make them a series that
+> > applies cleanly together?
+>
+> Sure, will make this a series.
+>
+> > Can you also please edit the subject lines so they match the
+> > convention (use "git log --oneline drivers/pci/pci-driver.c" to see
+> > it).
+>
+> Will do.
+>
+> > On Sat, Jan 04, 2020 at 02:50:52PM -0800, Deepa Dinamani wrote:
+> > > BME not being off is a security risk, so for whatever
+> > > reason if we cannot disable it, print a warning.
+> >
+> > "BME" is not a common term in drivers/pci; can you use "Bus Master
+> > Enable" (to match the PCIe spec) or "PCI_COMMAND_MASTER" (to match the
+> > Linux code)?
+>
+> Will do.
+>
+> > Can you also explain why this is a security risk?  It looks like we
+> > disable bus mastering if the device is in D0-D3hot.  If the device is
+> > in D3cold, it's powered off, so we can't read/write config space.  But
+> > if it's in D3cold, the device is powered off, so it can't be a bus
+> > master either, so why would we warn about it?
+>
+> I was mainly concerned about the PCI_UNKNOWN state here. Maybe we can
+> add a specific check for the unknown state if that is preferable.
 
-The kvmgt patches were posted, you could just include them in your next
-series and clean everything up.  You can get them at
-https://patchwork.kernel.org/cover/11316219/.
+I did some more testing. You are right, these messages are printed
+more often than I had remembered.
 
-Paolo
+For some more context on what I am trying to do: I recently merged
+another patch that disable iommu unconditionally at kexec:
+https://lkml.org/lkml/2019/11/10/146
+And, if we do not have IOMMU on and BME is on then we have no way of
+controlling memory accesses from devices. This is why I wanted these
+warning messages printed. Alternatively, it might just be enough to
+warn if we cannot turn off BME on root ports rather than all the
+devices. Does this seem like a better compromise?
 
+-Deepa
