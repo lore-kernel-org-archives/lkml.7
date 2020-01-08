@@ -2,104 +2,156 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11290C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D98C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15DC20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566C12073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nu7E+pux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgAHH7j (ORCPT
+        id S1727020AbgAHID6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:59:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9123 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726199AbgAHH7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:59:38 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 529256531BB77D6DCB2F;
-        Wed,  8 Jan 2020 15:59:34 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 8 Jan 2020
- 15:59:28 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: add a way to turn off ipu bio cache
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200107020709.73568-1-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <afddac87-b7c5-f68c-4e55-3705be311cf6@huawei.com>
-Date:   Wed, 8 Jan 2020 15:59:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Jan 2020 03:03:58 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52660 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAHID6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:03:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00883lPd117939;
+        Wed, 8 Jan 2020 02:03:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578470627;
+        bh=e7cuocncCbuxjywazcX7HKTb/Mw4T5KMNhkOUHettWc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nu7E+puxSqcLXcZZxc2CNxBQS58QZpLRQGpsElGO+SspowlPonvmYOddgUHYoVo+y
+         Bq3ABNJIPEyu6k5jzK+YJL+MC5bk2neg4ERCXDu1OqdndapvLKha4RF2IKj4gY4W8J
+         +vVEQRS7VIdllGZsU13DRAuLCMmQj7hHHp1Ocskw=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00883lBA104600
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 02:03:47 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 02:03:46 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 02:03:46 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00883i5s040553;
+        Wed, 8 Jan 2020 02:03:44 -0600
+Subject: Re: [PATCH v2] iio: adc: stm32-adc: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <jic23@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20200107114125.6095-1-peter.ujfalusi@ti.com>
+ <5146b085-d92d-7230-9a05-87926711dafa@st.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8e706545-958d-1c34-9d6d-addd4cb6af25@ti.com>
+Date:   Wed, 8 Jan 2020 10:04:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200107020709.73568-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <5146b085-d92d-7230-9a05-87926711dafa@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/7 10:07, Jaegeuk Kim wrote:
-> Setting 0x40 in /sys/fs/f2fs/dev/ipu_policy gives a way to turn off
-> bio cache, which is useufl to check whether block layer using hardware
-> encryption engine merges IOs correctly.
+Hi Fabrice,
+
+On 07/01/2020 19.15, Fabrice Gasnier wrote:
+> On 1/7/20 12:41 PM, Peter Ujfalusi wrote:
+>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>> eating up the error code.
+>>
+>> By using dma_request_chan() directly the driver can support deferred
+>> probing against DMA.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> Changes since v1:
+>> - Fall back to IRQ mode only in case of ENODEV
+>>
+>> Regards,
+>> Peter
 > 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  Documentation/filesystems/f2fs.txt | 1 +
->  fs/f2fs/segment.c                  | 2 +-
->  fs/f2fs/segment.h                  | 1 +
->  3 files changed, 3 insertions(+), 1 deletion(-)
+> Hi Peter,
 > 
-> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-> index 41b5aa94b30f..cd93bcc34726 100644
-> --- a/Documentation/filesystems/f2fs.txt
-> +++ b/Documentation/filesystems/f2fs.txt
-> @@ -335,6 +335,7 @@ Files in /sys/fs/f2fs/<devname>
->                                 0x01: F2FS_IPU_FORCE, 0x02: F2FS_IPU_SSR,
->                                 0x04: F2FS_IPU_UTIL,  0x08: F2FS_IPU_SSR_UTIL,
->                                 0x10: F2FS_IPU_FSYNC.
-
-. -> ,
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
-
-> +			       0x40: F2FS_IPU_NOCACHE disables bio caches.
->  
->   min_ipu_util                 This parameter controls the threshold to trigger
->                                in-place-updates. The number indicates percentage
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index a9519532c029..311fe4937f6a 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -3289,7 +3289,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
->  
->  	stat_inc_inplace_blocks(fio->sbi);
->  
-> -	if (fio->bio)
-> +	if (fio->bio && !(SM_I(sbi)->ipu_policy & (1 << F2FS_IPU_NOCACHE)))
->  		err = f2fs_merge_page_bio(fio);
->  	else
->  		err = f2fs_submit_page_bio(fio);
-> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> index a1b3951367cd..02e620470eef 100644
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -623,6 +623,7 @@ enum {
->  	F2FS_IPU_SSR_UTIL,
->  	F2FS_IPU_FSYNC,
->  	F2FS_IPU_ASYNC,
-> +	F2FS_IPU_NOCACHE,
->  };
->  
->  static inline unsigned int curseg_segno(struct f2fs_sb_info *sbi,
+> Thanks for the patch,
 > 
+> In case you send another version... I've just a minor suggestion
+> regarding the comment (see after). Apart from that, you can add my:
+
+Thanks, I'll take your suggested update and send v3.
+
+> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> 
+> Best Regards,
+> Fabrice
+> 
+>>
+>>  drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+>> index 3b291d72701c..df5f5d61f9f9 100644
+>> --- a/drivers/iio/adc/stm32-adc.c
+>> +++ b/drivers/iio/adc/stm32-adc.c
+>> @@ -1746,9 +1746,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+>>  	struct dma_slave_config config;
+>>  	int ret;
+>>  
+>> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+>> -	if (!adc->dma_chan)
+>> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+>> +	if (IS_ERR(adc->dma_chan)) {
+>> +		ret = PTR_ERR(adc->dma_chan);
+>> +		if (ret != -ENODEV) {
+>> +			if (ret != -EPROBE_DEFER)
+>> +				dev_err(&indio_dev->dev,
+>> +					"DMA channel request failed with %d\n",
+>> +					ret);
+>> +			return ret;
+>> +		}
+>> +
+>> +		/* Ignore errors to fall back to IRQ mode */
+> 		               ^
+> 		          error
+> alternate suggestion:
+> 		/* DMA is optional: fall back to IRQ mode */
+
+Makes more sense in the context.
+
+> 
+>> +		adc->dma_chan = NULL;
+>>  		return 0;
+>> +	}
+>>  
+>>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>>  					 STM32_DMA_BUFFER_SIZE,
+>>
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
