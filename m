@@ -2,131 +2,232 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5544FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E72C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F0F20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04452070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jfjo+Fag"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R5KYEY5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgAHFYI (ORCPT
+        id S1726281AbgAHFZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:24:08 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42636 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgAHFYF (ORCPT
+        Wed, 8 Jan 2020 00:25:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34552 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgAHFZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:24:05 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p9so627251plk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 21:24:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
-        b=Jfjo+Faggwo7DaWWKVmhC7/00Vvhz+MTRYNmhAKQYX1HCOP3EYR8Lin5NwFPnmhjMY
-         4+Fb5Qu0e1wDWqALzow5cVbQpRrmDtK6+s0MWVLSCLeAn/oBigTNqV6pS0G3uvjzNP7g
-         ZOYd16bXAfTR+SPI/3E9hzT5bBEzHfFjf0IP8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
-        b=YZSHtSOWS32msSqFWtb6R0iaf0Xv9jiD6K3LDMlG7pUex8BsfU3gtvBktm4yxJmSgu
-         c/QXxTJaVunbdQDsfbETEwct4Z7qvYQkzVAbV+1aTZReEA6DEs2Ed4zAsbsSVyNlAsLO
-         ghgrlL9w340uiuAfF6VUUIVm0eaXL8Ci2+qZxJUjSNbsdY5KnddpxiFUh99T3kCBRGGF
-         Z3VGzy7UyWp1s76KYHerImFzahEJshUKIN5dNdcWOXUOmHgtEWca1yQQvOSRS9CVEHaJ
-         skqmh7JQt+LCToclcXc9E3y1XBTlSCGcfg/kzn3/UEuuMORbHDOK4OZ7GeMIm/jx9YMZ
-         mJeQ==
-X-Gm-Message-State: APjAAAV/ebDdUKIAyqs29hMm5ke1F0aaaowj42OYmG8dtzHZukCI2zDN
-        9scrBXGD3KFYcw0o5vgGsmBG6g==
-X-Google-Smtp-Source: APXvYqyHC+8oOSDbkbTqCwSPnXshCUeDVww8reRuLxI2n62N7ExPieyrDCDC2ipIyCqYctUkgXWJYA==
-X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr2510426pjc.9.1578461044170;
-        Tue, 07 Jan 2020 21:24:04 -0800 (PST)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:24:03 -0800 (PST)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v2 3/7] drm/panfrost: Improve error reporting in panfrost_gpu_power_on
-Date:   Wed,  8 Jan 2020 13:23:33 +0800
-Message-Id: <20200108052337.65916-4-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
-References: <20200108052337.65916-1-drinkcat@chromium.org>
+        Wed, 8 Jan 2020 00:25:28 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0085PM7F053176;
+        Tue, 7 Jan 2020 23:25:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578461122;
+        bh=tkOTNhAqYE1x3Eo5rHG4Lthmtqq3DGR51ZA49CKqPEo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=R5KYEY5Dwh9gDpKNAwBiJkPf2SDlHH8VPAuEUoomniZOFpwSuM2xtZMROurQNMfwY
+         8tlTeUgvBbqi1aWR5NNfaBD9Arg1D2hsDUfCVEmyREE8qYe2I/FSZ0qk3EPk/9PCxz
+         M5lEzFh0yKEPozQzY8g6UA3MuuAzPx+y5HR4mA0o=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0085PMsu012399
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 23:25:22 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 23:25:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 23:25:21 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0085PIVE114824;
+        Tue, 7 Jan 2020 23:25:19 -0600
+Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <dan.carpenter@oracle.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <ac26ecfe-d45c-db70-df8f-91da32c9925a@ti.com>
+Date:   Wed, 8 Jan 2020 10:55:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is useful to know which component cannot be powered on.
+Hi,
+[...]
+On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
+> +static int cqspi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct struct_cqspi *cqspi;
+> +	struct spi_master *master;
+> +	struct reset_control *rstc, *rstc_ocp;
+> +	const struct cqspi_driver_platdata *ddata;
+> +	struct cqspi_platform_data *pdata = NULL;
+> +	struct resource *res = NULL;
+> +	int ret;
+> +
+> +	master = spi_alloc_master(&pdev->dev, sizeof(*cqspi));
+> +	if (!master) {
+> +		dev_err(&pdev->dev, "spi_alloc_master failed\n");
+> +		return -ENOMEM;
+> +	}
+> +	master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL |
+> +				SPI_RX_OCTAL;
+> +	master->setup = cqspi_setup;
+> +	master->mem_ops = &cqspi_mem_ops;
+> +	master->dev.of_node = pdev->dev.of_node;
+> +	cqspi = spi_master_get_devdata(master);
+> +	cqspi->pdev = pdev;
+> +
+> +	pdata = devm_kmalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
 
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+devm_kzalloc()?
 
----
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +
+> +	pdev->dev.platform_data = pdata;
+> +
+> +	/* Obtain QSPI clock. */
+> +	cqspi->clk = devm_clk_get(&pdev->dev, "qspi");
 
-Was useful when trying to probe bifrost GPU, to understand what
-issue we are facing.
----
- drivers/gpu/drm/panfrost/panfrost_gpu.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+clock-name of "qspi" is not mandatory as per DT binding and current DT
+files don't have clock-names property. This therefore cause probe to
+fail. This should remain:
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-index 8822ec13a0d619f..ba02bbfcf28c011 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-@@ -308,21 +308,26 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
- 	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
- 	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
- 		val, val == pfdev->features.l2_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu L2");
- 
- 	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
- 		val, val == pfdev->features.stack_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu stack");
- 
- 	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
- 		val, val == pfdev->features.shader_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu shader");
- 
- 	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
- 		val, val == pfdev->features.tiler_present, 100, 1000);
--
- 	if (ret)
--		dev_err(pfdev->dev, "error powering up gpu");
-+		dev_err(pfdev->dev, "error powering up gpu tiler");
- }
- 
- void panfrost_gpu_power_off(struct panfrost_device *pfdev)
+	cqspi->clk = devm_clk_get(&pdev->dev, "NULL");
+
+> +	if (IS_ERR(cqspi->clk)) {
+> +		dev_err(&pdev->dev, "cannot get qspi clk\n");
+> +		return PTR_ERR(cqspi->clk);
+> +	}
+> +	pdata->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+> +
+> +	ret = clk_prepare_enable(cqspi->clk);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to enable qspi clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Obtain configuration from OF. */
+> +	ret = cqspi_of_get_pdata(pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Get platform data failed.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	cqspi->res = res;
+> +	/* Obtain and remap controller address. */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	cqspi->iobase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(cqspi->iobase)) {
+> +		dev_err(dev, "Cannot remap controller address.\n");
+> +		return PTR_ERR(cqspi->iobase);
+> +	}
+> +
+> +	/* Obtain and remap AHB address. */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	cqspi->qspi_ahb_virt = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(cqspi->qspi_ahb_virt)) {
+> +		dev_err(dev, "Cannot remap AHB address.\n");
+> +		return PTR_ERR(cqspi->qspi_ahb_virt);
+> +	}
+> +	cqspi->ahbbase = res;
+> +	cqspi->ahb_size = resource_size(res);
+> +
+> +	/* Obtain QSPI reset control */
+> +	rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
+> +	if (IS_ERR(rstc)) {
+> +		dev_err(dev, "Cannot get QSPI reset.\n");
+> +		return PTR_ERR(rstc);
+> +	}
+> +
+> +	rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
+> +	if (IS_ERR(rstc_ocp)) {
+> +		dev_err(dev, "Cannot get QSPI OCP reset.\n");
+> +		return PTR_ERR(rstc_ocp);
+> +	}
+> +
+> +	reset_control_assert(rstc);
+> +	reset_control_deassert(rstc);
+> +
+> +	reset_control_assert(rstc_ocp);
+> +	reset_control_deassert(rstc_ocp);
+> +
+> +	ddata  = of_device_get_match_data(dev);
+> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+> +		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+> +						   pdata->master_ref_clk_hz);
+> +
+> +	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
+> +		cqspi->use_dac_mode = false;
+> +
+> +	init_completion(&cqspi->transfer_complete);
+> +
+> +	/* Obtain IRQ line. */
+> +	cqspi->irq = platform_get_irq(pdev, 0);
+> +	if (cqspi->irq < 0) {
+> +		dev_err(dev, "platform_get_irq failed.\n");
+> +		ret = -ENXIO;
+> +	}
+> +	ret = devm_request_irq(dev, cqspi->irq, cqspi_irq_handler, 0,
+> +			       pdev->name, cqspi);
+> +	if (ret) {
+> +		dev_err(dev, "request_irq failed.\n");
+> +		goto out_clk_disable;
+> +	}
+> +
+> +	master->bus_num = pdata->bus_num;
+> +	master->num_chipselect = pdata->num_chipselect;
+
+Where is pdata->bus_num and pdata->num_chipselect initialized? This
+causes devm_spi_register_master() to fail randomly as num_chipselect may
+be 0.
+
+> +	mutex_init(&cqspi->lock);
+> +	platform_set_drvdata(pdev, master);
+> +	cqspi_controller_init(cqspi);
+> +	cqspi->current_cs = -1;
+> +
+> +	ret = devm_spi_register_master(dev, master);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "devm_spi_register_master failed.\n");
+> +		goto err_of;
+> +	}
+> +
+> +	return 0;
+> +
+> +out_clk_disable:
+> +	clk_disable_unprepare(cqspi->clk);
+> +err_of:
+> +	spi_master_put(master);
+> +	dev_err(&pdev->dev, "Cadence QSPI controller probe failed\n");
+> +	return ret;
+> +}
+> +
+
 -- 
-2.24.1.735.g03f4e72817-goog
-
+Regards
+Vignesh
