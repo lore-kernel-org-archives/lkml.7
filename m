@@ -2,88 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B29C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43CA2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578518630;
-	bh=3o5eOcLo/avT4KVRkLtp/ebecyBmOIz2OoTMExZnZ9U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=nMuRkca+dSavkepwVCmM6OJtRm9kzXOWY3xVhq5HUQaMgTA3rxKDk1+J7F778q4fu
-	 qKuuuK8MPxSUQwMXpCTIj647QqVY5WrHQ4cTEfOaPOBbWyOhqRQJNEMWZAURE3reTM
-	 WU3IOLBz0xYbgH8aDVLxHBTMe56GHIJ72Cs2j6AI=
+	by mail.kernel.org (Postfix) with ESMTP id 1E235206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DDNcIote"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgAHVXu (ORCPT
+        id S1727511AbgAHVYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:23:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbgAHVXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:23:49 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99A3206DA;
-        Wed,  8 Jan 2020 21:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578518629;
-        bh=3o5eOcLo/avT4KVRkLtp/ebecyBmOIz2OoTMExZnZ9U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GAX6U5ZBSBhfL3of/JrrGOM3VkfXHC0Ss6T3n1cfux8OJShjKueO2kB2yRotSJ2JG
-         cb/qlF+pkp5jeUvFR4uziYwmdoHfZyAFTpJviZDePo0wo7AHQNa59J4DlnuNq9uotN
-         Yw8F3fAQ3mX05uPqYGK3D5g1xAVNsdzVmFzMwXB8=
-Date:   Wed, 8 Jan 2020 15:23:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
-        Doug Meyer <dmeyer@gigaio.com>
-Subject: Re: [PATCH 09/12] PCI/switchtec: Add gen4 support in struct
- flash_info_regs
-Message-ID: <20200108212347.GA207738@google.com>
+        Wed, 8 Jan 2020 16:24:19 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40871 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbgAHVYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 16:24:18 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so4860072ljk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 13:24:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MrgqnfuzWiyeoBisKfI9WUGDpT/I3A3pzpV2omGtkBc=;
+        b=DDNcIoteefV8aBFRJqRjAYF8UmeDfEGuxO5aoHpC40ksghWZNn1vYOvHVH75utqX92
+         8pyR/nWuhn+vomgt79nK/sovZ1x7PhYhTnNXeT0womFAJ98oI98vJEh+zZtrLhhAsaiT
+         xHAeO525OvgTSe1X+L3USeOsbOk+RWWtyuGny4uD91Ul8TIcjfd6L4XmBIrytt5zzyEs
+         hQErb3i2mU9p3strf1rp4eW3q1/1zYZBB0VrVfwfyEPkEBvcTwGsqDvhRh9K2zjsT3ch
+         4bymw0ydHk1l0bLwoVhIPuVYIxoBXZ9csRffl8URhKARiRZg6AEOEEzGhtohlDS2x0zL
+         xbtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MrgqnfuzWiyeoBisKfI9WUGDpT/I3A3pzpV2omGtkBc=;
+        b=J/2zKsLrNi7di78qJXN6nd7Mpx4dM1ealYs1e3AXAd/hm/0xfhKyEwMa2xd17Y7c+0
+         ROI1M4RXdA9o9weDPqBMHDMbXiBSyspl5xXXq0UD829XV21EmRTzlpEJ/vtGQWsvhZ8+
+         9Z3lc/SmvSN+tDsuiRJ0a7Qwau8ZVfFVqCYhIoil6L5Su9Ijpbl97RKBSoNxKh8f6uzR
+         LO+zFQsTdRa9GvrUoivj5na1sEdN4AlYPpxME7TZq7Y1MfYGIv0PhmJ4Q/l6kZJiCyyq
+         qkXRCqudHDHsXZ06xSAY5e5VG8t72IIdlfeZ8ePxuKAElymaWpNqAwxVF379hEG6zk+k
+         3l6g==
+X-Gm-Message-State: APjAAAXjlYm7gmuhIIEoW12mzJODo35+W57uxicw+/pKN2618cVtjeIy
+        VBcW6m3luzJ+5jfEdd+QoBq0T4pDL+MKEt7JdsZopQ==
+X-Google-Smtp-Source: APXvYqzIFAaH51EKKHEbmEN6pXokDd653dkwA7mvIiTffi1G/lQMFKNkhMpqs1Z3DU3Ocqxwmy/VJxTCWBZ8KPcs8nw=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr4073045ljm.233.1578518656460;
+ Wed, 08 Jan 2020 13:24:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106190337.2428-10-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200107051638.40893-1-drosen@google.com> <20200108185005.GE263696@mit.edu>
+In-Reply-To: <20200108185005.GE263696@mit.edu>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Wed, 8 Jan 2020 13:24:05 -0800
+Message-ID: <CA+PiJmSLFVvRazSKDWOiygtgvE3-o6m6rq9q+jUKuhP-T2RHNw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Support for Casefolding and Encryption
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 12:03:34PM -0700, Logan Gunthorpe wrote:
-> From: Kelvin Cao <kelvin.cao@microchip.com>
-> 
-> Add a union with gen3 and gen4 flash_info structs.
+On Wed, Jan 8, 2020 at 10:50 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Mon, Jan 06, 2020 at 09:16:32PM -0800, Daniel Rosenberg wrote:
+> > changes:
+> > fscrypt moved to separate thread to rebase on fscrypt dev branch
+> > addressed feedback, plus some minor fixes
+>
+> What branch was this based on?  There is no fscrypt dev branch, so I
+> took the fscrypt master branch, and then applied your fscrypt patches,
+> and then I tried to apply this patch series.  I got patch conflicts
+> starting with the very first patch.
+>
+> Applying: TMP: fscrypt: Add support for casefolding with encryption
+> error: patch failed: fs/crypto/Kconfig:9
+> error: fs/crypto/Kconfig: patch does not apply
+> error: patch failed: fs/crypto/fname.c:12
+> error: fs/crypto/fname.c: patch does not apply
+> error: patch failed: fs/crypto/fscrypt_private.h:12
+> error: fs/crypto/fscrypt_private.h: patch does not apply
+> error: patch failed: fs/crypto/keysetup.c:192
+> error: fs/crypto/keysetup.c: patch does not apply
+> error: patch failed: fs/crypto/policy.c:67
+> error: fs/crypto/policy.c: patch does not apply
+> error: patch failed: fs/inode.c:20
+> error: fs/inode.c: patch does not apply
+> error: patch failed: include/linux/fscrypt.h:127
+> error: include/linux/fscrypt.h: patch does not apply
+> Patch failed at 0001 TMP: fscrypt: Add support for casefolding with encryption
+> hint: Use 'git am --show-current-patch' to see the failed patch
+> When you have resolved this problem, run "git am --continue".
+> If you prefer to skip this patch, run "git am --skip" instead.
+> To restore the original branch and stop patching, run "git am --abort".
+>
+>                                                   - Ted
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
 
-This does a lot more than add a union :)
-
-I think this looks reasonable, but I would like it even better if this
-and related patches could be split up a little bit differently:
-
-  - Rename SWITCHTEC_CFG0_RUNNING to SWITCHTEC_GEN3_CFG0_RUNNING, etc
-    (purely mechanical change, so trivial and obvious).
-
-  - Add switchtec_gen and the tests where it's needed, but with only
-    SWITCHTEC_GEN3 cases for now.
-
-  - Refactor ioctl_flash_part_info() (still only supports GEN3).
-    Maybe adds struct flash_info_regs and union, but only with gen3.
-
-  - Add GEN4 support (patch basically contains only GEN4-related
-    things and doesn't touch GEN3 things at all).  Maybe it would
-    still make sense to split the GEN4 support into multiple patches
-    (as in this series), or maybe they could be squashed into a single
-    GEN4 patch?
-
-  - It seems like at least the aliasing quirk and the driver device ID
-    update could/should be squashed since they contain the same
-    constants.
-
-Bjorn
+This is based off of ToT master. I put in a dummy fscrypt patch so you
+wouldn't need to rebase on top of fscrypt, but I could just do future
+patch sets all on top of fscrypt-dev. I guess my attempt to make it
+easier just made it more confusing :(
