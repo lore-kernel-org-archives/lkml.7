@@ -2,172 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E97C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27A0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0846A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93C2205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aI0ASofZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SEKtLl/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgAHIRd (ORCPT
+        id S1727183AbgAHIRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:17:33 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39304 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHIRd (ORCPT
+        Wed, 8 Jan 2020 03:17:45 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32933 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgAHIRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:17:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so2340189wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:17:31 -0800 (PST)
+        Wed, 8 Jan 2020 03:17:45 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z16so1246885pfk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:17:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=abwTz2beL2gLghCfDY6LQgHixzJKFXuNxR9Ws8d7RDM=;
-        b=aI0ASofZ8Mua6VCbXQHpsVOKk4LmrksJUB9HHWJ4R//7YVTf+AUhqMkWJH0W9VehP8
-         hO4J7xnWfhFJ3/BjgARnjAydkUNLG6miKqZXznSTmYG7NbXK/nCVrNLCgMgMDgwZW17h
-         //+Qlu+yDH80bAB+zotUnImUeyCrF9shYMSmq5TxYR+EcUA9NiQwKAyiiJ3qw9kw6LAY
-         gdy7z21xh2Qa9I2UJPvmYXXDxdKMod6+yjf1nzPgX1eWzeSCDQhhxqEnQovgazaNQfCM
-         qQBVz3rFWrQyGcD678n9tQ0zwItTkphu7bT8QJNWvgAOvheUlsYrjQA5omq0vUDdpVS1
-         gUXA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wKcCES/d4/KeU/NbfZOHeDU0TekdBewHLd32C6AO1ck=;
+        b=SEKtLl/2LU1rqULv4K0YiLjIIU6CfLWc6zgCHzvxXn6rxs3MloRGcaY+mmpntrk4bR
+         qqWP66RHO1/y3UFLDjZ5vX9LWA6WSWYaNyehUzftiFo/A/vpzLr7FOczpYhalxh/g+ct
+         a+Gfmtpi+1j4iZzOSb68bV8GqPo5Mpq4dFFwZdtm8i1akjAn93MM63gkF9aG74vL07jw
+         efvISDgtx7WPN8FQ3PapBNdjNSHXuyU5JaLAe48son4QVaPPZ0sHRPrbm8SedF+oLoOE
+         vkTH/LFqRemsKya0qnLlhZsrwR+UHjzxT+UA8MxOW9nVh6Qhd9DaGwjqEYzs6LeHwavn
+         ZdeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=abwTz2beL2gLghCfDY6LQgHixzJKFXuNxR9Ws8d7RDM=;
-        b=YNehIaCRdlz6rAEt2t0H+zsha5TYajG7pEtftN+xhACE5gvt5s4NtoG13gngDkbTnc
-         cMFtA6Epx38gzEott2nfEGIfLLZHcQrvA7xrGIwHLLI3fvWj4lbHvW7nzoysBYGEr587
-         O48K/0PuDdN8lyUJ0WvxpqiyNSHIzrRhejW4u9W3iEMrq4TsLy0HmEux+EL5Hu3NguqT
-         kCOzfGxR1l6g4NJYjrSuel6twujPOCUHGu9ryR4LLBp3drRn6Lnc++LoWoNMahwdfcGP
-         dO/Yft87OLw5ht/LfuHWs8T5emmCgXr0BSlaM5joc+nh3USmYfbSHK22lfNf9brise1x
-         TqDw==
-X-Gm-Message-State: APjAAAVcAgAOGfbcIuPGG+e4KRHIOmbAUIHY7NVUwuLCQOrBRSe+tPCZ
-        b5k2GXV2CTi55xW/vzmAxETH9Z0Vr+h/iWqJWhFrPQ==
-X-Google-Smtp-Source: APXvYqz5y0daA1TT4hH3Zv+jz1/iOuMW0TLllfiMXuVE3LIZXrDCM1nG4BRrP8A84+6/wpPPnvOZ98XBmvbco7MQBPg=
-X-Received: by 2002:adf:d850:: with SMTP id k16mr2893460wrl.96.1578471450572;
- Wed, 08 Jan 2020 00:17:30 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wKcCES/d4/KeU/NbfZOHeDU0TekdBewHLd32C6AO1ck=;
+        b=cHTCpZWP4Mi0iNedBeQ3VgYoZ8VSM/fCGs7GxaGlLvdkkPaluBJn4rxsn2cJmRSVVU
+         AbbIwmm0J0wH+vi/qBJX/ZTwhtF3hkX/LRV9QP16UpDOjgZjXQOQB5yZYdGPVZ7YZkSS
+         9lznhv1uT1fmwZ0z8zb47UWnj79zvr0susLzyVEu4LtE1FB+42HWIJJD90m7unR5Mf9e
+         ASvWvd3ol2I38t5TUDS8AATqJrFRLIyed/dXFtdMfVOAFbWh9PWuBjs24zf6KhUG/A5X
+         E5jQjcCJjppyGtKCkYeVqSmctmL7tMU2Yvk7V7rRQfJuvM15K+xaPa1rIdD5n3Lh1dph
+         B9Vg==
+X-Gm-Message-State: APjAAAXM4F8BUJtM9j15KynOhZWLLDMM0NP6uh6GPQZKdjb+oLo5Lt2Z
+        hLCuQViGaopYrxlbVJ4y9F1l0w==
+X-Google-Smtp-Source: APXvYqzegCxJYokSIFLdFNcsQ5hduGvbek0AbObhZQnUPnuTQ7IwQ4pkC8mnHCuGhr5jfepvFOz3+w==
+X-Received: by 2002:aa7:92c7:: with SMTP id k7mr3844330pfa.8.1578471464268;
+        Wed, 08 Jan 2020 00:17:44 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id j38sm2414849pgj.27.2020.01.08.00.17.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 00:17:43 -0800 (PST)
+Date:   Wed, 8 Jan 2020 13:47:40 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] opp: quiet down WARN when no valid OPPs remain
+Message-ID: <20200108073500.ir4nvvzlz6z7d22m@vireshk-i7>
+References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
+ <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-References: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 8 Jan 2020 13:47:19 +0530
-Message-ID: <CAAhSdy2UAAQrzD4mgbAu1p022YLLLhUX2dJjYomyiTifoE0mBg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: move sifive_l2_cache.h to include/soc
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@alien8.de>, mchehab@kernel.org,
-        tony.luck@intel.com, James Morse <james.morse@arm.com>,
-        rrichter@marvell.com,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 11:39 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
-> moves the sifive L2 cache driver to driver/soc. It did not move the
-> header file along with the driver. Therefore this patch moves the header
-> file to driver/soc
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/include/asm/sifive_l2_cache.h | 16 ----------------
->  drivers/edac/sifive_edac.c               |  2 +-
->  drivers/soc/sifive/sifive_l2_cache.c     |  2 +-
->  include/soc/sifive/sifive_l2_cache.h     | 16 ++++++++++++++++
->  4 files changed, 18 insertions(+), 18 deletions(-)
->  delete mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
->  create mode 100644 include/soc/sifive/sifive_l2_cache.h
->
-> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-> deleted file mode 100644
-> index 04f6748..0000000
-> --- a/arch/riscv/include/asm/sifive_l2_cache.h
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/*
-> - * SiFive L2 Cache Controller header file
-> - *
-> - */
-> -
-> -#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
-> -#define _ASM_RISCV_SIFIVE_L2_CACHE_H
-> -
-> -extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-> -extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-> -
-> -#define SIFIVE_L2_ERR_TYPE_CE 0
-> -#define SIFIVE_L2_ERR_TYPE_UE 1
-> -
-> -#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
-> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-> index 413cdb4..c0cc72a 100644
-> --- a/drivers/edac/sifive_edac.c
-> +++ b/drivers/edac/sifive_edac.c
-> @@ -10,7 +10,7 @@
->  #include <linux/edac.h>
->  #include <linux/platform_device.h>
->  #include "edac_module.h"
-> -#include <asm/sifive_l2_cache.h>
-> +#include <soc/sifive/sifive_l2_cache.h>
->
->  #define DRVNAME "sifive_edac"
->
-> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
-> index a9ffff3..a506939 100644
-> --- a/drivers/soc/sifive/sifive_l2_cache.c
-> +++ b/drivers/soc/sifive/sifive_l2_cache.c
-> @@ -9,7 +9,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_address.h>
-> -#include <asm/sifive_l2_cache.h>
-> +#include <soc/sifive/sifive_l2_cache.h>
->
->  #define SIFIVE_L2_DIRECCFIX_LOW 0x100
->  #define SIFIVE_L2_DIRECCFIX_HIGH 0x104
-> diff --git a/include/soc/sifive/sifive_l2_cache.h b/include/soc/sifive/sifive_l2_cache.h
-> new file mode 100644
-> index 0000000..04f6748
-> --- /dev/null
-> +++ b/include/soc/sifive/sifive_l2_cache.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * SiFive L2 Cache Controller header file
-> + *
-> + */
-> +
-> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +
-> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-> +
-> +#define SIFIVE_L2_ERR_TYPE_CE 0
-> +#define SIFIVE_L2_ERR_TYPE_UE 1
-> +
-> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
-> --
-> 2.7.4
->
+On 03-01-20, 20:36, Michał Mirosław wrote:
+> -	/* There should be one of more OPP defined */
+> -	if (WARN_ON(!count))
 
-LGTM.
+Okay, you can remove the WARN but we don't need a lot of diagnostics around it.
+Just print a single error message and drop all other changes from the patch.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
+-- 
+viresh
