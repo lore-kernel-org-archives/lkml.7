@@ -2,269 +2,93 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9F5C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC5EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5332820692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4BF20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578501777;
+	bh=ynpqtPeDiLkS3B1XbB+7iA1SxwfKdgld1oNMaDvbztA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Al2qytAVPBaK4FAWTpxNF0Klk6ctZmNMZDsth6WWK6TdLWYZq63jRMVsgwryABrr9
+	 VvDflHxClSboLnQEfs6fdjJq66wN4soM9e+cOLU/E0QfY0QJfAmYDPGQWF4rM8xQu5
+	 AIV1sdi7HBpyTPHgU61lB7lpKCqcLappwGiGW2f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgAHQmy (ORCPT
+        id S1729284AbgAHQm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 8 Jan 2020 11:42:56 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35630 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgAHQmy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 11:42:54 -0500
-Received: from mga01.intel.com ([192.55.52.88]:36740 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgAHQmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:42:53 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:42:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="218114319"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 08:42:48 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEPw-0005Uf-2f; Wed, 08 Jan 2020 18:42:48 +0200
-Date:   Wed, 8 Jan 2020 18:42:48 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/36] platform/x86: intel_scu_ipc: Reformat
- kernel-doc comments of exported functions
-Message-ID: <20200108164248.GE32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-14-mika.westerberg@linux.intel.com>
+Received: by mail-oi1-f193.google.com with SMTP id k4so3211936oik.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:42:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UKDNwGykO2dbNkNckCxJfHqBIvtnDZYUjcmwNmsSzE8=;
+        b=B9wyXp8B6Kj0wM/Pxuc6+GerkGuTaVy+pPKwlbs75Fxfk3Rbp4l3Y9s3PIErFz9tJo
+         vliU/DJ5Vtx4WILMlsvOZEI3GB+mz/qi+YStxgo4Gq1JuKNqM7uvr6iVYQlIg/JdOS7n
+         E4Qdjuwtsfqt7YHxiA+/0MsaqDuq7mVeuQTQFMnPzwmpTO7wSW2UySlxa3popdZB964r
+         pE3CzC84AhsXHQ6MYiNCsGHwnVO/1k0Dp/5TkbOIbI19cn9/edyb0kR9P2hE6Cwz6F0f
+         n6u2w6oNwnW7GhiCzKPl5iK9T0pCSNNUsdnq9Wo3yqQdZwNAbc05ZXT3zhtDZ7kBAiuh
+         oPyQ==
+X-Gm-Message-State: APjAAAUk0gjtIdaVuYPUdUoqKmo+lB/FJY2N0m3cVhrCIVbZ26DatFAh
+        RzKBuAlRvkjSTqpktS07NLhS9zA=
+X-Google-Smtp-Source: APXvYqxE11QLzVyrtPegRwI8ZXTaRdM2SBk/p6R35E2OjRgGtUsquMcVae0SZkCPAIbxXoU7gT/N/w==
+X-Received: by 2002:aca:33d5:: with SMTP id z204mr3655602oiz.120.1578501773618;
+        Wed, 08 Jan 2020 08:42:53 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l1sm1217453oic.22.2020.01.08.08.42.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:42:51 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2208fa
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 10:42:50 -0600
+Date:   Wed, 8 Jan 2020 10:42:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        aisheng.dong@nxp.com, l.stach@pengutronix.de, angus@akkea.ca,
+        cosmin.stoica@nxp.com, gary.bisson@boundarydevices.com,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 3/3] dt-bindings: arm: imx: Add the i.MX8MP EVK board
+Message-ID: <20200108164250.GA17075@bogus>
+References: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
+ <1577426385-31273-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-14-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1577426385-31273-3-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:38PM +0300, Mika Westerberg wrote:
-> Format kernel-doc comments of the exported functions to follow the
-> typical format that does not have tab indentation. Also capitalize
-> parameter descriptions and add a missing period.
+On Fri, 27 Dec 2019 13:59:45 +0800, Anson Huang wrote:
+> Add board binding for i.MX8MP EVK board.
 > 
-> No functional changes intended.
-> 
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/platform/x86/intel_scu_ipc.c | 112 +++++++++++++--------------
->  1 file changed, 55 insertions(+), 57 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index e3f658f1b40a..b1ac381bb7dd 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -219,14 +219,14 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
->  }
->  
->  /**
-> - *	intel_scu_ipc_ioread8		-	read a word via the SCU
-> - *	@addr: register on SCU
-> - *	@data: return pointer for read byte
-> + * intel_scu_ipc_ioread8		-	read a word via the SCU
-> + * @addr: Register on SCU
-> + * @data: Return pointer for read byte
->   *
-> - *	Read a single register. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> + * Read a single register. Returns %0 on success or an error code. All
-> + * locking between SCU accesses is handled for the caller.
->   *
-> - *	This function may sleep.
-> + * This function may sleep.
->   */
->  int intel_scu_ipc_ioread8(u16 addr, u8 *data)
->  {
-> @@ -235,14 +235,14 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
->  EXPORT_SYMBOL(intel_scu_ipc_ioread8);
->  
->  /**
-> - *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
-> - *	@addr: register on SCU
-> - *	@data: byte to write
-> + * intel_scu_ipc_iowrite8		-	write a byte via the SCU
-> + * @addr: Register on SCU
-> + * @data: Byte to write
->   *
-> - *	Write a single register. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> + * Write a single register. Returns %0 on success or an error code. All
-> + * locking between SCU accesses is handled for the caller.
->   *
-> - *	This function may sleep.
-> + * This function may sleep.
->   */
->  int intel_scu_ipc_iowrite8(u16 addr, u8 data)
->  {
-> @@ -251,17 +251,17 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
->  EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
->  
->  /**
-> - *	intel_scu_ipc_readvv		-	read a set of registers
-> - *	@addr: register list
-> - *	@data: bytes to return
-> - *	@len: length of array
-> + * intel_scu_ipc_readvv		-	read a set of registers
-> + * @addr: Register list
-> + * @data: Bytes to return
-> + * @len: Length of array
->   *
-> - *	Read registers. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> + * Read registers. Returns %0 on success or an error code. All locking
-> + * between SCU accesses is handled for the caller.
->   *
-> - *	The largest array length permitted by the hardware is 5 items.
-> + * The largest array length permitted by the hardware is 5 items.
->   *
-> - *	This function may sleep.
-> + * This function may sleep.
->   */
->  int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
->  {
-> @@ -270,18 +270,17 @@ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
->  EXPORT_SYMBOL(intel_scu_ipc_readv);
->  
->  /**
-> - *	intel_scu_ipc_writev		-	write a set of registers
-> - *	@addr: register list
-> - *	@data: bytes to write
-> - *	@len: length of array
-> + * intel_scu_ipc_writev		-	write a set of registers
-> + * @addr: Register list
-> + * @data: Bytes to write
-> + * @len: Length of array
->   *
-> - *	Write registers. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> + * Write registers. Returns %0 on success or an error code. All locking
-> + * between SCU accesses is handled for the caller.
->   *
-> - *	The largest array length permitted by the hardware is 5 items.
-> - *
-> - *	This function may sleep.
-> + * The largest array length permitted by the hardware is 5 items.
->   *
-> + * This function may sleep.
->   */
->  int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
->  {
-> @@ -290,19 +289,18 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
->  EXPORT_SYMBOL(intel_scu_ipc_writev);
->  
->  /**
-> - *	intel_scu_ipc_update_register	-	r/m/w a register
-> - *	@addr: register address
-> - *	@bits: bits to update
-> - *	@mask: mask of bits to update
-> + * intel_scu_ipc_update_register	-	r/m/w a register
-> + * @addr: Register address
-> + * @bits: Bits to update
-> + * @mask: Mask of bits to update
->   *
-> - *	Read-modify-write power control unit register. The first data argument
-> - *	must be register value and second is mask value
-> - *	mask is a bitmap that indicates which bits to update.
-> - *	0 = masked. Don't modify this bit, 1 = modify this bit.
-> - *	returns 0 on success or an error code.
-> + * Read-modify-write power control unit register. The first data argument
-> + * must be register value and second is mask value mask is a bitmap that
-> + * indicates which bits to update. %0 = masked. Don't modify this bit, %1 =
-> + * modify this bit. returns %0 on success or an error code.
->   *
-> - *	This function may sleep. Locking between SCU accesses is handled
-> - *	for the caller.
-> + * This function may sleep. Locking between SCU accesses is handled
-> + * for the caller.
->   */
->  int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
->  {
-> @@ -312,16 +310,16 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
->  EXPORT_SYMBOL(intel_scu_ipc_update_register);
->  
->  /**
-> - *	intel_scu_ipc_simple_command	-	send a simple command
-> - *	@cmd: command
-> - *	@sub: sub type
-> + * intel_scu_ipc_simple_command	-	send a simple command
-> + * @cmd: Command
-> + * @sub: Sub type
->   *
-> - *	Issue a simple command to the SCU. Do not use this interface if
-> - *	you must then access data as any data values may be overwritten
-> - *	by another SCU access by the time this function returns.
-> + * Issue a simple command to the SCU. Do not use this interface if you must
-> + * then access data as any data values may be overwritten by another SCU
-> + * access by the time this function returns.
->   *
-> - *	This function may sleep. Locking for SCU accesses is handled for
-> - *	the caller.
-> + * This function may sleep. Locking for SCU accesses is handled for the
-> + * caller.
->   */
->  int intel_scu_ipc_simple_command(int cmd, int sub)
->  {
-> @@ -341,16 +339,16 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
->  EXPORT_SYMBOL(intel_scu_ipc_simple_command);
->  
->  /**
-> - *	intel_scu_ipc_command	-	command with data
-> - *	@cmd: command
-> - *	@sub: sub type
-> - *	@in: input data
-> - *	@inlen: input length in dwords
-> - *	@out: output data
-> - *	@outlein: output length in dwords
-> + * intel_scu_ipc_command	-	command with data
-> + * @cmd: Command
-> + * @sub: Sub type
-> + * @in: Input data
-> + * @inlen: Input length in dwords
-> + * @out: Output data
-> + * @outlen: Output length in dwords
->   *
-> - *	Issue a command to the SCU which involves data transfers. Do the
-> - *	data copies under the lock but leave it for the caller to interpret
-> + * Issue a command to the SCU which involves data transfers. Do the
-> + * data copies under the lock but leave it for the caller to interpret.
->   */
->  int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
->  			  u32 *out, int outlen)
-> -- 
-> 2.24.1
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
