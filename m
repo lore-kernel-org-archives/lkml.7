@@ -2,102 +2,91 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51EFC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCFEC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860D82053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060F2206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wnszb6on"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzdMPK5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgAHWoc (ORCPT
+        id S1727283AbgAHWw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 17:44:32 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36093 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgAHWoc (ORCPT
+        Wed, 8 Jan 2020 17:52:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43961 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgAHWw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 17:44:32 -0500
-Received: by mail-qk1-f193.google.com with SMTP id a203so4278530qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 14:44:31 -0800 (PST)
+        Wed, 8 Jan 2020 17:52:28 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x6so2336284pfo.10;
+        Wed, 08 Jan 2020 14:52:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vo+6C1EuzsBLHBwL8bvb08t4OkksMVFETIJoYKx5DTo=;
-        b=Wnszb6on0SMp/3XOzNETDRgBA1SdEWJobacWeeLrc4lDfi7vhmtnOldGqbPPBAZbfG
-         7wp6u/0G5WV3uSIpGENHwwILKLe4qZ56kKoDHOHcvgCpvAf4N2HVstmon3dD9/r6c9sv
-         qlfEDsZVhNNIdGprWFOmlxpJcR4ut9Km4zNUY=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g1kbrZtyZAAKENR54pIVneAHXym82XgJaiiw55EZyxw=;
+        b=bzdMPK5ZLRATem1WVJvRTtwTYEFGFMbPbf8x1K6U4cb8NBww1lB8eETpD+Tpd9V8TW
+         M3itPmabvr75bNvFrCMzpUcTPpQApnOjoT/bqIlo97J/YeUxsxSg+u7iJTzNHkmhBvFI
+         ny5mAUS09mF/IBqz1aHES0L4I1a6MqRcwgfpWLEvFKlBry/9/GcbqL721lLAsE7h43Pg
+         gba3DPTIibsaD+brnN+n5SRSYxwq4YI1AVjEGvGBVVOGwl8hpmGq34pHt5eZG5EzwwHi
+         F0mJSQBsTUofNLXJn8MtBdlyOgP55S0cHR72UIrF1N/NbwZBCZ6PkaqX7vD5n3hG5QLB
+         vocA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vo+6C1EuzsBLHBwL8bvb08t4OkksMVFETIJoYKx5DTo=;
-        b=X+5f3yJyZ6nvoh1fYmtSU7KtQ5UC7mUBdvm4vnGLu/zyVFH7tNSoMkt5S9n5GGOc+o
-         TRb31D92Ad5ISEfAfRRwqm8Ib97G7JZATd5nmUOLZsXzq9/eVxOvJk83nbm2e38W0wYd
-         KUQQgEq2lGtmlDkJIlvzkkg8L2wCK7B9VMhxkaAfTEKrKailax8PyMVqoPzA9RCvz18F
-         /rcXbWH6+0zcxkGoyLTZu46Weetp0w2ofTh8qGqsuQZVC6GYSbesdIaMpPJFo84VdOJj
-         V2vVh8bwlLiuRoTM3CBPTWM/VUUUuCDdOCdkSJyU90CRGg27Pn/LDE8CWRy0GAB8vVHD
-         zLwA==
-X-Gm-Message-State: APjAAAUPVan/o6vGAODxeOwDHtkvczCgT5Oa8xo4iNH4tVrdXMSEkMVl
-        6kRwONZXzbKNICcBeLgGKaB0AFIJ8ePE1kc0IUVSRQ==
-X-Google-Smtp-Source: APXvYqxnt7gN4ytrxX2jjjTbvXbu6erGQ6HNZhqe3Pr82LWm38qxIiDN1rgAR/6KRKR7dwyCXJ7fm7aQppC5xk7pbCM=
-X-Received: by 2002:ae9:e103:: with SMTP id g3mr6826468qkm.353.1578523471432;
- Wed, 08 Jan 2020 14:44:31 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g1kbrZtyZAAKENR54pIVneAHXym82XgJaiiw55EZyxw=;
+        b=Kc8QXx+irxd0rmOD/VuJHkN8s0u8Cr3EYcO/LARexKHkJ22g1DhqF8qxISidKW9G9M
+         G4WKlUjmsS0Ripl1mveGRlRHmVBif3Uy95oYX9K3WdXPDGDd+VJU/QvznGgI5dyIsPYa
+         yW4KIN7QWve4IKlr9XW+gBnYjrYnPoivqDvamB2R3H6YARWAp93nkVCdD9MvcZ7ZE+zJ
+         FiOp95VGozmSv0LguTf2jmDvrg2Xe5gm3CBSSSepc6SCHtq9ja+BgGMSYDV7TT4BBEvB
+         Yjp3ZAj05IRivg0qFQCVAbjfh4tWPBYfjMTprEi7VMYv3AI0StBvztw1xZKmo8sKo5W3
+         YaeQ==
+X-Gm-Message-State: APjAAAViwfPsL+6uXv46YyiKhzfO4jyjD/wL6Y4EgvxK3tMfKMK/esdA
+        7tJQNQVKmppNywAef/y21LE=
+X-Google-Smtp-Source: APXvYqx7GQYBMlwJE0OVggvfIiah7GvE/In7ia4UeEJeHIxJW/jTB/XC/5ZF49OERZ74xR7F/bNmPA==
+X-Received: by 2002:a63:5114:: with SMTP id f20mr7604127pgb.321.1578523947113;
+        Wed, 08 Jan 2020 14:52:27 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j10sm318752pjb.14.2020.01.08.14.52.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 14:52:26 -0800 (PST)
+Date:   Wed, 8 Jan 2020 14:52:24 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Subject: Re: [PATCH 3.16 00/63] 3.16.81-rc1 review
+Message-ID: <20200108225224.GA29712@roeck-us.net>
+References: <lsq.1578512578.117275639@decadent.org.uk>
 MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-8-drinkcat@chromium.org>
- <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 9 Jan 2020 06:44:20 +0800
-Message-ID: <CANMq1KCTdtKDB4bmdAFf+voTvCECedAKTJHue4H1quhW6SXbxQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7, RFC]: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 4:09 AM Rob Herring <robh+dt@kernel.org> wrote:
-> [snip]
-> >  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > index 92d471676fc7823..581da3fe5df8b17 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > @@ -91,10 +91,12 @@ struct panfrost_device {
-> >         struct {
-> >                 struct devfreq *devfreq;
-> >                 struct thermal_cooling_device *cooling;
-> > +               struct opp_table *dev_opp_table;
-> >                 ktime_t busy_time;
-> >                 ktime_t idle_time;
-> >                 ktime_t time_last_update;
-> >                 atomic_t busy_count;
-> > +               struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
->
-> ?? Left over from some rebase?
+On Wed, Jan 08, 2020 at 07:42:58PM +0000, Ben Hutchings wrote:
+> This is the start of the stable review cycle for the 3.16.81 release.
+> There are 63 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri Jan 10 20:00:00 UTC 2020.
+> Anything received after that time might be too late.
+> 
 
-Oh, yes, sorry.
+Build results:
+	total: 136 pass: 136 fail: 0
+Qemu test results:
+	total: 227 pass: 227 fail: 0
+
+Guenter
