@@ -2,197 +2,146 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD25CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED270C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8A820643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BD920643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7BfQX1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgAHUYL (ORCPT
+        id S1726927AbgAHUYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:24:11 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:52460 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgAHUYL (ORCPT
+        Wed, 8 Jan 2020 15:24:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37462 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgAHUYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:24:11 -0500
-Received: by mail-io1-f72.google.com with SMTP id d10so2797967iod.19
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:24:11 -0800 (PST)
+        Wed, 8 Jan 2020 15:24:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q127so2100325pga.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:24:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UIXqgaiVWae8Bhi+dC+q5rSp1vgGUZgQyrqPawYppjo=;
+        b=V7BfQX1BvUdYAxjWvcUf0XpDhT5nkjUkA7/08jlIQRhx+EBJ7vNuiDz6uNW55ElOpD
+         hsXEXbULovv6CtYsUmmP6cBFmWd6MywDjCJSYYeSc8ucQtBommmqdgUbP6EJ6zN+e1eP
+         dtZfTyZo4b40dD/x8Wkw0t+Dicv6+qPrkDRiqVXQqL1rmT4sV/U77jQgOXrxyZP5vDfp
+         4q5GRwgZS5ACG6mznYllo0kxC96dCRgRlbhgId72HAuWs2GYQim0s3NTfCVKOHLLC0K8
+         LjfoRs4N9OgE7vdhs5A0MOWe13w9B3OJN7hy28OuVnrgbcmXEyDz5l5FySrOn+8tbCBQ
+         CqLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=GVyssDLFxQI959y01fNygLsmfKd3ROHK3Ad8toVgtQY=;
-        b=LzkK9JOSTg6YSjCBhbOrvmqypjuCpnxSUBPsDHuZF5DMhIeOT6qb76Yy1BQFQTPNKM
-         ewJeXeG6CGdRqdvt0OYsI8Kpg20H7cBXBwMuXABy0oA6xcpQ/Vw901na9slUzJtvgUpw
-         z7Olm9Ag2Hs3bYEetMHozZkpZR9+WVzHGukAMPwymCB13qddGaxrjl9w2ZtZSpLxl3mn
-         g/ZBpatSYtBIAH61xbSWxdow4P6V0+fMEK9WPXf4YasXwKenzrzIlTmWwaxgtcAVqrYX
-         t+sDuvM1bhXXiLVbr/H9Ql18n5n46wohvEsLGSXRFjaTZf41Wj7qw5VWwdP/H8rj+fT6
-         jiOA==
-X-Gm-Message-State: APjAAAVHhcm84m2+aHsBXknvEiYxCteflgSP1czaIGfMnzwlTgnV90Nz
-        9bTUtUxSsoa1uUWl8IFxHnKB3ff70XLk0WaXIccjgbkvmaua
-X-Google-Smtp-Source: APXvYqyrzrk7LZE87usAyPXhFDdakLa5pq1NK+nqagWQYrm0vR1eCjRYKJXoTDm/Vum3Zn+GUflvzjFoS5D6SFMcFbRw/Hp1/jcM
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UIXqgaiVWae8Bhi+dC+q5rSp1vgGUZgQyrqPawYppjo=;
+        b=HrV1vw1KIxD+1+hfJNzlo57Zb4iH16BwAUuohYcorRT/DubTFLlbbehEEdFc2b49P7
+         7AY6YOQpMGoXYs+7+XJB7TReOUvzfwfbERmXGtfIKWm5ot/T0lEbqRIVOT2TGWI6ZCI/
+         0JWKKvQjOHqFWpmII06xWgIVR/dlAd1pSZ65QAHIeQjFdRZaGPlQKzKDoN1OiuLmJrRb
+         2ufsTPwxJ9C26PMhUiZ+qRxMfkflB/qIGvnNOqLqlvqe/wDMYJPZ1DgDpDyycANhX+oe
+         oGRLSeTTXCW2XKWHXr3UgCYad/Vpw/A4O9UCTd+rEXQBxv12/YUxvsD5buvrezpQbZE6
+         PH7g==
+X-Gm-Message-State: APjAAAVkgNkNCZDFXJLep+EtttfT6lydfB5da8WojzI+gNmy7EyYg105
+        8TG+Dc0H56FMP36CfZc30fsIxQ==
+X-Google-Smtp-Source: APXvYqx2eKy9DIhvgEVT2MvULvpoa3Atkfrm2Z7BVw2iAsxFD2KZjXe9EH7giHcTvLfHMGKdOcqaGA==
+X-Received: by 2002:a63:1f0c:: with SMTP id f12mr7346558pgf.247.1578515061913;
+        Wed, 08 Jan 2020 12:24:21 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b98sm135319pjc.16.2020.01.08.12.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 12:24:21 -0800 (PST)
+Date:   Wed, 8 Jan 2020 13:24:18 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom: wcnss: Allow specifying firmware-name
+Message-ID: <20200108202418.GA28145@xps15>
+References: <20200108055252.639791-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:9a08:: with SMTP id b8mr5557555jal.1.1578515050611;
- Wed, 08 Jan 2020 12:24:10 -0800 (PST)
-Date:   Wed, 08 Jan 2020 12:24:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000de50d7059ba6acd5@google.com>
-Subject: KASAN: use-after-free Read in v4l2_release (3)
-From:   syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, bnvandana@gmail.com,
-        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108055252.639791-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Bjorn,
 
-syzbot found the following crash on:
+On Tue, Jan 07, 2020 at 09:52:52PM -0800, Bjorn Andersson wrote:
+> Introduce a firmware-name property, in order to be able to support
+> device/platform specific firmware for the wireless connectivity
+> subsystem; in line with other Qualcomm remoteproc drivers.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../devicetree/bindings/remoteproc/qcom,wcnss-pil.txt     | 6 ++++++
+>  drivers/remoteproc/qcom_wcnss.c                           | 8 +++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+> index d420f84ddfb0..00844a5d2ccf 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+> @@ -34,6 +34,12 @@ on the Qualcomm WCNSS core.
+>  	Definition: should be "wdog", "fatal", optionally followed by "ready",
+>  		    "handover", "stop-ack"
+>  
+> +- firmware-name:
+> +	Usage: optional
+> +	Value type: <string>
+> +	Definition: must list the relative firmware image path for the
+> +		    WCNSS core.
 
-HEAD commit:    ae179410 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=132aa915e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=57adcee0a60380e2
-dashboard link: https://syzkaller.appspot.com/bug?extid=75287f75e2fedd69d680
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Perhaps mention that if omitted the firmware name will default to "wcnss.mdt".
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> +
+>  - vddmx-supply:
+>  - vddcx-supply:
+>  - vddpx-supply:
+> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+> index dc135754bb9c..a0468b3cc76f 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -457,6 +457,7 @@ static int wcnss_alloc_memory_region(struct qcom_wcnss *wcnss)
+>  
+>  static int wcnss_probe(struct platform_device *pdev)
+>  {
+> +	const char *fw_name = WCNSS_FIRMWARE_NAME;
+>  	const struct wcnss_data *data;
+>  	struct qcom_wcnss *wcnss;
+>  	struct resource *res;
+> @@ -474,8 +475,13 @@ static int wcnss_probe(struct platform_device *pdev)
+>  		return -ENXIO;
+>  	}
+>  
+> +	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
+> +				      &fw_name);
+> +	if (ret < 0 && ret != -EINVAL)
+> +		return ret;
+> +
+>  	rproc = rproc_alloc(&pdev->dev, pdev->name, &wcnss_ops,
+> -			    WCNSS_FIRMWARE_NAME, sizeof(*wcnss));
+> +			    fw_name, sizeof(*wcnss));
+>  	if (!rproc) {
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com
+That is in line with what was done for q6v5_mss and q6v5_pas.  With or without
+the above:
 
-usbvision_radio_close: Final disconnect
-==================================================================
-BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390  
-drivers/media/v4l2-core/v4l2-dev.c:459
-Read of size 4 at addr ffff8881d13b5068 by task v4l_id/20136
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-CPU: 1 PID: 20136 Comm: v4l_id Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xef/0x16e lib/dump_stack.c:118
-  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
-  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:639
-  v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x4e0/0x5c0 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f70446a32b0
-Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
-07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-RSP: 002b:00007ffee1722fd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f70446a32b0
-RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-R13: 00007ffee1723130 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 14633:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:670 [inline]
-  usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1315 [inline]
-  usbvision_probe.cold+0x5c5/0x1f21  
-drivers/media/usb/usbvision/usbvision-video.c:1469
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x141f/0x1bc0 drivers/base/core.c:2487
-  usb_set_configuration+0xe38/0x16c0 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0x141f/0x1bc0 drivers/base/core.c:2487
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
-  process_scheduled_works kernel/workqueue.c:2326 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 20136:
-  save_stack+0x1b/0x80 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x129/0x170 mm/kasan/common.c:474
-  slab_free_hook mm/slub.c:1425 [inline]
-  slab_free_freelist_hook mm/slub.c:1458 [inline]
-  slab_free mm/slub.c:3005 [inline]
-  kfree+0xda/0x310 mm/slub.c:3957
-  usbvision_release+0x181/0x1c0  
-drivers/media/usb/usbvision/usbvision-video.c:1364
-  usbvision_radio_close.cold+0x2b/0x74  
-drivers/media/usb/usbvision/usbvision-video.c:1130
-  v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x4e0/0x5c0 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881d13b4000
-  which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 4200 bytes inside of
-  8192-byte region [ffff8881d13b4000, ffff8881d13b6000)
-The buggy address belongs to the page:
-page:ffffea000744ec00 refcount:1 mapcount:0 mapping:ffff8881da40c500  
-index:0x0 compound_mapcount: 0
-raw: 0200000000010200 ffffea0007392a00 0000000300000003 ffff8881da40c500
-raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d13b4f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d13b4f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881d13b5000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8881d13b5080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d13b5100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> -- 
+> 2.24.0
+> 
