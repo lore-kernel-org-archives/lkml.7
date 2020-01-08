@@ -2,93 +2,117 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC92C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E82C2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80B520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="be/0HgRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgAHPpD (ORCPT
+        id S1727415AbgAHPsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:45:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:42398 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgAHPpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:45:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:45:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="246375213"
-Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2020 07:44:59 -0800
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        xiaochen.shen@intel.com
-Subject: [PATCH] x86/resctrl: Take care of PF_EXITING task in callback
-Date:   Thu,  9 Jan 2020 00:13:46 +0800
-Message-Id: <1578500026-21152-1-git-send-email-xiaochen.shen@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 8 Jan 2020 10:48:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38667 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAHPsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:48:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u2so3011172wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:48:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KrHsQAP0a9eh1NM9sOVdFPeaeyaEh108A3v2h0i3x0E=;
+        b=be/0HgREopOPW+2tP9ai/6DG9k194a1evqoodK9bIBc3vz7RTuMFmpvx7YvMURM5+j
+         /WfI9/uYzboJbd4o0O0nLDJ9+DcfHOY4/XH6QArnNld2yqZas8y3GJqdqqy1reHM3uMs
+         M0dIbzPeNLNZrbUYAHWfYJEsssmZPAGKUi0ggzMFLAxOg86ZjaZifHm0/KHB+isTebos
+         bHnq13duf8YWMA+Zhg/OuOjEy86QXkuphb9cZXKwnkcQIuumgHLIPPjMQDnC9bD66Lox
+         018PiSNZ1dXZhSEWycjVxWW7z+2AeT6M8LODMD+KI0/cY0Lz2dWIhYD3vFGVpuiqu7LO
+         s4XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KrHsQAP0a9eh1NM9sOVdFPeaeyaEh108A3v2h0i3x0E=;
+        b=uOBbQvwK7xvN7jHrKK2pyIWBn/uFTvbq7FgJ/g97VFLimlRB3TIFeS7/GH8hQ/QFgc
+         WykdXymbQ3s0w9vfNUbQg7brair5WT2CbHjuTl9BSg1WNo9qwXep0IQxasy21mHRG4mZ
+         IBbmo7q34xKX1xqwEPegRRcBYuLbETGekTq0bCmYKrqHZInfIJsQP33LTR6UjYXGbTw/
+         GmlkJP1x1MsnHEphQsDoZoFmul5Cdeq94+sAfbyaxjcAl9/cuNtJ3XLSXYAz1v6ysI9+
+         gYER+0J5PKfPWWuich20f/6PHujFvpq2xpmAchviXtkax9zhkAKz5d6jAGduf0GphYOc
+         auqQ==
+X-Gm-Message-State: APjAAAXVU57yjFpa7xG7NfXO+3dXNRq6QrJx/yMILqWF20npXLdMLAal
+        sMfZVkQyrLPVfZCndKEuDtZuav7XZKVxezgLFhTWQg==
+X-Google-Smtp-Source: APXvYqwKFiQyMCwL4AAPWd45y4MGjnhAiXJlP/5iP6Dw1GbxR2/pOuvKAU+O8dyrtdNHiAG2Ca7K6Fn60xTPEWb6G2A=
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr4477316wma.95.1578498482821;
+ Wed, 08 Jan 2020 07:48:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200108102304.25800-1-ardb@kernel.org> <20200108102304.25800-3-ardb@kernel.org>
+ <20200108154031.GA2512498@rani.riverdale.lan>
+In-Reply-To: <20200108154031.GA2512498@rani.riverdale.lan>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 8 Jan 2020 16:47:51 +0100
+Message-ID: <CAKv+Gu8AOukQL3qokt+Rz3PKBRWWnSULGUr=+yxg_HPM8-uodw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] x86/boot/compressed: force hidden visibility for
+ all symbol references
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When writing a pid to file "tasks", a callback function move_myself()
-is queued to this task to be called when the task returns from kernel
-mode or exits. The purpose of move_myself() is to activate the newly
-assigned closid and/or rmid associated with this task. This activation
-is done by calling resctrl_sched_in() from move_myself(), the same
-function that is called when switching to this task.
+On Wed, 8 Jan 2020 at 16:40, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, Jan 08, 2020 at 11:23:03AM +0100, Ard Biesheuvel wrote:
+> > Eliminate all GOT entries in the decompressor binary, by forcing hidden
+> > visibility for all symbol references, which informs the compiler that
+> > such references will be resolved at link time without the need for
+> > allocating GOT entries.
+> >
+> > To ensure that no GOT entries will creep back in, add an assertion to
+> > the decompressor linker script that will fire if the .got section has
+> > a non-zero size.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/boot/compressed/Makefile      |  1 +
+> >  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
+> >  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
+> >  3 files changed, 21 insertions(+)
+> >
+> > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> > index 56aa5fa0a66b..361df91b2288 100644
+> > --- a/arch/x86/boot/compressed/Makefile
+> > +++ b/arch/x86/boot/compressed/Makefile
+> > @@ -39,6 +39,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+> >  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> >  KBUILD_CFLAGS += -Wno-pointer-sign
+> >  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> > +KBUILD_CFLAGS += -include hidden.h
+> >
+>
+> This should be added to drivers/firmware/efi/libstub as well in case
+> future code changes bring in global references there?
 
-If this work is successfully queued but then the task enters PF_EXITING
-status (e.g., receiving signal SIGKILL, SIGTERM) prior to the execution
-of the callback move_myself() then move_myself() still calls
-resctrl_sched_in() since the task status is not currently considered.
+The EFI stub already sets the hidden visibility attribute for the few
+external symbol references that it contains, so it is not needed in
+the context of this series.
 
-When a task is exiting then the data structure of the task itself will
-be freed soon, calling resctrl_sched_in() to write the register that
-control's the task's resources is unnecessary and it implies extra
-performance overhead.
-
-Add check on task status in move_myself() and return immediately if the
-task is PF_EXITING.
-
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 2e3b06d6bbc6..205925d802d8 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -532,11 +532,15 @@ static void move_myself(struct callback_head *head)
- 		kfree(rdtgrp);
- 	}
- 
-+	if (unlikely(current->flags & PF_EXITING))
-+		goto out;
-+
- 	preempt_disable();
- 	/* update PQR_ASSOC MSR to make resource group go into effect */
- 	resctrl_sched_in();
- 	preempt_enable();
- 
-+out:
- 	kfree(callback);
- }
- 
--- 
-1.8.3.1
-
+In the future, we can revisit this if we want to get rid of the
+various __pure getter functions, but that requires thorough testing on
+other architectures and toolchains, so I'd prefer to leave that for
+later.
