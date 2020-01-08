@@ -2,100 +2,247 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42276C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBD7C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB2320705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFFB20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgAHKA1 (ORCPT
+        id S1727317AbgAHKEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:00:27 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:57259 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgAHKA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:00:26 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MqJyX-1jSqrc1z7L-00nOpV; Wed, 08 Jan 2020 11:00:15 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     syzbot+54fd8cca4b7226c94b8e@syzkaller.appspotmail.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: v4l2-core: only zero-out ioctl-read buffers
-Date:   Wed,  8 Jan 2020 11:00:00 +0100
-Message-Id: <20200108100013.284108-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 8 Jan 2020 05:04:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36574 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbgAHKEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:04:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 744D9AC5C;
+        Wed,  8 Jan 2020 10:03:56 +0000 (UTC)
+Received: from localhost (brahms.olymp [local])
+        by brahms.olymp (OpenSMTPD) with ESMTPA id db0556c4;
+        Wed, 8 Jan 2020 10:03:54 +0000 (WET)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [RFC PATCH v4] ceph: use 'copy-from2' operation in copy_file_range
+Date:   Wed,  8 Jan 2020 10:03:53 +0000
+Message-Id: <20200108100353.23770-1-lhenriques@suse.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:CVOlEaB3G4b+yq/fgEU8QwUgyL0mON3Gtm7AhWwU6x3RboXTNPi
- I+WMsU653svG0Zy2qvrYMB9pLrY0OkAb/r7t/z9IDA5dtAdqZX0+hemSZsxsmdzwXGM2gnH
- kRQWxF42lv3v/GOC9gJRxxxBCOXLM9nWEVPB1ZvwBG70y1EuCrm9TPtKyeb/Vn6Vv5vcBri
- oyes0WkWIpWko2xvjmKBQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H/LDq2q0KTg=:EZx+1YOXITU+Zlx3KhsF5z
- UHJpYb2efAbCvSq3g0hvc02JH9+seYy3t1Baq19O4gwTSRRia/yBL8C8xETKt4n1NKvICnSAp
- Hzf58RThek+qtU5fRAmu6bchog4TByWyGMCYlWb2ILCiMsCw+NZC2O0IW7bOHU3aZu/qF4eBt
- FPa5L3fKkHmjK+CfU1+7ochQyBLxr4brRRLd3YYFo5+DhjbFViPdBbWMquXzjvEA5ALoay9cO
- xEstnkHxCoM7qTRO6bWu+cXroBvPJqMfEtbj1EUGnH4OZGq0bioJDO/K04JcUvNuzEEKfu/uE
- oByG76VJilkTlHgd+e74JhAVpQDcaYsLvSGdE7oeeXeDe4+NPCAnBzOJ0rC2TjJ3e8GPY7Vmf
- yhRR8pyCuaftF6nOgTjVSrcLysSIZmqbQN0kJbI465mfc/MmUq6oG/UZsAO+N9uf4NZLjmGgY
- MuRlJPFTkiWgA8OKZszV0Q7R9kmqf9QlOnSR2EwHMrWq/5LnYhByGezyRHXV6TgJ0xrz/UkOZ
- LRFcl5uXTbpwkpAnBHxThulyKr6LjMOs7VLaiCNfGAtQrF4ewRQGXvFksXcU69rZkax4I6opZ
- fFVw1rw2Zs9rEqtEXOZu0gCE3MePkCnTrxue2mpH3cWUURnmBvMbTgeOd7OMFBs3ZhAAYkaUD
- ITrCzBsWEhwqLgDoznJxF4LUKpKceeWvYd9h/XhEX+ybPiEYwIFascEKlBwkwuvs/6UDC7DDc
- GDKHOXDlDpvt4Ih/uWdzjZcp9Vf+/RqmNbytwprXPhfJkVy08iWqjv7bb3JLIh2ZVknjvpi1F
- FrojwBjPpKcb2pwyhckznRcuPT1aPlW0dZB1ebzCxNIhRVTfOBW3WdVUvDVJwmp2KPYwJMABj
- OHABREwyQ5t5D30lIOlA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memset() got moved out of the check for _IOC_NONE, so passing a
-made-up command number with a size but no direction would allow clearing
-data on user-provided pointers.
+Instead of using the 'copy-from' operation, switch copy_file_range to the
+new 'copy-from2' operation, which allows to send the truncate_seq and
+truncate_size parameters.
 
-Move video_get_user() back into the _IOC_NONE check where it belongs.
+If an OSD does not support the 'copy-from2' operation it will return
+-EOPNOTSUPP.  In that case, the kernel client will stop trying to do
+remote object copies for this fs client and will always use the generic
+VFS copy_file_range.
 
-Reported-by: syzbot+54fd8cca4b7226c94b8e@syzkaller.appspotmail.com
-Fixes: 6c625c01c7a6 ("media: v4l2-core: split out data copy from video_usercopy")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hi Jeff,
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index b0d670715c27..0f11fc6b5447 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -3208,12 +3208,12 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
- 			parg = mbuf;
- 		}
+This is a follow-up to the discussion in [1].  Since PR [2] has been
+merged, it's now time to change the kernel client to use the new
+'copy-from2'.  And that's what this patch does.
+
+[1] https://lore.kernel.org/lkml/20191118120935.7013-1-lhenriques@suse.com/
+[2] https://github.com/ceph/ceph/pull/31728
+
+ fs/ceph/file.c                  | 13 ++++++++++++-
+ fs/ceph/super.c                 |  1 +
+ fs/ceph/super.h                 |  3 +++
+ include/linux/ceph/osd_client.h |  1 +
+ include/linux/ceph/rados.h      |  2 ++
+ net/ceph/osd_client.c           | 18 ++++++++++++------
+ 6 files changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 11929d2bb594..1e6cdf2dfe90 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1974,6 +1974,10 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 	if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+ 		return -EOPNOTSUPP;
  
-+		err = video_get_user((void __user *)arg, parg, orig_cmd,
-+				     &always_copy);
-+		if (err)
-+			goto out;
- 	}
++	/* Do the OSDs support the 'copy-from2' operation? */
++	if (!src_fsc->have_copy_from2)
++		return -EOPNOTSUPP;
++
+ 	/*
+ 	 * Striped file layouts require that we copy partial objects, but the
+ 	 * OSD copy-from operation only supports full-object copies.  Limit
+@@ -2101,8 +2105,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+ 			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+ 			&dst_oid, &dst_oloc,
+ 			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+-			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
++			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
++			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
++			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+ 		if (err) {
++			if (err == -EOPNOTSUPP) {
++				src_fsc->have_copy_from2 = false;
++				pr_notice("OSDs don't support 'copy-from2'; "
++					  "disabling copy_file_range\n");
++			}
+ 			dout("ceph_osdc_copy_from returned %d\n", err);
+ 			if (!ret)
+ 				ret = err;
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index 29a795f975df..b62c487a53af 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -637,6 +637,7 @@ static struct ceph_fs_client *create_fs_client(struct ceph_mount_options *fsopt,
+ 	fsc->sb = NULL;
+ 	fsc->mount_state = CEPH_MOUNT_MOUNTING;
+ 	fsc->filp_gen = 1;
++	fsc->have_copy_from2 = true;
  
--	err = video_get_user((void __user *)arg, parg, orig_cmd, &always_copy);
--	if (err)
--		goto out;
--
- 	err = check_array_args(cmd, parg, &array_size, &user_ptr, &kernel_ptr);
- 	if (err < 0)
+ 	atomic_long_set(&fsc->writeback_count, 0);
+ 
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 3bf1a01cd536..b2f86bed5c2c 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -106,6 +106,9 @@ struct ceph_fs_client {
+ 	unsigned long last_auto_reconnect;
+ 	bool blacklisted;
+ 
++	/* Do the OSDs support the 'copy-from2' Op? */
++	bool have_copy_from2;
++
+ 	u32 filp_gen;
+ 	loff_t max_file_size;
+ 
+diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+index eaffbdddf89a..5a62dbd3f4c2 100644
+--- a/include/linux/ceph/osd_client.h
++++ b/include/linux/ceph/osd_client.h
+@@ -534,6 +534,7 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+ 			struct ceph_object_id *dst_oid,
+ 			struct ceph_object_locator *dst_oloc,
+ 			u32 dst_fadvise_flags,
++			u32 truncate_seq, u64 truncate_size,
+ 			u8 copy_from_flags);
+ 
+ /* watch/notify */
+diff --git a/include/linux/ceph/rados.h b/include/linux/ceph/rados.h
+index 3eb0e55665b4..59bdfd470100 100644
+--- a/include/linux/ceph/rados.h
++++ b/include/linux/ceph/rados.h
+@@ -256,6 +256,7 @@ extern const char *ceph_osd_state_name(int s);
+ 									    \
+ 	/* tiering */							    \
+ 	f(COPY_FROM,	__CEPH_OSD_OP(WR, DATA, 26),	"copy-from")	    \
++	f(COPY_FROM2,	__CEPH_OSD_OP(WR, DATA, 45),	"copy-from2")	    \
+ 	f(COPY_GET_CLASSIC, __CEPH_OSD_OP(RD, DATA, 27), "copy-get-classic") \
+ 	f(UNDIRTY,	__CEPH_OSD_OP(WR, DATA, 28),	"undirty")	    \
+ 	f(ISDIRTY,	__CEPH_OSD_OP(RD, DATA, 29),	"isdirty")	    \
+@@ -446,6 +447,7 @@ enum {
+ 	CEPH_OSD_COPY_FROM_FLAG_MAP_SNAP_CLONE = 8, /* map snap direct to
+ 						     * cloneid */
+ 	CEPH_OSD_COPY_FROM_FLAG_RWORDERED = 16,     /* order with write */
++	CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ = 32,  /* send truncate_{seq,size} */
+ };
+ 
+ enum {
+diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+index ba45b074a362..b68b376d8c2f 100644
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -402,7 +402,7 @@ static void osd_req_op_data_release(struct ceph_osd_request *osd_req,
+ 	case CEPH_OSD_OP_LIST_WATCHERS:
+ 		ceph_osd_data_release(&op->list_watchers.response_data);
+ 		break;
+-	case CEPH_OSD_OP_COPY_FROM:
++	case CEPH_OSD_OP_COPY_FROM2:
+ 		ceph_osd_data_release(&op->copy_from.osd_data);
+ 		break;
+ 	default:
+@@ -697,7 +697,7 @@ static void get_num_data_items(struct ceph_osd_request *req,
+ 		case CEPH_OSD_OP_SETXATTR:
+ 		case CEPH_OSD_OP_CMPXATTR:
+ 		case CEPH_OSD_OP_NOTIFY_ACK:
+-		case CEPH_OSD_OP_COPY_FROM:
++		case CEPH_OSD_OP_COPY_FROM2:
+ 			*num_request_data_items += 1;
+ 			break;
+ 
+@@ -1029,7 +1029,7 @@ static u32 osd_req_encode_op(struct ceph_osd_op *dst,
+ 	case CEPH_OSD_OP_CREATE:
+ 	case CEPH_OSD_OP_DELETE:
+ 		break;
+-	case CEPH_OSD_OP_COPY_FROM:
++	case CEPH_OSD_OP_COPY_FROM2:
+ 		dst->copy_from.snapid = cpu_to_le64(src->copy_from.snapid);
+ 		dst->copy_from.src_version =
+ 			cpu_to_le64(src->copy_from.src_version);
+@@ -1966,7 +1966,7 @@ static void setup_request_data(struct ceph_osd_request *req)
+ 			ceph_osdc_msg_data_add(request_msg,
+ 					       &op->notify_ack.request_data);
+ 			break;
+-		case CEPH_OSD_OP_COPY_FROM:
++		case CEPH_OSD_OP_COPY_FROM2:
+ 			ceph_osdc_msg_data_add(request_msg,
+ 					       &op->copy_from.osd_data);
+ 			break;
+@@ -5315,6 +5315,7 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
+ 				     struct ceph_object_locator *src_oloc,
+ 				     u32 src_fadvise_flags,
+ 				     u32 dst_fadvise_flags,
++				     u32 truncate_seq, u64 truncate_size,
+ 				     u8 copy_from_flags)
+ {
+ 	struct ceph_osd_req_op *op;
+@@ -5325,7 +5326,8 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
+ 	if (IS_ERR(pages))
+ 		return PTR_ERR(pages);
+ 
+-	op = _osd_req_op_init(req, 0, CEPH_OSD_OP_COPY_FROM, dst_fadvise_flags);
++	op = _osd_req_op_init(req, 0, CEPH_OSD_OP_COPY_FROM2,
++			      dst_fadvise_flags);
+ 	op->copy_from.snapid = src_snapid;
+ 	op->copy_from.src_version = src_version;
+ 	op->copy_from.flags = copy_from_flags;
+@@ -5335,6 +5337,8 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
+ 	end = p + PAGE_SIZE;
+ 	ceph_encode_string(&p, end, src_oid->name, src_oid->name_len);
+ 	encode_oloc(&p, end, src_oloc);
++	ceph_encode_32(&p, truncate_seq);
++	ceph_encode_64(&p, truncate_size);
+ 	op->indata_len = PAGE_SIZE - (end - p);
+ 
+ 	ceph_osd_data_pages_init(&op->copy_from.osd_data, pages,
+@@ -5350,6 +5354,7 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+ 			struct ceph_object_id *dst_oid,
+ 			struct ceph_object_locator *dst_oloc,
+ 			u32 dst_fadvise_flags,
++			u32 truncate_seq, u64 truncate_size,
+ 			u8 copy_from_flags)
+ {
+ 	struct ceph_osd_request *req;
+@@ -5366,7 +5371,8 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+ 
+ 	ret = osd_req_op_copy_from_init(req, src_snapid, src_version, src_oid,
+ 					src_oloc, src_fadvise_flags,
+-					dst_fadvise_flags, copy_from_flags);
++					dst_fadvise_flags, truncate_seq,
++					truncate_size, copy_from_flags);
+ 	if (ret)
  		goto out;
--- 
-2.20.0
-
+ 
