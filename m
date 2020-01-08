@@ -2,134 +2,180 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B6C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C337C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C39206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBAA206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHOLhO+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgAHKjD (ORCPT
+        id S1727865AbgAHKkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:39:03 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54866 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgAHKjD (ORCPT
+        Wed, 8 Jan 2020 05:40:35 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40445 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbgAHKke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:39:03 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AFB7F2920FA
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Fix keyboard backlight probing
-To:     Daniel Campello <campello@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Benson Leung <bleung@chromium.org>
-References: <20200107112400.1.Iedcdbae5a7ed79291b557882130e967f72168a9f@changeid>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <ab377eeb-f1bc-13c2-8bbc-ccc53ecb7c4d@collabora.com>
-Date:   Wed, 8 Jan 2020 11:38:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jan 2020 05:40:34 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so2803332wrn.7;
+        Wed, 08 Jan 2020 02:40:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=siCClIKYBSJbbyV9Fx1AWH7B6zrtxbk84GPvmjQP9HY=;
+        b=uHOLhO+V1x6pLXu/z7YfTI/wnHQzDFdVV7yVLl1IfGKQbRkCVrCICV6jG9rUypPsF9
+         EogGLFTvAc9j8fguwf7uI8r1ci5Eno7V6B31z8o6eeMIjLkNllMihdtgr6ONtTV3rLA6
+         qMI+PxRjF4lxg7C8mUT4jw4QaynGlrHAy5d7/f5ruZFpxiwtFbyLEF0XI9hO3ZSjH8ef
+         uXd5QquKbtlHMm8U+vYgedKflsRpd1zv/+W/WqlQcZz8jcF+uIF1I3L2HLz/kIjy77fw
+         +ELCoR22idD9rWtySjLDPAh859wY7yAb/wZO4WZQte2D+lie7CFagsBJrPBf732+TA87
+         Zvvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=siCClIKYBSJbbyV9Fx1AWH7B6zrtxbk84GPvmjQP9HY=;
+        b=CISM/1kjCeZGCWAiX8R9vPhSj0HF+maqWzljevAUeD9MBMtQOXwZQVbIGXsxAZDdT+
+         HAbCY6bnvglc31IzMqh+maU5zkjiDcPbA3A6oWAJZ4I2L6mee4L+uBfn42nSV9nrom3L
+         XPQekWvauTgvZyngvZXDznInXt0RQOuaoQsREB28CdQx/cF7YZjhQ4i8rCjN7FTF6rH+
+         1KpCtmMVx7DPB0sUhSr+yGEm7oDCMaqgvqUNqQb/vO3BiyJEc6esL3n7Yn4LcQeeZG5/
+         AKOR3AyjR3E0DVOS6Ua1yCdZVPNT8WnUl2B9aHkVz42faDObXF7429XvN8MjVVwStjQR
+         hcJA==
+X-Gm-Message-State: APjAAAU2hsMj/gSDOEMfNrM9jBwqj3KqK8nkrUbPvrjwp3bDIFyriiQA
+        YOAy1f6u0KIwYDJrte6/z74CqlQWHIMvplqRum46XDMB
+X-Google-Smtp-Source: APXvYqzPoDrHqZH8i5DPEVIqG+zBSIYdBoE603DpxkU4fYvZsdM0T7mXmsW5RIww8qDtkz4nKlMDh3Cmy9bUzC2jXMw=
+X-Received: by 2002:adf:f7c4:: with SMTP id a4mr3640527wrq.332.1578480032491;
+ Wed, 08 Jan 2020 02:40:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200107112400.1.Iedcdbae5a7ed79291b557882130e967f72168a9f@changeid>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191124172908.10804-1-peron.clem@gmail.com>
+In-Reply-To: <20191124172908.10804-1-peron.clem@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 8 Jan 2020 11:40:21 +0100
+Message-ID: <CAJiuCce_zg_E99EKbQa3aQ1fjziB4Ead9p6J8F0wYWk2_VcFZg@mail.gmail.com>
+Subject: Re: [PATCH v9 0/6] Add support for H6 PWM
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi Uwe, Thierry,
 
-Many thanks for sending the patch upstream.
+On Sun, 24 Nov 2019 at 18:29, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Hi,
+>
+> This is a rework of Jernej's previous work[1] taking account all the
+> previous remarks.
 
-On 7/1/20 19:24, Daniel Campello wrote:
-> The EC on the Wilco platform responds with 0xFF to commands related to
-> the keyboard backlight on the absence of a keyboard backlight module.
-> This change allows the EC driver to continue loading even if the
-> backlight module is not present.
-> 
-
-Could you explain a bit more which is the problem you're trying to solve? I am
-not sure I understand it, isn't the kbbl_exist call for that purpose? (in
-absence of the keyboard backligh module just don't init the device?)
+Is this series ok for you?
+FYI the device-tree bindings is merged in sunxi-next.
 
 Thanks,
- Enric
+Clement
 
-
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
-> 
->  .../platform/chrome/wilco_ec/keyboard_leds.c  | 28 +++++++++++++------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/wilco_ec/keyboard_leds.c b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
-> index bb0edf51dfda..5731d1b60e28 100644
-> --- a/drivers/platform/chrome/wilco_ec/keyboard_leds.c
-> +++ b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
-> @@ -73,13 +73,6 @@ static int send_kbbl_msg(struct wilco_ec_device *ec,
->  		return ret;
->  	}
-> 
-> -	if (response->status) {
-> -		dev_err(ec->dev,
-> -			"EC reported failure sending keyboard LEDs command: %d",
-> -			response->status);
-> -		return -EIO;
-> -	}
-> -
->  	return 0;
->  }
-> 
-> @@ -87,6 +80,7 @@ static int set_kbbl(struct wilco_ec_device *ec, enum led_brightness brightness)
->  {
->  	struct wilco_keyboard_leds_msg request;
->  	struct wilco_keyboard_leds_msg response;
-> +	int ret;
-> 
->  	memset(&request, 0, sizeof(request));
->  	request.command = WILCO_EC_COMMAND_KBBL;
-> @@ -94,7 +88,18 @@ static int set_kbbl(struct wilco_ec_device *ec, enum led_brightness brightness)
->  	request.mode    = WILCO_KBBL_MODE_FLAG_PWM;
->  	request.percent = brightness;
-> 
-> -	return send_kbbl_msg(ec, &request, &response);
-> +	ret = send_kbbl_msg(ec, &request, &response);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (response.status) {
-> +		dev_err(ec->dev,
-> +			"EC reported failure sending keyboard LEDs command: %d",
-> +			response.status);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
->  }
-> 
->  static int kbbl_exist(struct wilco_ec_device *ec, bool *exists)
-> @@ -140,6 +145,13 @@ static int kbbl_init(struct wilco_ec_device *ec)
->  	if (ret < 0)
->  		return ret;
-> 
-> +	if (response.status) {
-> +		dev_err(ec->dev,
-> +			"EC reported failure sending keyboard LEDs command: %d",
-> +			response.status);
-> +		return -EIO;
-> +	}
-> +
->  	if (response.mode & WILCO_KBBL_MODE_FLAG_PWM)
->  		return response.percent;
-> 
+>
+> Bindings is still strict but probe in the driver are now optionnals.
+>
+> If someone could confirm that the PWM is not broken, as my board
+> doesn't output it.
+>
+> Thanks,
+> Cl=C3=A9ment
+>
+> Jernej's cover:
+> Allwinner H6 SoC has PWM core which is basically the same as that found
+> in A20, it's just depends on additional bus clock and reset line.
+>
+> This series adds support for it and extends PWM driver functionality in
+> a way that it's now possible to bypass whole core and output PWM source
+> clock directly as a PWM signal. This functionality is needed by AC200
+> chip, which is bundled in same physical package as H6 SoC, to serve as a
+> clock source of 24 MHz. AC200 clock input pin is bonded internally to
+> the second PWM channel.
+>
+> I would be grateful if anyone can test this patch series for any kind of
+> regression on other SoCs.
+>
+> [1]: https://patchwork.kernel.org/cover/11061737/
+>
+> Changes in v9:
+>  - print error code in error message
+>  - no capital letter to keep coherency
+>
+> Changes in v8:
+>  - Display error return code
+>  - split commit
+>  - bypass is false if unsupported
+>  - return instead of goto
+>
+> Changes in v7:
+>  - Fix indent in Yaml bindings
+>
+> Changes in v6:
+>  - Update git commit log
+>  - Distinguish error message
+>
+> Changes in v5:
+>  - Move bypass calculation to pwm_calculate
+>  - Split mod_clock fallback from bus_clk probe
+>  - Update comment
+>  - Move my SoB after acked-by/reviewed-by
+>
+> Changes in v4:
+>  - item description in correct order and add a blank line
+>  - use %pe for printing PTR_ERR
+>  - don't print error when it's an EPROBE_DEFER
+>  - change output clock bypass formula to match PWM policy
+>
+> Changes in v3:
+>  - Documentation update to allow one clock without name
+>  - Change reset optional to shared
+>  - If reset probe failed return an error
+>  - Remove old clock probe
+>  - Update bypass enabled formula
+>
+> Changes in v2:
+>  - Remove allOf in Documentation
+>  - Add H6 example in Documentation
+>  - Change clock name from "pwm" to "mod"
+>  - Change reset quirk to optional probe
+>  - Change bus_clock quirk to optional probe
+>  - Add limitation comment about mod_clk_output
+>  - Add quirk for mod_clk_output
+>  - Change bypass formula
+>
+> Cl=C3=A9ment P=C3=A9ron (2):
+>   pwm: sun4i: Prefer "mod" clock to unnamed
+>   pwm: sun4i: Always calculate params when applying new parameters
+>
+> Jernej Skrabec (4):
+>   pwm: sun4i: Add an optional probe for reset line
+>   pwm: sun4i: Add an optional probe for bus clock
+>   pwm: sun4i: Add support to output source clock directly
+>   pwm: sun4i: Add support for H6 PWM
+>
+>  drivers/pwm/pwm-sun4i.c | 187 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 156 insertions(+), 31 deletions(-)
+>
 > --
-> 2.24.1.735.g03f4e72817-goog
-> 
+> 2.20.1
+>
