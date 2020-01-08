@@ -2,116 +2,146 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40912C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80562070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1833F20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="fTMbiHxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAHQIs (ORCPT
+        id S1729324AbgAHQJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:08:48 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2238 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726401AbgAHQIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:08:48 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 666C22DAEBDC859A7839;
-        Wed,  8 Jan 2020 16:08:46 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 8 Jan 2020 16:08:46 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 8 Jan 2020
- 16:08:45 +0000
-Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
- device_links_purge()
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     luojiaxing <luojiaxing@huawei.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
- <20200108122658.GA2365903@kroah.com>
- <73252c08-ac46-5d0d-23ec-16c209bd9b9a@huawei.com>
- <1578498695.3260.5.camel@linux.ibm.com> <20200108155700.GA2459586@kroah.com>
- <1578499287.3260.7.camel@linux.ibm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
-Date:   Wed, 8 Jan 2020 16:08:44 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 8 Jan 2020 11:09:40 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:49271 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726922AbgAHQJj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:09:39 -0500
+Received: from [192.168.2.10] ([62.249.185.68])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id pDtjiXEm4pLtbpDtmiHdt5; Wed, 08 Jan 2020 17:09:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578499775; bh=kmsCylMQnvNLljjtH/5R6Qd+4IWFqilvWA3W0idMQLA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=fTMbiHxB2zt4MZxGlsWVKDEqwXrLP8SZBRCUGfA9Jpe4MA0p0Qvap7o0A7x/DejNn
+         cjYXCYUzfs2TKzFqemb9CrkLroMmWjmbP033MuWFNVCzDVlRgpn0My0/f9LWUwzN6i
+         R4gM9jw+nwd+DcT9FExDM5POEFKAu2IwFRPREezB9//v8D+AQjqe/+o/dH0GgyWAxM
+         VJOcrb4X6R4PrkXFuvFw6Xi3E/rjX+epyGNOWw3nMEWRP/Z8XOKGas0ppH21UIqcAV
+         M/33YPRt3n97/V00gygIvTsnS99tQK+UTGi2jiGhd+MbtOpXuVkHzcKt43V5fO9XnT
+         Qe/4rE1R383Qg==
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+Date:   Wed, 8 Jan 2020 17:09:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1578499287.3260.7.camel@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-CMAE-Envelope: MS4wfLZOPd7nEc6mtz3KkR3z8WAv5nebYzc6GaZPifyqG8SDLEYK+/cZcgiZj1m8Mp2HsvqxYBIh6PDz+ME2Wm31Ob0+/Pt4jCULg9nqdbDtyOWlZf89Flgn
+ wHJe3KHP6oEFsyqoJIbiDfk0lalpJahBN8ZGTAkXJVFW60qQlMiSEownruBt7/WJfQo1IeRwuNhNBCm19ldTcQd7+7s3tdPLrX5hWj2+4ZC3wmsoDHyoZnGp
+ WVpp9IxdbqmtNOapjPTnkroI6ks6CCIwe/vRR7AA+7HRZeiwXLjeDYuKiqh7bev+uPkKIUOZ4tPWyqTao9RYreTkiRBLt4UQNbq1sRxU2lwyzvsQglv3Gwix
+ IusukogpwVb+GvIeGMTxwXMsg1mEdoOrGYYmsfRtV29mS+SYlHgVFDrwRt0Yl+CzJV/gZtby
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 16:01, James Bottomley wrote:
->>>> 	cdev->dev = NULL;
->>>> 			return device_add(&cdev->cdev);
->>>> 		}
->>>> 	}
->>>> 	return -ENODEV;
->>>> }
->>> The design of the code is simply to remove the link to the inserted
->>> device which has been removed.
->>>
->>> I*think*  this means the calls to device_del and device_add are
->>> unnecessary and should go.  enclosure_remove_links and the put of
->>> the
->>> enclosed device should be sufficient.
->> That would make more sense than trying to "reuse" the device
->> structure
->> here by tearing it down and adding it back.
-> OK, let's try that.  This should be the patch if someone can try it
-> (I've compile tested it, but the enclosure system is under a heap of
-> stuff in the garage).
-
-I can test it now.
-
-But it is a bit suspicious that we had the device_del() and device_add() 
-at all, especially since the code change makes it look a bit more like 
-pre-43d8eb9cfd0 ("ses: add support for enclosure component hot removal")
-
-John
-
+On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+> This event indicate that the source color bit-depth is changed
+> during run-time. The client must get the new format and re-allocate
+> buffers for it. This can usually happens with video decoder (encoders)
+> when the bit-stream color bit-depth is changed from 8 to 10bits
+> or vice versa.
 > 
-> James
-> 
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
+>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>  include/uapi/linux/videodev2.h                  | 1 +
+>  3 files changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
-> index 6d27ccfe0680..3c2d405bc79b 100644
-> --- a/drivers/misc/enclosure.c
-> +++ b/drivers/misc/enclosure.c
-> @@ -406,10 +406,9 @@ int enclosure_remove_device(struct enclosure_device *edev, struct device *dev)
->   		cdev = &edev->component[i];
->   		if (cdev->dev == dev) {
->   			enclosure_remove_links(cdev);
-> -			device_del(&cdev->cdev);
->   			put_device(dev);
->   			cdev->dev = NULL;
-> -			return device_add(&cdev->cdev);
-> +			return 0;
->   		}
->   	}
->   	return -ENODEV;
+> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> index 42659a3d1705..fad853d440cf 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> @@ -402,7 +402,13 @@ call.
+>  	that many Video Capture devices are not able to recover from a temporary
+>  	loss of signal and so restarting streaming I/O is required in order for
+>  	the hardware to synchronize to the video signal.
+> -
+> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+> +      - 0x0002
+> +      - This event gets triggered when color bit-depth change is detected
+> +	from a video decoder. Applications will have to query the new pixel
+> +	format and re-negotiate the queue. In most cases the streaming must be
+> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+
+I think this is too specific for decoders. Something similar to the
+CH_RESOLUTION description would be more appropriate:
+
+      - This event gets triggered when a color bit-depth change (but not a
+	resolution change!) is detected	at an input. This can come from an
+	input connector or from a video decoder. Applications will have to query
+	the new pixel format and re-negotiate the queue.
+
+	For stateful decoders follow the guidelines in :ref:`decoder`.
+	Video capture devices will in most cases have to stop and restart
+	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
+	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+
+And update dev-decoder.rst where needed with this new event flag.
+
+As to your question on irc: once I've acked this patch it can be merged
+via a venus PR.
+
+Regards,
+
+	Hans
+
+>  
+>  Return Value
+>  ============
+> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+> index cb6ccf91776e..209709114378 100644
+> --- a/Documentation/media/videodev2.h.rst.exceptions
+> +++ b/Documentation/media/videodev2.h.rst.exceptions
+> @@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
+>  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>  
+>  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+> +replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+>  
+>  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>  
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 5f9357dcb060..1d349c9d57a7 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -2332,6 +2332,7 @@ struct v4l2_event_frame_sync {
+>  };
+>  
+>  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+> +#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
+>  
+>  struct v4l2_event_src_change {
+>  	__u32 changes;
+> 
 
