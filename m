@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D222C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54076C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5572070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFAB2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgAHTtp (ORCPT
+        id S1729400AbgAHTts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43452 "EHLO
+        Wed, 8 Jan 2020 14:49:48 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43426 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730405AbgAHTqB (ORCPT
+        by vger.kernel.org with ESMTP id S1730400AbgAHTqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:01 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-0006nm-Eq; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHC-0006o5-56; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dkp-1Q; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dle-Fx; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        linux-crypto@vger.kernel.org, "Eric Biggers" <ebiggers@google.com>
-Date:   Wed, 08 Jan 2020 19:43:03 +0000
-Message-ID: <lsq.1578512578.955748574@decadent.org.uk>
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Konstantin Khlebnikov" <khlebnikov@yandex-team.ru>,
+        "Vasily Averin" <vvs@virtuozzo.com>
+Date:   Wed, 08 Jan 2020 19:43:13 +0000
+Message-ID: <lsq.1578512578.674062023@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 05/63] crypto: cts - fix crash on short inputs
+Subject: [PATCH 3.16 15/63] mm/rmap: replace BUG_ON(anon_vma->degree) with
+ VM_WARN_ON
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,50 +59,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-In the CTS template, when the input length is <= one block cipher block
-(e.g. <= 16 bytes for AES) pass the correct length to the underlying CBC
-transform rather than one block.  This matches the upstream behavior and
-makes the encryption/decryption operation correctly return -EINVAL when
-1 <= nbytes < bsize or succeed when nbytes == 0, rather than crashing.
+commit e4c5800a3991f0c6a766983535dfc10d51802cf6 upstream.
 
-This was fixed upstream incidentally by a large refactoring,
-commit 0605c41cc53c ("crypto: cts - Convert to skcipher").  But
-syzkaller easily trips over this when running on older kernels, as it's
-easily reachable via AF_ALG.  Therefore, this patch makes the minimal
-fix for older kernels.
+This check effectively catches anon vma hierarchy inconsistence and some
+vma corruptions.  It was effective for catching corner cases in anon vma
+reusing logic.  For now this code seems stable so check could be hidden
+under CONFIG_DEBUG_VM and replaced with WARN because it's not so fatal.
 
-Cc: linux-crypto@vger.kernel.org
-Fixes: 76cb9521795a ("[CRYPTO] cts: Add CTS mode required for Kerberos AES support")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Suggested-by: Vasily Averin <vvs@virtuozzo.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/cts.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/rmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/cts.c
-+++ b/crypto/cts.c
-@@ -137,8 +137,8 @@ static int crypto_cts_encrypt(struct blk
- 	lcldesc.info = desc->info;
- 	lcldesc.flags = desc->flags;
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -403,7 +403,7 @@ void unlink_anon_vmas(struct vm_area_str
+ 	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+ 		struct anon_vma *anon_vma = avc->anon_vma;
  
--	if (tot_blocks == 1) {
--		err = crypto_blkcipher_encrypt_iv(&lcldesc, dst, src, bsize);
-+	if (tot_blocks <= 1) {
-+		err = crypto_blkcipher_encrypt_iv(&lcldesc, dst, src, nbytes);
- 	} else if (nbytes <= bsize * 2) {
- 		err = cts_cbc_encrypt(ctx, desc, dst, src, 0, nbytes);
- 	} else {
-@@ -232,8 +232,8 @@ static int crypto_cts_decrypt(struct blk
- 	lcldesc.info = desc->info;
- 	lcldesc.flags = desc->flags;
+-		BUG_ON(anon_vma->degree);
++		VM_WARN_ON(anon_vma->degree);
+ 		put_anon_vma(anon_vma);
  
--	if (tot_blocks == 1) {
--		err = crypto_blkcipher_decrypt_iv(&lcldesc, dst, src, bsize);
-+	if (tot_blocks <= 1) {
-+		err = crypto_blkcipher_decrypt_iv(&lcldesc, dst, src, nbytes);
- 	} else if (nbytes <= bsize * 2) {
- 		err = cts_cbc_decrypt(ctx, desc, dst, src, 0, nbytes);
- 	} else {
+ 		list_del(&avc->same_vma);
 
