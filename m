@@ -2,139 +2,202 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9252AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B9820720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6919B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="Lo/Mml0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgAHTbq (ORCPT
+        id S1729984AbgAHTdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:31:46 -0500
-Received: from namei.org ([65.99.196.166]:56288 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbgAHTbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:31:46 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 008JVZsW030992;
-        Wed, 8 Jan 2020 19:31:35 GMT
-Date:   Thu, 9 Jan 2020 06:31:35 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Huaisheng Ye <yehs2007@zoho.com>
-cc:     Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>, efremov@ispras.ru,
-        Paul Moore <paul@paul-moore.com>, omosnace@redhat.com,
-        David Howells <dhowells@redhat.com>, joel@joelfernandes.org,
-        tyu1@lenovo.com, linux-kernel@vger.kernel.org,
-        Huaisheng Ye <yehs1@lenovo.com>,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] LSM: Delete hooks in reverse order for avoiding race
-In-Reply-To: <20200108083430.57412-1-yehs2007@zoho.com>
-Message-ID: <alpine.LRH.2.21.2001090631130.30428@namei.org>
-References: <20200108083430.57412-1-yehs2007@zoho.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 8 Jan 2020 14:33:17 -0500
+Received: from USFB19PA31.eemsg.mail.mil ([214.24.26.194]:44079 "EHLO
+        USFB19PA31.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbgAHTdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 14:33:17 -0500
+X-EEMSG-check-017: 42325420|USFB19PA31_ESA_OUT01.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.69,411,1571702400"; 
+   d="scan'208";a="42325420"
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by USFB19PA31.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 08 Jan 2020 19:33:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1578511994; x=1610047994;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5vtn4nl+vULDkbXvwPAZaK8U99nfGQpZnPOpY7Pr5FE=;
+  b=Lo/Mml0zbhap+ALWEBhBX0jACG3dHFljtomSc1NRgvxLKAfyhnoAHtGG
+   YX1+GbXp22dQtKkTPpqExnDCFHoPsFGwvxS+Kj7JIqQ1kkS3ejO1LiaZ/
+   3qNpJ/mBWyC09srGZl/0k+cR2OamaiFgE56pLwguUsRyrDPo5Pst8H9A1
+   USjObGuQznVcRgSdGPhL8oXcJ4+XpvbMExVXzFk7DnproffGBZNT2UIkx
+   iocupJ432cclvV/bzYwBUJoGpQgrFVSIm1gvNwvmSNIDyw6hdT7RdVVv9
+   3OuBvcvYJkzdjttpzCaNmuEF36LMWei3FZ1rtE3QQw+rVSsOBiUpySnZ0
+   g==;
+X-IronPort-AV: E=Sophos;i="5.69,411,1571702400"; 
+   d="scan'208";a="37510737"
+IronPort-PHdr: =?us-ascii?q?9a23=3ABvES1RU5jmv5HPC14ZHaSC+3pb7V8LGtZVwlr6?=
+ =?us-ascii?q?E/grcLSJyIuqrYZhGEvadThVPEFb/W9+hDw7KP9fy5AipavMbK6SpZOLV3FD?=
+ =?us-ascii?q?Y9wf0MmAIhBMPXQWbaF9XNKxIAIcJZSVV+9Gu6O0UGUOz3ZlnVv2HgpWVKQk?=
+ =?us-ascii?q?a3OgV6PPn6FZDPhMqrye+y54fTYwJVjzahfL9+Nhq7oRjfu8UMn4dvKqU8xh?=
+ =?us-ascii?q?TUrndWdeld2H9lK0+Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElRrFGDzooLn?=
+ =?us-ascii?q?446tTzuRbMUQWA6H0cUn4LkhVTGAjK8Av6XpbqvSTksOd2xTSXMtf3TbAwXj?=
+ =?us-ascii?q?Si8rtrRRr1gyoJKzI17GfagdFrgalFvByuuQBww4/MYIGUKvV+eL/dfcgHTm?=
+ =?us-ascii?q?ZFR8pdSjBNDp+5Y4YJAeUBJ+JYpJTjqVUIoxW1GA2gCPrvxzJMg3P727Ax3e?=
+ =?us-ascii?q?Y8HgHcxAEuAswAsHrUotv2OqkdX++6w6vUwjvMdP5WxTXw5ZLUfhw9r/yBX7?=
+ =?us-ascii?q?R9etfRx0k1EAPFi02dp5H5PzyLzuQNs3aU7+x9Xuyyjm4osQVxojyxycYsl4?=
+ =?us-ascii?q?LEgZkVxU3f9Shi3IY0JcG3SE58YdK+FptQrDuVO5F5QsMlXWFloSA3waAFt5?=
+ =?us-ascii?q?6jZCUG1ZsqyhHFZ/GHboSE+AzvWemPLTtimX5ofq+0iQyo/ki60OL8U9G50F?=
+ =?us-ascii?q?NNriVYjNbBrmsN1xnP6sifTft941uh1S6P1w/N7uFEJlg5lbbBJJ47w74wi4?=
+ =?us-ascii?q?ETvV7CHi/wlkX2i7SWeVs49eSy9+TmYqnppp+bN4NujAHxLr8uldClDeQ9Mw?=
+ =?us-ascii?q?gOW3CX+eW61LL94U30WKhGg/I5n6XDsJ3WON4XqrC2DgNLyIov9g6zDzK839?=
+ =?us-ascii?q?QZmXkHIkhFeBWCj4XxIFHBPev4AOyjg1WsjDhrx/fGMqfnApXWNHfPirjhfb?=
+ =?us-ascii?q?Fj60JE0go80chf545ICrEGOP/zWErxtNvCDh8jMgy02P3qCNNn2YMbR22PA7?=
+ =?us-ascii?q?WVMKTIsV+H/ugvOfWDZJcJuDbhLPgo//3ugmEnll8GYaap2pwXaHOjE/t6I0?=
+ =?us-ascii?q?WZe33sgtIAEWcXuwoyVuvqiEeNUTRLfXa9Q7o85i0nCIKhFYrDRZitgKeA3C?=
+ =?us-ascii?q?e9EZ1WZntLBUyMEXfycIWEXvYMaD+XIsN7lTwET7ehQZc71R6yrA/616ZnLu?=
+ =?us-ascii?q?3M9yIEr53jz8Z65u3ImBEp6TN0D96S03yDT2FwgGwIXSY607xlrkBn1liD1q?=
+ =?us-ascii?q?14ieRCFdNP//NJThs6NZnEwux+CtDyXB/Bf9iQRFalXNqmGzcxQcw1w9IVfU?=
+ =?us-ascii?q?Z9FMutjgrZ0yqpHbAVjbqLC4Iw8q7G2HjxPcl9wW7c1KY9l1kmXtdPNWq+i6?=
+ =?us-ascii?q?Fk7wjTCZXEk1uWl6m0b6QQxi3N+3mZzWqIok5YVBR8UaLfXXAQfkHWt8j25l?=
+ =?us-ascii?q?veT7+yDrQqKg9Byc+EKqtXZdzllE5GS+n/N9TDeWKxmnuwBBaRyrOJa4rlZn?=
+ =?us-ascii?q?gd3CHDB0UfjQAT8miJNRIkCieivW3eFjpuGkzrY0/29ul+sny7RFcuzw6Wd0?=
+ =?us-ascii?q?1hy6a1+hkNiPOGUPMTwqkJuCQ/pDVuGlaywdbWB8CHpwp7c6VWeck970tf1W?=
+ =?us-ascii?q?LFqwx9OYStIL14iV4YcgR4oUfu2g52CoVHnsglsmklzBBpJqKf31JNbTWY0o?=
+ =?us-ascii?q?7sOrfPMGn94Aiva7LK2lHZyNuW5qcP6PsipFX5ugGpF1Qt/m573NlVyXuc4Z?=
+ =?us-ascii?q?DKDAsPUZL0SEo38AJ6p77CaCkn+4zUzWFsMbWzsjLa3tIpBPEqyhK8cNdFN6?=
+ =?us-ascii?q?OFGhT/E8IdB8ipJ+wqn0amYggYM+BV8a4+J9mmeOee2K63IOZgmyqrjXxF4I?=
+ =?us-ascii?q?BhyU+M+C18SunH35YB3f6UxBeIVzD5jF25qMD4hZhEZS0OHmq40SXrH5RRab?=
+ =?us-ascii?q?N0fYkWE2iuJde7ychki57iQX5X6lGjB1wd1c+mfBqddV393QlK2UsLpnynnD?=
+ =?us-ascii?q?OyzyZonDExsqqfwCvOzvzgdBUdPG5LQmligEzjIYiziNAaU0yoYBYzmBS54k?=
+ =?us-ascii?q?b6wrBRpL5jIGnLXUdIYy/2InlnUquyubqPY8pC5YgnsSVQV+S8blSaRaDnrx?=
+ =?us-ascii?q?QG1CPjGnNUxConeDGyppX5gxt6hXqBI3ZztnrZeNpwxQve5NPGQ/5cxSEJRD?=
+ =?us-ascii?q?NihjnKAFizIcOp8c+Vl5fEquq+TX6uVoVPcSn3yoONrC675Wx2DhCkgv+zm9?=
+ =?us-ascii?q?LnEQk50S/8ytZmTyPIowjgYoPzzaS1LfpnflV0BF/788d6AJ9xkpUui5ELxX?=
+ =?us-ascii?q?gXnYma/XodkWf0NNVb2L/+bH8XST4M2d7V7xDv2Fd/IXKR24L5SnKdz9NjZ9?=
+ =?us-ascii?q?agfmwW2Sc94NpMCKiP97FLgSt1okC/rQLUYPh9gzIdxeEp6H4AjOEDoBAtwT?=
+ =?us-ascii?q?mFArAOAUlYOjThlxeS4NCwtqpXZX2icbar20Zkgd+hC7SCqBlGWHnlYpciAT?=
+ =?us-ascii?q?Nw7sJnPVLX133z7I7keN3RbdIOrRKUiQ3Pj/ZUKJI3mfoHniRnNnnnsXI5zO?=
+ =?us-ascii?q?47iARk3Yums4ifN2Vt4KW5DwZYNz31fMMe4T/tgr1EksmK2ICvG41rGi8XU5?=
+ =?us-ascii?q?vwUfKoDDUSuOz8NwmQCj08pWmUFKHfHQCF7Edmq3LOE5axO36LI3kZyM1oRA?=
+ =?us-ascii?q?OBK0xHnAAUQDI6k4Y8Fg+2xMzubkd56SoK6VL/sRtD0OdoNwLiUmfZqwelcT?=
+ =?us-ascii?q?Q0R4aFLBpQ8A5C413ZMcuE7uJ8BytY5IGurBSRKmyHYARFFXwGVVaaB1/9O7?=
+ =?us-ascii?q?mj/sTP/PKGBuWgKvvOZbKOqeJCV/uSw5KgzJdm9S6WNsqTJnliE+E72k1bUH?=
+ =?us-ascii?q?B2AcTWhToPSy8Xly/Wa86bpRG8+jB4r8Cx9/TrRQTv6paVBLtOMNVv/Ba2jb?=
+ =?us-ascii?q?2EN+6KiyZzMSxY2Y8UxX/U1Lgf20YfiydvdzaxFrQAsTTCTLnKlq9ZEREbcT?=
+ =?us-ascii?q?lzO9VT4qI53wlCJdTbitTp2b54j/41E01JWkDmmsGsfcYKOX2yNEvbBEaXM7?=
+ =?us-ascii?q?SLPSbLzNz5Ya6nRr1Qi+JUtxK0uTmFCUPsIjODlzzxXRC1Le5MlD2bPABZuI?=
+ =?us-ascii?q?ylaxZtFHbsTNT6ah26Nt97lzg2wboyhnPMK2EcLSNxc0VTob2M9yNYhfN/G2?=
+ =?us-ascii?q?tE7nV7N+WLhyGZ7+zAIJYMrfRrGjh0l/5d4Hki0bta8SdES+ZulSvctdFiuU?=
+ =?us-ascii?q?2pku6KyjB/ShpBti5LhJ6XvUVlIajZ9J5AVmjf8RMD92qQDQkFq8FjCtLxp6?=
+ =?us-ascii?q?Bc0N7PlaPrIjdY793U5dccB9TTKM+fKHouKwfpGDrPAQsdVzGrKGXfi1VYkP?=
+ =?us-ascii?q?GV8X2VtIY1poLwl5oJT78IHGAyQ9ETD0l+VPkFOo12RXtwk7ucltQJ/lK4pR?=
+ =?us-ascii?q?zcRYNdpJ+RBdyIBvC6EyqUlblJYVMzxLr8KYkCftng11dKdkhxnIOMHVHZG9?=
+ =?us-ascii?q?9KvHsyPUcPvExR/S0mHSUI0EX/Z1bouSJCGA=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2DxAwAQLRZe/wHyM5BmHQEBAQkBEQUFAYF8gX2BbSASh?=
+ =?us-ascii?q?DOJA4ZeAQEBAQEBBoESJYlukUgJAQEBAQEBAQEBNwEBhEACgg44EwIQAQEBB?=
+ =?us-ascii?q?AEBAQEBBQMBAWyFCwgwgjspAYJ6AQUjFUEQCw4KAgImAgJXBg0IAQGCXz+CU?=
+ =?us-ascii?q?yWsMIEyhU+DP4E9gQ4ojDN5gQeBEScMA4JdPodZgl4EkAmHFUaXQ4JAgkWTV?=
+ =?us-ascii?q?wYbmmKrTiKBWCsIAhgIIQ+DKE8YDYEUmmIjA5ErAQE?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 08 Jan 2020 19:33:10 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 008JWT9g122499;
+        Wed, 8 Jan 2020 14:32:29 -0500
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+To:     James Morris <jmorris@namei.org>
+Cc:     Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        Paul Moore <paul@paul-moore.com>
+References: <20191220154208.15895-1-kpsingh@chromium.org>
+ <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
+ <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
+ <201912301112.A1A63A4@keescook>
+ <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001090551000.27794@namei.org>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
+Date:   Wed, 8 Jan 2020 14:33:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <alpine.LRH.2.21.2001090551000.27794@namei.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please cc the LSM list with LSM related patches.
+On 1/8/20 1:58 PM, James Morris wrote:
+> On Wed, 8 Jan 2020, Stephen Smalley wrote:
+> 
+>> This appears to impose a very different standard to this eBPF-based LSM than
+>> has been applied to the existing LSMs, e.g. we are required to preserve
+>> SELinux policy compatibility all the way back to Linux 2.6.0 such that new
+>> kernel with old policy does not break userspace.  If that standard isn't being
+>> applied to the eBPF-based LSM, it seems to inhibit its use in major Linux
+>> distros, since otherwise users will in fact start experiencing breakage on the
+>> first such incompatible change.  Not arguing for or against, just trying to
+>> make sure I understand correctly...
+> 
+> A different standard would be applied here vs. a standard LSM like
+> SELinux, which are retrofitted access control systems.
+> 
+> I see KRSI as being more of a debugging / analytical API, rather than an
+> access control system. You could of course build such a system with KRSI
+> but it would need to provide a layer of abstraction for general purpose
+> users.
+> 
+> So yes this would be a special case, as its real value is in being a
+> special case, i.e. dynamic security telemetry.
 
+The cover letter subject line and the Kconfig help text refer to it as a 
+BPF-based "MAC and Audit policy".  It has an enforce config option that 
+enables the bpf programs to deny access, providing access control. IIRC, 
+in the earlier discussion threads, the BPF maintainers suggested that 
+Smack and other LSMs could be entirely re-implemented via it in the 
+future, and that such an implementation would be more optimal.
 
-On Wed, 8 Jan 2020, Huaisheng Ye wrote:
-
-> From: Huaisheng Ye <yehs1@lenovo.com>
-> 
-> There is small possibility as race condition when selinux_disable
-> has been triggered. security_delete_hooks deletes all selinux hooks
-> from security_hook_heads, but there are some selinux functions which
-> are being called at the same time.
-> 
-> Here is a panic accident scene from 4.18 based kernel,
-> 
-> [   26.654494] SELinux:  Disabled at runtime.
-> [   26.654507] BUG: unable to handle kernel NULL pointer dereference
-> at 0000000000000020
-> [   26.654508] PGD 0 P4D 0
-> [   26.654510] Oops: 0002 [#1] SMP NOPTI
-> [   26.654512] CPU: 53 PID: 2614 Comm: systemd-cgroups Tainted: G
->      OE    --------- -  - 4.18.0-80.el8.x86_64 #1
-> [   26.654512] Hardware name: Lenovo ThinkSystem SR850P
->  -[7D2H]-/-[7D2H]-, BIOS -[TEE145P-1.10]- 12/06/2019
-> [   26.654519] RIP: 0010:selinux_socket_post_create+0x80/0x390
-> [   26.654520] Code: e9 95 6a 89 00 bd 16 00 00 00 c7 44 24 04 01
->  00 00 00 45 85 c0 0f 85 f6 00 00 00 8b 56 14 85 d2 0f 84 26 01 00
->  00 89 54 24 04 <66> 41 89 6c 24 20 31 c0 41 89 54 24 1c 41 c6 44
->  24 22 01 49 8b 4d
-> [   26.654521] RSP: 0018:ffffbf515cc63e48 EFLAGS: 00010246
-> [   26.654522] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000019
-> [   26.654522] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffffffab46f680
-> [   26.654523] RBP: 0000000000000019 R08: 0000000000000000 R09: ffffbf515cc63e4c
-> [   26.654523] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> [   26.654524] R13: ffff97d7bb6cbc80 R14: 0000000000000001 R15: ffff97d7bb6cbc80
-> [   26.654525] FS:  00007f5c608ea380(0000) GS:ffff97d7bf140000(0000) knlGS:0000000000000000
-> [   26.654525] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   26.654526] CR2: 0000000000000020 CR3: 0000011ebc934004 CR4: 00000000007606e0
-> [   26.654527] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   26.654528] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   26.654528] PKRU: 55555554
-> [   26.654528] Call Trace:
-> [   26.654535]  security_socket_post_create+0x42/0x60
-> [   26.654537] SELinux:  Unregistering netfilter hooks
-> [   26.654542]  __sock_create+0x106/0x1a0
-> [   26.654545]  __sys_socket+0x57/0xe0
-> [   26.654547]  __x64_sys_socket+0x16/0x20
-> [   26.654551]  do_syscall_64+0x5b/0x1b0
-> [   26.654554]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-> 
-> The root cause is that, selinux_inode_alloc_security has been deleted
-> firstly from security_hook_heads, so security_inode_alloc directly 
-> return 0, that means the value of pointer inode->i_security equalling
-> to NULL.
-> 
-> But selinux_socket_post_create hasn't been deleted at that moment, so
-> which would involked by mistake. Inside the function, pointer isec
-> needs to point to inode->i_security, then a NULL pointer defect happens.
-> 
-> For current upstream kernel, because of commit
-> afb1cbe37440c7f38b9cf46fc331cc9dfd5cce21
-> the inode security has been moved out to LSM infrastructure from
-> individual security modules like selinux.
-> 
-> But this patch still can be applied for solving similar issue when
-> security_delete_hooks has been used. Also for stable branch v4.19,
-> the inode security still need to be created in individual modules.
-> 
-> The patch has been verified by Lenovo SR850P server through overnight
-> reboot cycles.
-> 
-> Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
-> ---
->  include/linux/lsm_hooks.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> index 20d8cf1..57cb2ac 100644
-> --- a/include/linux/lsm_hooks.h
-> +++ b/include/linux/lsm_hooks.h
-> @@ -2164,7 +2164,7 @@ static inline void security_delete_hooks(struct security_hook_list *hooks,
->  	int i;
->  
->  	for (i = 0; i < count; i++)
-> -		hlist_del_rcu(&hooks[i].list);
-> +		hlist_del_rcu(&hooks[count - 1 - i].list);
->  }
->  #endif /* CONFIG_SECURITY_SELINUX_DISABLE */
->  
-> 
-
--- 
-James Morris
-<jmorris@namei.org>
-
+Again, not arguing for or against, but wondering if people fully 
+understand the implications.  If it ends up being useful, people will 
+build access control systems with it, and it directly exposes a lot of 
+kernel internals to userspace.  There was a lot of concern originally 
+about the LSM hook interface becoming a stable ABI and/or about it being 
+misused.  Exposing that interface along with every kernel data structure 
+exposed through it to userspace seems like a major leap.  Even if the 
+mainline kernel doesn't worry about any kind of stable interface 
+guarantees for it, the distros might be forced to provide some kABI 
+guarantees for it to appease ISVs and users...
