@@ -2,148 +2,143 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D86C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC0BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E471720720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E506206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aV98CB9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgAHFok (ORCPT
+        id S1726186AbgAHFsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:44:40 -0500
-Received: from mga04.intel.com ([192.55.52.120]:47785 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgAHFok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:44:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 21:44:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
-   d="scan'208";a="215851240"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2020 21:44:37 -0800
-Received: from [10.226.38.20] (unknown [10.226.38.20])
-        by linux.intel.com (Postfix) with ESMTP id 2523058033E;
-        Tue,  7 Jan 2020 21:44:34 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <e89cf037-217b-cd61-79ee-a11e2a118c01@ti.com>
- <66b9f427-83c2-f56c-3d38-fa955429118d@linux.intel.com>
- <9b95a30f-6d2d-2202-248a-24186d5ddb2a@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <8b0816ba-f74f-6ed7-7a85-679031104568@linux.intel.com>
-Date:   Wed, 8 Jan 2020 13:44:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 8 Jan 2020 00:48:04 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16367 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgAHFsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 00:48:04 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e156d010004>; Tue, 07 Jan 2020 21:47:46 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 21:48:03 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 21:48:03 -0800
+Received: from [10.2.162.131] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 05:48:01 +0000
+Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
+ audio mclk
+To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
+        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
+ <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
+Date:   Tue, 7 Jan 2020 21:48:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <9b95a30f-6d2d-2202-248a-24186d5ddb2a@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578462466; bh=GQANHx+miKT/xFnjFw8SvljwDPz/I599x2UEzMokWfU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=aV98CB9QC8JyG8GXOwpMrLT8QNkMj+OOzED8H0aLx8mhQ/t5Pu0P3tTV3m9Y7dMK9
+         rc2TJY1XEY1p7bryNhFFUPUuZctVQD3Sl0U4YIxfKqqxnS7Mzil7c9j0TeRwbUdc6l
+         eSlt1xo2llXnImNXhMu909wTqeDrAndEVyKVg5iNF9a349q2nD9A/OzRzLpX1CcabZ
+         BTFLofk0Lkc0fYOuX90fm5hQzvfquwO1t9w4vjDx26I5jK7dy0CH8uG2cHqCCytxGN
+         rW7yqReLPD7SST6+PpEvs1qwbeD9J9vLfHDZRkoWcIF/MWOusKNRGnN05jA+w1oaly
+         tcYMJ/hLYqx/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 8/1/2020 1:14 PM, Vignesh Raghavendra wrote:
+On 1/7/20 9:34 PM, Sameer Pujar wrote:
 >
-> On 06/01/20 4:49 pm, Ramuthevar, Vadivel MuruganX wrote:
->> Hi,
+> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
+>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+>> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+>> clock ids.
 >>
->> Thank you for the review comments.
+>> New device tree uses clk_out_1 from pmc clock provider.
 >>
->> On 6/1/2020 6:40 PM, Vignesh Raghavendra wrote:
->>> Hi,
->>>
->>> On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
->>> [...]
->>>> +static u32 cqspi_cmd2addr(const unsigned char *addr_buf, u32
->>>> addr_width)
->>>> +{
->>>> +    unsigned int addr = 0;
->>>> +    int i;
->>>> +
->>>> +    /* Invalid address return zero. */
->>>> +    if (addr_width > 4)
->>>> +        return 0;
->>>> +
->>>> +    for (i = 0; i < addr_width; i++) {
->>>> +        addr = addr << 8;
->>>> +        addr |= addr_buf[i];
->>>> +    }
->>>> +
->>>> +    return addr;
->>>> +}
->>>> +
->>> [...]
->>>> +static int cqspi_apb_read_setup(struct struct_cqspi *cqspi,
->>>> +                const struct spi_mem_op *op,
->>>> +                const u8 *addrbuf)
->>>> +{
->>>> +    void __iomem *reg_base = cqspi->iobase;
->>>> +    size_t addrlen = op->addr.nbytes;
->>>> +    size_t dummy_bytes = op->dummy.nbytes;
->>>> +    unsigned int addr_value, dummy_clk, reg;
->>>> +
->>>> +    if (addrlen) {
->>>> +        addr_value = cqspi_cmd2addr(&addrbuf[0], addrlen);
->>>> +        writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
->>>> +    }
->>>> +
->>> Why do you need to swap the address bytes to SPI bus order?
->> Yes , you are right to align with spi bus order swap is done .
->>>    You are
->>> writing to a controller register that accepts 24 bit or 32 bit address.
->> 32bit address.
-> There is no need to swap the address bytes. The current driver
-> (drivers/mtd/spi-nor/cadence-quadspi.c) does not swap the address to SPI
-> bus order, why does the new driver required to do so?
-Thanks! for clarification, actually we are not swapping , just 
-Converting address buffer into word format (MSB first).
->>>> +    reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
->>>> +    reg |= (op->data.buswidth & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
->>>> +        CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
->>>> +
->>> This is wrong... op->data.buswidth's range is 1 to 8 whereas
->>> CQSPI_REG_RD_INSTR_TYPE range is 0 to 3. I wonder whether you tested
->>> dual/quad mode with this driver?
->> Yes I have tested with Quad mode since Cadence-IP supports dual/quad on
->> my platform, used to validate
->> before sending the patch that's  standard procedure here.
->> please let me know if you have any further queries.
+>> So, this patch adds implementation for mclk fallback to extern1 when
+>> retrieving mclk returns -ENOENT to be backward compatible of new device
+>> tree with older kernels.
 >>
-> Then I have no idea how it works on your platform..
-while testing on my platform I have hardcoded to 4 instead of 8, for me 
-it is working fine.
-should be handled properly for OCTAL mode once your changes are ready
-
->   What you are
-> programming above overflows the assigned bit fields for bus width, right?
-yes, overflow should be handled
-once started working on your platform with your changes, I will squash 
-and send it back.
-Thanks for your time.
-
-Regards
-Vadivel
+>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 >> ---
->> Best Regards
->> Vadivel
->>> I am still unable to get this series to work on my platform. Will
->>> continue to debug...
->>>
+>> =C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>> =C2=A0 1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c=20
+>> b/sound/soc/tegra/tegra_asoc_utils.c
+>> index 9cfebef74870..9a5f81039491 100644
+>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct=20
+>> tegra_asoc_utils_data *data,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_clk_get(dev, "mc=
+lk");
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1)) {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->dev=
+, "Can't retrieve clk cdev1\n");
+>
+> This error print can be moved inside below if, when this actually=20
+> meant to be an error condition.
+>
+Want to show error even if mclk retrieval returns ENOENT to clearly=20
+indicate mclk does not exist along with message of falling back to extern1.
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(data->clk_cde=
+v1);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PTR_ERR(data->clk_cdev1)=
+ !=3D -ENOENT)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
+rn PTR_ERR(data->clk_cdev1);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Fall back to extern1 */
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_clk=
+_get(dev, "extern1");
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1))=
+ {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_=
+err(data->dev, "Can't retrieve clk extern1\n");
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
+rn PTR_ERR(data->clk_cdev1);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->dev, "Falling =
+back to extern1\n");
+>
+> This can be a info print?
+
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
