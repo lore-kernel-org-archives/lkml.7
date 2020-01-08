@@ -2,159 +2,123 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A561C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7195CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A6E20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4833E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DXG1ZtsI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fASnDFOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgAHTEx (ORCPT
+        id S1729808AbgAHTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:04:53 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36765 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728846AbgAHTEw (ORCPT
+        Wed, 8 Jan 2020 14:06:44 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31657 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727328AbgAHTGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:04:52 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so1495757plm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WuNXLxL+1sMtBQwv2K4eumVoHhxOxma8tmqoVufR3Bo=;
-        b=DXG1ZtsIcjDxidZu/VinHygy2TnOOMWJCkW68fgKSoLzbNQuosPVTfeFICr2WeZO/o
-         jEz4NM8gdLtyyjADFqAgi02ttsRMWhyxHSbz5o4LuO+7Qy+BKExbX7qFidFEVzrX+vZK
-         KCmZzBTJoCG6A7mi/a10GpnVfSa38TbwRFAE5dP+gHSQ8rrsUTznxoim7ZKKbcFH5jgf
-         EpOSKff4YTs5tRjobJ+zZoXvlf/3o0g9v6X+GCj1MkzoIb8HMcjcLlj7XGqVNh8GXcsC
-         LANolYpfTQ6cB62xGw/ttyTOV93kTgQ0xpDe0xCWHoFl4YEWonrWZ0wIMwCzLzJBXHUe
-         FtpQ==
+        Wed, 8 Jan 2020 14:06:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578510403;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aIsPQkefvKbs8Mx+H3weFs4lkNWqI+3u39gZ7NmRyAU=;
+        b=fASnDFOvoAQWhp7H3x73gwkjx9V2BNhd2MxoGJXql0B3v77/7akBJe/LCqxMtj0s5IDxi0
+        Xghi2CDDxVUyyC8KLet/p0ik57DeKAXQ2JoTxOs3urbxclhprq5mcj0hyiv1M8dtoRVY9V
+        ZNfz9ejmxwUI5CiIjdivp+5xxJ3gy3U=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-Yxg9cIQSM4a7XNlezvjO8g-1; Wed, 08 Jan 2020 14:06:41 -0500
+X-MC-Unique: Yxg9cIQSM4a7XNlezvjO8g-1
+Received: by mail-qt1-f197.google.com with SMTP id b7so2617183qtg.23
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:06:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WuNXLxL+1sMtBQwv2K4eumVoHhxOxma8tmqoVufR3Bo=;
-        b=oN6MfNn8KXlGRDD+Z+QcIsW1j3AEz0kGazhl/AIy6yT5ZVtlQfDc2sLXo0n6VA8hIJ
-         +GtHoyxRy74M3H2rzp63guP50pIJwzN2Ee85+FhmfEimRquZDE75PkkWQvkiyafHP5lQ
-         l6rFS/S9VuzNH18ZP2gIvHim7guan2vSDFgkfYE4ebGPkMm7fsqc3If5pW265NI9C4xt
-         PSI+txF1FAyd+EfdvxaafVO2SzAFb0tn1+GnJys7xlPA3xuylSNtoWwKXkYHZRTNUnkB
-         0SDOs9ytTMHN6W/p2uyeC+dfdk+lnNW2Zjf5bNj3Z80qSZUjBpdtubi10GeA+rC/48/U
-         bcpA==
-X-Gm-Message-State: APjAAAVSZMq8VZjVshTKuFOaXttkS0SnuJAYllnFpdZRsGHSL1ZWv6A6
-        4PtiaqQJPEumoT+Tw9058KezYw==
-X-Google-Smtp-Source: APXvYqzdDG6/dcVOe88U3YPEnVAhW9Km4txL2BJeQX8JE8h8UKIkAzsn0ducTYHl8ZhNVbgcVE0nwg==
-X-Received: by 2002:a17:902:b701:: with SMTP id d1mr5876172pls.280.1578510291991;
-        Wed, 08 Jan 2020 11:04:51 -0800 (PST)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u127sm4731367pfc.95.2020.01.08.11.04.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aIsPQkefvKbs8Mx+H3weFs4lkNWqI+3u39gZ7NmRyAU=;
+        b=YDqzQjkEHv/LC9c/xl1nirTFTe+sgRUBmvgp45HREjCAMPIyYzCT9bln0h1ZZPp2v3
+         RFz2u36qhHcNonC0lq4c6+bVERxn/W3aXGOUzNMXlV33IsBkaaRkOJocb/ckoymQp1mr
+         MkNegiNkMa1LTai9ueKqo5CwCSzACuBEkM2ibuuzYUj6lfB59Wmh/+X7rjqpIb91xuE4
+         HgQRlJ7sKOl5woOXe3VrGrxqAgHdbPs/po4hpM8TDvD3JarTUncd8kQl/HWeHqlsYrew
+         xXxpbBR+/F+5sunVohO+c7lljVH7SuHxa7JRoPE7fiDKnWW/C2YGOxWCtPoArOMClajU
+         Bfiw==
+X-Gm-Message-State: APjAAAVd//EKCUey05Lp9xgYWKDD0Z9OCQop2wtcMNV3Xybsth/5fMSo
+        7ejn3r01lNVUI03ZE3ehdjq1lhbYErGm4DAt05voFQcJfNdrsGmtWUTYiJWI+Eh7+U7V3zK/62z
+        GqFmCcBJLPKAiX5C0SN7rNvuU
+X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr4971749qta.196.1578510401495;
+        Wed, 08 Jan 2020 11:06:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzQzt09Rs7mLLYG5FgB+AsfdPFCtd6ICoe8Ea8YxVYAtfHSxrWhnYkBa0bOXlLt5LtDkKxP0g==
+X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr4971717qta.196.1578510401266;
+        Wed, 08 Jan 2020 11:06:41 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id 65sm2020756qtf.95.2020.01.08.11.06.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 11:04:51 -0800 (PST)
-Date:   Wed, 8 Jan 2020 11:04:48 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
-Message-ID: <20200108190448.GI1214176@minitux>
-References: <20200108013847.899170-1-robdclark@gmail.com>
- <20200108013847.899170-2-robdclark@gmail.com>
- <20200108184850.GA13260@jcrouse1-lnx.qualcomm.com>
+        Wed, 08 Jan 2020 11:06:40 -0800 (PST)
+Date:   Wed, 8 Jan 2020 14:06:39 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+Subject: Re: [PATCH RESEND v2 08/17] KVM: X86: Implement ring-based dirty
+ memory tracking
+Message-ID: <20200108190639.GE7096@xz-x1>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-9-peterx@redhat.com>
+ <20200108155210.GA7096@xz-x1>
+ <9f7582b1-cfba-d096-2216-c5b06edc6ca9@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200108184850.GA13260@jcrouse1-lnx.qualcomm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <9f7582b1-cfba-d096-2216-c5b06edc6ca9@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 08 Jan 10:48 PST 2020, Jordan Crouse wrote:
-
-> On Tue, Jan 07, 2020 at 05:38:42PM -0800, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
+On Wed, Jan 08, 2020 at 06:41:06PM +0100, Paolo Bonzini wrote:
+> On 08/01/20 16:52, Peter Xu wrote:
+> > here, which is still a bit tricky to makeup the kvmgt issue.
 > > 
-> > Since zap firmware can be device specific, allow for a firmware-name
-> > property in the zap node to specify which firmware to load, similarly to
-> > the scheme used for dsp/wifi/etc.
+> > Now we still have the waitqueue but it'll only be used for
+> > no-vcpu-context dirtyings, so:
 > > 
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
-> >  1 file changed, 29 insertions(+), 3 deletions(-)
+> > - For no-vcpu-context: thread could wait in the waitqueue if it makes
+> >   vcpu0's ring soft-full (note, previously it was hard-full, so here
+> >   we make it easier to wait so we make sure )
 > > 
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > index 112e8b8a261e..aa8737bd58db 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> >  {
-> >  	struct device *dev = &gpu->pdev->dev;
-> >  	const struct firmware *fw;
-> > +	const char *signed_fwname = NULL;
-> >  	struct device_node *np, *mem_np;
-> >  	struct resource r;
-> >  	phys_addr_t mem_phys;
-> > @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> >  
-> >  	mem_phys = r.start;
-> >  
-> > -	/* Request the MDT file for the firmware */
-> > -	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > +	/*
-> > +	 * Check for a firmware-name property.  This is the new scheme
-> > +	 * to handle firmware that may be signed with device specific
-> > +	 * keys, allowing us to have a different zap fw path for different
-> > +	 * devices.
-> > +	 *
-> > +	 * If the firmware-name property is found, we bypass the
-> > +	 * adreno_request_fw() mechanism, because we don't need to handle
-> > +	 * the /lib/firmware/qcom/* vs /lib/firmware/* case.
-> > +	 *
-> > +	 * If the firmware-name property is not found, for backwards
-> > +	 * compatibility we fall back to the fwname from the gpulist
-> > +	 * table.
-> > +	 */
-> > +	of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
-> > +	if (signed_fwname) {
-> > +		fwname = signed_fwname;
-> > +		ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
-> > +		if (ret) {
-> > +			DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
-> > +			fw = ERR_PTR(ret);
-> > +		}
-> > +	} else {
-> > +		/* Request the MDT file for the firmware */
-> > +		fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > +	}
-> > +
+> > - For with-vcpu-context: we should never wait, guaranteed by the fact
+> >   that KVM_RUN will return now if soft-full for that vcpu ring, and
+> >   above waitqueue will make sure even vcpu0's waitqueue won't be
+> >   filled up by kvmgt
+> > 
+> > Again this is still a workaround for kvmgt and I think it should not
+> > be needed after the refactoring.  It's just a way to not depend on
+> > that work so this should work even with current kvmgt.
 > 
-> Since DT seems to be the trend for target specific firmware names I think we
-> should plan to quickly deprecate the legacy name and not require new targets to
-> set it. If a zap node is going to be opt in then it isn't onerous to ask
-> the developer to set the additional property for each target platform.
-> 
+> The kvmgt patches were posted, you could just include them in your next
+> series and clean everything up.  You can get them at
+> https://patchwork.kernel.org/cover/11316219/.
 
-For the zap specifically I agree that it would be nice to require this
-property, but for non-zap firmware it seems reasonable to continue with
-the existing scheme.
+Good to know!
 
-Regards,
-Bjorn
+Maybe I'll simply drop all the redundants in the dirty ring series
+assuming it's there?  Since these patchsets should not overlap with
+each other (so looks more like an ordering constraints for merging).
+
+Thanks,
+
+-- 
+Peter Xu
+
