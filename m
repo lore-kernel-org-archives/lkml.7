@@ -2,93 +2,97 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3858C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D0C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DE120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C22E20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="lgY7QYci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgAHQH5 (ORCPT
+        id S1728821AbgAHQIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:07:57 -0500
-Received: from mga11.intel.com ([192.55.52.93]:65235 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbgAHQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:07:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:07:55 -0800
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="211581775"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:07:52 -0800
-Message-ID: <783a534b37500c36a0255b5a7615b667a89b5b76.camel@linux.intel.com>
-Subject: Re: [PATCH v16 7/9] mm: Rotate free list so reported pages are
- moved to the tail of the list
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Wed, 08 Jan 2020 08:07:52 -0800
-In-Reply-To: <1ee73115-b5b7-9de8-08b0-528035111ea8@redhat.com>
-References: <20200103210509.29237.18426.stgit@localhost.localdomain>
-         <20200103211657.29237.50194.stgit@localhost.localdomain>
-         <1ee73115-b5b7-9de8-08b0-528035111ea8@redhat.com>
+        Wed, 8 Jan 2020 11:08:34 -0500
+Received: from www413.your-server.de ([88.198.28.140]:59188 "EHLO
+        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAHQIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:08:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
+        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iMgpRwMfBTA/wg1V1yYv/ptKkHdbwk4G6gGbVx8IaEQ=; b=lgY7QYcicyoKwvccg83IZQro0
+        0cResX5TJ+zvSIpLlLQDFaZF2/s8crlziDLa9UCb79Wo0iA+5QxfM4z5XRTmg3g4n5H+lVAFrSgZj
+        hULgkB/qa5xtNPoCCeiIC8EWWw2G0H2wVMXZCb3Igvu20TWgiaC0FsbfKTrtGpWj+EWHOG+oFr3rK
+        EbVEVokH/sT2XBGNxUG26c8bpcGw89Ema7TtlHzGoG6sZK9KhEogvk412Iwu8lDMVygkugjpMd5va
+        atSePYPRa/H/tDRUmpPyfO7p8MhV7yjSL5w4rmoO10ezG/P0N8AjxUM57OseHrcutrOQBZmnUYKSL
+        /dNK9O48A==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1ipDsk-00028w-O8; Wed, 08 Jan 2020 17:08:30 +0100
+Received: from [24.134.37.229] (helo=192-168-0-109.rdsnet.ro)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1ipDsk-0002Bk-C4; Wed, 08 Jan 2020 17:08:30 +0100
+Message-ID: <5e98e9666bfeb275ec168df24bb8e9a33781229e.camel@cyberus-technology.de>
+Subject: Re: [PATCH 2/3] drm/i915/gvt: make gvt oblivious of kvmgt data
+ structures
+From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        intel-gvt-dev@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, hang.yuan@intel.com,
+        dri-devel@lists.freedesktop.org, zhiyuan.lv@intel.com
+Date:   Wed, 08 Jan 2020 18:08:28 +0200
+In-Reply-To: <87tv56qm9m.fsf@intel.com>
+References: <20200106140622.14393-1-julian.stecklina@cyberus-technology.de>
+         <20200106140622.14393-2-julian.stecklina@cyberus-technology.de>
+         <87tv56qm9m.fsf@intel.com>
+Organization: Cyberus Technology GmbH
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25688/Wed Jan  8 10:56:24 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-08 at 14:38 +0100, David Hildenbrand wrote:
-> On 03.01.20 22:16, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > Rather than walking over the same pages again and again to get to the pages
-> > that have yet to be reported we can save ourselves a significant amount of
-> > time by simply rotating the list so that when we have a full list of
-> > reported pages the head of the list is pointing to the next non-reported
-> > page. Doing this should save us some significant time when processing each
-> > free list.
-> > 
-> > This doesn't gain us much in the standard case as all of the non-reported
-> > pages should be near the top of the list already. However in the case of
-> > page shuffling this results in a noticeable improvement. Below are the
-> > will-it-scale page_fault1 w/ THP numbers for 16 tasks with and without
-> > this patch.
-> > 
-> > Without:
-> > tasks   processes       processes_idle  threads         threads_idle
-> > 16      8093776.25      0.17            5393242.00      38.20
-> > 
-> > With:
-> > tasks   processes       processes_idle  threads         threads_idle
-> > 16      8283274.75      0.17            5594261.00      38.15
-> > 
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  mm/page_reporting.c |   30 ++++++++++++++++++++++--------
-> >  1 file changed, 22 insertions(+), 8 deletions(-)
+On Wed, 2020-01-08 at 12:24 +0200, Jani Nikula wrote:
+> On Mon, 06 Jan 2020, Julian Stecklina <julian.stecklina@cyberus-technology.de>
+> wrote:
+[...]
+> > +	/* Hypervisor-specific device state. */
+> > +	void *vdev;
 > 
-> Just a minor comment while scanning over the patches (will do more
-> review soon), you might want to switch to "mm/page_reporting: " styled
-> subjects for these optimizations.
+> I have no clue about the relative merits of the patch, but you can use
+> the actual type for the pointer with a forward declaration. You don't
+> need the definition for that.
 > 
+> i.e.
+> 
+> struct kvmgt_vdev;
+> ...
+> 	struct kvmgt_vdev *vdev;
 
-Okay, I will update if needed for the next version.
+The goal here is to make the GVT code independent of the hypervisor backend.
+Different hypervisor backends need to keep different per-device state, so using
+the KVM type here defeats the purpose.
+
+I assume this is not only useful for us, but also for other hypervisor backends,
+such as Xen or 3rd-party hypervisors.
+
+Julian
+
 
