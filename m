@@ -2,289 +2,96 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7170DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76011C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7D22075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C852073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7F+JP7x"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IJCtyY21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgAHKxy (ORCPT
+        id S1727987AbgAHK4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:53:54 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54362 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbgAHKxy (ORCPT
+        Wed, 8 Jan 2020 05:56:12 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:20252 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726290AbgAHK4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:53:54 -0500
-Received: by mail-pj1-f67.google.com with SMTP id kx11so900036pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 02:53:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=STBEgNuy8lz4/AudmUx23rJGibKwthfZkRpgmM09tVY=;
-        b=N7F+JP7xjleGQ/DQfzVh5ePkXJfOFfZ8Tmy/Xw72Q9FhVazYEDHntSiDCWlPJB8RxS
-         0lk8a+qDnU6Gyp+QaHkkZIZzkzr6P3VPx7KyWg2N57X3PGaO3sBHwTmb/HL2p9e94c1j
-         Vv7o4N2VgTJqVLrB9aj4VrSy7ZDBRHdeY498mvo87IuMD2PWU8w3rgkgqA+o3nPavY7i
-         hB8b2+pBFHxRm5SEyuRL28W6LpgJM00Y6VuN0NdGuvVFv55jewgZo98ssUF0mNUHFHbb
-         y+5F6NQkOSJBkhXedVhKrXZe9mSu4jmv9agrSt+98MsSNierS7yeUyrPaObx0V/mBF3Y
-         bSNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=STBEgNuy8lz4/AudmUx23rJGibKwthfZkRpgmM09tVY=;
-        b=OI+GYIvukgJyAH4KpMd4PeKqZQRuLkBB4OBBPTCA3BylsFeqj3Xm/Ok4TdIynQJW4w
-         g5Vcm3ACBGScfZaneNZUNl9EH19BZIDEvh1yN3lullRX9n9GMN/vMDsQbN8h2DNnKu/a
-         RFj8uYVEj0JxrQnETqdd4b3TohBcjUY/NIrLkHhXudHRsZ20tQ/xBB6HgUfZBQMjGlR/
-         fb+LhnmoCati10v+CZNejV1q2WNNzHl3F+2yhgQ9fi2NTNnkY4Ut96R72kE00BHbrQQi
-         pYgXHisRbcUTxtUaGbaDiEOycgPhRie2uXAHNttie5y/xEhiuddGb5up9TSgFOyv433P
-         nZ2g==
-X-Gm-Message-State: APjAAAU3dNPSZS48nXvbrsh+JgG5CDkDgzzgTHQQqii5LKINTs4UoCVJ
-        2A2yZ0JfXXLZAykHTYPc9+L71g==
-X-Google-Smtp-Source: APXvYqxdLix7z72IgP1QZiKqUQ5IkOZZmcUIJTTtf6yKOTcTtQA3PGO+nkAVHgeUEhV7QYAwk0iRIg==
-X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr4477491plt.26.1578480833114;
-        Wed, 08 Jan 2020 02:53:53 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id x11sm2962961pfn.53.2020.01.08.02.53.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 02:53:52 -0800 (PST)
-Date:   Wed, 8 Jan 2020 16:23:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
-Message-ID: <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-3-saravanak@google.com>
+        Wed, 8 Jan 2020 05:56:12 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008AlxkM021687;
+        Wed, 8 Jan 2020 11:56:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=HQegFaRorBiqJXYyjb8evLS2x249g1aHtLlFii1jNgI=;
+ b=IJCtyY21s8a/RpoICoEMu6WYJkGhHaXkYRjScYJ0S872dRdKHzJRjOcCSuFxlurtEgSK
+ i31g/ngnQwC5tayjfzehfq1p//ovmvRq+R0MDfk6YPrEtCGDPHbur6tjdu4DeTMbxOhR
+ snBaJD+oMpKYJoM4JCDY4yfNATWQcQpNqu+dn2Q9NvWPPCbehcNCSR8p0Xhu7nlnnrcv
+ FjTaddL2cUk9DF9CUn3AuuzXIgjFTSoCaHqKXLQDSixHgtvUF3/ZOGu76MqObjrGv7WT
+ 4ICQQJX+SZbA6G1AF+vOkUGW6ZY8a4J1D9gCWxBMiBd0+3uDv/KUGYd7RVZRf2YASwjQ dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakuqudyy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jan 2020 11:56:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1BA2710002A;
+        Wed,  8 Jan 2020 11:56:01 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0B4D72AC7BA;
+        Wed,  8 Jan 2020 11:56:01 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan 2020 11:56:00
+ +0100
+From:   <patrice.chotard@st.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <patrice.chotard@st.com>
+Subject: ARM: dts: stih410-b2260: Remove deprecated snps PHY properties
+Date:   Wed, 8 Jan 2020 11:54:50 +0100
+Message-ID: <20200108105450.31435-1-patrice.chotard@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207002424.201796-3-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_03:2020-01-08,2020-01-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-12-19, 16:24, Saravana Kannan wrote:
-> Not all devices quantify their performance points in terms of frequency.
-> Devices like interconnects quantify their performance points in terms of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> add support for parsing bandwidth OPPs from DT.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/core.c | 15 +++++++++--
->  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
->  drivers/opp/opp.h  |  5 ++++
->  3 files changed, 62 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index be7a7d332332..c79bbfac7289 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1282,11 +1282,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
->  	return true;
->  }
->  
-> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> +{
-> +	if (opp1->rate != opp2->rate)
-> +		return opp1->rate < opp2->rate ? -1 : 1;
-> +	if (opp1->peak_bw != opp2->peak_bw)
-> +		return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Please also add level here.
+Remove "snps,phy-bus-name", "snps,phy-bus-id" and "snps,phy-addr"
+properties which are deprecated.
 
-> +	return 0;
-> +}
-> +
->  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
->  			     struct opp_table *opp_table,
->  			     struct list_head **head)
->  {
->  	struct dev_pm_opp *opp;
-> +	int opp_cmp;
->  
->  	/*
->  	 * Insert new OPP in order of increasing frequency and discard if
-> @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
->  	 * loop.
->  	 */
->  	list_for_each_entry(opp, &opp_table->opp_list, node) {
-> -		if (new_opp->rate > opp->rate) {
-> +		opp_cmp = opp_compare_key(new_opp, opp);
-> +		if (opp_cmp > 0) {
->  			*head = &opp->node;
->  			continue;
->  		}
->  
-> -		if (new_opp->rate < opp->rate)
-> +		if (opp_cmp < 0)
->  			return 0;
->  
->  		/* Duplicate OPPs */
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 1cbb58240b80..b565da5a2b1f 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
-> +			 bool *rate_not_available)
-> +{
-> +	int ret;
-> +	u64 rate;
-> +	u32 bw;
-> +
-> +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	if (!ret) {
-> +		/*
-> +		 * Rate is defined as an unsigned long in clk API, and so
-> +		 * casting explicitly to its type. Must be fixed once rate is 64
-> +		 * bit guaranteed in clk API.
-> +		 */
-> +		new_opp->rate = (unsigned long)rate;
-> +		goto out;
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> +	if (!ret) {
-> +		new_opp->peak_bw = bw;
-> +
-> +		if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
-> +			new_opp->avg_bw = bw;
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stih410-b2260.dts | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Maybe
-		of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
-
-and same for opp-peak-kbps as well.
-
-> +	}
-> +
-> +out:
-> +	*rate_not_available = !!ret;
-> +	/*
-> +	 * If ret is 0 at this point, we have already found a key. If we
-> +	 * haven't found a key yet, then ret already has an error value. In
-> +	 * either case, we don't need to update ret.
-> +	 */
-> +	of_property_read_u32(np, "opp-level", &new_opp->level);
-
-Yes, it wasn't done earlier but we should do it now. Check level as
-well and treat it as any other key.
-
-I think add a preparatory patch first which does all the cleanup
-before bandwidth thing is added.
-
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
->   * @opp_table:	OPP table
-> @@ -558,26 +596,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (!new_opp)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> -	if (ret < 0) {
-> -		/* "opp-hz" is optional for devices like power domains. */
-> -		if (!opp_table->is_genpd) {
-> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> -			goto free_opp;
-> -		}
-> -
-> -		rate_not_available = true;
-> -	} else {
-> -		/*
-> -		 * Rate is defined as an unsigned long in clk API, and so
-> -		 * casting explicitly to its type. Must be fixed once rate is 64
-> -		 * bit guaranteed in clk API.
-> -		 */
-> -		new_opp->rate = (unsigned long)rate;
-> +	ret = _read_opp_key(new_opp, np, &rate_not_available);
-> +	if (ret) {
-> +		dev_err(dev, "%s: opp key field not found\n", __func__);
-> +		goto free_opp;
->  	}
->  
-> -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> -
->  	/* Check if the OPP supports hardware's hierarchy of versions or not */
->  	if (!_opp_is_supported(dev, opp_table, np)) {
->  		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> @@ -616,7 +640,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (of_property_read_bool(np, "opp-suspend")) {
->  		if (opp_table->suspend_opp) {
->  			/* Pick the OPP with higher rate as suspend OPP */
-> -			if (new_opp->rate > opp_table->suspend_opp->rate) {
-> +			if (opp_compare_key(new_opp,
-> +					    opp_table->suspend_opp) > 1) {
-
-Maybe leave this place as is as we never want to compare anything else
-but rate.
-
->  				opp_table->suspend_opp->suspend = false;
->  				new_opp->suspend = true;
->  				opp_table->suspend_opp = new_opp;
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 01a500e2c40a..0def3154d07b 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -57,6 +57,8 @@ extern struct list_head opp_tables;
->   * @suspend:	true if suspend OPP
->   * @pstate: Device's power domain's performance state.
->   * @rate:	Frequency in hertz
-> + * @peak_bw:	Peak bandwidth in kilobytes per second
-> + * @avg_bw:	Average bandwidth in kilobytes per second
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-> @@ -78,6 +80,8 @@ struct dev_pm_opp {
->  	bool suspend;
->  	unsigned int pstate;
->  	unsigned long rate;
-> +	unsigned int peak_bw;
-> +	unsigned int avg_bw;
->  	unsigned int level;
->  
->  	struct dev_pm_opp_supply *supplies;
-> @@ -213,6 +217,7 @@ struct opp_device *_add_opp_dev(const struct device *dev, struct opp_table *opp_
->  void _dev_pm_opp_find_and_remove_table(struct device *dev);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
->  void _opp_free(struct dev_pm_opp *opp);
-> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2);
-
-make it _opp_compare_key() instead.
-
->  int _opp_add(struct device *dev, struct dev_pm_opp *new_opp, struct opp_table *opp_table, bool rate_not_available);
->  int _opp_add_v1(struct opp_table *opp_table, struct device *dev, unsigned long freq, long u_volt, bool dynamic);
->  void _dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask, int last_cpu);
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
-
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index 4fbd8e9eb5b7..e2bb59783146 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -178,9 +178,6 @@
+ 			phy-mode = "rgmii";
+ 			pinctrl-0 = <&pinctrl_rgmii1 &pinctrl_rgmii1_mdio_1>;
+ 
+-			snps,phy-bus-name = "stmmac";
+-			snps,phy-bus-id = <0>;
+-			snps,phy-addr = <0>;
+ 			snps,reset-gpio = <&pio0 7 0>;
+ 			snps,reset-active-low;
+ 			snps,reset-delays-us = <0 10000 1000000>;
 -- 
-viresh
+2.17.1
+
