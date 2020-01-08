@@ -2,120 +2,101 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91FBC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A101BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6367920643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578492742;
-	bh=nXRbCIvWFni5/kkEcOEpwe39xSL34pDogwAjsOuipRg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qQ0tkbukMCKGehwy+bMFZxgqzfF9+0p/fIvob5T2e/lBlIOtXIgqp1dTsL6uaCmzd
-	 2LluYfKvIfmwctHGkzVfT84W3wWDmiLGm+kmuQr9vxQFRHwdFaJKyrDlcqT5l1TcGL
-	 aCfQ9YKN6KAolhOKtSWQlpv552aJWQY1JtDr0ikg=
+	by mail.kernel.org (Postfix) with ESMTP id 76EDD20643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wz+DWmer"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgAHOMV (ORCPT
+        id S1728806AbgAHONB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:12:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgAHOMV (ORCPT
+        Wed, 8 Jan 2020 09:13:01 -0500
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:32861 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgAHONB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:12:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fr9fRlz5jxrgjkeY4j9Bve4Yqtw4Ip+E2iegvsEk9jk=; b=PBzy4YDRvknqyOdLQyAz3OMtm
-        VKkkh+lcwJHiQz+AfDbo+JFL3kwsaJHo0GP4eQ8xuTmZMbnDEP1UIVlsYdY9sYN3rs+1rf0xxZbiZ
-        uX3ZrF1B8p/4OBrNzTU8JIOyEnxcyNQP+IfxRWacyHfRad6gde1Zo/Gpf56CeHm/wldNEzh8Hmso0
-        XfCRsmv1Lov+rld2P3P20MUTPD68Xk90QyZS3/2/tyX9XLhmtQHR77JFpnkYnsibTNaOFMihoeAqR
-        zQ51DvLE3lb5zfsz3bVNcIcFgF2uu/bE/q82ktdyTec8YZnpCyVysC1o0iBO3Wtj9V4iO+U8ERZq8
-        3wHU2WqDw==;
-Received: from 177.206.132.169.dynamic.adsl.gvt.net.br ([177.206.132.169] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipC4B-0002T4-CD; Wed, 08 Jan 2020 14:12:12 +0000
-Date:   Wed, 8 Jan 2020 15:11:57 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, paul.kocialkowski@bootlin.com,
-        hverkuil@xs4all.nl, gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] media: uapi: hevc: Add scaling matrix control
-Message-ID: <20200108151157.17cf9774@kernel.org>
-In-Reply-To: <20191213160428.54303-2-jernej.skrabec@siol.net>
-References: <20191213160428.54303-1-jernej.skrabec@siol.net>
-        <20191213160428.54303-2-jernej.skrabec@siol.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 8 Jan 2020 09:13:01 -0500
+Received: by mail-pg1-f173.google.com with SMTP id 6so1666178pgk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:12:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JOI5BG860h0vH7yTQCyBsKUAeChUvKx+rCYmS5SLzkw=;
+        b=Wz+DWmer/jGrH1ORaA/pti5FLZBhYiqAK4WhKgaqvtUdUv2uLo//D1fV3Oyi2aL1a5
+         2XBX+pUT01YDPfDSzhR5a27RYecvnf5OW7f8hFXXDvMEJd3vv62gi/0UCsANnd6vMWD/
+         aWkhvhafdi/SOJjyEPFjebG39px2lwEtmwP55tRyPASRjOSb2N1MYfwfk97XHBJiaCle
+         cX30ziwPyHf/50MR7leB0pDfYbyF8DkRL1zYIsqiplPcwl+STftfjXblGvuewwW1djXu
+         oEVbkghL0c+Il5f+4O1XUK57kEKl5w6L7HXxfBfe/Si9nYJ+XAJpXYNDzZRv96iQK9as
+         SSyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JOI5BG860h0vH7yTQCyBsKUAeChUvKx+rCYmS5SLzkw=;
+        b=r6o/h8mfALYBTgRblItEou83VIdZ6O+8cTIcBrsregrL5FLeOGZMG19hHSQId6BEA1
+         Y+qxEPgfa7vQiiZUqwWxz+jDvI2rMsli+56zEZmbI++KOzE3pfPid9U+bzwju3MqYCAc
+         4UULZdK1mW3RfnHVHgbYXHyhub/HdTyCUGiMCoFgTYPgouYbCAH9Rt+3rGQPHG9hoDpf
+         kxXoBSINVFeJ6hJRo8Qtis4TOHMf6Z97caqTsCd34uP7wytP+x+JmFCwHASxf3AJGZmv
+         PZqlRmEAq5CtlHOxQv8+OLp9D/MO8NQqT95nFNRWV/+ijdKfvyBKHnWWP98iP/w3HDM/
+         i9fQ==
+X-Gm-Message-State: APjAAAVumb5GaeaZJ7vMYSNU/TbXVL81JXkmoneuZbgqLxnUsqGX576y
+        p40gb4CeoRYZq6RDfdTjtig/rnj/QhtjnzLS7bswMQ==
+X-Google-Smtp-Source: APXvYqxXYnISGYqhh65OlFyk1T5mmTwmrC7gpU1waoraE1dS7SopJkNW+C8vOA5O2JPuqb/lVeKX/DfbN3Cf5AUXb6A=
+X-Received: by 2002:aa7:961b:: with SMTP id q27mr5233188pfg.23.1578492779096;
+ Wed, 08 Jan 2020 06:12:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAFd5g47-wi0duBAVxvevDKT7eb7WGT9JMFoKgCJQQSa0P0h9Jw@mail.gmail.com>
+ <20200107134910.20347-1-sjpark@amazon.com>
+In-Reply-To: <20200107134910.20347-1-sjpark@amazon.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 8 Jan 2020 06:12:47 -0800
+Message-ID: <CAFd5g45Bo=7QXw8tX6MvFHwU6sCdX8UrjMk5erbByjPvujBw1g@mail.gmail.com>
+Subject: Re: Re: Re: What is the best way to compare an unsigned and a constant?
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sj38.park@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 13 Dec 2019 17:04:25 +0100
-Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
+On Tue, Jan 7, 2020 at 5:49 AM SeongJae Park <sjpark@amazon.com> wrote:
+>
+> On   Tue, 7 Jan 2020 05:35:21 -0800   Brendan Higgins <brendanhiggins@google.com> wrote:
+>
+> > Sorry for the delay, I was on vacation. (I still am, but I was too ;-).)
+>
+> Happy new year, Brendan :)
 
-> HEVC has a scaling matrix concept. Add support for it.
+Happy New Year!
 
-> +struct v4l2_ctrl_hevc_scaling_matrix {
-> +	__u8	scaling_list_4x4[6][16];
-> +	__u8	scaling_list_8x8[6][64];
-> +	__u8	scaling_list_16x16[6][64];
-> +	__u8	scaling_list_32x32[2][64];
-> +	__u8	scaling_list_dc_coef_16x16[6];
-> +	__u8	scaling_list_dc_coef_32x32[2];
-> +};
+> >
+> > On Tue, Jan 7, 2020 at 3:52 AM SeongJae Park <sjpark@amazon.com> wrote:
+> > >
+> > > On   Fri, 27 Dec 2019 13:52:27 +0100   Bernd Petrovitsch <bernd@petrovits=
+> > ch.priv.at> wrote:
 
-I never looked at HEVC spec, but the above seems really weird.
+[...]
 
-Please correct me if I am wrong, but each of the above matrixes
-is independent, and the driver will use just one of the above on
-any specific time (for a given video output node), right?
+> Oh, right...  Removing the non-sense casting fixed the problem.  Thanks,
+> Brendan!
 
-If so, why would userspace be forced to update lots of matrixes, if would
-likely use just one at a given time?
+No worries, I do that kind of stuff all the time :-)
 
-IMO, the proper way would be, instead, to use an uAPI like:
+Does that fix everything? It looks like there was an encoding issue
+with your last email, so I wasn't sure if I got everything.
 
-/*
- * Actually, as this is uAPI, we will use a fixed size integer type, like
- *  unsigned int
- */
-enum hevc_scaling_matrix_type {
-	HEVC_SCALING_MATRIX_4x4,
-	HEVC_SCALING_MATRIX_8x8,
-...
-	HEVC_SCALING_MATRIX_DC_COEF_32x32,
-};
-
-struct v4l2_ctrl_hevc_scaling_matrix {
-	__u32	scaling_type 		/* as defined by enum hevc_scaling_matrix_type */
-
-	union {
-		__u8	scaling_list_4x4[6][16];
-		__u8	scaling_list_8x8[6][64];
-		__u8	scaling_list_16x16[6][64];
-		__u8	scaling_list_32x32[2][64];
-		__u8	scaling_list_dc_coef_16x16[6];
-		__u8	scaling_list_dc_coef_32x32[2];
-	};
-};
-
-And let the core use a default for each scaling matrix, if userspace doesn't
-set it.
-
-
-
-Cheers,
-Mauro
+Cheers!
