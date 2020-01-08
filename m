@@ -2,206 +2,169 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8718AC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDCBC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64991206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344C6206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Cd0z8iC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgAHIsq (ORCPT
+        id S1727492AbgAHIsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:48:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36414 "EHLO mx2.suse.de"
+        Wed, 8 Jan 2020 03:48:51 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9734 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727313AbgAHIsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:48:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5AB81AD82;
-        Wed,  8 Jan 2020 08:48:43 +0000 (UTC)
-Subject: Re: [PATCH] drm/hisilicon: add the mode_valid function
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
-Date:   Wed, 8 Jan 2020 09:48:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1727313AbgAHIsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:48:50 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47t2wF6zpLz9v3Hd;
+        Wed,  8 Jan 2020 09:48:45 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Cd0z8iC9; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eHCnKMUwPC8j; Wed,  8 Jan 2020 09:48:45 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47t2wF5Z8xz9v3Hc;
+        Wed,  8 Jan 2020 09:48:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578473325; bh=kWCAIl6qlr/NQhjX84pOmCSHzIhFMSBDwvFc83ztIuI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Cd0z8iC9RC8pjwPeyNjKHDYp8ooejNu3HGALPmb6+R1rGPni1Gqd3Osr1pzBr++DW
+         qVroJ655pO9/GIgcKq73QC5BW2ualhxp5CandPHCNUTG1TbQ4ytfyemBB8YchvhikW
+         Jys4zIMmlSAmxqdhihc3mS1nPdn3QvL04p1qUK10=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCA2B8B7ED;
+        Wed,  8 Jan 2020 09:48:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Z-k90vSTB5Ao; Wed,  8 Jan 2020 09:48:46 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2CC498B7EA;
+        Wed,  8 Jan 2020 09:48:46 +0100 (CET)
+Subject: Re: [RFT 00/13] iomap: Constify ioreadX() iomem argument
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rich Felker <dalias@libc.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Jason Wang <jasowang@redhat.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        virtualization@lists.linux-foundation.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        netdev <netdev@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Helge Deller <deller@gmx.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Ben Skeggs <bskeggs@redhat.com>, nouveau@lists.freedesktop.org,
+        Dave Airlie <airlied@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Allen Hubbe <allenbh@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Jon Mason <jdmason@kudzu.us>,
+        linux-ntb@googlegroups.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <1578415992-24054-1-git-send-email-krzk@kernel.org>
+ <CAMuHMdW4ek0OYQDrrbcpZjNUTTP04nSbwkmiZvBmKcU=PQM9qA@mail.gmail.com>
+ <CAMuHMdUBmYtJKtSYzS_5u67hVZOqcKSgFY1rDGme6gLNRBJ_gA@mail.gmail.com>
+ <CAJKOXPfq9vS4kSyx1jOPHBvi9_HjviRv0LU2A8ZwdmqgUuebHQ@mail.gmail.com>
+ <2355489c-a207-1927-54cf-85c04b62f18f@c-s.fr>
+ <CAMuHMdV=-m-eN4rOa=XQhk2oBDZZwgXXMU6RMVQRVsc6ALyeoA@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <00a43e5c-0708-d49a-9cc4-eb2ce8b4cf99@c-s.fr>
+Date:   Wed, 8 Jan 2020 09:48:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx"
+In-Reply-To: <CAMuHMdV=-m-eN4rOa=XQhk2oBDZZwgXXMU6RMVQRVsc6ALyeoA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx
-Content-Type: multipart/mixed; boundary="ujRMYAIfhnuseeewZLl362zPnio58F1kj";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
-Subject: Re: [PATCH] drm/hisilicon: add the mode_valid function
-References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
+Hi Geert,
 
---ujRMYAIfhnuseeewZLl362zPnio58F1kj
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Le 08/01/2020 à 09:43, Geert Uytterhoeven a écrit :
+> Hi Christophe,
+> 
+> On Wed, Jan 8, 2020 at 9:35 AM Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>> Le 08/01/2020 à 09:18, Krzysztof Kozlowski a écrit :
+>>> On Wed, 8 Jan 2020 at 09:13, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>> On Wed, Jan 8, 2020 at 9:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>>> On Tue, Jan 7, 2020 at 5:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>> The ioread8/16/32() and others have inconsistent interface among the
+>>>>>> architectures: some taking address as const, some not.
+>>>>>>
+>>>>>> It seems there is nothing really stopping all of them to take
+>>>>>> pointer to const.
+>>>>>
+>>>>> Shouldn't all of them take const volatile __iomem pointers?
+>>>>> It seems the "volatile" is missing from all but the implementations in
+>>>>> include/asm-generic/io.h.
+>>>>
+>>>> As my "volatile" comment applies to iowrite*(), too, probably that should be
+>>>> done in a separate patch.
+>>>>
+>>>> Hence with patches 1-5 squashed, and for patches 11-13:
+>>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>
+>>> I'll add to this one also changes to ioreadX_rep() and add another
+>>> patch for volatile for reads and writes. I guess your review will be
+>>> appreciated once more because of ioreadX_rep()
+>>
+>> volatile should really only be used where deemed necessary:
+>>
+>> https://www.kernel.org/doc/html/latest/process/volatile-considered-harmful.html
+>>
+>> It is said: " ...  accessor functions might use volatile on
+>> architectures where direct I/O memory access does work. Essentially,
+>> each accessor call becomes a little critical section on its own and
+>> ensures that the access happens as expected by the programmer."
+> 
+> That is exactly the use case here: all above are accessor functions.
+> 
+> Why would ioreadX() not need volatile, while readY() does?
+> 
 
-Hi,
+My point was: it might be necessary for some arches and not for others.
 
-here are a few more nits to fix.
+And as pointed by Arnd, the volatile is really only necessary for the 
+dereference itself, should the arch use dereferencing.
 
-Am 08.01.20 um 09:19 schrieb Tian Tao:
-> add mode_valid function, and we can also use it to make suse the resolu=
-tion
-> is valid.
+So I guess the best would be to go in the other direction: remove 
+volatile keyword wherever possible instead of adding it where it is not 
+needed.
 
-Start with capital 'Add' and make it a simple sentence. Change 'suse' to
-'sure'
-
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 20 ++++++++++++++++++=
-++
->  1 file changed, 20 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/g=
-pu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> index 843d784..6cb7a79 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-> @@ -242,6 +242,25 @@ static void hibmc_crtc_atomic_disable(struct drm_c=
-rtc *crtc,
->  	hibmc_set_current_gate(priv, reg);
->  }
-> =20
-> +enum drm_mode_status hibmc_crtc_mode_valid(struct drm_crtc *crtc,
-> +					const struct drm_display_mode *mode)
-
-Please declare this function as static.
-
-> +{
-> +	int i =3D 0;
-> +	int vrefresh =3D drm_mode_vrefresh(mode);
-> +
-> +	if (vrefresh < 59 || vrefresh > 61)
-> +		return MODE_NOMODE;
-
-I'd return MODE_NOCLOCK or MODE_CLOCK_RANGE.
-
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(hibmc_pll_table); i++) {
-> +		if (hibmc_pll_table[i].hdisplay =3D=3D mode->hdisplay &&
-> +			hibmc_pll_table[i].vdisplay =3D=3D mode->vdisplay)
-> +			return MODE_OK;
-> +	}
-> +
-> +	return MODE_NOMODE;
-
-Maybe return MODE_BAD. MODE_NOMODE apparently refers to a descriptive
-string for the mode.
-
-> +}
-> +
-> +
-
-One one empty line please.
-
-With these fixes applied, you can add my
-
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-Best regards
-Thomas
-
-
->  static unsigned int format_pll_reg(void)
->  {
->  	unsigned int pllreg =3D 0;
-> @@ -510,6 +529,7 @@ static const struct drm_crtc_helper_funcs hibmc_crt=
-c_helper_funcs =3D {
->  	.atomic_flush	=3D hibmc_crtc_atomic_flush,
->  	.atomic_enable	=3D hibmc_crtc_atomic_enable,
->  	.atomic_disable	=3D hibmc_crtc_atomic_disable,
-> +	.mode_valid =3D hibmc_crtc_mode_valid,
->  };
-> =20
->  int hibmc_de_init(struct hibmc_drm_private *priv)
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---ujRMYAIfhnuseeewZLl362zPnio58F1kj--
-
---OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4Vl2cACgkQaA3BHVML
-eiOtvQgAl+IKOBGin0jJPitb0wqB32GKS7u8kxNi8XOnM9YrgBAVf1kh2JEKQid4
-uwPj9RXDKcvUPvQmPL/vtbnwW4bOC6Ozd5T4hLr/LFURtvLk7KPnLrCYaiYYLlpq
-dEy+hgizVw99TzD/os1Y9YipRQcfExiNKQZwoFpNC95csJENwPZuLdQpcacisQpZ
-bIo91OvPy/U9vpmqsrNYW7S9CMguPO0fQ2giSRkvVho88zCzsxwahI/SS4Ts0RJk
-IXhjiqytFxcRonvLJR272RqdCTH8LodVCbXFbXZTYasTsQDzXHXnz9vZvEK/eZwI
-+jl149f6VR4riTxQ5uDKMT9Ei0cWmw==
-=QA9q
------END PGP SIGNATURE-----
-
---OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx--
+Christophe
