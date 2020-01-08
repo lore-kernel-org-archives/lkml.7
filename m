@@ -2,60 +2,102 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9859C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E3BC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5544206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735C520720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgAHNkv (ORCPT
+        id S1728295AbgAHNlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:40:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49116 "EHLO mx2.suse.de"
+        Wed, 8 Jan 2020 08:41:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50544 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgAHNkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:40:51 -0500
+        id S1726144AbgAHNlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:41:52 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C0BC6AE07;
-        Wed,  8 Jan 2020 13:40:49 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 47359DA791; Wed,  8 Jan 2020 14:40:37 +0100 (CET)
-Date:   Wed, 8 Jan 2020 14:40:36 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] btrfs: remove set but not used variable
- 'root_objectid'
-Message-ID: <20200108134036.GE3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, YueHaibing <yuehaibing@huawei.com>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200108125835.45768-1-yuehaibing@huawei.com>
+        by mx2.suse.de (Postfix) with ESMTP id 6BEF8AE52;
+        Wed,  8 Jan 2020 13:41:50 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 13:41:48 +0000
+From:   Michal Rostecki <mrostecki@opensuse.org>
+To:     Quentin Monnet <quentin.monnet@netronome.com>
+Cc:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 2/2] bpftool: Add misc secion and probe for
+ large INSN limit
+Message-ID: <20200108134148.GD2954@wotan.suse.de>
+References: <20200107130308.20242-1-mrostecki@opensuse.org>
+ <20200107130308.20242-3-mrostecki@opensuse.org>
+ <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108125835.45768-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 08:58:35PM +0800, YueHaibing wrote:
-> fs/btrfs/inode.c: In function btrfs_rename:
-> fs/btrfs/inode.c:9196:6: warning: variable root_objectid set but not used [-Wunused-but-set-variable]
+On Tue, Jan 07, 2020 at 02:36:15PM +0000, Quentin Monnet wrote:
+> Nit: typo in subject ("secion").
 > 
-> commit f8b3030e0807 ("btrfs: rework arguments of btrfs_unlink_subvol")
-> left behind this unused variable.
+> 2020-01-07 14:03 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> > Introduce a new probe section (misc) for probes not related to concrete
+> > map types, program types, functions or kernel configuration. Introduce a
+> > probe for large INSN limit as the first one in that section.
+> > 
+> > Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> > ---
+> >  tools/bpf/bpftool/feature.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
+> > index 03bdc5b3ac49..d8ce93092c45 100644
+> > --- a/tools/bpf/bpftool/feature.c
+> > +++ b/tools/bpf/bpftool/feature.c
+> > @@ -572,6 +572,18 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
+> >  		printf("\n");
+> >  }
+> >  
+> > +static void
+> > +probe_large_insn_limit(const char *define_prefix, __u32 ifindex)
+> > +{
+> > +	bool res;
+> > +
+> > +	res = bpf_probe_large_insn_limit(ifindex);
+> > +	print_bool_feature("have_large_insn_limit",
+> > +			   "Large complexity and program size limit",
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> I am not sure we should mention "complexity" here. Although it is
+> related to program size in the kernel commit you describe, the probe
+> that is run is only on instruction number. This can make a difference
+> for offloaded programs: When you probe a device, if kernel has commit
+> c04c0d2b968a and supports up to 1M instructions, but hardware supports
+> no more than 4k instructions, you may still benefit from the new value
+> for BPF_COMPLEXITY_LIMIT_INSNS for complexity, but not for the total
+> number of available instructions. In that case the probe will fail, and
+> the message on complexity would not be accurate.
+> 
+> Looks good otherwise, thanks Michal!
+> 
+> Quentin
 
-Thanks, I'll fold it to the patch.
+Thanks for review! Should I change the description just to "Large
+program size limit" or "Large instruction limit"?
+
+Michal
