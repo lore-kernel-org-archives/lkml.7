@@ -2,134 +2,132 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C126C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07DFC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112E920692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE0C20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578520053;
+	bh=IaGGzdrgRQajWKZsD3t0eI8I52MhXUkIdlflteIv+6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gWCI3R6pGevD8pxVUQDLJijXc6WW5Ql9tt3lwHYapvJ/YMtrYMDcw+IE34Bpq7KMh
+	 3vfT2r0r0aVuzIwIn8ewp2hOIEzMygof8Y0/IjgCTwn8166qbASkohEWHC8VQtO66P
+	 KQgvot8MUidqzjVf+FtRzU/PPjNpR/jDHZb2HPEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgAHVpQ (ORCPT
+        id S1727277AbgAHVrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:45:16 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:40107 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgAHVpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:45:15 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MacjC-1jQHqL2fve-00c983; Wed, 08 Jan 2020 22:44:59 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Willem de Bruijn <willemb@google.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Pedro Tammela <pctammela@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] [v2] socket: fix unused-function warning
-Date:   Wed,  8 Jan 2020 22:44:43 +0100
-Message-Id: <20200108214454.3950090-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 8 Jan 2020 16:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgAHVrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 16:47:32 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E5120692;
+        Wed,  8 Jan 2020 21:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578520050;
+        bh=IaGGzdrgRQajWKZsD3t0eI8I52MhXUkIdlflteIv+6Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=F2kUJO0eN8HqowhRuXaTxUp80jqmtV4HHjFf8S1Gp69Z4/f22cb6H8QCr2LwLBKi3
+         9Hb5wuOEv7ifu9k3ERWWEXLhy0E93fJYHQDSqio1jD++B4Q9SxYHVo/skgs6TUiUSK
+         Ma8Ho8fYI4p8DlDQFPhbSaLRb4WO5TK9fZ98038g=
+Date:   Wed, 8 Jan 2020 15:47:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
+        Doug Meyer <dmeyer@gigaio.com>
+Subject: Re: [PATCH 00/12]  Switchtec Fixes and Gen4 Support
+Message-ID: <20200108214728.GA209478@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:cQbL1QogaNHrETb1/OAbt58mv61iwIwKD9mrjQznrq3KLaWutDU
- 5cRv9sfKcaEK2OqWCOuRGzlQjyum2PzXcRKRlhqqLSpCkPPIiozyk/8MPrn4DbEj4xIzNnf
- s8s63hk65Ww+t2ndcsdxKmp63cTcUsOC7a7yxP3ntZ0/AzACmo9CcLkZrhN2UH02DF/a5aB
- 89h7Rdrnblnm1AIW9mPiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0uzF1xxd2nI=:BXhLrEV5h8gz2y4OcIdemP
- 8zRsmkIWy81bMd8/CaLHLg4nS6EtvbEpWjWTmNypHhlvR2FQ+eYCRarO5y+HsyPc4qW2eFwB2
- hfNJP5kWGnULqzr807+29vtAcqsK/4bNaM+Dzq6omjtdJauSMMsS1Qu3riPk3/wrWn/JzYVJh
- xK16sJ3aWTUNwxAhuMIVgcAWbtYEOEA2TZ7/eXJiolmz8edEVNFo7cSnwR3juPQfBM2kcAWYP
- WIupxlHCKWLmUctP/RST57Nmx2LeXzfb3TLN3/HziboGSspyTvvoQdBFK4KRogP+Hh/LJb/Vm
- Xegv2P8U6beksTIB8gkgvG54vM5NyyzxynS/Z2M/3kZG6qMZOdj4gY4YYVc2VGyXtjynhM9x0
- DEu8FQD1zxdIw0X/5LivNfBSmsW8tdHOUwKbjOhE3Wr0YsP+Ur5h5+fl8hmL7/BKUo+Whw3cq
- vNUdIw+UGgRR4ZvgiuxBWpWBF13pz57o81ZsLESL+rmN3KstoC3bzKzt4gECwstuk7FjJne6O
- Oj07Wl7s/3UjQ04l8SrCUKNVX0+0zb2StFL1koTIm/cf6OaXeum+SHAJI8xxm6ODbaTygvt06
- 9vtWzuSo7xx0IglGlXkZa1aitiB7RDUZknDE2fNXvpgPLNYWy9RqO6ENjIEtcenOXCk7FfQGJ
- puqB8egTeHbwal4tHYZdgJ81PkuJQoFMa8cTxjMJHcglw0AqLJbHPYgxaO6KX8+SQv6v5tywn
- Wz7zxivJT6PI2mlxXggurRw5Pm20xH8K+8sSokUlZzcaZRJ31ZbHCFGNLVYdkI7CIk2XO8CSW
- 67uaS1OaJfRoxrD+6yPta11DUBW09QSD2mmjbUfmkp1uR8hhalpDCIgHZCgJc2e18yUoDn/PN
- SOfM5Ypn1zIWofr1gnqg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106190337.2428-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When procfs is disabled, the fdinfo code causes a harmless
-warning:
+On Mon, Jan 06, 2020 at 12:03:25PM -0700, Logan Gunthorpe wrote:
+> Hi,
+> 
+> Please find a bunch of patches for the switchtec driver collected over the
+> last few months.
+> 
+> The first 2 patches fix a couple of minor bugs. Patch 3 adds support for
+> a new event that is available in specific firmware versions. Patches 4 and
+> 5 are some code cleanup changes to simplify the logic. And the last 6
+> patches implement support for the new Gen4 hardware.
+> 
+> This patchset is based on v5.5-rc5 and a git branch is available here:
+> 
+> https://github.com/sbates130272/linux-p2pmem switchtec-next
+> 
+> Thanks,
+> 
+> Logan
+> 
+> --
+> 
+> Kelvin Cao (3):
+>   PCI/switchtec: Add gen4 support in struct flash_info_regs
+>   PCI/switchtec: Add permission check for the GAS access MRPC commands
+>   PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+> 
+> Logan Gunthorpe (6):
+>   PCI/switchtec: Fix vep_vector_number ioread width
+>   PCI/switchtec: Add support for new events
+>   PCI/switchtec: Introduce Generation Variable
+>   PCI/switchtec: Separate out gen3 specific fields in the sys_info_regs
+>     structure
+>   PCI/switchtec: Add gen4 support in struct sys_info_regs
+>   PCI: Apply switchtec DMA aliasing quirk to GEN4 devices
+> 
+> Wesley Sheng (3):
+>   PCI/switchtec: Use dma_set_mask_and_coherent()
+>   PCI/switchtec: Remove redundant valid PFF number count
+>   PCI/switchtec: Move check event id from mask_event() to
+>     switchtec_event_isr()
 
-net/socket.c:1000:13: error: 'sock_show_fdinfo' defined but not used [-Werror=unused-function]
- static void sock_show_fdinfo(struct seq_file *m, struct file *f)
+Current order is:
 
-Move the function definition up so we can use a single #ifdef
-around it.
+  [PATCH 01/12] PCI/switchtec: Use dma_set_mask_and_coherent()
+  [PATCH 02/12] PCI/switchtec: Fix vep_vector_number ioread width
+  [PATCH 03/12] PCI/switchtec: Add support for new events
+  [PATCH 04/12] PCI/switchtec: Remove redundant valid PFF number count
+  [PATCH 05/12] PCI/switchtec: Move check event id from mask_event() to switchtec_event_isr()
+  [PATCH 06/12] PCI/switchtec: Introduce Generation Variable
+  [PATCH 07/12] PCI/switchtec: Separate out gen3 specific fields in the sys_info_regs structure
+  [PATCH 08/12] PCI/switchtec: Add gen4 support in struct sys_info_regs
+  [PATCH 09/12] PCI/switchtec: Add gen4 support in struct flash_info_regs
+  [PATCH 10/12] PCI/switchtec: Add permission check for the GAS access MRPC commands
 
-Fixes: b4653342b151 ("net: Allow to show socket-specific information in /proc/[pid]/fdinfo/[fd]")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Acked-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: use an #ifdef instead of a ?: operator
----
- net/socket.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+10/12 looks lonely in the middle of the gen4 stuff, and it looks like
+it's unrelated to gen3/gen4?  Maybe it could be moved up after 05/12?
 
-diff --git a/net/socket.c b/net/socket.c
-index 5230c9e1bdec..f13b84e5c70d 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -128,7 +128,18 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
- static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
- 				struct pipe_inode_info *pipe, size_t len,
- 				unsigned int flags);
--static void sock_show_fdinfo(struct seq_file *m, struct file *f);
-+
-+#ifdef CONFIG_PROC_FS
-+static void sock_show_fdinfo(struct seq_file *m, struct file *f)
-+{
-+	struct socket *sock = f->private_data;
-+
-+	if (sock->ops->show_fdinfo)
-+		sock->ops->show_fdinfo(m, sock);
-+}
-+#else
-+#define sock_show_fdinfo NULL
-+#endif
- 
- /*
-  *	Socket files have a set of 'special' operations as well as the generic file ones. These don't appear
-@@ -151,9 +162,7 @@ static const struct file_operations socket_file_ops = {
- 	.sendpage =	sock_sendpage,
- 	.splice_write = generic_splice_sendpage,
- 	.splice_read =	sock_splice_read,
--#ifdef CONFIG_PROC_FS
- 	.show_fdinfo =	sock_show_fdinfo,
--#endif
- };
- 
- /*
-@@ -997,14 +1006,6 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	return res;
- }
- 
--static void sock_show_fdinfo(struct seq_file *m, struct file *f)
--{
--	struct socket *sock = f->private_data;
--
--	if (sock->ops->show_fdinfo)
--		sock->ops->show_fdinfo(m, sock);
--}
--
- /*
-  * Atomic setting of ioctl hooks to avoid race
-  * with module unload.
--- 
-2.20.0
+  [PATCH 11/12] PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+  [PATCH 12/12] PCI: Apply switchtec DMA aliasing quirk to GEN4 devices
 
+I speculatively reordered the permission check patch and applied these
+to my pci/switchtec branch for v5.6 (reverse order from "git log"):
+
+  b96abab6314f ("PCI/switchtec: Add permission check for the GAS access MRPC commands")
+  5f23367bd4df ("PCI/switchtec: Move check event ID from mask_event() to switchtec_event_isr()")
+  6722d609bc82 ("PCI/switchtec: Remove redundant valid PFF number count")
+  3f3a521ecc81 ("PCI/switchtec: Add support for intercom notify and UEC Port")
+  9375646b4cf0 ("PCI/switchtec: Fix vep_vector_number ioread width")
+  aa82130a22f7 ("PCI/switchtec: Use dma_set_mask_and_coherent()")
+
+If you rework any of the subsequent ones, you can just post those
+without reposting these first six.
+
+Bjorn
