@@ -2,118 +2,152 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D87DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FF9C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B730205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94590205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aNGnhlCQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QUXDBnIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgAHNTa (ORCPT
+        id S1727733AbgAHNUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:19:30 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:36912 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgAHNT3 (ORCPT
+        Wed, 8 Jan 2020 08:20:42 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41008 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAHNUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:19:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QI9FSPKXEXNXCVFfcwps3NFfNhdiPjcAIviYkTvz5XY=; b=aNGnhlCQH3wcQ/6SaaEDBZ0o9
-        smK8V1WVwtw9cLIh2ZUodoConiikHmgsE+yM+v/uBqMeaz1nBR11+yG8vzKHS3oc0PzIWGg7PniQs
-        Tvg7wDyzYOqI5Nq4CCL3fAjSBfoVIxVcSPUwfWWkXc9d3wJ2rzxbllfn7fIPJWDdLQclYb27x9E17
-        AqaBldmSd5VlsXqTZ3FUkysw2VlJD2JnPSGpvnk+1cDmpPwo1SEQuNR0AkpWRfrteQ3O1OUpchlAM
-        lTjgejmIzzk41850EtH9GATefFAGQWaFyNOcE45Z8mb16DeuJvkL6bmmh7gPsMfIxP0RENeQQoxMW
-        7VkECMrlQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipBEj-0002PW-GY; Wed, 08 Jan 2020 13:19:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD2BD300693;
-        Wed,  8 Jan 2020 14:17:25 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C5D3320B79C81; Wed,  8 Jan 2020 14:18:58 +0100 (CET)
-Date:   Wed, 8 Jan 2020 14:18:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains v2
-Message-ID: <20200108131858.GZ2827@hirez.programming.kicks-ass.net>
-References: <CAKfTPtDp624geHEnPmHki70L=ZrBuz6zJG3zW0VFy+_S064Etw@mail.gmail.com>
- <20200103143051.GA3027@techsingularity.net>
- <CAKfTPtCGm7-mq3duxi=ugy+mn=Yutw6w9c35+cSHK8aZn7rzNQ@mail.gmail.com>
- <20200106145225.GB3466@techsingularity.net>
- <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
- <20200107095655.GF3466@techsingularity.net>
- <CAKfTPtAtJSWGPC1t+0xj_Daid0fZaWnN+b53WQ_a1-Js5fJ6sg@mail.gmail.com>
- <20200107115646.GI3466@techsingularity.net>
- <CAKfTPtAacdmxniM9yZUrQPW39LAvhpBQt6ZiGiwk5qpEx7zicA@mail.gmail.com>
- <20200107202406.GJ3466@techsingularity.net>
+        Wed, 8 Jan 2020 08:20:42 -0500
+Received: by mail-pl1-f193.google.com with SMTP id bd4so1124268plb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:20:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v5QuWl/+PY9Q73jf1DmwSNtvySHIXxjomMZ599Y61vs=;
+        b=QUXDBnIjggHMVJ1vjZpL/09PJRr5wQywtvlcmjwyKrqWWWGWiwU5NxbjeLnMyBAY9V
+         g5SA+SUvHxX+SSscvqxP3XIX6+f/Aunh5tFRmsirpJNJiyg2gR79d2oHhzrbGVqTjtd4
+         q1X6JSeYUKiYxYmh7BI9zzt7b2IaEWdYnBHfpjkh6o10WdHpuvCXMtmv/40VmC3N5d3x
+         jwRP/woqdBple+tDNX4J2cdROe9K4g0pAdnR4KhXN/IabZbp9hPn70PW8fMbN3xMAnp5
+         yV9J4pmZD3rGsAZfKMunsARQMl9gsX/VzJciQhfb5Y8bDtRAQd6dMvSRVDPOkKi1Xu8G
+         WZcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v5QuWl/+PY9Q73jf1DmwSNtvySHIXxjomMZ599Y61vs=;
+        b=XcgC9HkYYzQ+XJ0rsMyhFE/Mr64X7KgY5bJidnoQIPCIN2uiTVc+bvJ65wQ5pip+Dz
+         Bxk21E40VT7R6h0gENsHjVMkh+E/f2yKpOkhIzD8AxavxZDvHvRpFaix/zct7Lbsm2L/
+         QxB7uZlgzLFgh7/rwwy07Ttr8ZB7q/O2fr2G/6+gl7x3vkcafmAkTEyifmaYbhssfr5e
+         kM2iBEDTBkg2u1HE5a/REC3wil+D9qo3S7Kw7eMAN6p86WVDWHJ0t3CbW0OwviEgKkF8
+         32ZRg0d626F0Fgygb/zNOc9JyNLqKLAWyRREaKPx6e8ZzZYr25HLcUN/OOjmUZvfqbbK
+         O8DA==
+X-Gm-Message-State: APjAAAWmUiqkzft4hqBTpOrzjx1d1JRiyKBeV5/qQlrWohclhKwdACsv
+        il24FJsEjGDBS6mvDn5jfqh+Kw==
+X-Google-Smtp-Source: APXvYqwFrVUBTFT4TH96PlM5QwpRRFO+v8oK7loC4BoRfqYnyP3sB0JkBhAwEEs5F1Iuf0FsWQk/lg==
+X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr4105919plo.53.1578489641346;
+        Wed, 08 Jan 2020 05:20:41 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li519-153.members.linode.com. [66.175.222.153])
+        by smtp.gmail.com with ESMTPSA id p185sm3669828pfg.61.2020.01.08.05.20.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 05:20:40 -0800 (PST)
+Date:   Wed, 8 Jan 2020 21:20:28 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v3] perf parse: Copy string to perf_evsel_config_term
+Message-ID: <20200108132028.GC7797@leoy-ThinkPad-X240s>
+References: <20200107120310.9632-1-leo.yan@linaro.org>
+ <CANLsYkzs67NXpszueKTM5y05KrOUf-yaphs3Y7yC8P2sNz3YwQ@mail.gmail.com>
+ <20200108102212.GA360164@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107202406.GJ3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200108102212.GA360164@krava>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 08:24:06PM +0000, Mel Gorman wrote:
-> Now I get you, but unfortunately it also would not work out. The number
-> of groups is not related to the LLC except in some specific cases.
-> It's possible to use the first CPU to find the size of an LLC but now I
-> worry that it would lead to unpredictable behaviour. AMD has different
-> numbers of LLCs per node depending on the CPU family and while Intel
-> generally has one LLC per node, I imagine there are counter examples.
+Hi Mathieu, Jiri,
 
-Intel has the 'fun' case of an LLC spanning nodes :-), although Linux
-pretends this isn't so and truncates the LLC topology information to be
-the node again -- see arch/x86/kernel/smpboot.c:match_llc().
+On Wed, Jan 08, 2020 at 11:22:12AM +0100, Jiri Olsa wrote:
+> On Tue, Jan 07, 2020 at 02:45:27PM -0700, Mathieu Poirier wrote:
 
-And of course, in the Core2 era we had the Core2Quad chips which was a
-dual-die solution and therefore also had multiple LLCs, and I think the
-Xeon variant of that would allow the multiple LLC per node situation
-too, although this is of course ancient hardware nobody really cares
-about anymore.
+[...]
 
-> This means that load balancing on different machines with similar core
-> counts will behave differently due to the LLC size.
+> > Many thanks for digging into this and stepping forward to provide a
+> > solution - it is much appreciated.
 
-That sounds like perfectly fine/expected behaviour to me.
+My pleasure!
 
-> It might be possible
-> to infer it if the intermediate domain was DIE instead of MC but I doubt
-> that's guaranteed and it would still be unpredictable. It may be the type
-> of complexity that should only be introduced with a separate patch with
-> clear rationale as to why it's necessary and we are not at that threshold
-> so I withdraw the suggestion.
+After think again, we do need to add CoreSight test into perf test
+ASAP, thus we can pay attention for the failure at the early time.
+This is another topic, let's fistly focus on resolve this issue.
 
-So IIRC the initial patch(es) had the idea to allow for 1 extra task
-imbalance to get 1-1 pairs on the same node, instead of across nodes. I
-don't immediately see that in these later patches.
+> > > Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
+> > > Suggested-by: Jiri Olsa <jolsa@kernel.org>
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  tools/perf/util/evsel.c        |  2 ++
+> > >  tools/perf/util/evsel_config.h |  2 ++
+> > >  tools/perf/util/parse-events.c | 56 +++++++++++++++++++++-------------
+> > >  3 files changed, 39 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > index a69e64236120..ab9925cc1aa7 100644
+> > > --- a/tools/perf/util/evsel.c
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -1265,6 +1265,8 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+> > >
+> > >         list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+> > >                 list_del_init(&term->list);
+> > > +               if (term->free_str)
+> > > +                       free(term->val.str);
+> > 
+> > This will do the trick but we can definitely do better.
+> > 
+> > Part of his comments on V2, Jiri hinted that we should move to a
+> > common perf_evsel_config_term::str to replace {callgraph, drv_cfg,
+> > branch}, something that will work because we have
+> > perf_evsel_config_term::type.  That means  functions
+> > apply_config_terms() and cs_etm_set_sink_attr() need to be modified
+> > but the changes are quite small and well worth for the benefit they'll
+> > carry.
+> > 
+> > With that the above becomes neat and clean.
+> 
+> I wonder if there was some reason for keeping the variables
+> like that for every type and not just one per type as we did
+> 'struct parse_events_term'
+> 
+> if the change is possible, the code would be cleaner, let's see ;-)
 
-Would that be something to go back to? Would that not side-step much of
-the issues under discussion here?
+Thanks for the suggestion, I hope to do right thing in next spin :)
+
+I tried to only use val.num and val.str in perf_evsel_config_term in
+my local code, same with the struct parse_events_term, it does work and
+the effort is not big.  Will send out patches soon (will use two
+patches, one is for refactoring, another is for fixing regression).
+
+Thanks,
+Leo Yan
