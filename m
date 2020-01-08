@@ -4,113 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C759C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE63C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C071206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D331E206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgAHM6D (ORCPT
+        id S1728703AbgAHM6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:58:03 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35640 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgAHM5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:57:53 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: zZyrzAeRS6ZjciCUnVdrqO74+rJjsEolZK9q+ZrLuU92XIJUowEfCtwhfVUROEd355pPbitF39
- TbbKvov42iGr89vQFkql3SncElGdSkrwmCHo7rvVYVa26iyGyvEL79QF8CGyveKdxMjNOXVtta
- cbQOAdLmLGPUvOpLNBe84TqjNVmUHPLrrzBXKIUmDYyu+RoEI5df0yFRJ20bnjlaKbqzYavW4S
- wJbAE1HeCcnWkSa5gEv/dPC6cpftyF8TxUNhUO1GUUxNBvkIvqYPWDACjTwFAvTHPISV+FHv/H
- dc8=
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="62569376"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 05:57:51 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 8 Jan 2020 05:57:51 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 8 Jan 2020 05:57:44 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <mchehab@kernel.org>, <lee.jones@linaro.org>,
-        <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
-        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
-        <mkl@pengutronix.de>, <a.zummo@towertech.it>, <broonie@kernel.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 14/16] dt-bindings: arm: add sam9x60-ek board
-Date:   Wed, 8 Jan 2020 14:55:21 +0200
-Message-ID: <1578488123-26127-15-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 8 Jan 2020 07:58:17 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39358 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726087AbgAHM6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:58:15 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 17C797F26F29BD2CC0B6;
+        Wed,  8 Jan 2020 20:58:14 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 Jan 2020
+ 20:58:07 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <rfontana@redhat.com>,
+        <allison@lohutok.net>, <hslester96@gmail.com>,
+        <o-takashi@sakamocchi.jp>, <kjlu@umn.edu>, <yuehaibing@huawei.com>,
+        <tglx@linutronix.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] ALSA: pci: echoaudio: remove set but not used variable 'chip'
+Date:   Wed, 8 Jan 2020 20:58:03 +0800
+Message-ID: <20200108125803.45584-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for SAM9X60-EK board.
+sound/pci/echoaudio/echoaudio.c: In function snd_echo_mixer_info:
+sound/pci/echoaudio/echoaudio.c:1233:20: warning: variable chip set but not used [-Wunused-but-set-variable]
+sound/pci/echoaudio/echoaudio.c: In function 'snd_echo_vmixer_info':
+sound/pci/echoaudio/echoaudio.c:1300:20: warning: variable 'chip' set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+commit e67c3f0fd44c ("ALSA: pci: echoaudio: remove usage
+of dimen menber of elem_value structure") left behind this
+unused variable.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- Documentation/devicetree/bindings/arm/atmel-at91.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/pci/echoaudio/echoaudio.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-index 6dd8be401673..bdf22891a768 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-@@ -57,6 +57,12 @@ properties:
-           - const: atmel,sama5d2
-           - const: atmel,sama5
- 
-+      - description: SAM9X60-EK board
-+        items:
-+          - const: microchip,sam9x60ek
-+          - const: microchip,sam9x60
-+          - const: atmel,at91sam9
-+
-       - description: Nattis v2 board with Natte v2 power board
-         items:
-           - const: axentia,nattis-2
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index 07fe0b3..0941a7a 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -1230,9 +1230,6 @@ static const struct snd_kcontrol_new snd_echo_intput_nominal_level = {
+ static int snd_echo_mixer_info(struct snd_kcontrol *kcontrol,
+ 			       struct snd_ctl_elem_info *uinfo)
+ {
+-	struct echoaudio *chip;
+-
+-	chip = snd_kcontrol_chip(kcontrol);
+ 	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+ 	uinfo->count = 1;
+ 	uinfo->value.integer.min = ECHOGAIN_MINOUT;
+@@ -1300,9 +1297,6 @@ static struct snd_kcontrol_new snd_echo_monitor_mixer = {
+ static int snd_echo_vmixer_info(struct snd_kcontrol *kcontrol,
+ 				struct snd_ctl_elem_info *uinfo)
+ {
+-	struct echoaudio *chip;
+-
+-	chip = snd_kcontrol_chip(kcontrol);
+ 	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+ 	uinfo->count = 1;
+ 	uinfo->value.integer.min = ECHOGAIN_MINOUT;
 -- 
 2.7.4
+
 
