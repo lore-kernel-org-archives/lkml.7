@@ -2,111 +2,141 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECF3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F74EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD152082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfSBKC9u"
+	by mail.kernel.org (Postfix) with ESMTP id DDFEE206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgAHLYq (ORCPT
+        id S1726295AbgAHLZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:24:46 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36067 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHLYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:24:46 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so2317583oic.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 03:24:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=QFQ9MzNR3N8+jCKSFbC/snv1ofUy7bS229pDEsG4jtU=;
-        b=BfSBKC9urrCfL+mnO1wDRiAIf3kvrUAK0zCMfKv3A2Nivl2OaQw1dNxFOIBX86ylrP
-         rYgOOTUO/HQDnD/zc1XkjpuUASqyWQI9CzirZWviiktrYETdU6r8etl0Y0yxJGsSviuU
-         wEv2TR39OsGQRTp/K2XmYVevlUrZnvFmRFVreWJzXgegipHdKA0P+N4yFTPhBxkxC02D
-         M8s5WP2PPW04v+VK8lSTJQEU55xtHHLdyNrniaRMQ4K9BbYSHtJXAHHsiCfaJ3cElKzJ
-         9i0vt0PDlUiG9abu4hOGc/li01v0s9DqA8NBYZ9ycI3KftuOhCcz/h7nGEj14pX8YSu7
-         76EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=QFQ9MzNR3N8+jCKSFbC/snv1ofUy7bS229pDEsG4jtU=;
-        b=EO4HZJuL3VKD4EVVaBO/vjEdGf70BLNTNyvqcI/6LYHl8PYQgg+DzEgf+izEPR3LvF
-         CICNZwnio4epzzfgOgymoZMnDUcIOtauW4+iFlcV1CDfckOqBJTbQtTvxMxDx3wagsaB
-         w8e5sRPfsMzSDSLjloitTEbdmTpliu7pM3QaIyt3+kjL2w4I96pZY6syuQjoB0o/NP3s
-         AEV2Cxc5+tvgB1DH/YsLLDr1QXd6qwfIybrdMFb8a3ii+utob78a2Re/13kxa+CvEsdE
-         ZT5eWbbHAzK3x+t+1jYPN6C80Q4WAJK2xEnnqPZBqIYjWdfiQ1RGxN+8re+LOff2QsbP
-         EOXQ==
-X-Gm-Message-State: APjAAAVBHj1xh+ph2+lbmagq/Qw9yMOkgvOM9vdER7AM1f0DqysUtXqe
-        pmZj7KM7V5Jh1ymxe6BSwWioAA==
-X-Google-Smtp-Source: APXvYqzOWV+sbUpUBdYUxYwIk/nJwIoBL6vcjOmXeYbyU08FMkPZ2OYEZkrYkv7PKP8zAf5XscqRDw==
-X-Received: by 2002:aca:ab0e:: with SMTP id u14mr2709116oie.1.1578482685125;
-        Wed, 08 Jan 2020 03:24:45 -0800 (PST)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id a74sm1002436oii.37.2020.01.08.03.24.43
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 08 Jan 2020 03:24:44 -0800 (PST)
-Date:   Wed, 8 Jan 2020 03:24:42 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Chris Mason <clm@fb.com>
-cc:     Dave Chinner <david@fromorbit.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
-In-Reply-To: <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
-Message-ID: <alpine.LSU.2.11.2001080259350.1884@eggly.anvils>
-References: <cover.1578225806.git.chris@chrisdown.name> <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name> <20200107001039.GM23195@dread.disaster.area> <20200107001643.GA485121@chrisdown.name> <20200107003944.GN23195@dread.disaster.area>
- <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com> <alpine.LSU.2.11.2001070002040.1496@eggly.anvils> <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com> <20200107210715.GQ23195@dread.disaster.area>
- <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 8 Jan 2020 06:25:04 -0500
+Received: from mga03.intel.com ([134.134.136.65]:10668 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbgAHLZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:25:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:25:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
+   d="scan'208";a="215923892"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 03:25:00 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ip9SN-0000oC-TA; Wed, 08 Jan 2020 19:24:59 +0800
+Date:   Wed, 8 Jan 2020 19:24:10 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     kbuild-all@lists.01.org, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kevin.tian@intel.com, joro@8bytes.org,
+        peterx@redhat.com, baolu.lu@linux.intel.com,
+        Liu Yi L <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 07/12] vfio_pci: shrink vfio_pci.c
+Message-ID: <202001081944.Ax1eyQdP%lkp@intel.com>
+References: <1578398509-26453-8-git-send-email-yi.l.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578398509-26453-8-git-send-email-yi.l.liu@intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020, Chris Mason wrote:
-> On 7 Jan 2020, at 16:07, Dave Chinner wrote:
-> 
-> > IOWs, there are *lots* of 64bit inode numbers out there on XFS
-> > filesystems....
-> 
-> It's less likely in btrfs but +1 to all of Dave's comments.  I'm happy 
-> to run a scan on machines in the fleet and see how many have 64 bit 
-> inodes (either buttery or x-y), but it's going to be a lot.
+Hi Liu,
 
-Dave, Amir, Chris, many thanks for the info you've filled in -
-and absolutely no need to run any scan on your fleet for this,
-I think we can be confident that even if fb had some 15-year-old tool
-in use on its fleet of 2GB-file filesystems, it would not be the one
-to insist on a kernel revert of 64-bit tmpfs inos.
+Thank you for the patch! Perhaps something to improve:
 
-The picture looks clear now: while ChrisD does need to hold on to his
-config option and inode32/inode64 mount option patch, it is much better
-left out of the kernel until (very unlikely) proved necessary.
+[auto build test WARNING on v5.5-rc5]
+[also build test WARNING on next-20200106]
+[cannot apply to vfio/next]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Thanks,
-Hugh
+url:    https://github.com/0day-ci/linux/commits/Liu-Yi-L/vfio_pci-wrap-pci-device-as-a-mediated-device/20200108-020930
+base:    c79f46a282390e0f5b306007bf7b11a46d529538
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/vfio/pci/vfio_pci_common.c:201:25: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:201:43: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:201:56: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:201:65: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:206:25: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:206:44: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:206:57: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:206:66: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:214:39: sparse: sparse: restricted pci_power_t degrades to integer
+   drivers/vfio/pci/vfio_pci_common.c:214:58: sparse: sparse: restricted pci_power_t degrades to integer
+
+vim +201 drivers/vfio/pci/vfio_pci_common.c
+
+8db581db521ec0 Liu Yi L 2020-01-07  186  
+8db581db521ec0 Liu Yi L 2020-01-07  187  /*
+8db581db521ec0 Liu Yi L 2020-01-07  188   * pci_set_power_state() wrapper handling devices which perform a soft reset on
+8db581db521ec0 Liu Yi L 2020-01-07  189   * D3->D0 transition.  Save state prior to D0/1/2->D3, stash it on the vdev,
+8db581db521ec0 Liu Yi L 2020-01-07  190   * restore when returned to D0.  Saved separately from pci_saved_state for use
+8db581db521ec0 Liu Yi L 2020-01-07  191   * by PM capability emulation and separately from pci_dev internal saved state
+8db581db521ec0 Liu Yi L 2020-01-07  192   * to avoid it being overwritten and consumed around other resets.
+8db581db521ec0 Liu Yi L 2020-01-07  193   */
+8db581db521ec0 Liu Yi L 2020-01-07  194  int vfio_pci_set_power_state(struct vfio_pci_device *vdev, pci_power_t state)
+8db581db521ec0 Liu Yi L 2020-01-07  195  {
+8db581db521ec0 Liu Yi L 2020-01-07  196  	struct pci_dev *pdev = vdev->pdev;
+8db581db521ec0 Liu Yi L 2020-01-07  197  	bool needs_restore = false, needs_save = false;
+8db581db521ec0 Liu Yi L 2020-01-07  198  	int ret;
+8db581db521ec0 Liu Yi L 2020-01-07  199  
+8db581db521ec0 Liu Yi L 2020-01-07  200  	if (vdev->needs_pm_restore) {
+8db581db521ec0 Liu Yi L 2020-01-07 @201  		if (pdev->current_state < PCI_D3hot && state >= PCI_D3hot) {
+8db581db521ec0 Liu Yi L 2020-01-07  202  			pci_save_state(pdev);
+8db581db521ec0 Liu Yi L 2020-01-07  203  			needs_save = true;
+8db581db521ec0 Liu Yi L 2020-01-07  204  		}
+8db581db521ec0 Liu Yi L 2020-01-07  205  
+8db581db521ec0 Liu Yi L 2020-01-07  206  		if (pdev->current_state >= PCI_D3hot && state <= PCI_D0)
+8db581db521ec0 Liu Yi L 2020-01-07  207  			needs_restore = true;
+8db581db521ec0 Liu Yi L 2020-01-07  208  	}
+8db581db521ec0 Liu Yi L 2020-01-07  209  
+8db581db521ec0 Liu Yi L 2020-01-07  210  	ret = pci_set_power_state(pdev, state);
+8db581db521ec0 Liu Yi L 2020-01-07  211  
+8db581db521ec0 Liu Yi L 2020-01-07  212  	if (!ret) {
+8db581db521ec0 Liu Yi L 2020-01-07  213  		/* D3 might be unsupported via quirk, skip unless in D3 */
+8db581db521ec0 Liu Yi L 2020-01-07  214  		if (needs_save && pdev->current_state >= PCI_D3hot) {
+8db581db521ec0 Liu Yi L 2020-01-07  215  			vdev->pm_save = pci_store_saved_state(pdev);
+8db581db521ec0 Liu Yi L 2020-01-07  216  		} else if (needs_restore) {
+8db581db521ec0 Liu Yi L 2020-01-07  217  			pci_load_and_free_saved_state(pdev, &vdev->pm_save);
+8db581db521ec0 Liu Yi L 2020-01-07  218  			pci_restore_state(pdev);
+8db581db521ec0 Liu Yi L 2020-01-07  219  		}
+8db581db521ec0 Liu Yi L 2020-01-07  220  	}
+8db581db521ec0 Liu Yi L 2020-01-07  221  
+8db581db521ec0 Liu Yi L 2020-01-07  222  	return ret;
+8db581db521ec0 Liu Yi L 2020-01-07  223  }
+8db581db521ec0 Liu Yi L 2020-01-07  224  
+
+:::::: The code at line 201 was first introduced by commit
+:::::: 8db581db521ec047e12946a9c933f085c4d680ba vfio_pci: duplicate vfio_pci.c
+
+:::::: TO: Liu Yi L <yi.l.liu@intel.com>
+:::::: CC: 0day robot <lkp@intel.com>
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
