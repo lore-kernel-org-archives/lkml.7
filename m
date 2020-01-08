@@ -2,228 +2,143 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CADC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507E7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6644D20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272F820705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="OxnNkXsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgAHPHJ (ORCPT
+        id S1728898AbgAHPHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:07:09 -0500
-Received: from mga09.intel.com ([134.134.136.24]:20675 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbgAHPG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:06:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:06:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="422942762"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.113])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 07:06:55 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [RFC PATCH V3 7/7] perf: Clean up event context from sched_task()
-Date:   Wed,  8 Jan 2020 07:03:09 -0800
-Message-Id: <1578495789-95006-7-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
-References: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
+        Wed, 8 Jan 2020 10:07:43 -0500
+Received: from mail-vi1eur05on2108.outbound.protection.outlook.com ([40.107.21.108]:57568
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727541AbgAHPHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:07:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hh3kuprxgAhWF6XHwZmqELiUfbcwmz8bn0gg3NrEFi+xlWlzA7fduyOl2OEUxT5Fpp8176j9HC9PG/84KI5AYQjRjYMTHNTxCMPpOHT9bsdD3q7jFqu6YKJ+MvwKgK5P4QVLbDLgz4G20h85uiR9cD3mVUQSxkSRUTw4dx0tX3Kr3gEL7IxfXyjWpwNRevc1WpduS5oF4v9pPwxOk4gN8IZiyffBNzWj1Y+wkdWQTYrAtysXKmokT9i7pkWb/PFyHXbg/FjZVS5tqsGFXBizDYERYi/Kgm6JNufHQQW1ZseVAjbqEzi4Vgis9fiQalmeB6++nDO2WSn1X7ludQo0ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=orjRyjcvhJxHCnaz3BPDGgKdjIS1OkrhehrdBUf5UaY=;
+ b=KN6HcQ9wjce9lo9ZFHCgT/lr2JSk0CuzdYFaJbtrL0oXYFdZyt6yOspaCMS9aTxiXh7EatOkhjOWvp2mIcwMPJdi1dIbwe3k31PeTPj3QeNBkmJmM9xo5h15e6xDtnDRpHZR66pSQj+YLWJyU/REzxIM4d8bUIOmYXUa0foOUUg+DS8m5gwMR/dCLzG6byrfDcuq4gkqvIbtA/hPVUC7Wvd8hL3mJqOSBMLiuaO1W+HkNGUsuZjGOYamZ3cwpv4exY8J6kFPrJnloeGN1PaQJDKt+JOjr6Yl2dOOW1QLymhQHDW5mh3LirQxnkCNeDvBgd/dHKoXVhNQbBs8nLSgSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=orjRyjcvhJxHCnaz3BPDGgKdjIS1OkrhehrdBUf5UaY=;
+ b=OxnNkXsIooVvXkVK29wn68JqdX5DCkxSyRSBYRejFmwCYR1+NpSYHVEny3vEEREVM3dq7hWXUig5gfjKE9COvHFYDAer7sHTZpQqhFltKV9wfV2S6439jYvItgaKyCEO7lXtJUVd/0xc82SZvJSOjVxRSmkWlO3G/wQ44HDV61I=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+Received: from VI1PR07MB5040.eurprd07.prod.outlook.com (20.177.203.20) by
+ VI1PR07MB6013.eurprd07.prod.outlook.com (20.178.123.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.6; Wed, 8 Jan 2020 15:07:39 +0000
+Received: from VI1PR07MB5040.eurprd07.prod.outlook.com
+ ([fe80::20c4:7ce8:f735:316e]) by VI1PR07MB5040.eurprd07.prod.outlook.com
+ ([fe80::20c4:7ce8:f735:316e%2]) with mapi id 15.20.2644.006; Wed, 8 Jan 2020
+ 15:07:39 +0000
+Subject: Re: [PATCH 2/3] genirq/irqdomain: Re-check mapping after associate in
+ irq_create_mapping()
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>
+Cc:     Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        "Glavinic-Pecotic, Matija (EXT - DE/Ulm)" 
+        <matija.glavinic-pecotic.ext@nokia.com>,
+        "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20190912094343.5480-1-alexander.sverdlin@nokia.com>
+ <20190912094343.5480-3-alexander.sverdlin@nokia.com>
+ <2c02b9d5-2394-7dcb-ee89-9950c6071dd1@kernel.org>
+From:   Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Message-ID: <39bcb24e-9e30-6932-be38-b9f2962734fc@nokia.com>
+Date:   Wed, 8 Jan 2020 16:07:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+In-Reply-To: <2c02b9d5-2394-7dcb-ee89-9950c6071dd1@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR05CA0247.eurprd05.prod.outlook.com
+ (2603:10a6:3:fb::23) To VI1PR07MB5040.eurprd07.prod.outlook.com
+ (2603:10a6:803:9c::20)
+MIME-Version: 1.0
+Received: from [0.0.0.0] (131.228.32.166) by HE1PR05CA0247.eurprd05.prod.outlook.com (2603:10a6:3:fb::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Wed, 8 Jan 2020 15:07:38 +0000
+X-Originating-IP: [131.228.32.166]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dcf61354-bc75-4e52-1a4a-08d7944c809b
+X-MS-TrafficTypeDiagnostic: VI1PR07MB6013:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR07MB6013BADA3AD0E56A9E8EBF1A883E0@VI1PR07MB6013.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 02760F0D1C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(2906002)(52116002)(26005)(53546011)(186003)(478600001)(16526019)(6666004)(4326008)(44832011)(31686004)(5660300002)(956004)(54906003)(86362001)(6706004)(110136005)(81166006)(81156014)(8936002)(16576012)(316002)(31696002)(36756003)(66946007)(66476007)(8676002)(2616005)(66556008)(6486002)(78286006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB6013;H:VI1PR07MB5040.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nYrLITztDlGEZ9oGH8/nitIzUIYzGdbj0ha6MswgWNdW7QM6NHtVEtBAlWKzzBXLVj/XfvYAiSYd4yJ0NVSOS/ZNTl+nmb+FDqje7M8fjlGmKMYhebgN5VgxyfyYxXJVbXvhjW+V454ssUGp/PAgzcupDi0cUV52YtfnAEhc8hi8aQhzyH+aYn9O6RxhE6nIIEtcq9GVu6dPVI6kZD0JA3olu7QfkLqkEdVeZD1eMl2r8Mxn3Af/Q6J9HGQUdXtlafadmnoku09fTpqFiT/6gFYyjlqSxKrjdC1P0k0+MzjIvO963qSCKtXXJomHPl4NFrKLlDfGsaAqQFeLQdhmxUvcy5aF+huU3co7jRudRePM9bR4Omq+Ga4N2hjgmjchTkrhcKq31nK5XC7778jo2tdA845G7sLwelOipLcoBjXhX6BdMi+EUiCmq9/gf+IJkVWIqjbWBDm9tNTvP6X4aJVPmPHl7qEyAMMf10cnOFW8AEMQyTYZO5rhumlg/im4
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcf61354-bc75-4e52-1a4a-08d7944c809b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 15:07:39.4047
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bOHhTTGpienlHID+XJBYnRRs/H/2141E2gfbzCosn23zub3T2ENAiXj1nwsPH+oxU6js5Fk4VY7wCvQrxVBWYJr6Dxk6Yrif/5SmTbjrM/Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB6013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hello Marc,
 
-No one uses event context in sched_task() anymore.
+On 20/09/2019 17:52, Marc Zyngier wrote:
+> On 12/09/2019 10:44, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
+>> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+>>
+>> If two irq_create_mapping() calls perform a mapping of the same hwirq on
+>> two CPU cores in parallel they both will get 0 from irq_find_mapping(),
+>> both will allocate unique virq using irq_domain_alloc_descs() and both
+>> will finally irq_domain_associate() it. Giving different virq numbers
+>> to their callers.
+>>
+>> In practice the first caller is usually an interrupt controller driver and
+>> the seconds is some device requesting the interrupt providede by the above
+>> interrupt controller.
+> I disagree with this "In practice". An irqchip controller should *very
+> rarely* call irq_create_mapping on its own. It usually indicates some
+> level of brokenness, unless the mapped interrupt is exposed by the
+> irqchip itself (the GIC maintenance interrupt, for example).
+> 
+>> In this case either the interrupt controller driver configures virq which
+>> is not the one being "associated" with hwirq, or the "slave" device
+>> requests the virq which is never being triggered.
+> Why should the interrupt controller configure that interrupt? On any
+> sane platform, the mapping should be created by the user of the
+> interrupt, and not by the provider.
+> 
+> This doesn't mean we shouldn't fix the irqdomain races, but I tend to
+> disagree with the analysis here.
 
-Remove the event context parameters from sched_task().
-ctx_lock is useless as well.
+would you have time to review v2 of this series?
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-No changes since V2
-
- arch/powerpc/perf/core-book3s.c | 8 ++------
- arch/x86/events/core.c          | 5 ++---
- arch/x86/events/intel/core.c    | 7 +++----
- arch/x86/events/intel/ds.c      | 2 +-
- arch/x86/events/intel/lbr.c     | 3 +--
- arch/x86/events/perf_event.h    | 8 +++-----
- include/linux/perf_event.h      | 3 +--
- kernel/events/core.c            | 4 +---
- 8 files changed, 14 insertions(+), 26 deletions(-)
-
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 99cb809..3c3631d 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -126,10 +126,7 @@ static unsigned long ebb_switch_in(bool ebb, struct cpu_hw_events *cpuhw)
- 
- static inline void power_pmu_bhrb_enable(struct perf_event *event) {}
- static inline void power_pmu_bhrb_disable(struct perf_event *event) {}
--static void power_pmu_sched_task(struct perf_event_context *ctx,
--				 struct task_struct *task, bool sched_in)
--{
--}
-+static void power_pmu_sched_task(struct task_struct *task, bool sched_in) {}
- static inline void power_pmu_bhrb_read(struct perf_event *event, struct cpu_hw_events *cpuhw) {}
- static void pmao_restore_workaround(bool ebb) { }
- #endif /* CONFIG_PPC32 */
-@@ -406,8 +403,7 @@ static void power_pmu_bhrb_disable(struct perf_event *event)
- /* Called from ctxsw to prevent one process's branch entries to
-  * mingle with the other process's entries during context switch.
-  */
--static void power_pmu_sched_task(struct perf_event_context *ctx,
--				 struct task_struct *task, bool sched_in)
-+static void power_pmu_sched_task(struct task_struct *task, bool sched_in)
- {
- 	if (!ppmu->bhrb_nr)
- 		return;
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7046a59..43d0918 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2237,11 +2237,10 @@ static const struct attribute_group *x86_pmu_attr_groups[] = {
- 	NULL,
- };
- 
--static void x86_pmu_sched_task(struct perf_event_context *ctx,
--			       struct task_struct *task, bool sched_in)
-+static void x86_pmu_sched_task(struct task_struct *task, bool sched_in)
- {
- 	if (x86_pmu.sched_task)
--		x86_pmu.sched_task(ctx, task, sched_in);
-+		x86_pmu.sched_task(task, sched_in);
- }
- 
- void perf_check_microcode(void)
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bd18c83..f43ec24 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3813,11 +3813,10 @@ static void intel_pmu_cpu_dead(int cpu)
- 	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
- }
- 
--static void intel_pmu_sched_task(struct perf_event_context *ctx,
--				 struct task_struct *task, bool sched_in)
-+static void intel_pmu_sched_task(struct task_struct *task, bool sched_in)
- {
--	intel_pmu_pebs_sched_task(ctx, sched_in);
--	intel_pmu_lbr_sched_task(ctx, task, sched_in);
-+	intel_pmu_pebs_sched_task(sched_in);
-+	intel_pmu_lbr_sched_task(task, sched_in);
- }
- 
- static int intel_pmu_check_period(struct perf_event *event, u64 value)
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ce83950..d22af4b 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -908,7 +908,7 @@ static inline bool pebs_needs_sched_cb(struct cpu_hw_events *cpuc)
- 	return cpuc->n_pebs && (cpuc->n_pebs == cpuc->n_large_pebs);
- }
- 
--void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in)
-+void intel_pmu_pebs_sched_task(bool sched_in)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 20c1d7e..97fadfa 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -423,8 +423,7 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
- 	cpuc->last_log_id = ++task_ctx->log_id;
- }
- 
--void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
--			      struct task_struct *task, bool sched_in)
-+void intel_pmu_lbr_sched_task(struct task_struct *task, bool sched_in)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct x86_perf_task_context *task_ctx;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ed287ba..84822cb 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -638,8 +638,7 @@ struct x86_pmu {
- 	void		(*cpu_dead)(int cpu);
- 
- 	void		(*check_microcode)(void);
--	void		(*sched_task)(struct perf_event_context *ctx,
--				      struct task_struct *task, bool sched_in);
-+	void		(*sched_task)(struct task_struct *task, bool sched_in);
- 
- 	/*
- 	 * Intel Arch Perfmon v2+
-@@ -1009,7 +1008,7 @@ void intel_pmu_pebs_enable_all(void);
- 
- void intel_pmu_pebs_disable_all(void);
- 
--void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in);
-+void intel_pmu_pebs_sched_task(bool sched_in);
- 
- void intel_pmu_auto_reload_read(struct perf_event *event);
- 
-@@ -1017,8 +1016,7 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
- 
- void intel_ds_init(void);
- 
--void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
--			      struct task_struct *task, bool sched_in);
-+void intel_pmu_lbr_sched_task(struct task_struct *task, bool sched_in);
- 
- u64 lbr_from_signext_quirk_wr(u64 val);
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 364b0d0..91d2d28 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -405,8 +405,7 @@ struct pmu {
- 	/*
- 	 * context-switches callback
- 	 */
--	void (*sched_task)		(struct perf_event_context *ctx,
--					 struct task_struct *task, bool sched_in);
-+	void (*sched_task)		(struct task_struct *task, bool sched_in);
- 	/*
- 	 * PMU specific data size
- 	 */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 23db381..623e520 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3347,13 +3347,11 @@ static void perf_pmu_sched_task(struct task_struct *prev,
- 		if (WARN_ON_ONCE(!pmu->sched_task))
- 			continue;
- 
--		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
- 		perf_pmu_disable(pmu);
- 
--		pmu->sched_task(cpuctx->task_ctx, sched_in ? next : prev, sched_in);
-+		pmu->sched_task(sched_in ? next : prev, sched_in);
- 
- 		perf_pmu_enable(pmu);
--		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
- 	}
- }
- 
 -- 
-2.7.4
-
+Best regards,
+Alexander Sverdlin.
