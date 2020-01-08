@@ -2,127 +2,129 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EBAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F5C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7CE2073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ODwxIqg6"
+	by mail.kernel.org (Postfix) with ESMTP id 0223A2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgAHQFO (ORCPT
+        id S1728978AbgAHQFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:05:14 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:51752 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgAHQFN (ORCPT
+        Wed, 8 Jan 2020 11:05:45 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:48453 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgAHQFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:05:13 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8352C20B4798;
-        Wed,  8 Jan 2020 08:05:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8352C20B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578499512;
-        bh=KrknY3LiZv+UW2WvDhkkxFbk6VfTO+2SgVUx/zg5yx8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ODwxIqg6c19Ihnn1BDvr4kZ84df6p8m8V4Ob7p7QA9/JBsyhwRTt1UM1Q64cN1s6F
-         c5oFKrsms0zcyEk7JH1IUdL492lV4RmN2YmsV16CPkXoLvdw3DdtG42FkrwuxTzKOY
-         ZfaebksJbDKG9nSqtQ9YDaEAzP341D1dhGMsaKjo=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        arnd@arndb.de, linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v1] IMA: fix measuring asymmetric keys Kconfig
-Date:   Wed,  8 Jan 2020 08:05:08 -0800
-Message-Id: <20200108160508.5938-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 Jan 2020 11:05:44 -0500
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MEUaQ-1iwJWG3s66-00G4ZF; Wed, 08 Jan 2020 17:05:43 +0100
+Received: by mail-qt1-f180.google.com with SMTP id w30so1985478qtd.12;
+        Wed, 08 Jan 2020 08:05:42 -0800 (PST)
+X-Gm-Message-State: APjAAAWlBzYgEylMmXpCYKzZmqEVpUf15RLp/cydgBVsQ16MUfKOntfu
+        7tbB/T2R1DyJll8SqQpSg1Js93g/dUOQOyT8OQY=
+X-Google-Smtp-Source: APXvYqzqWQEeHE7TaWNtzpBpnp1E3rb+fs8wMFW5zsPq4jwo54iNI9QBbVdA5oc0dSdNHlxIFwVe6vphV190F0C143E=
+X-Received: by 2002:ac8:768d:: with SMTP id g13mr4188797qtr.7.1578499541624;
+ Wed, 08 Jan 2020 08:05:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20200107210256.2426176-1-arnd@arndb.de> <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
+In-Reply-To: <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 17:05:25 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0qb3fE1D4o1wYMVVets8CtbTpMRg1hUJF1wW+oC1GJjg@mail.gmail.com>
+Message-ID: <CAK8P3a0qb3fE1D4o1wYMVVets8CtbTpMRg1hUJF1wW+oC1GJjg@mail.gmail.com>
+Subject: Re: [PATCH] rbd: work around -Wuninitialized warning
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Sage Weil <sage@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Jason Dillaman <dillaman@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:onrL9DaFWfOC/Ad3SvMt2oMgkY5ejSs/ewdb6kHw2Fzj/WdTHGS
+ 8fUCcYbiNmmFizt4rxo24Za9n0LxNFWFRkAHDheFc00XCaMm4zzNBm61spWfkTrRv+0S1bG
+ +eCbzi3OGnch5XvrMgZX5ekH64dADY+iFDGdZvEAb7We2enFWiqN0wq2beCEaz8o9BKXO2D
+ exKA4EB9ZtQMHeHYYDJ4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:quB0CnsP3xg=:Oht/pwgkURotru5YSxY3ge
+ aRr5t/bdENbEJxZQx2y2kzCSYUCjB4rVS3dh5X2kMRh9fii/2cpTCBKJTRvP3SQkzBUbVBiBn
+ BqxpWP6SweGZ5bDegdlmB+Pmx7s4OptZtmw9PfkHf+fyDbiEL00lfegwxiXlT34vI8ROVTFoo
+ 2yyBMIQsV9DvzTC6R4KQoAPTIx2EaxQ1h1kbVCcWm/3EzfkRcQUriITMr2T/OvvARlndi0cx2
+ Qb68q3vffEoFEQPuknhpkyqdUJz6OaEj5ygyFiEOjeV1M8ABBxh9XOQDratB1fkFtxhWCGUy1
+ B19YbUnj8KT4b3PJJsS5PpEI7XMVHCaOMu7VBeGwvHpvJiuvGXOCtYy3Behsgl5awDsLtJNvM
+ AXAX3j+ZplNUZH/KqDr04l3ASql6500MrQkfXJjjcjMw1ECix96imJTuMIIZ4Q5BbCQHKJEV/
+ d9gW1G5zgWa/K07XgBNXu3sPXDFk9plu9PvfL007Gv0I2y+7EEJf0bem/9S3v5yfVVQzZrCJY
+ mETh1MEt7roXcPN5c/TjVw98f1o1/0AHV8WRmvrCnpO2v+9AyEw7hnpB6ArupMNurUd38gFUu
+ VG9roqPRPXhSt/sl/NdKm5UBXImqkKA93YERbfSZFQsPIHVwP/2z2Y8lYHeZEz+wGhGDUaVu0
+ G49ZO96GhfmLj8EU0gkUe2UUwmB9SH2i+IGUVK4mxwqNohj59pE5lZVTCAari77+x1LaAQBaG
+ 9vo8bcyPvzr6IttubJCyWBdJsO0N/V2Tk/7bq2bHyxKJ6X83uqgAeActwodjwq0dFLjIHzvHi
+ jkbL14qmhPoaqDosnbbviAX1/D2FFPrgettUS/XlS98ViPs6/cSBNUixNSAW9y4eMFw/vKy3r
+ MCHgaqCj2WISpbZoYB6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is a tristate. If this config
-is set to "=m", ima_asymmetric_keys.c is built as a kernel module.
+On Wed, Jan 8, 2020 at 4:31 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+>
+> On Tue, Jan 7, 2020 at 10:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > gcc -O3 warns about a dummy variable that is passed
+> > down into rbd_img_fill_nodata without being initialized:
+> >
+> > drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+> > drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+> >   fctx->iter = *fctx->pos;
+> >
+> > Since this is a dummy, I assume the warning is harmless, but
+> > it's better to initialize it anyway and avoid the warning.
+> >
+> > Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/block/rbd.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> > index 29be02838b67..070edc5983df 100644
+> > --- a/drivers/block/rbd.c
+> > +++ b/drivers/block/rbd.c
+> > @@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+> >                                u64 off, u64 len)
+> >  {
+> >         struct ceph_file_extent ex = { off, len };
+> > -       union rbd_img_fill_iter dummy;
+> > +       union rbd_img_fill_iter dummy = {};
+> >         struct rbd_img_fill_ctx fctx = {
+> >                 .pos_type = OBJ_REQUEST_NODATA,
+> >                 .pos = &dummy,
+>
+> Applied, but slightly confused.  Wasn't selecting -O3/s/etc supposed to
+> automatically disable -Wmaybe-uninitialized via Kconfig?
 
-Defined an intermediate boolean config namely
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS that is
-defined when CONFIG_IMA and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-are defined.
+Oh, that's right. I have a couple of patches in my randconfig tree that
+completely rework the way that the warning options are handled and
+that accidentally ignored CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED,
+so it's won't actually happen on linux-next right now, just on my kernel.
 
-Asymmetric key structure is defined only when
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is defined. Since the IMA hook
-measures asymmetric keys, the IMA hook is defined in
-ima_asymmetric_keys.c which is built only if
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is defined.
+However, given that -O3 did not actually introduce too many false
+positives here but did find some actual uninitialized variables, we should
+probably have it turned on anyway.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: James.Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reported-by: kbuild test robot <lkp@intel.com> # ima_asymmetric_keys.c
-is built as a kernel module.
-Fixes: 88e70da170e8 ("IMA: Define an IMA hook to measure keys")
-Fixes: cb1aa3823c92 ("KEYS: Call the IMA hook to measure keys")
----
- include/linux/ima.h             | 4 ++--
- security/integrity/ima/Kconfig  | 6 ++++++
- security/integrity/ima/Makefile | 2 +-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+A lot of these false positives seem to happen whenever gcc can partially
+understand how a variable is used, but not enough to see that it's ok.
+With higher optimization levels, this happens less often than with the
+lower levels as it inlines more aggressively and correctly determines
+uses to be safe that were false-positives earlier.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 3b89136bc218..f4644c54f648 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -101,7 +101,7 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
- {}
- #endif
- 
--#if defined(CONFIG_IMA) && defined(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE)
-+#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
- extern void ima_post_key_create_or_update(struct key *keyring,
- 					  struct key *key,
- 					  const void *payload, size_t plen,
-@@ -113,7 +113,7 @@ static inline void ima_post_key_create_or_update(struct key *keyring,
- 						 size_t plen,
- 						 unsigned long flags,
- 						 bool create) {}
--#endif  /* CONFIG_IMA && CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
-+#endif  /* CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS */
- 
- #ifdef CONFIG_IMA_APPRAISE
- extern bool is_ima_appraise_enabled(void);
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 838476d780e5..355754a6b6ca 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -310,3 +310,9 @@ config IMA_APPRAISE_SIGNED_INIT
- 	default n
- 	help
- 	   This option requires user-space init to be signed.
-+
-+config IMA_MEASURE_ASYMMETRIC_KEYS
-+	bool
-+	depends on IMA
-+	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
-+	default y
-diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-index 207a0a9eb72c..3e9d0ad68c7b 100644
---- a/security/integrity/ima/Makefile
-+++ b/security/integrity/ima/Makefile
-@@ -12,4 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
- ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
- ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
- obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
--obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += ima_asymmetric_keys.o
-+obj-$(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) += ima_asymmetric_keys.o
--- 
-2.17.1
+I'm fairly sure that the output at -Os still won't be helpful as that would
+mostly show up cases that -O2 has found to be safe rather than those
+that -O2 decided not to warn about because of lack of information.
 
+      Arnd
