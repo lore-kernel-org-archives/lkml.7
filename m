@@ -2,83 +2,75 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D62C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BFDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A923C20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCD72073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578502406;
+	bh=H1p2fX0nJsbb077d4AW19/aUlVCtej1nlRBJlhvXO6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2t1iTgJ2OjeJrxTRbo/OKTuJfuxx7IXE6gxOvraegvvQxfTyGsahGPWKB28wbYDXt
+	 fApS8/FEzh/GOBVInJXruubHatm4DnyLsOjJKGEr89ALQGVJ2AsKs26nWn+evS6xnP
+	 lKcmYJH6SpwN9ln/T3EUe617u+rQ4clCwJh393Fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgAHQxB (ORCPT
+        id S1729541AbgAHQx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:53:01 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:54272 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgAHQxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:53:01 -0500
-Received: by mail-io1-f70.google.com with SMTP id u6so2393310iog.21
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:53:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=QolCxUn5s/4K7GKyA5X2xLHSsYz24NpJzFUvvR3OMz0=;
-        b=bWMJ5Wko/lCqnphIT6vqR5ivJbVduCOP8iOmWCUCu5GZxemvtu32nnVcOb4y0eYaaB
-         Qfp25BZm1vxihbVSqk5BmrtNO9+u+JC7sYWGVHmgld4M8mwljjEfnz0i9S+u2p1QqVuQ
-         G+HQzeeOLFyRZk4uXYm8rcPddJHw9OQZD6cp3KI/in0rlDs7D4WEthBXXjvIAiPBiHCe
-         cxRKhhIbLKqHcB3g4d72vXIgs9gw25z6hOn4DLEhEQsEDB53gBE43MMICa1IyNVMb3v1
-         tPDVSXCIXZI4gTEUkvqkjMDphG9eH/PAFVD2Dj2L15NyvpwA9bhra/8+0CWlWksVVA6E
-         vnHQ==
-X-Gm-Message-State: APjAAAVNZR/j5ABo/59XLa8uQrb8VT/qMgXcuH1Rd36VoyIWcHOgmYhN
-        0H6Yu5Cav0J9nIEfEBOtnXEuuVUqDuaftQYeT9a9Jjmu9swH
-X-Google-Smtp-Source: APXvYqw7GKpl01VnwgT3uyXH2jOmkGxwN/KTGFcWtwBlYHLJt+Fn1jSB1cHbmeA3E1QqBW3DFyLuj5USskG7K+2UGNRRJRO1ZW6V
+        Wed, 8 Jan 2020 11:53:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729507AbgAHQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:53:25 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC5DC20678;
+        Wed,  8 Jan 2020 16:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578502405;
+        bh=H1p2fX0nJsbb077d4AW19/aUlVCtej1nlRBJlhvXO6E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kGvq+LCWZ5RGwV4CLf34HMsMWWhbQSQghxfjXbSvb32sMeWAl7NRpLjFR/N+QuM1x
+         j4em6ezD2Yuu4Wvh5C6pF/AIxCmoWg0Xsw2Owm6NSZyM4Fkyy78uXMuRQtVA2VCuQP
+         8nWIBtD0vLTlStF1Z2EqxtObEgS24JK/MHunBSmM=
+Date:   Wed, 8 Jan 2020 17:53:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>, od@zcrc.me,
+        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register charger
+Message-ID: <20200108165323.GA2506374@kroah.com>
+References: <20200107002901.940297-1-paul@crapouillou.net>
 MIME-Version: 1.0
-X-Received: by 2002:a02:2446:: with SMTP id q6mr4800559jae.78.1578502380699;
- Wed, 08 Jan 2020 08:53:00 -0800 (PST)
-Date:   Wed, 08 Jan 2020 08:53:00 -0800
-In-Reply-To: <000000000000a347ef059b8ee979@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000adcc3c059ba3b9e9@google.com>
-Subject: Re: general protection fault in hash_ipportnet4_uadt
-From:   syzbot <syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, coreteam@netfilter.org, davem@davemloft.net,
-        fw@strlen.de, gregkh@linuxfoundation.org, info@metux.net,
-        jengelh@inai.de, jeremy@azazel.net, kadlec@blackhole.kfki.hu,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107002901.940297-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Jan 07, 2020 at 01:29:01AM +0100, Paul Cercueil wrote:
+> Register a power supply charger, whose online state depends on whether
+> the USB role is set to device or not.
 
-commit 23c42a403a9cfdbad6004a556c927be7dd61a8ee
-Author: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Date:   Sat Oct 27 13:07:40 2018 +0000
+That says _what_ you are doing, but I have no idea _why_ you want to do
+this.
 
-     netfilter: ipset: Introduction of new commands and protocol version 7
+What is this going to cause to have happen?  What new userspace api is
+going to result?  What will a user do with this?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13a9d115e00000
-start commit:   ae608821 Merge tag 'trace-v5.5-rc5' of git://git.kernel.or..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1069d115e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a9d115e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
-dashboard link: https://syzkaller.appspot.com/bug?extid=34bd2369d38707f3f4a7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=118d6971e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b47c9ee00000
+Is this going to always show up, no matter if the role is not even
+relevant for a power supply?
 
-Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and  
-protocol version 7")
+You need a lot more text here to make this mergable.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+thanks,
+
+greg k-h
