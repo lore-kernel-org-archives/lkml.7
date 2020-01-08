@@ -2,186 +2,70 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7728C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB7FC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30402082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B3E20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:30:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ASf04qi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgAHK3u convert rfc822-to-8bit (ORCPT
+        id S1727726AbgAHKax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:29:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50536 "EHLO mx2.suse.de"
+        Wed, 8 Jan 2020 05:30:53 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:45080 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbgAHK3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:29:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 13CB7AAC2;
-        Wed,  8 Jan 2020 10:29:48 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Chen Wandun <chenwandun@huawei.com>, rkrcmar@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolai Stange <nstange@suse.de>
-Subject: Re: [PATCH next] KVM: Fix debugfs_simple_attr.cocci warnings
-References: <1577151674-67949-1-git-send-email-chenwandun@huawei.com>
-        <4f193d99-ee9b-5217-c2f6-3a8a96bf1534@redhat.com>
-Date:   Wed, 08 Jan 2020 11:29:46 +0100
-In-Reply-To: <4f193d99-ee9b-5217-c2f6-3a8a96bf1534@redhat.com> (Paolo
-        Bonzini's message of "Tue, 7 Jan 2020 15:01:54 +0100")
-Message-ID: <87h816nsv9.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726751AbgAHKaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:30:52 -0500
+Received: from zn.tnic (p200300EC2F0BD40034469522243F337C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d400:3446:9522:243f:337c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 116DC1EC0CC9;
+        Wed,  8 Jan 2020 11:30:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578479451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=taKxhErl92ubSBBYp1djuoXl7LfBrUvCb2etYgMFOcY=;
+        b=ASf04qi56AORsfwfq9pUSRNWqPGxmJC/U2lnXR4PkfV6xEOeky+8De2dK/sCGfo10jiQMM
+        QJG+i9+2yxeXsVWIVNSrZq926cUc5xTy3iS9b78LDvttshGzNZd2H4Og4shW+PiM53p/z6
+        7CaWgeiRnmb5ntrNl8uIqLysnA1XCcE=
+Date:   Wed, 8 Jan 2020 11:30:40 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Add support for fast short rep mov
+Message-ID: <20200108103040.GB27363@zn.tnic>
+References: <20191212225210.GA22094@zn.tnic>
+ <20191216214254.26492-1-tony.luck@intel.com>
+ <20200107184003.GK29542@zn.tnic>
+ <20200107223606.GA32598@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+In-Reply-To: <20200107223606.GA32598@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Tue, Jan 07, 2020 at 02:36:06PM -0800, Luck, Tony wrote:
+> Yes FSRM implies ERMS
 
-> On 24/12/19 02:41, Chen Wandun wrote:
->> Use DEFINE_DEBUGFS_ATTRIBUTE rather than DEFINE_SIMPLE_ATTRIBUTE
->> for debugfs files.
->> 
->> Semantic patch information:
->> Rationale: DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
->> imposes some significant overhead as compared to
->> DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
->> 
->> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
->
-> This patch was sent probably already two or three times, and every time
-> I've not been able to understand what is this significant overhead.
+Ok, I've added this comment ontop so that it is clear what's going on
+there:
 
-As you correctly stated below, the overhead is one
-kmalloc(sizeof(struct file_operations)) per opened debugfs file
-(i.e. one per debugfs struct file instance). struct file_operations is
-equivalent to 33 unsigned longs, so it might not be seen as that
-"significant", but it isn't small either.
-
-
-> With DEFINE_DEBUGFS_ATTRIBUTE:
->
-> - the fops member is debugfs_open_proxy_file_operations, which calls
-> replace_fops so that the fops->read member is debugfs_attr_read on the
-> opened file
->
-> - debugfs_attr_read does
->
->         ret = debugfs_file_get(dentry);
->         if (unlikely(ret))
->                 return ret;
->         ret = simple_attr_read(file, buf, len, ppos);
->         debugfs_file_put(dentry);
->
-> With DEFINE_SIMPLE_ATTRIBUTE:
->
-> - the fops member is debugfs_full_proxy_open, and after
-> __full_proxy_fops_init fops->read is initialized to full_proxy_read
->
-> - full_proxy_read does
->
->         r = debugfs_file_get(dentry);
->         if (unlikely(r))
->                 return r;
->         real_fops = debugfs_real_fops(filp);
->         r = real_fops->name(args);
->         debugfs_file_put(dentry);
->         return r;
->
-> where real_fops->name is again just simple_attr_read.
->
-> So the overhead is really just one kzalloc every time the file is
-> opened.
-
-Yes.
-
-
-> I could just apply the patch, but it wouldn't solve the main issue,
-> which is that there is a function with a scary name
-> ("debugfs_create_file_unsafe") that can be used in very common
-> circumstances (with DEFINE_DEBUGFS_ATTRIBUTE.
-
-Agreed, the naming is a bit poor. "debugfs_create_file_no_proxy" or the
-like would perhaps have been a better choice.
-
-
-> Therefore, we could
-> instead fix the root cause and avoid using the scary API:
->
-> - remove from the .cocci patch the change from debugfs_create_file to
-> debugfs_create_file_unsafe.  Only switch DEFINE_SIMPLE_ATTRIBUTE to
-> DEFINE_DEBUGFS_ATTRIBUTE
->
-> - change debugfs_create_file to automatically detect the "easy" case
-> that does not need proxying of fops; something like this:
->
-> 	const struct file_operations *proxy_fops;
->
-> 	/*
-> 	 * Any struct file_operations defined by means of
-> 	 * DEFINE_DEBUGFS_ATTRIBUTE() is protected against file removals
-> 	 * and thus does not need proxying of read and write fops.
-> 	 */
-> 	if (!fops ||
-> 	    (fops->llseek == no_llseek &&
-> 	     ((!fops->read && !fops->read_iter) ||
-> 	      fops->read == debugfs_attr_read) &&
-> 	     ((!fops->write && !fops->write_iter) ||
-> 	      fops->write == debugfs_attr_write) &&
-> 	     !fops->poll && !fops->unlocked_ioctl)
-> 		return debugfs_create_file_unsafe(name, mode, parent,
-> 						  data, fops);
->
-> 	/* These are not supported by __full_proxy_fops_init.  */
-> 	WARN_ON_ONCE(fops->read_iter || fops->write_iter);
-> 	return __debugfs_create_file(name, mode, parent, data,
-> 				    &debugfs_full_proxy_file_operations,
-> 				     fops);
->
-> CCing Nicolai Stange who first introduced debugfs_create_file_unsafe.
-
-I'm not strictly against your proposal, but I somewhat dislike the idea
-of adding runtime checks for special cases to work around a historic
-issue. Also, we'd either have to touch the ~63 existing call sites of
-debugfs_create_file_unsafe() again or had to live with inconsistent
-debugfs usage patterns.
-
-AFAICT, your approach wouldn't really put a relieve on maintainers
-wrt. patch count as the cocci check for the DEFINE_SIMPLE_ATTRIBUTE ->
-DEFINE_DEBUGFS_ATTRIBUTE conversion would still be needed.
-
-And then there's grepability: right now it would be possible to find all
-fully proxied debugfs files by means of "git grep 'debugfs_file_create('".
-I'm not saying I'm about to convert these, but in theory it could be
-done easily.
-
-How about introducing a
-  #define debugfs_create_attr debugfs_create_file_unsafe
-instead to make those
-s/DEFINE_SIMPLE_ATTRIBUTE/DEFINE_DEBUGFS_ATTRIBUTE/
-patches look less scary?
-
-Ideally, for the sake of additional safety, DEFINE_DEBUGFS_ATTRIBUTE
-could be made to wrap the file_operations within something like a
-struct debugfs_attr_file_operations and debugfs_create_attr() would
-take that instead of a plain file_operations. But again, this would
-require touching the existing users of debugfs_create_file_unsafe()...
-So I'm not sure it would be worth it.
-c
-
-Thanks,
-
-Nicolai
+	/* FSRM implies ERMS => no length checks, do the copy directly */
 
 -- 
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
