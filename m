@@ -2,107 +2,85 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA42C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4851FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4016820705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3F42072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7bDlf64"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LGhwTuIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbgAHJ60 (ORCPT
+        id S1727730AbgAHJ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:58:26 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43455 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726199AbgAHJ60 (ORCPT
+        Wed, 8 Jan 2020 04:58:33 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35261 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgAHJ6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:58:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578477504;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9sycsqZJGVnQw+EqUeY+kh0XYMo8ue/f6Kld1hcvxz8=;
-        b=d7bDlf641fthW2KYfWr2bq1BONQGNJNoc9gJ3j6jAMT2VZEhUzvXlkfHwvB1Y3CjGxKBzw
-        lc51ch227gYJeOf6iT+/oxuYUL0XXbLr+LSg5coWHRZmiJCQS4i5vDZbUN4HjJuWdaM8G7
-        8p1nQ+9lejzQWrq6ALvJ0Vq3qed7CnY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-Hy-c3osQPSqa5RsUENJZtg-1; Wed, 08 Jan 2020 04:58:23 -0500
-X-MC-Unique: Hy-c3osQPSqa5RsUENJZtg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15834800D54;
-        Wed,  8 Jan 2020 09:58:22 +0000 (UTC)
-Received: from [10.43.2.30] (unknown [10.43.2.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D59E5C241;
-        Wed,  8 Jan 2020 09:58:17 +0000 (UTC)
-Subject: Re: discuss about pvpanic
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        zhenwei pi <pizhenwei@bytedance.com>
-Cc:     "yelu@bytedance.com" <yelu@bytedance.com>,
-        Greg KH <gregkh@linuxfoundation.org>, qemu-devel@nongnu.org,
-        linux-kernel@vger.kernel.org,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>
-References: <2feff896-21fe-2bbe-6f68-9edfb476a110@bytedance.com>
- <dd8e46c4-eac4-046a-82ec-7ae17df75035@redhat.com>
-From:   Michal Privoznik <mprivozn@redhat.com>
-Message-ID: <d0c57f84-a25c-9984-560b-2419807444e1@redhat.com>
-Date:   Wed, 8 Jan 2020 10:58:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 8 Jan 2020 04:58:32 -0500
+Received: by mail-io1-f67.google.com with SMTP id h8so2570673iob.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:58:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QAtR7WNLGbja1kZFYbC1LM6r/2gOOz73oNIxwZf1sK8=;
+        b=LGhwTuIZMsvckUaUhJ+tDGp6Y0jn0LYn/xbxleZUSDMkTwotTTy+1Fg5ZHuiCgbnuW
+         ABixaa78LQAMQqSXxlOdTlfDx+n2+WrJQM9cCO+dERP4pTnItxTE5IlWAuVhshqD5D0f
+         0ZiCF95TJ+fR3w2e37nT74ePbWYE2y6TFcorU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QAtR7WNLGbja1kZFYbC1LM6r/2gOOz73oNIxwZf1sK8=;
+        b=iA18eTLhNdjMy3rEYmEJMY+DhWqNB6ApP1/fUjIOGvLldl0CwU/ch+Wv1C+2lGw3ep
+         JvzTJOLJcxtEUJ2daX8aDDgeGkzvAkXa5+AeTQTDXqFGBEIwyyj7r6fxwGYGNjUVCDHr
+         EK4/cvekipg7kp/oAcmhRIQf3zbMgEcfI10dbydnE33fzJ6Ewvf4Z6Kx1Hq9Iq1QqaRl
+         LzXfCvsUVdxjlNEvdbzmorhRrREM9RezY3ZVjpQC/vdOTmZFkVXdi3gp/50Xa8giiBrq
+         0l2Xu1w13PXsQtXygWjAWcu0DL96+c8wiA9I7+epoB2AYSD0Wc4EJEdjXKNv4Y6/J8P5
+         imIw==
+X-Gm-Message-State: APjAAAVsEddOkp+dP8jkQ3pup+UWfVJGdaoUTpdfFqEbRXv/wv+pr4kd
+        R9yeTE+Pv/P9qE+mNbZFipZJNQpzLifgnQL88Ep13A==
+X-Google-Smtp-Source: APXvYqwH5rufYzM9JfRPQjj7bRhJ6sm9RgJQyx7qvhgpJjalHtt1/UbVPcBLfTvCu23laYbDf4TKavfcetdwMpGEoRY=
+X-Received: by 2002:a6b:3845:: with SMTP id f66mr2819729ioa.102.1578477511547;
+ Wed, 08 Jan 2020 01:58:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <dd8e46c4-eac4-046a-82ec-7ae17df75035@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200103064407.19861-1-michael.kao@mediatek.com> <20200103064407.19861-7-michael.kao@mediatek.com>
+In-Reply-To: <20200103064407.19861-7-michael.kao@mediatek.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 8 Jan 2020 17:58:05 +0800
+Message-ID: <CAJMQK-hQ5BWp7isGDTz_Y4ttxfoM0guqfcAEFrh3Eq7SMcNM5w@mail.gmail.com>
+Subject: Re: [PATCH v3,6/8] thermal: mediatek: mt8183: fix bank number settings
+To:     Michael Kao <michael.kao@mediatek.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/20 10:36 AM, Paolo Bonzini wrote:
-> On 08/01/20 09:25, zhenwei pi wrote:
->> Hey, Paolo
->>
->> Currently, pvpapic only supports bit 0(PVPANIC_PANICKED).
->> We usually expect that guest writes ioport (typical 0x505) in panic_notifier_list callback
->> during handling panic, then we can handle pvpapic event PVPANIC_PANICKED in QEMU.
->>
->> On the other hand, guest wants to handle the crash by kdump-tools, and reboots without any
->> panic_notifier_list callback. So QEMU only knows that guest has rebooted (because guest
->> write 0xcf9 ioport for RCR request), but QEMU can't identify why guest resets.
->>
->> In production environment, we hit about 100+ guest reboot event everyday, sadly we
->> can't separate the abnormal reboot from normal operation.
->>
->> We want to add a new bit for pvpanic event(maybe PVPANIC_CRASHLOADED) to represent the guest has crashed,
->> and the panic is handled by the guest kernel. (here is the previous patch https://lkml.org/lkml/2019/12/14/265)
->>
->> What do you think about this solution? Or do you have any other suggestions?
-> 
-> Hi Zhenwei,
-> 
-> the kernel-side patch certainly makes sense.  I assume that you want the
-> event to propagate up from QEMU to Libvirt and so on?  The QEMU patch
-> would need to declare a new event (qapi/misc.json) and send it in
-> handle_event (hw/misc/pvpanic.c).  For Libvirt I'm not familiar, so I'm
-> adding the respective list.
-
-Adding an event is fairly easy, if everything you want libvirt to do is 
-report the event to upper layers. I volunteer to do it. Question is, how 
-qemu is going to report this, whether some attributes to GUEST_PANICKED 
-event or some new event. But more important is to merge the change into 
-kernel.
-
-Michal
-
+On Fri, Jan 3, 2020 at 2:44 PM Michael Kao <michael.kao@mediatek.com> wrote:
+>
+> MT8183_NUM_ZONES should be set to 1
+> because MT8183 doesn't have multiple banks.
+>
+> Fixes: a4ffe6b52d27 ("thermal: mediatek: add support for MT8183")
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
