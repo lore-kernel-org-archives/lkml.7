@@ -2,125 +2,108 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF92C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864C0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E4F2080A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0AE2080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCaReHFA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YfjvWjsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgAHDYS (ORCPT
+        id S1726411AbgAHD0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 22:24:18 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33204 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgAHDYO (ORCPT
+        Tue, 7 Jan 2020 22:26:33 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36273 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgAHD0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 22:24:14 -0500
-Received: by mail-pj1-f65.google.com with SMTP id u63so5839670pjb.0;
-        Tue, 07 Jan 2020 19:24:14 -0800 (PST)
+        Tue, 7 Jan 2020 22:26:33 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x184so891540pfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 19:26:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=lK0hzpi7lOKx/+vwwnIUmfL08coFZ79d+GQbKJpzbuw=;
-        b=kCaReHFA/2m4OEHT4jLNp5pVtd/t9O5G9JwqiJ9+UasprWNPIFZUCmMOvsTtwblCZy
-         BLFANaRq6BoJXO5M9gMEMwZE9QeERUxmzCV4qePVIyDEpeI6rq/wKc1JndkKLkHdQyz7
-         hEWRhfORw2kWqCwEPOoxoE87VSxmB9c1PBOmwOjKTUlXcaTZErdZEKImufCRM1rMYjw1
-         242c6PO2wGpRhUz4RFm+B5mp6KEjdzG/3LVq49PTdSSISIczQ99tN122UCiW8EhJux8D
-         FVsDzdwYQE3IIgBXx+Qaul/MeyXhAOjtKWroaViiEZ3emMHIlnf8YZDLqhNjK25uPJp7
-         M+mg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1xOSp/kO5RUHbhgM95X1/1jyAywCmLEOyBUx87fFFtw=;
+        b=YfjvWjsaaKSbVwMhWV4e2o2UhVmKdwk3YsOZGjWpCogvoGsPWrQNsyJorRN6s8wfgN
+         A85ZEmclMJYvt2/41/sVuGiUkdi/SXwXQY6qW7HuF+q9QkWp2hRZRITST6+4z4vW9W3c
+         SONMWPY5/FwsyIQDvtO00HuOxmyjd1HOhKXis=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=lK0hzpi7lOKx/+vwwnIUmfL08coFZ79d+GQbKJpzbuw=;
-        b=ZFnMAiVFZfxyPtvBe6T22q6NrvqGCy45y6H29eN20/2a2wQNVQbp9kpwynlbt/kjbc
-         TN3r2gMaEYwBC4064F3gwqCK7HnQDLAiSrRYwB+WtBukWor7R/J1OiArcu7hVgDn9eo9
-         7k9GPhWIUXorB02cxTIEo0g5Q9byly+/mtVmMAJhhwsR7qtEs4DP5waYqct/mxq0LeU5
-         TeGjsp+W9kyaUtlBJrqLtoylFEiHHb0xNBcsTYdODQxxzHTTRCtcxjRcMDek8JzMiqj1
-         DMYKyr5q+krf7xb/YQSiL5GuomOa8TAudjQGK71K9SjY2HV4ej5ZO8wxSTKnT2PJnvKP
-         TElQ==
-X-Gm-Message-State: APjAAAW7DYXJ9mvay4TJHoADDFbgB7qwy61oVwJ3qKrF24rq0dCmnkcf
-        Fs/6aQ8BLVouGPHCUzBooLE=
-X-Google-Smtp-Source: APXvYqyf1gLmB4hhnarUAfaBLruqzaaorl1nD7HJculUE1wIQqdTMKqw2LGQwDmGsTse2kht9lXJvQ==
-X-Received: by 2002:a17:90a:8a12:: with SMTP id w18mr2028423pjn.68.1578453854183;
-        Tue, 07 Jan 2020 19:24:14 -0800 (PST)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id g7sm1077875pfq.33.2020.01.07.19.24.10
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 07 Jan 2020 19:24:13 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org, baohua@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, baolin.wang7@gmail.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 3/3] hwspinlock: sirf: Use devm_hwspin_lock_register() to register hwlock controller
-Date:   Wed,  8 Jan 2020 11:23:46 +0800
-Message-Id: <8f94e67b5f9af20a93418a2fc9cc71b194f1285c.1578453662.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1578453662.git.baolin.wang7@gmail.com>
-References: <cover.1578453662.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1578453662.git.baolin.wang7@gmail.com>
-References: <cover.1578453662.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1xOSp/kO5RUHbhgM95X1/1jyAywCmLEOyBUx87fFFtw=;
+        b=BqxWf+Ha9/wcwDM6vBBSUCqL68/ECkdbA/MMcAO8fd/OlqZkC82sHQLDzbOw+jwqn9
+         e4/Ol/VPJggd5DJ+rDbWmekQtBjHxcMYNykXMVMzJI1drU0ymzfkgl9iIpEcVH3/nRLr
+         BEeOpcSCMtDZAo2y6jJNi5OhkgvBFNflEDq64K21onv9+mLdTC8XQAINbn3d9DZmTVnU
+         7/aXJseSgMmNqGwk/SuNngpIvmurellFKoi7amGf06f9xjQjIVZ/HBFmEqF6jEM8TCEG
+         9I9PtBiI9TiMCJ1AX3/D6uRfF6Lz83j8AZERVEqpELqVpc8hiPG6qId6fFqbbARO/Kjh
+         /ggQ==
+X-Gm-Message-State: APjAAAVaE4hw6fm0XcPVgWFM+vJfhzxRcFFCo8iDeI/SQ8YH+sczjNrI
+        vLcYj/0XZBuoksho34F9DDBFog==
+X-Google-Smtp-Source: APXvYqyUT6VsXxCtYuElv5Y3o6IQMdGzsPCyousxOHbeS/ntlyTO3M2XSD2NtvvArGznvirU2k991Q==
+X-Received: by 2002:a62:3086:: with SMTP id w128mr2755138pfw.58.1578453992605;
+        Tue, 07 Jan 2020 19:26:32 -0800 (PST)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
+        by smtp.gmail.com with ESMTPSA id 80sm1056157pfw.123.2020.01.07.19.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 19:26:31 -0800 (PST)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2] arm64: dts: qcom: add Venus firmware node on Cheza
+Date:   Wed,  8 Jan 2020 12:26:23 +0900
+Message-Id: <20200108032623.113921-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_hwspin_lock_register() to register the hwlock controller instead of
-unregistering the hwlock controller explicitly when removing the device.
+Cheza boards require this node to probe, so add it.
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- drivers/hwspinlock/sirf_hwspinlock.c |   21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 6 ++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
-index d62462e..823d3c4 100644
---- a/drivers/hwspinlock/sirf_hwspinlock.c
-+++ b/drivers/hwspinlock/sirf_hwspinlock.c
-@@ -79,23 +79,9 @@ static int sirf_hwspinlock_probe(struct platform_device *pdev)
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 9a4ff57fc877..8c2e3aeacac4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -1279,3 +1279,9 @@ config {
+ 		};
+ 	};
+ };
++
++&venus {
++	video-firmware {
++		iommus = <&apps_smmu 0x10b2 0x0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ddb1f23c936f..8f1d19c5a098 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2567,7 +2567,7 @@ usb_2_dwc3: dwc3@a800000 {
+ 			};
+ 		};
  
- 	platform_set_drvdata(pdev, hwspin);
- 
--	return hwspin_lock_register(&hwspin->bank, &pdev->dev,
--				    &sirf_hwspinlock_ops, 0,
--				    HW_SPINLOCK_NUMBER);
--}
--
--static int sirf_hwspinlock_remove(struct platform_device *pdev)
--{
--	struct sirf_hwspinlock *hwspin = platform_get_drvdata(pdev);
--	int ret;
--
--	ret = hwspin_lock_unregister(&hwspin->bank);
--	if (ret) {
--		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
--		return ret;
--	}
--
--	return 0;
-+	return devm_hwspin_lock_register(&pdev->dev, &hwspin->bank,
-+					 &sirf_hwspinlock_ops, 0,
-+					 HW_SPINLOCK_NUMBER);
- }
- 
- static const struct of_device_id sirf_hwpinlock_ids[] = {
-@@ -106,7 +92,6 @@ static int sirf_hwspinlock_remove(struct platform_device *pdev)
- 
- static struct platform_driver sirf_hwspinlock_driver = {
- 	.probe = sirf_hwspinlock_probe,
--	.remove = sirf_hwspinlock_remove,
- 	.driver = {
- 		.name = "atlas7_hwspinlock",
- 		.of_match_table = of_match_ptr(sirf_hwpinlock_ids),
+-		video-codec@aa00000 {
++		venus: video-codec@aa00000 {
+ 			compatible = "qcom,sdm845-venus";
+ 			reg = <0 0x0aa00000 0 0xff000>;
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-1.7.9.5
+2.24.1.735.g03f4e72817-goog
 
