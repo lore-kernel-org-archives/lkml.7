@@ -2,384 +2,124 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78865C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CBDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3C3206ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578484296;
-	bh=UaIxLZUI75Nhbq0wZwJ9Y9VnTVdDPODF8I6Yh67fzSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UFLJ25b3fsk+CdT6Ogg/bnCZIVeuUL81o5Tw5Td2QBcn3TOkTqYJK/vR4azRgAWix
-	 uqtFrX/n8CgddNYl0xVX3tBxXJNzZSn6t38swm0GMrzb2VodB91sAsaI5BmP4XbeCT
-	 UkazL3GEy9sFM0sB9dPv229LCWNT/9RbU6PZMQhg=
+	by mail.kernel.org (Postfix) with ESMTP id C8041206ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgAHLvf (ORCPT
+        id S1727491AbgAHLxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgAHLvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:51:35 -0500
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 495E1206DA;
-        Wed,  8 Jan 2020 11:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578484293;
-        bh=UaIxLZUI75Nhbq0wZwJ9Y9VnTVdDPODF8I6Yh67fzSA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tFFKdgGabDv2XpV7p5rWZmsHOHdxYqIOYTmoNUoMI7xPlmiNp1RObtxD7yRvcSbHb
-         eKRLtPgSy39OK+usHe3gQVmMj7vkwqn+nMkZ9QSE8sGMkcqeimCxhcieeoWeqreZI1
-         1bzWtwfZcbYU1e2boj4CmHBo+rM2WbUrcIPue6gk=
-Date:   Wed, 8 Jan 2020 03:51:32 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Chao Yu <chao@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
-Message-ID: <20200108115132.GA28331@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191218130935.32402-1-agruenba@redhat.com>
+        Wed, 8 Jan 2020 06:53:49 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2235 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726290AbgAHLxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:53:48 -0500
+Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 3E7AA4C5978AABF20FD3;
+        Wed,  8 Jan 2020 11:53:47 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 Jan 2020 11:53:46 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 8 Jan 2020
+ 11:53:46 +0000
+Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
+ device_links_purge()
+To:     Luo Jiaxing <luojiaxing@huawei.com>, <gregkh@linuxfoundation.org>,
+        <saravanak@google.com>, <jejb@linux.ibm.com>,
+        <James.Bottomley@suse.de>, <James.Bottomley@HansenPartnership.com>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <875eb2dc-a0d3-72e5-a27b-48fa38687c8c@huawei.com>
+Date:   Wed, 8 Jan 2020 11:53:45 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218130935.32402-1-agruenba@redhat.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+On 08/01/2020 11:34, Luo Jiaxing wrote:
 
-On 12/18, Andreas Gruenbacher wrote:
-> Hi Darrick,
++ linux-scsi, Martin
+
+> We found that enabling kernel compilation options CONFIG_SCSI_ENCLOSURE and
+> CONFIG_ENCLOSURE_SERVICES, repeated initialization and deletion of the same
+> SCSI device will cause system panic, as follows:
+> [72.425705] Unable to handle kernel paging request at virtual address
+> dead000000000108
+> ...
+> [72.595093] Call trace:
+> [72.597532] device_del + 0x194 / 0x3a0
+> [72.601012] enclosure_remove_device + 0xbc / 0xf8
+> [72.605445] ses_intf_remove + 0x9c / 0xd8
+> [72.609185] device_del + 0xf8 / 0x3a0
+> [72.612576] device_unregister + 0x14 / 0x30
+> [72.616489] __scsi_remove_device + 0xf4 / 0x140
+> [72.620747] scsi_remove_device + 0x28 / 0x40
+> [72.624745] scsi_remove_target + 0x1c8 / 0x220
+
+please share the full crash stack frame and the commands used to trigger 
+it. Some people prefer the timestamp removed also.
+
 > 
-> can this fix go in via the xfs tree?
+> After analysis, we see that in the error scenario, the ses module has the
+> following calling sequence:
+> device_register() -> device_del() -> device_add() -> device_del().
+> The first call to device_del() is fine, but the second call to device_del()
+> will cause a system panic.
 > 
-> Thanks,
-> Andreas
+> Through disassembly, we locate that panic happen when device_links_purge()
+> call list_del() to remove device_links.needs_suppliers from list, and
+> list_del() will set this list entry's prev and next pointers to poison.
+> So if INIT_LIST_HEAD() is not re-executed before the next list_del(), It
+> will cause the system to access a memory address which is posioned.
 > 
-> --
+> Therefore, replace list_del() with list_del_init() can avoid such issue.
 > 
-> The check in block_page_mkwrite that is meant to determine whether an
-> offset is within the inode size is off by one.  This bug has been copied
-> into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
-> ceph).
-> 
-> Fix that by introducing a new page_mkwrite_check_truncate helper that
-> checks for truncate and computes the bytes in the page up to EOF.  Use
-> the helper in the above mentioned filesystems.
-> 
-> In addition, use the new helper in btrfs as well.
-> 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
-> Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
+> Fixes: e2ae9bcc4aaa ("driver core: Add support for linking devices during device addition")
+> Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+> Reviewed-by: John Garry <john.garry@huawei.com>
+
+This tag was only implicitly granted, but I thought that the fix looked 
+ok, so:
+
+Reviewed-by: John Garry <john.garry@huawei.com>
+
 > ---
->  fs/btrfs/inode.c        | 15 ++++-----------
->  fs/buffer.c             | 16 +++-------------
->  fs/ceph/addr.c          |  2 +-
->  fs/ext4/inode.c         | 14 ++++----------
->  fs/f2fs/file.c          | 19 +++++++------------
->  fs/iomap/buffered-io.c  | 18 +++++-------------
->  fs/ubifs/file.c         |  3 +--
->  include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
->  8 files changed, 53 insertions(+), 62 deletions(-)
+>   drivers/base/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 56032c518b26..86c6fcd8139d 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  	ret = VM_FAULT_NOPAGE; /* make the VM retry the fault */
->  again:
->  	lock_page(page);
-> -	size = i_size_read(inode);
->  
-> -	if ((page->mapping != inode->i_mapping) ||
-> -	    (page_start >= size)) {
-> -		/* page got truncated out from underneath us */
-> +	ret2 = page_mkwrite_check_truncate(page, inode);
-> +	if (ret2 < 0)
->  		goto out_unlock;
-> -	}
-> +	zero_start = ret2;
->  	wait_on_page_writeback(page);
->  
->  	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
-> @@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  		goto again;
->  	}
->  
-> +	size = i_size_read(inode);
->  	if (page->index == ((size - 1) >> PAGE_SHIFT)) {
->  		reserved_space = round_up(size - page_start,
->  					  fs_info->sectorsize);
-> @@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  	}
->  	ret2 = 0;
->  
-> -	/* page is wholly or partially inside EOF */
-> -	if (page_start + PAGE_SIZE > size)
-> -		zero_start = offset_in_page(size);
-> -	else
-> -		zero_start = PAGE_SIZE;
-> -
->  	if (zero_start != PAGE_SIZE) {
->  		kaddr = kmap(page);
->  		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
-> diff --git a/fs/buffer.c b/fs/buffer.c
-> index d8c7242426bb..53aabde57ca7 100644
-> --- a/fs/buffer.c
-> +++ b/fs/buffer.c
-> @@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
->  	struct page *page = vmf->page;
->  	struct inode *inode = file_inode(vma->vm_file);
->  	unsigned long end;
-> -	loff_t size;
->  	int ret;
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	if ((page->mapping != inode->i_mapping) ||
-> -	    (page_offset(page) > size)) {
-> -		/* We overload EFAULT to mean page got truncated */
-> -		ret = -EFAULT;
-> +	ret = page_mkwrite_check_truncate(page, inode);
-> +	if (ret < 0)
->  		goto out_unlock;
-> -	}
-> -
-> -	/* page is wholly or partially inside EOF */
-> -	if (((page->index + 1) << PAGE_SHIFT) > size)
-> -		end = size & ~PAGE_MASK;
-> -	else
-> -		end = PAGE_SIZE;
-> +	end = ret;
->  
->  	ret = __block_write_begin(page, 0, end, get_block);
->  	if (!ret)
-> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-> index 7ab616601141..ef958aa4adb4 100644
-> --- a/fs/ceph/addr.c
-> +++ b/fs/ceph/addr.c
-> @@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault *vmf)
->  	do {
->  		lock_page(page);
->  
-> -		if ((off > size) || (page->mapping != inode->i_mapping)) {
-> +		if (page_mkwrite_check_truncate(page, inode) < 0) {
->  			unlock_page(page);
->  			ret = VM_FAULT_NOPAGE;
->  			break;
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 28f28de0c1b6..51ab1d2cac80 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
->  	struct page *page = vmf->page;
-> -	loff_t size;
->  	unsigned long len;
->  	int err;
->  	vm_fault_t ret;
-> @@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
->  	}
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	/* Page got truncated from under us? */
-> -	if (page->mapping != mapping || page_offset(page) > size) {
-> +	err = page_mkwrite_check_truncate(page, inode);
-> +	if (err < 0) {
->  		unlock_page(page);
-> -		ret = VM_FAULT_NOPAGE;
-> -		goto out;
-> +		goto out_ret;
->  	}
-> +	len = err;
->  
-> -	if (page->index == size >> PAGE_SHIFT)
-> -		len = size & ~PAGE_MASK;
-> -	else
-> -		len = PAGE_SIZE;
->  	/*
->  	 * Return if we have all the buffers mapped. This avoids the need to do
->  	 * journal_start/journal_stop which can block and take a long time
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 85af112e868d..0e77b2e6f873 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  	struct dnode_of_data dn = { .node_changed = false };
-> -	int err;
-> +	int offset, err;
->  
->  	if (unlikely(f2fs_cp_error(sbi))) {
->  		err = -EIO;
-> @@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	file_update_time(vmf->vma->vm_file);
->  	down_read(&F2FS_I(inode)->i_mmap_sem);
->  	lock_page(page);
-> -	if (unlikely(page->mapping != inode->i_mapping ||
-> -			page_offset(page) > i_size_read(inode) ||
-> -			!PageUptodate(page))) {
-> +	err = -EFAULT;
-> +	if (likely(PageUptodate(page)))
-> +		err = page_mkwrite_check_truncate(page, inode);
-> +	if (unlikely(err < 0)) {
->  		unlock_page(page);
-> -		err = -EFAULT;
->  		goto out_sem;
->  	}
-> +	offset = err;
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 42a6724..7b9b0d6 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1103,7 +1103,7 @@ static void device_links_purge(struct device *dev)
+>   	struct device_link *link, *ln;
+>   
+>   	mutex_lock(&wfs_lock);
+> -	list_del(&dev->links.needs_suppliers);
+> +	list_del_init(&dev->links.needs_suppliers);
+>   	mutex_unlock(&wfs_lock);
+>   
+>   	/*
+> 
 
-This is a bit odd, so how about this?
-
-	offset = -EFAULT;
-	if (likely(PageUptodate(page))
-		offset = page_mkwrite_check_truncate(page, inode);
-
-	if (unlikely(offset < 0) {
-		unlock_page(page);
-		err = offset;
-		goto out_sem;
-	}
-
-I think Linus will address the merge conflict simply later.
-
-Thanks,
-
->  
->  	/* block allocation */
->  	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
-> @@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	if (PageMappedToDisk(page))
->  		goto out_sem;
->  
-> -	/* page is wholly or partially inside EOF */
-> -	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
-> -						i_size_read(inode)) {
-> -		loff_t offset;
-> -
-> -		offset = i_size_read(inode) & ~PAGE_MASK;
-> +	if (offset != PAGE_SIZE)
->  		zero_user_segment(page, offset, PAGE_SIZE);
-> -	}
->  	set_page_dirty(page);
->  	if (!PageUptodate(page))
->  		SetPageUptodate(page);
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index d33c7bc5ee92..1aaf157fd6e9 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
->  	struct page *page = vmf->page;
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	unsigned long length;
-> -	loff_t offset, size;
-> +	loff_t offset;
->  	ssize_t ret;
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	offset = page_offset(page);
-> -	if (page->mapping != inode->i_mapping || offset > size) {
-> -		/* We overload EFAULT to mean page got truncated */
-> -		ret = -EFAULT;
-> +	ret = page_mkwrite_check_truncate(page, inode);
-> +	if (ret < 0)
->  		goto out_unlock;
-> -	}
-> -
-> -	/* page is wholly or partially inside EOF */
-> -	if (offset > size - PAGE_SIZE)
-> -		length = offset_in_page(size);
-> -	else
-> -		length = PAGE_SIZE;
-> +	length = ret;
->  
-> +	offset = page_offset(page);
->  	while (length > 0) {
->  		ret = iomap_apply(inode, offset, length,
->  				IOMAP_WRITE | IOMAP_FAULT, ops, page,
-> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-> index cd52585c8f4f..91f7a1f2db0d 100644
-> --- a/fs/ubifs/file.c
-> +++ b/fs/ubifs/file.c
-> @@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_fault *vmf)
->  	}
->  
->  	lock_page(page);
-> -	if (unlikely(page->mapping != inode->i_mapping ||
-> -		     page_offset(page) > i_size_read(inode))) {
-> +	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
->  		/* Page got truncated out from underneath us */
->  		goto sigbus;
->  	}
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 37a4d9e32cd3..ccb14b6a16b5 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *inode)
->  			       PAGE_SHIFT;
->  }
->  
-> +/**
-> + * page_mkwrite_check_truncate - check if page was truncated
-> + * @page: the page to check
-> + * @inode: the inode to check the page against
-> + *
-> + * Returns the number of bytes in the page up to EOF,
-> + * or -EFAULT if the page was truncated.
-> + */
-> +static inline int page_mkwrite_check_truncate(struct page *page,
-> +					      struct inode *inode)
-> +{
-> +	loff_t size = i_size_read(inode);
-> +	pgoff_t index = size >> PAGE_SHIFT;
-> +	int offset = offset_in_page(size);
-> +
-> +	if (page->mapping != inode->i_mapping)
-> +		return -EFAULT;
-> +
-> +	/* page is wholly inside EOF */
-> +	if (page->index < index)
-> +		return PAGE_SIZE;
-> +	/* page is wholly past EOF */
-> +	if (page->index > index || !offset)
-> +		return -EFAULT;
-> +	/* page is partially inside EOF */
-> +	return offset;
-> +}
-> +
->  #endif /* _LINUX_PAGEMAP_H */
-> -- 
-> 2.20.1
