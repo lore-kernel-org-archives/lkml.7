@@ -2,87 +2,122 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC2C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D30EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D44920692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578514908;
-	bh=xbnZweZysNvjJs5HrwfqefXp1VjWQsaLFHlxz4jQYzo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n+G1QpXjIkBycUh10wNenSN8ClK+crBAOwDFg1Tck68im98mUerIq0hFWWbTkH+ol
-	 AZuXgefbPN4Zc7pyQ/vKXkoY774oxYxEp9td+vJ1tbUGisuGgtZTA0g5lKxfB9xy/j
-	 7oRiKyW67CxTRRW3hAslw/u6As3ZKMkHBQf4MME0=
+	by mail.kernel.org (Postfix) with ESMTP id 2D8DD20643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WrillX3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgAHUVr (ORCPT
+        id S1726687AbgAHUXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:21:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55533 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgAHUVr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:21:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so297944wmj.5;
-        Wed, 08 Jan 2020 12:21:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DAChl6Ul9fKSKLSUyoPgGNo0ChhyAr0XJVth8mI90zs=;
-        b=MOPb+EvtynICKVb4YpklQxm9YdA2sGVaK1Bl47sG/ChZVWWUVkL7eP3lYVuj2dyRma
-         l91eqPosW4LgGGtMWM+7IJjQk0H8t4iLkhvyQ4RqgLNFpwaZVTO4wDwbhy9POvAPyKq2
-         G0bLrWOY/dw04ymaLWrNT1EuFJBVELceZxygSmjZIM+7MAeZP/02zkGGKyng+pX39eZo
-         FaDh5s2PT5r9ADpomlPW+uprxxyIju6zt8dgGW5r5d+EYC1zA6uwm+QXjmmz9oWpJUaE
-         i82OAbp/JkF2TA5mq/JXoWsVxEJuIw350pSWSoi7BVbO84XeQ7vDeSXlZCeLrA1QRElw
-         cGQw==
-X-Gm-Message-State: APjAAAVdbCh1Yz73cntUKfR0A5imwKzUC4JR6tApCF5vxVb2cYM+4Q3b
-        /o99l5DcktgelvzHFDMZXrSDt64tZuP12Q==
-X-Google-Smtp-Source: APXvYqzpZx5bVmQEcf1bpPT5tN7m0CBp56yBmQq5PdtRIz3mJs/1AeH+ujtV+juGwD4/yfPcficuPA==
-X-Received: by 2002:a7b:c93a:: with SMTP id h26mr408703wml.83.1578514905607;
-        Wed, 08 Jan 2020 12:21:45 -0800 (PST)
-Received: from kozik-book ([83.218.167.187])
-        by smtp.googlemail.com with ESMTPSA id q3sm238868wmj.38.2020.01.08.12.21.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 12:21:44 -0800 (PST)
-Date:   Wed, 8 Jan 2020 21:21:42 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: exynos: tiny4412: enable fimd node and add
- proper panel node
-Message-ID: <20200108202142.GA8492@kozik-book>
-References: <20200107191020.27475-1-tiny.windzz@gmail.com>
-MIME-Version: 1.0
+        Wed, 8 Jan 2020 15:23:31 -0500
+Received: from mail-mw2nam10on2087.outbound.protection.outlook.com ([40.107.94.87]:1281
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbgAHUXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:23:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZtfuGoXpNGFQCzla6d41RvdnXte6oEBu7XKam5VqKa1BvhllhBWbH7GMmkzHb4OtQVKkUNieroz0LSHaiIzBVV6X9Oq/NUu4ewUmvJFn4mDKTvSwX/MNntBR5uu+c986UlbfSvqGnm8mUJKBEkaOOMB8VQYRqCcyQxMz6GcbR7xFVviL4Mr7TYjWDN2TgXqm65Dj/yUEYxRpUwEzxtPdm65PNBH68/Q5JkcfaHztz8EF64SLpj7qpCbwLTY0rAYRmT7iuQDK5YdX8pIgkq0aGaLwjKhY8gX62eu8PtfQXRAmRgdOQHUhb6Oa0+SA7tNH7purSwtwdAjLSPgsuNDqFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9LDRqAYmrb6YtYfNNe3jSO7o6EVgEE8oUpJVmqEfT04=;
+ b=DKqYBFdtBP2eVaOi7zZFWEWVMKPvfzseC1OQJuYZI+86kNhFHGlC00hErBVuyOgBy+U90govkKcSh+KbtvG+jiXLbcPG4sl/TsKmMgkJ7h9It0q55pQdjPWVqS92LTA6NWk0puiuSkVKRKjS3msR4YAIXkvwnNfj9eGT1NR4MpmSNIkYvfC/BH2+gyKO+uPKt0jn7cqqdQ/celY3vCVWDZeoIhU3AvGgUCBx/Lx02bhPe5f4iz4ViYML5ewo7Z4jUFNyT8bv/bLtIpe2q5qlGaixMpn/a9GqXyjXK8MgKs7mGq75SjA6vx4E0HXqXT0c5fg+BSZNROuIMe/Dt9QIsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9LDRqAYmrb6YtYfNNe3jSO7o6EVgEE8oUpJVmqEfT04=;
+ b=WrillX3lMezolfdl5Gzm1McUXZkEDDjuMCCg6FuT4YSMfOcVSDuEtWjk7pyd71DMdLsXgLGDnxIUMe8U4LaOfgsZ81fNoa8NstslKrUWoDv1o273ZmuYWRwdrm46GzFdkDTNGshMpoe/CrkCZdS9nq/Lbi7plK4Es5oTzNe10b4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2781.namprd12.prod.outlook.com (52.135.99.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Wed, 8 Jan 2020 20:23:26 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc%7]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
+ 20:23:26 +0000
+Subject: Re: [PATCH internal v2] perf/x86/amd: Add missing L2 misses event
+ spec to AMD Family 17h's event map
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        linux-kernel@vger.kernel.org, Babu Moger <babu.moger@amd.com>
+References: <20200108193455.29834-1-kim.phillips@amd.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <03e5fd9e-5662-c4a5-5792-c64146225dc8@amd.com>
+Date:   Wed, 8 Jan 2020 14:23:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20200108193455.29834-1-kim.phillips@amd.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200107191020.27475-1-tiny.windzz@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0401CA0027.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::13) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
+MIME-Version: 1.0
+Received: from [10.236.136.247] (165.204.77.1) by SN4PR0401CA0027.namprd04.prod.outlook.com (2603:10b6:803:2a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Wed, 8 Jan 2020 20:23:26 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 02f3b658-7fd2-4d94-8537-08d794789e1a
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2781:|SN6PR12MB2781:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB278116499EC0C66AAEE0DADA873E0@SN6PR12MB2781.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 02760F0D1C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(44832011)(31696002)(2616005)(5660300002)(558084003)(26005)(66556008)(66476007)(66946007)(956004)(53546011)(52116002)(86362001)(16526019)(54906003)(81166006)(81156014)(16576012)(110136005)(4326008)(31686004)(8936002)(2906002)(8676002)(6486002)(186003)(36756003)(498600001)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2781;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Fj/I6yKhad3l0Irnhyo3mdQ4oVqhsDtwdApXlUjLROK1/+nTNy7OQApFqIpJ3HL7NN6tO1VIiZINFUwqE8p1yK+EhLAq7adn2E4GKfvHWfFKwH+ecxBLtf8Gt2ZJT+QMqi9FBQkCag7qEQIAqB+7XcCtXGY5OKEejbGaMyd9LmJl4xxelz9lDM0UhL7bNLexLrQBxBFM+xI/tVJW0QImwL4fCX/vRor0irDdqhAYleWOG6ZyAgiN7oUSkRqAj3ur6alFzIaBiXe8PcXZVDArstVbEGSfT2nZX3WkquVi1HNU4z4T8hCsKzT5Ri26Bdx5cabYQ0U7D5dpVrGjWAqvhOVPDRQPerU4sDf639nNgPIlRP9KDEjFHOtEAav3yMuB5BZozy3SRFU1Il/3ZQruZcyG154NlA0Stdr9CHL4fA+9KVz98JCD5qE2TKGIlE1Y
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02f3b658-7fd2-4d94-8537-08d794789e1a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 20:23:26.7078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YX5ElSg6qCFI90TXaGkjNJzAx+ihjuLdy42rvjyeeGtmf2jhywO6tmmDG25e35VFLMluGc9a0DahmXVLdBwfuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2781
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 07:10:20PM +0000, Yangtao Li wrote:
-> Enable fimd device node which is a display controller, and add panel
-> node required by it.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
-> v2:
-> -update commit msg and merge to one patch
-> ---
->  arch/arm/boot/dts/exynos4412-tiny4412.dts | 25 +++++++++++++++++++++++
+On 1/8/20 1:34 PM, Kim Phillips wrote:
+> Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
 
-Thanks, applied.
+Hi, I neglected to remove the "internal v2" from the $SUBJECT.
 
-Best regards,
-Krzysztof
+This is not an internal patch, it is intended to be an upstream submission.
 
+Please consider applying it.
+
+Thanks,
+
+Kim
