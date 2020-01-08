@@ -2,99 +2,98 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511CDC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24372C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B0A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xv2vcbBp"
+	by mail.kernel.org (Postfix) with ESMTP id 0060620880
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgAHLTA (ORCPT
+        id S1728188AbgAHLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:19:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47160 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbgAHLSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:18:51 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008BIlQm061054;
-        Wed, 8 Jan 2020 05:18:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578482327;
-        bh=KN+t6HQRgfBskuoZzha3kzY1YHsWfUc9MOwnVuDHmMs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Xv2vcbBpXb+QPNIe62/DUN498yEViFe47yJ8plcpa+2a5rq3sZZ1me52dkElAXqSQ
-         3aOlKlk1Jo4NMI7W4PdwfK0ni3lTmj0szfhhS4Cnhali5KevTgAC9qGX/KyJ7pan79
-         9KaN5TgkAoSio71fYcapU7xR/lGjM5C2Kfou/J8I=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008BIl15114652
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 05:18:47 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 05:18:46 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 05:18:46 -0600
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008BIWBu087830;
-        Wed, 8 Jan 2020 05:18:44 -0600
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <nm@ti.com>, <kishon@ti.com>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 5/5] arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR line
-Date:   Wed, 8 Jan 2020 13:18:30 +0200
-Message-ID: <20200108111830.8482-6-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108111830.8482-1-rogerq@ti.com>
-References: <20200108111830.8482-1-rogerq@ti.com>
+        Wed, 8 Jan 2020 06:19:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:42644 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727795AbgAHLS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:18:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4F7630E;
+        Wed,  8 Jan 2020 03:18:58 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F1133F703;
+        Wed,  8 Jan 2020 03:18:57 -0800 (PST)
+Subject: Re: [PATCH RFT v1 1/3] drm/panfrost: enable devfreq based the
+ "operating-points-v2" property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        dri-devel@lists.freedesktop.org, alyssa@rosenzweig.io,
+        steven.price@arm.com, tomeu.vizoso@collabora.com, robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, daniel@ffwll.ch, airlied@linux.ie,
+        linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200107230626.885451-1-martin.blumenstingl@googlemail.com>
+ <20200107230626.885451-2-martin.blumenstingl@googlemail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a85f2063-f412-9762-58d1-47fdffb24af9@arm.com>
+Date:   Wed, 8 Jan 2020 11:18:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200107230626.885451-2-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Type-C compainon chip on the board needs ~133ms (tCCB_DEFAULT)
-to debounce the CC lines in order to detect attach and plug orientation
-and reflect the correct DIR status. [1]
+On 07/01/2020 11:06 pm, Martin Blumenstingl wrote:
+> Decouple the check to see whether we want to enable devfreq for the GPU
+> from dev_pm_opp_set_regulators(). This is preparation work for adding
+> back support for regulator control (which means we need to call
+> dev_pm_opp_set_regulators() before dev_pm_opp_of_add_table(), which
+> means having a check for "is devfreq enabled" that is not tied to
+> dev_pm_opp_of_add_table() makes things easier).
 
-Let's wait for 300ms before sampling the Type-C DIR line.
+Hmm, what about cases like the SCMI DVFS protocol where the OPPs are 
+dynamically discovered rather than statically defined in DT?
 
-[1] http://www.ti.com/lit/ds/symlink/tusb321.pdf
+Robin.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 4d180887342c..1dc6fdc86bc5 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -272,6 +272,7 @@
- 
- &serdes_wiz3 {
- 	typec-dir-gpios = <&main_gpio1 3 GPIO_ACTIVE_HIGH>;
-+	typec-dir-debounce-ms = <300>;	/* TUSB321, tCCB_DEFAULT 133 ms */
- };
- 
- &serdes3 {
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>   drivers/gpu/drm/panfrost/panfrost_devfreq.c | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> index 413987038fbf..1471588763ce 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> @@ -5,6 +5,7 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/pm_opp.h>
+>   #include <linux/clk.h>
+> +#include <linux/property.h>
+>   #include <linux/regulator/consumer.h>
+>   
+>   #include "panfrost_device.h"
+> @@ -79,10 +80,12 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+>   	struct devfreq *devfreq;
+>   	struct thermal_cooling_device *cooling;
+>   
+> -	ret = dev_pm_opp_of_add_table(dev);
+> -	if (ret == -ENODEV) /* Optional, continue without devfreq */
+> +	if (!device_property_present(dev, "operating-points-v2"))
+> +		/* Optional, continue without devfreq */
+>   		return 0;
+> -	else if (ret)
+> +
+> +	ret = dev_pm_opp_of_add_table(dev);
+> +	if (ret)
+>   		return ret;
+>   
+>   	panfrost_devfreq_reset(pfdev);
+> 
