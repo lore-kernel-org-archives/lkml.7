@@ -2,155 +2,111 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96256C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B048C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B9F20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F31220692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OAm3VBt0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9FttcX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgAHToF (ORCPT
+        id S1730378AbgAHToQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:44:05 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33914 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727247AbgAHToE (ORCPT
+        Wed, 8 Jan 2020 14:44:16 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28275 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727247AbgAHToQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:44:04 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008Ji3ed032667;
-        Wed, 8 Jan 2020 13:44:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578512643;
-        bh=qb7bCEHbxdLwaBILj37/9DfnWNTmboocW2uFVUEMG0g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OAm3VBt0HvYttynA2J1hESCjYvJIN7sABufG2GFUrmErrtAO1wBcG9kpnjBI+SMGm
-         q9u6NyQ5pvWNjtm5lGvlSO9NyvKDIurIfNdp6U2Lgec4HvrNZPoYbAsINqjmMkVS3z
-         vJX9edHmXcCmV/f79CIZWAAW/YzfII51sSqN4HuM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008Ji3FW101772
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 13:44:03 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 13:44:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 13:44:03 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008Ji2D6024389;
-        Wed, 8 Jan 2020 13:44:02 -0600
-Subject: Re: [PATCHv4 08/14] remoteproc/omap: remove the platform_data header
-To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200102131845.12992-1-t-kristo@ti.com>
- <20200102131845.12992-9-t-kristo@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <4391856a-d956-751e-6d38-02f8306bb691@ti.com>
-Date:   Wed, 8 Jan 2020 13:44:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 Jan 2020 14:44:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578512654;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cMRQrznsbzSjtlf0lQFDY0JtcAwrzSd+QX0zX3BOs2k=;
+        b=Z9FttcX6jL4RzDHrn9BLiRf9Ym0Pqbz0ziUsEn1m8U9FUT8GQH+cw4qvyTnTM/VDQKlwUD
+        wxXSMXYhA1p+vTPPFUrHiX6WvRnXUvKuMmothANlYm9WWp68eGiPMTrEPifi/qqmlZecEf
+        Ud5sVryUAhmUS6oiBBXCmC3J+Sk/87A=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-rp3zaVeaPv6UfNyfqi4P2A-1; Wed, 08 Jan 2020 14:44:13 -0500
+X-MC-Unique: rp3zaVeaPv6UfNyfqi4P2A-1
+Received: by mail-wr1-f70.google.com with SMTP id c6so1831616wrm.18
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:44:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cMRQrznsbzSjtlf0lQFDY0JtcAwrzSd+QX0zX3BOs2k=;
+        b=sdU9CmVu4dpyE5GA4kAzxZEkKCk3tsTlchcLi0IbzQRfGuuJNpc9frRGoCCqcDrMqH
+         USSscILeOC94pbBdj5zJ2OeKMnsfUp0IWz4w4dMhjhcs4DvXd/4OVq/ZwK7YWfdX2UwV
+         bVZwEb73r1mK4XK9KDCZmBLSUP0+muOUfuXmmlYMuosFezrcrGx0rdnv8CjDpRhtwcfF
+         5l23J2YdZTaprdbee09Dzv2SKHi7El7c6jhNVcy+BqRSRGHDqGsu+O4o1nBm45c2QB5I
+         smVpy4yUzm4MFVWpw3Z9lU5va32huJveWzMS6wGYn6Yyw2e7gldy09msIDlJWRZeJbOh
+         PXYA==
+X-Gm-Message-State: APjAAAXvbxeFbU7HnChCqZIC96Dt/zgr84rfXpRGPqg+YNhmG8gNpMxe
+        frfvm9SC6rmR/oTKe04HhR3brhjteIUjRT4N2pJpO5zenX7pRcQfggg0j7qTxi5yNNFDR237hyz
+        Onm23x+4tQy7/ZgHqWd29Q70M
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr235689wmj.175.1578512652205;
+        Wed, 08 Jan 2020 11:44:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx6Udq5HntGuIazbWsfw/ygAYHPKVLZ9sImXcCCWDU0SWSRt+amBVLXlg+oTsMtN3geDV3w3Q==
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr235672wmj.175.1578512652012;
+        Wed, 08 Jan 2020 11:44:12 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
+        by smtp.gmail.com with ESMTPSA id m7sm127875wma.39.2020.01.08.11.44.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 11:44:11 -0800 (PST)
+Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-4-peterx@redhat.com>
+ <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
+ <20191223172737.GA81196@xz-x1>
+ <851bd9ed-3ff3-6aef-725c-b586d819211c@redhat.com>
+ <20191223201024.GB90172@xz-x1>
+ <e56d4157-1a0a-3f45-0e02-ac7c10fccf96@redhat.com>
+ <20200108191512.GF7096@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <649c77ba-94a7-d0bf-69e7-fa0276f536d1@redhat.com>
+Date:   Wed, 8 Jan 2020 20:44:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200102131845.12992-9-t-kristo@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200108191512.GF7096@xz-x1>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/2/20 7:18 AM, Tero Kristo wrote:
-> The platform data header for OMAP remoteproc is no longer used for
-> anything post ti-sysc conversion, so just remove it completely.
+On 08/01/20 20:15, Peter Xu wrote:
+> But you seemed to have fixed that already? :)
 
-Thanks for removing the header now altogether,
-%s/ti-sysc/ti-sysc and DT/ to be more accurate.
+Perhaps. :)
 
-With that,
-Acked-by: Suman Anna <s-anna@ti.com>
+> 3898da947bba ("KVM: avoid using rcu_dereference_protected", 2017-08-02)
+> 
+> And this path is after kvm_destroy_vm() so kvm->users_count should be 0.
+> Or I feel like we need to have more places to take the lock..
 
-regards
-Suman
+Yeah, it should be okay assuming you test with lockdep.
 
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
-> v4:
->   - new patch, to remove the platform data file completely compared to
->     patches #8 / #9 in previous version of the series
-> 
->  include/linux/platform_data/remoteproc-omap.h | 51 -------------------
->  1 file changed, 51 deletions(-)
->  delete mode 100644 include/linux/platform_data/remoteproc-omap.h
-> 
-> diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
-> deleted file mode 100644
-> index 7e3a16097672..000000000000
-> --- a/include/linux/platform_data/remoteproc-omap.h
-> +++ /dev/null
-> @@ -1,51 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> -/*
-> - * Remote Processor - omap-specific bits
-> - *
-> - * Copyright (C) 2011 Texas Instruments, Inc.
-> - * Copyright (C) 2011 Google, Inc.
-> - */
-> -
-> -#ifndef _PLAT_REMOTEPROC_H
-> -#define _PLAT_REMOTEPROC_H
-> -
-> -struct rproc_ops;
-> -struct platform_device;
-> -
-> -/*
-> - * struct omap_rproc_pdata - omap remoteproc's platform data
-> - * @name: the remoteproc's name
-> - * @oh_name: omap hwmod device
-> - * @oh_name_opt: optional, secondary omap hwmod device
-> - * @firmware: name of firmware file to load
-> - * @mbox_name: name of omap mailbox device to use with this rproc
-> - * @ops: start/stop rproc handlers
-> - * @device_enable: omap-specific handler for enabling a device
-> - * @device_shutdown: omap-specific handler for shutting down a device
-> - * @set_bootaddr: omap-specific handler for setting the rproc boot address
-> - */
-> -struct omap_rproc_pdata {
-> -	const char *name;
-> -	const char *oh_name;
-> -	const char *oh_name_opt;
-> -	const char *firmware;
-> -	const char *mbox_name;
-> -	const struct rproc_ops *ops;
-> -	int (*device_enable)(struct platform_device *pdev);
-> -	int (*device_shutdown)(struct platform_device *pdev);
-> -	void (*set_bootaddr)(u32);
-> -};
-> -
-> -#if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
-> -
-> -void __init omap_rproc_reserve_cma(void);
-> -
-> -#else
-> -
-> -static inline void __init omap_rproc_reserve_cma(void)
-> -{
-> -}
-> -
-> -#endif
-> -
-> -#endif /* _PLAT_REMOTEPROC_H */
-> 
+Paolo
 
