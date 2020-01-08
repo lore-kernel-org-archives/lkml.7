@@ -2,160 +2,279 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1843C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5118FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9942072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qqz4QYYd"
+	by mail.kernel.org (Postfix) with ESMTP id 2346A20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgAHQ75 (ORCPT
+        id S1729615AbgAHRDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:59:57 -0500
-Received: from mail-eopbgr70078.outbound.protection.outlook.com ([40.107.7.78]:34567
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729555AbgAHQ7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:59:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f/9pmop6R6gXhYgqG+ZQtWBwwZ6opJgZBcfuEqyVsl3s8eHHkxRrsfvAUH3vANuNiAypfcywKjcK3iS2aSjdkC9dJLS5ColwpejYDdHQL3WwWXxV06f3dgSXFNfTw8OYGAFG3bZ7EPfoAAffAFOCCDtBcrCuxheWSlaGea1qkLVA8vrPn43R+FTrQ7XC5X7bOj/wsDrJ3Yu+HHLda+WQ+sfn90pRbI3Dm7DTKugvxR6edQb2pMa4yxWGugVZzLtuK3RKXJTxS5SKs0H06TdTG1uufsyHP18qdxpW2YWRKqkQed0isKMMzpPH0XEMGPyMRwpssGWL4E4axQAj8H1fgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EsVExKfSNysx3JQYrkGKoybIoK8bY9SRiJ3jbNGFDwU=;
- b=mBxqehX7XjITCVlr47E9zt5ebj4LouzMRmEbFodWDBqhWjUBnHiy0C5RvXfzpUV+2S0shgKpP0SLrn5yJwe60e+bLcyt9ro2frdeoFvCEHof9v6V0otD2KSDyAkckXJShLvz4pFfJMMcIDltkhrOh+nj+hs+jCRbBiM3gRn/H8nhy208YViN24CWdjH2xXzg2FPWKFqEvdkQ0TubqawlZQtA3FKdh7UrIF+snLQ4ozPRTD6S1Pl35r0UfNaFfFpEW5gyJZchEnfigPbrSfwVhyZhPbaNhOC+L3kvr/JCQCTLtNKGB28r1rhjYQiBYDNzvoFJRM8DFJDEUUrWHQgtmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EsVExKfSNysx3JQYrkGKoybIoK8bY9SRiJ3jbNGFDwU=;
- b=Qqz4QYYdNqc5tI2yA+n+ksA83AIxQWUmK7inqxGcOPkBoBb276mPsClSRXprgjn2a+wfiI+EI6kjemeRMx2lpV5Q5mMVM/iBSzE54HSh2eLYg2Xe+nxtiMKZ1/b2CEFg2+5W65HdQAN39/EW9hoOaF35CahRxT0PRSumgnQOE9E=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3855.eurprd04.prod.outlook.com (52.134.17.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Wed, 8 Jan 2020 16:59:51 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2602.015; Wed, 8 Jan 2020
- 16:59:51 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 06/10] crypto: caam - refactor caam_jr_enqueue
-Thread-Topic: [PATCH v2 06/10] crypto: caam - refactor caam_jr_enqueue
-Thread-Index: AQHVwdGz6i/Y7lkd70GPiPG71gFRzw==
-Date:   Wed, 8 Jan 2020 16:59:51 +0000
-Message-ID: <VI1PR0402MB34852528A105E1C472686078983E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1578013373-1956-1-git-send-email-iuliana.prodan@nxp.com>
- <1578013373-1956-7-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4c5bd083-0769-4dc9-8a55-08d7945c2d3c
-x-ms-traffictypediagnostic: VI1PR0402MB3855:|VI1PR0402MB3855:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3855F9D0D1EECF87DB420F8B983E0@VI1PR0402MB3855.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(189003)(199004)(76116006)(478600001)(91956017)(8676002)(6506007)(44832011)(4326008)(7696005)(186003)(53546011)(81166006)(26005)(81156014)(2906002)(66446008)(66946007)(8936002)(66476007)(66556008)(64756008)(5660300002)(33656002)(110136005)(86362001)(54906003)(52536014)(71200400001)(9686003)(6636002)(55016002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3855;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UdX5lOixl8EQ10rLlKKqRTsSVFb9wNPk8PWEMsltnJH0U6mZrcn/J23KX+O4jFo0TSkXXlf7NqsKX8H37jMAyPU5nH0jS6E7uIpbgeqaXqi0dFdX7rbRw9eVrSXWTKkswMHtTsJyYBbFX1cpHmfRoKRPvU4RHTFEBYrQH+KO5y/ZlOMaOb4V2l4rpbtU3thEfuq95nNPSSLtnhK8kx8qdthoUI4p6/z1j8Kffhu9jWZQOPwU842chyQMWVefRMUy4XRnufwuhqr6MT94QXaXwoxl6qWncC5NnAdt+/LXvlwb8HEWRLfGX0iPyTOmdvKY8/5B0+HBvbbkSaOtFvSRo3P0llD3i2FnDCY0upQwmILMSIqnB/3hjJMj/Y9M+L6/8fTMhvx+2ow3LZZCxPbgMGGdxtsBuH9KdDS8ZM/Cnz6Gc8DTJkxF2IfCRfapGDQR
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jan 2020 12:03:34 -0500
+Received: from mga01.intel.com ([192.55.52.88]:38801 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbgAHRDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:03:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:03:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="422976068"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 09:03:29 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipEjx-0005kR-9r; Wed, 08 Jan 2020 19:03:29 +0200
+Date:   Wed, 8 Jan 2020 19:03:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 32/36] platform/x86: intel_pmc_ipc: Move PCI IDs to
+ intel_scu_pcidrv.c
+Message-ID: <20200108170329.GR32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-33-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c5bd083-0769-4dc9-8a55-08d7945c2d3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 16:59:51.2559
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pmF7VHUoa13+rboWoUj19BeyrzgCc74IpqzTgM+uEeb3COpcFcHny8OmW3Duj0t2s+ZeYpQHyK5svg2nptQPeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3855
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-33-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/3/2020 3:04 AM, Iuliana Prodan wrote:=0A=
-> Added a new struct - caam_{skcipher, akcipher, ahash, aead}_request_entry=
-,=0A=
-> to keep each request information. This has a specific crypto request and=
-=0A=
-> a bool to check if the request has backlog flag or not.=0A=
-> This struct is passed to CAAM, via enqueue function - caam_jr_enqueue.=0A=
-> =0A=
-> This is done for later use, on backlogging support in CAAM.=0A=
-[...]=0A=
-> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.=
-c=0A=
-> index 21b6172..34662b4 100644=0A=
-> --- a/drivers/crypto/caam/caamalg.c=0A=
-> +++ b/drivers/crypto/caam/caamalg.c=0A=
-> @@ -871,6 +871,17 @@ static int xts_skcipher_setkey(struct crypto_skciphe=
-r *skcipher, const u8 *key,=0A=
->  }=0A=
->  =0A=
->  /*=0A=
-> + * caam_aead_request_entry - storage for tracking each aead request=0A=
-> + *                           that is processed by a ring=0A=
-> + * @base: common attributes for aead requests=0A=
-> + * @bklog: stored to determine if the request needs backlog=0A=
-> + */=0A=
-> +struct caam_aead_request_entry {=0A=
-> +	struct aead_request *base;=0A=
-> +	bool bklog;=0A=
-> +};=0A=
-> +=0A=
-> +/*=0A=
->   * aead_edesc - s/w-extended aead descriptor=0A=
->   * @src_nents: number of segments in input s/w scatterlist=0A=
->   * @dst_nents: number of segments in output s/w scatterlist=0A=
-> @@ -878,6 +889,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher=
- *skcipher, const u8 *key,=0A=
->   * @mapped_dst_nents: number of segments in output h/w link table=0A=
->   * @sec4_sg_bytes: length of dma mapped sec4_sg space=0A=
->   * @sec4_sg_dma: bus physical mapped address of h/w link table=0A=
-> + * @jrentry: information about the current request that is processed by =
-a ring=0A=
->   * @sec4_sg: pointer to h/w link table=0A=
->   * @hw_desc: the h/w job descriptor followed by any referenced link tabl=
-es=0A=
->   */=0A=
-> @@ -888,11 +900,23 @@ struct aead_edesc {=0A=
->  	int mapped_dst_nents;=0A=
->  	int sec4_sg_bytes;=0A=
->  	dma_addr_t sec4_sg_dma;=0A=
-> +	struct caam_aead_request_entry jrentry;=0A=
->  	struct sec4_sg_entry *sec4_sg;=0A=
->  	u32 hw_desc[];=0A=
->  };=0A=
->  =0A=
-Now that most of the backlogging logic moved from the backend (jr.c)=0A=
-to frontends (caamalg.c, caamhash.c etc.), it looks like there's no need fo=
-r=0A=
-all the *_request_entry structures.=0A=
-Instead, bklog flag could be added directly into the corresponding=0A=
-*_edesc structure.=0A=
-=0A=
-Horia=0A=
+On Wed, Jan 08, 2020 at 02:41:57PM +0300, Mika Westerberg wrote:
+> The PCI probe driver in intel_pmc_ipc.c is a duplicate of what we
+> already have in intel_scu_pcidrv.c with the exception that the later also
+> creates SCU specific devices. Move the PCI IDs from the intel_pmc_ipc.c
+> to intel_scu.c and use driver_data to detect whether SCU devices need to
+> be created or not.
+> 
+> Also update Kconfig entry to mention all platforms supported by the
+> Intel SCU PCI driver.
+
+One comment below. After addressing,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/platform/x86/Kconfig            | 13 +++--
+>  drivers/platform/x86/intel_pmc_ipc.c    | 73 +------------------------
+>  drivers/platform/x86/intel_scu_pcidrv.c | 21 +++++--
+>  3 files changed, 27 insertions(+), 80 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 797683c5d005..1c5afb9e4965 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -994,13 +994,18 @@ config INTEL_SCU
+>  
+>  config INTEL_SCU_PCI
+>  	bool "Intel SCU PCI driver"
+> -	depends on X86_INTEL_MID
+> +	depends on X86_INTEL_MID || PCI
+
+Dependency on PCI is much more generic than Intel MID one. I think we may drop
+X86_INTEL_MID here completely -- less users of it better.
+
+>  	select INTEL_SCU
+>  	help
+>  	  SCU is used to bridge the communications between kernel and
+>  	  SCU on some embedded Intel x86 platforms. It also creates
+> -	  devices that are connected to the SoC through the SCU. This is
+> -	  not needed for PC-type machines.
+> +	  devices that are connected to the SoC through the SCU.
+> +	  Platforms supported:
+> +	    Medfield
+> +	    Clovertrail
+> +	    Merrifield
+> +	    Broxton
+> +	    Apollo Lake
+>  
+>  config INTEL_SCU_IPC_UTIL
+>  	tristate "Intel SCU IPC utility driver"
+> @@ -1192,7 +1197,7 @@ config INTEL_SMARTCONNECT
+>  
+>  config INTEL_PMC_IPC
+>  	tristate "Intel PMC IPC Driver"
+> -	depends on ACPI && PCI
+> +	depends on ACPI
+>  	select INTEL_SCU_IPC
+>  	---help---
+>  	This driver provides support for PMC control on some Intel platforms.
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 241bce603183..acec1c6d2069 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/module.h>
+> -#include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  
+>  #include <asm/intel_pmc_ipc.h>
+> @@ -194,62 +193,6 @@ static int update_no_reboot_bit(void *priv, bool set)
+>  				    PMC_CFG_NO_REBOOT_MASK, value);
+>  }
+>  
+> -static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> -{
+> -	struct intel_pmc_ipc_dev *pmc = &ipcdev;
+> -	struct intel_scu_ipc_pdata pdata;
+> -	struct intel_scu_ipc_dev *scu;
+> -	int ret;
+> -
+> -	/* Only one PMC is supported */
+> -	if (pmc->dev)
+> -		return -EBUSY;
+> -
+> -	memset(&pdata, 0, sizeof(pdata));
+> -	spin_lock_init(&ipcdev.gcr_lock);
+> -
+> -	ret = pcim_enable_device(pdev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
+> -	if (ret)
+> -		return ret;
+> -
+> -	pdata.ipc_regs = pcim_iomap_table(pdev)[0];
+> -
+> -	scu = intel_scu_ipc_probe(&pdev->dev, &pdata);
+> -	if (IS_ERR(scu))
+> -		return PTR_ERR(scu);
+> -
+> -	pmc->dev = &pdev->dev;
+> -
+> -	pci_set_drvdata(pdev, scu);
+> -
+> -	return 0;
+> -}
+> -
+> -static void ipc_pci_remove(struct pci_dev *pdev)
+> -{
+> -	intel_scu_ipc_remove(pci_get_drvdata(pdev));
+> -	ipcdev.dev = NULL;
+> -}
+> -
+> -static const struct pci_device_id ipc_pci_ids[] = {
+> -	{PCI_VDEVICE(INTEL, 0x0a94), 0},
+> -	{PCI_VDEVICE(INTEL, 0x1a94), 0},
+> -	{PCI_VDEVICE(INTEL, 0x5a94), 0},
+> -	{ 0,}
+> -};
+> -MODULE_DEVICE_TABLE(pci, ipc_pci_ids);
+> -
+> -static struct pci_driver ipc_pci_driver = {
+> -	.name = "intel_pmc_ipc",
+> -	.id_table = ipc_pci_ids,
+> -	.probe = ipc_pci_probe,
+> -	.remove = ipc_pci_remove,
+> -};
+> -
+>  static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+>  					      struct device_attribute *attr,
+>  					      const char *buf, size_t count)
+> @@ -697,25 +640,11 @@ static struct platform_driver ipc_plat_driver = {
+>  
+>  static int __init intel_pmc_ipc_init(void)
+>  {
+> -	int ret;
+> -
+> -	ret = platform_driver_register(&ipc_plat_driver);
+> -	if (ret) {
+> -		pr_err("Failed to register PMC ipc platform driver\n");
+> -		return ret;
+> -	}
+> -	ret = pci_register_driver(&ipc_pci_driver);
+> -	if (ret) {
+> -		pr_err("Failed to register PMC ipc pci driver\n");
+> -		platform_driver_unregister(&ipc_plat_driver);
+> -		return ret;
+> -	}
+> -	return ret;
+> +	return platform_driver_register(&ipc_plat_driver);
+>  }
+>  
+>  static void __exit intel_pmc_ipc_exit(void)
+>  {
+> -	pci_unregister_driver(&ipc_pci_driver);
+>  	platform_driver_unregister(&ipc_plat_driver);
+>  }
+>  
+> diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
+> index 42030bdb3e08..4f2a7ca5c5f7 100644
+> --- a/drivers/platform/x86/intel_scu_pcidrv.c
+> +++ b/drivers/platform/x86/intel_scu_pcidrv.c
+> @@ -17,6 +17,7 @@
+>  static int intel_scu_pci_probe(struct pci_dev *pdev,
+>  			       const struct pci_device_id *id)
+>  {
+> +	void (*setup_fn)(void) = (void (*)(void))id->driver_data;
+>  	struct intel_scu_ipc_pdata *pdata;
+>  	struct intel_scu_ipc_dev *scu;
+>  	int ret;
+> @@ -40,14 +41,26 @@ static int intel_scu_pci_probe(struct pci_dev *pdev,
+>  	if (IS_ERR(scu))
+>  		return PTR_ERR(scu);
+>  
+> -	intel_scu_devices_create();
+> +	if (setup_fn)
+> +		setup_fn();
+>  	return 0;
+>  }
+>  
+> +static void intel_mid_scu_setup(void)
+> +{
+> +	intel_scu_devices_create();
+> +}
+> +
+>  static const struct pci_device_id pci_ids[] = {
+> -	{ PCI_VDEVICE(INTEL, 0x080e) },
+> -	{ PCI_VDEVICE(INTEL, 0x08ea) },
+> -	{ PCI_VDEVICE(INTEL, 0x11a0) },
+> +	{ PCI_VDEVICE(INTEL, 0x080e),
+> +	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
+> +	{ PCI_VDEVICE(INTEL, 0x08ea),
+> +	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
+> +	{ PCI_VDEVICE(INTEL, 0x0a94) },
+> +	{ PCI_VDEVICE(INTEL, 0x11a0),
+> +	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
+> +	{ PCI_VDEVICE(INTEL, 0x1a94) },
+> +	{ PCI_VDEVICE(INTEL, 0x5a94) },
+>  	{}
+>  };
+>  
+> -- 
+> 2.24.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
