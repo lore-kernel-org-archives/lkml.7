@@ -2,189 +2,83 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7520C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D0C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC00206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CCbYCLLK"
+	by mail.kernel.org (Postfix) with ESMTP id C3557206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgAHIhl (ORCPT
+        id S1727408AbgAHIhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:37:41 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7420 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726313AbgAHIhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:37:41 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0088XhNd015078;
-        Wed, 8 Jan 2020 09:37:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=yPNIf756cl8D+oxvK8LLBojSG/dQwdM1A+I4zftj8fc=;
- b=CCbYCLLKndNABtq/VJGr/ALZrXaWmYLg1OVDSROsAZS7YZEBKnqruYz6+7BcWsLQ3zpR
- QEb2WFHOvihS+VYxnhBSfGkc+DhvVHv3XZlB2rA0CFFMk/pHR/3fdpm8S7+LxL080asA
- IMkAIDeaC0KfUXsAR7Qe6MuYkpTTjev5I4MGJZ77r75kNOFWFxEiqj3vJY7qKT91lqBE
- ExNs5jiV8kreuUcWS3jEnFhNM/YXzZxPwL5UZqoYi5YEi1KvnVMZyKnakkEu162gU/eO
- u2zlQgfUb/ClR7ETRIcRmuJMyYJ9bL9bcpVbqRPS5PbGjX2545h8Cm9GD3TpHkBDvV0V 5A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakuqtqkw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 09:37:24 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 065AC10002A;
-        Wed,  8 Jan 2020 09:37:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF8422A6191;
-        Wed,  8 Jan 2020 09:37:23 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 8 Jan
- 2020 09:37:23 +0100
-Subject: Re: [PATCH] phy: core: Add consumer device link support
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191104143713.11137-1-alexandre.torgue@st.com>
- <146b2971-d51a-164c-aea8-9b6b4ff5f420@nvidia.com>
- <341954e6-79f8-d45c-fc05-1ce5bd4e3abb@ti.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <b4bceef4-44b1-a48a-7b76-41eb3f5acc81@st.com>
-Date:   Wed, 8 Jan 2020 09:37:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 03:37:54 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2921 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbgAHIhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:37:53 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 7B7B13D67110E36FE76C;
+        Wed,  8 Jan 2020 16:37:49 +0800 (CST)
+Received: from dggeme766-chm.china.huawei.com (10.3.19.112) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 8 Jan 2020 16:37:49 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 8 Jan 2020 16:37:48 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Wed, 8 Jan 2020 16:37:48 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
+Thread-Topic: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
+Thread-Index: AdXF/gTC8Mase5IDSN6uFk3TkzmHmw==
+Date:   Wed, 8 Jan 2020 08:37:48 +0000
+Message-ID: <09ad7e0c69264929a5508eab8833abdc@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <341954e6-79f8-d45c-fc05-1ce5bd4e3abb@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_01:2020-01-07,2020-01-08 signatures=0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/8/20 8:29 AM, Kishon Vijay Abraham I wrote:
-> Hi Jon,
-> 
-> On 07/01/20 5:21 PM, Jon Hunter wrote:
->>
->> On 04/11/2019 14:37, Alexandre Torgue wrote:
->>> In order to enforce suspend/resume ordering, this commit creates link
->>> between phy consumers and phy devices. This link avoids to suspend phy
->>> before phy consumers.
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>
->> With next-20200106 we are seeing a boot regression on Tegra124 Jetson
->> TK1 board. Bisect is pointing to this commit and reverting this on top
->> of -next fixes the problem.
->>
->> The bootlog is showing the following crash on boot ...
->>
->> [    1.730024] 8<--- cut here ---
->> [    1.733079] Unable to handle kernel paging request at virtual address fffffe7f
->> [    1.740318] pgd = (ptrval)
->> [    1.743021] [fffffe7f] *pgd=affff841, *pte=00000000, *ppte=00000000
->> [    1.749304] Internal error: Oops: 27 [#1] SMP ARM
->> [    1.754001] Modules linked in:
->> [    1.757057] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc4-next-20200106-g9eb1b48ca4ce #1
->> [    1.765654] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->> [    1.771919] PC is at device_link_add+0x68/0x4d4
->> [    1.776444] LR is at device_link_add+0x68/0x4d4
->> [    1.780967] pc : [<c09832e4>]    lr : [<c09832e4>]    psr: 60000013
->> [    1.787223] sp : ee0e1d60  ip : 60000013  fp : 00000005
->> [    1.792439] r10: 00000000  r9 : 00000000  r8 : eefedd88
->> [    1.797657] r7 : ee269c10  r6 : fffffdfb  r5 : 00000001  r4 : 00000001
->> [    1.804173] r3 : ee0d8000  r2 : 00000000  r1 : 00000000  r0 : c1858f88
->> [    1.810691] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
->> [    1.817815] Control: 10c5387d  Table: 8020406a  DAC: 00000051
->> [    1.823552] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
->> [    1.829549] Stack: (0xee0e1d60 to 0xee0e2000)
->> [    1.833904] 1d60: eefedd88 00000040 c07087a0 fffffdfb ee269c10 ee737640 00000000 eefedd88
->> [    1.842073] 1d80: 00000000 00000000 00000005 c0707d34 00000000 ee3c8a00 ee7375c0 ee269c10
->> [    1.850242] 1da0: eefedd88 c0a0bd2c c1704e48 ee269c10 ee269c00 ee3c8a00 00000000 c0a0c4a8
->> [    1.858409] 1dc0: ee269c10 c1704e48 c186603c 00000000 c186603c 00000000 00000000 bc98ab22
->> [    1.866577] 1de0: ffffffff ee269c10 00000000 c186603c ee269c00 c186603c 00000000 00000000
->> [    1.874744] 1e00: c1656690 c0a0ffe0 00000000 bc98ab22 ee269c10 ee269c10 00000000 c186603c
->> [    1.882913] 1e20: 00000000 c186603c 00000000 c09887e0 c18ff9dc ee269c10 c18ff9e0 c0986860
->> [    1.891082] 1e40: ee269c10 c186603c c186603c c1704e48 00000000 c15003f0 c15c3854 c0986af0
->> [    1.899249] 1e60: c15c3854 c0d128b4 c10e48ec ee269c10 00000000 c186603c c1704e48 00000000
->> [    1.907416] 1e80: c15003f0 c15c3854 c1656690 c0986da0 00000000 c186603c ee269c10 c0986e28
->> [    1.915583] 1ea0: 00000000 c186603c c0986da8 c0984ba0 c15003f0 ee20c058 ee242334 bc98ab22
->> [    1.923752] 1ec0: c18588c8 c186603c ee737200 c18588c8 00000000 c0985b94 c133ef10 ffffe000
->> [    1.931919] 1ee0: c186603c c186603c c18aaf80 ffffe000 c158b72c c09878ac c1704e48 c18aaf80
->> [    1.940088] 1f00: ffffe000 c0302f80 00000168 c0367d84 c143e5b4 c1371000 00000000 00000006
->> [    1.948255] 1f20: 00000006 c125b1b4 00000000 c1704e48 c126f324 c125b228 00000000 efffec88
->> [    1.956424] 1f40: 00000000 bc98ab22 00000000 c18b6bc0 c18b6bc0 bc98ab22 c18b6bc0 c18b6bc0
->> [    1.964591] 1f60: 00000007 c15c3834 00000169 c1500f28 00000006 00000006 00000000 c15003f0
->> [    1.972758] 1f80: 00000000 00000000 c0ef1cdc 00000000 00000000 00000000 00000000 00000000
->> [    1.980924] 1fa0: 00000000 c0ef1ce4 00000000 c03010e8 00000000 00000000 00000000 00000000
->> [    1.989092] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [    1.997260] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
->> [    2.005440] [<c09832e4>] (device_link_add) from [<c0707d34>] (devm_of_phy_get+0x6c/0xb0)
->> [    2.013528] [<c0707d34>] (devm_of_phy_get) from [<c0a0bd2c>] (ahci_platform_get_phy+0x28/0xd0)
->> [    2.022134] [<c0a0bd2c>] (ahci_platform_get_phy) from [<c0a0c4a8>] (ahci_platform_get_resources+0x384/0x468)
->> [    2.031952] [<c0a0c4a8>] (ahci_platform_get_resources) from [<c0a0ffe0>] (tegra_ahci_probe+0x14/0x650)
->> [    2.041254] [<c0a0ffe0>] (tegra_ahci_probe) from [<c09887e0>] (platform_drv_probe+0x48/0x98)
->> [    2.049686] [<c09887e0>] (platform_drv_probe) from [<c0986860>] (really_probe+0x234/0x34c)
->> [    2.057944] [<c0986860>] (really_probe) from [<c0986af0>] (driver_probe_device+0x60/0x168)
->> [    2.066202] [<c0986af0>] (driver_probe_device) from [<c0986da0>] (device_driver_attach+0x58/0x60)
->> [    2.075064] [<c0986da0>] (device_driver_attach) from [<c0986e28>] (__driver_attach+0x80/0xbc)
->> [    2.083582] [<c0986e28>] (__driver_attach) from [<c0984ba0>] (bus_for_each_dev+0x74/0xb4)
->> [    2.091751] [<c0984ba0>] (bus_for_each_dev) from [<c0985b94>] (bus_add_driver+0x164/0x1e8)
->> [    2.100008] [<c0985b94>] (bus_add_driver) from [<c09878ac>] (driver_register+0x7c/0x114)
->> [    2.108094] [<c09878ac>] (driver_register) from [<c0302f80>] (do_one_initcall+0x54/0x22c)
->> [    2.116271] [<c0302f80>] (do_one_initcall) from [<c1500f28>] (kernel_init_freeable+0x14c/0x1b0)
->> [    2.124967] [<c1500f28>] (kernel_init_freeable) from [<c0ef1ce4>] (kernel_init+0x8/0x10c)
->> [    2.133139] [<c0ef1ce4>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
->> [    2.140697] Exception stack(0xee0e1fb0 to 0xee0e1ff8)
->> [    2.145743] 1fa0:                                     00000000 00000000 00000000 00000000
->> [    2.153910] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [    2.162076] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> [    2.168686] Code: e59f0470 03844040 eb15cb16 eb004c8a (e5d63084)
->> [    2.174824] ---[ end trace fddbf111e88ec722 ]---
->>
->>
->> I believe that there is a bug in this patch and the following fixed it for me ...
->>
->> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
->> index 8dfb4868c8c3..2eb28cc2d2dc 100644
->> --- a/drivers/phy/phy-core.c
->> +++ b/drivers/phy/phy-core.c
->> @@ -799,6 +799,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
->>                  devres_add(dev, ptr);
->>          } else {
->>                  devres_free(ptr);
->> +               return phy;
->>          }
->>   
->>          link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-> 
-> Thank you for spotting this. I've included the fix now.
-
-Thanks guys, and sorry for this regression.
-
-alex
-
-> 
-> Thanks
-> Kishon
-> 
+SGmjug0KPg0KPlVzZSBhIExvZ2ljYWwgT1IgaW4gX19pc19yc3ZkX2JpdHNfc2V0KCkgdG8gY29t
+YmluZSB0aGUgdHdvIHJlc2VydmVkIGJpdCBjaGVja3MsIHdoaWNoIGFyZSBvYnZpb3VzbHkgaW50
+ZW5kZWQgdG8gYmUgbG9naWNhbCBzdGF0ZW1lbnRzLiAgU3dpdGNoaW5nIHRvIGEgTG9naWNhbCBP
+UiBpcyBmdW5jdGlvbmFsbHkgYSBub3AsIGJ1dCBhbGxvd3MgdGhlIGNvbXBpbGVyIHRvIGJldHRl
+ciBvcHRpbWl6ZSB0aGUgY2hlY2tzLg0KPg0KPlNpZ25lZC1vZmYtYnk6IFNlYW4gQ2hyaXN0b3Bo
+ZXJzb24gPHNlYW4uai5jaHJpc3RvcGhlcnNvbkBpbnRlbC5jb20+DQo+LS0tDQo+IGFyY2gveDg2
+L2t2bS9tbXUvbW11LmMgfCAyICstDQo+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KPg0KPmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vbW11L21tdS5jIGIv
+YXJjaC94ODYva3ZtL21tdS9tbXUuYyBpbmRleCA3MjY5MTMwZWE1ZTIuLjcyZTg0NTcwOTAyNyAx
+MDA2NDQNCj4tLS0gYS9hcmNoL3g4Ni9rdm0vbW11L21tdS5jDQo+KysrIGIvYXJjaC94ODYva3Zt
+L21tdS9tbXUuYw0KPkBAIC0zOTcwLDcgKzM5NzAsNyBAQCBfX2lzX3JzdmRfYml0c19zZXQoc3Ry
+dWN0IHJzdmRfYml0c192YWxpZGF0ZSAqcnN2ZF9jaGVjaywgdTY0IHB0ZSwgaW50IGxldmVsKSAg
+ew0KPiAJaW50IGJpdDcgPSAocHRlID4+IDcpICYgMSwgbG93NiA9IHB0ZSAmIDB4M2Y7DQo+IA0K
+Pi0JcmV0dXJuIChwdGUgJiByc3ZkX2NoZWNrLT5yc3ZkX2JpdHNfbWFza1tiaXQ3XVtsZXZlbC0x
+XSkgfA0KPisJcmV0dXJuIChwdGUgJiByc3ZkX2NoZWNrLT5yc3ZkX2JpdHNfbWFza1tiaXQ3XVts
+ZXZlbC0xXSkgfHwNCj4gCQkoKHJzdmRfY2hlY2stPmJhZF9tdF94d3IgJiAoMXVsbCA8PCBsb3c2
+KSkgIT0gMCk7ICB9DQo+IA0KPi0tDQo+Mi4yNC4xDQoNCk9uIHRoZSBjYWxsIGNoYWluIHdhbGtf
+c2hhZG93X3BhZ2VfZ2V0X21taW9fc3B0ZSAtLT4gaXNfc2hhZG93X3plcm9fYml0c19zZXQgLS0+
+IF9faXNfcnN2ZF9iaXRzX3NldCwgdGhlDQpyZXR1cm4gdmFsdWUgaXMgdXNlZCBhczoNCglyZXNl
+cnZlZCB8PSBpc19zaGFkb3dfemVyb19iaXRzX3NldCh2Y3B1LT5hcmNoLm1tdSwgc3B0ZSwNCgkJ
+aXRlcmF0b3IubGV2ZWwpOw0KDQpCdXQgdGhpcyBzZWVtcyBvayBiZWNhdXNlIHZhbCByZXNlcnZl
+ZCBpcyBib29sIHR5cGUuDQoNClRoYW5rcy4NCg==
