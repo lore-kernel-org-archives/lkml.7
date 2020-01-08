@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B8E20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDA924683
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgAHLmX (ORCPT
+        id S1727818AbgAHLm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:42:23 -0500
-Received: from mga17.intel.com ([192.55.52.151]:51036 "EHLO mga17.intel.com"
+        Wed, 8 Jan 2020 06:42:26 -0500
+Received: from mga09.intel.com ([134.134.136.24]:62303 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727614AbgAHLmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:42:17 -0500
+        id S1727695AbgAHLmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:42:18 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:16 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="223521065"
+   d="scan'208";a="422891944"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 03:42:14 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2B1ED61D; Wed,  8 Jan 2020 13:42:03 +0200 (EET)
+        id 5560B6E2; Wed,  8 Jan 2020 13:42:03 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 28/36] mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
-Date:   Wed,  8 Jan 2020 14:41:53 +0300
-Message-Id: <20200108114201.27908-29-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 33/36] platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
+Date:   Wed,  8 Jan 2020 14:41:58 +0300
+Message-Id: <20200108114201.27908-34-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,55 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the Intel Merrifield PMIC driver over the new SCU IPC API
-where the SCU IPC instance is passed to the functions.
+This is the current preferred way so replace the S_IWUSR with the
+corresponding octal value. While there move the attributes to follow
+directly their store functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-index 26a1551c5faf..bd94c989d232 100644
---- a/drivers/mfd/intel_soc_pmic_mrfld.c
-+++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-@@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
- static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
- 				    unsigned int *val)
- {
-+	struct intel_soc_pmic *pmic = context;
- 	u8 ipc_out;
- 	int ret;
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index acec1c6d2069..20a4bb72aeac 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -215,6 +215,7 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+ 	}
+ 	return (ssize_t)count;
+ }
++static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
  
--	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-+	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
- 	if (ret)
- 		return ret;
+ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 					     struct device_attribute *attr,
+@@ -240,11 +241,7 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 	}
+ 	return (ssize_t)count;
+ }
+-
+-static DEVICE_ATTR(simplecmd, S_IWUSR,
+-		   NULL, intel_pmc_ipc_simple_cmd_store);
+-static DEVICE_ATTR(northpeak, S_IWUSR,
+-		   NULL, intel_pmc_ipc_northpeak_store);
++static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
  
-@@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
- static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
- 				     unsigned int val)
- {
-+	struct intel_soc_pmic *pmic = context;
- 	u8 ipc_in = val;
- 	int ret;
- 
--	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-+	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
- 	if (ret)
- 		return ret;
- 
-@@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
- 	if (!pmic)
- 		return -ENOMEM;
- 
-+	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!pmic->scu)
-+		return -ENOMEM;
-+
- 	platform_set_drvdata(pdev, pmic);
- 	pmic->dev = &pdev->dev;
- 
+ static struct attribute *intel_ipc_attrs[] = {
+ 	&dev_attr_northpeak.attr,
 -- 
 2.24.1
 
