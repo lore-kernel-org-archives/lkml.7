@@ -2,124 +2,206 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F32C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8718AC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07383206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Z4rje0WJ"
+	by mail.kernel.org (Postfix) with ESMTP id 64991206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgAHIqo (ORCPT
+        id S1727452AbgAHIsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:46:44 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:49712 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbgAHIqn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:46:43 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0088b6h7025138;
-        Wed, 8 Jan 2020 02:46:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=5vloF2tu2Sx4S6BQ3fMbJ4Y4FSx5v/rQY3RGNTFnX/k=;
- b=Z4rje0WJGLs9oD3+dBeRKR433H0E1IFrO+Rc7isUvv/3Y4gapOi+15dBNKUtMldIgERN
- lGzy1RMcQJu54NeCJ40CeUAzoO/j9b0gTgOO5RGHry3NJYzOVAQvbIOnOjZE2SJyGb37
- KWVnpwLM4wyrBc16pxGuKzDiBDuES+vMMY8r/LrTVRhooIJmDe/ZftrY4ECMbIZg6VmJ
- zOERFRxLfLLSt1G9qlTo7iMiZQqrI6syd54V6w9NviHX/1Icw8WqJJTwiXNCufon1ho9
- D5DGVhfQ80boQYVKJ01VaHCKLDU+uwepd4Gs0znr71w1NqUiLxU9SAlSQFLC+g6ifptU xQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2xar0tcsbn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 08 Jan 2020 02:46:41 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 8 Jan
- 2020 08:46:40 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Wed, 8 Jan 2020 08:46:40 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 25AB32B1;
-        Wed,  8 Jan 2020 08:46:40 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 08:46:40 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 1/2] mfd: madera: Allow more time for hardware reset
-Message-ID: <20200108084640.GI10451@ediswmail.ad.cirrus.com>
-References: <20200106102834.31301-1-ckeepax@opensource.cirrus.com>
- <20200107142742.GN14821@dell>
+        Wed, 8 Jan 2020 03:48:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36414 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727313AbgAHIsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:48:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5AB81AD82;
+        Wed,  8 Jan 2020 08:48:43 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: add the mode_valid function
+To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
+Date:   Wed, 8 Jan 2020 09:48:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200107142742.GN14821@dell>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001080074
+In-Reply-To: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:27:42PM +0000, Lee Jones wrote:
-> On Mon, 06 Jan 2020, Charles Keepax wrote:
-> 
-> > Both manual and power on resets have a brief period where the chip will
-> > not be accessible immediately afterwards. Extend the time allowed for
-> > this from a minimum of 1mS to 2mS based on newer evaluation of the
-> > hardware and ensure this reset happens in all reset conditions. Whilst
-> > making the change also remove the redundant NULL checks in the reset
-> > functions as the GPIO functions already check for this.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> >  drivers/mfd/madera-core.c | 18 ++++++++++--------
-> >  1 file changed, 10 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-> > index a8cfadc1fc01e..f41ce408259fb 100644
-> > --- a/drivers/mfd/madera-core.c
-> > +++ b/drivers/mfd/madera-core.c
-> > @@ -238,6 +238,11 @@ static int madera_wait_for_boot(struct madera *madera)
-> >  	return ret;
-> >  }
-> >  
-> > +static inline void madera_reset_delay(void)
-> > +{
-> > +	usleep_range(2000, 3000);
-> > +}
-> 
-> Hmm ... We usually shy away from abstraction for the sake of
-> abstraction.  What's preventing you from using the preferred method of
-> simply calling the abstracted function from each of the call-sites?
-> 
-> I could understand (a little) if you needed to frequently change these
-> values, since changing them in once place is obviously simpler than
-> changing them in 3, but even then it's marginal.
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx
+Content-Type: multipart/mixed; boundary="ujRMYAIfhnuseeewZLl362zPnio58F1kj";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+ airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+ alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: add the mode_valid function
+References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
 
-I don't mind manually inline it, we don't plan on changing the
-values very often certainly. It really was just to avoid future
-bugs if someone adds a new place that needs the delay or does
-indeed change the delay. Would you mind if I used a define for
-the time instead, if I am manually inlining? That keeps the same
-single place to update, but without the extra function.
+--ujRMYAIfhnuseeewZLl362zPnio58F1kj
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Charles
+Hi,
+
+here are a few more nits to fix.
+
+Am 08.01.20 um 09:19 schrieb Tian Tao:
+> add mode_valid function, and we can also use it to make suse the resolu=
+tion
+> is valid.
+
+Start with capital 'Add' and make it a simple sentence. Change 'suse' to
+'sure'
+
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 20 ++++++++++++++++++=
+++
+>  1 file changed, 20 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/g=
+pu/drm/hisilicon/hibmc/hibmc_drm_de.c
+> index 843d784..6cb7a79 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+> @@ -242,6 +242,25 @@ static void hibmc_crtc_atomic_disable(struct drm_c=
+rtc *crtc,
+>  	hibmc_set_current_gate(priv, reg);
+>  }
+> =20
+> +enum drm_mode_status hibmc_crtc_mode_valid(struct drm_crtc *crtc,
+> +					const struct drm_display_mode *mode)
+
+Please declare this function as static.
+
+> +{
+> +	int i =3D 0;
+> +	int vrefresh =3D drm_mode_vrefresh(mode);
+> +
+> +	if (vrefresh < 59 || vrefresh > 61)
+> +		return MODE_NOMODE;
+
+I'd return MODE_NOCLOCK or MODE_CLOCK_RANGE.
+
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(hibmc_pll_table); i++) {
+> +		if (hibmc_pll_table[i].hdisplay =3D=3D mode->hdisplay &&
+> +			hibmc_pll_table[i].vdisplay =3D=3D mode->vdisplay)
+> +			return MODE_OK;
+> +	}
+> +
+> +	return MODE_NOMODE;
+
+Maybe return MODE_BAD. MODE_NOMODE apparently refers to a descriptive
+string for the mode.
+
+> +}
+> +
+> +
+
+One one empty line please.
+
+With these fixes applied, you can add my
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Best regards
+Thomas
+
+
+>  static unsigned int format_pll_reg(void)
+>  {
+>  	unsigned int pllreg =3D 0;
+> @@ -510,6 +529,7 @@ static const struct drm_crtc_helper_funcs hibmc_crt=
+c_helper_funcs =3D {
+>  	.atomic_flush	=3D hibmc_crtc_atomic_flush,
+>  	.atomic_enable	=3D hibmc_crtc_atomic_enable,
+>  	.atomic_disable	=3D hibmc_crtc_atomic_disable,
+> +	.mode_valid =3D hibmc_crtc_mode_valid,
+>  };
+> =20
+>  int hibmc_de_init(struct hibmc_drm_private *priv)
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--ujRMYAIfhnuseeewZLl362zPnio58F1kj--
+
+--OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4Vl2cACgkQaA3BHVML
+eiOtvQgAl+IKOBGin0jJPitb0wqB32GKS7u8kxNi8XOnM9YrgBAVf1kh2JEKQid4
+uwPj9RXDKcvUPvQmPL/vtbnwW4bOC6Ozd5T4hLr/LFURtvLk7KPnLrCYaiYYLlpq
+dEy+hgizVw99TzD/os1Y9YipRQcfExiNKQZwoFpNC95csJENwPZuLdQpcacisQpZ
+bIo91OvPy/U9vpmqsrNYW7S9CMguPO0fQ2giSRkvVho88zCzsxwahI/SS4Ts0RJk
+IXhjiqytFxcRonvLJR272RqdCTH8LodVCbXFbXZTYasTsQDzXHXnz9vZvEK/eZwI
++jl149f6VR4riTxQ5uDKMT9Ei0cWmw==
+=QA9q
+-----END PGP SIGNATURE-----
+
+--OZ3Z0Rm1PvXry6qAkJcWesTazNMCuYBUx--
