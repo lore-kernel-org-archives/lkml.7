@@ -2,79 +2,158 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF33C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7386C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DAA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB322072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEShmPzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbgAHPuE (ORCPT
+        id S1728275AbgAHPu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:50:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:46370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgAHPuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:50:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5806031B;
-        Wed,  8 Jan 2020 07:50:03 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78B9D3F534;
-        Wed,  8 Jan 2020 07:50:01 -0800 (PST)
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v3
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Hillf Danton <hdanton@sina.com>, Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200106144250.GA3466@techsingularity.net>
- <04033a63f11a9c59ebd2b099355915e4e889b772.camel@surriel.com>
- <20200106163303.GC3466@techsingularity.net>
- <20200107015111.4836-1-hdanton@sina.com>
- <20200107091256.GE3466@techsingularity.net>
- <CAKfTPtAMeta=jtTkTewdFN1UyqT+iyRhm9pfNDjkydfJQjaorQ@mail.gmail.com>
- <20200107101646.GG3466@techsingularity.net>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <d0c556ee-0758-ee57-7264-f1e4c158ae54@arm.com>
-Date:   Wed, 8 Jan 2020 15:49:55 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 10:50:26 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45844 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgAHPu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:50:26 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so3841922wrj.12;
+        Wed, 08 Jan 2020 07:50:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0N3N55mKu7D6d7h9hmn6IsvaDLGUWysqQq54G06xnmc=;
+        b=uEShmPzw5xgcVfK3GcKJ1pcAbUUKIEsRASYH9i+gdlGVyVcjN/bjZt8ucd4xpTahK6
+         glwEk3CBwPVEP34eMIfafPiylQFDJd7Ee75Er8GaCG0KEfZpuynSACF69GFFom7n499C
+         uQslmQ7fcLEVWISoJY2nFAJNc/282zr360qcqlhazBJBXjVoawMpqJW6jC0zOLV9MDXa
+         EPuF3iAtAPF2sCwRpZEdnFbml75XX3/6YdRh2iSR+mdI/WXQKIkTUj4BrMocvw6GmbsX
+         8plbDRm4oHg/3sCv9OkAsPM/6HY18h0R28eeMwKk5ty2UYPaXCcJj7MvTj03fR6BP4HK
+         Zh/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0N3N55mKu7D6d7h9hmn6IsvaDLGUWysqQq54G06xnmc=;
+        b=gYpO2GtInG8wYMJwWMQZam20NhqumYmtwjxrQ40UUkbLqfbLUHd56pkLWbKh1F4o6z
+         kc6McJiSrxYyEAWOvKxjW86Y8mEnIAUdWPNXLZ/LWqB9yJ/SVPIpijgQF+cz4SChDwXm
+         4XtgVgW+1zzci3YU+sOpDPuhJ0n0D1Ccq0PHUJqOfVDuYVGI+dL2RZAdCF2MPaYpD1j/
+         wVuEJhC70ljvbEMGsT4/54t3kd7aHVwTVTXfTmGAGC9XwCKOdOxAmMZ0dqwLq9kD8Wiv
+         g13iLej5R5rJJjjD5ibTWb9kUM/IEgut+0vkSqls3e+b8r7iTDQcdFH8f/Q2fRdNMtR3
+         UNeg==
+X-Gm-Message-State: APjAAAWmxCphBSRdbuADFplYmylcLDvkMcFEBbWFLio37+r0Hc3BWIwZ
+        yyKffDSRYvtEn+j87U8ZUUIqvS7nxcSVKUurFXQ=
+X-Google-Smtp-Source: APXvYqxPEibow2/dOPHBHRrXKbKanMI8VD5bNxb9vyWi016tP8DINM//hzIULp8SZLVtL0ef1MxEO7LiWO1kexZKxMk=
+X-Received: by 2002:adf:e78b:: with SMTP id n11mr5355464wrm.10.1578498624011;
+ Wed, 08 Jan 2020 07:50:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200107101646.GG3466@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
+ <DB7PR04MB4620E3087C59A26B865DEE988B790@DB7PR04MB4620.eurprd04.prod.outlook.com>
+ <CAHQ1cqH5hstMwbO1vqOkZ3GVe-j5a+c3TX-yosq-TvuFFxPkHQ@mail.gmail.com>
+ <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <CAHQ1cqFPmJ7AR3ftTyCy4DiE0YQgspPBnp+EQLPOwxXo6tTcYg@mail.gmail.com> <CAHQ1cqE2PGKUPfc8SUAw2TkuDXRbFtnyux=bWyOny21KK8dhjA@mail.gmail.com>
+In-Reply-To: <CAHQ1cqE2PGKUPfc8SUAw2TkuDXRbFtnyux=bWyOny21KK8dhjA@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 8 Jan 2020 07:50:12 -0800
+Message-ID: <CAHQ1cqFR4ztK7zToN3OeTDYEXaGMkLa8uY3ka+Sgmf3dwxJsFg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] CAAM JR lifecycle
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     Vakul Garg <vakul.garg@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 10:16, Mel Gorman wrote:
-> I think running tasks at least is the least bad metric. idle CPUs gets
-> caught up in corner cases with bindings and util_avg can be skewed by
-> outliers. Running tasks is a sensible starting point until there is a
-> concrete use case that shows it is unworkable.
+On Sat, Nov 16, 2019 at 10:15 PM Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+>
+> On Wed, Nov 13, 2019 at 11:25 AM Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+> >
+> > On Wed, Nov 13, 2019 at 10:57 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+> > >
+> > > On 11/6/2019 5:19 PM, Andrey Smirnov wrote:
+> > > > On Tue, Nov 5, 2019 at 11:27 PM Vakul Garg <vakul.garg@nxp.com> wrote:
+> > > >>
+> > > >>
+> > > >>
+> > > >>> -----Original Message-----
+> > > >>> From: linux-crypto-owner@vger.kernel.org <linux-crypto-
+> > > >>> owner@vger.kernel.org> On Behalf Of Andrey Smirnov
+> > > >>> Sent: Tuesday, November 5, 2019 8:44 PM
+> > > >>> To: linux-crypto@vger.kernel.org
+> > > >>> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>; Chris Healy
+> > > >>> <cphealy@gmail.com>; Lucas Stach <l.stach@pengutronix.de>; Horia Geanta
+> > > >>> <horia.geanta@nxp.com>; Herbert Xu <herbert@gondor.apana.org.au>;
+> > > >>> Iuliana Prodan <iuliana.prodan@nxp.com>; dl-linux-imx <linux-
+> > > >>> imx@nxp.com>; linux-kernel@vger.kernel.org
+> > > >>> Subject: [PATCH 0/5] CAAM JR lifecycle
+> > > >>>
+> > > >>> Everyone:
+> > > >>>
+> > > >>> This series is a different approach to addressing the issues brought up in
+> > > >>> [discussion]. This time the proposition is to get away from creating per-JR
+> > > >>> platfrom device, move all of the underlying code into caam.ko and disable
+> > > >>> manual binding/unbinding of the CAAM device via sysfs. Note that this series
+> > > >>> is a rough cut intented to gauge if this approach could be acceptable for
+> > > >>> upstreaming.
+> > > >>>
+> > > >>> Thanks,
+> > > >>> Andrey Smirnov
+> > > >>>
+> > > >>> [discussion] lore.kernel.org/lkml/20190904023515.7107-13-
+> > > >>> andrew.smirnov@gmail.com
+> > > >>>
+> > > >>> Andrey Smirnov (5):
+> > > >>>   crypto: caam - use static initialization
+> > > >>>   crypto: caam - introduce caam_jr_cbk
+> > > >>>   crypto: caam - convert JR API to use struct caam_drv_private_jr
+> > > >>>   crypto: caam - do not create a platform devices for JRs
+> > > >>>   crypto: caam - disable CAAM's bind/unbind attributes
+> > > >>>
+> > > >>
+> > > >> To access caam jobrings from DPDK (user space drivers), we unbind job-ring's platform device from the kernel.
+> > > >> What would be the alternate way to enable job ring drivers in user space?
+> > > >>
+> > > >
+> > > > Wouldn't either building your kernel with
+> > > > CONFIG_CRYPTO_DEV_FSL_CAAM_JR=n (this series doesn't handle that right
+> > > > currently due to being a rough cut) or disabling specific/all JRs via
+> > > > DT accomplish the same goal?
+> > > >
+> > > It's not a 1:1 match, the ability to move a ring to user space / VM etc.
+> > > *dynamically* goes away.
+> > >
+> >
+> > Wouldn't it be possible to do that dynamically using DT overlays? That
+> > is "modprobe -r caam; <apply overlay>; modprobe caam"?
+> >
+>
+> Or, alternatively, could adding a module parameter, say "jr_mask", to
+> limit JRs controlled by the driver cover dynamic use case?
+>
 
-I'd tend to agree with you here. Also; this being in the group_has_spare
-imbalance type we have some guarantees that the group is not overutilized.
+Horia, could you please comment on the above? I think getting rid of
+struct device for JRs is the best approach to dealing with described
+corner case problems + it will allows us to get rid of this custom JR
+users lifecycle management
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/crypto/caam/jr.c?h=v5.4.8#n26
+since it can be just done as a part for caam_probe(), so I'd like to
+either move forward on this series or close this discussion.
 
-If we keep some threshold of 'sum_nr_running < group_weight / 2', then this
-"naturally" puts a hard limit of 50% total group utilization (corner case
-where all tasks are 100% util).
-
-> Lets see what you think of
-> the other untested patch I posted that takes the group weight and child
-> domain weight into account.
-> 
+Thanks,
+Andrey Smirnov
