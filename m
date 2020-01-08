@@ -2,110 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A06C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D1C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45CB24672
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2304B206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578482274;
-	bh=qmRF5I/eJ6Xufmpf6Fnipis4D/jLuNSSfdkTRh9QjDE=;
+	s=default; t=1578482277;
+	bh=hgXupPARz/+WnBXYCcpMWO+F+6Ku0DuxSLKFEnmHNJY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dXTnOxymIEguzmfDyumpwwQEnnm0imKZ71cPpN1VH0HFBcSSCmyosGpe3Dz9LU4aj
-	 oebhbafBn35FwyEkeXrksL1CYFqcLYptQOuMPpO+pIbYbG48eIp/Zs4N1DBHy8Cphs
-	 /sSxbgIRFyKdhCfWz+/KD7JJJhW07rqZ1OJKf+Jg=
+	b=QJCBoil+gT3o1UJS6Fj6LCsWALty5qZscpGAWfKBQMzjhvK64kmdNlcDEQTlwMZbb
+	 1TVteeW+6D9/1N6TGdysp8jzAZRI1D0AX9FjVNJ8QbHIrOLnxa4ncDNejZu1DIlRMk
+	 cwh5hD1VcB0P0Xi7oj4JeXCGqDIkQrmuuuADleTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgAHLRx (ORCPT
+        id S1728129AbgAHLRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:17:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
+        Wed, 8 Jan 2020 06:17:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbgAHLRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:17:50 -0500
+        id S1728108AbgAHLRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:17:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBFB2077B;
-        Wed,  8 Jan 2020 11:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CE92087F;
+        Wed,  8 Jan 2020 11:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578482270;
-        bh=qmRF5I/eJ6Xufmpf6Fnipis4D/jLuNSSfdkTRh9QjDE=;
+        s=default; t=1578482267;
+        bh=hgXupPARz/+WnBXYCcpMWO+F+6Ku0DuxSLKFEnmHNJY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ff56IwXwfuwkzUgXwaXeRvpnnqLHD6SbvYQhn90CxETJYI/g1TnZBRFOscPfedPig
-         1K0zOMF+SOAnFx/FB6sUHef9beVrIP+paN9CSX6CwJ64lk5VDZKCiypHXGSqv3RND7
-         2X15uMf3KS/EIRW7qXYXOYR1x4PXmCp6vpxRilA0=
-Date:   Wed, 8 Jan 2020 12:17:19 +0100
+        b=qWRpWd7p9wbwOeGEwLV3cKQmbG2hxEowBBRoJCSu91ZMbE60iXSaDwmlbE7qy4lG6
+         gPeobkVj+FS2z1tr8idDKrkRGran/PY2Vz3FHoDM2Gq8n6KvvuUDakGrGxxplUyXx/
+         GZLz9orm/rmULaz8Gj8rxOoh6bg9YrJQAJhYk7N0=
+Date:   Wed, 8 Jan 2020 11:47:55 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+To:     Pavel Machek <pavel@denx.de>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 103/115] coresight: etb10: Do not call
- smp_processor_id from preemptible
-Message-ID: <20200108111719.GA2342287@kroah.com>
+Subject: Re: [PATCH 4.19 040/115] drm: limit to INT_MAX in create_blob ioctl
+Message-ID: <20200108104755.GA2338370@kroah.com>
 References: <20200107205240.283674026@linuxfoundation.org>
- <20200107205308.383005810@linuxfoundation.org>
- <a3f27cf7-f3dc-7829-873b-591a91d8a28a@arm.com>
+ <20200107205301.771918206@linuxfoundation.org>
+ <20200108081148.GC619@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a3f27cf7-f3dc-7829-873b-591a91d8a28a@arm.com>
+In-Reply-To: <20200108081148.GC619@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 11:01:41AM +0000, Suzuki Kuruppassery Poulose wrote:
-> Greg,
+On Wed, Jan 08, 2020 at 09:11:48AM +0100, Pavel Machek wrote:
+> On Tue 2020-01-07 21:54:10, Greg Kroah-Hartman wrote:
+> > From: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > 
+> > [ Upstream commit 5bf8bec3f4ce044a223c40cbce92590d938f0e9c ]
+> > 
+> > The hardened usercpy code is too paranoid ever since commit 6a30afa8c1fb
+> > ("uaccess: disallow > INT_MAX copy sizes")
 > 
-> On 07/01/2020 20:55, Greg Kroah-Hartman wrote:
-> > From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Code itself should have been fine as-is.
 > > 
-> > [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
-> > 
-> > During a perf session we try to allocate buffers on the "node" associated
-> > with the CPU the event is bound to. If it is not bound to a CPU, we
-> > use the current CPU node, using smp_processor_id(). However this is unsafe
-> > in a pre-emptible context and could generate the splats as below :
-> > 
+> > Link: http://lkml.kernel.org/r/20191106164755.31478-1-daniel.vetter@ffwll.ch
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
+> > Fixes: 6a30afa8c1fb ("uaccess: disallow > INT_MAX copy sizes")
 > 
-> >   BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
-> > 
-> > Use NUMA_NO_NODE hint instead of using the current node for events
-> > not bound to CPUs.
-> > 
-> > Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: stable <stable@vger.kernel.org> # 4.6+
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-etb10.c | 4 +---
-> >   1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-> > index 0dad8626bcfb..0a59bf3af40b 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etb10.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etb10.c
-> > @@ -275,9 +275,7 @@ static void *etb_alloc_buffer(struct coresight_device *csdev, int cpu,
-> >   	int node;
-> >   	struct cs_buffers *buf;
-> > -	if (cpu == -1)
-> > -		cpu = smp_processor_id();
-> > -	node = cpu_to_node(cpu);
-> > +	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
+> There is no such thing as commit 6a30afa8c1fb. Apparently this is
+> talking about commit "6d13de1489b6bf539695f96d945de3860e6d5e17", but
+> that one is not in 4.19-stable.
 > 
-> Please drop this patch too, from the list as it will break the build
-> with undefined "event" variable. I will post a backport soon.
+> Do we need this in 4.19-stable?
 
-Also now dropped, thanks.
-
-greg k-h
+Yes.
