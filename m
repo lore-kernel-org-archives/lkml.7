@@ -2,210 +2,177 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB3C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3883CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1F8206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024D5206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UMKviDcx"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S03AhBky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgAHIaW (ORCPT
+        id S1727226AbgAHIaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:30:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56180 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHIaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:30:18 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0088UGvx129217;
-        Wed, 8 Jan 2020 02:30:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578472216;
-        bh=OXxUci0KUCdGYZId9cqKL8rIYfQAjqBnFgpBE40z2ug=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UMKviDcxC7x1jcpzaNlJuNe9NmzZOoxGG+Dq+j0B91IzwvPJvHbR/fgCinmMkBsNd
-         UVLTi6iH38W+e6PYDH7gsUrwx0V4BshglXoCobXAX89ikZfBFaHWKP1yrU9Mj8sPDa
-         7WXGr5hQ4V5Q0b3zZpMfAMotMDSUelbGreUuiEiw=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0088UGZX108345
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 02:30:16 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 02:30:15 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 02:30:15 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0088U8va048698;
-        Wed, 8 Jan 2020 02:30:13 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
-        <sjakhade@cadence.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
-        <jsarha@ti.com>, <rogerq@ti.com>
-Subject: [PATCH v2 2/2] phy: ti: j721e-wiz: Implement DisplayPort mode to the wiz driver
-Date:   Wed, 8 Jan 2020 10:30:08 +0200
-Message-ID: <08f35af7ad6b948bd6ccab9f0807e36b6ddfb1c3.1578471433.git.jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1578471433.git.jsarha@ti.com>
-References: <cover.1578471433.git.jsarha@ti.com>
+        Wed, 8 Jan 2020 03:30:39 -0500
+Received: from mail-eopbgr20085.outbound.protection.outlook.com ([40.107.2.85]:43782
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726556AbgAHIai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:30:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ULfymETQ6FGb0C+an5/+BJeqYLZXc1G+ASi1L1Y8VyDWeIJd7b+SRc1YQNmH9b+gt88BbEiq6MhPmaSXNr+vrA/Z6KmahBbSZdaQbLkoYj6GYF0OrPrRPClabhVowadD5bsXxIW/Z6OibqfiV1TDMsKnONaINWVkadWuOQFP2apbW8pCCLHj2wvEwc/hQItkES18C13tuEEHd/BNNOep5SsyehCuqhkm2K79L/7K6ux81sNl1dcnrnllRLvzTYAcOJx+hSpo+ojn7y1ijCxIVAoA33PsYfUy0jENsGxAu2uOzflRG6Tm/A6LrVi0udKZ8eQwf0e9M1Ow2t4DmEhbWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubWuDKneieWqZqps87Cf73MhpxpseCyT4FuguI/XZuw=;
+ b=RG2hVW5kOZVK86yus3kRZe3Z95ou7ARMJEJPxjV9UFFUwmmoNsa/DR631aFeFTOn9nsfcgGzRs2MwMWW6+mi4flG6tVU8o9k3ER9pc+SqryJywMC0njVfkn+ucLi4zursxW0ijBaUk56kdIsPnATbfyZqjyUuKcM+ZAe/p4O2lyeY0W4WPMJysTapCGPOLvxDNIcEJp2Q6ksqaxSS4mCEyIG4wyVTcbXRZYwtaFcJ1lDIKW4iue+uvBMacjq0tf69ri1E5g0qMBwBT2tx2/jtXGteQvMTR8b+HW9RrY/v3ALvY0BceT4BpdHhhbUVnq7uxLdua08Yud6X0lsc/n+iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubWuDKneieWqZqps87Cf73MhpxpseCyT4FuguI/XZuw=;
+ b=S03AhBkyR5ltWVJK986wN7oUzwD1Q9RPp9JWikEa9AJqaN/J+0MMRZlFDL1jEBzvfnNiIQphm630EhvGZcvZcoYywyutQiREWvJ0AdV7yQrTPixY8EnPt03nZd0TY2LxUDKRqdOOjO3vrFYGMn+s9aGXvswChI28/shORXdKSvg=
+Received: from DB8PR04MB5786.eurprd04.prod.outlook.com (20.179.10.31) by
+ DB8PR04MB6457.eurprd04.prod.outlook.com (20.179.248.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Wed, 8 Jan 2020 08:30:34 +0000
+Received: from DB8PR04MB5786.eurprd04.prod.outlook.com
+ ([fe80::6d98:adb8:f7cc:394]) by DB8PR04MB5786.eurprd04.prod.outlook.com
+ ([fe80::6d98:adb8:f7cc:394%7]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
+ 08:30:34 +0000
+Received: from localhost (89.37.124.34) by AM7PR04CA0022.eurprd04.prod.outlook.com (2603:10a6:20b:110::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Wed, 8 Jan 2020 08:30:33 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "t-kristo@ti.com" <t-kristo@ti.com>, Peng Fan <peng.fan@nxp.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V3 1/4] clk: imx: gate4: Switch imx_clk_gate4_flags() to
+ clk_hw based API
+Thread-Topic: [PATCH V3 1/4] clk: imx: gate4: Switch imx_clk_gate4_flags() to
+ clk_hw based API
+Thread-Index: AQHVxccHqL7Ov6gaike6khrnD2xGWKfgcDiA
+Date:   Wed, 8 Jan 2020 08:30:34 +0000
+Message-ID: <20200108083031.kpcmlujhpu5fein2@fsr-ub1664-175>
+References: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM7PR04CA0022.eurprd04.prod.outlook.com
+ (2603:10a6:20b:110::32) To DB8PR04MB5786.eurprd04.prod.outlook.com
+ (2603:10a6:10:a8::31)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d9bea7a-41cd-4159-8d91-08d794150773
+x-ms-traffictypediagnostic: DB8PR04MB6457:|DB8PR04MB6457:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB64570767E8DBFBA2ECC3D227F63E0@DB8PR04MB6457.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(189003)(199004)(9686003)(316002)(6636002)(2906002)(86362001)(71200400001)(33716001)(8936002)(8676002)(54906003)(7416002)(81166006)(81156014)(6496006)(52116002)(1076003)(956004)(53546011)(4326008)(5660300002)(66946007)(26005)(66476007)(6862004)(66556008)(478600001)(44832011)(66446008)(64756008)(6486002)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6457;H:DB8PR04MB5786.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MU6svVdXrTt8Tzi4m0HxoNCBk06EYYuSJDfUWy9m+BagPGrJf4kFgSY4ps75IjLUMORqmjivqIFaY+uOQ1ys9d1f0ybDBkWhwi8w2bdreIbwbW0OBmMKRLOMc/PotKpAxOknE68PfeoC9xdU6FlA7UUth/jxOSBkjy1kfRrP49MrReo6C4I+z5K6QKXgXI7RfBCCGGt39Ckm9fCy9eJP3uenlI0M1PKhcIzMhoLoNxNFd2Nm6SjakTi+czUPhvt47Hw+XIr8/CT0jDH7FkggsqdCndCUycQXtzuHkEWJRTg1n0WQS8gWYwZgpT1ceAkIYVI3LDfC+xTTq5nKVzrbolzuoeWk4qdbFOQKztRfCuBC9V5kSjJ5XGggkwE8vNRId4bbSbPUpdYZeZvepMT61BNVe+T7VcNOQKPBsJphctZGudOSv/cohhXP/XL7m5cE
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1CC62D0316E4814C83B3DCB649EBF82C@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9bea7a-41cd-4159-8d91-08d794150773
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 08:30:34.0879
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v2YxH4VS74IF8vvRRsEzexXJC09fS6SErYakKT/QGQE0oCTWcB8/FrR/NmkSU/NwwFex9PrRMMW687ysJMXf4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6457
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For DisplayPort use we need to set WIZ_CONFIG_LANECTL register's
-P_STANDARD_MODE bits to "mode 3". In the DisplayPort use also the
-P_ENABLE bits of the same register are set to P_ENABLE instead of
-P_ENABLE_FORCE, so that the DisplayPort driver can enable and disable
-the lane as needed. The DisplayPort mode is selected according to
-"cdns,phy-type"-properties found in link subnodes under the managed
-serdes (see "ti,sierra-phy-t0" and "ti,j721e-serdes-10g" devicetree
-bindings for details). All other values of "cdns,phy-type"-property
-but PHY_TYPE_DP will set P_STANDARD_MODE bits to 0 and P_ENABLE bits
-to force enable.
+On 20-01-08 09:53:34, Anson Huang wrote:
+> Switch the imx_clk_gate4_flags() function to clk_hw based API, rename
+> accordingly and add a macro for clk based legacy. This allows us to
+> move closer to a clear split between consumer and provider clk APIs.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- drivers/phy/ti/phy-j721e-wiz.c | 59 +++++++++++++++++++++++++++++++---
- 1 file changed, 55 insertions(+), 4 deletions(-)
+For the entire patchset:
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index b5f6019e5c7d..22bc04846cdb 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -20,6 +20,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/reset-controller.h>
-+#include <dt-bindings/phy/phy.h>
- 
- #define WIZ_SERDES_CTRL		0x404
- #define WIZ_SERDES_TOP_CTRL	0x408
-@@ -78,6 +79,8 @@ static const struct reg_field p_enable[WIZ_MAX_LANES] = {
- 	REG_FIELD(WIZ_LANECTL(3), 30, 31),
- };
- 
-+enum p_enable { P_ENABLE = 2, P_ENABLE_FORCE = 1, P_ENABLE_DISABLE = 0 };
-+
- static const struct reg_field p_align[WIZ_MAX_LANES] = {
- 	REG_FIELD(WIZ_LANECTL(0), 29, 29),
- 	REG_FIELD(WIZ_LANECTL(1), 29, 29),
-@@ -220,6 +223,7 @@ struct wiz {
- 	struct reset_controller_dev wiz_phy_reset_dev;
- 	struct gpio_desc	*gpio_typec_dir;
- 	int			typec_dir_delay;
-+	u32 lane_phy_type[WIZ_MAX_LANES];
- };
- 
- static int wiz_reset(struct wiz *wiz)
-@@ -242,12 +246,17 @@ static int wiz_reset(struct wiz *wiz)
- static int wiz_mode_select(struct wiz *wiz)
- {
- 	u32 num_lanes = wiz->num_lanes;
-+	enum wiz_lane_standard_mode mode;
- 	int ret;
- 	int i;
- 
- 	for (i = 0; i < num_lanes; i++) {
--		ret = regmap_field_write(wiz->p_standard_mode[i],
--					 LANE_MODE_GEN4);
-+		if (wiz->lane_phy_type[i] == PHY_TYPE_DP)
-+			mode = LANE_MODE_GEN1;
-+		else
-+			mode = LANE_MODE_GEN4;
-+
-+		ret = regmap_field_write(wiz->p_standard_mode[i], mode);
- 		if (ret)
- 			return ret;
- 	}
-@@ -707,7 +716,7 @@ static int wiz_phy_reset_assert(struct reset_controller_dev *rcdev,
- 		return ret;
- 	}
- 
--	ret = regmap_field_write(wiz->p_enable[id - 1], false);
-+	ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_DISABLE);
- 	return ret;
- }
- 
-@@ -734,7 +743,11 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
- 		return ret;
- 	}
- 
--	ret = regmap_field_write(wiz->p_enable[id - 1], true);
-+	if (wiz->lane_phy_type[id - 1] == PHY_TYPE_DP)
-+		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE);
-+	else
-+		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_FORCE);
-+
- 	return ret;
- }
- 
-@@ -761,6 +774,40 @@ static const struct of_device_id wiz_id_table[] = {
- };
- MODULE_DEVICE_TABLE(of, wiz_id_table);
- 
-+static int wiz_get_lane_phy_types(struct device *dev, struct wiz *wiz)
-+{
-+	struct device_node *serdes, *subnode;
-+
-+	serdes = of_get_child_by_name(dev->of_node, "serdes");
-+	if (!serdes) {
-+		dev_err(dev, "%s: Getting \"serdes\"-node failed\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	for_each_child_of_node(serdes, subnode) {
-+		u32 reg, num_lanes = 1, phy_type = PHY_NONE;
-+		int ret, i;
-+
-+		ret = of_property_read_u32(subnode, "reg", &reg);
-+		if (ret) {
-+			dev_err(dev,
-+				"%s: Reading \"reg\" from \"%s\" failed: %d\n",
-+				__func__, subnode->name, ret);
-+			return ret;
-+		}
-+		of_property_read_u32(subnode, "cdns,num-lanes", &num_lanes);
-+		of_property_read_u32(subnode, "cdns,phy-type", &phy_type);
-+
-+		dev_dbg(dev, "%s: Lanes %u-%u have phy-type %u\n", __func__,
-+			reg, reg + num_lanes - 1, phy_type);
-+
-+		for (i = reg; i < reg + num_lanes; i++)
-+			wiz->lane_phy_type[i] = phy_type;
-+	}
-+
-+	return 0;
-+}
-+
- static int wiz_probe(struct platform_device *pdev)
- {
- 	struct reset_controller_dev *phy_reset_dev;
-@@ -844,6 +891,10 @@ static int wiz_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	ret = wiz_get_lane_phy_types(dev, wiz);
-+	if (ret)
-+		return ret;
-+
- 	wiz->dev = dev;
- 	wiz->regmap = regmap;
- 	wiz->num_lanes = num_lanes;
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
+> ---
+> Changes since V2:
+> 	- Switch to latest i.MX clock driver base to redo the patch.
+> ---
+>  drivers/clk/imx/clk.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index 65d80c6..b05213b 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -390,15 +390,18 @@ static inline struct clk_hw *imx_clk_hw_gate4(const=
+ char *name, const char *pare
+>  			reg, shift, 0x3, 0, &imx_ccm_lock, NULL);
+>  }
+> =20
+> -static inline struct clk *imx_clk_gate4_flags(const char *name,
+> +static inline struct clk_hw *imx_clk_hw_gate4_flags(const char *name,
+>  		const char *parent, void __iomem *reg, u8 shift,
+>  		unsigned long flags)
+>  {
+> -	return clk_register_gate2(NULL, name, parent,
+> +	return clk_hw_register_gate2(NULL, name, parent,
+>  			flags | CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
+>  			reg, shift, 0x3, 0, &imx_ccm_lock, NULL);
+>  }
+> =20
+> +#define imx_clk_gate4_flags(name, parent, reg, shift, flags) \
+> +	to_clk(imx_clk_hw_gate4_flags(name, parent, reg, shift, flags))
+> +
+>  static inline struct clk_hw *imx_clk_hw_mux(const char *name, void __iom=
+em *reg,
+>  			u8 shift, u8 width, const char * const *parents,
+>  			int num_parents)
+> --=20
+> 2.7.4
+>=20
