@@ -2,189 +2,114 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6BFC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DF1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971C6206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF6E20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QUoqhl67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgAHReu (ORCPT
+        id S1728880AbgAHRff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:34:50 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26610 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgAHRet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:34:49 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:34:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="246409632"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2020 09:34:44 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipFEC-00063o-1g; Wed, 08 Jan 2020 19:34:44 +0200
-Date:   Wed, 8 Jan 2020 19:34:44 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Message-ID: <20200108173444.GZ32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+        Wed, 8 Jan 2020 12:35:35 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55642 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbgAHRfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:35:34 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so3380758wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:35:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qwg5hibFRVywSqJ0shEP5dA8R4/hDi63ijsidIVUsnI=;
+        b=QUoqhl67fBgCPzU+SawnnCIxZ4VeUk3dj6RARmd4tvkb3zuVnoidILFVGwXsN5UE2I
+         /F5RA4m/Ts5DWqtPY4fbEwVrFuGLvTj3ZvxdZY/KfsHA/92XiLTWNxlRvAT/l38OSrBg
+         2KSwA4YLo8d/FXx89+AyH9Iiffz0+7TqE5dms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=qwg5hibFRVywSqJ0shEP5dA8R4/hDi63ijsidIVUsnI=;
+        b=oP5Zv1aKM6bHJO4zT2T7lNAogu+og8/4GBU+XIQrF6TC3YqscAv0SZwi0Js1bcPCWg
+         zvO/T+CcBUvwrx6+kaB54jC1dAogKFSenblXzLPDhx6tcqbpb4RtOWP4IJT7D4hSdAyG
+         ijZvYCoA2qpYhR6co43K+dNBYb93K3o9kQIixSVroVxAi4JgPvxsqxHCSeL5ZHZcOgY6
+         4wMa4HNvYX/SwC8bdT8licY/3nrocyaAE4xmBclW1+3Bfo0Kg7iwqwLJo46pjdUA8A+n
+         q7Y3N3SV2+T2W5p2fZ3C7+KDIeSknfq8iCLteVlMN7eXglnIENGFcIn74FfosK9Eeq2B
+         DCYw==
+X-Gm-Message-State: APjAAAV7hacxu/E0rYNqD98cTsePeCNcCZ82qbk2hE1r+MhwArMUebFg
+        5o//E2vGnvaNRSGJjM16APV1NQ==
+X-Google-Smtp-Source: APXvYqzL8iJjlAP6Ht35NUvrFJlYJCBylU7frfkVj8GVw/wQ1xkS3qZdMpeM79IbBg2pFJtR30DPRQ==
+X-Received: by 2002:a1c:a382:: with SMTP id m124mr5324133wme.90.1578504932671;
+        Wed, 08 Jan 2020 09:35:32 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
+        by smtp.gmail.com with ESMTPSA id h17sm5044566wrs.18.2020.01.08.09.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 09:35:31 -0800 (PST)
+Date:   Wed, 8 Jan 2020 18:35:29 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/omapdrm: use BUG_ON macro for error debugging.
+Message-ID: <20200108173529.GG43062@phenom.ffwll.local>
+Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
+        tomi.valkeinen@ti.com, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200102095515.7106-1-wambui.karugax@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200102095515.7106-1-wambui.karugax@gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:25PM +0300, Mika Westerberg wrote:
-> Hi,
+On Thu, Jan 02, 2020 at 12:55:15PM +0300, Wambui Karuga wrote:
+> Since the if statement only checks for the value of the `id` variable,
+> it can be replaced by the more concise BUG_ON() macro for error
+> reporting.
+> Issue found using coccinelle.
 > 
-> Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
-> IPC communications with minor differences. This duplication does not make
-> much sense so this series reworks the two drivers so that there is only a
-> single implementation of the SCU IPC. In addition to that the API will be
-> updated to take SCU instance pointer as an argument, and most of the
-> callers will be converted to this new API. The old API is left there but
-> the plan is to get rid the callers and then the old API as well (this is
-> something we are working with Andy Shevchenko).
-> 
-> The intel_pmc_ipc.c is then moved under MFD which suits better for this
-> kind of a driver that pretty much sets up the SCU IPC and then creates a
-> bunch of platform devices for the things sitting behind the PMC. The driver
-> is renamed to intel_pmc_bxt.c which should follow the existing conventions
-> under drivers/mfd (and it is only meant for Intel Broxton derivatives).
-> 
-> Previous version of the series:
-> 
->   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
-> 
-> Changes from the previous version:
-> 
->   * Update changelog of patch 16 according to what the patch actually does.
->   * Add kernel-doc for struct intel_soc_pmic.
->   * Move octal permission patch to be before MFD conversion.
->   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
->     drivers/mfd.
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-Hmm... I didn't see you appended Lee's ACKs.
+Tomi said he's ok with this landing in drm-misc-next on irc, so merged.
+Thanks for your patch!
+-Daniel
 
+> ---
+>  drivers/gpu/drm/omapdrm/dss/dispc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> I'm including all x86 maintainers just to be sure they are aware of this as
-> I'm not sure if x86@kernel.org reaches them all. Let me know if you have
-> issues with this series.
-> 
-> I would prefer this to be merged through platform/x86 or MFD trees assuming
-> there are no objections.
-
-I'm almost reviewed it (few patches left which I plan to do soon), I'm fine if
-it goes via other tree.
-
-> 
-> I have tested this on Intel Edison (Merrifield) and Joule (Broxton-M).
-> 
-> Mika Westerberg (36):
->   platform/x86: intel_mid_powerbtn: Take a copy of ddata
->   platform/x86: intel_scu_ipcutil: Remove default y from Kconfig
->   platform/x86: intel_scu_ipc: Add constants for register offsets
->   platform/x86: intel_scu_ipc: Remove Lincroft support
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()
->   platform/x86: intel_scu_ipc: Fix interrupt support
->   platform/x86: intel_scu_ipc: Sleeping is fine when polling
->   platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
->   platform/x86: intel_scu_ipc: Drop unused macros
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_io[read|write][8|16]()
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_raw_command()
->   platform/x86: intel_scu_ipc: Split out SCU IPC functionality from the SCU driver
->   platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
->   platform/x86: intel_scu_ipc: Introduce new SCU IPC API
->   platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
->   watchdog: intel-mid_wdt: Convert to use new SCU IPC API
->   platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
->   platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
->   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
->   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
->   platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
->   platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
->   platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
->   platform/x86: intel_scu_ipc: Add function to remove SCU IPC
->   platform/x86: intel_pmc_ipc: Start using SCU IPC
->   mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
->   mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
->   mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
->   platform/x86: intel_telemetry: Convert to use new SCU IPC API
->   platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
->   x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
->   platform/x86: intel_pmc_ipc: Move PCI IDs to intel_scu_pcidrv.c
->   platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
->   platform/x86: intel_pmc_ipc: Convert to MFD
->   mfd: intel_pmc_bxt: Switch to use driver->dev_groups
->   MAINTAINERS: Update entry for Intel Broxton PMC driver
-> 
->  MAINTAINERS                                   |   13 +-
->  arch/x86/Kconfig                              |    2 +-
->  arch/x86/include/asm/intel-mid.h              |    9 +-
->  arch/x86/include/asm/intel_pmc_ipc.h          |   91 --
->  arch/x86/include/asm/intel_scu_ipc.h          |  104 +-
->  arch/x86/include/asm/intel_scu_ipc_legacy.h   |   76 ++
->  arch/x86/include/asm/intel_telemetry.h        |    3 +
->  drivers/mfd/Kconfig                           |   18 +-
->  drivers/mfd/Makefile                          |    1 +
->  drivers/mfd/intel_pmc_bxt.c                   |  539 +++++++++
->  drivers/mfd/intel_soc_pmic_bxtwc.c            |   22 +-
->  drivers/mfd/intel_soc_pmic_mrfld.c            |   10 +-
->  drivers/platform/x86/Kconfig                  |   49 +-
->  drivers/platform/x86/Makefile                 |    2 +-
->  drivers/platform/x86/intel_mid_powerbtn.c     |   20 +-
->  drivers/platform/x86/intel_pmc_ipc.c          | 1031 -----------------
->  drivers/platform/x86/intel_scu_ipc.c          |  681 +++++------
->  drivers/platform/x86/intel_scu_ipcutil.c      |   43 +-
->  drivers/platform/x86/intel_scu_pcidrv.c       |   75 ++
->  .../platform/x86/intel_telemetry_debugfs.c    |    2 +-
->  drivers/platform/x86/intel_telemetry_pltdrv.c |  101 +-
->  drivers/usb/typec/tcpm/Kconfig                |    2 +-
->  drivers/watchdog/intel-mid_wdt.c              |   53 +-
->  include/linux/mfd/intel_pmc_bxt.h             |   50 +
->  include/linux/mfd/intel_soc_pmic.h            |   15 +
->  25 files changed, 1319 insertions(+), 1693 deletions(-)
->  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
->  create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
->  create mode 100644 drivers/mfd/intel_pmc_bxt.c
->  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
->  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
->  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
-> 
+> diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+> index 413dbdd1771e..dbb90f2d2ccd 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/dispc.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+> @@ -393,8 +393,7 @@ static void dispc_get_reg_field(struct dispc_device *dispc,
+>  				enum dispc_feat_reg_field id,
+>  				u8 *start, u8 *end)
+>  {
+> -	if (id >= dispc->feat->num_reg_fields)
+> -		BUG();
+> +	BUG_ON(id >= dispc->feat->num_reg_fields);
+>  
+>  	*start = dispc->feat->reg_fields[id].start;
+>  	*end = dispc->feat->reg_fields[id].end;
 > -- 
-> 2.24.1
+> 2.17.1
 > 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
