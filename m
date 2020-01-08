@@ -2,161 +2,98 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB82C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAFCC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2A720643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188C020643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="glK3IIKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgAHU2G (ORCPT
+        id S1727164AbgAHU2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:28:06 -0500
-Received: from mga18.intel.com ([134.134.136.126]:21736 "EHLO mga18.intel.com"
+        Wed, 8 Jan 2020 15:28:48 -0500
+Received: from ozlabs.org ([203.11.71.1]:41317 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbgAHU1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:27:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:27:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="211658362"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 12:27:05 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Barret Rhoden <brho@google.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Zeng <jason.zeng@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: [PATCH 03/14] KVM: Use vcpu-specific gva->hva translation when querying host page size
-Date:   Wed,  8 Jan 2020 12:24:37 -0800
-Message-Id: <20200108202448.9669-4-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108202448.9669-1-sean.j.christopherson@intel.com>
-References: <20200108202448.9669-1-sean.j.christopherson@intel.com>
+        id S1726875AbgAHU2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:28:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tLRs72xPz9sPJ;
+        Thu,  9 Jan 2020 07:28:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578515325;
+        bh=iXmqXirrsBQRqRiY/M5nTMqr0oBHja7Xprthl2OT4cg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=glK3IIKQZ2iculhRlejO4Jt0yy1e/dVbGNbRDnvAUfeNBIS2hMhmDX+8rFnBpILMc
+         341WGBr5hUIINTNUBmJ4BMzlKlkZjCnZXpwQS8OJ58Qt7P2NliBy3oXxNHdFf9lrDr
+         y6KVZlMEYzuxhPdLVBdnDThalt4A1t0Vl5BxLEtO2BFmGh10r8iJcoYVUw9Rrr+fqe
+         utWF8Q4BViQlRd1ii53mWqFEJmTkOkait/5Y1wHeSAR4cWXvL+44NRD5nKHvos9AZh
+         t1NqKPFCuXBf1I/usyZYyB//VBCxs8TAO/nQJWhT444z2lkJXx8oUMuDPB4ib8bPJd
+         4/HKe397EYfvA==
+Date:   Thu, 9 Jan 2020 07:28:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baruch Siach <baruch@tkos.co.il>
+Subject: linux-next: Fixes tag needs some work in the mvebu tree
+Message-ID: <20200109072840.0a8d1ef6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/fB+QLalH_DE.qdPRNRKeajb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
-correct set of memslots is used when handling x86 page faults in SMM.
+--Sig_/fB+QLalH_DE.qdPRNRKeajb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/powerpc/kvm/book3s_xive_native.c | 2 +-
- arch/x86/kvm/mmu/mmu.c                | 6 +++---
- include/linux/kvm_host.h              | 2 +-
- virt/kvm/kvm_main.c                   | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+Hi all,
 
-diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-index d83adb1e1490..6ef0151ff70a 100644
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -631,7 +631,7 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
- 	srcu_idx = srcu_read_lock(&kvm->srcu);
- 	gfn = gpa_to_gfn(kvm_eq.qaddr);
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 	if (1ull << kvm_eq.qshift > page_size) {
- 		srcu_read_unlock(&kvm->srcu, srcu_idx);
- 		pr_warn("Incompatible host page size %lx!\n", page_size);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index ca14c84c4f4b..8ca6cd04cdf1 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1286,12 +1286,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
- }
- 
--static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
-+static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	unsigned long page_size;
- 	int i, ret = 0;
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 
- 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
- 		if (page_size >= KVM_HPAGE_SIZE(i))
-@@ -1362,7 +1362,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 	 * So, do not propagate host_mapping_level() to max_level as KVM can
- 	 * still promote the guest mapping to a huge page in the THP case.
- 	 */
--	host_level = host_mapping_level(vcpu->kvm, large_gfn);
-+	host_level = host_mapping_level(vcpu, large_gfn);
- 	return min(host_level, max_level);
- }
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 411b71a02f25..3c0ceec45ebd 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -767,7 +767,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
- struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e8ca8bf12320..5f7f06824c2b 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1416,14 +1416,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
- 
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	struct vm_area_struct *vma;
- 	unsigned long addr, size;
- 
- 	size = PAGE_SIZE;
- 
--	addr = gfn_to_hva(kvm, gfn);
-+	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
- 	if (kvm_is_error_hva(addr))
- 		return PAGE_SIZE;
- 
--- 
-2.24.1
+In commit
 
+  66f5ff1bf632 ("arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port n=
+ode")
+
+Fixes tag
+
+  Fixes: a612083327 ("arm64: dts: add support for SolidRun Clearfog GT 8K")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fB+QLalH_DE.qdPRNRKeajb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WO3gACgkQAVBC80lX
+0GzlBwf+IkqztACER0k99/iO/1AhWCYZOkD2h+h2E7BX8mxGC8uuswkNz37f0B+V
+1dvWtFY+iDtB9NEwwoNPPuiX/nvM7Pf7VLoVR/B72uz8XXlRuBQsshSBzDF1287r
+VECxdKw+K2pQkgZXLu4bkHfYhsbRrZgvLUaoIAbhpeihTtbmmboJ9G9wq9RPtKu8
+WI9Bb06Fw/cHmJkZF2EankNyn01TClE1UYd7kejZuB21wafFr9zsmaor4exDzoB4
+wjuW3l9Xl4gajI3BwmShCUG1nDrDORsK24OHpGREbctFyIFME+AyfdC85x5Slggm
+vCuZZO+It2+QgCJzt8grGpScsh7r3A==
+=uRcc
+-----END PGP SIGNATURE-----
+
+--Sig_/fB+QLalH_DE.qdPRNRKeajb--
