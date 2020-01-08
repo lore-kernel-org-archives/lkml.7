@@ -2,135 +2,100 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9107CC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E64C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D575206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rwnwk7EI"
+	by mail.kernel.org (Postfix) with ESMTP id CE02F2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgAHSea (ORCPT
+        id S1726551AbgAHShz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:34:30 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39173 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgAHSea (ORCPT
+        Wed, 8 Jan 2020 13:37:55 -0500
+Received: from www62.your-server.de ([213.133.104.62]:32830 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgAHShy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:34:30 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so1462371plp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 10:34:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ycpN+XpOcmzf5Fswpp+TY6J3qUdx2wbF41rrLN2Bl/k=;
-        b=Rwnwk7EIjhAbXXR5fDaZqGVQXaJkfD91xDJX/5ih7jqvtCxL1tGSobiOPWVMbpXiTk
-         Xzgcesxc9wIeHKM38Q0U5cYDtg+ME3zIni9jOoWk3bywRrigA+qnq5qtO318U/SBD8UH
-         QbKwQtTfbvV7uC4pI+V48jc4LTI9G5eedlt7U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ycpN+XpOcmzf5Fswpp+TY6J3qUdx2wbF41rrLN2Bl/k=;
-        b=c2SZ4+uf1YE04tq2rgOS4MH+T3zi+3l8TUuMrXu8wK5yFPugqvKlqFFM3DoqG2dU+k
-         OuP58yjJCZCZ6nWdfxmWK9p0vLCgEWrBo1qkc0AwQekRAoRuN6xQ0VnyUl3qP5cMeV7V
-         AHYABvzZn4OOuQsvz+cdZSirAAGHb55k7bsfzp4rvjyezYbBf5IInXD7g7lP9yDlnAb9
-         515EJ7ESUlDcNSLBTcJZD4T98wnUq/BU/j9ED7J1aDy4txnMtk3LVkVikrjwJH1YkPo0
-         w6u+Pd03fRYUjsF3b4zkX8gyZK/dvmQTcOXaQof3KL8yffiHwtnh11otA1X5IYzLSk/b
-         L/Xg==
-X-Gm-Message-State: APjAAAVu2/Yrrr3UVGhWCO93TGf3G4gRAYBc3t+TUhujR6SM1SIu9csk
-        e2cgk51ke0/2//57wso5VOMYApcRLRM=
-X-Google-Smtp-Source: APXvYqwFFiua/Q28cb39Q52i6MM5ymiTmVYVZBEZ/535aaJp/yYe9FvOHXWjDhnkEmklHYuX2LyxhA==
-X-Received: by 2002:a17:90a:cf07:: with SMTP id h7mr5823396pju.66.1578508469499;
-        Wed, 08 Jan 2020 10:34:29 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id t1sm4695406pgq.23.2020.01.08.10.34.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 10:34:28 -0800 (PST)
-Date:   Wed, 8 Jan 2020 10:34:27 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] Bluetooth: hci_qca: Add qca_power_on() API to
- support both wcn399x and Rome power up
-Message-ID: <20200108183427.GE89495@google.com>
-References: <20200107052601.32216-1-rjliao@codeaurora.org>
- <20200108090804.22889-1-rjliao@codeaurora.org>
+        Wed, 8 Jan 2020 13:37:54 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ipGDG-0001FX-7d; Wed, 08 Jan 2020 19:37:50 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux-3.fritz.box)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ipGDF-000UdI-OC; Wed, 08 Jan 2020 19:37:49 +0100
+Subject: Re: [PATCH bpf-next v3 0/2] bpftool/libbpf: Add probe for large INSN
+ limit
+To:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        Peter Wu <peter@lekensteyn.nl>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200108162428.25014-1-mrostecki@opensuse.org>
+ <01feb8cd-6e24-91d8-4c78-a489c1170965@netronome.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <fffe7581-c2ef-ced0-7df6-3db895a0e3d2@iogearbox.net>
+Date:   Wed, 8 Jan 2020 19:37:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200108090804.22889-1-rjliao@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <01feb8cd-6e24-91d8-4c78-a489c1170965@netronome.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25688/Wed Jan  8 10:56:24 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
-
-On Wed, Jan 08, 2020 at 05:08:02PM +0800, Rocky Liao wrote:
-> This patch adds a unified API qca_power_on() to support both wcn399x and
-> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
-> regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
+On 1/8/20 6:48 PM, Quentin Monnet wrote:
+> 2020-01-08 17:23 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+>> This series implements a new BPF feature probe which checks for the
+>> commit c04c0d2b968a ("bpf: increase complexity limit and maximum program
+>> size"), which increases the maximum program size to 1M. It's based on
+>> the similar check in Cilium, although Cilium is already aiming to use
+>> bpftool checks and eventually drop all its custom checks.
+>>
+>> Examples of outputs:
+>>
+>> # bpftool feature probe
+>> [...]
+>> Scanning miscellaneous eBPF features...
+>> Large complexity limit and maximum program size (1M) is available
+>>
+>> # bpftool feature probe macros
+>> [...]
+>> /*** eBPF misc features ***/
+>> #define HAVE_HAVE_LARGE_INSN_LIMIT
+>>
+>> # bpftool feature probe -j | jq '.["misc"]'
+>> {
+>>    "have_large_insn_limit": true
+>> }
+>>
+>> v1 -> v2:
+>> - Test for 'BPF_MAXINSNS + 1' number of total insns.
+>> - Remove info about current 1M limit from probe's description.
+>>
+>> v2 -> v3:
+>> - Remove the "complexity" word from probe's description.
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
+> Series looks good to me, thanks!
 > 
-> Changes in v2: None
-> 
->  drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 9392cc7f9908..f6555bd1adbc 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart *hu)
->  	return 0;
->  }
->  
-> +static int qca_power_on(struct hci_dev *hdev)
-> +{
-> +	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> +	struct qca_serdev *qcadev;
-> +	int ret = 0;
-> +
-> +	if (qca_is_wcn399x(soc_type)) {
+> Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
 
-Why not include the qca_regulator_enable() call from qca_open() here?
-It is clearly part of power on.
-
-> +		ret = qca_wcn3990_init(hu);
-> +	} else {
-> +		if (hu->serdev) {
-
-nit: you could save a level of indentation (and IMO improve
-readability) by doing:
-
-     	       if (!hu->serdev)
-	            	return 0;
-
-> +			qcadev = serdev_device_get_drvdata(hu->serdev);
-> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-> +			/* Controller needs time to bootup. */
-> +			msleep(150);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-
-I think common practice would be to combine the 3 patches of this series
-into one. The new function doesn't really add any new functionality, but
-is a refactoring. This is more evident if you see in a single diff that
-the pieces in qca_power_on() are removed elsewhere.
+Applied, thanks!
