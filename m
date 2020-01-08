@@ -2,154 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B87C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283CA2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578484709;
-	bh=vw48TG6VhKIFdgjzyzo2ERgtSK1lHZF/IJpQOpT3km4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qyLUZnotMLe799Rr1HbpRTdTGKBEzlSmYhiFZave1SbVP7Akf45gwrsi7MbJJ/kOn
-	 Z08RzT2LCttou/+6OgY0I9WA0xCB5ycZjhLE4xrXVZRl/jkfrd22b/ST8vAoi0zlt1
-	 0U9hEPiSbgvHIKpUuyMW6kP77O2DHAE5659FSgKg=
+	by mail.kernel.org (Postfix) with ESMTP id BEAF12070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgAHL62 (ORCPT
+        id S1727412AbgAHMAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
+        Wed, 8 Jan 2020 07:00:03 -0500
+Received: from mga14.intel.com ([192.55.52.115]:62784 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbgAHL61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:58:27 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C4E206DA;
-        Wed,  8 Jan 2020 11:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578484706;
-        bh=vw48TG6VhKIFdgjzyzo2ERgtSK1lHZF/IJpQOpT3km4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U6CgaRzqEC7uwX/YgsDOLCpB46/uXVTTPUc/oyYmrkfgGYqhWutbtf4LXtKtxtVSj
-         OtzHDVwriyEeF9LJ6Aacoq2DL1EtSwJSczVnOd0pqx3u2snfzUvJggtStlN2pWWigE
-         pwc5yrVc6FLtGiW1dyK5CYwqWOCN7DxOzrepsBRk=
-Date:   Wed, 8 Jan 2020 11:58:17 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>, kvm@vger.kernel.org,
-        kvmarm <kvmarm@lists.cs.columbia.edu>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore
- full SPE profiling buffer controls
-Message-ID: <20200108115816.GB15861@willie-the-truck>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-10-andrew.murray@arm.com>
- <20191221141325.5a177343@why>
- <20200107151328.GW42593@e119886-lin.cambridge.arm.com>
- <fc222fef381f4ada37966db0a1ec314a@kernel.org>
+        id S1726098AbgAHMAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:00:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 04:00:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
+   d="scan'208";a="370926604"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jan 2020 04:00:00 -0800
+Subject: Re: [PATCH 0/3] Fix issues with command queuing in arasan controllers
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, shawn.lin@rock-chips.com
+References: <20191230092343.30692-1-faiz_abbas@ti.com>
+ <837996b2-c69f-1446-fda4-5577e28ba8e1@ti.com>
+ <a1b75d07-17ab-5dec-aa40-b9cff247eabf@intel.com>
+ <b2600fd2-bcc9-19f6-8bf8-f3bb51da089f@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <9c74c1b9-8ae4-49be-68e3-8e827d07cc66@intel.com>
+Date:   Wed, 8 Jan 2020 13:59:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc222fef381f4ada37966db0a1ec314a@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b2600fd2-bcc9-19f6-8bf8-f3bb51da089f@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 11:17:16AM +0000, Marc Zyngier wrote:
-> On 2020-01-07 15:13, Andrew Murray wrote:
-> > On Sat, Dec 21, 2019 at 02:13:25PM +0000, Marc Zyngier wrote:
-> > > On Fri, 20 Dec 2019 14:30:16 +0000
-> > > Andrew Murray <andrew.murray@arm.com> wrote:
-> > > 
-> > > [somehow managed not to do a reply all, re-sending]
-> > > 
-> > > > From: Sudeep Holla <sudeep.holla@arm.com>
-> > > >
-> > > > Now that we can save/restore the full SPE controls, we can enable it
-> > > > if SPE is setup and ready to use in KVM. It's supported in KVM only if
-> > > > all the CPUs in the system supports SPE.
-> > > >
-> > > > However to support heterogenous systems, we need to move the check if
-> > > > host supports SPE and do a partial save/restore.
-> > > 
-> > > No. Let's just not go down that path. For now, KVM on heterogeneous
-> > > systems do not get SPE.
-> > 
-> > At present these patches only offer the SPE feature to VCPU's where the
-> > sanitised AA64DFR0 register indicates that all CPUs have this support
-> > (kvm_arm_support_spe_v1) at the time of setting the attribute
-> > (KVM_SET_DEVICE_ATTR).
-> > 
-> > Therefore if a new CPU comes online without SPE support, and an
-> > existing VCPU is scheduled onto it, then bad things happen - which I
-> > guess
-> > must have been the intention behind this patch.
+On 8/01/20 1:49 pm, Faiz Abbas wrote:
+> Adrian,
 > 
-> I guess that was the intent.
+> On 08/01/20 5:12 pm, Adrian Hunter wrote:
+>> On 8/01/20 1:30 pm, Faiz Abbas wrote:
+>>> Hi,
+>>>
+>>> On 30/12/19 2:53 pm, Faiz Abbas wrote:
+>>>> In some Arasan SDHCI controllers, after tuning, the tuning pattern data
+>>>> is leftover in the sdhci buffer. This leads to issues with future data
+>>>> commands, especially when command queuing is enabled. The following
+>>>> patches help fix this issue by resetting data lines after tuning is
+>>>> finished. The first two patches have been tested with TI's am65x and
+>>>> j721e SoCs using the sdhci_am654 driver.
+>>>>
+>>>> I have a strong suspicion that this is the same issue with
+>>>> the sdhci-of-arasan driver where they are forced to dump data from the
+>>>> buffer before enabling command queuing. I need help from someone with a
+>>>> compatible platform to test this.
+>>>>
+>>>
+>>> I had some discussions with our hardware team and they say we should be
+>>> asserting both SRC and SRD reset after tuning to start from a clean
+>>> state. Will update the patches to do that in v2.
+>>
+>> Can you use the ->execute_tuning() for that instead of a quirk?
+>>
 > 
-> > > If SPE has been enabled on a guest and a CPU
-> > > comes up without SPE, this CPU should fail to boot (same as exposing a
-> > > feature to userspace).
-> > 
-> > I'm unclear as how to prevent this. We can set the FTR_STRICT flag on
-> > the sanitised register - thus tainting the kernel if such a non-SPE CPU
-> > comes online - thought that doesn't prevent KVM from blowing up. Though
-> > I don't believe we can prevent a CPU coming up. At the moment this is
-> > my preferred approach.
-> 
-> I'd be OK with this as a stop-gap measure. Do we know of any existing
-> design where only half of the CPUs have SPE?
+> ->platform_execute_tuning() is called before __sdhci_execute_tuning(). I
+> need this to be done after that. Should I add a post_tuning() callback?
 
-No, but given how few CPUs implement SPE I'd say that this configuration
-is inevitable. I certainly went out of my way to support it in the driver.
+I meant hook host->mmc_host_ops.execute_tuning and call
+sdhci_execute_tuning() and then sdhci_reset(), like in intel_execute_tuning().
 
-> > Looking at the vcpu_load and related code, I don't see a way of saying
-> > 'don't schedule this VCPU on this CPU' or bailing in any way.
-> 
-> That would actually be pretty easy to implement. In vcpu_load(), check
-> that that the CPU physical has SPE. If not, raise a request for that vcpu.
-> In the run loop, check for that request and abort if raised, returning
-> to userspace.
-> 
-> Userspace can always check /sys/devices/arm_spe_0/cpumask and work out
-> where to run that particular vcpu.
-
-It's also worth considering systems where there are multiple implementations
-of SPE in play. Assuming we don't want to expose this to a guest, then the
-right interface here is probably for userspace to pick one SPE
-implementation and expose that to the guest. That fits with your idea above,
-where you basically get an immediate exit if we try to schedule a vCPU onto
-a CPU that isn't part of the SPE mask.
-
-> > One solution could be to allow scheduling onto non-SPE VCPUs but wrap
-> > the
-> > SPE save/restore code in a macro (much like kvm_arm_spe_v1_ready) that
-> > reads the non-sanitised feature register. Therefore we don't go bang,
-> > but
-> > we also increase the size of any black-holes in SPE capturing. Though
-> > this
-> > feels like something that will cause grief down the line.
-> > 
-> > Is there something else that can be done?
-> 
-> How does userspace deal with this? When SPE is only available on half of
-> the CPUs, how does perf work in these conditions?
-
-Not sure about userspace, but the kernel driver works by instantiating an
-SPE PMU instance only for the CPUs that have it and then that instance
-profiles for only those CPUs. You also need to do something similar if
-you had two CPU types with SPE, since the SPE configuration is likely to be
-different between them.
-
-Will
