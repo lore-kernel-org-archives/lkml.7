@@ -2,115 +2,119 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E1FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC3DC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B722082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BCA2082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eKTJ7I02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgAHEZp (ORCPT
+        id S1727340AbgAHE0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:25:45 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727156AbgAHEZl (ORCPT
+        Tue, 7 Jan 2020 23:26:20 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10430 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgAHEZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 23:25:41 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0084MJKg082385
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Jan 2020 23:25:40 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xd0wjkpts-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 23:25:40 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 8 Jan 2020 04:25:38 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Jan 2020 04:25:34 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0084PX7830671218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jan 2020 04:25:33 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 999AA11C04C;
-        Wed,  8 Jan 2020 04:25:33 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81AB011C054;
-        Wed,  8 Jan 2020 04:25:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.234.104])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jan 2020 04:25:32 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Defined CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS to
- enable IMA hook to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Date:   Tue, 07 Jan 2020 23:25:32 -0500
-In-Reply-To: <20200108003647.2472-1-nramas@linux.microsoft.com>
-References: <20200108003647.2472-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010804-0020-0000-0000-0000039EB268
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010804-0021-0000-0000-000021F61077
-Message-Id: <1578457532.5222.127.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-07_08:2020-01-07,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001080037
+        Tue, 7 Jan 2020 23:25:46 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1559b70000>; Tue, 07 Jan 2020 20:25:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 20:25:45 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 20:25:45 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 04:25:44 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 8 Jan 2020 04:25:44 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.162.131]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e1559c60002>; Tue, 07 Jan 2020 20:25:44 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for audio mclk
+Date:   Tue, 7 Jan 2020 20:25:09 -0800
+Message-ID: <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578457527; bh=o1WkaBZF+V5uOHI2hp52m1Tf/ktBgPdCEp983xhjZ0c=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=eKTJ7I02raJWXBiNI+8QxCLlmMUHbwZmJuyrgepH8vbz4f16moWjFaFWOVUlJB9Gm
+         vlImI3rjv5JlwAk7arbcUHCWtP6+TnVT6Y108XgZFkOSNMnNvFAg++eViVBK3klMVw
+         e3vqqhfkZR1Kaaf935c/+12BJ7XHYDl0cUwPY7ZqgegU3zoQ38Y37uTkTcnt6DLsDU
+         2VYcLP4QekzDsd/KJIrBpWuUMSDcMTaQkj22KRlIIfCkk1yU+NctplzBIakhbhUfI7
+         hl2Zch2mAo7CZimNX332J1LLb7QBZGMnFRjjSLwu4lFBxLPbDmUTltDCtjBFeCp0Cj
+         qpgHnvbIcCeEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subject line is too long.  How about "IMA: fix measuring
-asymmetric keys Kconfig"?
+mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+are moved to Tegra PMC driver with pmc as clock provider and using pmc
+clock ids.
 
-On Tue, 2020-01-07 at 16:36 -0800, Lakshmi Ramasubramanian wrote:
-> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is a tristate and not a bool.
-> If this config is set to "=m", ima_asymmetric_keys.c is built
-> as a kernel module when it is actually not.
+New device tree uses clk_out_1 from pmc clock provider.
 
-Simplify the wording by removing the unnecessary "not a bool" and
-"when it is actually not".
+So, this patch adds implementation for mclk fallback to extern1 when
+retrieving mclk returns -ENOENT to be backward compatible of new device
+tree with older kernels.
 
-> 
-> Defined a new config CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS that is
-> defined when CONFIG_IMA and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> are defined.
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-How about using James wording - "intermediate boolean config
-variable"?
-
-> Asymmetric key structure is defined only when
-> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is defined. Since the IMA hook
-> measures asymmetric keys, the IMA hook is defined in
-> ima_asymmetric_keys.c which is built only if
-> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is defined.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-
-Please include a "Suggested-by:" tag for James.
-
-thanks,
-
-Mimi
+diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
+index 9cfebef74870..9a5f81039491 100644
+--- a/sound/soc/tegra/tegra_asoc_utils.c
++++ b/sound/soc/tegra/tegra_asoc_utils.c
+@@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+ 	data->clk_cdev1 = devm_clk_get(dev, "mclk");
+ 	if (IS_ERR(data->clk_cdev1)) {
+ 		dev_err(data->dev, "Can't retrieve clk cdev1\n");
+-		return PTR_ERR(data->clk_cdev1);
++		if (PTR_ERR(data->clk_cdev1) != -ENOENT)
++			return PTR_ERR(data->clk_cdev1);
++		/* Fall back to extern1 */
++		data->clk_cdev1 = devm_clk_get(dev, "extern1");
++		if (IS_ERR(data->clk_cdev1)) {
++			dev_err(data->dev, "Can't retrieve clk extern1\n");
++			return PTR_ERR(data->clk_cdev1);
++		}
++
++		dev_err(data->dev, "Falling back to extern1\n");
+ 	}
+ 
+ 	/*
+-- 
+2.7.4
 
