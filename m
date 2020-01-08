@@ -2,34 +2,33 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB92C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BCEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2E9206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BCB206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LDM7vwp3"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kjdPOi1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgAHXyv (ORCPT
+        id S1727616AbgAHXyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 18:54:51 -0500
-Received: from mail-mw2nam10on2074.outbound.protection.outlook.com ([40.107.94.74]:7271
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        Wed, 8 Jan 2020 18:54:52 -0500
+Received: from mail-dm6nam11on2060.outbound.protection.outlook.com ([40.107.223.60]:11448
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726721AbgAHXyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 18:54:50 -0500
+        id S1727258AbgAHXyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 18:54:51 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OHiLoU0qtsJmjW3PlDE3SgGbnE9+OBqR7EdGOgHM9Wd3uuOH6IpgOKK31pJSxoYpVVzcAbz5IK8bDQFGk7f2U7ea9cf4EH0FYueMQnHd7ZNv/4oQvxS6ulZa4XXPkyfCHInxJSGhPr6W4CNsKIiTtbqkxIlzg51g0i+nVxgdp32DIaBYQXdDFW/mPVtWYyylFXCDhHmBtQKV8RVl1NQsm5Boazg25UkSAZxaf3FNJq/WH+EB6hhFCeCb3YV8QH06JPSjz6i0O5lfF0Vy/yC3OAyCvRdO9DTqgGJwteo5gVXOUYCf2KoAOaXsowNLM50PW/qJWfYtmYtXgBv335+dCg==
+ b=HhC9kJNthpFkKAZGmncAlfb7f2pGX5I1NtiTYSGC6oYs4NrcVlyg1XqlMRqXEDJ0jPHMg8nUTBHneR2Ooigea6fOI7T2ouLbnBwRpafZwIgfe8MebFis0RAJNjpDpXPxASOKRDtRxbJAJVPoOzlTtd3QZeAGnAwWML6tK2kbxN5bER5RwQyh2ZawzQDUWiRpWqUTs5IW8S7vevNK5CyOcpF7ZGIaKMbtCdbO8SX8oZak2DbXNqJcO8tGuVl7jIuPqwtsb3jRFCyoM6H/PhgR/e4ME4b4Mr6shKMryljZXxf8yl+ZGggcy8D+AXk8JlVT3RpEAScysiqdf6Rh6h8A6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5q7nHJuL7rNZP14poX4fUSh8K5hU0KIYUscM0OPdCe8=;
- b=awrwMQiHnDOy8oPJfLcT9/ISLw0vLPiJl2F1XepjgLwDR+L3cCF44fzXAFZJXFj9swX1PyMHVH+fibhOu3Sw3qJGLqJA4EnSj86Up0P5LNTLo/zCwhhUX+QvEV//IhZBWs6t588g1opJC1Z4oXs8sCmXaM0TpwifTBQg9S+O+wR5DZGbeD657aVx1bKyFIYXPSLNQYyklvZ5yIgnITn8ASHlkVeLz/2RO5lwWx82iAyuZiWhspmU3O164rWvX6iO0rZMzbnQ9WbDtJJdzwFWiid4B0Pl+ZwCEQRc+DxBsf5fHyo6xCKOy3iU0Ab6lPGFPrkW7fYCG/8oCE65xCRvqw==
+ bh=1N64uWFrytHW+OU/7Ez1on4A5D52e8waC62XguFC9tE=;
+ b=jII9z5rCkG3BS8Op2oXNrcaCi5LMluf3fGDUyjYUxZr2GNuHX6dobu04Dnfs6llGtnNlFshkFpD+bO7Ay4Izv37WyjyZ2424uJtuX7v8GpjoYXmzaJMR6ypP1j5AgXFayABitiarKi3NITjs8DzgHgy7Ud0TjG9XliC3Xy4Rn4cZgfgcz9B2XAonJEtWK7HYwkEOm7e8aLUqcROS89Xv2V0WpNkgwxlEVgYf3BnLA61NtVTwVZXiHB3GBfmJK8IWwHzLNnNSH8/cfZHa3Xft4FBiz8N+cmKD74wm+Ol4uKN4u4Df0urr8Imt6Zc+0dwgY8dWEP7H0QKp3tNObcgyEw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +36,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5q7nHJuL7rNZP14poX4fUSh8K5hU0KIYUscM0OPdCe8=;
- b=LDM7vwp3wz4QllBJMBFT8e8pAOKRvGAZdaxyGfeymXqfjQpiy6CFEK3pY7MMqU9Hl3sfd5zNPgC7RjDQAUfOt0t0P/sRXpEFE4S/hfqD4y6OI0XcqjHI1jlPr3E/K47Mf+aLVte1Oy6Dx87rqD4gJL8vuumNfEf89h/89V9r5uc=
-Received: from SN4PR0201CA0033.namprd02.prod.outlook.com
- (2603:10b6:803:2e::19) by CY4PR02MB2230.namprd02.prod.outlook.com
- (2603:10b6:903:f::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10; Wed, 8 Jan
- 2020 23:54:47 +0000
-Received: from SN1NAM02FT020.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::205) by SN4PR0201CA0033.outlook.office365.com
- (2603:10b6:803:2e::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend
- Transport; Wed, 8 Jan 2020 23:54:47 +0000
+ bh=1N64uWFrytHW+OU/7Ez1on4A5D52e8waC62XguFC9tE=;
+ b=kjdPOi1FX8rdIwHWPJqDra0cHI30TEbHVxLXtaCQEdqvXt07Px5tt9Sl33b0EgQASXIV5PhvaGSgRN3L7DUttGe9HyQXH6Vq2b17hnBhwX2gKfucc3VEvRQtqvjn0p3A9ZEfQzx6y4AWLkRXhaLZci0W+4wsjO65c4San33xLQ4=
+Received: from BYAPR02CA0044.namprd02.prod.outlook.com (2603:10b6:a03:54::21)
+ by DM6PR02MB5641.namprd02.prod.outlook.com (2603:10b6:5:77::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15; Wed, 8 Jan
+ 2020 23:54:48 +0000
+Received: from BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::202) by BYAPR02CA0044.outlook.office365.com
+ (2603:10b6:a03:54::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend
+ Transport; Wed, 8 Jan 2020 23:54:48 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
  header.d=none;linaro.org; dmarc=bestguesspass action=none
@@ -57,60 +56,57 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT020.mail.protection.outlook.com (10.152.72.139) with Microsoft SMTP
+ BL2NAM02FT043.mail.protection.outlook.com (10.152.77.95) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2623.9
  via Frontend Transport; Wed, 8 Jan 2020 23:54:47 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ipL9z-0003pv-3Q; Wed, 08 Jan 2020 15:54:47 -0800
+        id 1ipL9z-0003pw-9T; Wed, 08 Jan 2020 15:54:47 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ipL9t-0002BN-VM; Wed, 08 Jan 2020 15:54:42 -0800
+        id 1ipL9u-0002BN-57; Wed, 08 Jan 2020 15:54:42 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1ipL9l-0002A4-Pp; Wed, 08 Jan 2020 15:54:33 -0800
+        id 1ipL9l-0002A4-HV; Wed, 08 Jan 2020 15:54:33 -0800
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
         sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jollys@xilinx.com>
-Subject: [PATCH v2 4/4] firmware: xilinx: Add sysfs and IOCTL to set boot health status
-Date:   Wed,  8 Jan 2020 15:54:23 -0800
-Message-Id: <1578527663-10243-5-git-send-email-jolly.shah@xilinx.com>
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: [PATCH v2 0/4] firmware: xilinx: Add xilinx specific sysfs interface
+Date:   Wed,  8 Jan 2020 15:54:19 -0800
+Message-Id: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(189003)(199004)(7696005)(4326008)(186003)(26005)(2616005)(2906002)(478600001)(6636002)(44832011)(426003)(5660300002)(356004)(81166006)(6666004)(81156014)(8676002)(54906003)(8936002)(70586007)(336012)(36756003)(7416002)(9786002)(70206006)(316002)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2230;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(199004)(189003)(426003)(7696005)(498600001)(8936002)(336012)(8676002)(356004)(6666004)(7416002)(2616005)(81166006)(44832011)(5660300002)(81156014)(186003)(26005)(6636002)(2906002)(70586007)(9786002)(107886003)(4326008)(36756003)(70206006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5641;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 106cecc2-cc34-41ff-f299-08d794962499
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2230:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB2230B640631E5DFB3920ED27B83E0@CY4PR02MB2230.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: ae9cc7df-42cb-406d-1f5e-08d7949624eb
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5641:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB5641CD6975F7A377BFCD2D14B83E0@DM6PR02MB5641.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
 X-Forefront-PRVS: 02760F0D1C
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5WB9jo9cuXkMgNf/BR/KFLXlbFv4TgIdUTMEb+OhcRbvwZWIusLzKyo5cbkWx8KOPL31PHGyHu4r7hpybM+IYT3D7P4t/xZL+P4Q0kVTDylPK5fMUtTssVBwJJvFSH6XsnCiXa7qRi+FIF6vfQz/sHwiEM5mCPt0PHMeji72Z92hwvmo927eLrZKjbicRzQjKO6jmKOY2e52Lli9roYA0E8lIAtkCFVwKTq1w285tZ76G4pwHgzaSU9QpAWSC1akOglh9zzGWmdotTaGdgMlYTW81KSHeNir0rASLUaTtBdQeOm74QTV5+hINvPDTUBqDuw3vQuQTs917CHKv8nURD0ds3v6MqMCDHaL8J65XaaakF9vFXc2ntEsmR3rAf7Qq9jKXHOcSA6ZHaJnBFimRzwQEipZqswjbEZY9925JTi5DkSEEsSl5AEYIDNwTLDW
+X-Microsoft-Antispam-Message-Info: LrhrU4MZfFPDQEX6QI2RUk7/TO8ta3haoMqBC4l3xAu8Z/ijI3I7KZnhwFATJN8N+NxX+zOoNNpj5BAHD/pKt5emTWFke5XsrYVZWC6as3AXYDEpHF49e73pmuCkCnWVk29B5yNaANkLP1cT1cnGrDWm+JDBg+RIAdou8VLhDS06Eq8x+New1K6LDR9KQWIXXgRpQCjXd1pJpe5LZEs0Hw+94sFJ/sNkPvs/yfeNhbDhw5dck0Eu5HxpwKyC2CBczSUO/XU/I9vi9u95HWnSmkmAJypk0piRRKjXmZUtWdWDQ18/muToJk+CTjJz6T1pga6x4vnXKjh8NBN5CaJZsI9KGgr2Hy1kynzkBgD+QavUfMpifmXcnyKdOgdOnjdYjMHdMmr+LuIzqGt3272KnaAZCNi1cSFP3YyYUwoxBs1kONyZoM6/jGsf1yC0RJQ2
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 23:54:47.4807
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 23:54:47.9607
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 106cecc2-cc34-41ff-f299-08d794962499
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae9cc7df-42cb-406d-1f5e-08d7949624eb
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2230
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5641
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -118,132 +114,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add sysfs interface to set boot health status from user space.
-Add IOCTL ID used by this interface to communicate with firmware.
+This patch series adds xilinx specific sysfs interface for below
+purposes:
+- Register access
+- Set shutdown scope
+- Set boot health status bit
 
-If PMUFW is compiled with CHECK_HEALTHY_BOOT, it will check the
-healthy bit on FPD WDT expiration. If healthy bit is set by a user
-application running in Linux, PMUFW will do APU only restart. If
-healthy bit is not set during FPD WDT expiration, PMUFW will do
-system restart.
+Rajan Vaja (4):
+  firmware: xilinx: Add sysfs interface
+  firmware: xilinx: Add system shutdown API interface
+  firmware: xilinx: Add sysfs to set shutdown scope
+  firmware: xilinx: Add sysfs and IOCTL to set boot health status
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
+ Documentation/ABI/stable/sysfs-firmware-zynqmp | 103 +++++++++
+ drivers/firmware/xilinx/Makefile               |   2 +-
+ drivers/firmware/xilinx/zynqmp-ggs.c           | 284 +++++++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp.c               | 242 +++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h           |  28 ++-
+ 5 files changed, 657 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+ create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
+
+--
 Changes in v2:
- - Updated Linux kernel version in documentation.
+ - Removed patch #1 for register access sysfs.
+ - Updated kernel version in documentation.
  - Used DEVICE_ATTR_* and ATTRIBUTE_GROUPS macros.
+ - Correct typo
+ - Free Kobject structure in case of error.
+ - Resolved smatch errors.
  - Updated Signed-off-by sequence.
----
- Documentation/ABI/stable/sysfs-firmware-zynqmp | 21 +++++++++++++
- drivers/firmware/xilinx/zynqmp.c               | 41 ++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h           |  2 ++
- 3 files changed, 64 insertions(+)
-
-diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-index f41e9c5..3f44a3c 100644
---- a/Documentation/ABI/stable/sysfs-firmware-zynqmp
-+++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-@@ -80,3 +80,24 @@ Description:
- 		# echo "subsystem" > /sys/firmware/zynqmp/shutdown_scope
- 
- Users:		Xilinx
-+
-+What:		/sys/firmware/zynqmp/health_status
-+Date:		April 2018
-+KernelVersion:	5.5
-+Contact:	"Rajan Vaja" <rajanv@xilinx.com>
-+Description:
-+		This sysfs interface allows to set the health status. If PMUFW
-+		is compiled with CHECK_HEALTHY_BOOT, it will check the healthy
-+		bit on FPD WDT expiration. If healthy bit is set by a user
-+		application running in Linux, PMUFW will do APU only restart. If
-+		healthy bit is not set during FPD WDT expiration, PMUFW will do
-+		system restart.
-+
-+		Usage:
-+		Set healthy bit
-+		# echo 1 > /sys/firmware/zynqmp/health_status
-+
-+		Unset healthy bit
-+		# echo 0 > /sys/firmware/zynqmp/health_status
-+
-+Users:		Xilinx
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index ef7d107..2a77c90 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -477,6 +477,7 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
- 	case IOCTL_READ_GGS:
- 	case IOCTL_WRITE_PGGS:
- 	case IOCTL_READ_PGGS:
-+	case IOCTL_SET_BOOT_HEALTH_STATUS:
- 		return 1;
- 	default:
- 		return 0;
-@@ -861,8 +862,48 @@ static ssize_t shutdown_scope_store(struct device *device,
- 
- static DEVICE_ATTR_RW(shutdown_scope);
- 
-+/**
-+ * health_status_store - Store health_status sysfs attribute
-+ * @device:	Device structure
-+ * @attr:	Device attribute structure
-+ * @buf:	User entered health_status attribute string
-+ * @count:	Buffer size
-+ *
-+ * User-space interface for setting the boot health status.
-+ * Usage: echo <value> > /sys/firmware/zynqmp/health_status
-+ *
-+ * Value:
-+ *	1 - Set healthy bit to 1
-+ *	0 - Unset healthy bit
-+ *
-+ * Return:	count argument if request succeeds, the corresponding error
-+ *		code otherwise
-+ */
-+static ssize_t health_status_store(struct device *device,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	int ret;
-+	unsigned int value;
-+
-+	ret = kstrtouint(buf, 10, &value);
-+	if (ret)
-+		return ret;
-+
-+	ret = zynqmp_pm_ioctl(0, IOCTL_SET_BOOT_HEALTH_STATUS, value, 0, NULL);
-+	if (ret) {
-+		pr_err("unable to set healthy bit value to %u\n", value);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_WO(health_status);
-+
- static struct attribute *zynqmp_attrs[] = {
- 	&dev_attr_shutdown_scope.attr,
-+	&dev_attr_health_status.attr,
- 	NULL,
- };
- 
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index e4f83c6..0554054 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -106,6 +106,8 @@ enum pm_ioctl_id {
- 	IOCTL_READ_GGS,
- 	IOCTL_WRITE_PGGS,
- 	IOCTL_READ_PGGS,
-+	/* Set healthy bit value */
-+	IOCTL_SET_BOOT_HEALTH_STATUS = 17,
- };
- 
- enum pm_query_id {
 -- 
 2.7.4
 
