@@ -2,122 +2,95 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E009AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E85C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97B92072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2E52067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="bNfU3pqQ"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="hruQrdLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgAHR7F (ORCPT
+        id S1729254AbgAHR7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:59:05 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38856 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgAHR7F (ORCPT
+        Wed, 8 Jan 2020 12:59:40 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36622 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgAHR7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:59:05 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so3323338edr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:59:04 -0800 (PST)
+        Wed, 8 Jan 2020 12:59:39 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j17so3347678edp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:59:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2uEGBOLSJ2/X/0eS51RiNhJGw7wJMIxKLyleFhVXCjU=;
-        b=bNfU3pqQAxrJLz5YamHpEVqhAqbwtCyAQtia8G0VcYhNt4oMjsMyEKEFJSsaPM023k
-         WwYyZCoRFiDvgBZqyHWGBIwb33HRviCqZzPQ9Rwvnv+3mXF6zDMBX3LYLNWRmADSxWnU
-         AhTLCkfwuKN5URHZy0XQG0kOUs2ESmqZZBjf0yO6gd7DiHyWEZal/nUYAH4tnfghehRx
-         Hwhd0v7hpxd/nXxGkC6sxAB4fgSJFoTM9sld6Z/jH37HNI8+Uto9KE3qombk7p4dmMtc
-         pULM+JnTaOvu7dHzcEFKAWuMIvImdzzHZ74vUt8yadsb9zL1bvktTIkcoeJkG0CZjuJB
-         wQRQ==
+        bh=NYI9BdokG2IbKyPM2CZW5USlC6MewEmU/EsguFiov3s=;
+        b=hruQrdLyR9/6799NqXMaIG2kcPTB33SpTMDmQYiE6vp6kHoBE5stgW1MaZKyjvZEHS
+         9pyrvpkV+NQv/kkb8q5nTz1tTLWuuT1OgqWGMyCl4SrNwKg/Vmk9/2G+WNkwGgezngDA
+         FYKlRdEN8J3h19TIKwynRppUNImOq+Xhfr3fGTJ6sArPvEm4gpxNjaYPxhftTMoienYA
+         2nOYAZHd7I0S2gi9MDvpYHkqCYX3dor6aiynnAumkuiKYfaz570phRxWWrlZ0pKSAcpm
+         +DQBUyvQHCVPMUWbYH+7XD0ec/9hm9xW7UVxT/sAZIIw8Rb3pnK4QfV3hYqG7QqRiLen
+         xJeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2uEGBOLSJ2/X/0eS51RiNhJGw7wJMIxKLyleFhVXCjU=;
-        b=JgI23a3MQj5dE/XeW9gnihP2X/eAtRz1mIpbqoK7TgWdnGS8hah4HO5KmFn02mo98Z
-         Zf4wKG6a0Pc6rrChdPI9i5Fd2mhiYsRUulUyl+RL3cgElSB7EThlLdpGBvMLaXkudLPm
-         zeRgq1SZ5NvfE5R14ZzMWVRqAwBVAFsgkS7HmFWfxhwmDzUFdeW45rjlxQKqrecERPOl
-         fovPMTBZXc4bqOSP8SPPEbuxULincNb4VS0L7Mhx69nqR4yTCKTJQ6FzOBkx3sXRNv0E
-         hCg9nAVwLz97NHNwfhitCPULz+h18NGw7nbb4WUThjCzrdW9kRm9WLJaD/ocIUfUrevr
-         5FFQ==
-X-Gm-Message-State: APjAAAWIw7c+yVaYvrCBxD/9vOinYh1o2epWk/rVwrTSYaJ1s4onJkbv
-        PeV3dVwBIeRjRaGmSEOeSjIxKlREVJ0IrbU8oyZ8Kw==
-X-Google-Smtp-Source: APXvYqzJNhUYj7BUDWq/b5VLfPHGhXZOH/nyV2Gie8IiGDhSBzYXZZsk8IWFKTu5blsELnHIiDrlPgfetGRZnwf7rWQ=
-X-Received: by 2002:a17:906:3798:: with SMTP id n24mr6133397ejc.15.1578506343460;
- Wed, 08 Jan 2020 09:59:03 -0800 (PST)
+        bh=NYI9BdokG2IbKyPM2CZW5USlC6MewEmU/EsguFiov3s=;
+        b=eKZEwyWb433dhgnePzjKeDmslD21IY0JBGezHDXdKvIuE24gzGdKhvtOY7xIVcYkAt
+         LM25MkrDz8m/3GKSbP3ztt1Kbgcu3xXx0OcU31D0k5Yj3e9JVA8MWBXouUwQB0z/Mopw
+         MTdY4LfxF+uP7OyiSH8C3CEzutzQ4B3MR5aJ7xF93W3alzfKgVSb6CN5UJf0cFKPfF/X
+         4dX25qMGvRaCYbZO2OdfWYK1y6BG4ZEwtwIWAx53oOKGZFpvzK/4QhKSoz6Eb3xD6q9k
+         7GigbiQFHQIMEuYxgP9T3WUlX8wsGfqFVNEisB10Uz2bBjbvFX8uedD5GiHna8xlKgYl
+         Q5kA==
+X-Gm-Message-State: APjAAAU/StJZxcIjh5BxPM0bARWmccpWAHzWDb0Qi2fuxss4T4IBsPis
+        6xPY9KpwOmgybUCrW1wQTs8IYFuw0GvouHJ9sSjX7g==
+X-Google-Smtp-Source: APXvYqy0z28/dzBrNsd91I0p0ovtGg4Owrd9cilLSqMFv+lDXxI4gLLHOwdGWBi7vzbaJVrwcuwcObUtdOg6AO/wMiw=
+X-Received: by 2002:a17:906:4d43:: with SMTP id b3mr6268026ejv.109.1578506378310;
+ Wed, 08 Jan 2020 09:59:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216021247.24950-1-takahiro.akashi@linaro.org>
- <20191216021247.24950-3-takahiro.akashi@linaro.org> <20200108174839.GB21242@willie-the-truck>
-In-Reply-To: <20200108174839.GB21242@willie-the-truck>
+References: <20191204155938.2279686-1-pasha.tatashin@soleen.com> <20200108173225.GA21242@willie-the-truck>
+In-Reply-To: <20200108173225.GA21242@willie-the-truck>
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 8 Jan 2020 12:58:52 -0500
-Message-ID: <CA+CK2bBg2zaUONC_wf5na4CF0Tj3sThEPT7AgNmevycSZRdMeA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] arm64: kexec_file: add crash dump support
+Date:   Wed, 8 Jan 2020 12:59:27 -0500
+Message-ID: <CA+CK2bBDhF4YuFOeagzZ48-BigDmOVuBKZTAC8fd6tojcJN-0g@mail.gmail.com>
+Subject: Re: [PATCH v8 00/25] arm64: MMU enabled kexec relocation
 To:     Will Deacon <will@kernel.org>
-Cc:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, robh+dt@kernel.org,
-        frowand.list@gmail.com, Bhupesh Sharma <bhsharma@redhat.com>,
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         kexec mailing list <kexec@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         James Morse <james.morse@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com,
+        rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.
+On Wed, Jan 8, 2020 at 12:32 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Wed, Dec 04, 2019 at 10:59:13AM -0500, Pavel Tatashin wrote:
+> > Many changes compared to version 6, so I decided to send it out now.
+> > James Morse raised an important issue to which I do not have a solution
+> > yet. But would like to discuss it.
+>
+> Thanks. In the meantime, I've queued the first 10 patches of the series
+> since they look like sensible cleanup, they've been reviewed and it saves
+> you from having to repost them when you make changes to the later stuff.
+
+Great, thank you!
 
 Pasha
-
-On Wed, Jan 8, 2020 at 12:48 PM Will Deacon <will@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 11:12:47AM +0900, AKASHI Takahiro wrote:
-> > Enabling crash dump (kdump) includes
-> > * prepare contents of ELF header of a core dump file, /proc/vmcore,
-> >   using crash_prepare_elf64_headers(), and
-> > * add two device tree properties, "linux,usable-memory-range" and
-> >   "linux,elfcorehdr", which represent respectively a memory range
-> >   to be used by crash dump kernel and the header's location
-> >
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Reviewed-by: James Morse <james.morse@arm.com>
-> > Tested-and-reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > ---
-> >  arch/arm64/include/asm/kexec.h         |   4 +
-> >  arch/arm64/kernel/kexec_image.c        |   4 -
-> >  arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
-> >  3 files changed, 106 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> > index 12a561a54128..d24b527e8c00 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -96,6 +96,10 @@ static inline void crash_post_resume(void) {}
-> >  struct kimage_arch {
-> >       void *dtb;
-> >       unsigned long dtb_mem;
-> > +     /* Core ELF header buffer */
-> > +     void *elf_headers;
-> > +     unsigned long elf_headers_mem;
-> > +     unsigned long elf_headers_sz;
-> >  };
->
-> This conflicts with the cleanup work from Pavel. Please can you check my
-> resolution? [1]
->
-> Will
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/diff/?h=for-kernelci&id=aef73191765a88cadc0a627cdc070e5a0086b015
->
