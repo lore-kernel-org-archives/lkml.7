@@ -2,79 +2,58 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4614C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7F8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CC220678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486472072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgAHPAv convert rfc822-to-8bit (ORCPT
+        id S1728426AbgAHPCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:00:51 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:30737 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPAv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:00:51 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="34122417"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 08 Jan 2020 23:00:45 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(2825:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 08 Jan 2020 23:00:43 +0800 (CST)
-Received: from 39.10.5.22
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2479:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 08 Jan 2020 23:00:41 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Osipenko'" <digetx@gmail.com>,
-        "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        =?utf-8?Q?'Micha=C5=82_Miros=C5=82aw'?= <mirq-linux@rere.qmqm.pl>
-Cc:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "'Scott Liu'" <scott.liu@emc.com.tw>,
-        "'James Chen'" <james.chen@emc.com.tw>,
-        <linux-kernel@vger.kernel.org>,
-        "'Henrik Rydberg'" <rydberg@bitmath.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Rob Herring'" <robh-dt@kernel.org>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl> <20191212192420.GD101194@dtor-ws> <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
-In-Reply-To: <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
-Subject: RE: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-Date:   Wed, 8 Jan 2020 23:00:33 +0800
-Message-ID: <000001d5c634$655bed20$3013c760$@emc.com.tw>
+        Wed, 8 Jan 2020 10:02:48 -0500
+Received: from verein.lst.de ([213.95.11.211]:49671 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbgAHPCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:02:48 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5230B68BFE; Wed,  8 Jan 2020 16:02:45 +0100 (CET)
+Date:   Wed, 8 Jan 2020 16:02:45 +0100
+From:   "hch@lst.de" <hch@lst.de>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     Balbir Singh <sblbir@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ssomesh@amazon.com" <ssomesh@amazon.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "hch@lst.de" <hch@lst.de>, "mst@redhat.com" <mst@redhat.com>
+Subject: Re: [resend v1 1/5] block/genhd: Notify udev about capacity change
+Message-ID: <20200108150245.GA10975@lst.de>
+References: <20200102075315.22652-1-sblbir@amazon.com> <20200102075315.22652-2-sblbir@amazon.com> <BYAPR04MB5749EE1549B30FCECEC1154B86230@BYAPR04MB5749.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQG/wbboUgEFdZ2Q4eX8SCV758q1EAKWfXCAAgu9J8mn59GaYA==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy00YjEyMDg4NC0zMjI3LTExZWEtODM0MS03YzVjZjg3NDk0NzhcYW1lLXRlc3RcNGIxMjA4ODYtMzIyNy0xMWVhLTgzNDEtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI3MDMiIHQ9IjEzMjIyOTY5MDk0Mjk2MzgxMiIgaD0iU0RWQzJ5V3lBTldGRWdEVzgvaUpjQ0RGdG5BPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
-x-dg-rorf: true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB5749EE1549B30FCECEC1154B86230@BYAPR04MB5749.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 12.12.2019 22:24, Dmitry Torokhov пишет:
-> > On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
-> >> This series cleans up the driver a bit and implements changes needed
-> >> to support EKTF3624-based touchscreen used in eg. Asus TF300T tablet.
-> >
-> > Johnny, could you please take a look at this patch series?
-> >
-> > Thanks!
+On Fri, Jan 03, 2020 at 06:16:39AM +0000, Chaitanya Kulkarni wrote:
+> Since disk_set_capacity(() is on the same line as set_capacity()
+> we should follow the same convention, which is :-
 > 
-> Hello Johnny,
+> 1. Avoid exporting symbol.
+> 2. Mark new function in-line.
 > 
-> Could you please let us know whether you or anyone else from Elan are going
-> to take a look at this patchset anytime soon?
+> Unless there is a very specific reason for breaking the pattern.
 
-Hi Dmitry Osipenko,
-
-I'm sorry to reply late. James Chen will take a look at this patch set. 
-
+Why would we mark it as inline?  It isn't by any means in the fast
+path, and there are no easy opportunities for constant propagation,
+so the only thing that would do is increase the code size.
