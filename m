@@ -2,93 +2,125 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454ECC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E40C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C17F2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578501024;
-	bh=ODslVDAuh7de65gW/tg9WQIQROKBdslx9dSRBnp52xo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wDi8YNXvVLB/XIs8ULFGges95XZ6kBu4SWrU8ewZDnp5dBj9AGMxB4/QTrj1FVW5Q
-	 dl67m6EDjOgnJ31TM4z/wKEHjkUP216p3IEautF9WufXFCU/J5tZUoHRWxx/2VkNHy
-	 mbELjKzlFCIPruD4F/zP+GouSbYOk2Bq3uxsSWKE=
+	by mail.kernel.org (Postfix) with ESMTP id 250F42067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8TgNDuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgAHQaX (ORCPT
+        id S1728773AbgAHQaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:30:23 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35359 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHQaX (ORCPT
+        Wed, 8 Jan 2020 11:30:46 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37272 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbgAHQap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:30:23 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i15so4180460oto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:30:22 -0800 (PST)
+        Wed, 8 Jan 2020 11:30:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so3086763edb.4;
+        Wed, 08 Jan 2020 08:30:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7o9krT2FUFfJzalxomNVkht5y8lOkSzgYqZOdm5yd0M=;
+        b=X8TgNDuz+uEj76NEkllamJk67PcA5BUx9CHYIBn0iZCL1hhHXUlYs14iUvNwIuuS7f
+         kTTfoDZxbxkhEIZLHTP4UQ3cCdGf28XCWMfZ9WIr3KBzfiTihOqAjllKOzkWCKE1DGAR
+         svr5zwYLmkCY+wocqYDhNi5qyjWvN80z8QvAZEINIiB96tTe1HtDtSwe+yT/qjqGv7pM
+         0DVCSJefobFFR3r0Jazu9+7z1cRsncaZqKySZzYhssuLnMc58cjMCUDsSX1gKNQH+6Rg
+         FVxYDocWq5DzrIhtY2iEVv4/YIi0jygNC7pBCJdH2QfpjFthNLvQ8+9CX0YWyKrMP2so
+         hU+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eh1a1EgozWErHHqGLEoauZ/x7T61NxvHf+uJt4V80kQ=;
-        b=FwyWURrqIQ0C0HxAT5peIN+VFqRhdOpFnD+BnKPivVYUgZUlygwN3d43ldYCCAt4eI
-         fUX4xaVsekIOQsMGfHIVVWC2o6H+R3aGPRuCDvCjc56RXOOJ5hQc6+WMeTZMAM2Lx4fU
-         u+ir+YS5E9cpgFs0ZlGPIVMmr2FXvsS+sejKYwY1C2PNvdQs17pYlIHQqW1ZYK5iewjb
-         cCDDewZV3rD30YmiYL3aMf+ks7mH7Y2LqcO2gOz4TqpPgWFBDEjvUh/y6208PT3ho53+
-         DxfLnVyGXviK8VuH4XXmFWutM8ApIaFXEDV0LI2ppHtG9xaa4uccZi7ufCHz39x7JcZO
-         mCDA==
-X-Gm-Message-State: APjAAAVngpCv/iFtjrvhncMxkQIpyC69rB8k00478iGa19qQj4UytAm5
-        P8FoNTL+powLpvERwtU+NVf/UEs=
-X-Google-Smtp-Source: APXvYqxKsjx9+cwiBTktFXebBt0H8xPQPd+Y2hQEzTrD8HHEX023K4NyG5ueTwbyI7Aom8YgEyGMjw==
-X-Received: by 2002:a9d:4e99:: with SMTP id v25mr4923504otk.363.1578501021618;
-        Wed, 08 Jan 2020 08:30:21 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k26sm1214456oiw.34.2020.01.08.08.30.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:30:21 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220333
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 10:25:49 -0600
-Date:   Wed, 8 Jan 2020 10:25:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rajeshwari <rkambl@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sanm@codeaurora.org, sivaa@codeaurora.org, manafm@codeaurora.org,
-        Rajeshwari <rkambl@codeaurora.org>
-Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add configuration for
- sc7180 in yaml
-Message-ID: <20200108162549.GA24298@bogus>
-References: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org>
- <1577106871-19863-3-git-send-email-rkambl@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7o9krT2FUFfJzalxomNVkht5y8lOkSzgYqZOdm5yd0M=;
+        b=CgbOac+xOxRm7UxAdFcjKnXYM+1mxa0FPjr812YAXY+uoDq/6QbDNrDAAiTfIIszlW
+         mG1obcBJ6xKELrxzCq2DpuTCYqbwhiL2UZfngb7TBSTgoCvdcrR0yrN/FKyR3GGJGwtw
+         UdDI6bwDp3Qet0EHazJmixAGZoIfOdg62DcGDikX2MgrJZRNLGLQ5CM1LXiy+KqRszzS
+         VCZ4RyXb2hTOObOFBr7uza7bULV9XUW13CS1bg0qTdbssYf1Umy2um8/WNmXnkyS3NCJ
+         HicCQlSH+gb1+PL7OcJLvqxlEEXXsPVAuJOd5B4JRY+5ryKJuuzQFXJt/R5T/R4rcPvL
+         +0sg==
+X-Gm-Message-State: APjAAAVUHfxhRY72T9xBATfrbwsMCAzVW4i719kppu9kMcEAzFieyWG6
+        NDCUz8TBBE1f/FeCaEiX1yoWpqo97WGubIOtf3U=
+X-Google-Smtp-Source: APXvYqzF4ARmkb+wNjI820dBjXqHoID1H5hB7nCDR7eZCrEtV123/DMTKyIfpgBjt0+My1LvwCjXkpgwBJXhyAFw3xo=
+X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr5803958ejb.164.1578501043781;
+ Wed, 08 Jan 2020 08:30:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577106871-19863-3-git-send-email-rkambl@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+ <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com> <HK0PR01MB35219F5DF16CE54D088ACE2CFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <HK0PR01MB35219F5DF16CE54D088ACE2CFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 8 Jan 2020 18:30:31 +0200
+Message-ID: <CA+h21hrb70QTaaXzxSxXGE=JaOLPazKmAEqSdMxOEcAYFVrxCg@mail.gmail.com>
+Subject: Re: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
+To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zero19850401@gmail.com" <zero19850401@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019 18:44:31 +0530, Rajeshwari wrote:
-> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Johnson,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Wed, 8 Jan 2020 at 09:15, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=B3)
+<JohnsonCH.Chen@moxa.com> wrote:
+>
+> Hi Vladimir,
+>
+> Vladimir Oltean <olteanv@gmail.com> =E6=96=BC 2020=E5=B9=B41=E6=9C=887=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> >
+> > Hi Chen,
+> >
+> > On Tue, 7 Jan 2020 at 12:37, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=
+=B3)
+> > <JohnsonCH.Chen@moxa.com> wrote:
+> > >
+> > > Add dma_endian_le to solve ethernet TX/RX problems for freescale
+> > > ls1021a. Without this, it will result in rx-busy-errors by ethtool, a=
+nd transmit queue timeout in ls1021a's platforms.
+> > >
+> > > Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
+> > > ---
+> >
+> > This patch is not valid. The endianness configuration in
+> > eTSECx_DMACTRL is reserved and not applicable.
+> > What is the value of SCFG_ETSECDMAMCR bits ETSEC_BD and ETSEC_FR_DATA
+> > on your board? Typically this is configured by the bootloader.
+> >
+>
+> Thanks your suggestion. I use linux-fsl-sdk-v1.7, and find "dma-endian-le=
+" is used in ls1021a.dtsi and gianfar.c/.h. For bootloader, version is U-Bo=
+ot version is 2015.01-dirty and it seems old and not includes "SCFG_ETSECDM=
+AMCR bits".
+>
+> It seems solution is included in bootloader, not in device tree for
+> freescale/NXP: https://lxr.missinglinkelectronics.com/uboot/board/freesca=
+le/ls1021aiot/ls1021aiot.c
+>
+> It means bootloader provides functions are the same as device tree's.
+> So what's benefit for this desgin? It seems we need to upgrade kernel and=
+ bootloader to satisfy our need, not just upgrade kernel only. So many than=
+ks!
+>
+
+I'm not sure that the Freescale SDK 1.7 is of any relevance here. The
+point is that this patch is breaking Ethernet for every other LS1021A
+board except yours.
+
+Regards,
+-Vladimir
