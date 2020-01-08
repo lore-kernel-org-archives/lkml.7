@@ -2,274 +2,135 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB5C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772EEC33CA4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9CD206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TrwrY8yB"
+	by mail.kernel.org (Postfix) with ESMTP id 52D6E2051A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgAHMyK (ORCPT
+        id S1727732AbgAHM4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:54:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45558 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726902AbgAHMyK (ORCPT
+        Wed, 8 Jan 2020 07:56:06 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:31331 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgAHM4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:54:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578488047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+gcKZ6MhcBEiXq2WwzLzzuxx2MKHjtaktZcdoemM0CI=;
-        b=TrwrY8yBO/MWuCfk+RMXkEKx2G1DoUIxGjrbCawWxs46qGohcLsTUCJSrinT0/q14lQJYh
-        Fe4tZw3PAVyNnSwv0JjRGlJ5T305SMMGYNx1ke2CQKAp0HRyB67F4vJIrqettslyD/76zr
-        uEPQ5rKkRWz39s5Uipw9y5FUEI+rcGE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-1wcoVsHpPrO2MtTI_0xWEw-1; Wed, 08 Jan 2020 07:54:06 -0500
-X-MC-Unique: 1wcoVsHpPrO2MtTI_0xWEw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D31A18CA240;
-        Wed,  8 Jan 2020 12:54:04 +0000 (UTC)
-Received: from rules.brq.redhat.com (unknown [10.43.2.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 408817FB78;
-        Wed,  8 Jan 2020 12:54:02 +0000 (UTC)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     linux-watchdog@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, cphealy@gmail.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, vdronov@redhat.com
-Subject: [PATCH] watchdog: fix UAF in reboot notifier handling in watchdog core code
-Date:   Wed,  8 Jan 2020 13:53:47 +0100
-Message-Id: <20200108125347.6067-1-vdronov@redhat.com>
+        Wed, 8 Jan 2020 07:56:05 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: feLro1JNCFp1+UpYxfUe+bG2IPLSvnlmgEXzWgR/sW3uX4OwPBSjnIj8qhK2OnwOjjDOqzVpbt
+ g8bZUzYBbwpp+khpk6/ata/+DQPt9aBwtnPADf6kO2iqyJour8APSLqAWRCsC61k0Iv5val3AB
+ +w32RZ3p2/hGM7Abr6FCBcun5Lp4TmpY9srfoUiBepWiL5KArSMVzb6N8wh8mTDnlI4CxH7Kr6
+ OQwyP26353aBoemlTeFG5Bpj+fE3wiMJjSz0Au3d7cS/SPDHITUHuvh3QHOPTtmyV4EvzqeVnH
+ K3Q=
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="60517506"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 05:56:03 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 8 Jan 2020 05:56:02 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 8 Jan 2020 05:55:55 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
+        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <mchehab@kernel.org>, <lee.jones@linaro.org>,
+        <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
+        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
+        <mkl@pengutronix.de>, <a.zummo@towertech.it>, <broonie@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH 00/16] add device tree for SAM9X60 SoC and SAM9X60-EK board
+Date:   Wed, 8 Jan 2020 14:55:07 +0200
+Message-ID: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the commit 44ea39420fc9 ("drivers/watchdog: make use of
-devm_register_reboot_notifier()") the struct notifier_block reboot_nb in
-the struct watchdog_device is removed from the reboot notifiers chain at
-the time watchdog's chardev is closed. But at least in i6300esb.c case
-reboot_nb is embedded in the struct esb_dev which can be freed on its
-device removal and before the chardev is closed, thus UAF at reboot:
+This series add device tree for SAM9X60 SoC and SAM9X60-EK board.
+Allong with these, there are patches that documents some compatibles
+for SAM9X60's IPs.
 
-[    7.728581] esb_probe: esb_dev.watchdog_device ffff91316f91ab28
-ts# uname -r                            note the address ^^^
-5.5.0-rc5-ae6088-wdog
-ts# ./openwdog0 &
-[1] 696
-ts# opened /dev/watchdog0, sleeping 10s...
-ts# echo 1 > /sys/devices/pci0000\:00/0000\:00\:09.0/remove
-[  178.086079] devres:rel_nodes: dev ffff91317668a0b0 data ffff91316f91ab=
-28
-           esb_dev.watchdog_device.reboot_nb memory is freed here ^^^
-ts# ...woken up
-[  181.459010] devres:rel_nodes: dev ffff913171781000 data ffff913174a1da=
-e8
-[  181.460195] devm_unreg_reboot_notifier: res ffff913174a1dae8 nb ffff91=
-316f91ab78
-                                     attempt to use memory already freed =
-^^^
-[  181.461063] devm_unreg_reboot_notifier: nb->call 6b6b6b6b6b6b6b6b
-[  181.461243] devm_unreg_reboot_notifier: nb->next 6b6b6b6b6b6b6b6b
-                freed memory is filled with a slub poison ^^^
-[1]+  Done                    ./openwdog0
-ts# reboot
-[  229.921862] systemd-shutdown[1]: Rebooting.
-[  229.939265] notifier_call_chain: nb ffffffff9c6c2f20 nb->next ffffffff=
-9c6d50c0
-[  229.943080] notifier_call_chain: nb ffffffff9c6d50c0 nb->next 6b6b6b6b=
-6b6b6b6b
-[  229.946054] notifier_call_chain: nb 6b6b6b6b6b6b6b6b INVAL
-[  229.957584] general protection fault: 0000 [#1] SMP
-[  229.958770] CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.5.0-rc5-=
-ae6088-wdog
-[  229.960224] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), ...
-[  229.963288] RIP: 0010:notifier_call_chain+0x66/0xd0
-[  229.969082] RSP: 0018:ffffb20dc0013d88 EFLAGS: 00010246
-[  229.970812] RAX: 000000000000002e RBX: 6b6b6b6b6b6b6b6b RCX: 000000000=
-00008b3
-[  229.972929] RDX: 0000000000000000 RSI: 0000000000000096 RDI: ffffffff9=
-ccc46ac
-[  229.975028] RBP: 0000000000000001 R08: 0000000000000000 R09: 000000000=
-00008b3
-[  229.977039] R10: 0000000000000001 R11: ffffffff9c26c740 R12: 000000000=
-0000000
-[  229.979155] R13: 6b6b6b6b6b6b6b6b R14: 0000000000000000 R15: 00000000f=
-ffffffa
-...   slub_debug=3DFZP poison ^^^
-[  229.989089] Call Trace:
-[  229.990157]  blocking_notifier_call_chain+0x43/0x59
-[  229.991401]  kernel_restart_prepare+0x14/0x30
-[  229.992607]  kernel_restart+0x9/0x30
-[  229.993800]  __do_sys_reboot+0x1d2/0x210
-[  230.000149]  do_syscall_64+0x3d/0x130
-[  230.001277]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  230.002639] RIP: 0033:0x7f5461bdd177
-[  230.016402] Modules linked in: i6300esb
-[  230.050261] Kernel panic - not syncing: Attempted to kill init! exitco=
-de=3D0x0000000b
+Claudiu Beznea (15):
+  dt-bindings: at_xdmac: add entry for microchip compatibles
+  dt-bindings: atmel-can: add microchip,sam9x60-can
+  dt-bindings: atmel-tcb: add microchip,<chip>-tcb
+  dt-bindings: atmel-isi: add microchip,sam9x60-isi
+  dt-bindings: at91-sama5d2_adc: add microchip,sam9x60-adc
+  dt-bindings: atmel-matrix: add microchip,sam9x60-matrix
+  dt-bindings: atmel-nand: add microchip,sam9x60-pmecc
+  dt-bindings: atmel-sysreg: add microchip,sam9x60-ddramc
+  dt-bindings: atmel-smc: add microchip,sam9x60-smc
+  dt-bindings: atmel-gpbr: add microchip,sam9x60-gpbr
+  dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
+  dt-bindings: spi_atmel: add microchip,sam9x60-spi
+  dt-bindings: atmel-usart: add microchip,<chip>-usart
+  dt-bindings: arm: add sam9x60-ek board
+  ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
 
-Fix the crash by reverting 44ea39420fc9 so unregister_reboot_notifier()
-is called when watchdog device is removed. This also makes handling of
-the reboot notifier unified with the handling of the restart handler,
-which is freed with unregister_restart_handler() in the same place.
+Sandeep Sheriker Mallikarjun (1):
+  ARM: dts: at91: sam9x60: add device tree for soc and board
 
-Fixes: 44ea39420fc9 ("drivers/watchdog: make use of devm_register_reboot_=
-notifier()")
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
----
- drivers/watchdog/watchdog_core.c | 35 +++++++++++++++++++++++++++++++
- drivers/watchdog/watchdog_dev.c  | 36 +-------------------------------
- 2 files changed, 36 insertions(+), 35 deletions(-)
+ .../devicetree/bindings/arm/atmel-at91.yaml        |   6 +
+ .../devicetree/bindings/arm/atmel-sysregs.txt      |   1 +
+ .../devicetree/bindings/dma/atmel-xdma.txt         |   3 +-
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   2 +-
+ .../devicetree/bindings/media/atmel-isi.txt        |   2 +-
+ .../devicetree/bindings/mfd/atmel-gpbr.txt         |   4 +-
+ .../devicetree/bindings/mfd/atmel-matrix.txt       |   1 +
+ .../devicetree/bindings/mfd/atmel-smc.txt          |   1 +
+ .../devicetree/bindings/mfd/atmel-tcb.txt          |   5 +-
+ .../devicetree/bindings/mfd/atmel-usart.txt        |   6 +-
+ .../devicetree/bindings/mtd/atmel-nand.txt         |   1 +
+ .../devicetree/bindings/net/can/atmel-can.txt      |   3 +-
+ .../bindings/rtc/atmel,at91rm9200-rtc.txt          |   3 +-
+ .../devicetree/bindings/spi/spi_atmel.txt          |   2 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
+ arch/arm/configs/at91_dt_defconfig                 |   4 +
+ 18 files changed, 1373 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+ create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
 
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog=
-_core.c
-index 21e8085b848b..861daf4f37b2 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -147,6 +147,25 @@ int watchdog_init_timeout(struct watchdog_device *wd=
-d,
- }
- EXPORT_SYMBOL_GPL(watchdog_init_timeout);
-=20
-+static int watchdog_reboot_notifier(struct notifier_block *nb,
-+				    unsigned long code, void *data)
-+{
-+	struct watchdog_device *wdd;
-+
-+	wdd =3D container_of(nb, struct watchdog_device, reboot_nb);
-+	if (code =3D=3D SYS_DOWN || code =3D=3D SYS_HALT) {
-+		if (watchdog_active(wdd)) {
-+			int ret;
-+
-+			ret =3D wdd->ops->stop(wdd);
-+			if (ret)
-+				return NOTIFY_BAD;
-+		}
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int watchdog_restart_notifier(struct notifier_block *nb,
- 				     unsigned long action, void *data)
- {
-@@ -235,6 +254,19 @@ static int __watchdog_register_device(struct watchdo=
-g_device *wdd)
- 		}
- 	}
-=20
-+	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
-+		wdd->reboot_nb.notifier_call =3D watchdog_reboot_notifier;
-+
-+		ret =3D register_reboot_notifier(&wdd->reboot_nb);
-+		if (ret) {
-+			pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
-+			       wdd->id, ret);
-+			watchdog_dev_unregister(wdd);
-+			ida_simple_remove(&watchdog_ida, id);
-+			return ret;
-+		}
-+	}
-+
- 	if (wdd->ops->restart) {
- 		wdd->restart_nb.notifier_call =3D watchdog_restart_notifier;
-=20
-@@ -289,6 +321,9 @@ static void __watchdog_unregister_device(struct watch=
-dog_device *wdd)
- 	if (wdd->ops->restart)
- 		unregister_restart_handler(&wdd->restart_nb);
-=20
-+	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
-+		unregister_reboot_notifier(&wdd->reboot_nb);
-+
- 	watchdog_dev_unregister(wdd);
- 	ida_simple_remove(&watchdog_ida, wdd->id);
- }
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_=
-dev.c
-index 4b2a85438478..8b5c742f24e8 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -38,7 +38,6 @@
- #include <linux/miscdevice.h>	/* For handling misc devices */
- #include <linux/module.h>	/* For module stuff/... */
- #include <linux/mutex.h>	/* For mutexes */
--#include <linux/reboot.h>	/* For reboot notifier */
- #include <linux/slab.h>		/* For memory functions */
- #include <linux/types.h>	/* For standard types (like size_t) */
- #include <linux/watchdog.h>	/* For watchdog specific items */
-@@ -1097,25 +1096,6 @@ static void watchdog_cdev_unregister(struct watchd=
-og_device *wdd)
- 	put_device(&wd_data->dev);
- }
-=20
--static int watchdog_reboot_notifier(struct notifier_block *nb,
--				    unsigned long code, void *data)
--{
--	struct watchdog_device *wdd;
--
--	wdd =3D container_of(nb, struct watchdog_device, reboot_nb);
--	if (code =3D=3D SYS_DOWN || code =3D=3D SYS_HALT) {
--		if (watchdog_active(wdd)) {
--			int ret;
--
--			ret =3D wdd->ops->stop(wdd);
--			if (ret)
--				return NOTIFY_BAD;
--		}
--	}
--
--	return NOTIFY_DONE;
--}
--
- /*
-  *	watchdog_dev_register: register a watchdog device
-  *	@wdd: watchdog device
-@@ -1134,22 +1114,8 @@ int watchdog_dev_register(struct watchdog_device *=
-wdd)
- 		return ret;
-=20
- 	ret =3D watchdog_register_pretimeout(wdd);
--	if (ret) {
-+	if (ret)
- 		watchdog_cdev_unregister(wdd);
--		return ret;
--	}
--
--	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
--		wdd->reboot_nb.notifier_call =3D watchdog_reboot_notifier;
--
--		ret =3D devm_register_reboot_notifier(&wdd->wd_data->dev,
--						    &wdd->reboot_nb);
--		if (ret) {
--			pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
--			       wdd->id, ret);
--			watchdog_dev_unregister(wdd);
--		}
--	}
-=20
- 	return ret;
- }
---=20
-2.20.1
+-- 
+2.7.4
 
