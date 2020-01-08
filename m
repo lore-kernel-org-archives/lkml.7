@@ -2,319 +2,190 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFEAC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE2CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6451820673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7995F20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="dY/DWHhY"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="C0rT988u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAHP2b (ORCPT
+        id S1728948AbgAHP2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:28:31 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:3495 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbgAHP2T (ORCPT
+        Wed, 8 Jan 2020 10:28:38 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38479 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728932AbgAHP2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:28:19 -0500
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jan 2020 10:28:18 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1578497299;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=ZJuSUJ02rylweO0QTHeZK87XYdE2eEfNMSYEfZ4ISFU=;
-  b=dY/DWHhYkkxgjmkULTxYvRMfaZA3Jglr4+ai0bo1e0ndy2jdRPGmS5bg
-   iOeukYOWlrd6a4uWoBMP4u2in+AZ5ypO9e7xX5WMpXE9E81o0KOk9nU79
-   rVHRlIrjMpTOMRsJ8/MqQiEqC0kPcz23sPGnEuwMqNpWS0eCFFfmDBxA/
-   I=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  sergey.dyasli@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  sergey.dyasli@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: DX+ggOVcUV+qjAM+GH2sUSi46yljxph9UiDZ5OvdtBvqC5kMO1PziVlbeWDiErFsikLJupbr6j
- e1GJp5zCy/6F3zEoqeeNBUnp1jCorCX2Lv0Aiur8r6exMyKmwDqJuw2jGva+/nJJXFvTQ2Ugl7
- MsXEecRWjr/VWKfr79oqpWhGuobCwHKJmBbBKn4tqnGTrqWdR7mqh2Qt3c/YNqtAyzHNee9e/R
- zXaizezM7fqVpwm8zpKNd8k535daqotbAfc1B7wEgWYPCbpvlXlweSc7xS8pQwblpvCKKTD4np
- 1yI=
-X-SBRS: 2.7
-X-MesageID: 11004137
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,410,1571716800"; 
-   d="scan'208";a="11004137"
-From:   Sergey Dyasli <sergey.dyasli@citrix.com>
-To:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        George Dunlap <george.dunlap@citrix.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Dyasli <sergey.dyasli@citrix.com>
-Subject: [PATCH v1 2/4] x86/xen: add basic KASAN support for PV kernel
-Date:   Wed, 8 Jan 2020 15:20:58 +0000
-Message-ID: <20200108152100.7630-3-sergey.dyasli@citrix.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108152100.7630-1-sergey.dyasli@citrix.com>
-References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
+        Wed, 8 Jan 2020 10:28:34 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so3841611wrh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:28:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V+jjQ4Ip9VghYx4Ogoeys27CKAs+Gf9yYIGWHjojKP4=;
+        b=C0rT988ua9tw5YGgg+iHRVuWkLt2IMZ3t00QD8f68MvEHxgNT+gI8znrD7VGuk4VF1
+         sXanIE0z0BKh2924mEqk4nzNVKcwuH8ZLaWf/kUAhI1ZioPspwFKA2TQlmQTaeUHp9Gz
+         0huHTUXygWfK0o+XLbzjgnU2Q/WN3dV5MtCd1bSvkeg9I+hrDQVFRv503UNJy4LGVWbK
+         T6mtftG0hSe89xQq7iNt4JksgEAvouw9RxfAz/hieIM+LSKpc6/EahQipNFdSEsv8QYt
+         d2j9Ta2W4gEuZitnCWpUsG/VpO00CUiYCpRuJl+YJyGHdLI56QLzsnpAxV+UXe6HO9KQ
+         egUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=V+jjQ4Ip9VghYx4Ogoeys27CKAs+Gf9yYIGWHjojKP4=;
+        b=S2Wc5Q+E5GppY7xK/mdffXNWVVmEQfQXRNfMJCwdUdpTb8NgIqFmLwP3rTvPgrIdH+
+         PD1jy00t4EFNR6zDCB+nam/JdnBDW0v4uIS27UbugobOyoN35OwOrSKMqJ6FjUTgams7
+         4m8YTd/z9RW6+ISzmpvXyqOkmCaYBHlEWn24+dtD+7PrSAepLaMwcmgw3/fpw/E3COQ9
+         JxztUL+GTR7OWK2oi9BLN9MlFTEdWTjnV8Buw51kMo8EvFd/AnFrWFfaJ9+qglRnXG6C
+         LWqgAcawpeQEETMRK+2Bf4zBQcPXwTeXfFYoHUoCXPzXlH0lC7R4wffuqRzn7BxlKyxl
+         5svg==
+X-Gm-Message-State: APjAAAUcHoX6iEAwDQ+BRRa+zW1E9ZYT4H6w7KOoVQK+tomgXifwVv+0
+        T0m4jl3l7J2oQwU0aOfKE4PivAA/lmKqww4BEysByfH5GHEBBlK7CQ0QJNET2nARw+fCHd0xCHB
+        pPRHbIWFhtl+DyqQJcZ7hQrXRcJ+L1/DCQHbDkKhJ28IL9Ki1u65cs6HeTYO1oINtzg93ZOBa3e
+        lOuACJIUTdsjSA
+X-Google-Smtp-Source: APXvYqxJ9aRKfVFIyCU1I4W0biSdU30z65gLa9YVZJeeUyxUmuOg/X4T5ZLLlGSvgZ0V6HWusdrRSA==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr5200645wru.154.1578497311918;
+        Wed, 08 Jan 2020 07:28:31 -0800 (PST)
+Received: from [172.20.1.104] ([217.38.71.146])
+        by smtp.gmail.com with ESMTPSA id s1sm4181780wmc.23.2020.01.08.07.28.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 07:28:31 -0800 (PST)
+Subject: Re: [PATCH bpf-next v2 2/2] bpftool: Add misc secion and probe for
+ large INSN limit
+To:     Michal Rostecki <mrostecki@opensuse.org>
+Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200107130308.20242-1-mrostecki@opensuse.org>
+ <20200107130308.20242-3-mrostecki@opensuse.org>
+ <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
+ <20200108134148.GD2954@wotan.suse.de>
+From:   Quentin Monnet <quentin.monnet@netronome.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
+ 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
+ RHhSHGnKaQ6MfrTge5Q0h5A=
+Message-ID: <091b68b1-d651-6b23-c3d7-7334ccde1700@netronome.com>
+Date:   Wed, 8 Jan 2020 15:28:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200108134148.GD2954@wotan.suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables to use Outline instrumentation for Xen PV kernels.
+2020-01-08 13:41 UTC+0000 ~ Michal Rostecki <mrostecki@opensuse.org>
+> On Tue, Jan 07, 2020 at 02:36:15PM +0000, Quentin Monnet wrote:
+>> Nit: typo in subject ("secion").
+>>
+>> 2020-01-07 14:03 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+>>> Introduce a new probe section (misc) for probes not related to concrete
+>>> map types, program types, functions or kernel configuration. Introduce a
+>>> probe for large INSN limit as the first one in that section.
+>>>
+>>> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+>>> ---
+>>>  tools/bpf/bpftool/feature.c | 18 ++++++++++++++++++
+>>>  1 file changed, 18 insertions(+)
+>>>
+>>> diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
+>>> index 03bdc5b3ac49..d8ce93092c45 100644
+>>> --- a/tools/bpf/bpftool/feature.c
+>>> +++ b/tools/bpf/bpftool/feature.c
+>>> @@ -572,6 +572,18 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
+>>>  		printf("\n");
+>>>  }
+>>>  
+>>> +static void
+>>> +probe_large_insn_limit(const char *define_prefix, __u32 ifindex)
+>>> +{
+>>> +	bool res;
+>>> +
+>>> +	res = bpf_probe_large_insn_limit(ifindex);
+>>> +	print_bool_feature("have_large_insn_limit",
+>>> +			   "Large complexity and program size limit",
+>>
+>> I am not sure we should mention "complexity" here. Although it is
+>> related to program size in the kernel commit you describe, the probe
+>> that is run is only on instruction number. This can make a difference
+>> for offloaded programs: When you probe a device, if kernel has commit
+>> c04c0d2b968a and supports up to 1M instructions, but hardware supports
+>> no more than 4k instructions, you may still benefit from the new value
+>> for BPF_COMPLEXITY_LIMIT_INSNS for complexity, but not for the total
+>> number of available instructions. In that case the probe will fail, and
+>> the message on complexity would not be accurate.
+>>
+>> Looks good otherwise, thanks Michal!
+>>
+>> Quentin
+> 
+> Thanks for review! Should I change the description just to "Large
+> program size limit" or "Large instruction limit"?
+> 
+> Michal
+> 
 
-KASAN_INLINE and KASAN_VMALLOC options currently lead to boot crashes
-and hence disabled.
-
-Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
----
-RFC --> v1:
-- New functions with declarations in xen/xen-ops.h
-- Fixed the issue with free_kernel_image_pages() with the help of
-  xen_pv_kasan_unpin_pgd()
----
- arch/x86/mm/kasan_init_64.c | 12 ++++++++++++
- arch/x86/xen/Makefile       |  7 +++++++
- arch/x86/xen/enlighten_pv.c |  3 +++
- arch/x86/xen/mmu_pv.c       | 39 +++++++++++++++++++++++++++++++++++++
- drivers/xen/Makefile        |  2 ++
- include/xen/xen-ops.h       |  4 ++++
- kernel/Makefile             |  2 ++
- lib/Kconfig.kasan           |  3 ++-
- 8 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index cf5bc37c90ac..902a6a152d33 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -13,6 +13,9 @@
- #include <linux/sched/task.h>
- #include <linux/vmalloc.h>
- 
-+#include <xen/xen.h>
-+#include <xen/xen-ops.h>
-+
- #include <asm/e820/types.h>
- #include <asm/pgalloc.h>
- #include <asm/tlbflush.h>
-@@ -332,6 +335,11 @@ void __init kasan_early_init(void)
- 	for (i = 0; pgtable_l5_enabled() && i < PTRS_PER_P4D; i++)
- 		kasan_early_shadow_p4d[i] = __p4d(p4d_val);
- 
-+	if (xen_pv_domain()) {
-+		pgd_t *pv_top_pgt = xen_pv_kasan_early_init();
-+		kasan_map_early_shadow(pv_top_pgt);
-+	}
-+
- 	kasan_map_early_shadow(early_top_pgt);
- 	kasan_map_early_shadow(init_top_pgt);
- }
-@@ -369,6 +377,8 @@ void __init kasan_init(void)
- 				__pgd(__pa(tmp_p4d_table) | _KERNPG_TABLE));
- 	}
- 
-+	xen_pv_kasan_pin_pgd(early_top_pgt);
-+
- 	load_cr3(early_top_pgt);
- 	__flush_tlb_all();
- 
-@@ -433,6 +443,8 @@ void __init kasan_init(void)
- 	load_cr3(init_top_pgt);
- 	__flush_tlb_all();
- 
-+	xen_pv_kasan_unpin_pgd(early_top_pgt);
-+
- 	/*
- 	 * kasan_early_shadow_page has been used as early shadow memory, thus
- 	 * it may contain some garbage. Now we can clear and write protect it,
-diff --git a/arch/x86/xen/Makefile b/arch/x86/xen/Makefile
-index 084de77a109e..102fad0b0bca 100644
---- a/arch/x86/xen/Makefile
-+++ b/arch/x86/xen/Makefile
-@@ -1,3 +1,10 @@
-+KASAN_SANITIZE_enlighten_pv.o := n
-+KASAN_SANITIZE_enlighten.o := n
-+KASAN_SANITIZE_irq.o := n
-+KASAN_SANITIZE_mmu_pv.o := n
-+KASAN_SANITIZE_p2m.o := n
-+KASAN_SANITIZE_multicalls.o := n
-+
- # SPDX-License-Identifier: GPL-2.0
- OBJECT_FILES_NON_STANDARD_xen-asm_$(BITS).o := y
- 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index ae4a41ca19f6..27de55699f24 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -72,6 +72,7 @@
- #include <asm/mwait.h>
- #include <asm/pci_x86.h>
- #include <asm/cpu.h>
-+#include <asm/kasan.h>
- 
- #ifdef CONFIG_ACPI
- #include <linux/acpi.h>
-@@ -1231,6 +1232,8 @@ asmlinkage __visible void __init xen_start_kernel(void)
- 	/* Get mfn list */
- 	xen_build_dynamic_phys_to_machine();
- 
-+	kasan_early_init();
-+
- 	/*
- 	 * Set up kernel GDT and segment registers, mainly so that
- 	 * -fstack-protector code can be executed.
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index c8dbee62ec2a..cf6ff214d9ea 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -1771,6 +1771,36 @@ static void __init set_page_prot(void *addr, pgprot_t prot)
- {
- 	return set_page_prot_flags(addr, prot, UVMF_NONE);
- }
-+
-+pgd_t * __init xen_pv_kasan_early_init(void)
-+{
-+	/* PV page tables must be read-only */
-+	set_page_prot(kasan_early_shadow_pud, PAGE_KERNEL_RO);
-+	set_page_prot(kasan_early_shadow_pmd, PAGE_KERNEL_RO);
-+	set_page_prot(kasan_early_shadow_pte, PAGE_KERNEL_RO);
-+
-+	/* Return a pointer to the initial PV page tables */
-+	return (pgd_t *)xen_start_info->pt_base;
-+}
-+
-+void __init xen_pv_kasan_pin_pgd(pgd_t *pgd)
-+{
-+	if (!xen_pv_domain())
-+		return;
-+
-+	set_page_prot(pgd, PAGE_KERNEL_RO);
-+	pin_pagetable_pfn(MMUEXT_PIN_L4_TABLE, PFN_DOWN(__pa_symbol(pgd)));
-+}
-+
-+void __init xen_pv_kasan_unpin_pgd(pgd_t *pgd)
-+{
-+	if (!xen_pv_domain())
-+		return;
-+
-+	pin_pagetable_pfn(MMUEXT_UNPIN_TABLE, PFN_DOWN(__pa_symbol(pgd)));
-+	set_page_prot(pgd, PAGE_KERNEL);
-+}
-+
- #ifdef CONFIG_X86_32
- static void __init xen_map_identity_early(pmd_t *pmd, unsigned long max_pfn)
- {
-@@ -1943,6 +1973,15 @@ void __init xen_setup_kernel_pagetable(pgd_t *pgd, unsigned long max_pfn)
- 	if (i && i < pgd_index(__START_KERNEL_map))
- 		init_top_pgt[i] = ((pgd_t *)xen_start_info->pt_base)[i];
- 
-+#ifdef CONFIG_KASAN
-+	/*
-+	 * Copy KASAN mappings
-+	 * ffffec0000000000 - fffffbffffffffff (=44 bits) kasan shadow memory (16TB)
-+	 */
-+	for (i = 0xec0 >> 3; i < 0xfc0 >> 3; i++)
-+		init_top_pgt[i] = ((pgd_t *)xen_start_info->pt_base)[i];
-+#endif
-+
- 	/* Make pagetable pieces RO */
- 	set_page_prot(init_top_pgt, PAGE_KERNEL_RO);
- 	set_page_prot(level3_ident_pgt, PAGE_KERNEL_RO);
-diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-index 0c4efa6fe450..1e9e1e41c0a8 100644
---- a/drivers/xen/Makefile
-+++ b/drivers/xen/Makefile
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
-+KASAN_SANITIZE_features.o := n
-+
- obj-$(CONFIG_HOTPLUG_CPU)		+= cpu_hotplug.o
- obj-y	+= grant-table.o features.o balloon.o manage.o preempt.o time.o
- obj-y	+= mem-reservation.o
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index d89969aa9942..91d66520f0a3 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -241,4 +241,8 @@ static inline void xen_preemptible_hcall_end(void)
- 
- #endif /* CONFIG_PREEMPT */
- 
-+pgd_t *xen_pv_kasan_early_init(void);
-+void xen_pv_kasan_pin_pgd(pgd_t *pgd);
-+void xen_pv_kasan_unpin_pgd(pgd_t *pgd);
-+
- #endif /* INCLUDE_XEN_OPS_H */
-diff --git a/kernel/Makefile b/kernel/Makefile
-index f2cc0d118a0b..1da6fd93c00c 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -12,6 +12,8 @@ obj-y     = fork.o exec_domain.o panic.o \
- 	    notifier.o ksysfs.o cred.o reboot.o \
- 	    async.o range.o smpboot.o ucount.o
- 
-+KASAN_SANITIZE_cpu.o := n
-+
- obj-$(CONFIG_MODULES) += kmod.o
- obj-$(CONFIG_MULTIUSER) += groups.o
- 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 81f5464ea9e1..429a638625ea 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -98,6 +98,7 @@ config KASAN_OUTLINE
- 
- config KASAN_INLINE
- 	bool "Inline instrumentation"
-+	depends on !XEN_PV
- 	help
- 	  Compiler directly inserts code checking shadow memory before
- 	  memory accesses. This is faster than outline (in some workloads
-@@ -147,7 +148,7 @@ config KASAN_SW_TAGS_IDENTIFY
- 
- config KASAN_VMALLOC
- 	bool "Back mappings in vmalloc space with real shadow memory"
--	depends on KASAN && HAVE_ARCH_KASAN_VMALLOC
-+	depends on KASAN && HAVE_ARCH_KASAN_VMALLOC && !XEN_PV
- 	help
- 	  By default, the shadow region for vmalloc space is the read-only
- 	  zero page. This means that KASAN cannot detect errors involving
--- 
-2.17.1
-
+I don't really have a preference here, let's keep "program size"?
+Quentin
