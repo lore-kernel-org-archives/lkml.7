@@ -2,121 +2,225 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1729CC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E862C33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D7C20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCAF20838
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Moxa.onmicrosoft.com header.i=@Moxa.onmicrosoft.com header.b="RYeUe/rx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u+Pu69gI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgAHF0l (ORCPT
+        id S1726333AbgAHFdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:26:41 -0500
-Received: from mail-eopbgr1320085.outbound.protection.outlook.com ([40.107.132.85]:43038
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725773AbgAHF0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:26:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C6uwzobp8HRtdDGga45xAYUFBMDNDjJzAd85ao4qRdPppVOdO/BPgDWce+ydEj2/pP/AhSeZKVNPPsst2qHzfMps8gO6cueSlRg3vzl3ORWZHmslA1A9M6iVC0jDABMy+iJf9ycgKQDATsQA9qJnD4Qagn/xCm9KdPBGoLTK37yK7OKgspX9LpucmCvilb5G6KfevAf/6si7nWyu9s23vL/Po8kY0zrTpidZK2lR8bFPAI8JREnuvcO8BKEquU++4SP5to0KR+xe1WVcdVOZVChZxKBRqH9rJht/2dGhPcwpnNlLWwbLwna7T3J8yiJdhGfjjZLFhAiORz7pe2oPOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CXQoVL/S7SaSvlwGd6hgUlFgPaanNGOjOCAtLzV7NzM=;
- b=PHFs8ChoisSogk1kugVe5rL/qCRxsdeZ5Ikc9EtPp99Gt51lU/OGRuo+63jL2lIaQxtskqAVCWK7jDhtnNX76WqhU9/qLsur5ddafVH6tCi/6OVsQCIEl6wfI2A48DrTMwLVjq5cQxm1XYw9Y+rm1YQdHbUAhwulimxHpnhhgCrd8YCqjTcey567VkZnInb+DaNJu40swNOoxAT7jmvuWzgn4wZYTu4DTiLiurmBPoFloROlHLb74dtI1klN6sAUWRkzv8awAiVNJPEtfZNFhthpqCsSwfEnaPP6jX7rOtvbEROEwICPPfyqGVbPB0+Lx2EFrj2rKisYFuZtHrRLpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
- dkim=pass header.d=moxa.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Moxa.onmicrosoft.com;
- s=selector2-Moxa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CXQoVL/S7SaSvlwGd6hgUlFgPaanNGOjOCAtLzV7NzM=;
- b=RYeUe/rxX/AO1ZLHTTZcO1xoJjj2866WaY972OGuTQqc/8BKmPtfjNk3Q8ED8OMRA+u26cku9R9pZvfQ3XtchGAraGkmeziXwkCEjjM14IVGdr1cZ5PnLNwzj/U1SAC6gIEK/xbbKWch8r5XiB5FZYMFG9VctSuyzlvNI8keJ+I=
-Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com (52.132.237.22) by
- HK0PR01MB1972.apcprd01.prod.exchangelabs.com (52.133.157.143) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Wed, 8 Jan 2020 05:26:36 +0000
-Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com
- ([fe80::3433:35cd:2be4:d042]) by HK0PR01MB3521.apcprd01.prod.exchangelabs.com
- ([fe80::3433:35cd:2be4:d042%6]) with mapi id 15.20.2602.016; Wed, 8 Jan 2020
- 05:26:36 +0000
-From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
-        <JohnsonCH.Chen@moxa.com>
-To:     Fabio Estevam <festevam@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-CC:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zero19850401@gmail.com" <zero19850401@gmail.com>
-Subject: RE: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
-Thread-Topic: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
-Thread-Index: AdXFRAcg+ooT8TPrTsG92JEuKMTbqwAGWQoAAAHzV4AAH6igEA==
-Date:   Wed, 8 Jan 2020 05:26:35 +0000
-Message-ID: <HK0PR01MB3521CA38E57FA1A5860349DDFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
-References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
- <20200107132150.GB23819@lunn.ch>
- <CAOMZO5AE1eFjfHwh5HQjn3XmA=_tYZ2qjcU-sX63qFuV=f8ccw@mail.gmail.com>
-In-Reply-To: <CAOMZO5AE1eFjfHwh5HQjn3XmA=_tYZ2qjcU-sX63qFuV=f8ccw@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=JohnsonCH.Chen@moxa.com; 
-x-originating-ip: [122.146.92.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 856f3a51-4518-4232-19fd-08d793fb548b
-x-ms-traffictypediagnostic: HK0PR01MB1972:
-x-microsoft-antispam-prvs: <HK0PR01MB1972F3F65E11DAE7CC67E1C1FA3E0@HK0PR01MB1972.apcprd01.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39850400004)(346002)(396003)(366004)(199004)(189003)(43544003)(478600001)(66446008)(6506007)(76116006)(64756008)(66556008)(8936002)(33656002)(55016002)(5660300002)(7696005)(110136005)(54906003)(9686003)(71200400001)(2906002)(53546011)(4326008)(86362001)(26005)(52536014)(66476007)(81166006)(8676002)(81156014)(66946007)(316002)(186003)(85182001);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR01MB1972;H:HK0PR01MB3521.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: moxa.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vwCGII9QfVxfEbMvVr2dnFs0+/VpFc1Gj9TC/qTf+DHzXNNTsOTdv2j31jNUUJp2GH/4Pr0ytDlNaQhd4l6yw6HwyeVQgBa+CCSNB2maIiIdQvamHlDL2FHxrQQ2HFb9Zk36Hw/JWqt4SQjzkh56gGqa3ORydDatI8rN66WgZAgOanzp6VarJx8MfwBAPuuZ0TPc4wHbhfnCzkpy0YDo5TBJ7aYYIRCHy29vsduGqdWk+idWcKVy2XyNAkRdNSrjtFizfbv8kNPMUmOY014/Mki+RTc7xdmAt+SB3xV29FsQXvE8KqXwlFVzcj6eMHlM8LL+DO0GsGnnflA7m6TyXGW9ZZQMjK5qvxRXyY4IVDyuH4dvfg08xnrpTg/9o57RUnLGN+6yZlCb3rOF1f1vj9pM+sTdXF290VIz99mghTt7D1i1RLP7sg6thXKJcZgkBeRMti9EPLpzva8179unFktaJikls7f5QgoBQLsa936mS8NdMBMt3wJIeHXtS1iM
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 8 Jan 2020 00:33:11 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47308 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgAHFdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 00:33:11 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0085WxXx099545;
+        Tue, 7 Jan 2020 23:32:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578461579;
+        bh=keL4LWQIupCJg61mpAvGVJuErN5R0nhMOq3fzzLzC4o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=u+Pu69gIiJ/hwHWNHI8SeHHO4V5yf0FMv088Qty0DiZSjYNMpsRctPy97zPPOfWj+
+         mUrnvS5OJUA3r/5RfIqlX7118w+Pia5L97WwCxypojX27DFKWdnefVfFIpBdNKCHaa
+         gMDjwq1b7UOA6SP9u9jl96tf31a6L477cS2dTTbE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0085WxKt000705
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 23:32:59 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 23:32:59 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 23:32:59 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0085Wtx9127819;
+        Tue, 7 Jan 2020 23:32:56 -0600
+Subject: Re: [PATCH v2 01/14] dt-bindings: PCI: cadence: Add PCIe RC/EP DT
+ schema for Cadence PCIe
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200106102058.19183-1-kishon@ti.com>
+ <20200106102058.19183-2-kishon@ti.com> <20200108034314.GA5412@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <3e2bfa1b-ff9e-93a0-a6b9-7985e0a76bf0@ti.com>
+Date:   Wed, 8 Jan 2020 11:05:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: moxa.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 856f3a51-4518-4232-19fd-08d793fb548b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 05:26:35.8572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1FAUhKGyl8ORk88fLMSZMAMvclYFKQTjU9RatYWGO8FvOp5xhgdpECkwg/XI2B/SU1OpLwr6f0Vr8q79NAqayQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB1972
+In-Reply-To: <20200108034314.GA5412@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4g5pa8IDIwMjDlubQx5pyI
-N+aXpSDpgLHkuowg5LiL5Y2IMTA6MTflr6vpgZPvvJoNCj4NCj4gT24gVHVlLCBKYW4gNywgMjAy
-MCBhdCAxMToxMyBBTSBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+IHdyb3RlOg0KPiA+DQo+
-ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2dpYW5mYXIu
-YyANCj4gPiA+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2dpYW5mYXIuYw0KPiA+
-ID4gaW5kZXggNzI4NjhhMjhiNjIxLi5hYjRlNDUxOTlkZjkgMTAwNjQ0DQo+ID4gPiAtLS0gYS9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZhci5jDQo+ID4gPiArKysgYi9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZhci5jDQo+ID4gPiBAQCAtODMzLDYgKzgz
-Myw3IEBAIHN0YXRpYyBpbnQgZ2Zhcl9vZl9pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgDQo+
-ID4gPiAqb2ZkZXYsIHN0cnVjdCBuZXRfZGV2aWNlICoqcGRldikNCj4gPiA+DQo+ID4gPiAgICAg
-ICAvKiBGaW5kIHRoZSBUQkkgUEhZLiAgSWYgaXQncyBub3QgdGhlcmUsIHdlIGRvbid0IHN1cHBv
-cnQgU0dNSUkgKi8NCj4gPiA+ICAgICAgIHByaXYtPnRiaV9ub2RlID0gb2ZfcGFyc2VfcGhhbmRs
-ZShucCwgInRiaS1oYW5kbGUiLCAwKTsNCj4gPiA+ICsgICAgIHByaXYtPmRtYV9lbmRpYW5fbGUg
-PSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsIA0KPiA+ID4gKyAiZnNsLGRtYS1lbmRpYW4tbGUi
-KTsNCj4gPg0KPiA+IEhpIEpvaG5zb24NCj4gPg0KPiA+IFlvdSBuZWVkIHRvIGRvY3VtZW50IHRo
-aXMgbmV3IHByb3BlcnR5IGluIHRoZSBiaW5kaW5nLg0KDQpUaGFua3MgeXVvciByZW1pbmQsIEkn
-bGwgdGFrZSBjYXJlIG9mIGl0IGxhdGVyDQo+DQo+IFllcywgYnV0IHdoYXQgYWJvdXQgY2FsbGlu
-ZyBpdCAnbGl0dGxlLWVuZGlhbicgd2hpY2ggaXMgY29tbW9ubHkgdXNlZCANCj4gaW4gYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzeHh4IGRldmljZSB0cmVlcz8NCkl0IHNvdW5k
-cyBnb29kLCB1c2UgImRtYS1lbmRpYW4tbGUiIGJlY2F1c2UgaXQncyBmcm9tIGZyZWVzY2FsZSdz
-IFNESyBmb3IgYXJtICgzMmJpdCkuDQoNClRoYW5rcyB5b3VyIHN1Z2dlc3Rpb25zIQ0KDQpCZXN0
-IHJlZ2FyZHMsDQpKb2huc29uDQo=
+Hi Rob,
+
+On 08/01/20 9:13 AM, Rob Herring wrote:
+> On Mon, Jan 06, 2020 at 03:50:45PM +0530, Kishon Vijay Abraham I wrote:
+>> Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
+>> PCIe core library. Platforms using Cadence PCIe core can include the
+>> schemas added here in the platform specific schemas.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 20 ++++++++++++
+>>  .../bindings/pci/cdns-pcie-host.yaml          | 30 +++++++++++++++++
+>>  .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 +++++++++++++++++++
+>>  3 files changed, 82 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+> 
+> Need to remove the old files.
+> 
+> Note that I posted a conversion of Cadence host[1]. Yours goes further, 
+> but please compare and add anything mine has that yours doesn't.
+> 
+> [1] https://lore.kernel.org/linux-pci/20191231193903.15929-2-robh@kernel.org/
+
+Sure, I'll look at this.
+
+Recently we converted Cadence driver to a library since the same Cadence
+core can be used by multiple vendors. Here I'm trying to add the
+bindings for Cadence core which can be included in the platform specific
+schema.
+
+So the existing cdns,cdns-pcie-host.yaml which is a Cadence platform
+using Cadence core should include cdns-pcie-host.yaml.
+
+"[PATCH v2 10/14] dt-bindings: PCI: Add host mode dt-bindings for TI's
+J721E SoC" in this series includes "cdns-pcie-host.yaml" for TI platform
+using Cadence core.
+
+That's why in the schema added here you don't see the compatible since
+that will be added in platform specific schema.
+> 
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>> new file mode 100644
+>> index 000000000000..36aaae5931c3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>> @@ -0,0 +1,20 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +--
+>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence PCIe Endpoint
+>> +
+>> +maintainers:
+>> +  - Tom Joseph <tjoseph@cadence.com>
+>> +
+>> +allOf:
+>> +  - $ref: "cdns-pcie.yaml#"
+>> +
+>> +properties:
+>> +  max-functions:
+>> +    description: Maximum number of functions that can be configured (default 1)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint8
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>> new file mode 100644
+>> index 000000000000..78261bc4f0c5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
+>> @@ -0,0 +1,30 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence PCIe Host
+>> +
+>> +maintainers:
+>> +  - Tom Joseph <tjoseph@cadence.com>
+>> +
+>> +allOf:
+>> +  - $ref: "/schemas/pci/pci-bus.yaml#"
+>> +  - $ref: "cdns-pcie.yaml#"
+>> +
+>> +properties:
+>> +  vendor-id:
+>> +    description: The PCI vendor ID (16 bits, default is design dependent)
+>> +
+>> +  device-id:
+>> +    description: The PCI device ID (16 bits, default is design dependent)
+> 
+> While these got defined here as 16-bits, these should be fixed to 32-bit 
+> because they are established properties for a long time.
+> 
+>> +
+>> +  cdns,no-bar-match-nbits:
+>> +    description: Set into the no BAR match register to configure the number
+>> +      of least significant bits kept during inbound (PCIe -> AXI) address
+>> +      translations (default 32)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> What about compatible?
+> 
+>> +
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..497d3dc2e6f2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+>> @@ -0,0 +1,32 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence PCIe Core
+>> +
+>> +maintainers:
+>> +  - Tom Joseph <tjoseph@cadence.com>
+>> +
+>> +properties:
+>> +  max-link-speed:
+>> +    minimum: 1
+>> +    maximum: 3
+>> +
+>> +  num-lanes:
+>> +    minimum: 1
+>> +    maximum: 2
+> 
+> Needs a type.
+> 
+> The Cadence IP can't support x4, x8, or x16?
+
+I'll fix this. I assume these can be overwritten in platform specific
+schema files?
+
+Thanks
+Kishon
