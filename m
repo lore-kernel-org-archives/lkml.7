@@ -4,110 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCFCC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C997BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E298D20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963B3205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0Lm4QX0v"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="hooMOcE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgAHNHr (ORCPT
+        id S1727364AbgAHNJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:07:47 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39697 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgAHNHq (ORCPT
+        Wed, 8 Jan 2020 08:09:18 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39885 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgAHNJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:07:46 -0500
-Received: by mail-qk1-f194.google.com with SMTP id c16so2513042qko.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:07:44 -0800 (PST)
+        Wed, 8 Jan 2020 08:09:18 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c16so2517508qko.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:09:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=346qyklA3qDZU461htPaEWZ7KyGFJdr1eYBTQuGWWLw=;
-        b=0Lm4QX0vpXdy7jqJW18R2UNFaGBSA9YgyYd+W+YjisYEd5UfNh+waopNJhq8pEmVpJ
-         ZYk1woK3VfrEAL9gXGysYX7hbrFdMs1osMLatiaDV+AyNIr0SDv0BsA/ltyqe9R7Hf/f
-         U1gA7P/kR4cteDWdVIEzd+j/G742RCNYbeTmMBzJG8TTH1EdpF7ZzrinMJEnZ+wnRgxj
-         Hb9E9Q4Hxsxx2TdUGf3h6Ph+pDAiVFeAqHc1oS8HVX2sJoraWkA3FLQfQivgQz/KliwB
-         7hIy4XK/AE+dxJ90I5hwyPMuqVvSxS8sMik7urKy88WgJe7zCX14ppu1LPNnL10VLOZG
-         Skaw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=T1UOaKySeFJ0zKePKXqAI7V9b9QgvGnZL/Q3FtxcxRw=;
+        b=hooMOcE6opMbVdDJ7nmkFDN8Zp6CmRzc5r5pztAQmfT0T6Q1tdPnQ46RLDwiG02Day
+         Glb6+fWlPHqMGE9GXQWAQomFlk35zPedNaVupcNKQiNjMJXS4GUA/zJybWpFVHH9EkVZ
+         ixPvXakHhWguyTMogEGL06x+MLJtSPzn0mPEzm4240ZDFOvhNWXEK/XwxfZqgJz4G6gn
+         MlvgbeGwRwSubDfzRhlgQrFwi64Bhyo45xPY6tHjw9N8RDxY57R4G3aeOW/v7JfFqicR
+         pAbN58Z5EtHvqqLRPKnlkje8EyXgzlNToN4DZjPiMXLCH/G5TR3xSJDJv4JZMqrEACj3
+         V3rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=346qyklA3qDZU461htPaEWZ7KyGFJdr1eYBTQuGWWLw=;
-        b=EDzL8xI8qDayHuq9lkm6hoo8BBnupZ+0BaLH/oPOU+Tgspn8KoD5iHMlJ3O3rw/Xsw
-         UcBRAJN2NfV+/JmAEUIg6nSWWhyhLm4RyMC1EwLqXnIeTMLIHmVVWF/93CDu5cuH1Nvd
-         /Fdye1Sb+xO1s+rDYr74s388vwy/1h1eLtT/ETNlfwcOsZVRKD4bXVfXG1VoMN8j1QQC
-         Gg0fjfa7K49eM+EcnB4tqfMakXI1mK/fygvx2olpAzeYlJHJB9dpsgwLz1CQeSWVJBDQ
-         fO4R3X8XT6yAKobCfqskKUb7N1HWXUlQHisU3RJKbhJCPurrUaE/mvmmnqCwD1NpI+Z+
-         fuxQ==
-X-Gm-Message-State: APjAAAWCf4AsnG+XnEKkChT+8G8YYdt0oVjjC2LvAXksbVWlXR436QY2
-        VxAQXjxRnIof9fhzXWW2jZXTAMTUXCZKF38nreBFTBCW
-X-Google-Smtp-Source: APXvYqzdFYF4a74FYgNRam7LkkWroayazu4aWmKYjGmCth3u04VbHgmVr8XLcphpCceIy6E73inH7J9E9Qk/OsqsQg4=
-X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr3814511qkl.263.1578488864477;
- Wed, 08 Jan 2020 05:07:44 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=T1UOaKySeFJ0zKePKXqAI7V9b9QgvGnZL/Q3FtxcxRw=;
+        b=fI+VrrqGTVDzxzL/v0x6pC4VQU8ZqPydUgL7E7eil/a64F8wUDVNoWybvmlZKC/KY7
+         ETthRTPNUNWLFgVRX5siF8YXLCvpGMXfyksH524UHBOgxFNNS7iodG3YRotmLv2VHq6u
+         kjVTgvuQCEJL0GAKqwNDzIFXSXP8Kn5skeQ/KFdzhecu2x28PF1q/BmCmSiSI9/D0Uzz
+         irb30urty684a4xkC+CGL/slPZ2z0FjPoHCYWHDv2sc0jxdchMX+UTO3f7XKXQ09kVyo
+         d3MDj34qM2H6hBizYC3L+AG69YOviDbjxjW+ifHq0yY3QlXXrAOJx+bQjLMFS56mc4l5
+         aEqg==
+X-Gm-Message-State: APjAAAWQbEIgUULvQfG6mmJ0N+lnlJo1J309ZjJElT+RtMZN5+/PPBQB
+        Iq/oxk3UGLU4QLGKorCVgKMVRw==
+X-Google-Smtp-Source: APXvYqzc8kfgPN9AN9MgcitXkpdCWilW0meQ9p/ArvJ2UJspNn9/Jjt6TwseF4fe6UUI8HtF11Z8UA==
+X-Received: by 2002:a37:66c2:: with SMTP id a185mr4060253qkc.211.1578488957243;
+        Wed, 08 Jan 2020 05:09:17 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id s11sm1325512qkg.99.2020.01.08.05.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 05:09:17 -0800 (PST)
+Date:   Wed, 8 Jan 2020 05:09:12 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <simon.horman@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        oss-drivers@netronome.com, Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] netronome: fix ipv6 link error
+Message-ID: <20200108050912.6a07008b@cakuba.netronome.com>
+In-Reply-To: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
+References: <20200107200659.3538375-1-arnd@arndb.de>
+        <20200107124417.5239a6cf@cakuba.netronome.com>
+        <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20200108121117.45060-1-yuehaibing@huawei.com>
-In-Reply-To: <20200108121117.45060-1-yuehaibing@huawei.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 8 Jan 2020 14:07:33 +0100
-Message-ID: <CAMpxmJWwcL9e6so=XrYmpjW1DF=7Vnq4UMvWE+j+sTbnXjd6Ww@mail.gmail.com>
-Subject: Re: [PATCH -next] gpiolib: remove set but not used variable 'config'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 8 sty 2020 o 13:11 YueHaibing <yuehaibing@huawei.com> napisa=C5=
-=82(a):
->
-> drivers/gpio/gpiolib.c: In function gpio_set_config:
-> drivers/gpio/gpiolib.c:3053:16: warning:
->  variable config set but not used [-Wunused-but-set-variable]
->
-> commit d90f36851d65 ("gpiolib: have a single place
-> of calling set_config()") left behind this unused variable.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpio/gpiolib.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 9fd2dfb..aabf801 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3050,7 +3050,6 @@ static int gpio_do_set_config(struct gpio_chip *gc,=
- unsigned int offset,
->  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->                            enum pin_config_param mode)
->  {
-> -       unsigned long config;
->         unsigned arg;
->
->         switch (mode) {
-> @@ -3064,7 +3063,6 @@ static int gpio_set_config(struct gpio_chip *gc, un=
-signed int offset,
->                 arg =3D 0;
->         }
->
-> -       config =3D PIN_CONF_PACKED(mode, arg);
->         return gpio_do_set_config(gc, offset, mode);
->  }
->
+On Tue, 7 Jan 2020 23:01:50 +0100, Arnd Bergmann wrote:
+> On Tue, Jan 7, 2020 at 9:44 PM Jakub Kicinski wrote:
+> > On Tue,  7 Jan 2020 21:06:40 +0100, Arnd Bergmann wrote:  
+> > > When the driver is built-in but ipv6 is a module, the flower
+> > > support produces a link error:
+> > >
+> > > drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.o: In function `nfp_tunnel_keep_alive_v6':
+> > > tunnel_conf.c:(.text+0x2aa8): undefined reference to `nd_tbl'  
+> >
+> > Damn, I guess the v2 of that patch set did not solve _all_ v6 linking
+> > issues :/ Thanks for the patch.
+> >  
+> > > Add a Kconfig dependency to avoid that configuration.
+> > >
+> > > Fixes: 9ea9bfa12240 ("nfp: flower: support ipv6 tunnel keep-alive messages from fw")
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > >  drivers/net/ethernet/netronome/Kconfig | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/net/ethernet/netronome/Kconfig b/drivers/net/ethernet/netronome/Kconfig
+> > > index bac5be4d4f43..dcb02ce28460 100644
+> > > --- a/drivers/net/ethernet/netronome/Kconfig
+> > > +++ b/drivers/net/ethernet/netronome/Kconfig
+> > > @@ -31,6 +31,7 @@ config NFP_APP_FLOWER
+> > >       bool "NFP4000/NFP6000 TC Flower offload support"
+> > >       depends on NFP
+> > >       depends on NET_SWITCHDEV
+> > > +     depends on IPV6 != m || NFP =m  
+> >
+> > Could we perhaps do the more standard:
+> >
+> >         depends on IPV6 || IPV6=n  
+> 
+> That would have to be on CONFIG_NFP instead of CONFIG_NFP_APP_FLOWER
+> then, making the entire driver a module if IPV6=m but always allowing
+> CONFIG_NFP_APP_FLOWER.
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Ah, indeed.
 
-Thanks!
+> > The whitespace around = and != seems a little random as is..  
+> 
+> Yep, my mistake. I can send a fixed version, please let me know which
+> version you want, or fix it up yourself if you find that easier.
+
+Adding the dependency just to NFP_APP_FLOWER seems clean, please just
+fix the whitespace and feel free to add my Acked-by to v2.
