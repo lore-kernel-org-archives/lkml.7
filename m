@@ -2,51 +2,51 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C5EC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F92C33CA3
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB07206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67E8206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIyAOmd8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cj8ARzs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgAHM1a (ORCPT
+        id S1727845AbgAHM3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:27:30 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52980 "EHLO
+        Wed, 8 Jan 2020 07:29:16 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27305 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727795AbgAHM13 (ORCPT
+        by vger.kernel.org with ESMTP id S1727400AbgAHM3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:27:29 -0500
+        Wed, 8 Jan 2020 07:29:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578486447;
+        s=mimecast20190719; t=1578486553;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=YcX/h1ODx2t0WC6vtgv1THC5OeL0byNIZX5cdZODUBE=;
-        b=NIyAOmd8rLfcOaD2Clx2Hn6EPfuzjb/JT5KietrHvXsbfw9UZQ9tNKEm9GIP/UvHT+O05p
-        zEWv/+pbGVLfTrvw/IXSe7aXVr7MCmpaJd+Isb7xLLA1jUNWpJIOXCP4M1vIMpfMRQFS/H
-        0GSUFJ+ui9VPNb9/rlnJ9ONMhT674DY=
+        bh=Zzh8C5n/Y78S4sfQYt8stUbbwXaAXVpTXCioKFsbbKo=;
+        b=Cj8ARzs6uENInHgmgj+GFOSAZi5k2ZOYIxSgYUEvVEHpFgmf9hshRdAwiujJSpDEbCu7QP
+        YypvgkA29dSS0uhEGU+nc6ci3D6uI3/47ThYIDM55atmg0EuvQSLqRZ7/i8jUe54hCYLWg
+        cb1ke6Jt8eDNnziDQmSGaEeTxJdxrHk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71-gQTG7dlrPFaZcQHmyglyFA-1; Wed, 08 Jan 2020 07:27:24 -0500
-X-MC-Unique: gQTG7dlrPFaZcQHmyglyFA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-209-nHM-ZjxvNtqh74pyY1jG8Q-1; Wed, 08 Jan 2020 07:29:07 -0500
+X-MC-Unique: nHM-ZjxvNtqh74pyY1jG8Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4FDD800D53;
-        Wed,  8 Jan 2020 12:27:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65FFF107ACC4;
+        Wed,  8 Jan 2020 12:29:04 +0000 (UTC)
 Received: from [10.36.117.90] (ovpn-117-90.ams2.redhat.com [10.36.117.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 38C3C19C58;
-        Wed,  8 Jan 2020 12:27:15 +0000 (UTC)
-Subject: Re: [PATCH v2 1/8] mm/memory_hotplug: Drop the flags field from
- struct mhp_restrictions
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E0F6A7C37B;
+        Wed,  8 Jan 2020 12:28:55 +0000 (UTC)
+Subject: Re: [PATCH v2 2/8] mm/memory_hotplug: Rename mhp_restrictions to
+ mhp_modifiers
 To:     Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -66,7 +66,7 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Eric Badger <ebadger@gigaio.com>
 References: <20200107205959.7575-1-logang@deltatee.com>
- <20200107205959.7575-2-logang@deltatee.com>
+ <20200107205959.7575-3-logang@deltatee.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -112,51 +112,29 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <c3c3c475-f828-13f7-b5c9-f691ef0fe1ff@redhat.com>
-Date:   Wed, 8 Jan 2020 13:27:14 +0100
+Message-ID: <3e432695-e3a9-2aae-e9f5-1b6454886c06@redhat.com>
+Date:   Wed, 8 Jan 2020 13:28:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200107205959.7575-2-logang@deltatee.com>
+In-Reply-To: <20200107205959.7575-3-logang@deltatee.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 07.01.20 21:59, Logan Gunthorpe wrote:
-> This variable is not used anywhere and should therefore be removed
-> from the structure.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  include/linux/memory_hotplug.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ba0dca6aac6e..e47a29761088 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -55,11 +55,9 @@ enum {
->  
->  /*
->   * Restrictions for the memory hotplug:
-> - * flags:  MHP_ flags
->   * altmap: alternative allocator for memmap array
->   */
->  struct mhp_restrictions {
-> -	unsigned long flags;
->  	struct vmem_altmap *altmap;
->  };
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_modifiers.
 
-We wanted to use that for the "vmemmap on added memory" config knob. But
-that might still take some time and we might actually realize it using
-the altmap instead (hopefully :) ).
+I wonder if something like "mhp_params" would be even better. It's
+essentially just a way to avoid changing call chains rough-out all archs
+whenever we want to add a new parameter.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
