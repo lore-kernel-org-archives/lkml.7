@@ -2,129 +2,183 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F5C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9AC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0223A2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05C120720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gIzYSGyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAHQFp (ORCPT
+        id S1729042AbgAHQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:05:45 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:48453 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgAHQFo (ORCPT
+        Wed, 8 Jan 2020 11:06:06 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40438 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgAHQGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:05:44 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MEUaQ-1iwJWG3s66-00G4ZF; Wed, 08 Jan 2020 17:05:43 +0100
-Received: by mail-qt1-f180.google.com with SMTP id w30so1985478qtd.12;
-        Wed, 08 Jan 2020 08:05:42 -0800 (PST)
-X-Gm-Message-State: APjAAAWlBzYgEylMmXpCYKzZmqEVpUf15RLp/cydgBVsQ16MUfKOntfu
-        7tbB/T2R1DyJll8SqQpSg1Js93g/dUOQOyT8OQY=
-X-Google-Smtp-Source: APXvYqzqWQEeHE7TaWNtzpBpnp1E3rb+fs8wMFW5zsPq4jwo54iNI9QBbVdA5oc0dSdNHlxIFwVe6vphV190F0C143E=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr4188797qtr.7.1578499541624;
- Wed, 08 Jan 2020 08:05:41 -0800 (PST)
+        Wed, 8 Jan 2020 11:06:06 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c17so3082696qkg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:06:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dHVy/bdGgZG0dgo/A6xJ4fb+c5SsUeYQ5V/nRwaXsR8=;
+        b=gIzYSGyFOm/9vezNwEfG3UhvQcxnfPpDvcyH9PS3eCoL5GgNPJwBj0B5jViIbSD1wx
+         20Ad85YOsFF/oVehT82Fwe67ffRzl80vtLUgib1Zv/SrUWo4O0T0tqyDoBYoBdymi2tn
+         4h/mocvUgJ6oNKsBi2FQFD726DicXF5efWUuDb7VQp6ULa+GFISmIr/YFy70VdM+tguo
+         kPoxjJm4ZkFp6irwJ4gh7PNgxT79s5m143V55hPQMoRzyWTpVpJVi0+pqAGbgJGXjOGh
+         3zrxkmAg2MsWDKqTzcm35s7hSz32g8DeF3n07UJkbSwby+l+g0a377eiWJMTeahXkTyw
+         lsCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dHVy/bdGgZG0dgo/A6xJ4fb+c5SsUeYQ5V/nRwaXsR8=;
+        b=qda40gPQ1Qn/0aZmIMl4kJvRU7HvsNw72l9pOyVqo2+x0l1c4eH9uXfZcz5bjj8aRS
+         VZjn8ryum1mBnXG47LlN9LqXkeqKZYrtzY2Skgb7p3TQSqi5uq0VmBcb/U9ZtrXUgfra
+         yRtf3sEx29HwFQAmLl9mCzK9xhCXDLDZgkdlAlReLFAjRrzHwZEaNxol1wVOXxD15uWD
+         Ezm4Iwee98YivFP1J0VmXhbFhYoTkJmx5mGo8+IojRnQiW23RnrBc4uvGSeqnes/yxRy
+         FimWFi5iABwf/h8g5XvvcmDyMMrIEjgNZDMvwmc3eIjVhZvWhtMeTmQmNW2viAYf+Dsu
+         BymQ==
+X-Gm-Message-State: APjAAAXPddYfEjlij/Idq2lVjVi5fC8UUkcuQA8UHz2tFRcl2wLPCECY
+        zAXjGDbuKEjKXLDeXwtksN+9yXjl3UIIl+vHcUGVDQ==
+X-Google-Smtp-Source: APXvYqwu8vcwV28qqkCiKOxLYe7TONUIvZEDdzkJ4P+jYRYuHgTF/4k0P0SBjS4B+/GNrAPa4IWS6FSlZR6dvPujKME=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr4903928qkg.43.1578499564696;
+ Wed, 08 Jan 2020 08:06:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107210256.2426176-1-arnd@arndb.de> <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
-In-Reply-To: <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jan 2020 17:05:25 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0qb3fE1D4o1wYMVVets8CtbTpMRg1hUJF1wW+oC1GJjg@mail.gmail.com>
-Message-ID: <CAK8P3a0qb3fE1D4o1wYMVVets8CtbTpMRg1hUJF1wW+oC1GJjg@mail.gmail.com>
-Subject: Re: [PATCH] rbd: work around -Wuninitialized warning
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Sage Weil <sage@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Jason Dillaman <dillaman@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <00000000000002902c059ba30b4b@google.com>
+In-Reply-To: <00000000000002902c059ba30b4b@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 8 Jan 2020 17:05:53 +0100
+Message-ID: <CACT4Y+aHL0fCnREJwk7JKWo14tFM5dKh1N9UzG6=mdxkFvUL+w@mail.gmail.com>
+Subject: Re: general protection fault in hash_ipportip6_uadt
+To:     syzbot <syzbot+19df0457b3f8383e02bd@syzkaller.appspotmail.com>
+Cc:     coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        jeremy@azazel.net, kadlec@netfilter.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:onrL9DaFWfOC/Ad3SvMt2oMgkY5ejSs/ewdb6kHw2Fzj/WdTHGS
- 8fUCcYbiNmmFizt4rxo24Za9n0LxNFWFRkAHDheFc00XCaMm4zzNBm61spWfkTrRv+0S1bG
- +eCbzi3OGnch5XvrMgZX5ekH64dADY+iFDGdZvEAb7We2enFWiqN0wq2beCEaz8o9BKXO2D
- exKA4EB9ZtQMHeHYYDJ4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:quB0CnsP3xg=:Oht/pwgkURotru5YSxY3ge
- aRr5t/bdENbEJxZQx2y2kzCSYUCjB4rVS3dh5X2kMRh9fii/2cpTCBKJTRvP3SQkzBUbVBiBn
- BqxpWP6SweGZ5bDegdlmB+Pmx7s4OptZtmw9PfkHf+fyDbiEL00lfegwxiXlT34vI8ROVTFoo
- 2yyBMIQsV9DvzTC6R4KQoAPTIx2EaxQ1h1kbVCcWm/3EzfkRcQUriITMr2T/OvvARlndi0cx2
- Qb68q3vffEoFEQPuknhpkyqdUJz6OaEj5ygyFiEOjeV1M8ABBxh9XOQDratB1fkFtxhWCGUy1
- B19YbUnj8KT4b3PJJsS5PpEI7XMVHCaOMu7VBeGwvHpvJiuvGXOCtYy3Behsgl5awDsLtJNvM
- AXAX3j+ZplNUZH/KqDr04l3ASql6500MrQkfXJjjcjMw1ECix96imJTuMIIZ4Q5BbCQHKJEV/
- d9gW1G5zgWa/K07XgBNXu3sPXDFk9plu9PvfL007Gv0I2y+7EEJf0bem/9S3v5yfVVQzZrCJY
- mETh1MEt7roXcPN5c/TjVw98f1o1/0AHV8WRmvrCnpO2v+9AyEw7hnpB6ArupMNurUd38gFUu
- VG9roqPRPXhSt/sl/NdKm5UBXImqkKA93YERbfSZFQsPIHVwP/2z2Y8lYHeZEz+wGhGDUaVu0
- G49ZO96GhfmLj8EU0gkUe2UUwmB9SH2i+IGUVK4mxwqNohj59pE5lZVTCAari77+x1LaAQBaG
- 9vo8bcyPvzr6IttubJCyWBdJsO0N/V2Tk/7bq2bHyxKJ6X83uqgAeActwodjwq0dFLjIHzvHi
- jkbL14qmhPoaqDosnbbviAX1/D2FFPrgettUS/XlS98ViPs6/cSBNUixNSAW9y4eMFw/vKy3r
- MCHgaqCj2WISpbZoYB6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 4:31 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+On Wed, Jan 8, 2020 at 5:04 PM syzbot
+<syzbot+19df0457b3f8383e02bd@syzkaller.appspotmail.com> wrote:
 >
-> On Tue, Jan 7, 2020 at 10:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > gcc -O3 warns about a dummy variable that is passed
-> > down into rbd_img_fill_nodata without being initialized:
-> >
-> > drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
-> > drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
-> >   fctx->iter = *fctx->pos;
-> >
-> > Since this is a dummy, I assume the warning is harmless, but
-> > it's better to initialize it anyway and avoid the warning.
-> >
-> > Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/block/rbd.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> > index 29be02838b67..070edc5983df 100644
-> > --- a/drivers/block/rbd.c
-> > +++ b/drivers/block/rbd.c
-> > @@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
-> >                                u64 off, u64 len)
-> >  {
-> >         struct ceph_file_extent ex = { off, len };
-> > -       union rbd_img_fill_iter dummy;
-> > +       union rbd_img_fill_iter dummy = {};
-> >         struct rbd_img_fill_ctx fctx = {
-> >                 .pos_type = OBJ_REQUEST_NODATA,
-> >                 .pos = &dummy,
+> Hello,
 >
-> Applied, but slightly confused.  Wasn't selecting -O3/s/etc supposed to
-> automatically disable -Wmaybe-uninitialized via Kconfig?
+> syzbot found the following crash on:
+>
+> HEAD commit:    ae608821 Merge tag 'trace-v5.5-rc5' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17a8e885e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
+> dashboard link: https://syzkaller.appspot.com/bug?extid=19df0457b3f8383e02bd
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ccdf51e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123dd5fee00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+19df0457b3f8383e02bd@syzkaller.appspotmail.com
 
-Oh, that's right. I have a couple of patches in my randconfig tree that
-completely rework the way that the warning options are handled and
-that accidentally ignored CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED,
-so it's won't actually happen on linux-next right now, just on my kernel.
+#syz dup: general protection fault in hash_ipportnet4_uadt
 
-However, given that -O3 did not actually introduce too many false
-positives here but did find some actual uninitialized variables, we should
-probably have it turned on anyway.
-
-A lot of these false positives seem to happen whenever gcc can partially
-understand how a variable is used, but not enough to see that it's ok.
-With higher optimization levels, this happens less often than with the
-lower levels as it inlines more aggressively and correctly determines
-uses to be safe that were false-positives earlier.
-
-I'm fairly sure that the output at -Os still won't be helpful as that would
-mostly show up cases that -O2 has found to be safe rather than those
-that -O2 decided not to warn about because of lack of information.
-
-      Arnd
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 9515 Comm: syz-executor397 Not tainted 5.5.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:hash_ipportip6_uadt+0x226/0xa00
+> net/netfilter/ipset/ip_set_hash_ipportip.c:285
+> Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 14 07 00 00 4c 89
+> ea 45 8b 76 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c
+> 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 d9
+> RSP: 0018:ffffc90001d07170 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffffc90001d07320 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff867d0153 RDI: ffff888094d55430
+> RBP: ffffc90001d072b8 R08: 0000000000000000 R09: 0000000000000000
+> R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffff8880a6f34c00
+> R13: 0000000000000000 R14: 0000000004000000 R15: 0000000000000002
+> FS:  0000000001348880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000180 CR3: 00000000a2c54000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
+>   nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+>   netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+>   nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>   netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+>   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+>   sock_sendmsg_nosec net/socket.c:639 [inline]
+>   sock_sendmsg+0xd7/0x130 net/socket.c:659
+>   ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+>   ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+>   __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+>   __do_sys_sendmsg net/socket.c:2426 [inline]
+>   __se_sys_sendmsg net/socket.c:2424 [inline]
+>   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x441469
+> Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffe390fa778 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441469
+> RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+> RBP: 00000000000166ea R08: 00000000004002c8 R09: 00000000004002c8
+> R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402290
+> R13: 0000000000402320 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 12a892406cf2adb8 ]---
+> RIP: 0010:hash_ipportip6_uadt+0x226/0xa00
+> net/netfilter/ipset/ip_set_hash_ipportip.c:285
+> Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 14 07 00 00 4c 89
+> ea 45 8b 76 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c
+> 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 d9
+> RSP: 0018:ffffc90001d07170 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffffc90001d07320 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff867d0153 RDI: ffff888094d55430
+> RBP: ffffc90001d072b8 R08: 0000000000000000 R09: 0000000000000000
+> R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffff8880a6f34c00
+> R13: 0000000000000000 R14: 0000000004000000 R15: 0000000000000002
+> FS:  0000000001348880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000180 CR3: 00000000a2c54000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000002902c059ba30b4b%40google.com.
