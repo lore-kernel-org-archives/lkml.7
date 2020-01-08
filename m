@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91661C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340BFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D18F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1402E20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgAHLnV (ORCPT
+        id S1728101AbgAHLnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:43:21 -0500
-Received: from mga09.intel.com ([134.134.136.24]:62291 "EHLO mga09.intel.com"
+        Wed, 8 Jan 2020 06:43:24 -0500
+Received: from mga17.intel.com ([192.55.52.151]:51036 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbgAHLmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727610AbgAHLmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 06:42:16 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:15 -0800
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="422891936"
+   d="scan'208";a="215927348"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 03:42:11 -0800
+  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id AFAC9543; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id E73A95C5; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 18/36] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
-Date:   Wed,  8 Jan 2020 14:41:43 +0300
-Message-Id: <20200108114201.27908-19-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 23/36] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+Date:   Wed,  8 Jan 2020 14:41:48 +0300
+Message-Id: <20200108114201.27908-24-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,60 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is not called outside of intel_pmc_ipc.c so we can make it
-static instead.
+There is no point including headers that are not needed in the driver so
+drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 9e7adcdbe031..3b2e8b461520 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read(u32 offset, u32 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- int intel_pmc_gcr_write(u32 offset, u32 data);
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
- 
- #else
- 
-@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
- 	return -EINVAL;
- }
- 
--static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
--{
--	return -EINVAL;
--}
--
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 5c1da2bb1435..9229c7a16536 100644
+index 83b106f66fa6..8527327d88c7 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-  *
-  * Return:	negative value on error or 0 on success.
+@@ -12,23 +12,13 @@
   */
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- {
- 	u32 new_val;
- 	int ret = 0;
-@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	spin_unlock(&ipcdev.gcr_lock);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
  
- static int update_no_reboot_bit(void *priv, bool set)
- {
+ #include <linux/acpi.h>
+-#include <linux/atomic.h>
+-#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+-#include <linux/pm_qos.h>
+-#include <linux/sched.h>
+-#include <linux/spinlock.h>
+-#include <linux/suspend.h>
+ 
+ #include <asm/intel_pmc_ipc.h>
+ 
 -- 
 2.24.1
 
