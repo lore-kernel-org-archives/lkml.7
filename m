@@ -2,80 +2,80 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B1FC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FF0C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A26120705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578507807;
-	bh=z5h2BCAJYT6Nmaz2VIY5if8GIhM340+Nbv2b4nnrgN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SgtQQZqEyyTmlRRQkuRQA22rglCX5b5DrR053Q8fxy3M47L1RBHsI3iJleolKZmY3
-	 jjUMyWf6ioHph7zkTBKwyvy87lo50SEK8YnXCGtZAQgeAOZBQZRxUOO6UXZQvbCVaq
-	 x51xRuE66Lw3YvqN5Ax9EnaYKRrNzKsZRzIvKlbM=
+	by mail.kernel.org (Postfix) with ESMTP id C570420692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgAHSX0 (ORCPT
+        id S1730210AbgAHSYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:23:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50924 "EHLO mail.kernel.org"
+        Wed, 8 Jan 2020 13:24:32 -0500
+Received: from namei.org ([65.99.196.166]:56128 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbgAHSX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:23:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F47B20720;
-        Wed,  8 Jan 2020 18:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578507806;
-        bh=z5h2BCAJYT6Nmaz2VIY5if8GIhM340+Nbv2b4nnrgN0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EB8UhSLBy6nn1eq6bDkAyFfKlWlVbONxEa7OsF1RlbSASr5VTnzRnHdd6xvlHeO2f
-         eRpq+8TiNOf+VehEXR55HB5KDYkfZHlExEhbonVX6c1ypnEvqm+pSX4AO+HclAHmVo
-         PVfe5LOVxNpEQQg82gDAsrm0azeYhtLr22lhzYu0=
-Date:   Wed, 8 Jan 2020 19:23:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
-Message-ID: <20200108182323.GC2547623@kroah.com>
-References: <20200107205332.984228665@linuxfoundation.org>
- <20200108154418.GC28993@roeck-us.net>
+        id S1727169AbgAHSYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:24:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 008IO3Lw026916;
+        Wed, 8 Jan 2020 18:24:03 GMT
+Date:   Thu, 9 Jan 2020 05:24:03 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v1 11/13] tools/libbpf: Add
+ bpf_program__attach_lsm
+In-Reply-To: <20191220154208.15895-12-kpsingh@chromium.org>
+Message-ID: <alpine.LRH.2.21.2001090523480.9683@namei.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-12-kpsingh@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108154418.GC28993@roeck-us.net>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 07:44:18AM -0800, Guenter Roeck wrote:
-> On Tue, Jan 07, 2020 at 09:52:00PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.9 release.
-> > There are 191 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> For v5.4.8-191-gdd269ce619cb:
-> 
-> Build results:
-> 	total: 158 pass: 158 fail: 0
-> Qemu test results:
-> 	total: 385 pass: 385 fail: 0
+On Fri, 20 Dec 2019, KP Singh wrote:
 
-Great, thanks for testing all of these and letting me know.
+> From: KP Singh <kpsingh@google.com>
+> 
+> Add functionality in libbpf to attach eBPF program to LSM hooks.
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-greg k-h
+
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+
+
+-- 
+James Morris
+<jmorris@namei.org>
+
