@@ -2,101 +2,102 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A101BC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F5C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EDD20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900A320643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wz+DWmer"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="mE4ElWaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgAHONB (ORCPT
+        id S1728815AbgAHONE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:13:01 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:32861 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgAHONB (ORCPT
+        Wed, 8 Jan 2020 09:13:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33258 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgAHONE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:13:01 -0500
-Received: by mail-pg1-f173.google.com with SMTP id 6so1666178pgk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:12:59 -0800 (PST)
+        Wed, 8 Jan 2020 09:13:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so3596099wrq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:13:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JOI5BG860h0vH7yTQCyBsKUAeChUvKx+rCYmS5SLzkw=;
-        b=Wz+DWmer/jGrH1ORaA/pti5FLZBhYiqAK4WhKgaqvtUdUv2uLo//D1fV3Oyi2aL1a5
-         2XBX+pUT01YDPfDSzhR5a27RYecvnf5OW7f8hFXXDvMEJd3vv62gi/0UCsANnd6vMWD/
-         aWkhvhafdi/SOJjyEPFjebG39px2lwEtmwP55tRyPASRjOSb2N1MYfwfk97XHBJiaCle
-         cX30ziwPyHf/50MR7leB0pDfYbyF8DkRL1zYIsqiplPcwl+STftfjXblGvuewwW1djXu
-         oEVbkghL0c+Il5f+4O1XUK57kEKl5w6L7HXxfBfe/Si9nYJ+XAJpXYNDzZRv96iQK9as
-         SSyg==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9A8G0j2tOPV5FCjdR09EsC+W3lv8v1DkkMAhtWMYjQk=;
+        b=mE4ElWaJnTCOvULGEugcZlrS0AvKFzP2T1ZQgv7If0CPJ+801EzSgzPzUuVxDsV1b3
+         encydKe/iOsHS+EWKTCPrnDN14rN2i7bdBgAXp4X+r+yNXWTHMj3dN9RFExBpJbyLGKH
+         valhGxo4sfUf2TwXxWTJlqYgRBeHQBOxxuRZyxut9SiraDesPGrs/p2Ejw/9KGSzB1tq
+         5IPun/7YCO5V5l24/dKQq8qF+soyBYBaLjng4RY62K2EYQS9M3x1yyf1JfZMcbqfkG5p
+         LkUbSdldHFH2y8ANSsA2IFBoqEm6iawPVNTd2Fyzzt9zGDYEO/+YP1QiawMx/9hzAeYV
+         UFvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JOI5BG860h0vH7yTQCyBsKUAeChUvKx+rCYmS5SLzkw=;
-        b=r6o/h8mfALYBTgRblItEou83VIdZ6O+8cTIcBrsregrL5FLeOGZMG19hHSQId6BEA1
-         Y+qxEPgfa7vQiiZUqwWxz+jDvI2rMsli+56zEZmbI++KOzE3pfPid9U+bzwju3MqYCAc
-         4UULZdK1mW3RfnHVHgbYXHyhub/HdTyCUGiMCoFgTYPgouYbCAH9Rt+3rGQPHG9hoDpf
-         kxXoBSINVFeJ6hJRo8Qtis4TOHMf6Z97caqTsCd34uP7wytP+x+JmFCwHASxf3AJGZmv
-         PZqlRmEAq5CtlHOxQv8+OLp9D/MO8NQqT95nFNRWV/+ijdKfvyBKHnWWP98iP/w3HDM/
-         i9fQ==
-X-Gm-Message-State: APjAAAVumb5GaeaZJ7vMYSNU/TbXVL81JXkmoneuZbgqLxnUsqGX576y
-        p40gb4CeoRYZq6RDfdTjtig/rnj/QhtjnzLS7bswMQ==
-X-Google-Smtp-Source: APXvYqxXYnISGYqhh65OlFyk1T5mmTwmrC7gpU1waoraE1dS7SopJkNW+C8vOA5O2JPuqb/lVeKX/DfbN3Cf5AUXb6A=
-X-Received: by 2002:aa7:961b:: with SMTP id q27mr5233188pfg.23.1578492779096;
- Wed, 08 Jan 2020 06:12:59 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=9A8G0j2tOPV5FCjdR09EsC+W3lv8v1DkkMAhtWMYjQk=;
+        b=S0l2L11wn+SARzpNqD/tiUrlHYzXr0C7nixCT8uaLZg+r/s3fkHVTLiz48Gh1g2fVi
+         IJXCZfdezGRibHVMJ6jethksNTBBMCGEahkoyx321iCedpdvGQDpWOgtKg3znP1CPlUe
+         Td1x60lVvmaC0rmUm/NuZMb8m2cmbEcp8a03GZLwCtk3ujyy+vuwnRzb6NQvh9WNKjYx
+         KSmQdKzDfJ/69hJmSreSmBIlw7xv3v65P4TpxY7cL5f50K6OjQNhlTJE/M8L0iNli7kz
+         hnhQktb1dOiuFSAu/2qMm3N0b1VsVv2axqQc2XhSPGTP+Ve/evsos5WFghWJCowWc51b
+         LgJA==
+X-Gm-Message-State: APjAAAUMSJ/i2g8bPKymJhakgjyNQo464ngYmpp6TI4xMwAp78+cgU6x
+        aSRW7RF2d1Q/dqBuhbTFsqZSO4sqp/c+8g==
+X-Google-Smtp-Source: APXvYqyIFWyUUSpkZjERC1rO3Tqh856VOJb1uBTzRVh1CenvSxFc2c3XK5jdEbkpMbkznGy8J5Vt1g==
+X-Received: by 2002:adf:dfd2:: with SMTP id q18mr4817516wrn.152.1578492782234;
+        Wed, 08 Jan 2020 06:13:02 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id q3sm4666671wrn.33.2020.01.08.06.13.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 06:13:01 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] microblaze: Fix message about compiled-in FDT location
+Date:   Wed,  8 Jan 2020 15:13:00 +0100
+Message-Id: <1a11e5cd73f6eb999f78981953d39773eb154040.1578492778.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <CAFd5g47-wi0duBAVxvevDKT7eb7WGT9JMFoKgCJQQSa0P0h9Jw@mail.gmail.com>
- <20200107134910.20347-1-sjpark@amazon.com>
-In-Reply-To: <20200107134910.20347-1-sjpark@amazon.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 8 Jan 2020 06:12:47 -0800
-Message-ID: <CAFd5g45Bo=7QXw8tX6MvFHwU6sCdX8UrjMk5erbByjPvujBw1g@mail.gmail.com>
-Subject: Re: Re: Re: What is the best way to compare an unsigned and a constant?
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sj38.park@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 5:49 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> On   Tue, 7 Jan 2020 05:35:21 -0800   Brendan Higgins <brendanhiggins@google.com> wrote:
->
-> > Sorry for the delay, I was on vacation. (I still am, but I was too ;-).)
->
-> Happy new year, Brendan :)
+%p is not working that early (don't know why)
 
-Happy New Year!
+Before this patch:
+Compiled-in FDT at (ptrval)
 
-> >
-> > On Tue, Jan 7, 2020 at 3:52 AM SeongJae Park <sjpark@amazon.com> wrote:
-> > >
-> > > On   Fri, 27 Dec 2019 13:52:27 +0100   Bernd Petrovitsch <bernd@petrovits=
-> > ch.priv.at> wrote:
+After:
+Compiled-in FDT at 0xc043c24c
 
-[...]
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-> Oh, right...  Removing the non-sense casting fixed the problem.  Thanks,
-> Brendan!
+ arch/microblaze/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No worries, I do that kind of stuff all the time :-)
+diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
+index 522a0c5d9c59..effed14eee06 100644
+--- a/arch/microblaze/kernel/setup.c
++++ b/arch/microblaze/kernel/setup.c
+@@ -138,7 +138,7 @@ void __init machine_early_init(const char *cmdline, unsigned int ram,
+ 	if (fdt)
+ 		pr_info("FDT at 0x%08x\n", fdt);
+ 	else
+-		pr_info("Compiled-in FDT at %p\n", _fdt_start);
++		pr_info("Compiled-in FDT at 0x%08x\n", (unsigned)&_fdt_start);
+ 
+ #ifdef CONFIG_MTD_UCLINUX
+ 	pr_info("Found romfs @ 0x%08x (0x%08x)\n",
+-- 
+2.24.0
 
-Does that fix everything? It looks like there was an encoding issue
-with your last email, so I wasn't sure if I got everything.
-
-Cheers!
