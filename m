@@ -2,172 +2,136 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52599C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D21AC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E96206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3158206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmuPlTPt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3TS9Ajq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgAHNpP (ORCPT
+        id S1728408AbgAHNpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:45:15 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41800 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAHNpO (ORCPT
+        Wed, 8 Jan 2020 08:45:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42958 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726186AbgAHNpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:45:14 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so3409634wrw.8;
-        Wed, 08 Jan 2020 05:45:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D3julrEGzeRkkk1/rWpHeUHdil17WhFSKQb41qCTkXU=;
-        b=CmuPlTPtnDvtw5DZ0Qf+AY+3PDSptqSxspoms4tKXIS/QIm9A/auA6Wxgw6pNAFKoj
-         td3GiUU5IqaNXopILg9AOXGMdZJBjW+mxw5FH/7rBL7o1vJUI3CaYhwZc54Nabakzoxm
-         PuwKFLdRoJbfMZgcP1nbKTTBGDVNKS+EpEvsjC++htmhdwlVOzgv14/W8HD1c+avG5zs
-         Bz+97NWA68uVKIO42UHin7omXsXG58hs9b5R3d0hEKuOtHul2VZfK9KXMAC5+y1VVWU7
-         DYLtTaL0yRzdEA6h133vRPEktQdes5CG2TgYgryZ4DnLXJ9Zdd9v00DQDOT4RZ6fNy4x
-         ox6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D3julrEGzeRkkk1/rWpHeUHdil17WhFSKQb41qCTkXU=;
-        b=dHK6jUjKKITCsPZyfAuYD8MXs21SqpA5QsbbOl9PJl1O9nMSGcQ6CqO3hWvyuIFSUh
-         hSoxAosHqonMm5MCDvT1ogqzOr17eEgIC01/2KGrXEXzTWQDrG2Cj8XYVbc20gy0yZxp
-         OWNTaYlZFOA122/CapRmyLCx+O4TXHUE3+/adrRL1mtbfM/VMpy9JaqMwfc72RlGsCTy
-         XoTGeXZCyPpBMwFPAASYDnCoGJwnXDFipuW5JX1jeASwi4BPSjHdAQkzNj1XqA3JZ8L7
-         DFMuh3MryvBfBNHaUXcCpwT/jb/8ONAXKk0kSf4EMI4/DfLuu3upo1uo7CfXevX1P7yN
-         4IVw==
-X-Gm-Message-State: APjAAAXXolDQpQRcxTZj1cbCEabt2PG9iy5+mZXRWLZMSvXbV2CBQPwF
-        DmLEF5U+QCm5g9GghIuknD8=
-X-Google-Smtp-Source: APXvYqydIJGVwu3LvXKaQvn9RIqZzW5YK/ku5ofvBCC4NqIuj7GDOYB1gSeRTb1/toIU8zIihyDBJg==
-X-Received: by 2002:a5d:484f:: with SMTP id n15mr4726450wrs.365.1578491111308;
-        Wed, 08 Jan 2020 05:45:11 -0800 (PST)
-Received: from [192.168.2.41] ([46.227.18.67])
-        by smtp.gmail.com with ESMTPSA id f127sm3821358wma.4.2020.01.08.05.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 05:45:10 -0800 (PST)
-Subject: Re: [PATCH] tty/serial: atmel: RS485 & ISO7816: wait for TXRDY before
- sending data
-To:     Codrin.Ciubotariu@microchip.com, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com
-References: <20200107111656.26308-1-codrin.ciubotariu@microchip.com>
-From:   Richard Genoud <richard.genoud@gmail.com>
-Message-ID: <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
-Date:   Wed, 8 Jan 2020 14:45:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jan 2020 08:45:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578491129;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dG3i7yuSZ3ug5whVQjbMvnjTRjDpvRHXJetJ3lD56EE=;
+        b=N3TS9AjqM8uIVPjkito7dT+fJXqhfHDfNRMjXlcPDta56ptjS5BXxqqRoPfNnHHgpVLHBB
+        lVjznGD4WDrSEerDJDaNuTuRa7+qh4qIRr0maXxUhqZ33KEM9XWnSWrZoiBq3MqKqtJCsi
+        XZzcZHW4kW2SzmE9wS8cTuZV97CpP44=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-D-99LmD1OlaSQU5Xry_7AQ-1; Wed, 08 Jan 2020 08:45:28 -0500
+X-MC-Unique: D-99LmD1OlaSQU5Xry_7AQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31D8E107ACC4;
+        Wed,  8 Jan 2020 13:45:27 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99FC47C34A;
+        Wed,  8 Jan 2020 13:45:22 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 14:45:20 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>
+Subject: Re: [PATCH v3 1/8] KVM: selftests: Create a demand paging test
+Message-ID: <20200108134520.zcrg6bx6urv4zxea@kamzik.brq.redhat.com>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-2-bgardon@google.com>
+ <20200107143334.GF219677@xz-x1>
+ <20200107145608.ogi34nkyh2abdgrq@kamzik.brq.redhat.com>
+ <CANgfPd8_ei0WdF7t73TPveCAh1ifSp9p1B6BOkL32A+499nz=Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200107111656.26308-1-codrin.ciubotariu@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANgfPd8_ei0WdF7t73TPveCAh1ifSp9p1B6BOkL32A+499nz=Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 07/01/2020 à 12:17, Codrin.Ciubotariu@microchip.com a écrit :
-> At this moment, TXEMPTY is checked before sending data on RS485 and ISO7816
-> modes. However, TXEMPTY is risen when FIFO (if used) or the Transmit Shift
-> Register are empty, even though TXRDY might be up and controller is able to
-> receive data. Since the controller sends data only when TXEMPTY is ready,
-> on RS485, when DMA is not used, the RTS pin is driven low after each byte.
-> With this patch, the characters will be transmitted when TXRDY is up and
-> so, RTS pin will remain high between bytes.
-> The performance improvement on RS485 is about 8% with a baudrate of 300.
+On Tue, Jan 07, 2020 at 10:41:55AM -0800, Ben Gardon wrote:
+> I'll try to implement Drew's suggestion re: syncing global variables
+> and then looking up CPU ID. If I can do that I'll upload another patch
+> set for s390, aarch64, and x86. If I can't I'll move this test to the
+> x86 subdirectory.
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-seems ok to me
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
+> I apologize for not responding to the comments on the previous version
+> of this patch set. I'm still learning the mailing list etiquette. In
+> the future is it preferable that I reply to those comments when I
+> upload a new patch set addressing them, or should I add a note in the
+> new patch emails about the comments I addressed in that update?
 
-NB: MS exchange has added some =3D and =20 here and there, but git am
-doesn't seems to be bothered by them.
-> ---
->  drivers/tty/serial/atmel_serial.c | 26 +++++++++++++++++++-------
->  1 file changed, 19 insertions(+), 7 deletions(-)
+It's typically enough to just create a changelog in the cover letter.
+E.g.
+
+v3:
+ - Added ...
+ - Dropped ...
+ - Fixed ...
+ - Picked up r-b's
+
+v2:
+ - Added ...
+ - Dropped ...
+ - Fixed ...
+ - Picked up r-b's
+
 > 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index a8dc8af83f39..19c8fb9faa36 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -313,7 +313,11 @@ static int atmel_config_rs485(struct uart_port *port,
->  
->  	if (rs485conf->flags & SER_RS485_ENABLED) {
->  		dev_dbg(port->dev, "Setting UART to RS485\n");
-> -		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
-> +		if (port->rs485.flags & SER_RS485_RX_DURING_TX)
-> +			atmel_port->tx_done_mask = ATMEL_US_TXRDY;
-> +		else
-> +			atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
-> +
->  		atmel_uart_writel(port, ATMEL_US_TTGR,
->  				  rs485conf->delay_rts_after_send);
->  		mode |= ATMEL_US_USMODE_RS485;
-> @@ -831,7 +835,7 @@ static void atmel_tx_chars(struct uart_port *port)
->  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
->  
->  	if (port->x_char &&
-> -	    (atmel_uart_readl(port, ATMEL_US_CSR) & atmel_port->tx_done_mask)) {
-> +	    (atmel_uart_readl(port, ATMEL_US_CSR) & ATMEL_US_TXRDY)) {
->  		atmel_uart_write_char(port, port->x_char);
->  		port->icount.tx++;
->  		port->x_char = 0;
-> @@ -839,8 +843,7 @@ static void atmel_tx_chars(struct uart_port *port)
->  	if (uart_circ_empty(xmit) || uart_tx_stopped(port))
->  		return;
->  
-> -	while (atmel_uart_readl(port, ATMEL_US_CSR) &
-> -	       atmel_port->tx_done_mask) {
-> +	while (atmel_uart_readl(port, ATMEL_US_CSR) & ATMEL_US_TXRDY) {
->  		atmel_uart_write_char(port, xmit->buf[xmit->tail]);
->  		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
->  		port->icount.tx++;
-> @@ -851,10 +854,20 @@ static void atmel_tx_chars(struct uart_port *port)
->  	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
->  		uart_write_wakeup(port);
->  
-> -	if (!uart_circ_empty(xmit))
-> +	if (!uart_circ_empty(xmit)) {
-> +		/* we still have characters to transmit, so we should continue
-> +		 * transmitting them when TX is ready, regardless of
-> +		 * mode or duplexity
-> +		 */
-> +		atmel_port->tx_done_mask |= ATMEL_US_TXRDY;
-> +
->  		/* Enable interrupts */
->  		atmel_uart_writel(port, ATMEL_US_IER,
->  				  atmel_port->tx_done_mask);
-> +	} else {
-> +		if (atmel_uart_is_half_duplex(port))
-> +			atmel_port->tx_done_mask &= ~ATMEL_US_TXRDY;
-> +	}
->  }
->  
->  static void atmel_complete_tx_dma(void *arg)
-> @@ -2525,8 +2538,7 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
->  	 * Use TXEMPTY for interrupt when rs485 or ISO7816 else TXRDY or
->  	 * ENDTX|TXBUFE
->  	 */
-> -	if (port->rs485.flags & SER_RS485_ENABLED ||
-> -	    port->iso7816.flags & SER_ISO7816_ENABLED)
-> +	if (atmel_uart_is_half_duplex(port))
->  		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
->  	else if (atmel_use_pdc_tx(port)) {
->  		port->fifosize = PDC_BUFFER_SIZE;
+> I don't have any aarch64 or s390 hardware handy to test on so I'll try
+> to move support for those architectures to separate commits at the end
+> of the series, and mark them untested.
+
+I'll test on aarch64, and I can also provide fixes if necessary.
+
+Thanks,
+drew
+
+> 
+> Thank you for your quick responses!
+> 
+> On Tue, Jan 7, 2020 at 6:56 AM Andrew Jones <drjones@redhat.com> wrote:
+> >
+> > On Tue, Jan 07, 2020 at 09:33:34AM -0500, Peter Xu wrote:
+> > > On Mon, Dec 16, 2019 at 01:38:54PM -0800, Ben Gardon wrote:
+> > > > While userfaultfd, KVM's demand paging implementation, is not specific
+> > > > to KVM, having a benchmark for its performance will be useful for
+> > > > guiding performance improvements to KVM. As a first step towards creating
+> > > > a userfaultfd demand paging test, create a simple memory access test,
+> > > > based on dirty_log_test.
+> > > >
+> > > > Signed-off-by: Ben Gardon <bgardon@google.com>
+> > >
+> > > It's fine to start with x86-only for this test, but imho it would be
+> > > better to mention that in cover letter, or reply to reviewer comments
+> > > on that you removed aarch64 from previous post.
+> >
+> > I'd also prefer that if it's x86-only that it be put in the x86_64
+> > subdirectory and drop the arch #ifdefs. The question is why is it
+> > x86-only for now though? Will it take a lot of work to port it to
+> > other architectures? Or does it just need testing by someone with
+> > the hardware?
+> >
+> > Thanks,
+> > drew
+> >
 > 
 
