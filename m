@@ -2,35 +2,34 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D506C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702D3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494E921744
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7F12146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgAHLmK (ORCPT
+        id S1727473AbgAHLmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:42:10 -0500
-Received: from mga04.intel.com ([192.55.52.120]:7736 "EHLO mga04.intel.com"
+        Wed, 8 Jan 2020 06:42:13 -0500
+Received: from mga09.intel.com ([134.134.136.24]:62271 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbgAHLmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:42:07 -0500
+        id S1727303AbgAHLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:42:11 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:07 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="395716519"
+   d="scan'208";a="422891903"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jan 2020 03:42:02 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 03:42:07 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id F40C92FB; Wed,  8 Jan 2020 13:42:01 +0200 (EET)
+        id 27BAB3C9; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -47,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/36] platform/x86: intel_scu_ipc: Add constants for register offsets
-Date:   Wed,  8 Jan 2020 14:41:28 +0300
-Message-Id: <20200108114201.27908-4-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 06/36] platform/x86: intel_scu_ipc: Fix interrupt support
+Date:   Wed,  8 Jan 2020 14:41:31 +0300
+Message-Id: <20200108114201.27908-7-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -60,85 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the code more readable. These are taken from intel_pmc_ipc.c
-which implements the same thing.
+Currently the driver has disabled interrupt support for Tangier but
+actually interrupt works just fine if the command is not written twice
+in a row. Also we need to ack the interrupt in the handler.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 48 ++++++----------------------
+ 1 file changed, 10 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index cdab916fbf92..a8be5bcb9832 100644
+index b39680b53387..43eaf9400c67 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -99,11 +99,15 @@ struct intel_scu_ipc_dev {
+@@ -58,24 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
+-#define PCI_DEVICE_ID_PENWELL		0x080e
+-#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+-#define PCI_DEVICE_ID_TANGIER		0x11a0
+-
+-/* intel scu ipc driver data */
+-struct intel_scu_ipc_pdata_t {
+-	u8 irq_mode;
+-};
+-
+-/* Penwell and Cloverview */
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+-	.irq_mode = 1,
+-};
+-
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+-	.irq_mode = 0,
+-};
+-
+ struct intel_scu_ipc_dev {
+ 	struct device *dev;
+ 	void __iomem *ipc_base;
+@@ -86,6 +68,7 @@ struct intel_scu_ipc_dev {
  static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
  
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_ERR		BIT(1)
-+#define IPC_STATUS_BUSY		BIT(0)
-+
- /*
-- * IPC Read Buffer (Read Only):
-- * 16 byte buffer for receiving data from SCU, if IPC command
-- * processing results in response data
-+ * IPC Write/Read Buffers:
-+ * 16 byte buffer for sending and receiving data to and from SCU.
-  */
-+#define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
+ #define IPC_STATUS		0x04
++#define IPC_STATUS_IRQ		BIT(2)
+ #define IPC_STATUS_ERR		BIT(1)
+ #define IPC_STATUS_BUSY		BIT(0)
  
- #define IPC_I2C_CNTRL_ADDR	0
-@@ -135,7 +139,7 @@ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+@@ -107,11 +90,8 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
   */
- static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
+ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
  {
--	writel(data, scu->ipc_base + 0x80 + offset);
-+	writel(data, scu->ipc_base + IPC_WRITE_BUFFER + offset);
+-	if (scu->irq_mode) {
+-		reinit_completion(&scu->cmd_complete);
+-		writel(cmd | IPC_IOC, scu->ipc_base);
+-	}
+-	writel(cmd, scu->ipc_base);
++	reinit_completion(&scu->cmd_complete);
++	writel(cmd | IPC_IOC, scu->ipc_base);
  }
  
  /*
-@@ -147,7 +151,7 @@ static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32
-  */
- static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
+@@ -549,9 +529,10 @@ EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
+ static irqreturn_t ioc(int irq, void *dev_id)
  {
--	return __raw_readl(scu->ipc_base + 0x04);
-+	return __raw_readl(scu->ipc_base + IPC_STATUS);
+ 	struct intel_scu_ipc_dev *scu = dev_id;
++	int status = ipc_read_status(scu);
+ 
+-	if (scu->irq_mode)
+-		complete(&scu->cmd_complete);
++	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
++	complete(&scu->cmd_complete);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -568,17 +549,10 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	int err;
+ 	struct intel_scu_ipc_dev *scu = &ipcdev;
+-	struct intel_scu_ipc_pdata_t *pdata;
+ 
+ 	if (scu->dev)		/* We support only one SCU */
+ 		return -EBUSY;
+ 
+-	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+-	if (!pdata)
+-		return -ENODEV;
+-
+-	scu->irq_mode = pdata->irq_mode;
+-
+ 	err = pcim_enable_device(pdev);
+ 	if (err)
+ 		return err;
+@@ -605,13 +579,11 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  }
  
- /* Read ipc byte data */
-@@ -169,17 +173,17 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- 	u32 loop_count = 100000;
+-#define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+-
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+-	{}
++	{ PCI_VDEVICE(INTEL, 0x080e) },
++	{ PCI_VDEVICE(INTEL, 0x08ea) },
++	{ PCI_VDEVICE(INTEL, 0x11a0) },
++	{ }
+ };
  
- 	/* break if scu doesn't reset busy bit after huge retry */
--	while ((status & BIT(0)) && --loop_count) {
-+	while ((status & IPC_STATUS_BUSY) && --loop_count) {
- 		udelay(1); /* scu processing time is in few u secods */
- 		status = ipc_read_status(scu);
- 	}
- 
--	if (status & BIT(0)) {
-+	if (status & IPC_STATUS_BUSY) {
- 		dev_err(scu->dev, "IPC timed out");
- 		return -ETIMEDOUT;
- 	}
- 
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
-@@ -196,7 +200,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- 	}
- 
- 	status = ipc_read_status(scu);
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
+ static struct pci_driver ipc_driver = {
 -- 
 2.24.1
 
