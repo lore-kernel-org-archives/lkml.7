@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D5DC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F6BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56222082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA7D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgAHLoZ (ORCPT
+        id S1727274AbgAHLmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:44:25 -0500
-Received: from mga14.intel.com ([192.55.52.115]:61527 "EHLO mga14.intel.com"
+        Wed, 8 Jan 2020 06:42:07 -0500
+Received: from mga11.intel.com ([192.55.52.93]:44631 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbgAHLmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:42:12 -0500
+        id S1726098AbgAHLmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:42:07 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:11 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:06 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="303532688"
+   d="scan'208";a="218046586"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 03:42:07 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 03:42:02 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 3912741D; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id DD26B149; Wed,  8 Jan 2020 13:42:01 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/36] platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
-Date:   Wed,  8 Jan 2020 14:41:33 +0300
-Message-Id: <20200108114201.27908-9-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 01/36] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Wed,  8 Jan 2020 14:41:26 +0300
+Message-Id: <20200108114201.27908-2-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,27 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no implementation for that anymore so drop the prototype.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
+Fix this by taking a copy of the structure.
+
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index d7bbebf4b729..b2dde96e0611 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -53,9 +53,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
- 			      u32 *out, int outlen, u32 dptr, u32 sptr);
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 292bace83f1e..6f436836fe50 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
  
--/* Update FW version */
--int intel_scu_ipc_fw_update(u8 *buffer, u32 length);
--
- extern struct blocking_notifier_head intel_scu_notifier;
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
  
- static inline void intel_scu_notifier_add(struct notifier_block *nb)
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 -- 
 2.24.1
 
