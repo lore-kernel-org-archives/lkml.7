@@ -2,103 +2,212 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37ACC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B493A206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E7020673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgAHLFt (ORCPT
+        id S1728025AbgAHLGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:05:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:42386 "EHLO foss.arm.com"
+        Wed, 8 Jan 2020 06:06:41 -0500
+Received: from mga11.intel.com ([192.55.52.93]:42333 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgAHLFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:05:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F6BD31B;
-        Wed,  8 Jan 2020 03:05:47 -0800 (PST)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3FF003F703;
-        Wed,  8 Jan 2020 03:05:46 -0800 (PST)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     stable@vger.kernel.org
-Cc:     suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org,
-        mathieu.poirier@linaro.org, gregkh@linuxfoundation.org,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [stable] [PATCH 2/2] coresight: tmc-etf: Do not call smp_processor_id from preemptible
-Date:   Wed,  8 Jan 2020 11:05:41 +0000
-Message-Id: <20200108110541.318672-2-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108110541.318672-1-suzuki.poulose@arm.com>
-References: <20200108110541.318672-1-suzuki.poulose@arm.com>
+        id S1726276AbgAHLGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:06:40 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:06:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
+   d="scan'208";a="421415431"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2020 03:06:38 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ip9Ad-0001gj-Dp; Wed, 08 Jan 2020 13:06:39 +0200
+Date:   Wed, 8 Jan 2020 13:06:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 09/13] gpiolib: rework the locking mechanism for
+ lineevent kfifo
+Message-ID: <20200108110639.GL32742@smile.fi.intel.com>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+ <20191224120709.18247-10-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224120709.18247-10-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
+On Tue, Dec 24, 2019 at 01:07:05PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The read_lock mutex is supposed to prevent collisions between reading
+> and writing to the line event kfifo but it's actually only taken when
+> the events are being read from it.
+> 
+> Drop the mutex entirely and reuse the spinlock made available to us in
+> the waitqueue struct. Take the lock whenever the fifo is modified or
+> inspected. Drop the call to kfifo_to_user() and instead first extract
+> the new element from kfifo when the lock is taken and only then pass
+> it on to the user after the spinlock is released.
 
-During a perf session we try to allocate buffers on the "node" associated
-with the CPU the event is bound to. If it is not bound to a CPU, we
-use the current CPU node, using smp_processor_id(). However this is unsafe
-in a pre-emptible context and could generate the splats as below :
+Sounds like a plausible approach.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
- BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
- caller is tmc_alloc_etf_buffer+0x5c/0x60
- CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
- Call trace:
-  dump_backtrace+0x0/0x150
-  show_stack+0x14/0x20
-  dump_stack+0x9c/0xc4
-  debug_smp_processor_id+0x10c/0x110
-  tmc_alloc_etf_buffer+0x5c/0x60
-  etm_setup_aux+0x1c4/0x230
-  rb_alloc_aux+0x1b8/0x2b8
-  perf_mmap+0x35c/0x478
-  mmap_region+0x34c/0x4f0
-  do_mmap+0x2d8/0x418
-  vm_mmap_pgoff+0xd0/0xf8
-  ksys_mmap_pgoff+0x88/0xf8
-  __arm64_sys_mmap+0x28/0x38
-  el0_svc_handler+0xd8/0x138
-  el0_svc+0x8/0xc
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib.c | 64 +++++++++++++++++++++++-------------------
+>  1 file changed, 35 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 81d5eda4de7d..a859c0813e0d 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -788,8 +788,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+>   * @irq: the interrupt that trigger in response to events on this GPIO
+>   * @wait: wait queue that handles blocking reads of events
+>   * @events: KFIFO for the GPIO events
+> - * @read_lock: mutex lock to protect reads from colliding with adding
+> - * new events to the FIFO
+>   * @timestamp: cache for the timestamp storing it between hardirq
+>   * and IRQ thread, used to bring the timestamp close to the actual
+>   * event
+> @@ -802,7 +800,6 @@ struct lineevent_state {
+>  	int irq;
+>  	wait_queue_head_t wait;
+>  	DECLARE_KFIFO(events, struct gpioevent_data, 16);
+> -	struct mutex read_lock;
+>  	u64 timestamp;
+>  };
+>  
+> @@ -818,7 +815,7 @@ static __poll_t lineevent_poll(struct file *filep,
+>  
+>  	poll_wait(filep, &le->wait, wait);
+>  
+> -	if (!kfifo_is_empty(&le->events))
+> +	if (!kfifo_is_empty_spinlocked_noirqsave(&le->events, &le->wait.lock))
+>  		events = EPOLLIN | EPOLLRDNORM;
+>  
+>  	return events;
+> @@ -831,43 +828,52 @@ static ssize_t lineevent_read(struct file *filep,
+>  			      loff_t *f_ps)
+>  {
+>  	struct lineevent_state *le = filep->private_data;
+> -	unsigned int copied;
+> +	struct gpioevent_data event;
+> +	ssize_t bytes_read = 0;
+>  	int ret;
+>  
+> -	if (count < sizeof(struct gpioevent_data))
+> +	if (count < sizeof(event))
+>  		return -EINVAL;
+>  
+>  	do {
+> +		spin_lock(&le->wait.lock);
+>  		if (kfifo_is_empty(&le->events)) {
+> -			if (filep->f_flags & O_NONBLOCK)
+> +			if (bytes_read) {
+> +				spin_unlock(&le->wait.lock);
+> +				return bytes_read;
+> +			}
+> +
+> +			if (filep->f_flags & O_NONBLOCK) {
+> +				spin_unlock(&le->wait.lock);
+>  				return -EAGAIN;
+> +			}
+>  
+> -			ret = wait_event_interruptible(le->wait,
+> +			ret = wait_event_interruptible_locked(le->wait,
+>  					!kfifo_is_empty(&le->events));
+> -			if (ret)
+> +			if (ret) {
+> +				spin_unlock(&le->wait.lock);
+>  				return ret;
+> +			}
+>  		}
+>  
+> -		if (mutex_lock_interruptible(&le->read_lock))
+> -			return -ERESTARTSYS;
+> -		ret = kfifo_to_user(&le->events, buf, count, &copied);
+> -		mutex_unlock(&le->read_lock);
+> -
+> -		if (ret)
+> -			return ret;
+> -
+> -		/*
+> -		 * If we couldn't read anything from the fifo (a different
+> -		 * thread might have been faster) we either return -EAGAIN if
+> -		 * the file descriptor is non-blocking, otherwise we go back to
+> -		 * sleep and wait for more data to arrive.
+> -		 */
+> -		if (copied == 0 && (filep->f_flags & O_NONBLOCK))
+> -			return -EAGAIN;
+> +		ret = kfifo_out(&le->events, &event, 1);
+> +		spin_unlock(&le->wait.lock);
+> +		if (ret != 1) {
+> +			/*
+> +			 * This should never happen - we were holding the lock
+> +			 * from the moment we learned the fifo is no longer
+> +			 * empty until now.
+> +			 */
+> +			ret = -EIO;
+> +			break;
+> +		}
+>  
+> -	} while (copied == 0);
+> +		if (copy_to_user(buf + bytes_read, &event, sizeof(event)))
+> +			return -EFAULT;
+> +		bytes_read += sizeof(event);
+> +	} while (count >= bytes_read + sizeof(event));
+>  
+> -	return copied;
+> +	return bytes_read;
+>  }
+>  
+>  static int lineevent_release(struct inode *inode, struct file *filep)
+> @@ -969,7 +975,8 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
+>  		return IRQ_NONE;
+>  	}
+>  
+> -	ret = kfifo_put(&le->events, ge);
+> +	ret = kfifo_in_spinlocked_noirqsave(&le->events, &ge,
+> +					    1, &le->wait.lock);
+>  	if (ret)
+>  		wake_up_poll(&le->wait, EPOLLIN);
+>  
+> @@ -1084,7 +1091,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+>  
+>  	INIT_KFIFO(le->events);
+>  	init_waitqueue_head(&le->wait);
+> -	mutex_init(&le->read_lock);
+>  
+>  	/* Request a thread to read the events */
+>  	ret = request_threaded_irq(le->irq,
+> -- 
+> 2.23.0
+> 
 
-Use NUMA_NO_NODE hint instead of using the current node for events
-not bound to CPUs.
-
-Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
----
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index e31061308e19..e90af39283b1 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -304,9 +304,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
- 	int node;
- 	struct cs_buffers *buf;
- 
--	if (cpu == -1)
--		cpu = smp_processor_id();
--	node = cpu_to_node(cpu);
-+	node = (cpu == -1) ? NUMA_NO_NODE : cpu_to_node(cpu);
- 
- 	/* Allocate memory structure for interaction with Perf */
- 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
 -- 
-2.24.1
+With Best Regards,
+Andy Shevchenko
+
 
