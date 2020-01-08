@@ -2,126 +2,204 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13478C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B4DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC89820720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcH8Hddz"
+	by mail.kernel.org (Postfix) with ESMTP id AF82420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgAHPc1 (ORCPT
+        id S1728878AbgAHPcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:32:27 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34180 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:32:26 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s94so6437378pjc.1;
-        Wed, 08 Jan 2020 07:32:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1SOA3Ah7Rg4qtqYtLQcb6jr3zIfhzYvMEvCqqOZp10s=;
-        b=hcH8HddzSr1Lo2BeOG/EscmmwduKGPUQti+1Ls3aYlbDVwLieDuKmKNFQ7tZ5dur8p
-         uCLBqkSgM+YmReBEn67r9b9fP3qU+se7HvNsNxWOmKKmED0dk3rcxbGGpUIEi7PLjwl9
-         cW0D1BMPhGHhc7l7hHqpS3AC9E7JHvqe1UQxUZrFJEvUwZP3Kh6n6W90WhlHBgVIGSKc
-         BXI0Ojcnlz5awvU8Al7d06rFjOvxJH/npCCtVZN3kpIhZQ/5bMSy6/3BfXAIZgrgj85o
-         L2D/byLXUGhhEWVIZnGOGlm1r/J+gz6o/FpZDYOi9f2jdqIU2CmCbVik0tn8FqTUfQ8w
-         COmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1SOA3Ah7Rg4qtqYtLQcb6jr3zIfhzYvMEvCqqOZp10s=;
-        b=oZhu++31zZE5xQ/xr9iBQODsm/XFTOiDDY+X6euhLpEqk1XqszdkxontDNg1xjlNEc
-         l7sCdKEM74csW0nQ/RlM4mvdtuqIY5SvyslC0IQllmXsqajdhZJ+o6gSfhl0Z5a21Cnc
-         g4NKEh3e0pZ6BBo6yLjIhoYVoAc5o+VINY8MFJs3cD5+YTKxuDp5D5GlzkluzcRkqavb
-         aBkSrw05ArgNVb3y2Nx78nJAWqt/Ldc/VCVGwb4aZzlN2vdli2tbNUlC40yRRF1Xjjp0
-         p8oc538ZzWYYv01ZU0pGrtWNlOnEmKyDg0Tf7wGTN0akYKh0EdQYaSlcHQuOg71WPaUM
-         fxug==
-X-Gm-Message-State: APjAAAXOaDXIPCIcgpPoXTZO0KIWzaCzLMT8tdndnDbNegM8503etHG2
-        kQRTAsSCIXMUOpg/vVuTwVA=
-X-Google-Smtp-Source: APXvYqx0Zlx7AqZ48rQaShfquzyMapi4bxSa5qydlFyXVoGn4oFYV20TZyAhgNrStbY5tlGCbex9RA==
-X-Received: by 2002:a17:90a:bd10:: with SMTP id y16mr5007799pjr.108.1578497545665;
-        Wed, 08 Jan 2020 07:32:25 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l66sm3782432pga.30.2020.01.08.07.32.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 07:32:24 -0800 (PST)
-Date:   Wed, 8 Jan 2020 07:32:22 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-Message-ID: <20200108153222.GA28530@roeck-us.net>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com>
- <20191219003256.GA28144@roeck-us.net>
- <yq17e233o0o.fsf@oracle.com>
- <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net>
- <yq1o8ve20sb.fsf@oracle.com>
+        Wed, 8 Jan 2020 10:32:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:30165 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726556AbgAHPcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:32:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:32:35 -0800
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="215983554"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:32:29 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Dave Airlie <airlied@redhat.com>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i915: fix backlight configuration issue
+In-Reply-To: <20200108140227.3976563-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200108140227.3976563-1-arnd@arndb.de>
+Date:   Wed, 08 Jan 2020 17:32:26 +0200
+Message-ID: <87o8veotf9.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1o8ve20sb.fsf@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+On Wed, 08 Jan 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> The i915 driver can use the backlight subsystem as an option, and usually
+> selects it when CONFIG_ACPI is set. However it is possible to configure
+> a kernel with modular backlight classdev support and a built-in i915
+> driver, which leads to a linker error:
+>
+> drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_register':
+> intel_panel.c:(.text+0x2f58): undefined reference to `backlight_device_register'
+> drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_unregister':
+> intel_panel.c:(.text+0x2fe4): undefined reference to `backlight_device_unregister'
+>
+> Add another Kconfig option to ensure the driver only tries to use
+> the backlight support when it can in fact be linked that way. The
+> new option is on by default to keep the existing behavior.
+>
+> This is roughly what other drivers like nouveau do as well.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> I've had this one lying around for a long time, it is still needed
+> but I am not sure which solution is best here. This version is
+> probably the least invasive, but it does not solve the bigger
+> problem around too many 'select' statements in drm
 
-On Tue, Jan 07, 2020 at 08:29:40PM -0500, Martin K. Petersen wrote:
-> 
-> Guenter,
-> 
-> > "scsi-8-140" is created by libsensors, so any change in that would
-> > have to be made there, not in the kernel driver.
-> 
-> Yes. Something like the patch below which will produce actual SCSI
-> device instance names:
-> 
-> 	drivetemp-scsi-7:0:29:0
-> 	drivetemp-scsi-8:0:30:0
-> 	drivetemp-scsi-8:0:15:0
-> 	drivetemp-scsi-7:0:24:0
-> 
-> Instead of the current:
-> 
-> 	drivetemp-scsi-7-1d0
-> 	drivetemp-scsi-8-1e0
-> 	drivetemp-scsi-8-f0
-> 	drivetemp-scsi-7-180
-> 
-> Other question: Does hwmon have any notion of sensor topology? As I
-> mentioned earlier, SCSI installations typically rely on SAF-TE or SES
-> instead of the physical drive sensors. SES also includes monitoring of
-> fans, power supplies, etc. And more importantly, it provides a
-> representation of the location of a given component. E.g.: Tray number
-> #4, disk drive bay #5.
-> 
+This is just another hack that's only required because backlight is
+selected instead of depended on throughout the kernel. (*)
 
-Please go ahead and submit the patch for libsensors.
+i915 (and most drm drivers, with some variations) could easily handle
+this with:
 
-> So it would be helpful if libsensors had a way to represent sensors in a
-> way that mimics the physical device layout reported by SES.
-> 
+	depends on (ACPI && ACPI_VIDEO) || ACPI=n
+	depends on BACKLIGHT_CLASS_DEVICE || BACKLIGHT_CLASS_DEVICE=n
 
-I guess it would be up to you to come up with a proposal.
+Those two lines express the allowed configurations. It's just that we
+can't do that in i915 *alone*. The combinations of depends and selects
+lead to impossible configurations. It's all or nothing.
 
-Thanks,
-Guenter
+I am not amused by adding more hacks, and I am really *not* interested
+in adding another useless i915 config option to "solve" this issue.
+
+So thanks, but no thanks. I'm not taking this patch.
+
+
+BR,
+Jani.
+
+
+(*) The deeper issue is that people as well as the kconfig tools ignore
+the warnings in Documentation/kbuild/kconfig-language.rst:
+
+	select should be used with care. select will force
+	a symbol to a value without visiting the dependencies.
+	By abusing select you are able to select a symbol FOO even
+	if FOO depends on BAR that is not set.
+	In general use select only for non-visible symbols
+	(no prompts anywhere) and for symbols with no dependencies.
+	That will limit the usefulness but on the other hand avoid
+	the illegal configurations all over.
+
+I don't think we can, uh, fix the people, but it might be possible to
+warn about selecting visible symbols or symbols with dependencies.
+
+> ---
+>  drivers/gpu/drm/i915/Kconfig               | 11 ++++++++++-
+>  drivers/gpu/drm/i915/display/intel_panel.c |  4 ++--
+>  drivers/gpu/drm/i915/display/intel_panel.h |  6 +++---
+>  3 files changed, 15 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
+> index ba9595960bbe..81d956040d18 100644
+> --- a/drivers/gpu/drm/i915/Kconfig
+> +++ b/drivers/gpu/drm/i915/Kconfig
+> @@ -16,7 +16,7 @@ config DRM_I915
+>  	select IRQ_WORK
+>  	# i915 depends on ACPI_VIDEO when ACPI is enabled
+>  	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
+> -	select BACKLIGHT_CLASS_DEVICE if ACPI
+> +	select DRM_I915_BACKLIGHT if ACPI
+>  	select INPUT if ACPI
+>  	select ACPI_VIDEO if ACPI
+>  	select ACPI_BUTTON if ACPI
+> @@ -68,6 +68,15 @@ config DRM_I915_FORCE_PROBE
+>  
+>  	  Use "*" to force probe the driver for all known devices.
+>  
+> +config DRM_I915_BACKLIGHT
+> +	tristate "Control backlight support"
+> +	depends on DRM_I915
+> +	default DRM_I915
+> +	select BACKLIGHT_CLASS_DEVICE
+> +	help
+> +          Say Y here if you want to control the backlight of your display
+> +          (e.g. a laptop panel).
+> +
+>  config DRM_I915_CAPTURE_ERROR
+>  	bool "Enable capturing GPU state following a hang"
+>  	depends on DRM_I915
+> diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
+> index 7b3ec6eb3382..e2fe7a50dcbf 100644
+> --- a/drivers/gpu/drm/i915/display/intel_panel.c
+> +++ b/drivers/gpu/drm/i915/display/intel_panel.c
+> @@ -1203,7 +1203,7 @@ void intel_panel_enable_backlight(const struct intel_crtc_state *crtc_state,
+>  	mutex_unlock(&dev_priv->backlight_lock);
+>  }
+>  
+> -#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
+> +#if IS_ENABLED(CONFIG_DRM_I915_BACKLIGHT)
+>  static u32 intel_panel_get_backlight(struct intel_connector *connector)
+>  {
+>  	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
+> @@ -1370,7 +1370,7 @@ void intel_backlight_device_unregister(struct intel_connector *connector)
+>  		panel->backlight.device = NULL;
+>  	}
+>  }
+> -#endif /* CONFIG_BACKLIGHT_CLASS_DEVICE */
+> +#endif /* CONFIG_DRM_I915_BACKLIGHT */
+>  
+>  /*
+>   * CNP: PWM clock frequency is 19.2 MHz or 24 MHz.
+> diff --git a/drivers/gpu/drm/i915/display/intel_panel.h b/drivers/gpu/drm/i915/display/intel_panel.h
+> index cedeea443336..e6e81268b7ed 100644
+> --- a/drivers/gpu/drm/i915/display/intel_panel.h
+> +++ b/drivers/gpu/drm/i915/display/intel_panel.h
+> @@ -49,10 +49,10 @@ intel_panel_edid_fixed_mode(struct intel_connector *connector);
+>  struct drm_display_mode *
+>  intel_panel_vbt_fixed_mode(struct intel_connector *connector);
+>  
+> -#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
+> +#if IS_ENABLED(CONFIG_DRM_I915_BACKLIGHT)
+>  int intel_backlight_device_register(struct intel_connector *connector);
+>  void intel_backlight_device_unregister(struct intel_connector *connector);
+> -#else /* CONFIG_BACKLIGHT_CLASS_DEVICE */
+> +#else /* CONFIG_DRM_I915_BACKLIGHT */
+>  static inline int intel_backlight_device_register(struct intel_connector *connector)
+>  {
+>  	return 0;
+> @@ -60,6 +60,6 @@ static inline int intel_backlight_device_register(struct intel_connector *connec
+>  static inline void intel_backlight_device_unregister(struct intel_connector *connector)
+>  {
+>  }
+> -#endif /* CONFIG_BACKLIGHT_CLASS_DEVICE */
+> +#endif /* CONFIG_DRM_I915_BACKLIGHT */
+>  
+>  #endif /* __INTEL_PANEL_H__ */
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
