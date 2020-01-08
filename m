@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF825C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35122C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0FC20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141E9206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbgAHRaw (ORCPT
+        id S1729783AbgAHRba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:30:52 -0500
-Received: from mga11.intel.com ([192.55.52.93]:8375 "EHLO mga11.intel.com"
+        Wed, 8 Jan 2020 12:31:30 -0500
+Received: from mga06.intel.com ([134.134.136.31]:31609 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727579AbgAHRaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:30:52 -0500
+        id S1727579AbgAHRb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:31:29 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:30:51 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:31:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="223600628"
+   d="scan'208";a="211611025"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 09:30:47 -0800
+  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 09:31:24 -0800
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipFAO-00061S-2n; Wed, 08 Jan 2020 19:30:48 +0200
-Date:   Wed, 8 Jan 2020 19:30:48 +0200
+        id 1ipFAv-00061o-Rv; Wed, 08 Jan 2020 19:31:21 +0200
+Date:   Wed, 8 Jan 2020 19:31:21 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Darren Hart <dvhart@infradead.org>,
@@ -48,15 +48,15 @@ Cc:     Darren Hart <dvhart@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 35/36] mfd: intel_pmc_bxt: Switch to use
- driver->dev_groups
-Message-ID: <20200108173048.GW32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 26/36] mfd: intel_soc_pmic: Add SCU IPC member to
+ struct intel_soc_pmic
+Message-ID: <20200108173121.GX32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-36-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-27-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-36-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-27-mika.westerberg@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,82 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:42:00PM +0300, Mika Westerberg wrote:
-> The driver core provides support for adding additional attributes for
-> devices via new ->dev_groups member of struct device_driver.
-
-I'm wondering if we can also do this before converting to MFD.
-
-> Convert the
-> driver to use that instead of adding the attributes manually.
+On Wed, Jan 08, 2020 at 02:41:51PM +0300, Mika Westerberg wrote:
+> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+> be using this field going forward to access the SCU IPC instance.
+> 
+> While there add kernel-doc for the intel_soc_pmic structure.
 > 
 
-After addressing above and below comments,
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/mfd/intel_pmc_bxt.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
+>  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/mfd/intel_pmc_bxt.c b/drivers/mfd/intel_pmc_bxt.c
-> index 76f166c1455b..9f2eb75bdf78 100644
-> --- a/drivers/mfd/intel_pmc_bxt.c
-> +++ b/drivers/mfd/intel_pmc_bxt.c
-> @@ -244,6 +244,11 @@ static const struct attribute_group intel_pmc_group = {
->  	.attrs = intel_pmc_attrs,
+> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+> index bfecd6bd4990..bda22d750be6 100644
+> --- a/include/linux/mfd/intel_soc_pmic.h
+> +++ b/include/linux/mfd/intel_soc_pmic.h
+> @@ -13,6 +13,20 @@
+>  
+>  #include <linux/regmap.h>
+>  
+> +/**
+> + * struct intel_soc_pmic - Intel SoC PMIC data
+> + * @irq: Interrupt number
+> + * @regmap: Pointer to the regmap structure
+> + * @irq_chip_data: IRQ chip data for the PMIC itself
+> + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
+> + * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
+> + * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
+> + * @irq_chip_data_adc: Chained IRQ chip data for the ADC
+> + * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
+> + * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
+> + * @dev: Pointer to the PMIC device
+> + * @scu: SCU IPC pointer used for IPC operations
+> + */
+>  struct intel_soc_pmic {
+>  	int irq;
+>  	struct regmap *regmap;
+> @@ -24,6 +38,7 @@ struct intel_soc_pmic {
+>  	struct regmap_irq_chip_data *irq_chip_data_chgr;
+>  	struct regmap_irq_chip_data *irq_chip_data_crit;
+>  	struct device *dev;
+> +	struct intel_scu_ipc_dev *scu;
 >  };
 >  
-> +static const struct attribute_group *intel_pmc_groups[] = {
-> +	&intel_pmc_group,
-
-> +	NULL,
-
-Comma is not needed for terminator lines.
-
-> +};
-> +
->  static int pmc_create_punit_device(void)
->  {
->  	struct mfd_cell punit = {
-> @@ -492,27 +497,14 @@ static int intel_pmc_probe(struct platform_device *pdev)
->  	ret = pmc_create_devices();
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create pmc devices\n");
-> -		goto err_ipc;
-> -	}
-> -
-> -	ret = sysfs_create_group(&pdev->dev.kobj, &intel_pmc_group);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
-> -			ret);
-> -		goto err_ipc;
-> +		intel_scu_ipc_remove(scu);
->  	}
->  
-> -	return 0;
-> -
-> -err_ipc:
-> -	intel_scu_ipc_remove(scu);
-> -
->  	return ret;
->  }
->  
->  static int intel_pmc_remove(struct platform_device *pdev)
->  {
-> -	sysfs_remove_group(&pdev->dev.kobj, &intel_pmc_group);
->  	intel_scu_ipc_remove(platform_get_drvdata(pdev));
->  	pmcdev.dev = NULL;
->  	return 0;
-> @@ -524,6 +516,7 @@ static struct platform_driver intel_pmc_driver = {
->  	.driver = {
->  		.name = "intel_pmc_bxt",
->  		.acpi_match_table = ACPI_PTR(intel_pmc_acpi_ids),
-> +		.dev_groups = intel_pmc_groups,
->  	},
->  };
->  
+>  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 > -- 
 > 2.24.1
 > 
