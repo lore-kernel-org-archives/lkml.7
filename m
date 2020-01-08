@@ -2,198 +2,96 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC14C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFC3C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283C8206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578486976;
-	bh=W9JwVSVRItNpDbcbGietn6Cp2AuPDABok0YRBfrkW4M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ae13xu5hwAswt28ufQ4QOta0ax+5kCOedyEvKls3BjmLPz5vb2hBmj/+hPw+LyWQN
-	 9OyItciw3jdcDRu3UgqKq1Hens42lBmEnQJ8RXWgPDcosl6DXD1VkRGz5QxFwXfG9J
-	 8pNRWxAZvXNAasVXFbwF9YPd/R4JnXeDFWEDlKpE=
+	by mail.kernel.org (Postfix) with ESMTP id D1AFD20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DVTb0EFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgAHMgP (ORCPT
+        id S1727252AbgAHMiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:36:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgAHMgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:36:15 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82663206DB;
-        Wed,  8 Jan 2020 12:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578486973;
-        bh=W9JwVSVRItNpDbcbGietn6Cp2AuPDABok0YRBfrkW4M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e0vTgUF32Xj1bwsEWm9WFcVNStkTjl+ziOyel/OT6B8tDK/z5F405fD4Ox6as1YfH
-         RKSYtzikLXF8huxpv5OUfo1yeU/zAp5SkKwvdjJHCfzDWR7dEObk8T+1S8z0Kauc7n
-         efXlO69a6orB+g69QYcdpbV9P9QTs91UyFlKgP8g=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ipAZH-0008LF-Ob; Wed, 08 Jan 2020 12:36:11 +0000
+        Wed, 8 Jan 2020 07:38:13 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42484 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgAHMiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:38:12 -0500
+Received: by mail-ed1-f67.google.com with SMTP id e10so2406720edv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 04:38:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RotMCjOJKktSIUBCGAb4BBJvwMzxDTEukuKk1C8nR/Y=;
+        b=DVTb0EFtmqEPjuV03pnzZK8BsOoSGErBVKLIgk8UCu08OyrkYyp+HrCskvsX5sy5Ff
+         7dgC90WFdqalh7qU8HwYisvMIeBkmy+stiyz7LUL0LjF2/5fICa+Z4jUYnRAwAV4kksQ
+         7dZZUA2bit+LnZ4BIwweatxdmsnogHTuTJ2y1kqqYR2/oD1hUVcpiVL6nExK6EfOAQIE
+         bqcVrcApy0/mju2Mt+SP/RFG4is3ocgdJpHtYhpE74dGn55SZ2FCKUSQmnx5qLeY5PyP
+         qt9S8KPXnqjmbCkZ7ZHnvoc+ZArLCNgibMc4uWYw8FFqFFLTlLcbfckZ9XhF/1HEvSog
+         eEMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RotMCjOJKktSIUBCGAb4BBJvwMzxDTEukuKk1C8nR/Y=;
+        b=goHJ1U266geJz1HLsmNgycW9uoVu747vObVWYWhorszv/GyYn1tobUkwm1lilT828h
+         UxdPqeBHc9mw/wV1BRcHblvr4lBhfRAhI7LGNUWs1+fAcpjVIEAtVGxzRV4BCjVs23Yz
+         ruYP5wMxxTZtl8FxU6NNF9tRexT0XplgCsyeK5Sz6AU8S5OxCfnsRmbQdOGlvDiytdYe
+         RF0uTdsC6ym/EhDdBla1oBClalbOzIDr0Ibp+TDj5sEqNd5/R/QSfP/Qo9Xei6iFDsHb
+         YgxExJJedpm6/oUUm/9kR6qWQrIvfzGKVJWRmlwnm5MY/PbvsrXqfsCqTcFqSw3SmGlt
+         h6JQ==
+X-Gm-Message-State: APjAAAVdILi+ROnq58W+lsYuNH1PtlobHESDH2J+1oJRZifGY9EA6yVH
+        3ws0++ORudo1Hlk3c3J3vaFtd9SJWGTTlgaVQyFqLw==
+X-Google-Smtp-Source: APXvYqzi0WPsidDDmVj1R0p4gUv6jfBMcq5h5l5TD4QO3F5rD/GE1j0AN/0+zT53es3eTRwo2dDerj4WmIdMbbc4SpY=
+X-Received: by 2002:a17:906:1a50:: with SMTP id j16mr4721042ejf.106.1578487090894;
+ Wed, 08 Jan 2020 04:38:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jan 2020 12:36:11 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>, kvm@vger.kernel.org,
-        kvmarm <kvmarm@lists.cs.columbia.edu>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore full
- SPE profiling buffer controls
-In-Reply-To: <20200108115816.GB15861@willie-the-truck>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-10-andrew.murray@arm.com>
- <20191221141325.5a177343@why>
- <20200107151328.GW42593@e119886-lin.cambridge.arm.com>
- <fc222fef381f4ada37966db0a1ec314a@kernel.org>
- <20200108115816.GB15861@willie-the-truck>
-Message-ID: <745529f7e469b898b74dfc5153e3daf6@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: will@kernel.org, andrew.murray@arm.com, Catalin.Marinas@arm.com, Mark.Rutland@arm.com, Sudeep.Holla@arm.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200107230626.885451-1-martin.blumenstingl@googlemail.com>
+ <20200107230626.885451-2-martin.blumenstingl@googlemail.com> <a85f2063-f412-9762-58d1-47fdffb24af9@arm.com>
+In-Reply-To: <a85f2063-f412-9762-58d1-47fdffb24af9@arm.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 8 Jan 2020 13:38:00 +0100
+Message-ID: <CAFBinCBYrNC+ULV6Y=77qogowkDZwM+H0bxOqPN4sT6q3krGfw@mail.gmail.com>
+Subject: Re: [PATCH RFT v1 1/3] drm/panfrost: enable devfreq based the
+ "operating-points-v2" property
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, alyssa@rosenzweig.io,
+        steven.price@arm.com, tomeu.vizoso@collabora.com, robh@kernel.org,
+        linux-kernel@vger.kernel.org, daniel@ffwll.ch, airlied@linux.ie,
+        linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-08 11:58, Will Deacon wrote:
-> On Wed, Jan 08, 2020 at 11:17:16AM +0000, Marc Zyngier wrote:
->> On 2020-01-07 15:13, Andrew Murray wrote:
->> > On Sat, Dec 21, 2019 at 02:13:25PM +0000, Marc Zyngier wrote:
->> > > On Fri, 20 Dec 2019 14:30:16 +0000
->> > > Andrew Murray <andrew.murray@arm.com> wrote:
->> > >
->> > > [somehow managed not to do a reply all, re-sending]
->> > >
->> > > > From: Sudeep Holla <sudeep.holla@arm.com>
->> > > >
->> > > > Now that we can save/restore the full SPE controls, we can enable it
->> > > > if SPE is setup and ready to use in KVM. It's supported in KVM only if
->> > > > all the CPUs in the system supports SPE.
->> > > >
->> > > > However to support heterogenous systems, we need to move the check if
->> > > > host supports SPE and do a partial save/restore.
->> > >
->> > > No. Let's just not go down that path. For now, KVM on heterogeneous
->> > > systems do not get SPE.
->> >
->> > At present these patches only offer the SPE feature to VCPU's where the
->> > sanitised AA64DFR0 register indicates that all CPUs have this support
->> > (kvm_arm_support_spe_v1) at the time of setting the attribute
->> > (KVM_SET_DEVICE_ATTR).
->> >
->> > Therefore if a new CPU comes online without SPE support, and an
->> > existing VCPU is scheduled onto it, then bad things happen - which I
->> > guess
->> > must have been the intention behind this patch.
->> 
->> I guess that was the intent.
->> 
->> > > If SPE has been enabled on a guest and a CPU
->> > > comes up without SPE, this CPU should fail to boot (same as exposing a
->> > > feature to userspace).
->> >
->> > I'm unclear as how to prevent this. We can set the FTR_STRICT flag on
->> > the sanitised register - thus tainting the kernel if such a non-SPE CPU
->> > comes online - thought that doesn't prevent KVM from blowing up. Though
->> > I don't believe we can prevent a CPU coming up. At the moment this is
->> > my preferred approach.
->> 
->> I'd be OK with this as a stop-gap measure. Do we know of any existing
->> design where only half of the CPUs have SPE?
-> 
-> No, but given how few CPUs implement SPE I'd say that this 
-> configuration
-> is inevitable. I certainly went out of my way to support it in the 
-> driver.
-> 
->> > Looking at the vcpu_load and related code, I don't see a way of saying
->> > 'don't schedule this VCPU on this CPU' or bailing in any way.
->> 
->> That would actually be pretty easy to implement. In vcpu_load(), check
->> that that the CPU physical has SPE. If not, raise a request for that 
->> vcpu.
->> In the run loop, check for that request and abort if raised, returning
->> to userspace.
->> 
->> Userspace can always check /sys/devices/arm_spe_0/cpumask and work out
->> where to run that particular vcpu.
-> 
-> It's also worth considering systems where there are multiple 
-> implementations
-> of SPE in play. Assuming we don't want to expose this to a guest, then 
-> the
-> right interface here is probably for userspace to pick one SPE
-> implementation and expose that to the guest. That fits with your idea 
-> above,
-> where you basically get an immediate exit if we try to schedule a vCPU 
-> onto
-> a CPU that isn't part of the SPE mask.
+Hi Robin,
 
-Then it means that the VM should be configured with a mask indicating
-which CPUs it is intended to run on, and setting such a mask is 
-mandatory
-for SPE.
+On Wed, Jan 8, 2020 at 12:18 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 07/01/2020 11:06 pm, Martin Blumenstingl wrote:
+> > Decouple the check to see whether we want to enable devfreq for the GPU
+> > from dev_pm_opp_set_regulators(). This is preparation work for adding
+> > back support for regulator control (which means we need to call
+> > dev_pm_opp_set_regulators() before dev_pm_opp_of_add_table(), which
+> > means having a check for "is devfreq enabled" that is not tied to
+> > dev_pm_opp_of_add_table() makes things easier).
+>
+> Hmm, what about cases like the SCMI DVFS protocol where the OPPs are
+> dynamically discovered rather than statically defined in DT?
+where can I find such an example (Amlogic SoCs use SCPI instead of
+SCMI, so I don't think that I have any board with SCMI support) or
+some documentation?
+(I could only find SCPI clock and CPU DVFS implementations, but no
+generic "OPPs for any device" implementation)
 
-> 
->> > One solution could be to allow scheduling onto non-SPE VCPUs but wrap
->> > the
->> > SPE save/restore code in a macro (much like kvm_arm_spe_v1_ready) that
->> > reads the non-sanitised feature register. Therefore we don't go bang,
->> > but
->> > we also increase the size of any black-holes in SPE capturing. Though
->> > this
->> > feels like something that will cause grief down the line.
->> >
->> > Is there something else that can be done?
->> 
->> How does userspace deal with this? When SPE is only available on half 
->> of
->> the CPUs, how does perf work in these conditions?
-> 
-> Not sure about userspace, but the kernel driver works by instantiating 
-> an
-> SPE PMU instance only for the CPUs that have it and then that instance
-> profiles for only those CPUs. You also need to do something similar if
-> you had two CPU types with SPE, since the SPE configuration is likely 
-> to be
-> different between them.
 
-So that's closer to what Andrew was suggesting above (running a guest on 
-a
-non-SPE CPU creates a profiling black hole). Except that we can't really
-run a SPE-enabled guest on a non-SPE CPU, as the SPE sysregs will UNDEF
-at EL1.
-
-Conclusion: we need a mix of a cpumask to indicate which CPUs we want to
-run on (generic, not-SPE related), and a check for SPE-capable CPUs.
-If any of these condition is not satisfied, the vcpu exits for userspace
-to sort out the affinity.
-
-I hate heterogeneous systems.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Martin
