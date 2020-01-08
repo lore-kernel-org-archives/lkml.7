@@ -2,231 +2,300 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C20C33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB92072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA192070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IWkISoJr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U+csACo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgAHJTI (ORCPT
+        id S1727528AbgAHJVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:19:08 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33064 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbgAHJTI (ORCPT
+        Wed, 8 Jan 2020 04:21:04 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42168 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAHJVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:19:08 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0089IvJN082699;
-        Wed, 8 Jan 2020 03:18:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578475137;
-        bh=0v/0GKYMhTFfSAd0G2N5wdNhwt5MxxLP4iA8zez90n4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IWkISoJrS1dVWl6DWs8Av4X40yFyhG4mDJCXpIjP7z61UYMZCvQ6WjYJfnH9mf+Xi
-         Rd7Dl4JpwTzCmgRx3Tx5ta/EW3gGr5gfvjYgtJZ2PBjZT6AiHugQao3THL0fJ1KS9D
-         AA/PV3amgpXXLc0jy8EirZbDafXfm4N1iFJJ/vj4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0089Ivh8091876
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 03:18:57 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 03:18:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 03:18:57 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0089IrBV046357;
-        Wed, 8 Jan 2020 03:18:54 -0600
-Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
- devices
-To:     Baolin Wang <baolin.wang7@gmail.com>
-CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-4-faiz_abbas@ti.com>
- <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-Date:   Wed, 8 Jan 2020 14:50:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 04:21:03 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0089EDZV060798;
+        Wed, 8 Jan 2020 09:20:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=a65yAYGnmoHEn76tPwG8Kydxo0KhuItVUm5enQXNU5k=;
+ b=U+csACo57iPN2oPObXKksaR1PRmZuhuqDPLs4pCMcR/2VisUDp8D92G3iM/j7fkD3JVr
+ a8PDtWbN9PrTef7Sw0jWBfEfJFxWkOHoWAo8N3XRQXw69PaoEZJLDg5G77KADZM3I5OY
+ vjr93X+wXKwYfd5KBttzHeczX5+Rcn29Cw1JPx+nagprrfni2m/5wTNgUhOrIdoXbfC1
+ XgW5pcy4Onhq+BzCUAxk9M+SkuqPMCiWaZulkOBp9mIDIiCIPj5VGy0KY3AOrhAcI5ql
+ GPCSXmC4fsGByMLxrGMb5Y2UTgDu+SVaSJC7+AToudJXGpfti7lkBO+mddQC5YywlVT7 RA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xakbqtj93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 09:20:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0089JX3U144172;
+        Wed, 8 Jan 2020 09:20:36 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xcjvf6tnm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 09:20:35 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0089KQ3n008089;
+        Wed, 8 Jan 2020 09:20:26 GMT
+Received: from dhcp-10-175-161-204.vpn.oracle.com (/10.175.161.204)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jan 2020 01:20:26 -0800
+Date:   Wed, 8 Jan 2020 09:20:16 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-161-204.vpn.oracle.com
+To:     shuah <shuah@kernel.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, keescook@chromium.org,
+        yzaikin@google.com, akpm@linux-foundation.org,
+        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
+        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, davidgow@google.com, adilger.kernel@dilger.ca,
+        tytso@mit.edu, mcgrof@kernel.org, linux-doc@vger.kernel.org,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [RESEND PATCH v7 linux-kselftest-test 3/6] kunit: allow kunit
+ tests to be loaded as a module
+In-Reply-To: <6634211a-7ecc-378e-bc78-82c80e24d579@kernel.org>
+Message-ID: <alpine.LRH.2.20.2001080913410.19442@dhcp-10-175-161-204.vpn.oracle.com>
+References: <1578349703-15650-1-git-send-email-alan.maguire@oracle.com> <1578349703-15650-4-git-send-email-alan.maguire@oracle.com> <6634211a-7ecc-378e-bc78-82c80e24d579@kernel.org>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-In-Reply-To: <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001080080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001080080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolin,
+On Tue, 7 Jan 2020, shuah wrote:
 
-On 08/01/20 6:58 am, Baolin Wang wrote:
-> Hi Faiz,
+> Hi Alan,
 > 
-> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>
->> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>
->> Some standard SD host controllers can support both external dma
->> controllers as well as ADMA/SDMA in which the SD host controller
->> acts as DMA master. TI's omap controller is the case as an example.
->>
->> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->> the host controller but does not have any support for external DMA
->> controllers implemented using dmaengine, meaning that custom code is
->> needed for any systems that use an external DMA controller with SDHCI.
->>
->> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->> 1. Map scatterlists before dmaengine_prep_slave_sg()
->> 2. Use dma_async() functions inside of the send_command() path and call
->> terminate_sync() in non-atomic context in case of an error.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  drivers/mmc/host/Kconfig |   3 +
->>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
->>  drivers/mmc/host/sdhci.h |   8 ++
->>  3 files changed, 237 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> index d06b2dfe3c95..adef971582a1 100644
->> --- a/drivers/mmc/host/Kconfig
->> +++ b/drivers/mmc/host/Kconfig
->> @@ -1040,3 +1040,6 @@ config MMC_OWL
->>         help
->>           This selects support for the SD/MMC Host Controller on
->>           Actions Semi Owl SoCs.
->> +
->> +config MMC_SDHCI_EXTERNAL_DMA
->> +       bool
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index f6999054abcf..8cc78c76bc3d 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -10,6 +10,7 @@
->>   */
->>
->>  #include <linux/delay.h>
->> +#include <linux/dmaengine.h>
->>  #include <linux/ktime.h>
->>  #include <linux/highmem.h>
->>  #include <linux/io.h>
->> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->>         sdhci_set_block_info(host, data);
->>  }
->>
->> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
->> +
->> +static int sdhci_external_dma_init(struct sdhci_host *host)
->> +{
->> +       int ret = 0;
->> +       struct mmc_host *mmc = host->mmc;
->> +
->> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
->> +       if (IS_ERR(host->tx_chan)) {
->> +               ret = PTR_ERR(host->tx_chan);
->> +               if (ret != -EPROBE_DEFER)
->> +                       pr_warn("Failed to request TX DMA channel.\n");
->> +               host->tx_chan = NULL;
->> +               return ret;
->> +       }
->> +
->> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
->> +       if (IS_ERR(host->rx_chan)) {
->> +               if (host->tx_chan) {
->> +                       dma_release_channel(host->tx_chan);
->> +                       host->tx_chan = NULL;
->> +               }
->> +
->> +               ret = PTR_ERR(host->rx_chan);
->> +               if (ret != -EPROBE_DEFER)
->> +                       pr_warn("Failed to request RX DMA channel.\n");
->> +               host->rx_chan = NULL;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
->> +                                                  struct mmc_data *data)
->> +{
->> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
->> +}
->> +
->> +static int sdhci_external_dma_setup(struct sdhci_host *host,
->> +                                   struct mmc_command *cmd)
->> +{
->> +       int ret, i;
->> +       struct dma_async_tx_descriptor *desc;
->> +       struct mmc_data *data = cmd->data;
->> +       struct dma_chan *chan;
->> +       struct dma_slave_config cfg;
->> +       dma_cookie_t cookie;
->> +       int sg_cnt;
->> +
->> +       if (!host->mapbase)
->> +               return -EINVAL;
->> +
->> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
->> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
->> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->> +       cfg.src_maxburst = data->blksz / 4;
->> +       cfg.dst_maxburst = data->blksz / 4;
->> +
->> +       /* Sanity check: all the SG entries must be aligned by block size. */
->> +       for (i = 0; i < data->sg_len; i++) {
->> +               if ((data->sg + i)->length % data->blksz)
->> +                       return -EINVAL;
->> +       }
->> +
->> +       chan = sdhci_external_dma_channel(host, data);
->> +
->> +       ret = dmaengine_slave_config(chan, &cfg);
->> +       if (ret)
->> +               return ret;
->> +
->> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
->> +       if (sg_cnt <= 0)
->> +               return -EINVAL;
->> +
->> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
->> +                                      mmc_get_dma_dir(data),
->> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->> +       if (!desc)
->> +               return -EINVAL;
->> +
->> +       desc->callback = NULL;
->> +       desc->callback_param = NULL;
->> +
->> +       cookie = dmaengine_submit(desc);
->> +       if (cookie < 0)
+> Thanks for the resend.
 > 
-> We usually use the DMA engine standard API: dma_submit_error() to
-> validate the cookie.
+> On 1/6/20 3:28 PM, Alan Maguire wrote:
+> > As tests are added to kunit, it will become less feasible to execute
+> > all built tests together.  By supporting modular tests we provide
+> > a simple way to do selective execution on a running system; specifying
+> > 
+> > CONFIG_KUNIT=y
+> > CONFIG_KUNIT_EXAMPLE_TEST=m
+> > 
+> > ...means we can simply "insmod example-test.ko" to run the tests.
+> > 
+> > To achieve this we need to do the following:
+> > 
+> > o export the required symbols in kunit
+> > o string-stream tests utilize non-exported symbols so for now we skip
+> >    building them when CONFIG_KUNIT_TEST=m.
+> > o drivers/base/power/qos-test.c contains a few unexported interface
+> >    references, namely freq_qos_read_value() and freq_constraints_init().
+> >    Both of these could be potentially defined as static inline functions
+> >    in include/linux/pm_qos.h, but for now we simply avoid supporting
+> >    module build for that test suite.
+> > o support a new way of declaring test suites.  Because a module cannot
+> >    do multiple late_initcall()s, we provide a kunit_test_suites() macro
+> >    to declare multiple suites within the same module at once.
+> > o some test module names would have been too general ("test-test"
+> >    and "example-test" for kunit tests, "inode-test" for ext4 tests);
+> >    rename these as appropriate ("kunit-test", "kunit-example-test"
+> >    and "ext4-inode-test" respectively).
+> > 
+> > Also define kunit_test_suite() via kunit_test_suites()
+> > as callers in other trees may need the old definition.
+> > 
+> > Co-developed-by: Knut Omang <knut.omang@oracle.com>
+> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > Acked-by: Theodore Ts'o <tytso@mit.edu> # for ext4 bits
+> > Acked-by: David Gow <davidgow@google.com> # For list-test
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > ---
+> >   drivers/base/power/qos-test.c                      |  2 +-
+> >   fs/ext4/Kconfig                                    |  2 +-
+> >   fs/ext4/Makefile                                   |  3 +-
+> >   fs/ext4/inode-test.c                               |  4 ++-
+> >   include/kunit/test.h                               | 37
+> >   ++++++++++++++++------
+> >   kernel/sysctl-test.c                               |  4 ++-
+> >   lib/Kconfig.debug                                  |  4 +--
+> >   lib/kunit/Kconfig                                  |  4 +--
+> >   lib/kunit/Makefile                                 | 10 ++++--
+> >   lib/kunit/assert.c                                 |  8 +++++
+> >   lib/kunit/{example-test.c => kunit-example-test.c} |  4 ++-
+> >   lib/kunit/{test-test.c => kunit-test.c}            |  5 +--
+> >   lib/kunit/string-stream-test.c                     |  2 +-
+> >   lib/kunit/test.c                                   |  8 +++++
+> >   lib/kunit/try-catch.c                              |  2 ++
+> >   lib/list-test.c                                    |  4 ++-
+> >   16 files changed, 76 insertions(+), 27 deletions(-)
+> >   rename lib/kunit/{example-test.c => kunit-example-test.c} (97%)
+> >   rename lib/kunit/{test-test.c => kunit-test.c} (98%)
+> > 
+> > diff --git a/drivers/base/power/qos-test.c b/drivers/base/power/qos-test.c
+> > index 3115db0..79fc6c4 100644
+> > --- a/drivers/base/power/qos-test.c
+> > +++ b/drivers/base/power/qos-test.c
+> > @@ -114,4 +114,4 @@ static void freq_qos_test_readd(struct kunit *test)
+> >    .name = "qos-kunit-test",
+> >    .test_cases = pm_qos_test_cases,
+> >   };
+> > -kunit_test_suite(pm_qos_test_module);
+> > +kunit_test_suites(&pm_qos_test_module);
+> > diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+> > index ef42ab0..435510f 100644
+> > --- a/fs/ext4/Kconfig
+> > +++ b/fs/ext4/Kconfig
+> > @@ -108,7 +108,7 @@ config EXT4_DEBUG
+> >     echo 1 > /sys/module/ext4/parameters/mballoc_debug
+> >   
+> >   config EXT4_KUNIT_TESTS
+> > -	bool "KUnit tests for ext4"
+> > +	tristate "KUnit tests for ext4"
+> >    select EXT4_FS
+> >    depends on KUNIT
+> >    help
+> > diff --git a/fs/ext4/Makefile b/fs/ext4/Makefile
+> > index 840b91d..4ccb3c9 100644
+> > --- a/fs/ext4/Makefile
+> > +++ b/fs/ext4/Makefile
+> > @@ -13,5 +13,6 @@ ext4-y	:= balloc.o bitmap.o block_validity.o dir.o
+> > ext4_jbd2.o extents.o \
+> >   
+> >   ext4-$(CONFIG_EXT4_FS_POSIX_ACL)	+= acl.o
+> >   ext4-$(CONFIG_EXT4_FS_SECURITY)		+= xattr_security.o
+> > -ext4-$(CONFIG_EXT4_KUNIT_TESTS)		+= inode-test.o
+> > +ext4-inode-test-objs			+= inode-test.o
+> > +obj-$(CONFIG_EXT4_KUNIT_TESTS)		+= ext4-inode-test.o
+> >   ext4-$(CONFIG_FS_VERITY)		+= verity.o
+> > diff --git a/fs/ext4/inode-test.c b/fs/ext4/inode-test.c
+> > index 92a9da1..95620bf 100644
+> > --- a/fs/ext4/inode-test.c
+> > +++ b/fs/ext4/inode-test.c
+> > @@ -269,4 +269,6 @@ static void inode_test_xtimestamp_decoding(struct kunit
+> > *test)
+> >   	.test_cases = ext4_inode_test_cases,
+> >   };
+> >   
+> > -kunit_test_suite(ext4_inode_test_suite);
+> > +kunit_test_suites(&ext4_inode_test_suite);
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index dba4830..2dfb550 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -12,6 +12,7 @@
+> >   #include <kunit/assert.h>
+> >   #include <kunit/try-catch.h>
+> >   #include <linux/kernel.h>
+> > +#include <linux/module.h>
+> >   #include <linux/slab.h>
+> >   #include <linux/types.h>
+> >   
+> > @@ -197,31 +198,47 @@ struct kunit {
+> >   int kunit_run_tests(struct kunit_suite *suite);
+> >   
+> >   /**
+> > - * kunit_test_suite() - used to register a &struct kunit_suite with KUnit.
+> > + * kunit_test_suites() - used to register one or more &struct kunit_suite
+> > + *			 with KUnit.
+> >    *
+> > - * @suite: a statically allocated &struct kunit_suite.
+> > + * @suites: a statically allocated list of &struct kunit_suite.
+> >    *
+> > - * Registers @suite with the test framework. See &struct kunit_suite for
+> > + * Registers @suites with the test framework. See &struct kunit_suite for
+> >    * more information.
+> >    *
+> > - * NOTE: Currently KUnit tests are all run as late_initcalls; this means
+> > + * When builtin,  KUnit tests are all run as late_initcalls; this means
+> >    * that they cannot test anything where tests must run at a different init
+> >    * phase. One significant restriction resulting from this is that KUnit
+> >    * cannot reliably test anything that is initialize in the late_init
+> >    phase;
+> >    * another is that KUnit is useless to test things that need to be run in
+> >    * an earlier init phase.
+> >    *
+> > + * An alternative is to build the tests as a module.  Because modules
+> > + * do not support multiple late_initcall()s, we need to initialize an
+> > + * array of suites for a module.
+> > + *
+> >    * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+> >    * late_initcalls.  I have some future work planned to dispatch all KUnit
+> >    * tests from the same place, and at the very least to do so after
+> >    * everything else is definitely initialized.
+> >    */
+> > -#define kunit_test_suite(suite)
+> > \
+> > -	static int kunit_suite_init##suite(void)
+> > \
+> > -	{
+> > \
+> > -		return kunit_run_tests(&suite);
+> > \
+> > -	}
+> > \
+> > -	late_initcall(kunit_suite_init##suite)
+> > +#define kunit_test_suites(...)
+> > \
+> > +	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
+> > +	static int kunit_test_suites_init(void)				\
+> > +	{								\
+> > +		unsigned int i;						\
+> > +		for (i = 0; suites[i] != NULL; i++)			\
+> > +			kunit_run_tests(suites[i]);			\
+> > +		return 0;						\
+> > +	}								\
+> > +	late_initcall(kunit_test_suites_init);				\
+> > +	static void __exit kunit_test_suites_exit(void)			\
+> > +	{								\
+> > +		return;							\
+> > +	}								\
+> > +	module_exit(kunit_test_suites_exit)
+> > +
+> > +#define kunit_test_suite(suite)	kunit_test_suites(&suite)
 > 
+> This macro is getting more and more complex. Is there a good reason
+> for this code to stay as a macro?
+>
 
-The if condition is doing the same thing as the API. Do we really
-require it?
+I'm not sure if there's a better way, but by keeping it as a macro
+we get to define init/exit functions in context that will be used when the 
+code is built as a module, and not otherwise.  The body of 
+kunit_test_suites_init()/kunit_test_suites_exit() will likely evolve, and 
+when they do we could  take the oppportunity to simplify those functions 
+to just call kunit functions to do the init/cleanup. 
 
-Thanks,
-Faiz
+Thanks!
+
+Alan
+
+> thanks,
+> -- Shuah
+> 
