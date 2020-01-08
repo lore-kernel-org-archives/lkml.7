@@ -2,355 +2,189 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036DEC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7520C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BC9206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC00206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="aod1mUIM"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CCbYCLLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgAHIhB (ORCPT
+        id S1727390AbgAHIhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:37:01 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:42733 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgAHIg7 (ORCPT
+        Wed, 8 Jan 2020 03:37:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7420 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726313AbgAHIhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:36:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1578472620; x=1610008620;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BdrTlS0FPJ1oFfUxzleh5UlBzcGyn0/AS8FWYS/LHD4=;
-  b=aod1mUIMSTqc9hXjHZ0+F82ezMshSrtSYN73lMTygwyoUEOj8qszts/I
-   +aSiP8pJu31x2IjvtJDXpyzj4ltZmSX6zTWTg/0FYub4GDZWAQOOKhf1F
-   K/3cVpu0AuNGRxM20/Ch+8cPdr/IX68YWQXf7LYsEtT9Vh7tO0ZAIzgLI
-   /bpjh6OvchGRxtUqmFRBxqFTwGIXWZ/hMQw1vRKKEUkWKbe36/QFlr03Q
-   O4UngzLfd8VWcpM1KN+8zdgTXR74RiAmEaX7ZHTODUS4vQD8ENqy2cIcl
-   J49Tb4txwfkm+9/cyHlgs61G6CcnJw/F3SyHlvdFnRcHp/HReiEA9qo56
-   A==;
-IronPort-SDR: 37AAJ75okCi2Wd7XAe85ieRB8svON7tBcrgLL17we/T8uWgVUlk4LEBlmn7WbcKN4QcqqrmTF8
- YbXCBFF8dPJ9KUfCfQugl3NT6C4eakMooVUzQlSRem1zLL6V8TYm2+YP988fmVgLWR9mQAOFQ8
- AZPMIinActMGTaJStPWJ2X5Z1JzNnj8bEPfVnfhEJQNCrhbKn335zngrKoLYBeBAk+rK3N8sZq
- 8uioD6sjmvkFCwx6V6dYVLGdskssPFtiIL4X2VRUGsk73lB4Rt9wnbnAFCQgvEFoAMt7m2mfiY
- pmY=
-X-IronPort-AV: E=Sophos;i="5.69,409,1571673600"; 
-   d="scan'208";a="127676486"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Jan 2020 16:36:55 +0800
-IronPort-SDR: 42yfQUZ+ZOPZqID7bj1Cm4e6Av4W/wrcuQ5gXwfkH35lALAvXp5IGu/zVctGeMf1maSNDnP2uX
- o+en9OEKmPju8hO2W+3tYzSZOKWfoBH/BfLssbirHd8NGopBpzOvKZBJ1sDBfM0L3tB7jeWoeo
- FQiTM9FRXQtTjUayEXCPBQ8ZHe9u0mIb7aaz04FaQNHwCsHpWEdblPuVpptCjXFpavXcXTXyR2
- UxJ0KtCmovb0IOqRApFlKkZDLao2abQWyVEonDLVQLZ+qLE0rhabinuhOa4B1IhhHgMX92djH+
- u4j3i4QB+QMFUhNSQ+7W6KZC
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 00:30:42 -0800
-IronPort-SDR: y2A0CYZ+bnRa+/mV2bggtOhVoGABoQgIWx7WJrf0cxk3F0IL/JBEyvIeYa9Ar3bqL/c7FDrELQ
- OEfdKVnGIZhoo1mjHMwBe4lR+D2rC8LkbMwy0q18GaN3UfBRrO35FceaNIP5728TV97yB3cjnF
- yNEEROJMEyPhzo9Sb5F46jM9hpQLh2TZHIJzBKA91VcJbh7XV9xsOYdRqcLMwK3Cwvw3G9ryBD
- CxVlkLn4+M4/140g2NMfouig6HDEd4YerQP4PoLqB446dRTxYZloOawiahXmJ6YgxbQ8PKLhCo
- dXo=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip01.wdc.com with ESMTP; 08 Jan 2020 00:36:52 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v6 2/2] zonefs: Add documentation
-Date:   Wed,  8 Jan 2020 17:36:49 +0900
-Message-Id: <20200108083649.450834-3-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108083649.450834-1-damien.lemoal@wdc.com>
-References: <20200108083649.450834-1-damien.lemoal@wdc.com>
+        Wed, 8 Jan 2020 03:37:41 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0088XhNd015078;
+        Wed, 8 Jan 2020 09:37:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=yPNIf756cl8D+oxvK8LLBojSG/dQwdM1A+I4zftj8fc=;
+ b=CCbYCLLKndNABtq/VJGr/ALZrXaWmYLg1OVDSROsAZS7YZEBKnqruYz6+7BcWsLQ3zpR
+ QEb2WFHOvihS+VYxnhBSfGkc+DhvVHv3XZlB2rA0CFFMk/pHR/3fdpm8S7+LxL080asA
+ IMkAIDeaC0KfUXsAR7Qe6MuYkpTTjev5I4MGJZ77r75kNOFWFxEiqj3vJY7qKT91lqBE
+ ExNs5jiV8kreuUcWS3jEnFhNM/YXzZxPwL5UZqoYi5YEi1KvnVMZyKnakkEu162gU/eO
+ u2zlQgfUb/ClR7ETRIcRmuJMyYJ9bL9bcpVbqRPS5PbGjX2545h8Cm9GD3TpHkBDvV0V 5A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakuqtqkw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jan 2020 09:37:24 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 065AC10002A;
+        Wed,  8 Jan 2020 09:37:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF8422A6191;
+        Wed,  8 Jan 2020 09:37:23 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 8 Jan
+ 2020 09:37:23 +0100
+Subject: Re: [PATCH] phy: core: Add consumer device link support
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191104143713.11137-1-alexandre.torgue@st.com>
+ <146b2971-d51a-164c-aea8-9b6b4ff5f420@nvidia.com>
+ <341954e6-79f8-d45c-fc05-1ce5bd4e3abb@ti.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <b4bceef4-44b1-a48a-7b76-41eb3f5acc81@st.com>
+Date:   Wed, 8 Jan 2020 09:37:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <341954e6-79f8-d45c-fc05-1ce5bd4e3abb@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_01:2020-01-07,2020-01-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new file Documentation/filesystems/zonefs.txt to document
-zonefs principles and user-space tool usage.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- Documentation/filesystems/zonefs.txt | 241 +++++++++++++++++++++++++++
- MAINTAINERS                          |   1 +
- 2 files changed, 242 insertions(+)
- create mode 100644 Documentation/filesystems/zonefs.txt
 
-diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
-new file mode 100644
-index 000000000000..97008eb8ff82
---- /dev/null
-+++ b/Documentation/filesystems/zonefs.txt
-@@ -0,0 +1,241 @@
-+ZoneFS - Zone filesystem for Zoned block devices
-+
-+Overview
-+========
-+
-+zonefs is a very simple file system exposing each zone of a zoned block device
-+as a file. Unlike a regular POSIX-compliant file system with native zoned block
-+device support (e.g. f2fs), zonefs does not hide the sequential write
-+constraint of zoned block devices to the user. Files representing sequential
-+write zones of the device must be written sequentially starting from the end
-+of the file (append only writes).
-+
-+As such, zonefs is in essence closer to a raw block device access interface
-+than to a full featured POSIX file system. The goal of zonefs is to simplify
-+the implementation of zoned block device support in applications by replacing
-+raw block device file accesses with a richer file API, avoiding relying on
-+direct block device file ioctls which may be more obscure to developers. One
-+example of this approach is the implementation of LSM (log-structured merge)
-+tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-+by allowing SSTables to be stored in a zone file similarly to a regular file
-+system rather than as a range of sectors of the entire disk. The introduction
-+of the higher level construct "one file is one zone" can help reducing the
-+amount of changes needed in the application as well as introducing support for
-+different application programming languages.
-+
-+Zoned block devices
-+-------------------
-+
-+Zoned storage devices belong to a class of storage devices with an address
-+space that is divided into zones. A zone is a group of consecutive LBAs and all
-+zones are contiguous (there are no LBA gaps). Zones may have different types.
-+* Conventional zones: there are no access constraints to LBAs belonging to
-+  conventional zones. Any read or write access can be executed, similarly to a
-+  regular block device.
-+* Sequential zones: these zones accept random reads but must be written
-+  sequentially. Each sequential zone has a write pointer maintained by the
-+  device that keeps track of the mandatory start LBA position of the next write
-+  to the device. As a result of this write constraint, LBAs in a sequential zone
-+  cannot be overwritten. Sequential zones must first be erased using a special
-+  command (zone reset) before rewritting.
-+
-+Zoned storage devices can be implemented using various recording and media
-+technologies. The most common form of zoned storage today uses the SCSI Zoned
-+Block Commands (ZBC) and Zoned ATA Commands (ZAC) interfaces on Shingled
-+Magnetic Recording (SMR) HDDs.
-+
-+Solid State Disks (SSD) storage devices can also implement a zoned interface
-+to, for instance, reduce internal write amplification due to garbage collection.
-+The NVMe Zoned NameSpace (ZNS) is a technical proposal of the NVMe standard
-+committee aiming at adding a zoned storage interface to the NVMe protocol.
-+
-+zonefs on-disk metadata
-+-----------------------
-+
-+zonefs on-disk metadata is reduced to an immutable super block which
-+persistently stores a magic number and optional feature flags and values. On
-+mount, zonefs uses blkdev_report_zones() to obtain the device zone configuration
-+and populates the mount point with a static file tree solely based on this
-+information. File sizes come from the device zone type and write pointer
-+position managed by the device itself.
-+
-+The super block is always written on disk at sector 0. The first zone of the
-+device storing the super block is never exposed as a zone file by zonefs. If
-+the zone containing the super block is a sequential zone, the mkzonefs format
-+tool always "finishes" the zone, that is, it transitions the zone to a full
-+state to make it read-only, preventing any data write.
-+
-+Zone type sub-directories
-+-------------------------
-+
-+Files representing zones of the same type are grouped together under the same
-+sub-directory automatically created on mount.
-+
-+For conventional zones, the sub-directory "cnv" is used. This directory is
-+however created if and only if the device has usable conventional zones. If
-+the device only has a single conventional zone at sector 0, the zone will not
-+be exposed as a file as it will be used to store the zonefs super block. For
-+such devices, the "cnv" sub-directory will not be created.
-+
-+For sequential write zones, the sub-directory "seq" is used.
-+
-+These two directories are the only directories that exist in zonefs. Users
-+cannot create other directories and cannot rename nor delete the "cnv" and
-+"seq" sub-directories.
-+
-+The size of the directories indicated by the st_size field of struct stat,
-+obtained with the stat() or fstat() system calls, indicates the number of files
-+existing under the directory.
-+
-+Zone files
-+----------
-+
-+Zone files are named using the number of the zone they represent within the set
-+of zones of a particular type. That is, both the "cnv" and "seq" directories
-+contain files named "0", "1", "2", ... The file numbers also represent
-+increasing zone start sector on the device.
-+
-+All read and write operations to zone files are not allowed beyond the file
-+maximum size, that is, beyond the zone size. Any access exceeding the zone
-+size is failed with the -EFBIG error.
-+
-+Creating, deleting, renaming or modifying any attribute of files and
-+sub-directories is not allowed.
-+
-+The number of blocks of a file as reported by stat() and fstat() indicates the
-+size of the file zone, or in other words, the maximum file size.
-+
-+Conventional zone files
-+-----------------------
-+
-+The size of conventional zone files is fixed to the size of the zone they
-+represent. Conventional zone files cannot be truncated.
-+
-+These files can be randomly read and written, using any form of IO operation:
-+buffered IOs, direct IOs, memory mapped IOs (mmap), etc. There are no IO
-+constraint for these files beyond the file size limit mentioned above.
-+
-+Sequential zone files
-+---------------------
-+
-+The size of sequential zone files present in the "seq" sub-directory represents
-+the file's zone write pointer position relative to the zone start sector.
-+
-+Sequential zone files can only be written sequentially, starting from the file
-+end, that is, write operations can only be append writes. Zonefs makes no
-+attempt at accepting random writes and will fail any write request that has a
-+start offset not corresponding to the end of the last issued write.
-+
-+In order to give guarantees regarding write ordering, zonefs also prevents
-+buffered writes and mmap writes for sequential files. Only direct IO writes are
-+accepted. There are no restrictions on read operations nor on the type of IO
-+used to request reads (buffered IOs, direct IOs and mmap reads are all
-+accepted).
-+
-+Truncating sequential zone files is allowed only down to 0, in which case, the
-+zone is reset to rewind the file zone write pointer position to the start of
-+the zone, or up to the zone size, in which case the file's zone is transitioned
-+to the FULL state (finish zone operation).
-+
-+zonefs format options
-+---------------------
-+
-+Several optional features of zonefs can be enabled at format time.
-+* Conventional zone aggregation: ranges of contiguous conventional zones can be
-+  aggregated into a single larger file instead of the default one file per zone.
-+* File ownership: The owner UID and GID of zone files is by default 0 (root)
-+  but can be changed to any valid UID/GID.
-+* File access permissions: the default 640 access permissions can be changed.
-+
-+User Space Tools
-+================
-+
-+The mkzonefs tool is used to format zoned block devices for use with zonefs.
-+This tool is available on Github at:
-+
-+https://github.com/damien-lemoal/zonefs-tools
-+
-+zonefs-tools also includes a test suite which can be run against any zoned
-+block device, including null_blk block device created with zoned mode.
-+
-+Examples
-+--------
-+
-+The following formats a 15TB host-managed SMR HDD with 256 MB zones
-+with the conventional zones aggregation feature enabled.
-+
-+# mkzonefs -o aggr_cnv /dev/sdX
-+# mount -t zonefs /dev/sdX /mnt
-+# ls -l /mnt/
-+total 0
-+dr-xr-xr-x 2 root root     1 Nov 25 13:23 cnv
-+dr-xr-xr-x 2 root root 55356 Nov 25 13:23 seq
-+
-+The size of the zone files sub-directories indicate the number of files
-+existing for each type of zones. In this example, there is only one
-+conventional zone file (all conventional zones are aggregated under a single
-+file).
-+
-+# ls -l /mnt/cnv
-+total 137101312
-+-rw-r----- 1 root root 140391743488 Nov 25 13:23 0
-+
-+This aggregated conventional zone file can be used as a regular file.
-+
-+# mkfs.ext4 /mnt/cnv/0
-+# mount -o loop /mnt/cnv/0 /data
-+
-+The "seq" sub-directory grouping files for sequential write zones has in this
-+example 55356 zones.
-+
-+# ls -lv /mnt/seq
-+total 14511243264
-+-rw-r----- 1 root root 0 Nov 25 13:23 0
-+-rw-r----- 1 root root 0 Nov 25 13:23 1
-+-rw-r----- 1 root root 0 Nov 25 13:23 2
-+...
-+-rw-r----- 1 root root 0 Nov 25 13:23 55354
-+-rw-r----- 1 root root 0 Nov 25 13:23 55355
-+
-+For sequential write zone files, the file size changes as data is appended at
-+the end of the file, similarly to any regular file system.
-+
-+# dd if=/dev/zero of=/mnt/seq/0 bs=4096 count=1 conv=notrunc oflag=direct
-+1+0 records in
-+1+0 records out
-+4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s
-+
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/seq/0
-+
-+The written file can be truncated to the zone size, preventing any further
-+write operation.
-+
-+# truncate -s 268435456 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 268435456 Nov 25 13:49 /mnt/seq/0
-+
-+Truncation to 0 size allows freeing the file zone storage space and restart
-+append-writes to the file.
-+
-+# truncate -s 0 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 0 Nov 25 13:49 /mnt/seq/0
-+
-+Since files are statically mapped to zones on the disk, the number of blocks of
-+a file as reported by stat() and fstat() indicates the size of the file zone.
-+
-+# stat /mnt/seq/0
-+  File: /mnt/seq/0
-+  Size: 0         	Blocks: 524288     IO Block: 4096   regular empty file
-+Device: 870h/2160d	Inode: 50431       Links: 1
-+Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)
-+Access: 2019-11-25 13:23:57.048971997 +0900
-+Modify: 2019-11-25 13:52:25.553805765 +0900
-+Change: 2019-11-25 13:52:25.553805765 +0900
-+ Birth: -
-+
-+The number of blocks of the file ("Blocks") in units of 512B blocks gives the
-+maximum file size of 524288 * 512 B = 256 MB, corresponding to the device zone
-+size in this example. Of note is that the "IO block" field always indicates the
-+minimum IO size for writes and corresponds to the device physical sector size.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ffdeaa7191e..d658037e9843 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18312,6 +18312,7 @@ L:	linux-fsdevel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git
- S:	Maintained
- F:	fs/zonefs/
-+F:	Documentation/filesystems/zonefs.txt
- 
- ZPOOL COMPRESSED PAGE STORAGE API
- M:	Dan Streetman <ddstreet@ieee.org>
--- 
-2.24.1
+On 1/8/20 8:29 AM, Kishon Vijay Abraham I wrote:
+> Hi Jon,
+> 
+> On 07/01/20 5:21 PM, Jon Hunter wrote:
+>>
+>> On 04/11/2019 14:37, Alexandre Torgue wrote:
+>>> In order to enforce suspend/resume ordering, this commit creates link
+>>> between phy consumers and phy devices. This link avoids to suspend phy
+>>> before phy consumers.
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>
+>> With next-20200106 we are seeing a boot regression on Tegra124 Jetson
+>> TK1 board. Bisect is pointing to this commit and reverting this on top
+>> of -next fixes the problem.
+>>
+>> The bootlog is showing the following crash on boot ...
+>>
+>> [    1.730024] 8<--- cut here ---
+>> [    1.733079] Unable to handle kernel paging request at virtual address fffffe7f
+>> [    1.740318] pgd = (ptrval)
+>> [    1.743021] [fffffe7f] *pgd=affff841, *pte=00000000, *ppte=00000000
+>> [    1.749304] Internal error: Oops: 27 [#1] SMP ARM
+>> [    1.754001] Modules linked in:
+>> [    1.757057] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc4-next-20200106-g9eb1b48ca4ce #1
+>> [    1.765654] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>> [    1.771919] PC is at device_link_add+0x68/0x4d4
+>> [    1.776444] LR is at device_link_add+0x68/0x4d4
+>> [    1.780967] pc : [<c09832e4>]    lr : [<c09832e4>]    psr: 60000013
+>> [    1.787223] sp : ee0e1d60  ip : 60000013  fp : 00000005
+>> [    1.792439] r10: 00000000  r9 : 00000000  r8 : eefedd88
+>> [    1.797657] r7 : ee269c10  r6 : fffffdfb  r5 : 00000001  r4 : 00000001
+>> [    1.804173] r3 : ee0d8000  r2 : 00000000  r1 : 00000000  r0 : c1858f88
+>> [    1.810691] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+>> [    1.817815] Control: 10c5387d  Table: 8020406a  DAC: 00000051
+>> [    1.823552] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+>> [    1.829549] Stack: (0xee0e1d60 to 0xee0e2000)
+>> [    1.833904] 1d60: eefedd88 00000040 c07087a0 fffffdfb ee269c10 ee737640 00000000 eefedd88
+>> [    1.842073] 1d80: 00000000 00000000 00000005 c0707d34 00000000 ee3c8a00 ee7375c0 ee269c10
+>> [    1.850242] 1da0: eefedd88 c0a0bd2c c1704e48 ee269c10 ee269c00 ee3c8a00 00000000 c0a0c4a8
+>> [    1.858409] 1dc0: ee269c10 c1704e48 c186603c 00000000 c186603c 00000000 00000000 bc98ab22
+>> [    1.866577] 1de0: ffffffff ee269c10 00000000 c186603c ee269c00 c186603c 00000000 00000000
+>> [    1.874744] 1e00: c1656690 c0a0ffe0 00000000 bc98ab22 ee269c10 ee269c10 00000000 c186603c
+>> [    1.882913] 1e20: 00000000 c186603c 00000000 c09887e0 c18ff9dc ee269c10 c18ff9e0 c0986860
+>> [    1.891082] 1e40: ee269c10 c186603c c186603c c1704e48 00000000 c15003f0 c15c3854 c0986af0
+>> [    1.899249] 1e60: c15c3854 c0d128b4 c10e48ec ee269c10 00000000 c186603c c1704e48 00000000
+>> [    1.907416] 1e80: c15003f0 c15c3854 c1656690 c0986da0 00000000 c186603c ee269c10 c0986e28
+>> [    1.915583] 1ea0: 00000000 c186603c c0986da8 c0984ba0 c15003f0 ee20c058 ee242334 bc98ab22
+>> [    1.923752] 1ec0: c18588c8 c186603c ee737200 c18588c8 00000000 c0985b94 c133ef10 ffffe000
+>> [    1.931919] 1ee0: c186603c c186603c c18aaf80 ffffe000 c158b72c c09878ac c1704e48 c18aaf80
+>> [    1.940088] 1f00: ffffe000 c0302f80 00000168 c0367d84 c143e5b4 c1371000 00000000 00000006
+>> [    1.948255] 1f20: 00000006 c125b1b4 00000000 c1704e48 c126f324 c125b228 00000000 efffec88
+>> [    1.956424] 1f40: 00000000 bc98ab22 00000000 c18b6bc0 c18b6bc0 bc98ab22 c18b6bc0 c18b6bc0
+>> [    1.964591] 1f60: 00000007 c15c3834 00000169 c1500f28 00000006 00000006 00000000 c15003f0
+>> [    1.972758] 1f80: 00000000 00000000 c0ef1cdc 00000000 00000000 00000000 00000000 00000000
+>> [    1.980924] 1fa0: 00000000 c0ef1ce4 00000000 c03010e8 00000000 00000000 00000000 00000000
+>> [    1.989092] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> [    1.997260] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+>> [    2.005440] [<c09832e4>] (device_link_add) from [<c0707d34>] (devm_of_phy_get+0x6c/0xb0)
+>> [    2.013528] [<c0707d34>] (devm_of_phy_get) from [<c0a0bd2c>] (ahci_platform_get_phy+0x28/0xd0)
+>> [    2.022134] [<c0a0bd2c>] (ahci_platform_get_phy) from [<c0a0c4a8>] (ahci_platform_get_resources+0x384/0x468)
+>> [    2.031952] [<c0a0c4a8>] (ahci_platform_get_resources) from [<c0a0ffe0>] (tegra_ahci_probe+0x14/0x650)
+>> [    2.041254] [<c0a0ffe0>] (tegra_ahci_probe) from [<c09887e0>] (platform_drv_probe+0x48/0x98)
+>> [    2.049686] [<c09887e0>] (platform_drv_probe) from [<c0986860>] (really_probe+0x234/0x34c)
+>> [    2.057944] [<c0986860>] (really_probe) from [<c0986af0>] (driver_probe_device+0x60/0x168)
+>> [    2.066202] [<c0986af0>] (driver_probe_device) from [<c0986da0>] (device_driver_attach+0x58/0x60)
+>> [    2.075064] [<c0986da0>] (device_driver_attach) from [<c0986e28>] (__driver_attach+0x80/0xbc)
+>> [    2.083582] [<c0986e28>] (__driver_attach) from [<c0984ba0>] (bus_for_each_dev+0x74/0xb4)
+>> [    2.091751] [<c0984ba0>] (bus_for_each_dev) from [<c0985b94>] (bus_add_driver+0x164/0x1e8)
+>> [    2.100008] [<c0985b94>] (bus_add_driver) from [<c09878ac>] (driver_register+0x7c/0x114)
+>> [    2.108094] [<c09878ac>] (driver_register) from [<c0302f80>] (do_one_initcall+0x54/0x22c)
+>> [    2.116271] [<c0302f80>] (do_one_initcall) from [<c1500f28>] (kernel_init_freeable+0x14c/0x1b0)
+>> [    2.124967] [<c1500f28>] (kernel_init_freeable) from [<c0ef1ce4>] (kernel_init+0x8/0x10c)
+>> [    2.133139] [<c0ef1ce4>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+>> [    2.140697] Exception stack(0xee0e1fb0 to 0xee0e1ff8)
+>> [    2.145743] 1fa0:                                     00000000 00000000 00000000 00000000
+>> [    2.153910] 1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> [    2.162076] 1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>> [    2.168686] Code: e59f0470 03844040 eb15cb16 eb004c8a (e5d63084)
+>> [    2.174824] ---[ end trace fddbf111e88ec722 ]---
+>>
+>>
+>> I believe that there is a bug in this patch and the following fixed it for me ...
+>>
+>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+>> index 8dfb4868c8c3..2eb28cc2d2dc 100644
+>> --- a/drivers/phy/phy-core.c
+>> +++ b/drivers/phy/phy-core.c
+>> @@ -799,6 +799,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+>>                  devres_add(dev, ptr);
+>>          } else {
+>>                  devres_free(ptr);
+>> +               return phy;
+>>          }
+>>   
+>>          link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+> 
+> Thank you for spotting this. I've included the fix now.
 
+Thanks guys, and sorry for this regression.
+
+alex
+
+> 
+> Thanks
+> Kishon
+> 
