@@ -2,199 +2,109 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62613C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1326C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF8320692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732F42072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="TE9//4Kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgAHQrL (ORCPT
+        id S1729467AbgAHQrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:47:11 -0500
-Received: from mga18.intel.com ([134.134.136.126]:3817 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbgAHQrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:47:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:47:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="225935293"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Jan 2020 08:47:04 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEU4-0005YR-5H; Wed, 08 Jan 2020 18:47:04 +0200
-Date:   Wed, 8 Jan 2020 18:47:04 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 21/36] platform/x86: intel_pmc_ipc: Drop
- intel_pmc_gcr_read() and intel_pmc_gcr_write()
-Message-ID: <20200108164704.GK32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-22-mika.westerberg@linux.intel.com>
+        Wed, 8 Jan 2020 11:47:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55693 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729161AbgAHQrP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:47:15 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so3203788wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google;
+        h=reply-to:subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ODlM0CIKkuqbvn6TyFqbyKvykYoCZutfBb6M9KByNfE=;
+        b=TE9//4Kr2iBqUOZFqMt6oBcxiqw8769O1G828j6Sbl0flSOvPsxKmVhauaas8UBgta
+         JsjQ3RsWvQzWlZayk+un3QGUrIblPk/+4f0Tzl6aftQ/JCmHXdZsWHHnAHpUYXEg7c1S
+         50k5GQy69hVVSPYWfGG0NxXeH0t9Ul5CsV3EPFn5XsswVNthreSjJGYB+2O/1il8hEDV
+         evY42PO1xaZju9+Xx1UHodn0/RZcr8X2JbNUMjzuqCwqaqUfC21rUhHiYgtMQple7YoK
+         iHFc7vt1SqqrN5HGLKFeZ6TJh3t8rkkew2tLRPRO+3XBMsIGK6Lbuau1hebpd6su+1GC
+         DQhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ODlM0CIKkuqbvn6TyFqbyKvykYoCZutfBb6M9KByNfE=;
+        b=LFM6WXoxmvEP3xMshLinF+nNDNT7VXyT/T0FiCNv56gVH7bbiiRCu7d2dTQLw+jyl2
+         adVCdGuEqXU+aVftnX+EbSIYbJK+j0XPetWqiAn+5TKzenSyoFsnSlqyDmxOVyolkPXM
+         ttpcfZBB2S8HZfwAuNKb3wFn2B5+1P6EMh6fBf4xHnErSK0F63RwzlTVlT+9rLVtstkz
+         zsmfCC2w68Rf6fKqkZWWi4n7aEU6RZkuul/av3HzI1DyOc/hVykvvfZZuCxlYCC0Rrbl
+         xZWqV9gNaxu3fnYi662iEb8biHsqBO5iuHYXJsDFKLQTWqx7iS+PI5GTojD1neZuTuW9
+         VHPw==
+X-Gm-Message-State: APjAAAVe8BW1DWSBD/RdOyq6yHQ7qURtktzC8DgFOW3e6EhWWqH/+U5/
+        lV4ZA+Gw3lfCxlnzFc607gO1Jg==
+X-Google-Smtp-Source: APXvYqwZeX/npX9kHmTB5Cavy4RpYUSbhK4sKOk4mLYZ4U3ylpICSKaWpvMvA+XXctckGNlnulHp4g==
+X-Received: by 2002:a7b:c949:: with SMTP id i9mr4939006wml.131.1578502033588;
+        Wed, 08 Jan 2020 08:47:13 -0800 (PST)
+Received: from ?IPv6:2a01:e0a:410:bb00:2427:34d:af57:5d8? ([2a01:e0a:410:bb00:2427:34d:af57:5d8])
+        by smtp.gmail.com with ESMTPSA id p15sm4156718wma.40.2020.01.08.08.47.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 08:47:12 -0800 (PST)
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH ghak25 v2 1/9] netfilter: normalize x_table function
+ declarations
+To:     Richard Guy Briggs <rgb@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        eparis@parisplace.org, ebiederm@xmission.com, tgraf@infradead.org
+References: <cover.1577830902.git.rgb@redhat.com>
+ <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+Message-ID: <f8ee5829-f094-96b8-40c2-b0278f93fb03@6wind.com>
+Date:   Wed, 8 Jan 2020 17:47:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-22-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:46PM +0300, Mika Westerberg wrote:
-> These functions are not used anywhere so drop them completely.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Le 06/01/2020 à 19:54, Richard Guy Briggs a écrit :
+> Git context diffs were being produced with unhelpful declaration types
+> in the place of function names to help identify the funciton in which
+> changes were made.
+Just for my information, how do you reproduce that? With a 'git diff'?
 
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel_pmc_ipc.h | 12 ------
->  drivers/platform/x86/intel_pmc_ipc.c | 59 ----------------------------
->  2 files changed, 71 deletions(-)
+> Normalize x_table function declarations so that git context diff
+> function labels work as expected.
 > 
-> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-> index 966ff2171ff9..e6da1ce26256 100644
-> --- a/arch/x86/include/asm/intel_pmc_ipc.h
-> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
-> @@ -34,9 +34,7 @@
->  int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
->  		u32 *out, u32 outlen);
->  int intel_pmc_s0ix_counter_read(u64 *data);
-> -int intel_pmc_gcr_read(u32 offset, u32 *data);
->  int intel_pmc_gcr_read64(u32 offset, u64 *data);
-> -int intel_pmc_gcr_write(u32 offset, u32 data);
->  
->  #else
->  
-> @@ -51,21 +49,11 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
->  	return -EINVAL;
->  }
->  
-> -static inline int intel_pmc_gcr_read(u32 offset, u32 *data)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static inline int intel_pmc_gcr_read64(u32 offset, u64 *data)
->  {
->  	return -EINVAL;
->  }
->  
-> -static inline int intel_pmc_gcr_write(u32 offset, u32 data)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  #endif /*CONFIG_INTEL_PMC_IPC*/
->  
->  #endif
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index 83f47df1c4a5..677ed470e14e 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -210,35 +210,6 @@ static inline int is_gcr_valid(u32 offset)
->  	return 0;
->  }
->  
-> -/**
-> - * intel_pmc_gcr_read() - Read a 32-bit PMC GCR register
-> - * @offset:	offset of GCR register from GCR address base
-> - * @data:	data pointer for storing the register output
-> - *
-> - * Reads the 32-bit PMC GCR register at given offset.
-> - *
-> - * Return:	negative value on error or 0 on success.
-> - */
-> -int intel_pmc_gcr_read(u32 offset, u32 *data)
-> -{
-> -	int ret;
-> -
-> -	spin_lock(&ipcdev.gcr_lock);
-> -
-> -	ret = is_gcr_valid(offset);
-> -	if (ret < 0) {
-> -		spin_unlock(&ipcdev.gcr_lock);
-> -		return ret;
-> -	}
-> -
-> -	*data = readl(ipcdev.gcr_mem_base + offset);
-> -
-> -	spin_unlock(&ipcdev.gcr_lock);
-> -
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
-> -
->  /**
->   * intel_pmc_gcr_read64() - Read a 64-bit PMC GCR register
->   * @offset:	offset of GCR register from GCR address base
-> @@ -268,36 +239,6 @@ int intel_pmc_gcr_read64(u32 offset, u64 *data)
->  }
->  EXPORT_SYMBOL_GPL(intel_pmc_gcr_read64);
->  
-> -/**
-> - * intel_pmc_gcr_write() - Write PMC GCR register
-> - * @offset:	offset of GCR register from GCR address base
-> - * @data:	register update value
-> - *
-> - * Writes the PMC GCR register of given offset with given
-> - * value.
-> - *
-> - * Return:	negative value on error or 0 on success.
-> - */
-> -int intel_pmc_gcr_write(u32 offset, u32 data)
-> -{
-> -	int ret;
-> -
-> -	spin_lock(&ipcdev.gcr_lock);
-> -
-> -	ret = is_gcr_valid(offset);
-> -	if (ret < 0) {
-> -		spin_unlock(&ipcdev.gcr_lock);
-> -		return ret;
-> -	}
-> -
-> -	writel(data, ipcdev.gcr_mem_base + offset);
-> -
-> -	spin_unlock(&ipcdev.gcr_lock);
-> -
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-> -
->  /**
->   * intel_pmc_gcr_update() - Update PMC GCR register bits
->   * @offset:	offset of GCR register from GCR address base
+[snip]
+> 
 > -- 
-> 2.24.1
-> 
+> 1.8.3.1
+git v1.8.3.1 is seven years old:
+https://github.com/git/git/releases/tag/v1.8.3.1
 
--- 
-With Best Regards,
-Andy Shevchenko
+I don't see any problems with git v2.24. Not sure that the patch brings any
+helpful value except complicating backports.
 
-
+Regards,
+Nicolas
