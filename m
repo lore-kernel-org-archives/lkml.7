@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEA9C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED46BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21562077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4E720720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgAHTr2 (ORCPT
+        id S1728096AbgAHTro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:47:28 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43822 "EHLO
+        Wed, 8 Jan 2020 14:47:44 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43796 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730482AbgAHTqF (ORCPT
+        by vger.kernel.org with ESMTP id S1730471AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:46:05 -0500
+        Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006p6-IK; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHE-0006p6-3X; Wed, 08 Jan 2020 19:46:00 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dnp-KY; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007do9-TE; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Chaotian Jing" <chaotian.jing@mediatek.com>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 19:43:40 +0000
-Message-ID: <lsq.1578512578.769610404@decadent.org.uk>
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>
+Date:   Wed, 08 Jan 2020 19:43:44 +0000
+Message-ID: <lsq.1578512578.444365079@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 42/63] mmc: mmc: fix switch timeout issue caused by
- jiffies precision
+Subject: [PATCH 3.16 46/63] arm64: debug: Don't propagate UNKNOWN FAR into
+ si_code for debug signals
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,31 +57,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 987aa5f8059613bf85cbb6f64ffbd34f5cb7a9d1 upstream.
+commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
 
-with CONFIG_HZ=100, the precision of jiffies is 10ms, and the
-generic_cmd6_time of some card is also 10ms. then, may be current
-time is only 5ms, but already timed out caused by jiffies precision.
+FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
+taking a hardware watchpoint. Unfortunately, if a debug handler returns
+a non-zero value, then we will propagate the UNKNOWN FAR value to
+userspace via the si_addr field of the SIGTRAP siginfo_t.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Instead, let's set si_addr to take on the PC of the faulting instruction,
+which we have available in the current pt_regs.
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/mmc/core/mmc_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/mm/fault.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -470,7 +470,7 @@ int __mmc_switch(struct mmc_card *card,
- 		timeout_ms = MMC_OPS_TIMEOUT_MS;
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -512,11 +512,12 @@ void __init hook_debug_fault_code(int nr
+ 	debug_fault_info[nr].name	= name;
+ }
  
- 	/* Must check status to be sure of no errors. */
--	timeout = jiffies + msecs_to_jiffies(timeout_ms);
-+	timeout = jiffies + msecs_to_jiffies(timeout_ms) + 1;
- 	do {
- 		if (send_status) {
- 			err = __mmc_send_status(card, &status, ignore_crc);
+-asmlinkage int __exception do_debug_exception(unsigned long addr,
++asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 					      unsigned int esr,
+ 					      struct pt_regs *regs)
+ {
+ 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
++	unsigned long pc = instruction_pointer(regs);
+ 	struct siginfo info;
+ 	int rv;
+ 
+@@ -527,16 +528,16 @@ asmlinkage int __exception do_debug_exce
+ 	if (interrupts_enabled(regs))
+ 		trace_hardirqs_off();
+ 
+-	if (!inf->fn(addr, esr, regs)) {
++	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
+ 		rv = 1;
+ 	} else {
+ 		pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
+-			 inf->name, esr, addr);
++			 inf->name, esr, pc);
+ 
+ 		info.si_signo = inf->sig;
+ 		info.si_errno = 0;
+ 		info.si_code  = inf->code;
+-		info.si_addr  = (void __user *)addr;
++		info.si_addr  = (void __user *)pc;
+ 		arm64_notify_die("", regs, &info, 0);
+ 		rv = 0;
+ 	}
 
