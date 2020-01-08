@@ -2,117 +2,90 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A184C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4351CC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37082067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1029D20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XC5Zexf9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hpES8SdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgAHSvP (ORCPT
+        id S1729525AbgAHSw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:51:15 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40654 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbgAHSvO (ORCPT
+        Wed, 8 Jan 2020 13:52:57 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35633 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729362AbgAHSw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:51:14 -0500
-Received: by mail-ed1-f65.google.com with SMTP id b8so3466516edx.7;
-        Wed, 08 Jan 2020 10:51:13 -0800 (PST)
+        Wed, 8 Jan 2020 13:52:56 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s7so14549pjc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 10:52:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vethsP9E50DdWtICMPOkuQ6goKBYP2RJVrPlIQmJTMg=;
-        b=XC5Zexf92SHypxHLvMmBI5w3FSHrSw3ChtdI2OF27PsAQbEUToKMp47NP0PJ5PZ4iO
-         qvwclnwMcEmolMZ6JZwM2h3Ed7tAM0PZau2FG9JHoPmjAZlIJcgEnec56iw+K1AJIc8q
-         adJ3qNq+HyYQiWySRj9+wQBXeJJV+9w8gUIJdUvR9SsRt7HrCnQf4ldX0KTSdZCxNRuJ
-         qsd8FjWUJdfKQHqU+PoF+W+sYuDCW4BHUlPhd+hpwh+SYYbaSSgA2xMDB//uELrSoLRj
-         LGwvQij5PnNS7eVmZjSVWF42QOkdTi0WFP6ZOdKO+o2LlFlc03BfqaTGx/3yZPUqwSYf
-         /zeQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=hCOCHoRkkp5UhkO13eAqohn7PL1ou6ER+9SiJJ5LA7k=;
+        b=hpES8SdR9Uct+j5WAd8zNLCHlHLI0Dpp7FDalu+Q8dq7QprTl2szIsh+6DBrWb4NNz
+         xRrBGudrw+X/Ehs59ly2N8d8DSql+Fw7Ppwdjr4XpX75C+4sgM5xKFuqbIkO+z3QChEl
+         iQYQ0JNOqgh+OuuWj0mFms7QubXPP6Q/OqvExcsyRbIwKARY9jgHP2914Gc3gDTgacjJ
+         CR7FlFxLhEsgcA9/zQ4FxzryADWNeNR+68ozE/oMrV3BXa3+q5U8PWFc9AiE31Wd81R0
+         25Cgh1ITcxRibM6EOVZlV9vd99Nz5cGzZQ82KxKqCxpzlKEY6ZSH/lut8bdb5+a1U84z
+         Zw8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vethsP9E50DdWtICMPOkuQ6goKBYP2RJVrPlIQmJTMg=;
-        b=JMILJDm5sH62/DlqVg5yBXozlrSoiiyjkaCWDrxHLH+qF4PZhUqQhpGn10VSfclIBB
-         wCmZmGDyPQu4baXYQl784elu7TAErDIKx4wjFV+nFTaQLDv3fytlu939trNI8jOwApxq
-         yv0q/HlheJI9iAS9nDwDpAxzuENSWWmxbY8RRUCYphkDBY1Qvpyek7SPlY70P/NqDfes
-         nn9nqBTtYCwMXj9I7s/Z39j3W+MBhX9vTbC/WLu5uFCQTArCfti+GXEYX1OOBfUXdVkA
-         TqW59Kepe9OIqttwnTLOpW8pZcBdmAotINoaytAKuIxV2nUJtQjkMt5DMatyvgxLNfy0
-         yFFw==
-X-Gm-Message-State: APjAAAV1FsYVcJ+mBD48GvYReSUt+bxSZivoyS9c3Ot2u/A/50XGivyw
-        e5+eGczryR6p8GVRXThU/Aqmh5rhTLNbwlPDgDMHS3uc
-X-Google-Smtp-Source: APXvYqxj9WY6aFVY3QGDoy++bN3UIyzQmXGjf5q5b/ajYlIkYPYGNiUR8mdoppRNAUFyfzun/A2+8RJzsqQCeEQWPTE=
-X-Received: by 2002:a05:6402:311b:: with SMTP id dc27mr7182618edb.36.1578509472684;
- Wed, 08 Jan 2020 10:51:12 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hCOCHoRkkp5UhkO13eAqohn7PL1ou6ER+9SiJJ5LA7k=;
+        b=Cemh4Gi13HpKw34dzPQBrgHKXrRefNN/xM+jgiUt3L9/K8HzPHmP5ctdnc0hV2BnGv
+         2A8L2YePFoW7GPmMhuNxndUYTz229PE6sdD2sfilelMV2KyI+zCQ+FIMokUpSy6ttoEn
+         LcEvfcdjJupnWIHx/CWG9/fQ4l4uFCNav1CW2QD8+UmL/xYWhxK73l1pb63jOgqzHf19
+         iV3l1xoB/1EuagB00NBXPsKXtBt8DxtOZfd/We6CBYs9BJ/Y4z7f54dvUsbM4pW2/4df
+         qEElnEK4UNLbSEsZT6ZDmujGTjODxqelcRNWpDBoIhbmG1fCcr1Nl+z6i/+ZfSvUfuq6
+         BWzQ==
+X-Gm-Message-State: APjAAAWxs1FsJntMNRKuc1LioM8QOVmyeW4vLtNIu+hkkn17W9qr916n
+        V2uPzPOotlfCKN/HtC0hFBl0/A==
+X-Google-Smtp-Source: APXvYqyaHwgFqHkdB1vUFNMuHsw49pWnr1JXRS+Ome1dK+LyPoCS43sUUsv8UcMPR7AbUHvBPCKp0g==
+X-Received: by 2002:a17:902:34a:: with SMTP id 68mr6646218pld.250.1578509576062;
+        Wed, 08 Jan 2020 10:52:56 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id m3sm4429923pfh.116.2020.01.08.10.52.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 10:52:55 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: add audio fifo depths
+In-Reply-To: <20191218202452.1288378-1-jbrunet@baylibre.com>
+References: <20191218202452.1288378-1-jbrunet@baylibre.com>
+Date:   Wed, 08 Jan 2020 10:52:54 -0800
+Message-ID: <7himllg4qh.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20200108124844.1348395-1-arnd@arndb.de>
-In-Reply-To: <20200108124844.1348395-1-arnd@arndb.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 8 Jan 2020 20:51:01 +0200
-Message-ID: <CA+h21hqy6mK-Cy0VyXtDUtPqvqbTPGZ45aJ2eko+VQFzjDbtKg@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: felix: fix link error
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Arnd!
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-On Wed, 8 Jan 2020 at 14:59, Arnd Bergmann <arnd@arndb.de> wrote:
+> Add the property describing the depth of the audio fifo on the axg, g12a
+> and sm1 SoC family
 >
-> When the enetc driver is disabled, the mdio support fails to
-> get built:
->
-> drivers/net/dsa/ocelot/felix_vsc9959.o: In function `vsc9959_mdio_bus_alloc':
-> felix_vsc9959.c:(.text+0x19c): undefined reference to `enetc_hw_alloc'
-> felix_vsc9959.c:(.text+0x1d1): undefined reference to `enetc_mdio_read'
-> felix_vsc9959.c:(.text+0x1d8): undefined reference to `enetc_mdio_write'
->
-> Change the Makefile to enter the subdirectory for this as well.
->
-> Fixes: bdeced75b13f ("net: dsa: felix: Add PCS operations for PHYLINK")
-
-I agree the patch is only seen with the commit you pointed to, but the
-problem is also introduced by:
-
-Fixes: 6517798dd343 ("enetc: Make MDIO accessors more generic and
-export to include/linux/fsl")
-
-[ please excuse me David, I don't know how to configure neither Gmail
-nor Thunderbird to disable word wrapping ]
-
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  drivers/net/ethernet/freescale/Makefile | 1 +
->  1 file changed, 1 insertion(+)
+>  Hi Kevin,
 >
-> diff --git a/drivers/net/ethernet/freescale/Makefile b/drivers/net/ethernet/freescale/Makefile
-> index 6a93293d31e0..67c436400352 100644
-> --- a/drivers/net/ethernet/freescale/Makefile
-> +++ b/drivers/net/ethernet/freescale/Makefile
-> @@ -25,4 +25,5 @@ obj-$(CONFIG_FSL_DPAA_ETH) += dpaa/
->  obj-$(CONFIG_FSL_DPAA2_ETH) += dpaa2/
->
->  obj-$(CONFIG_FSL_ENETC) += enetc/
-> +obj-$(CONFIG_FSL_ENETC_MDIO) += enetc/
->  obj-$(CONFIG_FSL_ENETC_VF) += enetc/
-> --
-> 2.20.0
->
+>  The binding documentation for this new property will be merged through Mark's ASoC tree [0]
+> [0]: https://lkml.kernel.org/r/applied-20191218172420.1199117-3-jbrunet@baylibre.com
+
+Queued for v5.6,
+
+Thanks,
+
+Kevin
