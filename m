@@ -2,86 +2,161 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA86EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB20C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BF52070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B752070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="DA+TRyMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgAHOUZ (ORCPT
+        id S1728850AbgAHOUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:20:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:45232 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbgAHOUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:20:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F23B31B;
-        Wed,  8 Jan 2020 06:20:24 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E4533F703;
-        Wed,  8 Jan 2020 06:20:22 -0800 (PST)
-Subject: Re: [PATCH RFT v1 1/3] drm/panfrost: enable devfreq based the
- "operating-points-v2" property
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     dri-devel@lists.freedesktop.org, alyssa@rosenzweig.io,
-        steven.price@arm.com, tomeu.vizoso@collabora.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, daniel@ffwll.ch, airlied@linux.ie,
-        linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <20200107230626.885451-1-martin.blumenstingl@googlemail.com>
- <20200107230626.885451-2-martin.blumenstingl@googlemail.com>
- <a85f2063-f412-9762-58d1-47fdffb24af9@arm.com>
- <CAFBinCBYrNC+ULV6Y=77qogowkDZwM+H0bxOqPN4sT6q3krGfw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <be59a20b-af08-5b55-fa69-f87d5aa9f277@arm.com>
-Date:   Wed, 8 Jan 2020 14:20:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Jan 2020 09:20:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42443 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgAHOUi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 09:20:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q6so3532033wro.9
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:20:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UNEVB0IbcLubIcT7KASuWF617xfGG+pPUETe7tDmmuw=;
+        b=DA+TRyMm0KdyEb4fLOrfBWsgpvoL9TKJ1ThoqOWM7OQfVXExWS+/gOgbfXHahqt6q1
+         X85IAnRmo2S5bYVvTUuHZ8wAp+QDmzCq8ratpkKSHB5M5D5GHsHsqoGjefsavgROKxuN
+         WYJEF1M1kKCTBNCL9tsnEINUDkTZqS924W1hit7XVaq3Ns7r80bW0XbYzeNOBC7XzAS6
+         kyVBoGSyFDoCvxcLaTrhXo/IfzGMLG5Kj1tof0/dWr7bcCMTSKcbEZ/Kxch7tAoFPGmE
+         zZ55UebtQ6ByOXs9BSgpp4+rThqUVl+YMAhlMogp6uzYoLLUVtrOXMIfw7pNBcVnyIWa
+         l1nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UNEVB0IbcLubIcT7KASuWF617xfGG+pPUETe7tDmmuw=;
+        b=ICDMdlhPNfZY8Q3NuMDK3GUT4beeXX1ZBy7Hfyw+19NHpQh95oXwuUjlZw4CzCXjDO
+         Br/1f/Dq3zxwaKRg2rFiPMwoX7sL1RDoE+FpiVKijzPdOa3CK9o3dEfAy/vdG7nYgqUB
+         Xe5oZ1OsQ0WQjfUp/LF3hxIsddXEvs6fDMazo2GfGrqvDiFJHHu/EHRXTNMGaguXCf+a
+         ZRMEHcNtctKkCTypCNOekGpfKmFUw16bA81h5+VA7fh1AtCnvhYudrsDRbNm1oM5epgm
+         4+v8zYVAQfPKQ0nMohmDfPGrC9W7rpoRtSni6qHI6zeCjPXnFVCxby3+NdIm+WtWnv7E
+         +Gsg==
+X-Gm-Message-State: APjAAAXvTjTqFnXSuxOvjFTHK2rwNhfR1m3RLHxd1iMMr4FQSRAsDuII
+        SKjXhaa9UFZlZvGCMBbGpE4DPRXL/6VVhnd9Eepk/P6M4mw=
+X-Google-Smtp-Source: APXvYqw0BEmAIR/kDvuo7EWWRYEiMT/Z/muqEccIZHzlByYud6Aq2jOCKpVAw8xwH84vX/zCIW/OP+bEQWBlmZuGz7U=
+X-Received: by 2002:a5d:44cd:: with SMTP id z13mr4943064wrr.104.1578493235547;
+ Wed, 08 Jan 2020 06:20:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBYrNC+ULV6Y=77qogowkDZwM+H0bxOqPN4sT6q3krGfw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20f6ae784e058aaa136a61456fe4784330255ce5.1571828230.git.michal.simek@xilinx.com>
+In-Reply-To: <20f6ae784e058aaa136a61456fe4784330255ce5.1571828230.git.michal.simek@xilinx.com>
+From:   Michal Simek <monstr@monstr.eu>
+Date:   Wed, 8 Jan 2020 15:20:24 +0100
+Message-ID: <CAHTX3dLpGhOxxX1++GKq-U1Emd01R=iuqm9uMgicjmEhjRg-3Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: zynq: use physical cpuid in zynq_slcr_cpu_stop/start
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>,
+        Quanyang Wang <quanyang.wang@windriver.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ +Sudeep ]
+st 23. 10. 2019 v 12:57 odes=C3=ADlatel Michal Simek
+<michal.simek@xilinx.com> napsal:
+>
+> From: Quanyang Wang <quanyang.wang@windriver.com>
+>
+> When kernel booting, it will create a cpuid map between the logical cpus
+> and physical cpus. In a normal boot, the cpuid map is as below:
+>
+>     Physical      Logical
+>         0    =3D=3D>     0
+>         1    =3D=3D>     1
+>
+> But in kdump, there is a condition that the crash happens at the
+> physical cpu1, and the crash kernel will run at the physical cpu1 too,
+> so the cpuid map in crash kernel is as below:
+>
+>     Physical      Logical
+>         1    =3D=3D>     0
+>         0    =3D=3D>     1
+>
+> The functions zynq_slcr_cpu_stop/start is to stop/start the physical
+> cpus, the parameter cpu should be the physical cpuid. So use
+> cpu_logical_map to translate the logical cpuid to physical cpuid.
+> Or else the logical cpu0(physical cpu1) will stop itself and
+> the processor will hang.
+>
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/arm/mach-zynq/platsmp.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.c
+> index a10085be9073..68ec303fa278 100644
+> --- a/arch/arm/mach-zynq/platsmp.c
+> +++ b/arch/arm/mach-zynq/platsmp.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <asm/cacheflush.h>
+> +#include <asm/smp_plat.h>
+>  #include <asm/smp_scu.h>
+>  #include <linux/irqchip/arm-gic.h>
+>  #include "common.h"
+> @@ -30,6 +31,7 @@ int zynq_cpun_start(u32 address, int cpu)
+>  {
+>         u32 trampoline_code_size =3D &zynq_secondary_trampoline_end -
+>                                                 &zynq_secondary_trampolin=
+e;
+> +       u32 phy_cpuid =3D cpu_logical_map(cpu);
+>
+>         /* MS: Expectation that SLCR are directly map and accessible */
+>         /* Not possible to jump to non aligned address */
+> @@ -39,7 +41,7 @@ int zynq_cpun_start(u32 address, int cpu)
+>                 u32 trampoline_size =3D &zynq_secondary_trampoline_jump -
+>                                                 &zynq_secondary_trampolin=
+e;
+>
+> -               zynq_slcr_cpu_stop(cpu);
+> +               zynq_slcr_cpu_stop(phy_cpuid);
+>                 if (address) {
+>                         if (__pa(PAGE_OFFSET)) {
+>                                 zero =3D ioremap(0, trampoline_code_size)=
+;
+> @@ -68,7 +70,7 @@ int zynq_cpun_start(u32 address, int cpu)
+>                         if (__pa(PAGE_OFFSET))
+>                                 iounmap(zero);
+>                 }
+> -               zynq_slcr_cpu_start(cpu);
+> +               zynq_slcr_cpu_start(phy_cpuid);
+>
+>                 return 0;
+>         }
+> --
+> 2.17.1
+>
 
-On 08/01/2020 12:38 pm, Martin Blumenstingl wrote:
-> Hi Robin,
-> 
-> On Wed, Jan 8, 2020 at 12:18 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 07/01/2020 11:06 pm, Martin Blumenstingl wrote:
->>> Decouple the check to see whether we want to enable devfreq for the GPU
->>> from dev_pm_opp_set_regulators(). This is preparation work for adding
->>> back support for regulator control (which means we need to call
->>> dev_pm_opp_set_regulators() before dev_pm_opp_of_add_table(), which
->>> means having a check for "is devfreq enabled" that is not tied to
->>> dev_pm_opp_of_add_table() makes things easier).
->>
->> Hmm, what about cases like the SCMI DVFS protocol where the OPPs are
->> dynamically discovered rather than statically defined in DT?
-> where can I find such an example (Amlogic SoCs use SCPI instead of
-> SCMI, so I don't think that I have any board with SCMI support) or
-> some documentation?
-> (I could only find SCPI clock and CPU DVFS implementations, but no
-> generic "OPPs for any device" implementation)
+Tested-by: Michal Simek <michal.simek@xilinx.com>
 
-On closer inspection I think this applies to the SCPI DVFS protocol 
-too[1]. AIUI the fact that neither is wired up to a devfreq driver yet 
-is merely due to lack of demand and suitable systems to develop/test on 
-so far - the panfrost devfreq code is only now looking like the first 
-viable upstream use-case ;)
+Applied,
+Michal
 
-Robin.
 
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922g/BABFEBCD.html
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
