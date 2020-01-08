@@ -2,201 +2,292 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D2C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A76C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B822070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4b42H3L"
+	by mail.kernel.org (Postfix) with ESMTP id 86AEF2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578487364;
+	bh=lKLP2YPmu9sdL3Qd/2SvT9YisTqhtX5Fet6f6uoRdD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wvczk5PRpr6yZ6OYULqp4u6PGpEl7kI2X043uxldcIw6JgJ8/mWwgHq1coFKQDRgB
+	 tKRnRZ6KAUO/c6M54bzzEb4JtQVao1qnK1EFkh/loME2mfehCPLF8RY6yzTPlTYQnx
+	 5C5IiOLphjM9dA3qXTMdZ8yG9FomLa3r8aMpM2q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgAHMma (ORCPT
+        id S1728056AbgAHMmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:42:30 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52762 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHMma (ORCPT
+        Wed, 8 Jan 2020 07:42:43 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34831 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgAHMmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:42:30 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so2329554wmc.2;
-        Wed, 08 Jan 2020 04:42:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wtHnteVOSGYfVQHW+DJYvNro+VxPDt16khdirHn7AK8=;
-        b=G4b42H3LpRSLGwqm7QRiP2Q50fpItEyTX/7gfZxKagQBkdPYlVdpwiynRWfQU9Kyyl
-         AW2xosGD/80c/nBTl7EPE7/swsWEd4VTxG1Qoj4JxtzYBZvKVvBGcgiHTlEwLoj2mD7E
-         UQVAOq/cU1C1Cbt4UJGuO/a5oXPADJoNEZ+fQsL4kL0MvUG+fjw9jMdyYCV8eLK2Lucr
-         VTfjE+SBTzPWZBesC1OVwo5SMSr2X+UU6zsgZpEL1Qet4tt1+Pm4lHn4D8azQliO1ebq
-         GLq1f59EpZIAzVYBx+kAvT7Txq+0t5fWQGI3eylFw5KFIlCEbfqBXdzVmJFvFfu3X6xF
-         4hww==
+        Wed, 8 Jan 2020 07:42:43 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so2369312wmb.0;
+        Wed, 08 Jan 2020 04:42:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wtHnteVOSGYfVQHW+DJYvNro+VxPDt16khdirHn7AK8=;
-        b=jXCGhLFv+NNa9n9MIMI8hzFYNhqoquK8zH3u2aTMrG1K0O9HGYrgUneKHAKx8AnvW0
-         8FVI4q44d+O4Xs4epjP+Se1Iknk97vUFiaFbG0UqMM/5bcbe8AgW3IjKRC3dt7yOjSHG
-         ShjDND76bPuvC1fAL17w5s8lZTsmcGtKUTT25OThcdagFaVtktsB+Lu2uVB5d9DlCxXF
-         VNt2L3f8Ub86odQhfR5xm69lVQycuvD28Neb525l2AS9j/uBl0WFI4aJ+oIuJz5TMNcW
-         dcm0xdSyNr61PsklEcKoA2P6+q+dmxP++pdbZpjwCgsXe63mhk9HlE7zXCalhwkDxGHu
-         lZnw==
-X-Gm-Message-State: APjAAAVF/3dczuKidKtNBRMKDEifkCauMPij+HQiIhJO4Gun/0y9TUg3
-        6X/sf8dFJB11ofHF6ckMvo0=
-X-Google-Smtp-Source: APXvYqyVxfaWOe0pOx25hdbX5AKrUImvDSlOu2ODCLf8hl0wKRTw6ZIDB9ZhC+/bQC2kyPGNJFK5KQ==
-X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr3545909wmc.161.1578487347499;
-        Wed, 08 Jan 2020 04:42:27 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id c4sm3700812wml.7.2020.01.08.04.42.26
+        bh=oL7AiyezFSaPUSQINsQX9lIy1KtBrah03q1c+vdGl70=;
+        b=F/rBzDHwJpWDhQRb5i9IbsWTdOG2XsVxH+f6i93PbVO1mbqgwI64ACIUpQDCkbiRkE
+         Xpc3nl/YUteTxYHPSYVMjRbT5PCieuPCSCREN4zXvS4u4s3zlI9N+sqVmYNcZeg67rW8
+         SDpCkywtTYz3DLVm0cCkPuZt5hZOizfGucBVF2+mbSiE+HDIViucCO/PHMavSEktc5hU
+         dBVkS2+pQo061+XWskpAa1SaODP7d97Z206S035CaMek+eOMaEf/jhkXTdhNLEdg8GIM
+         XC2wL7f8Yo0cR2oIW7nOX/Ny4luAcE/ST/7KYemjS0Pu+6hRjgD3HRS/S4ws9phHwsQw
+         giaw==
+X-Gm-Message-State: APjAAAWkOjzlImaxKv9mxN3N1zBVWFV72NFOTt+1TFJqpnnYtlaGmAqr
+        v86NeEXbvpguyTaPEQQ9Tl8=
+X-Google-Smtp-Source: APXvYqwKFA4+cgBJREYNaAxy2zZsIKi5z4WvcBbaIX9+DBXR03grpLlZ4iuekK3XvVeBMtqSIy9dvg==
+X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr3768023wmd.115.1578487359562;
+        Wed, 08 Jan 2020 04:42:39 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id o7sm3546994wmh.11.2020.01.08.04.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 04:42:26 -0800 (PST)
-Date:   Wed, 8 Jan 2020 13:42:25 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v9 0/6] Add support for H6 PWM
-Message-ID: <20200108124225.GD1993114@ulmo>
-References: <20191124172908.10804-1-peron.clem@gmail.com>
+        Wed, 08 Jan 2020 04:42:38 -0800 (PST)
+Date:   Wed, 8 Jan 2020 13:42:38 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+Subject: Re: [PATCH v2 7/8] mm/memory_hotplug: Add pgprot_t to mhp_modifiers
+Message-ID: <20200108124238.GS32178@dhcp22.suse.cz>
+References: <20200107205959.7575-1-logang@deltatee.com>
+ <20200107205959.7575-8-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191124172908.10804-1-peron.clem@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200107205959.7575-8-logang@deltatee.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 07-01-20 13:59:58, Logan Gunthorpe wrote:
+> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+> struct page mappings for IO memory. At present, these mappings are created
+> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+> x86, an mtrr register will typically override this and force the cache
+> type to be UC-. In the case firmware doesn't set this register it is
+> effectively WB and will typically result in a machine check exception
+> when it's accessed.
+> 
+> Other arches are not currently likely to function correctly seeing they
+> don't have any MTRR registers to fall back on.
+> 
+> To solve this, add an argument to arch_add_memory() to explicitly
+> set the pgprot value to a specific value.
+> 
+> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
+> simple change to pass the pgprot_t down to their respective functions
+> which set up the page tables. For x86_32, set the page tables explicitly
+> using _set_memory_prot() (seeing they are already mapped). For sh, reject
+> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
+> sh doesn't support ZONE_DEVICE anyway.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
---MAH+hnPXVZWQ5cD/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, this is less code churn than I expected. Having pgprot as an implcit
+parameter de-facto is a bit fragile though. Should we add a WARN_ON_ONCE
+(e.g. into the add_pages to catch all arches) for value 0?
 
-On Sun, Nov 24, 2019 at 06:29:02PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi,
->=20
-> This is a rework of Jernej's previous work[1] taking account all the
-> previous remarks.
->=20
-> Bindings is still strict but probe in the driver are now optionnals.
->=20
-> If someone could confirm that the PWM is not broken, as my board
-> doesn't output it.
->=20
-> Thanks,
-> Cl=C3=A9ment
->=20
-> Jernej's cover:
-> Allwinner H6 SoC has PWM core which is basically the same as that found
-> in A20, it's just depends on additional bus clock and reset line.
->=20
-> This series adds support for it and extends PWM driver functionality in
-> a way that it's now possible to bypass whole core and output PWM source
-> clock directly as a PWM signal. This functionality is needed by AC200
-> chip, which is bundled in same physical package as H6 SoC, to serve as a
-> clock source of 24 MHz. AC200 clock input pin is bonded internally to
-> the second PWM channel.
->=20
-> I would be grateful if anyone can test this patch series for any kind of
-> regression on other SoCs.
->=20
-> [1]: https://patchwork.kernel.org/cover/11061737/
->=20
-> Changes in v9:
->  - print error code in error message
->  - no capital letter to keep coherency
->=20
-> Changes in v8:
->  - Display error return code
->  - split commit
->  - bypass is false if unsupported
->  - return instead of goto
->=20
-> Changes in v7:
->  - Fix indent in Yaml bindings
->=20
-> Changes in v6:
->  - Update git commit log
->  - Distinguish error message
->=20
-> Changes in v5:
->  - Move bypass calculation to pwm_calculate
->  - Split mod_clock fallback from bus_clk probe  =20
->  - Update comment
->  - Move my SoB after acked-by/reviewed-by
->=20
-> Changes in v4:
->  - item description in correct order and add a blank line
->  - use %pe for printing PTR_ERR
->  - don't print error when it's an EPROBE_DEFER
->  - change output clock bypass formula to match PWM policy
->=20
-> Changes in v3:
->  - Documentation update to allow one clock without name
->  - Change reset optional to shared
->  - If reset probe failed return an error
->  - Remove old clock probe
->  - Update bypass enabled formula
->=20
-> Changes in v2:
->  - Remove allOf in Documentation
->  - Add H6 example in Documentation
->  - Change clock name from "pwm" to "mod"
->  - Change reset quirk to optional probe
->  - Change bus_clock quirk to optional probe
->  - Add limitation comment about mod_clk_output
->  - Add quirk for mod_clk_output
->  - Change bypass formula
->=20
-> Cl=C3=A9ment P=C3=A9ron (2):
->   pwm: sun4i: Prefer "mod" clock to unnamed
->   pwm: sun4i: Always calculate params when applying new parameters
->=20
-> Jernej Skrabec (4):
->   pwm: sun4i: Add an optional probe for reset line
->   pwm: sun4i: Add an optional probe for bus clock
->   pwm: sun4i: Add support to output source clock directly
->   pwm: sun4i: Add support for H6 PWM
->=20
->  drivers/pwm/pwm-sun4i.c | 187 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 156 insertions(+), 31 deletions(-)
+Other than that
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Applied, thanks.
+> ---
+>  arch/arm64/mm/mmu.c            | 3 ++-
+>  arch/ia64/mm/init.c            | 4 ++++
+>  arch/powerpc/mm/mem.c          | 3 ++-
+>  arch/s390/mm/init.c            | 2 +-
+>  arch/sh/mm/init.c              | 3 +++
+>  arch/x86/mm/init_32.c          | 5 +++++
+>  arch/x86/mm/init_64.c          | 2 +-
+>  include/linux/memory_hotplug.h | 2 ++
+>  mm/memory_hotplug.c            | 2 +-
+>  mm/memremap.c                  | 6 +++---
+>  10 files changed, 24 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 3320406579c3..9b214b0d268f 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  
+>  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+> -			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
+> +			     size, modifiers->pgprot, __pgd_pgtable_alloc,
+> +			     flags);
+>  
+>  	memblock_clear_nomap(start, size);
+>  
+> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+> index daf438e08b96..5fd6ae4929c9 100644
+> --- a/arch/ia64/mm/init.c
+> +++ b/arch/ia64/mm/init.c
+> @@ -677,6 +677,10 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	int ret;
+>  
+>  	ret = __add_pages(nid, start_pfn, nr_pages, modifiers);
+> +	if (modifiers->pgprot != PAGE_KERNEL)
+> +		return -EINVAL;
+> +
+> +	ret = __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  	if (ret)
+>  		printk("%s: Problem encountered in __add_pages() as ret=%d\n",
+>  		       __func__,  ret);
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 631ee684721f..fddeaee53198 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -137,7 +137,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+>  	resize_hpt_for_hotplug(memblock_phys_mem_size());
+>  
+>  	start = (unsigned long)__va(start);
+> -	rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
+> +	rc = create_section_mapping(start, start + size, nid,
+> +				    modifiers->pgprot);
+>  	if (rc) {
+>  		pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
+>  			start, start + size, rc);
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index ef19522ddad2..c65fb33f6a89 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	if (WARN_ON_ONCE(modifiers->altmap))
+>  		return -EINVAL;
+>  
+> -	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
+> +	rc = vmem_add_mapping(start, size, modifiers->pgprot);
+>  	if (rc)
+>  		return rc;
+>  
+> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+> index 7e64f42fb570..7071dc5bd2e4 100644
+> --- a/arch/sh/mm/init.c
+> +++ b/arch/sh/mm/init.c
+> @@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  	int ret;
+>  
+> +	if (modifiers->pgprot != PAGE_KERNEL)
+> +		return -EINVAL;
+> +
+>  	/* We only have ZONE_NORMAL, so this is easy.. */
+>  	ret = __add_pages(nid, start_pfn, nr_pages, modifiers);
+>  	if (unlikely(ret))
+> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> index 630d8a36fcd7..737da0dbc0d5 100644
+> --- a/arch/x86/mm/init_32.c
+> +++ b/arch/x86/mm/init_32.c
+> @@ -857,6 +857,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	int ret;
+> +
+> +	ret = _set_memory_prot(start, nr_pages, modifiers->pgprot);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return __add_pages(nid, start_pfn, nr_pages, modifiers);
+>  }
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index 17ea0bfc0b83..cc9eb45ad120 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -868,7 +868,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  
+> -	init_memory_mapping(start, start + size, PAGE_KERNEL);
+> +	init_memory_mapping(start, start + size, modifiers->pgprot);
+>  
+>  	return add_pages(nid, start_pfn, nr_pages, modifiers);
+>  }
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 2152efae2f4b..00dfb2016737 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -56,9 +56,11 @@ enum {
+>  /*
+>   * Restrictions for the memory hotplug:
+>   * altmap: alternative allocator for memmap array
+> + * pgprot: page protection flags to apply to newly added page tables
+>   */
+>  struct mhp_modifiers {
+>  	struct vmem_altmap *altmap;
+> +	pgprot_t pgprot;
+>  };
+>  
+>  /*
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 1bb3f92e087d..0888f821af06 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1027,7 +1027,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+>   */
+>  int __ref add_memory_resource(int nid, struct resource *res)
+>  {
+> -	struct mhp_modifiers modifiers = {};
+> +	struct mhp_modifiers modifiers = {.pgprot = PAGE_KERNEL};
+>  	u64 start, size;
+>  	bool new_node = false;
+>  	int ret;
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index e30be8ba706b..45ab4ef0643d 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -163,8 +163,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+>  		 * We do not want any optional features only our own memmap
+>  		 */
+>  		.altmap = pgmap_altmap(pgmap),
+> +		.pgprot = PAGE_KERNEL,
+>  	};
+> -	pgprot_t pgprot = PAGE_KERNEL;
+>  	int error, is_ram;
+>  	bool need_devmap_managed = true;
+>  
+> @@ -252,8 +252,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+>  	if (nid < 0)
+>  		nid = numa_mem_id();
+>  
+> -	error = track_pfn_remap(NULL, &pgprot, PHYS_PFN(res->start), 0,
+> -			resource_size(res));
+> +	error = track_pfn_remap(NULL, &modifiers.pgprot, PHYS_PFN(res->start),
+> +				0, resource_size(res));
+>  	if (error)
+>  		goto err_pfn_remap;
+>  
+> -- 
+> 2.20.1
+> 
 
-Thierry
-
---MAH+hnPXVZWQ5cD/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4VzjEACgkQ3SOs138+
-s6GRCw//fzLIOmnXcwHTbq33btuvCEB1rp9YfVj9gXCp/MAZB5jm0UBI6xImaD/H
-dgrV/vrm7/xBSDuSHJXtEgioqcozjGB0cNdZxXrv7OZfoFo4xMLtiOC3FTjhJtLd
-ERuVBETpNxkD8XDQMfzr3mwcqE2nyjB2Fd0M5n2hzGZ5LEYMOWMUZfSp9zWoQGu6
-tm5Cg/W0l7FYV8IILR2cuKy7raMEWnPC3onUr0LUCSmm7U6L8JXewoXXp+qzSl5N
-FOkT76MFuKCrnlK5t6g7qxb4q+LDKrRGe3dgLMGM/lobNBePTncypajgFE4JRg7x
-0UTeTvM6USsBqCzq86cGOli/ZnyjQoGRvfXNR+jxM6NeAYJPbNg4NT2t/96IUMZH
-A6Bwb1j/PvXZwdG6jdFb3Ca5MuEsG7OLz5INYZTcOhrt680wnM3SrCj7HuzmZ88R
-4gaA2irjTO3d+aZeotvVj4x6sIkyHjbg97LoVfyDIaxKzJ5K5MPQf6kUjPMYJIux
-fH2JTdzh6YB1Q+Ac4jaQrk8AXYMWT/EHvgwIQayJb6uqQ6iCuwFbGNnwg9UbRAYf
-0aK7rL7rlolaqGkj5FlkzFmvKp80iE34RvC8Hrn6LfI6V8LI8CTVwdCHpum5FgDM
-Ra4UqflyN317dwIbSM3+t6P6M5MQoFVWAUIS3DwOOCx6EN5IPis=
-=slaW
------END PGP SIGNATURE-----
-
---MAH+hnPXVZWQ5cD/--
+-- 
+Michal Hocko
+SUSE Labs
