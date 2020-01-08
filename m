@@ -2,156 +2,192 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D98C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA73C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566C12073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA92206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nu7E+pux"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="juSfdx20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgAHID6 (ORCPT
+        id S1727091AbgAHIFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:03:58 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52660 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgAHID6 (ORCPT
+        Wed, 8 Jan 2020 03:05:35 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33238 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAHIFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:03:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00883lPd117939;
-        Wed, 8 Jan 2020 02:03:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578470627;
-        bh=e7cuocncCbuxjywazcX7HKTb/Mw4T5KMNhkOUHettWc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nu7E+puxSqcLXcZZxc2CNxBQS58QZpLRQGpsElGO+SspowlPonvmYOddgUHYoVo+y
-         Bq3ABNJIPEyu6k5jzK+YJL+MC5bk2neg4ERCXDu1OqdndapvLKha4RF2IKj4gY4W8J
-         +vVEQRS7VIdllGZsU13DRAuLCMmQj7hHHp1Ocskw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00883lBA104600
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 02:03:47 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 02:03:46 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 02:03:46 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00883i5s040553;
-        Wed, 8 Jan 2020 02:03:44 -0600
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <jic23@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Olivier MOYSAN <olivier.moysan@st.com>
-References: <20200107114125.6095-1-peter.ujfalusi@ti.com>
- <5146b085-d92d-7230-9a05-87926711dafa@st.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <8e706545-958d-1c34-9d6d-addd4cb6af25@ti.com>
-Date:   Wed, 8 Jan 2020 10:04:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Jan 2020 03:05:34 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so2394347lji.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:05:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n1EU76HkXS03l+2T5n8yLlrhyJ/YjUsQu84fPA/UIi0=;
+        b=juSfdx20rKroYfzg7vziXZBhUb4VGBE0on7PZqXOvPbzWae0lA0XCMAl6hm/niqXDV
+         JcyeMb7o+Wakc74lEFcLdgIaHvQqcmNjbVBQn/kaEO8E3FNqmiAJqh26tocn39R5t5ne
+         c4525lZtCqIRi1v0u3z7uL8rrsIAInjFIjyvwvXJiFyRJ9Vl05QO/iT9ogdVXr+NGcjA
+         WPPtVUfv3qO4XVEzMQWAZCNjPy462LDelh9EYNoHrftYLit5qr+OUsNdVhUM/jce2NoW
+         n6i4UBMV3212rHE11qlfZ3g6gFhJWLhtO3dzxJRXIFGvTT4f6wgee+I1c0U5gvWI7xoR
+         4RCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n1EU76HkXS03l+2T5n8yLlrhyJ/YjUsQu84fPA/UIi0=;
+        b=LmLYDRov4wgUwFGm3Q5PI0mgdfQ2iFflzoiwYDCbOLOAHVRgMQRhDbwg3+yKsft81o
+         73V68j7RKYMe0+FvHs6jGOQP5J8FC2SVGr8j16gjqXUvgfFQzrA1Bj+13ai3gH7T3XrR
+         ERIBFzbzkjFmzWmfTp/PyIGD2F4PxyFEXjJSQ+rwhAwH1V+kPx8N+0vlGPrc5zVYxnWv
+         Lvf77quDQcxbr78S5Rvdi2o80OCcYpGcyHD5Byi7p+VnQ4e0lCmfLtr6RiAqxrc4tjxE
+         agxKibihGYIBqBjVBybbo7hmHKi3QxiTqbcP+G1o/aHzvzpRKoh8pP2MfqEr7S6Ay15u
+         /HmA==
+X-Gm-Message-State: APjAAAXTMXEz+S6dDdEHZoJEt7mBmAY8zTe+TC+727wPzWQt9SCROLWu
+        +8OibDcdBQrT2LZLASgT4LSGBon3S8Dt4vIx2eUVng==
+X-Google-Smtp-Source: APXvYqznTfCxnkN6yMc6J9MYXCYuLRcg6W9ZDL/wJp/vlThoiBCeC6wwPnHDnVnDaQ/egn3DjCROzPSrVibUAilRNqE=
+X-Received: by 2002:a2e:9b03:: with SMTP id u3mr2234888lji.87.1578470732042;
+ Wed, 08 Jan 2020 00:05:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5146b085-d92d-7230-9a05-87926711dafa@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <885b1be9af68d124f44a863f54e337f8eb6c4917.1577090998.git.viresh.kumar@linaro.org>
+ <20200107124244.GY2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200107124244.GY2844@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 8 Jan 2020 09:05:20 +0100
+Message-ID: <CAKfTPtDxRKL+-fbCHkDd-A72=x1hYJnPTM02CUkTOh4g8wtfqw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Load balance aggressively for SCHED_IDLE CPUs
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrice,
+On Tue, 7 Jan 2020 at 13:42, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Dec 24, 2019 at 10:43:30AM +0530, Viresh Kumar wrote:
+> > The fair scheduler performs periodic load balance on every CPU to check
+> > if it can pull some tasks from other busy CPUs. The duration of this
+> > periodic load balance is set to sd->balance_interval for the idle CPUs
+> > and is calculated by multiplying the sd->balance_interval with the
+> > sd->busy_factor (set to 32 by default) for the busy CPUs. The
+> > multiplication is done for busy CPUs to avoid doing load balance too
+> > often and rather spend more time executing actual task. While that is
+> > the right thing to do for the CPUs busy with SCHED_OTHER or SCHED_BATCH
+> > tasks, it may not be the optimal thing for CPUs running only SCHED_IDLE
+> > tasks.
+> >
+> > With the recent enhancements in the fair scheduler around SCHED_IDLE
+> > CPUs, we now prefer to enqueue a newly-woken task to a SCHED_IDLE
+> > CPU instead of other busy or idle CPUs. The same reasoning should be
+> > applied to the load balancer as well to make it migrate tasks more
+> > aggressively to a SCHED_IDLE CPU, as that will reduce the scheduling
+> > latency of the migrated (SCHED_OTHER) tasks.
+> >
+> > This patch makes minimal changes to the fair scheduler to do the next
+> > load balance soon after the last non SCHED_IDLE task is dequeued from a
+> > runqueue, i.e. making the CPU SCHED_IDLE. Also the sd->busy_factor is
+> > ignored while calculating the balance_interval for such CPUs. This is
+> > done to avoid delaying the periodic load balance by few hundred
+> > milliseconds for SCHED_IDLE CPUs.
+> >
+> > This is tested on ARM64 Hikey620 platform (octa-core) with the help of
+> > rt-app and it is verified, using kernel traces, that the newly
+> > SCHED_IDLE CPU does load balancing shortly after it becomes SCHED_IDLE
+> > and pulls tasks from other busy CPUs.
+>
+> Nothing seems really objectionable here; I have a few comments below.
+>
+> Vincent?
 
-On 07/01/2020 19.15, Fabrice Gasnier wrote:
-> On 1/7/20 12:41 PM, Peter Ujfalusi wrote:
->> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->> eating up the error code.
->>
->> By using dma_request_chan() directly the driver can support deferred
->> probing against DMA.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi,
->>
->> Changes since v1:
->> - Fall back to IRQ mode only in case of ENODEV
->>
->> Regards,
->> Peter
-> 
-> Hi Peter,
-> 
-> Thanks for the patch,
-> 
-> In case you send another version... I've just a minor suggestion
-> regarding the comment (see after). Apart from that, you can add my:
+The change makes sense to me. This should fix the last remaining long
+scheduling latency of SCHED_OTHER tasks in presence of SCHED_IDLE
+tasks
 
-Thanks, I'll take your suggested update and send v3.
+With the change proposed by Peter below you can add my
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> Best Regards,
-> Fabrice
-> 
->>
->>  drivers/iio/adc/stm32-adc.c | 16 ++++++++++++++--
->>  1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
->> index 3b291d72701c..df5f5d61f9f9 100644
->> --- a/drivers/iio/adc/stm32-adc.c
->> +++ b/drivers/iio/adc/stm32-adc.c
->> @@ -1746,9 +1746,21 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
->>  	struct dma_slave_config config;
->>  	int ret;
->>  
->> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
->> -	if (!adc->dma_chan)
->> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
->> +	if (IS_ERR(adc->dma_chan)) {
->> +		ret = PTR_ERR(adc->dma_chan);
->> +		if (ret != -ENODEV) {
->> +			if (ret != -EPROBE_DEFER)
->> +				dev_err(&indio_dev->dev,
->> +					"DMA channel request failed with %d\n",
->> +					ret);
->> +			return ret;
->> +		}
->> +
->> +		/* Ignore errors to fall back to IRQ mode */
-> 		               ^
-> 		          error
-> alternate suggestion:
-> 		/* DMA is optional: fall back to IRQ mode */
+>
+>
+> > @@ -5324,6 +5336,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> >       struct sched_entity *se = &p->se;
+> >       int task_sleep = flags & DEQUEUE_SLEEP;
+> >       int idle_h_nr_running = task_has_idle_policy(p);
+> > +     bool was_sched_idle = sched_idle_rq(rq);
+> >
+> >       for_each_sched_entity(se) {
+> >               cfs_rq = cfs_rq_of(se);
+> > @@ -5370,6 +5383,10 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> >       if (!se)
+> >               sub_nr_running(rq, 1);
+> >
+> > +     /* balance early to pull high priority tasks */
+> > +     if (unlikely(!was_sched_idle && sched_idle_rq(rq)))
+> > +             rq->next_balance = jiffies;
+> > +
+> >       util_est_dequeue(&rq->cfs, p, task_sleep);
+> >       hrtick_update(rq);
+> >  }
+>
+> This can effectively set ->next_balance in the past, but given we only
+> tickle the balancer on every jiffy edge, that is of no concern. It just
+> made me stumble when reading this.
+>
+> Not sure it even deserves a comment or not..
+>
+> > @@ -9531,6 +9539,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+> >  {
+> >       int continue_balancing = 1;
+> >       int cpu = rq->cpu;
+> > +     int busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
+> >       unsigned long interval;
+> >       struct sched_domain *sd;
+> >       /* Earliest time when we have to do rebalance again */
+> > @@ -9567,7 +9576,7 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+> >                       break;
+> >               }
+> >
+> > -             interval = get_sd_balance_interval(sd, idle != CPU_IDLE);
+> > +             interval = get_sd_balance_interval(sd, busy);
+> >
+> >               need_serialize = sd->flags & SD_SERIALIZE;
+> >               if (need_serialize) {
+> > @@ -9582,10 +9591,16 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+> >                                * env->dst_cpu, so we can't know our idle
+> >                                * state even if we migrated tasks. Update it.
+> >                                */
+> > -                             idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+> > +                             if (idle_cpu(cpu)) {
+> > +                                     idle = CPU_IDLE;
+> > +                                     busy = 0;
+> > +                             } else {
+> > +                                     idle = CPU_NOT_IDLE;
+> > +                                     busy = !sched_idle_cpu(cpu);
+> > +                             }
+>
+> This is inconsistent vs the earlier code. That is, why not write it
+> like:
+>
+>                                 idle = idle_cpu(cpu) ? CPU_IDLE : CPU_NOT_IDLE;
+>                                 busy = idle != CPU_IDLE && !sched_idle_cpu(cpu);
 
-Makes more sense in the context.
+This looks easier to read
 
-> 
->> +		adc->dma_chan = NULL;
->>  		return 0;
->> +	}
->>  
->>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->>  					 STM32_DMA_BUFFER_SIZE,
->>
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+> >                       }
+> >                       sd->last_balance = jiffies;
+> > -                     interval = get_sd_balance_interval(sd, idle != CPU_IDLE);
+> > +                     interval = get_sd_balance_interval(sd, busy);
+> >               }
+> >               if (need_serialize)
+> >                       spin_unlock(&balancing);
