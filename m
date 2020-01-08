@@ -2,102 +2,412 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2A4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A597C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FE9206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42792206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZIlZJJpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgAHKsf (ORCPT
+        id S1727074AbgAHKto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:48:35 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:42830 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726462AbgAHKsf (ORCPT
+        Wed, 8 Jan 2020 05:49:44 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:36595 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgAHKtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:48:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tn9hx8y_1578480506;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0Tn9hx8y_1578480506)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 08 Jan 2020 18:48:27 +0800
-Subject: Re: [PATCH] x86: orc: fix unused-function warning
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-References: <20200107213127.209139-1-arnd@arndb.de>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <b977064f-f187-dfba-2765-cd9cafe1cdf2@linux.alibaba.com>
-Date:   Wed, 8 Jan 2020 18:48:26 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 8 Jan 2020 05:49:43 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200108104940epoutp024cf4af2f1adb0478e437a3d127db62a7~n47mBxhZz1037810378epoutp02U
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 10:49:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200108104940epoutp024cf4af2f1adb0478e437a3d127db62a7~n47mBxhZz1037810378epoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578480580;
+        bh=OJlFHd6ORh0dqFbuiWwag42dUqp3U0f4C3JPCcoMOR4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ZIlZJJpjjY1FJKzgx66DAomCGmIrKS22MOkyWrlOdKLPaStDhzAAHM6nbA1O5mHFo
+         XSwMO2PXlTJiJFxISHQJ8UJ7+Q7dLjt3qsxhsnftVkgeLfUQTCHV3CowBXICVqREB6
+         dbebSeHM+ckEaPjiLWXvkohEt39+ZYWqlPMcW7FU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200108104939epcas1p38dd6bde7806b6ee51965ea08bf2a8eb3~n47k-mqaj1300413004epcas1p3P;
+        Wed,  8 Jan 2020 10:49:39 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47t5bh7227zMqYkY; Wed,  8 Jan
+        2020 10:49:36 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        69.7C.52419.0C3B51E5; Wed,  8 Jan 2020 19:49:36 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200108104935epcas1p4c6d3a15029df41860265a5ec0a5e341b~n47iAtgRl3174131741epcas1p4p;
+        Wed,  8 Jan 2020 10:49:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200108104935epsmtrp297dbf143fa28c08f1dd729120be17ea1~n47h-2sbm3238832388epsmtrp2d;
+        Wed,  8 Jan 2020 10:49:35 +0000 (GMT)
+X-AuditID: b6c32a37-59fff7000001ccc3-f6-5e15b3c0f868
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        72.B3.10238.FB3B51E5; Wed,  8 Jan 2020 19:49:35 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200108104935epsmtip15c19a26ebc0682f3c2905a040ad46761~n47hq12GU2919429194epsmtip19;
+        Wed,  8 Jan 2020 10:49:35 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+To:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <92367824-d0ac-1be3-e432-292ea1796143@samsung.com>
+Date:   Wed, 8 Jan 2020 19:56:43 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <20200107213127.209139-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2c259936-f099-a239-9d6b-08f9b253644f@gmail.com>
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmvu6BzaJxBgffm1ncn9fKaHF6/zsW
+        i4k3rrBYrP74mNFize1DjBY/Npxitti4INvibNMbdosVdz+yWlzeNYfN4nPvEUaLhU0t7BZr
+        j9xlt7jduILNgc9jzbw1jB6X+3qZPHbcXcLosXPWXXaPTas62TzuXNvD5rHx3Q4mj7+z9rN4
+        9G1ZxejxeZNcAFdUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKL
+        T4CuW2YO0AdKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnALLAr3ixNzi0rx0veT8
+        XCtDAwMjU6DChOyMOVf2sxe8C6k49uAyYwNjk2MXIyeHhICJxMr9p5i7GLk4hAR2MEps7/8A
+        5XxilDh44DMThPONUaL50D9WmJZVk35CVe1llHiyFabqPaPE7Vk/GUGqhAW8JeZ3LWEBsUUE
+        EiSO/PkHVsQsMIVJYu7pXmaQBJuAlsT+FzfYQGx+AUWJqz8egzXzCthJzPiwkQnEZhFQkXh5
+        7i+YLSoQJnFyWwtUjaDEyZlPgBZwcHAK2EpcOyAEEmYWEJe49WQ+E4QtL9G8dTbYpRICp9gl
+        Pja1sYHUSwi4SDz/IgnxjbDEq+Nb2CFsKYnP7/ayQdjVEitPHmGD6O1glNiy/wLU+8YS+5dO
+        ZgKZwyygKbF+lz5EWFFi5++5jBB7+STefe1hhVjFK9HRJgRRoixx+cFdJghbUmJxeyfbBEal
+        WUiemYXkg1lIPpiFsGwBI8sqRrHUguLc9NRiwwJj5NjexAhO3VrmOxg3nPM5xCjAwajEw/tj
+        sUicEGtiWXFl7iFGCQ5mJRFeLR2gEG9KYmVValF+fFFpTmrxIUZTYFhPZJYSTc4H5pW8knhD
+        UyNjY2MLE0MzU0NDJXFejh8XY4UE0hNLUrNTUwtSi2D6mDg4pRoY2SWO7f0hzPw5aZJCXs8H
+        b9GSLdu/znZ2zWqomrXm8eLl9xccbWFfvCxf+GW/z/K7WlXpZ2Yuq59xyGHf8QK9M26bNNas
+        VP+wpt+rxt96k0/p2fzMz1ahG6a/nK+9wVxmceCle2t275n8bU7CevkT+yIun9kudSd23ttC
+        Uc4fPHUXN7eb5gn3/ldiKc5INNRiLipOBAAw8RDG8wMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsWy7bCSnO7+zaJxBu++G1rcn9fKaHF6/zsW
+        i4k3rrBYrP74mNFize1DjBY/Npxitti4INvibNMbdosVdz+yWlzeNYfN4nPvEUaLhU0t7BZr
+        j9xlt7jduILNgc9jzbw1jB6X+3qZPHbcXcLosXPWXXaPTas62TzuXNvD5rHx3Q4mj7+z9rN4
+        9G1ZxejxeZNcAFcUl01Kak5mWWqRvl0CV8acK/vZC96FVBx7cJmxgbHJsYuRk0NCwERi1aSf
+        zF2MXBxCArsZJfY9vssIkZCUmHbxKFCCA8gWljh8uBgkLCTwllFi98sEEFtYwFtiftcSFhBb
+        RCBB4u//j4wgc5gFpjBJzOm9xQgx9AOjRNP6JWwgVWwCWhL7X9wAs/kFFCWu/ngMtoxXwE5i
+        xoeNTCA2i4CKxMtzf8FsUYEwiZ1LHjNB1AhKnJz5hAXkIE4BW4lrB4RAwswC6hJ/5l1ihrDF
+        JW49mc8EYctLNG+dzTyBUXgWku5ZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi
+        0rx0veT83E2M4BjW0tzBeHlJ/CFGAQ5GJR7eH4tF4oRYE8uKK3MPMUpwMCuJ8GrpAIV4UxIr
+        q1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpgrJTJ3nXm5aIrfufT
+        rV7eWZVc9PeS+5V7spo77kkZp34U15soXMbzdgFjUmE4g+/hujVR999ND2qd5z5RudApwrHl
+        +brpffysFo6WDaphEn1blZUPas5KPvHjy/or11UzjT+brOL7edMi9oJqr4L7UuY/PeK+QVvV
+        b37W32Py7dVLjZYff64sUWIpzkg01GIuKk4EAC+nr+ndAgAA
+X-CMS-MailID: 20200108104935epcas1p4c6d3a15029df41860265a5ec0a5e341b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com>
+        <2c259936-f099-a239-9d6b-08f9b253644f@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi,
 
-Thanks for you work!
-But sorry for I have been fix this warning via a delta-patch as following:
-https://lore.kernel.org/lkml/157838258393.30329.5371781726464192052.tip-bot2@tip-bot2/
+On 1/8/20 6:31 AM, Dmitry Osipenko wrote:
+> Hello Chanwoo,
+> 
+> 07.01.2020 12:05, Chanwoo Choi пишет:
+>> Add new devfreq_transitions debugfs file to track the frequency transitions
+>> of all devfreq devices for the simple profiling as following:
+>> - /sys/kernel/debug/devfreq/devfreq_transitions
+>>
+>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+>> in Kconfig in order to save the transition history.
+>>
+>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+>> - time_ms	: Change time of frequency transition. (unit: millisecond)
+>> - dev_name	: Device name of h/w.
+>> - dev		: Device name made by devfreq core.
+>> - parent_dev	: If devfreq device uses the passive governor,
+>> 		  show parent devfreq device name.
+>> - load_%	: If devfreq device uses the simple_ondemand governor,
+>> 		  load is used by governor whene deciding the new frequency.
+>> 		  (unit: percentage)
+>> - old_freq_hz	: Frequency before changing. (unit: hz)
+>> - new_freq_hz	: Frequency after changed. (unit: hz)
+>>
+>> [For example on Exynos5422-based Odroid-XU3 board]
+>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+>> [snip]
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/Kconfig            |  13 +++
+>>  drivers/devfreq/devfreq.c          | 126 +++++++++++++++++++++++++++++
+>>  drivers/devfreq/governor.h         |   3 +
+>>  drivers/devfreq/governor_passive.c |   2 +
+>>  include/linux/devfreq.h            |   1 +
+>>  5 files changed, 145 insertions(+)
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index 0b1df12e0f21..84936eec0ef9 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -74,6 +74,19 @@ config DEVFREQ_GOV_PASSIVE
+>>  	  through sysfs entries. The passive governor recommends that
+>>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>>  
+>> +comment "DEVFREQ Debugging"
+>> +
+>> +config NR_DEVFREQ_TRANSITIONS
+>> +	int "Maximum storage size to save DEVFREQ Transitions (10-1000)"
+>> +	depends on DEBUG_FS
+>> +	range 10 1000
+>> +	default "100"
+>> +	help
+>> +	  Show the frequency transitions of all devfreq devices via
+>> +	  '/sys/kernel/debug/devfreq/devfreq_transitions' for the simple
+>> +	  profiling. It needs to decide the storage size to save transition
+>> +	  history of all devfreq devices.
+>> +
+>>  comment "DEVFREQ Drivers"
+>>  
+>>  config ARM_EXYNOS_BUS_DEVFREQ
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index c7f5e4e06420..7abaae06fa65 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -268,6 +268,57 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>>  }
+>>  EXPORT_SYMBOL(devfreq_update_status);
+>> +/**
+>> + * devfreq_update_transitions() - Update frequency transitions for debugfs file
+>> + * @devfreq:	the devfreq instance
+>> + * @old_freq:	the previous frequency before changing the frequency
+>> + * @new_freq:	the new frequency after frequency is changed
+>> + */
+>> +struct devfreq_transitions {
+>> +	struct devfreq *devfreq;
+>> +	struct devfreq_freqs freqs;
+>> +	unsigned long load;
+>> +} debugfs_transitions[CONFIG_NR_DEVFREQ_TRANSITIONS];
+>> +
+>> +static spinlock_t devfreq_debugfs_lock;
+> 
+> This could be:
+> 
+> static DEFINE_SPINLOCK(devfreq_debugfs_lock);
+> 
+> and then spin_lock_init() isn't needed.
 
-FYI.
+OK
 
-BRs
-Shile
+> 
+> 
+> Also, The "<linux/spinlock.h>" should be included directly by devfreq.c
 
-On 2020/1/8 05:31, Arnd Bergmann wrote:
-> The orc unwinder contains a new warning:
->
-> arch/x86/kernel/unwind_orc.c:210:12: error: 'orc_sort_cmp' defined but not used [-Werror=unused-function]
->   static int orc_sort_cmp(const void *_a, const void *_b)
->              ^~~~~~~~~~~~
-> arch/x86/kernel/unwind_orc.c:190:13: error: 'orc_sort_swap' defined but not used [-Werror=unused-function]
->   static void orc_sort_swap(void *_a, void *_b, int size)
->               ^~~~~~~~~~~~~
->
-> Move the #ifdef to hide the now unused functions.
->
-> Fixes: f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   arch/x86/kernel/unwind_orc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index abdf8911a1fb..538152cca46b 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -187,6 +187,7 @@ static struct orc_entry *orc_find(unsigned long ip)
->   	return orc_ftrace_find(ip);
->   }
->   
-> +#ifdef CONFIG_MODULES
->   static void orc_sort_swap(void *_a, void *_b, int size)
->   {
->   	struct orc_entry *orc_a, *orc_b;
-> @@ -229,7 +230,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
->   	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
->   }
->   
-> -#ifdef CONFIG_MODULES
->   void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
->   			void *_orc, size_t orc_size)
->   {
+OK.
 
+> 
+>> +static int debugfs_transitions_index;
+>> +
+>> +void devfreq_update_transitions(struct devfreq *devfreq,
+>> +			unsigned long old_freq, unsigned long new_freq,
+>> +			unsigned long busy_time, unsigned long total_time)
+>> +{
+>> +	unsigned long load;
+>> +	int i;
+>> +
+>> +	if (!devfreq_debugfs || !devfreq || (old_freq == new_freq))
+>> +		return;
+>> +
+>> +	spin_lock_nested(&devfreq_debugfs_lock, SINGLE_DEPTH_NESTING);
+>> +
+>> +	i = debugfs_transitions_index;
+>> +
+>> +	/*
+>> +	 * Calculate the load and if load is larger than 100,
+>> +	 * initialize to 100 because the unit of load is percentage.
+>> +	 */
+>> +	load = (total_time == 0 ? 0 : (100 * busy_time) / total_time);
+>> +	if (load > 100)
+>> +		load = 100;
+>> +
+>> +	debugfs_transitions[i].devfreq = devfreq;
+>> +	debugfs_transitions[i].freqs.time = ktime_to_ms(ktime_get());
+>> +	debugfs_transitions[i].freqs.old = old_freq;
+>> +	debugfs_transitions[i].freqs.new = new_freq;
+>> +	debugfs_transitions[i].load = load;
+>> +
+>> +	if (++i == CONFIG_NR_DEVFREQ_TRANSITIONS)
+>> +		i = 0;
+>> +	debugfs_transitions_index = i;
+>> +
+>> +	spin_unlock(&devfreq_debugfs_lock);
+>> +}
+>> +EXPORT_SYMBOL(devfreq_update_transitions);
+> 
+> What about EXPORT_SYMBOL_GPL()?
+
+I'll remove it.
+
+> 
+>>  /**
+>>   * find_devfreq_governor() - Find devfreq governor from name
+>>   * @name:	name of the governor
+>> @@ -401,6 +452,10 @@ static int set_target(struct devfreq *devfreq,
+>>  		return err;
+>>  	}
+>>  
+>> +	devfreq_update_transitions(devfreq, cur_freq, new_freq,
+>> +					devfreq->last_status.busy_time,
+>> +					devfreq->last_status.total_time);
+>> +
+>>  	freqs.new = new_freq;
+>>  	notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>  
+>> @@ -1787,6 +1842,72 @@ static int devfreq_summary_show(struct seq_file *s, void *data)
+>>  }
+>>  DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
+>>  
+>> +/**
+>> + * devfreq_transitions_show() - Show the frequency transitions of the registered
+>> + *			devfreq devices via 'devfreq_transitions' debugfs file.
+>> + */
+>> +static int devfreq_transitions_show(struct seq_file *s, void *data)
+>> +{
+>> +	struct devfreq *devfreq = NULL;
+>> +	struct devfreq *p_devfreq = NULL;
+>> +	struct devfreq_freqs *freqs = NULL;
+>> +	unsigned long load;
+>> +	int i = debugfs_transitions_index;
+>> +	int count;
+>> +
+>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>> +			"time_ms",
+>> +			"dev_name",
+>> +			"dev",
+>> +			"parent_dev",
+>> +			"load_%",
+>> +			"old_freq_hz",
+>> +			"new_freq_hz");
+>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>> +			"----------",
+>> +			"------------------------------",
+>> +			"----------",
+>> +			"----------",
+>> +			"----------",
+>> +			"------------",
+>> +			"------------");
+>> +
+>> +	spin_lock(&devfreq_debugfs_lock);> +	for (count = 0; count < CONFIG_NR_DEVFREQ_TRANSITIONS; count++) {
+>> +		devfreq = debugfs_transitions[i].devfreq;
+>> +		freqs = &debugfs_transitions[i].freqs;
+>> +		load = debugfs_transitions[i].load;
+>> +
+>> +		i = (CONFIG_NR_DEVFREQ_TRANSITIONS == ++i) ? 0 : i;
+>> +		if (!devfreq)
+>> +			continue;
+>> +
+>> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+>> +		if (!strncmp(devfreq->governor_name,
+>> +				DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
+>> +			struct devfreq_passive_data *data = devfreq->data;
+>> +
+>> +			if (data)
+>> +				p_devfreq = data->parent;
+>> +		} else {
+>> +			p_devfreq = NULL;
+>> +		}
+>> +#endif
+>> +		seq_printf(s, "%-10lld %-30s %-10s %-10s %-6ld %-12ld %-12ld\n",
+>> +			freqs->time,
+>> +			dev_name(devfreq->dev.parent),
+>> +			dev_name(&devfreq->dev),
+>> +			p_devfreq ? dev_name(&p_devfreq->dev) : "",
+>> +			load,
+>> +			freqs->old,
+>> +			freqs->new);
+>> +	}
+>> +	spin_unlock(&devfreq_debugfs_lock);
+>> +
+>> +	return 0;
+>> +}
+>> +DEFINE_SHOW_ATTRIBUTE(devfreq_transitions);
+>> +
+>>  static int __init devfreq_init(void)
+>>  {
+>>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
+>> @@ -1808,9 +1929,14 @@ static int __init devfreq_init(void)
+>>  		devfreq_debugfs = NULL;
+>>  		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
+>>  	} else {
+>> +		spin_lock_init(&devfreq_debugfs_lock);
+>> +
+>>  		debugfs_create_file("devfreq_summary", 0444,
+>>  				devfreq_debugfs, NULL,
+>>  				&devfreq_summary_fops);
+>> +		debugfs_create_file("devfreq_transitions", 0444,
+>> +				devfreq_debugfs, NULL,
+>> +				&devfreq_transitions_fops);
+>>  	}
+>>  
+>>  	return 0;
+>> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+>> index dc7533ccc3db..01eecfdaf2d6 100644
+>> --- a/drivers/devfreq/governor.h
+>> +++ b/drivers/devfreq/governor.h
+>> @@ -68,6 +68,9 @@ extern int devfreq_add_governor(struct devfreq_governor *governor);
+>>  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+>>  
+>>  extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+>> +extern void devfreq_update_transitions(struct devfreq *devfreq,
+>> +			unsigned long old_freq, unsigned long new_freq,
+>> +			unsigned long busy_time, unsigned long total_time);
+> 
+> The 'extern' attribute isn't needed for function prototypes defined in
+> header files.
+> 
+> 
+
+Right. I'll remove it.
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
