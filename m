@@ -2,116 +2,120 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79351C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AB4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E44A206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:03:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="atpPpGq2"
+	by mail.kernel.org (Postfix) with ESMTP id CCE2920705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578485086;
+	bh=8Ibxjwt6kC+hGFr1IDrRoG3a1vKrpplBnsa/l24ADGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pEIr6dGicj02tHVos0NburcGFaWOMrtweW2WSiIolexiyTe/MRKkAIdhjBWErxXPy
+	 nI5UBs4KqdDeCwQ9yPwcIlMtruzKTxQpR7cH0CMbMLcIHGo82eksZGwGqgNqgwEhjd
+	 cSOCHCHFe/yhYCrLSH94Y/wf3wDlvd2iqDnWQZ4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgAHMDO (ORCPT
+        id S1727538AbgAHMEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:03:14 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35500 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgAHMDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:03:14 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008C342V120327;
-        Wed, 8 Jan 2020 06:03:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578484984;
-        bh=TS4HVoZf6mCDU3VkYm2kQBuI8PTmVXqYeMVkBBo4qSo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=atpPpGq2XvtsQ//KW8+fgVuabAV6GRlgP7mE18I/Ay5fmfO8YE72K9StNDvWn+XmI
-         SZXJqfQ1/bkA65Gd7Qxjx+xSUbA1YdOrtgOlW57yoTOrym+qyZ7FLXGxbIcL+d4MQf
-         Yz4mKodE9ABZE0MgNl8olYIvGgaFEBWsuZBQNm0Y=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008C34p1101107
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 06:03:04 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 06:03:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 06:03:03 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008C31iN107760;
-        Wed, 8 Jan 2020 06:03:02 -0600
-Subject: Re: [PATCH 0/3] Fix issues with command queuing in arasan controllers
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <shawn.lin@rock-chips.com>
-References: <20191230092343.30692-1-faiz_abbas@ti.com>
- <837996b2-c69f-1446-fda4-5577e28ba8e1@ti.com>
- <a1b75d07-17ab-5dec-aa40-b9cff247eabf@intel.com>
- <b2600fd2-bcc9-19f6-8bf8-f3bb51da089f@ti.com>
- <9c74c1b9-8ae4-49be-68e3-8e827d07cc66@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <b34a07a7-8814-f1dd-3a90-5009af6b9eeb@ti.com>
-Date:   Wed, 8 Jan 2020 17:34:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 07:04:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgAHMEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:04:45 -0500
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0270C206DA;
+        Wed,  8 Jan 2020 12:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578485085;
+        bh=8Ibxjwt6kC+hGFr1IDrRoG3a1vKrpplBnsa/l24ADGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qqe7RbJUrhsfFDWUr1VAjV9s+B+nCgyhyRUUxC3WVvcThiR+pl5QeR+MkEMuYDolu
+         NdYxE5lfSt6NpK3W8TY3uKgGk2GxMNbf9s7SBlfxye4Qhy9ijEnjMaXdkFxMI6EOdK
+         gK9SGEFaHxbXxvyd0XTkOZyI8j3pFaBXLm6oCSc0=
+Date:   Wed, 8 Jan 2020 04:04:44 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add a way to turn off ipu bio cache
+Message-ID: <20200108120444.GC28331@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20200107020709.73568-1-jaegeuk@kernel.org>
+ <afddac87-b7c5-f68c-4e55-3705be311cf6@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <9c74c1b9-8ae4-49be-68e3-8e827d07cc66@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afddac87-b7c5-f68c-4e55-3705be311cf6@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-On 08/01/20 5:29 pm, Adrian Hunter wrote:
-> On 8/01/20 1:49 pm, Faiz Abbas wrote:
->> Adrian,
->>
->> On 08/01/20 5:12 pm, Adrian Hunter wrote:
->>> On 8/01/20 1:30 pm, Faiz Abbas wrote:
->>>> Hi,
->>>>
->>>> On 30/12/19 2:53 pm, Faiz Abbas wrote:
->>>>> In some Arasan SDHCI controllers, after tuning, the tuning pattern data
->>>>> is leftover in the sdhci buffer. This leads to issues with future data
->>>>> commands, especially when command queuing is enabled. The following
->>>>> patches help fix this issue by resetting data lines after tuning is
->>>>> finished. The first two patches have been tested with TI's am65x and
->>>>> j721e SoCs using the sdhci_am654 driver.
->>>>>
->>>>> I have a strong suspicion that this is the same issue with
->>>>> the sdhci-of-arasan driver where they are forced to dump data from the
->>>>> buffer before enabling command queuing. I need help from someone with a
->>>>> compatible platform to test this.
->>>>>
->>>>
->>>> I had some discussions with our hardware team and they say we should be
->>>> asserting both SRC and SRD reset after tuning to start from a clean
->>>> state. Will update the patches to do that in v2.
->>>
->>> Can you use the ->execute_tuning() for that instead of a quirk?
->>>
->>
->> ->platform_execute_tuning() is called before __sdhci_execute_tuning(). I
->> need this to be done after that. Should I add a post_tuning() callback?
+On 01/08, Chao Yu wrote:
+> On 2020/1/7 10:07, Jaegeuk Kim wrote:
+> > Setting 0x40 in /sys/fs/f2fs/dev/ipu_policy gives a way to turn off
+> > bio cache, which is useufl to check whether block layer using hardware
+> > encryption engine merges IOs correctly.
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  Documentation/filesystems/f2fs.txt | 1 +
+> >  fs/f2fs/segment.c                  | 2 +-
+> >  fs/f2fs/segment.h                  | 1 +
+> >  3 files changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+> > index 41b5aa94b30f..cd93bcc34726 100644
+> > --- a/Documentation/filesystems/f2fs.txt
+> > +++ b/Documentation/filesystems/f2fs.txt
+> > @@ -335,6 +335,7 @@ Files in /sys/fs/f2fs/<devname>
+> >                                 0x01: F2FS_IPU_FORCE, 0x02: F2FS_IPU_SSR,
+> >                                 0x04: F2FS_IPU_UTIL,  0x08: F2FS_IPU_SSR_UTIL,
+> >                                 0x10: F2FS_IPU_FSYNC.
 > 
-> I meant hook host->mmc_host_ops.execute_tuning and call
-> sdhci_execute_tuning() and then sdhci_reset(), like in intel_execute_tuning().
+> . -> ,
+
+Actually, we can't do it. I revised it a bit instead.
+
 > 
-
-Ok. Makes sense.
-
-Thanks,
-Faiz
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+> > +			       0x40: F2FS_IPU_NOCACHE disables bio caches.
+> >  
+> >   min_ipu_util                 This parameter controls the threshold to trigger
+> >                                in-place-updates. The number indicates percentage
+> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > index a9519532c029..311fe4937f6a 100644
+> > --- a/fs/f2fs/segment.c
+> > +++ b/fs/f2fs/segment.c
+> > @@ -3289,7 +3289,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+> >  
+> >  	stat_inc_inplace_blocks(fio->sbi);
+> >  
+> > -	if (fio->bio)
+> > +	if (fio->bio && !(SM_I(sbi)->ipu_policy & (1 << F2FS_IPU_NOCACHE)))
+> >  		err = f2fs_merge_page_bio(fio);
+> >  	else
+> >  		err = f2fs_submit_page_bio(fio);
+> > diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> > index a1b3951367cd..02e620470eef 100644
+> > --- a/fs/f2fs/segment.h
+> > +++ b/fs/f2fs/segment.h
+> > @@ -623,6 +623,7 @@ enum {
+> >  	F2FS_IPU_SSR_UTIL,
+> >  	F2FS_IPU_FSYNC,
+> >  	F2FS_IPU_ASYNC,
+> > +	F2FS_IPU_NOCACHE,
+> >  };
+> >  
+> >  static inline unsigned int curseg_segno(struct f2fs_sb_info *sbi,
+> > 
