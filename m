@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E485C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28687C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4B22077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F712077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgAHLoI (ORCPT
+        id S1727942AbgAHLoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:44:08 -0500
-Received: from mga17.intel.com ([192.55.52.151]:51036 "EHLO mga17.intel.com"
+        Wed, 8 Jan 2020 06:44:20 -0500
+Received: from mga07.intel.com ([134.134.136.100]:63961 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbgAHLmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727415AbgAHLmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 06:42:12 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:12 -0800
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="223521052"
+   d="scan'208";a="271806926"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 03:42:08 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jan 2020 03:42:07 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 58F574B8; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id 30CC33F3; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/36] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_raw_command()
-Date:   Wed,  8 Jan 2020 14:41:36 +0300
-Message-Id: <20200108114201.27908-12-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 07/36] platform/x86: intel_scu_ipc: Sleeping is fine when polling
+Date:   Wed,  8 Jan 2020 14:41:32 +0300
+Message-Id: <20200108114201.27908-8-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,101 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no user for this function so we can drop it from the driver.
+There is no reason why the driver would need to block other threads from
+running the CPU while it is waiting for the SCU IPC to complete its
+work. For this reason switch the driver to use usleep_range() instead
+with a bit more relaxed polling loop.
+
+Also add constant for the timeout and use the same value for both
+polling and interrupt modes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  2 -
- drivers/platform/x86/intel_scu_ipc.c | 63 ----------------------------
- 2 files changed, 65 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index b59afa59a4cb..2a1442ba6e78 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -38,8 +38,6 @@ int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
- int intel_scu_ipc_simple_command(int cmd, int sub);
- int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 			  u32 *out, int outlen);
--int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
--			      u32 *out, int outlen, u32 dptr, u32 sptr);
- 
- extern struct blocking_notifier_head intel_scu_notifier;
- 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index ba857e54800b..93a810fa6c8a 100644
+index 43eaf9400c67..8db0644900a3 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -383,69 +383,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- }
- EXPORT_SYMBOL(intel_scu_ipc_command);
+@@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ #define IPC_WRITE_BUFFER	0x80
+ #define IPC_READ_BUFFER		0x90
  
--#define IPC_SPTR		0x08
--#define IPC_DPTR		0x0C
--
--/**
-- * intel_scu_ipc_raw_command() - IPC command with data and pointers
-- * @cmd:	IPC command code.
-- * @sub:	IPC command sub type.
-- * @in:		input data of this IPC command.
-- * @inlen:	input data length in dwords.
-- * @out:	output data of this IPC command.
-- * @outlen:	output data length in dwords.
-- * @sptr:	data writing to SPTR register.
-- * @dptr:	data writing to DPTR register.
-- *
-- * Send an IPC command to SCU with input/output data and source/dest pointers.
-- *
-- * Return:	an IPC error code or 0 on success.
-- */
--int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
--			      u32 *out, int outlen, u32 dptr, u32 sptr)
--{
--	struct intel_scu_ipc_dev *scu = &ipcdev;
--	int inbuflen = DIV_ROUND_UP(inlen, 4);
--	u32 inbuf[4];
--	int i, err;
--
--	/* Up to 16 bytes */
--	if (inbuflen > 4)
--		return -EINVAL;
--
--	mutex_lock(&ipclock);
--	if (scu->dev == NULL) {
--		mutex_unlock(&ipclock);
--		return -ENODEV;
--	}
--
--	writel(dptr, scu->ipc_base + IPC_DPTR);
--	writel(sptr, scu->ipc_base + IPC_SPTR);
--
--	/*
--	 * SRAM controller doesn't support 8-bit writes, it only
--	 * supports 32-bit writes, so we have to copy input data into
--	 * the temporary buffer, and SCU FW will use the inlen to
--	 * determine the actual input data length in the temporary
--	 * buffer.
--	 */
--	memcpy(inbuf, in, inlen);
--
--	for (i = 0; i < inbuflen; i++)
--		ipc_data_writel(scu, inbuf[i], 4 * i);
--
--	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
--	err = intel_scu_ipc_check_status(scu);
--	if (!err) {
--		for (i = 0; i < outlen; i++)
--			*out++ = ipc_data_readl(scu, 4 * i);
--	}
--
--	mutex_unlock(&ipclock);
--	return err;
--}
--EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
--
++/* Timeout in jiffies */
++#define IPC_TIMEOUT		(3 * HZ)
++
+ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+ 
  /*
-  * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
-  * When ioc bit is set to 1, caller api must wait for interrupt handler called
+@@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+ /* Wait till scu status is busy */
+ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ {
+-	u32 status = ipc_read_status(scu);
+-	u32 loop_count = 100000;
++	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
+ 
+-	/* break if scu doesn't reset busy bit after huge retry */
+-	while ((status & IPC_STATUS_BUSY) && --loop_count) {
+-		udelay(1); /* scu processing time is in few u secods */
+-		status = ipc_read_status(scu);
+-	}
++	do {
++		u32 status;
+ 
+-	if (status & IPC_STATUS_BUSY) {
+-		dev_err(scu->dev, "IPC timed out");
+-		return -ETIMEDOUT;
+-	}
++		status = ipc_read_status(scu);
++		if (!(status & IPC_STATUS_BUSY))
++			return (status & IPC_STATUS_ERR) ? -EIO : 0;
+ 
+-	if (status & IPC_STATUS_ERR)
+-		return -EIO;
++		usleep_range(50, 100);
++	} while (time_before(jiffies, end));
+ 
+-	return 0;
++	dev_err(scu->dev, "IPC timed out");
++	return -ETIMEDOUT;
+ }
+ 
+ /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
+@@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ {
+ 	int status;
+ 
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
++	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+ 		dev_err(scu->dev, "IPC timed out\n");
+ 		return -ETIMEDOUT;
+ 	}
 -- 
 2.24.1
 
