@@ -2,98 +2,173 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECFCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64051C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DFA2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB002072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KJ8VyuDb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbD435UY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgAHQsK (ORCPT
+        id S1729406AbgAHQtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:48:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36949 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgAHQsK (ORCPT
+        Wed, 8 Jan 2020 11:49:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45384 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgAHQtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:48:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so4142457wru.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:48:09 -0800 (PST)
+        Wed, 8 Jan 2020 11:49:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 203so2929328lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oThwVOSRghlMQrtGPJX+ACmEzpakZ7+aStYbwUOl/sQ=;
-        b=KJ8VyuDbKf/CPrDOdmCtRVxpPCX/7Bw2aLcUSgFdoCjxTyv2qSBWu4ufbzJFir/k3d
-         y3fNIDlz6I1cgxg6GcWbamUyAFo5XarJYOMqCqgWxWGFC8/ozip7Kdd2Dz2GBbR1y7Gd
-         w6IGiT/m172BO9/zrnfDaW2THDf8WhTBmx0Vh4F3WFBce1UUSebyzVN38MIhOG6d3O6M
-         dUrrq7OlsDBXdhZ5DQWdUdQ6rpHgvpWe6kvJM+kKRK6oA5Hlxb0SUULePRnvyIflSrAY
-         YacENCL515yBuZFJKvrQ8jMHHERmGLu5nuWHeBhd4w70PcOJ3grnKyX8gfc9V4a7/ZLk
-         DLEw==
+         :cc:content-transfer-encoding;
+        bh=j/omBmD/YZUdw7F0DSQMqWOu1GRjaqDS/yf0QTPgslA=;
+        b=nbD435UYGyzatilzIS+UTN+GH4p9UU5NHMRVELHgVzkM0d3SwrNa4OPoH2FutaXayT
+         h78Jv9mEd66s493Fh7Rqp6GTNKLsKQA17VCG9mQh7OZSsf5aN0J+mzRShzFJAOwsygc9
+         lc8qT2P+myU7zEd69e7KbAh7BPXmZuvyaHnl7aps08DLFwI6M/mZLOrvw88/oRYehMiZ
+         nClF96wph3Sn+okyXezUJ67TIgJleoX/T83dqvs8jbrric3B3VFDze21U83Xfg17Hj0k
+         r5vAOTNjDgd6dnN5Z2fAzrSbB0Xkdkf1P3gN9Q6R2VnZi8bfKi80OVYpcDLmFW2rGOxp
+         NcZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oThwVOSRghlMQrtGPJX+ACmEzpakZ7+aStYbwUOl/sQ=;
-        b=Xz3UIHoasWHW08kNsZcnFrD6l6Fxzo33lprp28djMY77R6PHIYpuOBJdRrZP0zBoXE
-         cKiiJ81TCK5PgnBMU5+yT3RKvshN/cfHmGP3+4MB+KsaV+2J4FsocSmqKUoIoYLwxk4l
-         Fhk3qvm7tmtWOWicfU3a6FZzbCfttdxmLuOvo27FLl5FIk1QVqDCKUbSE4X96wjA9XTQ
-         pK/oEoRV1fRBd5BXF0S81tb3Fl1tf4+0utLFejtHc/iw5UvkDrVlWyXLolQpUFfimg8b
-         0J77ddEnnzzZfahQ4qen1VxA9REU8w7oDFGOjNN8IbJRB3iSj4dgnNCyZg+AE7JK0WZE
-         owvg==
-X-Gm-Message-State: APjAAAX9Px9zd9D2bHC93sG8UaFlUFFzWYCeYhZn9aMyA9acR+l1yyZw
-        RLbRMLRcvCAK/W5fsTmD+3Qikj7CgiOhMz5y7EATpw==
-X-Google-Smtp-Source: APXvYqxld4/J+48jZWMZsKYas2V8hJ6QfYzgpwPJfWXcagD63FIKHzy4jZc/YPSKMusV0C4z/jLQo+8YZf5zhAIJeoE=
-X-Received: by 2002:a5d:43c7:: with SMTP id v7mr5359077wrr.32.1578502088604;
- Wed, 08 Jan 2020 08:48:08 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j/omBmD/YZUdw7F0DSQMqWOu1GRjaqDS/yf0QTPgslA=;
+        b=lRRQ+HJ5J7OJHM0jocvIoZcysxgXHxHnmEe3zxoEnV5aEwRvJPIer9767OzBNOpgnE
+         vixDcFDzPWWvY1SQZUO11RIbR6xnlsryZz6JhOAJf9JmF7U5dZmL9Yd/yekl3rSmBlFt
+         ITzNUHO3wrh5ioHwg5QgUgn9ZTbwGb9oeYumpTOR4h+YzcCGAe7RKFybXsaUxgUo4vQc
+         xUmqQnkM8L0dTloquD4ysFE38ahaOJDnzdGqEEdrd8m+zAfW2GSJtxliZ1P0oYm27P2o
+         g9n4YmgFyFlAfhLr0J2mRKEt//uf8surRrPFEXlQMBTmQesBPd8P+TVEStA3B7AFR66/
+         My4A==
+X-Gm-Message-State: APjAAAXZ0tDgOuGL0FCOV54uv5qMmpgR9UoYFNc7Kga9PojqV9RgzXZj
+        FJ4bYCEQjsbUEOkQHddjg+ILl69MklEyuHezHSDhUg==
+X-Google-Smtp-Source: APXvYqzn1T42iOOiHyS4+8PMkEdX9st0Ln5btvKPlmJL0LNUwwmUjCGM0zS4biRPKdM95azxzdTRgBFftD6CqukZZwg=
+X-Received: by 2002:ac2:5337:: with SMTP id f23mr3267563lfh.192.1578502154340;
+ Wed, 08 Jan 2020 08:49:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108102304.25800-1-ardb@kernel.org> <20200108102304.25800-3-ardb@kernel.org>
- <20200108154031.GA2512498@rani.riverdale.lan> <CAKv+Gu8AOukQL3qokt+Rz3PKBRWWnSULGUr=+yxg_HPM8-uodw@mail.gmail.com>
- <20200108155700.GA2602122@rani.riverdale.lan>
-In-Reply-To: <20200108155700.GA2602122@rani.riverdale.lan>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 8 Jan 2020 17:47:57 +0100
-Message-ID: <CAKv+Gu_EVuX1nktX6Ueyot7XFgtq+AG9SqRHvN91r9oG5GL_wQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] x86/boot/compressed: force hidden visibility for
- all symbol references
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Jan 2020 22:19:03 +0530
+Message-ID: <CA+G9fYtN4jZV-qLZ=SAfcZQfVJj3WgOvjtMUUc2kaawRB11GFA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/115] 4.19.94-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jan 2020 at 16:57, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Wed, 8 Jan 2020 at 02:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Wed, Jan 08, 2020 at 04:47:51PM +0100, Ard Biesheuvel wrote:
-> > The EFI stub already sets the hidden visibility attribute for the few
-> > external symbol references that it contains, so it is not needed in
-> > the context of this series.
-> >
-> > In the future, we can revisit this if we want to get rid of the
-> > various __pure getter functions, but that requires thorough testing on
-> > other architectures and toolchains, so I'd prefer to leave that for
-> > later.
+> This is the start of the stable review cycle for the 4.19.94 release.
+> There are 115 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> We don't need it for the stub right now, but then this bit in the cover
-> letter is not yet true, we still need to be careful about libstub code.
+> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> Anything received after that time might be too late.
 >
-> > ...we can start using ordinary external symbol references in the EFI
-> > stub without running the risk of boot regressions.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.94-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Spurious GOT entries will now be caught by the ASSERT() in the linker
-script and fail the build instead of causing hard to debug boot
-regressions, so it is not entirely untrue either. But I take your
-point.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.94-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 53089eea25ff49cc78f5f988ab91d98ccc80463c
+git describe: v4.19.92-227-g53089eea25ff
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.92-227-g53089eea25ff
+
+
+No regressions (compared to build v4.19.92)
+
+No fixes (compared to build v4.19.92)
+
+Ran 22357 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-sched-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
