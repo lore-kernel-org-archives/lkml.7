@@ -2,112 +2,89 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E733AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D65C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C488820692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC6A2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EY7ctXSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgAHQ5K (ORCPT
+        id S1729585AbgAHQ50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:57:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgAHQ5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:57:10 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D26F20678;
-        Wed,  8 Jan 2020 16:57:08 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 11:57:07 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ard.biesheuvel@linaro.org, james.morse@arm.com, rabin@rab.in,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm/ftrace: fix building on BE32
-Message-ID: <20200108115707.2419bf97@gandalf.local.home>
-In-Reply-To: <20200108143640.1034808-1-arnd@arndb.de>
-References: <20200108143640.1034808-1-arnd@arndb.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 Jan 2020 11:57:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgAHQ5Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:57:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2/grOTBgUAvethVaNAqsX059fFfNkvhqoW88UGGxm7k=; b=EY7ctXSukj3r60Zq9V0xRGPZt
+        pcoHDTBrU9/U/T9W/u7/lPBqYmJdHvn5joBgWqzJu1kAAB2agXa5CJ7F/4uJphAZaXGoYTLf6G5/P
+        gcJvpUoZeccH3ZtoOX32cTJpBHYG4bWhyo6nyjiT6dZmk740K9aOUnm8QH7rSdOi2RFCL8bD+uHyw
+        QMufaqnCW10JBHm5uCzrI3oylj/Q+JMQz+H5+Is4pS2PxVaj+FSGfRn1VBAKYsNfDu02oZlBsEDqJ
+        sDCbs19FvbQfZpWPe5oSLlGfx2J6RXwCniDvD/bOgDRH5OzetrI29+4h1GU4MPNhYPQahNaivzf1l
+        /o3ltpAug==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipEdq-000890-Pg; Wed, 08 Jan 2020 16:57:10 +0000
+Date:   Wed, 8 Jan 2020 08:57:10 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, YueHaibing <yuehaibing@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH v4] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20200108165710.GA18523@infradead.org>
+References: <20200108131528.4279-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108131528.4279-1-agruenba@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  8 Jan 2020 15:36:30 +0100
-Arnd Bergmann <arnd@arndb.de> wrote:
+I don't want to be the party pooper, but shouldn't this be a series
+with one patch to add the helper, and then once for each fs / piece
+of common code switched over?
 
-> Compiling patch.c on BE32 fails because there is no definition
-> of __opcode_to_mem_thumb32()
+On Wed, Jan 08, 2020 at 02:15:28PM +0100, Andreas Gruenbacher wrote:
+> Hi Darrick,
 > 
-> arch/arm/kernel/patch.c: In function '__patch_text_real':
-> arch/arm/kernel/patch.c:94:11: error: implicit declaration of function '__opcode_to_mem_thumb32' [-Werror=implicit-function-declaration]
+> here's an updated version with the latest feedback incorporated.  Hope
+> you find that useful.
 > 
-> Since we don't actually call it, only a declaration is required
-> here, add one without a definition that fixes the build here
-> but will cause a link failure if someone actually relies on the
-> result.
-> 
-> Fixes: 5a735583b764 ("arm/ftrace: Use __patch_text()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Not sure if this version is any less ugly than the first
-> approach of adding an #ifdef in patch.c
+> As far as the f2fs merge conflict goes, I've been told by Linus not to
+> resolve those kinds of conflicts but to point them out when sending the
+> merge request.  So this shouldn't be a big deal.
 
-Adding #ifdef in headers is always better than adding it in C code.
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  arch/arm/include/asm/opcodes.h | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/opcodes.h b/arch/arm/include/asm/opcodes.h
-> index 6bff94b2372b..f75f59c1257a 100644
-> --- a/arch/arm/include/asm/opcodes.h
-> +++ b/arch/arm/include/asm/opcodes.h
-> @@ -110,14 +110,19 @@ extern asmlinkage unsigned int arm_check_condition(u32 opcode, u32 psr);
->  #define __opcode_to_mem_thumb16(x) ___opcode_identity16(x)
->  #define ___asm_opcode_to_mem_arm(x) ___asm_opcode_identity32(x)
->  #define ___asm_opcode_to_mem_thumb16(x) ___asm_opcode_identity16(x)
-> -#ifndef CONFIG_CPU_ENDIAN_BE32
->  /*
->   * On BE32 systems, using 32-bit accesses to store Thumb instructions will not
->   * work in all cases, due to alignment constraints.  For now, a correct
-> - * version is not provided for BE32.
-> + * version is not provided for BE32, only an extern declaration to allow
-> + * compiling patch.c
->   */
-> +#ifndef CONFIG_CPU_ENDIAN_BE32
->  #define __opcode_to_mem_thumb32(x) ___opcode_swahw32(x)
->  #define ___asm_opcode_to_mem_thumb32(x) ___asm_opcode_swahw32(x)
-> +#else
-> +#ifndef __ASSEMBLY__
-> +extern unsigned __opcode_to_mem_thumb32(unsigned);
-> +#endif
->  #endif
->  
->  #endif /* ! CONFIG_CPU_ENDIAN_BE8 */
-
+Also this isn't really the proper way to write a commit message.  This
+text would go into the cover letter if it was a series..
