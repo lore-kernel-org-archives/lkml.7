@@ -2,32 +2,32 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14075C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C403C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E471E2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2E92075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbgAHTqW (ORCPT
+        id S1730627AbgAHTqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:22 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43704 "EHLO
+        Wed, 8 Jan 2020 14:46:21 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43694 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730461AbgAHTqE (ORCPT
+        by vger.kernel.org with ESMTP id S1730456AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHE-0006p9-49; Wed, 08 Jan 2020 19:46:00 +0000
+        id 1ipHHD-0006p7-In; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007doE-UT; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007dnu-Nr; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Will Deacon" <will.deacon@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Catalin Marinas" <catalin.marinas@arm.com>
-Date:   Wed, 08 Jan 2020 19:43:45 +0000
-Message-ID: <lsq.1578512578.848538746@decadent.org.uk>
+        "Johannes Berg" <johannes.berg@intel.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Wed, 08 Jan 2020 19:43:41 +0000
+Message-ID: <lsq.1578512578.874297448@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 47/63] arm64: debug: Ensure debug handlers check
- triggering exception level
+Subject: [PATCH 3.16 43/63] cfg80211: size various nl80211 messages correctly
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,66 +55,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 6bd288569b50bc89fa5513031086746968f585cb upstream.
+commit 4ef8c1c93f848e360754f10eb2e7134c872b6597 upstream.
 
-Debug exception handlers may be called for exceptions generated both by
-user and kernel code. In many cases, this is checked explicitly, but
-in other cases things either happen to work by happy accident or they
-go slightly wrong. For example, executing 'brk #4' from userspace will
-enter the kprobes code and be ignored, but the instruction will be
-retried forever in userspace instead of delivering a SIGTRAP.
+Ilan reported that sometimes nl80211 messages weren't working if
+the frames being transported got very large, which was really a
+problem for userspace-to-kernel messages, but prompted me to look
+at the code.
 
-Fix this issue in the most stable-friendly fashion by simply adding
-explicit checks of the triggering exception level to all of our debug
-exception handlers.
+Upon review, I found various places where variable-length data is
+transported in an nl80211 message but the message isn't allocated
+taking that into account. This shouldn't cause any problems since
+the frames aren't really that long, apart in one place where two
+(possibly very long frames) might not fit.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fix all the places (that I found) that get variable length data
+from the driver and put it into a message to take the length of
+the variable data into account. The 100 there is just a safe
+constant for the remaining message overhead (it's usually around
+50 for most messages.)
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm64/kernel/kgdb.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ net/wireless/nl80211.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index bcac81e600b9..f72743dc070d 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -215,22 +215,31 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -10463,7 +10463,7 @@ static void nl80211_send_mlme_event(stru
+ 	struct sk_buff *msg;
+ 	void *hdr;
  
- static int kgdb_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
  
- static int kgdb_compiled_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	compiled_break = 1;
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
+@@ -10602,7 +10602,7 @@ void nl80211_send_connect_result(struct
+ 	struct sk_buff *msg;
+ 	void *hdr;
  
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
  
- static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
+@@ -10642,7 +10642,7 @@ void nl80211_send_roamed(struct cfg80211
+ 	struct sk_buff *msg;
+ 	void *hdr;
  
- static struct break_hook kgdb_brkpt_hook = {
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10680,7 +10680,7 @@ void nl80211_send_disconnected(struct cf
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ie_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10757,7 +10757,7 @@ void cfg80211_notify_new_peer_candidate(
+ 
+ 	trace_cfg80211_notify_new_peer_candidate(dev, addr);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -11133,7 +11133,7 @@ int nl80211_send_mgmt(struct cfg80211_re
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+@@ -11176,7 +11176,7 @@ void cfg80211_mgmt_tx_status(struct wire
+ 
+ 	trace_cfg80211_mgmt_tx_status(wdev, cookie, ack);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -11886,7 +11886,7 @@ void cfg80211_ft_event(struct net_device
+ 	if (!ft_event->target_ap)
+ 		return;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ft_event->ric_ies_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
 
