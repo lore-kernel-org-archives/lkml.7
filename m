@@ -2,134 +2,124 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE5C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E5CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA412067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE992067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgAHSDG (ORCPT
+        id S1730050AbgAHSDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:03:06 -0500
-Received: from verein.lst.de ([213.95.11.211]:50572 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgAHSDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:03:06 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6FC9F68BFE; Wed,  8 Jan 2020 19:03:04 +0100 (CET)
-Date:   Wed, 8 Jan 2020 19:03:04 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 09/13] exfat: add misc operations
-Message-ID: <20200108180304.GE14650@lst.de>
-References: <20200102082036.29643-1-namjae.jeon@samsung.com> <CGME20200102082406epcas1p268f260d90213bdaabee25a7518f86625@epcas1p2.samsung.com> <20200102082036.29643-10-namjae.jeon@samsung.com> <20200102091902.tk374bxohvj33prz@pali>
+        Wed, 8 Jan 2020 13:03:24 -0500
+Received: from outbound-smtp39.blacknight.com ([46.22.139.222]:49827 "EHLO
+        outbound-smtp39.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727090AbgAHSDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:03:23 -0500
+Received: from mail.blacknight.com (unknown [81.17.254.26])
+        by outbound-smtp39.blacknight.com (Postfix) with ESMTPS id F0D46D1F
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 18:03:20 +0000 (GMT)
+Received: (qmail 19896 invoked from network); 8 Jan 2020 18:03:20 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jan 2020 18:03:19 -0000
+Date:   Wed, 8 Jan 2020 18:03:17 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains v2
+Message-ID: <20200108180317.GM3466@techsingularity.net>
+References: <20200106145225.GB3466@techsingularity.net>
+ <CAKfTPtBa74nd4VP3+7V51Jv=-UpqNyEocyTzMYwjopCgfWPSXg@mail.gmail.com>
+ <20200107095655.GF3466@techsingularity.net>
+ <CAKfTPtAtJSWGPC1t+0xj_Daid0fZaWnN+b53WQ_a1-Js5fJ6sg@mail.gmail.com>
+ <20200107115646.GI3466@techsingularity.net>
+ <CAKfTPtAacdmxniM9yZUrQPW39LAvhpBQt6ZiGiwk5qpEx7zicA@mail.gmail.com>
+ <20200107202406.GJ3466@techsingularity.net>
+ <20200108131858.GZ2827@hirez.programming.kicks-ass.net>
+ <20200108140349.GL3466@techsingularity.net>
+ <20200108164657.GA16425@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102091902.tk374bxohvj33prz@pali>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200108164657.GA16425@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, can you review the exfat time handling, especially vs y2038
-related issues?
+On Wed, Jan 08, 2020 at 05:46:57PM +0100, Vincent Guittot wrote:
+> > Allowing just 1 extra task would work for netperf in some cases except when
+> > softirq is involved. It would partially work for IO on ext4 as it's only
+> > communicating with one journal thread but a bit more borderline for XFS
+> > due to workqueue usage. XFS is not a massive concern in this context as
+> > the workqueue is close to the IO issuer and short-lived so I don't think
+> > it would crop up much for load balancing unlike ext4 where jbd2 could be
+> > very active.
+> > 
+> > If v4 of the patch fails to meet approval then I'll try a patch that
+> 
+> My main concern with v4 was the mismatch between the computed value and the goal to not overload the LLCs
+> 
 
-On Thu, Jan 02, 2020 at 10:19:02AM +0100, Pali Rohár wrote:
-> On Thursday 02 January 2020 16:20:32 Namjae Jeon wrote:
-> > This adds the implementation of misc operations for exfat.
-> > 
-> > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> > ---
-> >  fs/exfat/misc.c | 253 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 253 insertions(+)
-> >  create mode 100644 fs/exfat/misc.c
-> > 
-> > diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-> > new file mode 100644
-> > index 000000000000..7f533bcb3b3f
-> > --- /dev/null
-> > +++ b/fs/exfat/misc.c
+Fair enough.
+
+> > allows a hard-coded imbalance of 2 tasks (one communicating task and
 > 
-> ...
+> If there is no good way to compute the allowed imbalance, a hard coded
+> value of 2 is probably simple value to start with
+
+Indeed.
+
 > 
-> > +/* <linux/time.h> externs sys_tz
-> > + * extern struct timezone sys_tz;
-> > + */
-> > +#define UNIX_SECS_1980    315532800L
-> > +
-> > +#if BITS_PER_LONG == 64
-> > +#define UNIX_SECS_2108    4354819200L
-> > +#endif
+> > one kthread) regardless of NUMA domain span up to 50% of utilisation
 > 
-> ...
+> Are you sure that it's necessary ? This degree of imbalance already applies only if the group has spare capacity
 > 
-> > +#define TIMEZONE_CUR_OFFSET()	((sys_tz.tz_minuteswest / (-15)) & 0x7F)
-> > +/* Convert linear UNIX date to a FAT time/date pair. */
-> > +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64 *ts,
-> > +		struct exfat_date_time *tp)
-> > +{
-> > +	time_t second = ts->tv_sec;
-> > +	time_t day, month, year;
-> > +	time_t ld; /* leap day */
+> something like
 > 
-> Question for other maintainers: Has kernel code already time_t defined
-> as 64bit? Or it is still just 32bit and 32bit systems and some time64_t
-> needs to be used? I remember that there was discussion about these
-> problems, but do not know if it was changed/fixed or not... Just a
-> pointer for possible Y2038 problem. As "ts" is of type timespec64, but
-> "second" of type time_t.
+> +               /* Consider allowing a small imbalance between NUMA groups */
+> +               if (env->sd->flags & SD_NUMA) {
+> +
+> +                       /*
+> +                        * Until we found a good way to compute an acceptable
+> +						 * degree of imbalance linked to the system topology
+> +						 * and that will not impatc mem bandwith and latency,
+> +						 * let start with a fixed small value.
+> +						 */
+> +                       imbalance_adj = 2;
+> +
+> +                       /*
+> +                        * Ignore small imbalances when the busiest group has
+> +                        * low utilisation.
+> +                        */
+> +                        env->imbalance -= min(env->imbalance, imbalance_adj);
+> +               }
 > 
-> > +
-> > +	/* Treats as local time with proper time */
-> > +	second -= sys_tz.tz_minuteswest * SECS_PER_MIN;
-> > +	tp->timezone.valid = 1;
-> > +	tp->timezone.off = TIMEZONE_CUR_OFFSET();
-> > +
-> > +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
-> > +	if (second < UNIX_SECS_1980) {
-> > +		tp->second  = 0;
-> > +		tp->minute  = 0;
-> > +		tp->hour = 0;
-> > +		tp->day  = 1;
-> > +		tp->month  = 1;
-> > +		tp->year = 0;
-> > +		return;
-> > +	}
-> > +
-> > +	if (second >= UNIX_SECS_2108) {
-> 
-> Hello, this code cause compile errors on 32bit systems as UNIX_SECS_2108
-> macro is not defined when BITS_PER_LONG == 32.
-> 
-> Value 4354819200 really cannot fit into 32bit signed integer, so you
-> should use 64bit signed integer. I would suggest to define this macro
-> value via LL not just L suffix (and it would work on both 32 and 64bit)
-> 
->   #define UNIX_SECS_2108    4354819200LL
-> 
-> > +		tp->second  = 59;
-> > +		tp->minute  = 59;
-> > +		tp->hour = 23;
-> > +		tp->day  = 31;
-> > +		tp->month  = 12;
-> > +		tp->year = 127;
-> > +		return;
-> > +	}
-> 
-> -- 
-> Pali Rohár
-> pali.rohar@gmail.com
----end quoted text---
+
+This is more or less what I had in mind with the exception that the "low
+utilisation" part of the comment would go away. The 50% utilisation may
+be unnecessary and was based simply on the idea that at that point memory
+bandwidth, HT considerations or both would also be dominating factors. I
+can leave out the check and add it in as a separate patch if proven to
+be necessary.
+
+-- 
+Mel Gorman
+SUSE Labs
