@@ -2,78 +2,137 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C93C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB9C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1179D2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB872206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578518508;
+	bh=NI/0EEDmS5QbvfbAKaMZQTWOoyjHvHDRvW8NzDitOPc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=VCuSlgGmo6eLIiag5jRVd/qoVgxjtGzhnul6yrMzmNuHXD8NCviKILvqEoZhrQx3z
+	 j/m4B4xOUlXTr79Om3FHqCoFYYfzf2USp0ksTpOFmbHqnIA7JMeP0wuCwzsHS4EiYY
+	 zZdxGdzLswj5ve/POpQK7Ss2p+nFXLZKeWj3irrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgAHVUf (ORCPT
+        id S1727463AbgAHVVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:20:35 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34573 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbgAHVUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:20:33 -0500
-X-Originating-IP: 87.231.134.186
-Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 65A361C0002;
-        Wed,  8 Jan 2020 21:20:28 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baruch Siach <baruch@tkos.co.il>
-Subject: Re: linux-next: Fixes tag needs some work in the mvebu tree
-In-Reply-To: <20200109072840.0a8d1ef6@canb.auug.org.au>
-References: <20200109072840.0a8d1ef6@canb.auug.org.au>
-Date:   Wed, 08 Jan 2020 22:20:28 +0100
-Message-ID: <87r209abmr.fsf@FE-laptop>
+        Wed, 8 Jan 2020 16:21:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbgAHVVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 16:21:47 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14AD320705;
+        Wed,  8 Jan 2020 21:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578518506;
+        bh=NI/0EEDmS5QbvfbAKaMZQTWOoyjHvHDRvW8NzDitOPc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NcCf/ebHSnRrXmFU/yRqcWrQEPUUdBzCRQnTbLB85puJkSu8GuUbGsyTYR61qeWyu
+         c7eHcutvZ1/lnpmOxdJvtXpl9ArNb7YeBg0SgJiD5qFNjtp1dhMRH0mo7sNjpZzxfz
+         WAxWKSbi/HY5DpdhFMDfl9hv/Ar1dYP2tR1BJDAs=
+Date:   Wed, 8 Jan 2020 15:21:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
+        Doug Meyer <dmeyer@gigaio.com>
+Subject: Re: [PATCH 08/12] PCI/switchtec: Add gen4 support in struct
+ sys_info_regs
+Message-ID: <20200108212144.GA209154@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106190337.2428-9-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Mon, Jan 06, 2020 at 12:03:33PM -0700, Logan Gunthorpe wrote:
+> Add a union with gen3 and gen4 sys_info structs. Ensure any use of the
+> gen3 struct is gaurded by an if statement on stdev->gen.
 
-> Hi all,
->
-> In commit
->
->   66f5ff1bf632 ("arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port node")
->
-> Fixes tag
->
->   Fixes: a612083327 ("arm64: dts: add support for SolidRun Clearfog GT 8K")
->
-> has these problem(s):
->
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+s/gaurded/guarded/
 
-This is fixed now,
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/pci/switch/switchtec.c | 41 +++++++++++++++++++++++++++---
+>  include/linux/switchtec.h      | 46 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 82 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index 21d3dd6e74f9..90d9c00984a7 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -317,8 +317,14 @@ static ssize_t field ## _show(struct device *dev, \
+>  	struct device_attribute *attr, char *buf) \
+>  { \
+>  	struct switchtec_dev *stdev = to_stdev(dev); \
+> -	return io_string_show(buf, &stdev->mmio_sys_info->gen3.field, \
+> -			    sizeof(stdev->mmio_sys_info->gen3.field)); \
+> +	struct sys_info_regs __iomem *si = stdev->mmio_sys_info; \
+> +	\
+> +	if (stdev->gen == SWITCHTEC_GEN4) \
+> +		return io_string_show(buf, &si->gen4.field, \
+> +				      sizeof(si->gen4.field)); \
+> +	else \
+> +		return io_string_show(buf, &si->gen3.field, \
+> +				      sizeof(si->gen3.field)); \
+>  } \
+>  \
+>  static DEVICE_ATTR_RO(field)
+> @@ -326,7 +332,21 @@ static DEVICE_ATTR_RO(field)
+>  DEVICE_ATTR_SYS_INFO_STR(vendor_id);
+>  DEVICE_ATTR_SYS_INFO_STR(product_id);
+>  DEVICE_ATTR_SYS_INFO_STR(product_revision);
+> -DEVICE_ATTR_SYS_INFO_STR(component_vendor);
+> +
+> +static ssize_t component_vendor_show(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +	struct switchtec_dev *stdev = to_stdev(dev);
+> +	struct sys_info_regs __iomem *si = stdev->mmio_sys_info;
+> +
+> +	/* component_vendor field not supported after gen4 */
+> +	if (stdev->gen != SWITCHTEC_GEN3)
 
-Thanks,
+I assume the comment should say "after gen3"?  More occurrences below.
 
-Gregory
->
-> -- 
-> Cheers,
-> Stephen Rothwell
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+> +		return sprintf(buf, "none\n");
+> +
+> +	return io_string_show(buf, &si->gen3.component_vendor,
+> +			      sizeof(si->gen3.component_vendor));
+> +}
+> +static DEVICE_ATTR_RO(component_vendor);
+>  
+>  static ssize_t component_id_show(struct device *dev,
+>  	struct device_attribute *attr, char *buf)
+> @@ -334,6 +354,10 @@ static ssize_t component_id_show(struct device *dev,
+>  	struct switchtec_dev *stdev = to_stdev(dev);
+>  	int id = ioread16(&stdev->mmio_sys_info->gen3.component_id);
+>  
+> +	/* component_id field not supported after gen4 */
+> +	if (stdev->gen != SWITCHTEC_GEN3)
+> +		return sprintf(buf, "none\n");
+> +
+>  	return sprintf(buf, "PM%04X\n", id);
+>  }
+>  static DEVICE_ATTR_RO(component_id);
+> @@ -344,6 +368,10 @@ static ssize_t component_revision_show(struct device *dev,
+>  	struct switchtec_dev *stdev = to_stdev(dev);
+>  	int rev = ioread8(&stdev->mmio_sys_info->gen3.component_revision);
+>  
+> +	/* component_revision field not supported after gen4 */
+> +	if (stdev->gen != SWITCHTEC_GEN3)
+> +		return sprintf(buf, "255\n");
+> +
