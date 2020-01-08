@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80869C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A0C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E08205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E275E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgAHTqL (ORCPT
+        id S1730552AbgAHTqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:11 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43480 "EHLO
+        Wed, 8 Jan 2020 14:46:13 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43476 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730424AbgAHTqC (ORCPT
+        by vger.kernel.org with ESMTP id S1730422AbgAHTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:02 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-0006nn-Fi; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHC-0006o9-96; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dku-2N; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dls-IY; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Andreas Ziegler" <andreas.ziegler@fau.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Ingo Molnar" <mingo@redhat.com>
-Date:   Wed, 08 Jan 2020 19:43:04 +0000
-Message-ID: <lsq.1578512578.490568620@decadent.org.uk>
+        "Philip Oberstaller" <Philip.Oberstaller@septentrio.com>,
+        "Felipe Balbi" <balbi@ti.com>,
+        "Arnout Vandecappelle (Essensium/Mind)" <arnout@mind.be>
+Date:   Wed, 08 Jan 2020 19:43:16 +0000
+Message-ID: <lsq.1578512578.745891120@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 06/63] tracing/uprobes: Fix output for multiple
- string arguments
+Subject: [PATCH 3.16 18/63] usb: gadget: serial: fix re-ordering of tx data
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,76 +56,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andreas Ziegler <andreas.ziegler@fau.de>
+From: Philip Oberstaller <Philip.Oberstaller@septentrio.com>
 
-commit 0722069a5374b904ec1a67f91249f90e1cfae259 upstream.
+commit 3e9d3d2efc677b501b12512cab5adb4f32a0673a upstream.
 
-When printing multiple uprobe arguments as strings the output for the
-earlier arguments would also include all later string arguments.
+When a single thread is sending out data over the gadget serial port,
+gs_start_tx() will be called both from the sender context and from the
+write completion. Since the port lock is released before the packet is
+queued, the order in which the URBs are submitted is not guaranteed.
+E.g.
 
-This is best explained in an example:
+  sending thread                      completion (interrupt)
 
-Consider adding a uprobe to a function receiving two strings as
-parameters which is at offset 0xa0 in strlib.so and we want to print
-both parameters when the uprobe is hit (on x86_64):
+  gs_write()
+    LOCK
+                                      gs_write_complete()
+                                        LOCK (wait)
+    gs_start_tx()
+      req1 = list_entry(pool->next)
+      UNLOCK
+                                        LOCK (acquired)
+                                        gs_start_tx()
+                                          req2 = list_entry(pool->next)
+                                          UNLOCK
+                                          usb_ep_queue(req2)
+      usb_ep_queue(req1)
 
-$ echo 'p:func /lib/strlib.so:0xa0 +0(%di):string +0(%si):string' > \
-    /sys/kernel/debug/tracing/uprobe_events
+I.e., req2 is submitted before req1 but it contains the data that
+comes after req1.
 
-When the function is called as func("foo", "bar") and we hit the probe,
-the trace file shows a line like the following:
+To reproduce, use SMP with sending thread and completion pinned to
+different CPUs, or use PREEMPT_RT, and add the following delay just
+before the call to usb_ep_queue():
 
-  [...] func: (0x7f7e683706a0) arg1="foobar" arg2="bar"
+		if (port->write_started > 0 && !list_empty(pool))
+			udelay(1000);
 
-Note the extra "bar" printed as part of arg1. This behaviour stacks up
-for additional string arguments.
+To work around this problem, make sure that only one thread is running
+through the gs_start_tx() loop with an extra flag write_busy. Since
+gs_start_tx() is always called with the port lock held, no further
+synchronisation is needed. The original caller will continue through
+the loop when the request was successfully submitted.
 
-The strings are stored in a dynamically growing part of the uprobe
-buffer by fetch_store_string() after copying them from userspace via
-strncpy_from_user(). The return value of strncpy_from_user() is then
-directly used as the required size for the string. However, this does
-not take the terminating null byte into account as the documentation
-for strncpy_from_user() cleary states that it "[...] returns the
-length of the string (not including the trailing NUL)" even though the
-null byte will be copied to the destination.
-
-Therefore, subsequent calls to fetch_store_string() will overwrite
-the terminating null byte of the most recently fetched string with
-the first character of the current string, leading to the
-"accumulation" of strings in earlier arguments in the output.
-
-Fix this by incrementing the return value of strncpy_from_user() by
-one if we did not hit the maximum buffer size.
-
-Link: http://lkml.kernel.org/r/20190116141629.5752-1-andreas.ziegler@fau.de
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Fixes: 5baaa59ef09e ("tracing/probes: Implement 'memory' fetch method for uprobes")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Andreas Ziegler <andreas.ziegler@fau.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Philip Oberstaller <Philip.Oberstaller@septentrio.com>
+Signed-off-by: Arnout Vandecappelle (Essensium/Mind) <arnout@mind.be>
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/trace/trace_uprobe.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/u_serial.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -151,7 +151,14 @@ static void FETCH_FUNC_NAME(memory, stri
+--- a/drivers/usb/gadget/u_serial.c
++++ b/drivers/usb/gadget/u_serial.c
+@@ -116,6 +116,7 @@ struct gs_port {
+ 	int write_allocated;
+ 	struct gs_buf		port_write_buf;
+ 	wait_queue_head_t	drain_wait;	/* wait while writes drain */
++	bool                    write_busy;
  
- 	ret = strncpy_from_user(dst, src, maxlen);
- 	if (ret == maxlen)
--		dst[--ret] = '\0';
-+		dst[ret - 1] = '\0';
-+	else if (ret >= 0)
-+		/*
-+		 * Include the terminating null byte. In this case it
-+		 * was copied by strncpy_from_user but not accounted
-+		 * for in ret.
-+		 */
-+		ret++;
+ 	/* REVISIT this state ... */
+ 	struct usb_cdc_line_coding port_line_coding;	/* 8-N-1 etc */
+@@ -366,7 +367,7 @@ __acquires(&port->port_lock)
+ 	int			status = 0;
+ 	bool			do_tty_wake = false;
  
- 	if (ret < 0) {	/* Failed to fetch string */
- 		((u8 *)get_rloc_data(dest))[0] = '\0';
+-	while (!list_empty(pool)) {
++	while (!port->write_busy && !list_empty(pool)) {
+ 		struct usb_request	*req;
+ 		int			len;
+ 
+@@ -396,9 +397,11 @@ __acquires(&port->port_lock)
+ 		 * NOTE that we may keep sending data for a while after
+ 		 * the TTY closed (dev->ioport->port_tty is NULL).
+ 		 */
++		port->write_busy = true;
+ 		spin_unlock(&port->port_lock);
+ 		status = usb_ep_queue(in, req, GFP_ATOMIC);
+ 		spin_lock(&port->port_lock);
++		port->write_busy = false;
+ 
+ 		if (status) {
+ 			pr_debug("%s: %s %s err %d\n",
 
