@@ -2,103 +2,105 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7B8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B6AC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AD92070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578512729;
-	bh=UWvJw/1tjXL2bFxBI/htLgWEov4V8RdvLBEJR/vcWsM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CPzOu6sbraffBOLjenPszhC5+KCIqVmo4fjAJ6oaC9AJbmfGnePCRnM1oilP9XOS3
-	 8JR0BT01/79PyCzk31Ku48JbmlDmy7rEiemS28+MEcehp/D05B1QweBrHXVfVTSGGd
-	 v24fWW6C0Ps5poWxn/0dNmkJ6MmnkGK/vUxqCevU=
+	by mail.kernel.org (Postfix) with ESMTP id B3D602072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbgAHTp2 (ORCPT
+        id S1730509AbgAHTqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:45:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbgAHTp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:45:27 -0500
-Received: from localhost.localdomain (unknown [83.218.167.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDD7420692;
-        Wed,  8 Jan 2020 19:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578512727;
-        bh=UWvJw/1tjXL2bFxBI/htLgWEov4V8RdvLBEJR/vcWsM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ir+6rvcsIKXMUri+0JtQkKw0XIbOwB37L48UjvF9Z38NTanu5M4850mUlW7Pki3d8
-         bA0yP8katDtqs80Pn/rhIOVWexZy+Ah2QTXZToeyFEH9vxfk7uSTqohvLs5+TgsFpA
-         LoNl8svOR5wzYhG3F+8vgfWYTIkIhQ/0u02Qwp9M=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] sh: sh4a: Remove unused tmu3_device
-Date:   Wed,  8 Jan 2020 20:45:20 +0100
-Message-Id: <20200108194520.3341-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Wed, 8 Jan 2020 14:46:07 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43374 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730060AbgAHTqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 14:46:00 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipHHB-0006nl-El; Wed, 08 Jan 2020 19:45:57 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipHHB-007dkk-0K; Wed, 08 Jan 2020 19:45:57 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Jiri Kosina" <jkosina@suse.cz>,
+        "Roderick Colenbrander" <roderick.colenbrander@sony.com>
+Date:   Wed, 08 Jan 2020 19:43:02 +0000
+Message-ID: <lsq.1578512578.563643187@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 04/63] HID: sony: Support DS4 dongle
+In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove left-over from previous cleanups to silence the warning:
+3.16.81-rc1 review patch.  If anyone has any objections, please let me know.
 
-    arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
-        warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
+------------------
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Roderick Colenbrander <roderick.colenbrander@sony.com>
+
+commit de66a1a04c25f2560a8dca7a95e2a150b0d5e17e upstream.
+
+Add support for USB based DS4 dongle device, which allows connecting
+a DS4 through Bluetooth, but hides Bluetooth from the host system.
+
+Signed-off-by: Roderick Colenbrander <roderick.colenbrander@sony.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 21 ---------------------
- 1 file changed, 21 deletions(-)
+ drivers/hid/hid-core.c | 1 +
+ drivers/hid/hid-ids.h  | 1 +
+ drivers/hid/hid-sony.c | 2 ++
+ 3 files changed, 4 insertions(+)
 
-diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-index 4b0db8259e3d..22d1c38f742f 100644
---- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-+++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-@@ -229,27 +229,6 @@ static struct platform_device tmu2_device = {
- 	.num_resources	= ARRAY_SIZE(tmu2_resources),
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1934,6 +1934,7 @@ static const struct hid_device_id hid_ha
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER_2) },
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER_2) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER_DONGLE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_VAIO_VGX_MOUSE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_VAIO_VGP_MOUSE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_STEELSERIES, USB_DEVICE_ID_STEELSERIES_SRWS1) },
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -877,6 +877,7 @@
+ #define USB_DEVICE_ID_SONY_PS3_CONTROLLER	0x0268
+ #define USB_DEVICE_ID_SONY_PS4_CONTROLLER	0x05c4
+ #define USB_DEVICE_ID_SONY_PS4_CONTROLLER_2	0x09cc
++#define USB_DEVICE_ID_SONY_PS4_CONTROLLER_DONGLE	0x0ba0
+ #define USB_DEVICE_ID_SONY_NAVIGATION_CONTROLLER	0x042f
+ #define USB_DEVICE_ID_SONY_BUZZ_CONTROLLER		0x0002
+ #define USB_DEVICE_ID_SONY_WIRELESS_BUZZ_CONTROLLER	0x1000
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -2002,6 +2002,8 @@ static const struct hid_device_id sony_d
+ 		.driver_data = DUALSHOCK4_CONTROLLER_USB },
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER_2),
+ 		.driver_data = DUALSHOCK4_CONTROLLER_BT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS4_CONTROLLER_DONGLE),
++		.driver_data = DUALSHOCK4_CONTROLLER_USB },
+ 	{ }
  };
- 
--static struct sh_timer_config tmu3_platform_data = {
--	.channels_mask = 7,
--};
--
--static struct resource tmu3_resources[] = {
--	DEFINE_RES_MEM(0xffde0000, 0x2c),
--	DEFINE_RES_IRQ(evt2irq(0x7c0)),
--	DEFINE_RES_IRQ(evt2irq(0x7c0)),
--	DEFINE_RES_IRQ(evt2irq(0x7c0)),
--};
--
--static struct platform_device tmu3_device = {
--	.name		= "sh-tmu",
--	.id		= 3,
--	.dev = {
--		.platform_data	= &tmu3_platform_data,
--	},
--	.resource	= tmu3_resources,
--	.num_resources	= ARRAY_SIZE(tmu3_resources),
--};
--
- static const struct sh_dmae_channel dmac0_channels[] = {
- 	{
- 		.offset = 0,
--- 
-2.17.1
+ MODULE_DEVICE_TABLE(hid, sony_devices);
 
