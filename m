@@ -2,86 +2,132 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2805C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D222C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E8C206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+2mzgmO"
+	by mail.kernel.org (Postfix) with ESMTP id DD70E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgAHNvI (ORCPT
+        id S1728423AbgAHNvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:51:08 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34560 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgAHNvH (ORCPT
+        Wed, 8 Jan 2020 08:51:36 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:50617 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgAHNvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:51:07 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008Dox0C115657;
-        Wed, 8 Jan 2020 07:50:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578491459;
-        bh=ZQvcg0rastnxK0vE7baWU38XIonrEiIs4ECCAsgMIA4=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=X+2mzgmO+zvrZV0G+H/1km2xl+vivf3Kco49RirE/4dW9yQ8/6X0le3VTY2qY1Twv
-         Dab3pu5i7da1it+II70cY4Cq9d9ZFWZgnxIlwfcJwdSqjaHUBc9HepltQv1W+3GAe5
-         vUKqiZk3NKIej3avdtcJFgnD7vP6y2Q+6VLudz0k=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008Dox6N125933
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 07:50:59 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 07:50:59 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 07:50:59 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008Dowmn016932;
-        Wed, 8 Jan 2020 07:50:58 -0600
-Subject: Re: [PATCH v17 00/19] Multicolor Framework
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191114133023.32185-1-dmurphy@ti.com>
- <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
-Message-ID: <63fd7446-d051-5ef2-3901-dbc290b158e0@ti.com>
-Date:   Wed, 8 Jan 2020 07:48:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 08:51:36 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M1HmG-1irvZ64Bre-002q6O; Wed, 08 Jan 2020 14:51:19 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] drm: panel: fix excessive stack usage in td028ttec1_prepare
+Date:   Wed,  8 Jan 2020 14:51:05 +0100
+Message-Id: <20200108135116.3687988-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tKeoXcUsVKacqijm/XBhh86H/1egpokkSRB3oJsHcu9HgP2Y928
+ 1GSfviPvOtLi8YZQaeX23+XqClPiJrywRCkJJRGjf8vAfQfiopAva7YFo0tnacKJDhyia6v
+ nYYGyu/22VW3xwc/I5Kcaf1stwZOTbn9Uk/fdCdpa1CSzmYXbgEVMI+3dfKJEF4pjqd14+w
+ b59uP2AOjmLkOyP7/qYkg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NnEmuwJCtxs=:oQlhA3d15KmrDDp73DbB0R
+ U7msgIXTj8DRZ7ZrBKZLKvIrfwFqeca2gA0mT+PqYsfFdPcEnp1ZC3zWHC2xBcgDPOGZsWzzl
+ qb9ZLn7st+2WRFQrYuQsWDjlkVaspQM0B2WnTx9It2RRS3DGhV2Lkjs0Q2vU1fx/7MGIF5WSu
+ kGYCMb53pgJ2HYcovEzYuid8cYXX5/861XJdOaPAXdL5I5AYqSqwCjmAH1xbT6kY0yhicMryT
+ cTcsoqUh/Sf8/BApRfpBnwB4vTkPcsYoV37klsMNv3YDr1lNikGT2CBGAECCHH8o8OS4Zx+JP
+ 9o6EtHjZiD8Imdqw7d8LS6Vml+HSqm3lkjMaDtvspGnHhJGPj64qq7TXeu0GgxQehWo1GgeSu
+ flj2aAqmHkdG7eYGvjjYx5E5lY1/IWPnPIN2jGMDhgJi13/pW0PEpUivk0tVeA1/5OQ+hj3/0
+ DTc+8bYQ7WuKfeZNk2MGF9IJjLF0MYutC2lFJFOdlzG2M776WmWxFm7GR/u3uICcm1kSmujZh
+ 5L42Hmf5xYNNx30ORmqdu5YbxxLV8/EBWjuY7L/fGaftxxaZGzsRUBQAD9Ro84w7CqMfro/cm
+ X9q7to4wGHu+fHoSsKpEau53GNaifrLcUkuNzoWP6xhMpOv9d5YVdUEEXH5TX6aQaRL/qKWm1
+ Nk6bhDXJIn5iPWO48+ktnkqEh0poK9EHaarqjycpI5kXXEQkgcUhr5So2Hv03gyEkn2wFZhrP
+ f5HEks8KlKwNE9KrnrOZNyoT5MhJIyo7U9S/PVV93Ai76ZRiXjstI+6ncpHTgecskFFMuJ08e
+ 3YPWm8AhJ3af1iLELo/25DOT5sDSUb/WvM7woQSnDhHYFHo2D2ePg1+iyjmPmTULo/FjB7xSS
+ oHJev4NpXbZzpWwc309w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+With gcc -O3 in combination with the structleak plug, the compiler can
+inline very aggressively, leading to rather large stack usage:
 
-Do you have a time frame in applying this patch set?
+drivers/gpu/drm/panel/panel-tpo-td028ttec1.c: In function 'td028ttec1_prepare':
+drivers/gpu/drm/panel/panel-tpo-td028ttec1.c:233:1: error: the frame size of 2768 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+ }
 
-Dan
+Marking jbt_reg_write_*() as noinline avoids the case where
+multiple instances of this function get inlined into the same
+stack frame and each one adds a copy of 'tx_buf'.
 
-On 12/18/19 8:45 AM, Dan Murphy wrote:
-> Hello
->
-> Bump for application to leds-next
->
-> Dan
->
-> On 11/14/19 7:30 AM, Dan Murphy wrote:
->> Hello
->>
+The compiler is clearly making some bad decisions here, but I
+did not open a new bug report as this only happens in combination
+with the structleak plugin.
+
+Link: https://lore.kernel.org/lkml/CAK8P3a3jAnFZA3GFRtdYdg1-i-oih3pOQzkkrK-X3BGsFrMiZQ@mail.gmail.com/
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2:
+- mark all three functions as noinlien
+- add code comment
+- add link to more detailed analysis
+---
+ drivers/gpu/drm/panel/panel-tpo-td028ttec1.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+index cf29405a2dbe..5034db8b55de 100644
+--- a/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
++++ b/drivers/gpu/drm/panel/panel-tpo-td028ttec1.c
+@@ -86,7 +86,12 @@ struct td028ttec1_panel {
+ 
+ #define to_td028ttec1_device(p) container_of(p, struct td028ttec1_panel, panel)
+ 
+-static int jbt_ret_write_0(struct td028ttec1_panel *lcd, u8 reg, int *err)
++/*
++ * noinline_for_stack so we don't get multiple copies of tx_buf
++ * on the stack in case of gcc-plugin-structleak
++ */
++static int noinline_for_stack
++jbt_ret_write_0(struct td028ttec1_panel *lcd, u8 reg, int *err)
+ {
+ 	struct spi_device *spi = lcd->spi;
+ 	u16 tx_buf = JBT_COMMAND | reg;
+@@ -105,7 +110,8 @@ static int jbt_ret_write_0(struct td028ttec1_panel *lcd, u8 reg, int *err)
+ 	return ret;
+ }
+ 
+-static int jbt_reg_write_1(struct td028ttec1_panel *lcd,
++static int noinline_for_stack
++jbt_reg_write_1(struct td028ttec1_panel *lcd,
+ 			   u8 reg, u8 data, int *err)
+ {
+ 	struct spi_device *spi = lcd->spi;
+@@ -128,7 +134,8 @@ static int jbt_reg_write_1(struct td028ttec1_panel *lcd,
+ 	return ret;
+ }
+ 
+-static int jbt_reg_write_2(struct td028ttec1_panel *lcd,
++static int noinline_for_stack
++jbt_reg_write_2(struct td028ttec1_panel *lcd,
+ 			   u8 reg, u16 data, int *err)
+ {
+ 	struct spi_device *spi = lcd->spi;
+-- 
+2.20.0
+
