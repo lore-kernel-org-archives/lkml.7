@@ -2,90 +2,109 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2597C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB4DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2F22070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C492070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3v/AC3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgAHVr6 (ORCPT
+        id S1727429AbgAHVse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:47:58 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:50096 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgAHVr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:47:58 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ipJBD-00012Q-Ql; Wed, 08 Jan 2020 14:47:56 -0700
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
-        Doug Meyer <dmeyer@gigaio.com>
-References: <20200108213337.GA210184@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <302aff9f-ff12-027c-80c8-2af2afca8359@deltatee.com>
-Date:   Wed, 8 Jan 2020 14:47:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jan 2020 16:48:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35824 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgAHVsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 16:48:33 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so5101167wro.2;
+        Wed, 08 Jan 2020 13:48:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=IFg/S/cLX8hJr8mgKoLrR3Rfke0W5bVXk1Q6TVYd+AE=;
+        b=n3v/AC3wT4iwuAPq2YsQ5z/WgSTJWZ+d9O4D+ncqJC4Hp5eYDDK1L1FX8E3fzzuLXE
+         1diFXiR38tJZ+SdvBHGrQ8WHDgMMNrv6seNgLy+cRqmRyicgcq6n0h3Zflu6UBFbblSP
+         +9a3IEnBO/MDsPLMs02f4wpHcf8SFnrqoJ7kcm+LqsHDMq+txs8yMejzQcmTSaDHs8PS
+         /gM9vEQz7F3KzAL6+XQ724lQ6K4WDSt9pgj5ojKKdI89iXbpoCfmW814ZE51auucU3su
+         d1u9/9iCYt1sz3CWZt4sdTAFLyNSqU+oz08JyY3lU9CuMDAfmk6js5f8rkzj/K/gbl8l
+         impQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=IFg/S/cLX8hJr8mgKoLrR3Rfke0W5bVXk1Q6TVYd+AE=;
+        b=WAoSQuzNE6QMitFFre7A6ECApxSkmSTO6GknfFPj4OxW6XWh949cBIIDKYHQ+mJBo6
+         7Mi++U/NJ/e38G66lG5bYxzypESc5H0ASRQHSFGGIvpTQvTAlbjU1UwbuF4vdbZyDoQ8
+         kf+MNgH2BCvK8S14fiW6kATZLHrH6QzlwqJXMsunoQry0PjHc60/uIGwQFDoqgJ8myAs
+         aYoplBVzCE1/FgUSUDqUS1WkABAUfFuMOm4P5f8t53mkrd9VWwGh7gHRwj4J8vN6ICkK
+         ux7/tIAig4A2NvnD59aFKTEDpX9lQS9BWMMpFJYwH562n24/2jR+xL/y8Ud+oPRXWDxY
+         W2Og==
+X-Gm-Message-State: APjAAAUHVOhwp4TdWGRR61CXoDPNipuFP9d40KPOXmJ61ygr16xXhNwk
+        vLJKzCoA8QqE1xXSkLnz0Sw=
+X-Google-Smtp-Source: APXvYqxzzFTXIwo+2zjEOtcKOIHDR3bMLz4Ky0ixGYJygQu212qrpPOx7dU9JT2JqvZugO90zOnMcA==
+X-Received: by 2002:a05:6000:50:: with SMTP id k16mr6886782wrx.145.1578520111735;
+        Wed, 08 Jan 2020 13:48:31 -0800 (PST)
+Received: from WINDOWSSS5SP16 ([82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id f1sm504895wmc.45.2020.01.08.13.48.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 13:48:31 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>
+Cc:     "'Trond Myklebust'" <trondmy@hammerspace.com>,
+        "'Chuck Lever'" <chuck.lever@oracle.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+Date:   Wed, 8 Jan 2020 21:48:29 -0000
+Message-ID: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200108213337.GA210184@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: dmeyer@gigaio.com, epilmore@gigaio.com, Kelvin.Cao@microchip.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 03/12] PCI/switchtec: Add support for new events
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdXGbKgtqm1QJU8yQtKfQBn7K7s7ZQ==
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Robert Milkowski <rmilkowski@gmail.com>
 
+Currently, if an nfs server returns NFS4ERR_EXPIRED to open(), etc.
+we return EIO to applications without even trying to recover.
 
-On 2020-01-08 2:33 p.m., Bjorn Helgaas wrote:
-> On Mon, Jan 06, 2020 at 12:03:28PM -0700, Logan Gunthorpe wrote:
->> The intercomm notify  event was added for PAX variants of switchtec
->> hardware and the UEC Port was added for the MR1 release of GEN3 firmware.
-> 
-> Do they actually spell it "intercomm" in the datasheet?  Seems like
-> the most common English spelling is "intercom".
+Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry
+of a single stateid")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+---
+ fs/nfs/nfs4proc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Hmm, not sure I don't have this event in my datasheet which is a little
-out of date. Kelvin, whose CC'd, would know if we can change the
-spelling hopefully he can weigh in on this. As far as I know the define
-isn't used anywhere yet.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 76d3716..2478405 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct nfs_server
+*server,
+ 						stateid);
+ 				goto wait_on_recovery;
+ 			}
++			if (state == NULL) {
++				nfs4_schedule_lease_recovery(clp);
++				goto wait_on_recovery;
++			}
+ 			/* Fall through */
+ 		case -NFS4ERR_OPENMODE:
+ 			if (inode) {
+-- 
+1.8.3.1
 
-> Is there some meaningful expansion of "UEC"?
-
-Upstream Error Containment -- I'll mention that in the commit message.
-
-Logan
-
-
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>  drivers/pci/switch/switchtec.c       | 3 +++
->>  include/linux/switchtec.h            | 7 +++++--
->>  include/uapi/linux/switchtec_ioctl.h | 4 +++-
->>  3 files changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
->> index 9c3ad09d3022..218e67428cf9 100644
->> --- a/drivers/pci/switch/switchtec.c
->> +++ b/drivers/pci/switch/switchtec.c
->> @@ -751,10 +751,13 @@ static const struct event_reg {
->>  	EV_PAR(SWITCHTEC_IOCTL_EVENT_MRPC_COMP, mrpc_comp_hdr),
->>  	EV_PAR(SWITCHTEC_IOCTL_EVENT_MRPC_COMP_ASYNC, mrpc_comp_async_hdr),
->>  	EV_PAR(SWITCHTEC_IOCTL_EVENT_DYN_PART_BIND_COMP, dyn_binding_hdr),
->> +	EV_PAR(SWITCHTEC_IOCTL_EVENT_INTERCOMM_REQ_NOTIFY,
->> +	       intercomm_notify_hdr),
