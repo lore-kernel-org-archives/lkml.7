@@ -2,91 +2,127 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09414C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C914C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78CA20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADD320678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="daAxOYfB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHmluhRL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgAHTBa (ORCPT
+        id S1730268AbgAHTCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:01:30 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43916 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbgAHTB2 (ORCPT
+        Wed, 8 Jan 2020 14:02:02 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33641 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgAHTCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:01:28 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p27so1480003pli.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:01:28 -0800 (PST)
+        Wed, 8 Jan 2020 14:02:02 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so315097wmd.0;
+        Wed, 08 Jan 2020 11:02:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=+JYKs8IBCn+dDMZJfNg8HbS7zBGKMw04iMj1o0iHpZw=;
-        b=daAxOYfB/C6ZvBYmYDxatyUSCRJpDXZuC6cvFHZXVHZR+k2InB/TQF45/MbsM8t+RZ
-         jAoffKmaXBtl/sonYDuNalnkTfvVzW/P0s3K4ldjdajpRlKaufKaOW78Duq7Pji4/+Gl
-         bGOWnS+27/G55F1bvWNfnqgPX5C1D2222ojSeMI1C3fPYZ68Wq970gu86tFI4mcEjc9R
-         mHzd45AnODBO1ZqeToWiLcAD3MpGV1hYBNVKCbVOd2yZWNYJdsM7jl95UFwdolN1BIto
-         vfGKAQ9j7COtPMODwCbCI6GBHTHW8OfTeogKLBu3vHTo3hr4S2RvF+aZzcbCAgJQXzph
-         Ukcg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NKyuYRQqoZHQmqzlPg1E+wM60Q1zmjCJTKBWatUXfXk=;
+        b=BHmluhRLje+ldzmTar8OvemUfNfab+NKjpFXegQMxLK1sOFc8LvcISUvn2w1d7z/zG
+         MuwIFw+xGnLP1BQeLzB1xipV1bdLSvnRLpcCnbrHeX3w8sMiA9Ez+1GvqJ1KdPGpR6t+
+         4+CG5Ve55+QrajvbGlAtYaItP9g1sgo1ezpawJQhjYaxJqsrpgaFr9dMYeTPwGrDI3lL
+         AhA6HrSyTqJmwqqzqMx6lcStZZFRNK67jhIfA86L8ErQZZ3k4jgzZym+d4FG6YelslNK
+         fqi8wWcOja2Tj2IF1AxeHL3v5Eyi+ccs7OWW+cA9vE0WMHcY3c0Dc1JVe9hUN50DqQBr
+         NIFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+JYKs8IBCn+dDMZJfNg8HbS7zBGKMw04iMj1o0iHpZw=;
-        b=gixbfV3AZgooZGCG6nTar6u4OedMvbjwa9UjKOODK4xMCMSqXvlKakru6Hs+BPUK6f
-         7eNJ1Y8xdeGe+brrB2aZvJHmjASk5UbfJig51XJOVrpyVgFqCFNPn9S8zbXK0PrhTU3k
-         5lQpfnxWryMKa7rticc9tRovB15g+rk880K/7RsKYz2l3EhhQe3e+pPcf4K8G78AENQ9
-         MyJqO33/blY63r2zkj77h6B7z5d3RNyhhVTQ1dDNvk4h5SJliUn9ZQTQ7o0vC1UdE14y
-         fspeIC65EVQw434fES1jlQa1y5IaKRENgdBTM/ol2SEtwHv8CyW+4CwZ64L4B8DJrBqN
-         8Y4A==
-X-Gm-Message-State: APjAAAW21vgbdT3NKUlyPfUkuO5TPqQej2ntm4XtCFjW51WQnyoXEOsn
-        qqCcpf7cNqsyL8929xd+2OELExpY1Ds5Nw==
-X-Google-Smtp-Source: APXvYqytkmEwJ7nWAkafKbqKMtVMYlkDminYrsnNeeN6pSN+L09PCE1fv+E4wVe0/cBFSbqYklIegQ==
-X-Received: by 2002:a17:90b:3011:: with SMTP id hg17mr87829pjb.90.1578510087816;
-        Wed, 08 Jan 2020 11:01:27 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id j10sm26200pjb.14.2020.01.08.11.01.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 11:01:27 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 0/3] ARM: dts: meson: fixes for GPU DVFS
-In-Reply-To: <20191225010607.1504239-1-martin.blumenstingl@googlemail.com>
-References: <20191225010607.1504239-1-martin.blumenstingl@googlemail.com>
-Date:   Wed, 08 Jan 2020 11:01:26 -0800
-Message-ID: <7hftgpg4c9.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NKyuYRQqoZHQmqzlPg1E+wM60Q1zmjCJTKBWatUXfXk=;
+        b=ZGjO5+x7YAN4MmMMUS1s1kHXiMPE/fSF9dQpACZEVJvum8UnYot+dPStGq/IFUYrpM
+         0Q5JE/23MZ3NsXeOA9nIhCbD5ZGsrwnYMloPJCZ5Gu3KZdW4dB2nynqF4RvL/SVx4Yit
+         eRL+cm/Utzgpc+/CJQX84Sd23D8yWMcaGDusfvO/3hZonJx5nmXjDOCCcUODYUpofxHz
+         j03HrbI9kMEtBmp/ebBKUL15Wn0N7PZZ7v9m/Qjvcif1GDhFyQC1DluEcYbaxp4BumIT
+         mmuoWMjbcoVvJCaDfrimAOAK8dnZjKn4ccSqfp3ILxow252r0VhK9Q3dgvvr5pCri2rA
+         vnTg==
+X-Gm-Message-State: APjAAAVFYj514ofv1eqD8/HSLcWsQ5ww6LZtc0GUej8RvG5eKuPJ6u4R
+        zNP+XuN5K3aCD4dDX0TutCY=
+X-Google-Smtp-Source: APXvYqzl0+rJwKsJeB3IpgRSeWetj8+Ny3enXPHmRQSd27kIk5j/gKXHBeYXvA8rGm/pN05qwGROOg==
+X-Received: by 2002:a1c:9d8b:: with SMTP id g133mr68958wme.27.1578510121032;
+        Wed, 08 Jan 2020 11:02:01 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id f127sm71520wma.4.2020.01.08.11.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 11:02:00 -0800 (PST)
+Date:   Wed, 8 Jan 2020 20:01:59 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+Subject: Re: [v8 08/13] exfat: add exfat cache
+Message-ID: <20200108190159.rfizxzi3tujpp7ck@pali>
+References: <CAKYAXd8Ed18OYYrEgwpDZooNdmsKwFqakGhTyLUgjgfQK39NpQ@mail.gmail.com>
+ <f253ed6a-3aae-b8df-04cf-7d5c0b3039f2@web.de>
+ <20200108180819.3gt6ihm4w2haustn@pali>
+ <20200108184616.GA15429@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3ydy4x3myfhpwesm"
+Content-Disposition: inline
+In-Reply-To: <20200108184616.GA15429@lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> While testing my patch to add DVFS support to the lima driver [0] I
-> found one bug and two inconveniences with the GPU clocks in the
-> Meson8 and Meson8b .dts:
-> - the first patch is an actual fix so the two mali GPU clock trees can
->   actually be used on Meson8b
-> - patch two and three are to prevent confusion when comparing the
->   frequencies from the .dts with the actual ones on the system
->
-> Neither of these patches are critical, so I based them on top of
-> v5.6/dt (meaning they target Linux 5.6, not v5.5/fixes).
+--3ydy4x3myfhpwesm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Queued for v5.6,
+On Wednesday 08 January 2020 19:46:16 Christoph Hellwig wrote:
+> On Wed, Jan 08, 2020 at 07:08:19PM +0100, Pali Roh=C3=A1r wrote:
+> > On Thursday 02 January 2020 11:19:26 Markus Elfring wrote:
+> > > > I am planning to change to share stuff included cache with fat after
+> > > > exfat upstream.
+> > >=20
+> > > Can unwanted code duplication be avoided before?
+> >=20
+> > +1 Could it be possible?
+>=20
+> Let's defer that until we have the code upstream.
 
-Thanks,
+Ok.
 
-Kevin
+> Getting rid
+> of the staging version and having proper upstream exfat support
+> should be a priority for now, especially as sharing will involve
+> coordination with multiple maintainers.  If it works out nicely
+> I'm all for it, though!
+
+Fine for me.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--3ydy4x3myfhpwesm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXhYnJQAKCRCL8Mk9A+RD
+Urr0AJ9sl0GoHqDf4d0r/LAkz/EY6TXsWACgiC5lR8ZgyX6u+tkMscKZDEHCtCM=
+=RcXx
+-----END PGP SIGNATURE-----
+
+--3ydy4x3myfhpwesm--
