@@ -2,113 +2,86 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6832EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94839C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF9B20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BA020705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAZlRLhL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X7Rm0hzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgAHTPR (ORCPT
+        id S1730315AbgAHTPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:15:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42289 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727103AbgAHTPQ (ORCPT
+        Wed, 8 Jan 2020 14:15:23 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59240 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730293AbgAHTPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:15:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578510915;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3z9gNLCSXB8aO3xtxIUun5FqOxfpI/aizS1bLtGDjNA=;
-        b=PAZlRLhLKEnyZzXjJsvffIp+BSjxSRGAbO7BMYRU/a2kmgfuoj+Med6AcZwciPQCv0d9v6
-        aSrR3BUGNuce9nvYM5ln5JFGcNLqxVJGWMsPySKraGyEhjWHt+7PpvmQBZU8UjUPTpjssL
-        IYBxKmw1aTixrX+InzjkMSn+bK26Xek=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-ahYIjnN3NOOxZJxL7au_dg-1; Wed, 08 Jan 2020 14:15:14 -0500
-X-MC-Unique: ahYIjnN3NOOxZJxL7au_dg-1
-Received: by mail-qk1-f200.google.com with SMTP id 65so2546732qkl.23
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:15:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3z9gNLCSXB8aO3xtxIUun5FqOxfpI/aizS1bLtGDjNA=;
-        b=glWFq+P2V9LttNmKC7fbp8J9uBOwuM8ED/tyPvXf3sHYnvNObqbbi9xR7zdF6hSUm0
-         IIXbzU92rXKEjq7XFp24TEs03yMYzS44YQot7hzZdjcZDXQFD2b/Au6wX61hpyKvX4hI
-         cSG9LeG22CjW0oUBEpbzZGaz+knryrV4fkag8jruz4Ra7wpK/7Cl6v2Jxq4DRWt0Fw3e
-         BlSctSVFmR88dBsv8UEcu1MwpPp8VIXmImM0czjExbmVmWtf6Es5VGDKNihjtFgmPywz
-         Qutv1DGJMtqU5p4MseAkiZVlKFvnT9KXQVue2lqHyelQfsQZ3MVF+XYiaBk+XRxUxXEA
-         8Ylg==
-X-Gm-Message-State: APjAAAU8VaqGCj6vCK3zxYiNuRm0g9MQV+2bhs+S6GiCAexxyeEkmst1
-        aBfaCWJMHvC7npZnMWAJ1xOshUOui1iLAtzlmO/URwWsbHZKLaigiw8TOQ4RqK2cHhKydmWIN4y
-        WeyOcImArYF4J743OVbQU3+hv
-X-Received: by 2002:ad4:5421:: with SMTP id g1mr5431497qvt.57.1578510914191;
-        Wed, 08 Jan 2020 11:15:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzaG+N6wIv/vcQ8oG8Xb91kma1URsYhdGn0JWu2TkG83LPrJ3CDlvwx1GR3NbfXuD16HiWg5g==
-X-Received: by 2002:ad4:5421:: with SMTP id g1mr5431470qvt.57.1578510913932;
-        Wed, 08 Jan 2020 11:15:13 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id l44sm1020260qtb.48.2020.01.08.11.15.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 11:15:13 -0800 (PST)
-Date:   Wed, 8 Jan 2020 14:15:12 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200108191512.GF7096@xz-x1>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-4-peterx@redhat.com>
- <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
- <20191223172737.GA81196@xz-x1>
- <851bd9ed-3ff3-6aef-725c-b586d819211c@redhat.com>
- <20191223201024.GB90172@xz-x1>
- <e56d4157-1a0a-3f45-0e02-ac7c10fccf96@redhat.com>
+        Wed, 8 Jan 2020 14:15:23 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008JFIpF022294;
+        Wed, 8 Jan 2020 13:15:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578510918;
+        bh=GADxs8iuDDp1e7HSjq06LFbU5gQ44F5odDANmb4L5n4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X7Rm0hzJ4cnLhLHnLadpg1GpH6CYa/NMaIJVfiahZDSiTNo58MAzVdz1MRiYvrYj4
+         6u5ORmpcFkHl9e2+Xh88CdmLraeKmyjrvGQXDo4xqyvqrlr76e6njQlMt9qQQ6xSU1
+         YEwWexAJA4McPuBC2TntNxjFcLRYTTzxq+jdI+ng=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008JFIec097542
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 13:15:18 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 13:15:18 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 13:15:17 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008JFHYa028176;
+        Wed, 8 Jan 2020 13:15:17 -0600
+Subject: Re: [PATCH v17 00/19] Multicolor Framework
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191114133023.32185-1-dmurphy@ti.com>
+ <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
+ <63fd7446-d051-5ef2-3901-dbc290b158e0@ti.com>
+ <ad01049a-e166-9740-13ae-1ee91079c2fd@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <5e249d4a-cfe6-3b21-ad86-e5a32fc6cd64@ti.com>
+Date:   Wed, 8 Jan 2020 13:12:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e56d4157-1a0a-3f45-0e02-ac7c10fccf96@redhat.com>
+In-Reply-To: <ad01049a-e166-9740-13ae-1ee91079c2fd@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 06:46:30PM +0100, Paolo Bonzini wrote:
-> On 23/12/19 21:10, Peter Xu wrote:
-> >> Yes, kvm->slots_lock is taken by x86_set_memory_region.  We need to move
-> >> that to the callers, of which several are already taking the lock (all
-> >> except vmx_set_tss_addr and kvm_arch_destroy_vm).
-> > OK, will do.  I'll directly replace the x86_set_memory_region() calls
-> > in kvm_arch_destroy_vm() to be __x86_set_memory_region() since IIUC
-> > the slots_lock is helpless when destroying the vm... then drop the
-> > x86_set_memory_region() helper in the next version.  Thanks,
-> 
-> Be careful because it may cause issues with lockdep.  Better just take
-> the lock.
+Jacek
 
-But you seemed to have fixed that already? :)
+On 1/8/20 1:09 PM, Jacek Anaszewski wrote:
+> On 1/8/20 2:48 PM, Dan Murphy wrote:
+>> Hello
+>>
+>> Do you have a time frame in applying this patch set?
+> I am afraid we're not waiting just for applying but for Pavel's
+> opinion on the most crucial parts of this patch set...
 
-3898da947bba ("KVM: avoid using rcu_dereference_protected", 2017-08-02)
+OK.  The patchset is aging rapidly as it is almost 2 months old.
 
-And this path is after kvm_destroy_vm() so kvm->users_count should be 0.
-Or I feel like we need to have more places to take the lock..
-
--- 
-Peter Xu
+Dan
 
