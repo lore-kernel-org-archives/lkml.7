@@ -2,118 +2,183 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F236FC33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B5BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD35B2075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578445104;
-	bh=n1XqwT16/zPyBPZ62ev8+HYwivyuSN6tPQ8E0cRLlrY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bm00W5hXVooHMUtoT7b4fZLCVg1s5vUvgJKSg3/KFdg5BKx4MLML8lIU+Jrxa5oRF
-	 95wsG8hXbKLfBdKHhMQipkBBbXTcr6SlKjacuttbumufgW3Lrmo/o+nbmD5LzGoujS
-	 Fvp2emIESpYgLNT9crnJrKNjgoMM5x50weTXsmm4=
+	by mail.kernel.org (Postfix) with ESMTP id 96D21214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKpyIDZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgAHA6X (ORCPT
+        id S1726346AbgAHBAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 19:58:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgAHA6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 19:58:23 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06FFD20656;
-        Wed,  8 Jan 2020 00:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578445102;
-        bh=n1XqwT16/zPyBPZ62ev8+HYwivyuSN6tPQ8E0cRLlrY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0yN2ZkwZ24etUHtKYoGN3f9D7JHWDUCLWz8kTAdyfV/8JrNFDGbmYSbU1ECJ+QWZc
-         3GtaVHnfzZ0Qq22b9rNsWpGQ3kSO+iGoyES2CEueDd1u58GPO++JXm9SD0GLeUxqQk
-         wlGph7jq5uQZOU2SHhSFOY60M/B/yasU2V4YHQIo=
-Date:   Wed, 8 Jan 2020 09:58:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Shile Zhang <shile.zhang@linux.alibaba.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: orc: fix unused-function warning
-Message-Id: <20200108095816.76dd48134cadc997bf4c5ece@kernel.org>
-In-Reply-To: <20200107213127.209139-1-arnd@arndb.de>
-References: <20200107213127.209139-1-arnd@arndb.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jan 2020 20:00:34 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44708 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgAHBAd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 20:00:33 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so1106220lfa.11;
+        Tue, 07 Jan 2020 17:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K1WP8Nt9IQPQl2KOhe2wpI7M9tBqcPCV3SoKWveA2gE=;
+        b=CKpyIDZpy9/X1XRZGg+g94Jld+ZA92gxz+9G5S0NWC/QTg6laZM8Pbax1fUCnmyUic
+         9Fos/Ai6ZQeBxm6kzQjhUugfBSaPakMfJnkB7eVChYX8kdE+cPpFCXwK1q9ll8GUA9fH
+         cwlsx4THXXCviFb0E/AdfzaGyqn3/8mbbpkPp2XpiCGG/S3+Ssw0tbaeJ5/T7E4Du+PK
+         ej+8788RJtDWfvenUfbYGEoG5HI/a77UCS8x28oCNy2wQyrLqmZ56mrPNKbYyFTxo6fh
+         2uVhudc+3esSMxBZ/vaQOjLVRnEkqVq4pUCUZEUPKaIDk9EpHl21dVU9sZ3dhn9+N5Ca
+         /+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K1WP8Nt9IQPQl2KOhe2wpI7M9tBqcPCV3SoKWveA2gE=;
+        b=h5+IyIfprpDwfOhrbYGh3/kvY6cyTjJtnf1xD1ter1YIdSigLd7dhG+Xmp0dHD6djE
+         nN+H48HN+2HGOuq6FdEbnE1n0q9vEKaNT9AyGMvg5u1NZCKl3ogEGbwOUi406cp/89qq
+         X0iYp/12Gm/BoH+oGCkJEIpPg6KtaiCH2DxaDRsExS/jSGF1mJFwMx11RZ0AE4K4EQgJ
+         TRDSKo0De1/z51p6epcOuK17XFsnorkAgz15BO5NQJlQ5qjS9ivf6TnQvvmcOOP7Oy2T
+         pyhS93bhwnRsJZhZN6Zo+DKpoTS8Gpa/GOmKXiu1GeWWcclEYP7sPLRUY255enuj4Aqo
+         GElQ==
+X-Gm-Message-State: APjAAAWkB1tNv6caPVYlB0ILekcAcrCulmCKRN+5ZPrrWD9sqbmJH4UY
+        qYICIc4q//lGwr5N8xK0Jn2kzYK9
+X-Google-Smtp-Source: APXvYqxlFIc5MZjr1WvkXMENKUiPp2po17tVllNb4RZz7CwvgpAUwjW0i6K3x+iiWURfcON05bQQ0w==
+X-Received: by 2002:ac2:5549:: with SMTP id l9mr1246026lfk.53.1578445230650;
+        Tue, 07 Jan 2020 17:00:30 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f22sm451040ljh.74.2020.01.07.17.00.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 17:00:29 -0800 (PST)
+Subject: Re: [PATCH v6 06/19] soc: tegra: Add Tegra PMC clocks registration
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+ <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
+Date:   Wed, 8 Jan 2020 04:00:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jan 2020 22:31:20 +0100
-Arnd Bergmann <arnd@arndb.de> wrote:
-
-> The orc unwinder contains a new warning:
+07.01.2020 07:14, Sowjanya Komatineni пишет:
+> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
+> these PMC clocks are registered by Tegra clock driver with each clock as
+> separate mux and gate clocks using clk_register_mux and clk_register_gate
+> by passing PMC base address and register offsets and PMC programming for
+> these clocks happens through direct PMC access by the clock driver.
 > 
-> arch/x86/kernel/unwind_orc.c:210:12: error: 'orc_sort_cmp' defined but not used [-Werror=unused-function]
->  static int orc_sort_cmp(const void *_a, const void *_b)
->             ^~~~~~~~~~~~
-> arch/x86/kernel/unwind_orc.c:190:13: error: 'orc_sort_swap' defined but not used [-Werror=unused-function]
->  static void orc_sort_swap(void *_a, void *_b, int size)
->              ^~~~~~~~~~~~~
+> With this, when PMC is in secure mode any direct PMC access from the
+> non-secure world does not go through and these clocks will not be
+> functional.
 > 
-> Move the #ifdef to hide the now unused functions.
+> This patch adds these PMC clocks registration to pmc driver with PMC as
+> a clock provider and registers each clock as single clock.
 > 
-> Fixes: f14bf6a350df ("x86/unwind/orc: Remove boot-time ORC unwind tables sorting")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you,
-
+> clk_ops callback implementations for these clocks uses tegra_pmc_readl and
+> tegra_pmc_writel which supports PMC programming in both secure mode and
+> non-secure mode.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/x86/kernel/unwind_orc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/soc/tegra/pmc.c | 242 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 242 insertions(+)
 > 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index abdf8911a1fb..538152cca46b 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -187,6 +187,7 @@ static struct orc_entry *orc_find(unsigned long ip)
->  	return orc_ftrace_find(ip);
->  }
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 1699dda6b393..2b1a709c3cb7 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -13,9 +13,13 @@
 >  
-> +#ifdef CONFIG_MODULES
->  static void orc_sort_swap(void *_a, void *_b, int size)
->  {
->  	struct orc_entry *orc_a, *orc_b;
-> @@ -229,7 +230,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
->  	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
->  }
+>  #include <linux/arm-smccc.h>
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk/clk-conf.h>
+>  #include <linux/clk/tegra.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/device.h>
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+>  #include <linux/init.h>
+> @@ -48,6 +52,7 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>  #include <dt-bindings/gpio/tegra186-gpio.h>
+>  #include <dt-bindings/gpio/tegra194-gpio.h>
+> +#include <dt-bindings/soc/tegra-pmc.h>
 >  
-> -#ifdef CONFIG_MODULES
->  void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
->  			void *_orc, size_t orc_size)
->  {
-> -- 
-> 2.20.0
-> 
+>  #define PMC_CNTRL			0x0
+>  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+> @@ -100,6 +105,8 @@
+>  #define PMC_WAKE2_STATUS		0x168
+>  #define PMC_SW_WAKE2_STATUS		0x16c
+>  
+> +#define PMC_CLK_OUT_CNTRL		0x1a8
+> +#define  PMC_CLK_OUT_MUX_MASK		GENMASK(1, 0)
+>  #define PMC_SENSOR_CTRL			0x1b0
+>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+> @@ -155,6 +162,63 @@
+>  #define  TEGRA_SMC_PMC_READ	0xaa
+>  #define  TEGRA_SMC_PMC_WRITE	0xbb
+>  
+> +struct pmc_clk {
+> +	struct clk_hw	hw;
+> +	unsigned long	offs;
+> +	u32		mux_shift;
+> +	u32		force_en_shift;
+> +};
+> +
+> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+> +
+> +struct pmc_clk_init_data {
+> +	char *name;
+> +	const char *const *parents;
+> +	int num_parents;
+> +	int clk_id;
+> +	u8 mux_shift;
+> +	u8 force_en_shift;
+> +};
+> +
+> +static const char * const clk_out1_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern1",
+> +};
+> +
+> +static const char * const clk_out2_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern2",
+> +};
+> +
+> +static const char * const clk_out3_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern3",
+> +};
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+There is no way to specify "osc" as a parent clock in a device-tree
+because there is no DT ID assigned to the OSC in the CaR driver, should
+this be fixed?
