@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A083C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A0C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCFD2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B26E2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgAHTtS (ORCPT
+        id S1727276AbgAHTt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:18 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43582 "EHLO
+        Wed, 8 Jan 2020 14:49:27 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43466 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730436AbgAHTqD (ORCPT
+        by vger.kernel.org with ESMTP id S1730417AbgAHTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:46:03 -0500
+        Wed, 8 Jan 2020 14:46:02 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-0006od-V3; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHC-0006o6-52; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dmh-4L; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHB-007dlj-Gd; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
         "Arnd Bergmann" <arnd@arndb.de>,
-        "Catalin Marinas" <catalin.marinas@arm.com>
-Date:   Wed, 08 Jan 2020 19:43:26 +0000
-Message-ID: <lsq.1578512578.849336066@decadent.org.uk>
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        "Michal Marek" <mmarek@suse.com>
+Date:   Wed, 08 Jan 2020 19:43:14 +0000
+Message-ID: <lsq.1578512578.201161676@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 28/63] asm-generic: Fix local variable shadow in
- __set_fixmap_offset
+Subject: [PATCH 3.16 16/63] kbuild: setlocalversion: print error to STDERR
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,50 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-commit 3694bd76781b76c4f8d2ecd85018feeb1609f0e5 upstream.
+commit 78283edf2c01c38eb840a3de5ffd18fe2992ab64 upstream.
 
-Currently __set_fixmap_offset is a macro function which has a local
-variable called 'addr'. If a caller passes a 'phys' parameter which is
-derived from a variable also called 'addr', the local variable will
-shadow this, and the compiler will complain about the use of an
-uninitialized variable. To avoid the issue with namespace clashes,
-'addr' is prefixed with a liberal sprinkling of underscores.
+I tried to use 'make O=...' from an unclean source tree. This triggered
+the error path of setlocalversion. But by printing to STDOUT, it created
+a broken localversion which then caused another (unrelated) error:
 
-Turning __set_fixmap_offset into a static inline breaks the build for
-several architectures. Fixing this properly requires updates to a number
-of architectures to make them agree on the prototype of __set_fixmap (it
-could be done as a subsequent patch series).
+"4.7.0-rc2Error: kernelrelease not valid - run make prepare to update it" exceeds 64 characters
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+After printing to STDERR, the true build error gets displayed later:
+
+  /home/wsa/Kernel/linux is not clean, please run 'make mrproper'
+  in the '/home/wsa/Kernel/linux' directory.
+
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Michal Marek <mmarek@suse.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
-[catalin.marinas@arm.com: squashed the original function patch and macro fixup]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/asm-generic/fixmap.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ scripts/setlocalversion | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/asm-generic/fixmap.h
-+++ b/include/asm-generic/fixmap.h
-@@ -67,12 +67,12 @@ static inline unsigned long virt_to_fix(
- #endif
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -143,7 +143,7 @@ fi
+ if test -e include/config/auto.conf; then
+ 	. include/config/auto.conf
+ else
+-	echo "Error: kernelrelease not valid - run 'make prepare' to update it"
++	echo "Error: kernelrelease not valid - run 'make prepare' to update it" >&2
+ 	exit 1
+ fi
  
- /* Return a pointer with offset calculated */
--#define __set_fixmap_offset(idx, phys, flags)		      \
--({							      \
--	unsigned long addr;				      \
--	__set_fixmap(idx, phys, flags);			      \
--	addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1)); \
--	addr;						      \
-+#define __set_fixmap_offset(idx, phys, flags)				\
-+({									\
-+	unsigned long ________addr;					\
-+	__set_fixmap(idx, phys, flags);					\
-+	________addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1));	\
-+	________addr;							\
- })
- 
- #define set_fixmap_offset(idx, phys) \
 
