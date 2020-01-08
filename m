@@ -2,122 +2,186 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F90C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7728C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD71A2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKHkRs0C"
+	by mail.kernel.org (Postfix) with ESMTP id B30402082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgAHK1Z (ORCPT
+        id S1727773AbgAHK3u convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:27:25 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54604 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726252AbgAHK1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:27:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578479243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YCdLRbEXo/mLO/KI232Elg94jM5uidenpM5TwMdi2Mk=;
-        b=JKHkRs0CQRgUhQTl6XznubxFFYDPsrIhgVZBSpE6vDaPg1Ec+hc8hGV6eo/tv5zH3/Odyo
-        ntZtW8P6qbMdi9zk3kGmlwybohFwB1AUI+cbi/SHI8CM3l3YXIUUXjXwbAKRyVcZgv0Ue+
-        x/6Pq7+XDhbkqzupfxxoregkVxnAoV0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-zZRF13R_P-iIHrj97TadmQ-1; Wed, 08 Jan 2020 05:27:20 -0500
-X-MC-Unique: zZRF13R_P-iIHrj97TadmQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D10F25B37B;
-        Wed,  8 Jan 2020 10:27:18 +0000 (UTC)
-Received: from krava (ovpn-205-199.brq.redhat.com [10.40.205.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FA107C82C;
-        Wed,  8 Jan 2020 10:27:15 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 11:27:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, tmricht@linux.ibm.com
-Subject: Re: [PATCH] perf report: Fix no libunwind compiled warning break
- s390 issue
-Message-ID: <20200108102708.GC360164@krava>
-References: <20200107191745.18415-1-yao.jin@linux.intel.com>
+        Wed, 8 Jan 2020 05:29:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50536 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbgAHK3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:29:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 13CB7AAC2;
+        Wed,  8 Jan 2020 10:29:48 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Chen Wandun <chenwandun@huawei.com>, rkrcmar@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolai Stange <nstange@suse.de>
+Subject: Re: [PATCH next] KVM: Fix debugfs_simple_attr.cocci warnings
+References: <1577151674-67949-1-git-send-email-chenwandun@huawei.com>
+        <4f193d99-ee9b-5217-c2f6-3a8a96bf1534@redhat.com>
+Date:   Wed, 08 Jan 2020 11:29:46 +0100
+In-Reply-To: <4f193d99-ee9b-5217-c2f6-3a8a96bf1534@redhat.com> (Paolo
+        Bonzini's message of "Tue, 7 Jan 2020 15:01:54 +0100")
+Message-ID: <87h816nsv9.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107191745.18415-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 03:17:45AM +0800, Jin Yao wrote:
-> Commit 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
-> breaks the s390 platform. S390 uses libdw-dwarf-unwind for call chain
-> unwinding and had no support for libunwind.
-> 
-> So the warning "Please install libunwind development packages during the perf build."
-> caused the confusion even if the call-graph is displayed correctly.
-> 
-> This patch adds checking for HAVE_DWARF_SUPPORT, which is set when
-> libdw-dwarf-unwind is compiled in.
-> 
-> Fixes: 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
-> 
-> Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-perfect, I have the same change prepared for sending, but it's
-together with making libdw default dwarf unwinder, which I'm still
-not sure we want to do, so it all got posponed ;-)
+> On 24/12/19 02:41, Chen Wandun wrote:
+>> Use DEFINE_DEBUGFS_ATTRIBUTE rather than DEFINE_SIMPLE_ATTRIBUTE
+>> for debugfs files.
+>> 
+>> Semantic patch information:
+>> Rationale: DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
+>> imposes some significant overhead as compared to
+>> DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+>> 
+>> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+>
+> This patch was sent probably already two or three times, and every time
+> I've not been able to understand what is this significant overhead.
 
-would you guys be ok with that? with having libdw picked up as default dwarf unwinder..
+As you correctly stated below, the overhead is one
+kmalloc(sizeof(struct file_operations)) per opened debugfs file
+(i.e. one per debugfs struct file instance). struct file_operations is
+equivalent to 33 unsigned longs, so it might not be seen as that
+"significant", but it isn't small either.
 
-for the patch:
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+> With DEFINE_DEBUGFS_ATTRIBUTE:
+>
+> - the fops member is debugfs_open_proxy_file_operations, which calls
+> replace_fops so that the fops->read member is debugfs_attr_read on the
+> opened file
+>
+> - debugfs_attr_read does
+>
+>         ret = debugfs_file_get(dentry);
+>         if (unlikely(ret))
+>                 return ret;
+>         ret = simple_attr_read(file, buf, len, ppos);
+>         debugfs_file_put(dentry);
+>
+> With DEFINE_SIMPLE_ATTRIBUTE:
+>
+> - the fops member is debugfs_full_proxy_open, and after
+> __full_proxy_fops_init fops->read is initialized to full_proxy_read
+>
+> - full_proxy_read does
+>
+>         r = debugfs_file_get(dentry);
+>         if (unlikely(r))
+>                 return r;
+>         real_fops = debugfs_real_fops(filp);
+>         r = real_fops->name(args);
+>         debugfs_file_put(dentry);
+>         return r;
+>
+> where real_fops->name is again just simple_attr_read.
+>
+> So the overhead is really just one kzalloc every time the file is
+> opened.
 
-thanks,
-jirka
+Yes.
 
-> ---
->  tools/perf/builtin-report.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index de988589d99b..66cd97cc8b92 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -412,10 +412,10 @@ static int report__setup_sample_type(struct report *rep)
->  				PERF_SAMPLE_BRANCH_ANY))
->  		rep->nonany_branch_mode = true;
->  
-> -#ifndef HAVE_LIBUNWIND_SUPPORT
-> +#if !defined(HAVE_LIBUNWIND_SUPPORT) && !defined(HAVE_DWARF_SUPPORT)
->  	if (dwarf_callchain_users) {
-> -		ui__warning("Please install libunwind development packages "
-> -			    "during the perf build.\n");
-> +		ui__warning("Please install libunwind or libdw "
-> +			    "development packages during the perf build.\n");
->  	}
->  #endif
->  
-> -- 
-> 2.17.1
-> 
 
+> I could just apply the patch, but it wouldn't solve the main issue,
+> which is that there is a function with a scary name
+> ("debugfs_create_file_unsafe") that can be used in very common
+> circumstances (with DEFINE_DEBUGFS_ATTRIBUTE.
+
+Agreed, the naming is a bit poor. "debugfs_create_file_no_proxy" or the
+like would perhaps have been a better choice.
+
+
+> Therefore, we could
+> instead fix the root cause and avoid using the scary API:
+>
+> - remove from the .cocci patch the change from debugfs_create_file to
+> debugfs_create_file_unsafe.  Only switch DEFINE_SIMPLE_ATTRIBUTE to
+> DEFINE_DEBUGFS_ATTRIBUTE
+>
+> - change debugfs_create_file to automatically detect the "easy" case
+> that does not need proxying of fops; something like this:
+>
+> 	const struct file_operations *proxy_fops;
+>
+> 	/*
+> 	 * Any struct file_operations defined by means of
+> 	 * DEFINE_DEBUGFS_ATTRIBUTE() is protected against file removals
+> 	 * and thus does not need proxying of read and write fops.
+> 	 */
+> 	if (!fops ||
+> 	    (fops->llseek == no_llseek &&
+> 	     ((!fops->read && !fops->read_iter) ||
+> 	      fops->read == debugfs_attr_read) &&
+> 	     ((!fops->write && !fops->write_iter) ||
+> 	      fops->write == debugfs_attr_write) &&
+> 	     !fops->poll && !fops->unlocked_ioctl)
+> 		return debugfs_create_file_unsafe(name, mode, parent,
+> 						  data, fops);
+>
+> 	/* These are not supported by __full_proxy_fops_init.  */
+> 	WARN_ON_ONCE(fops->read_iter || fops->write_iter);
+> 	return __debugfs_create_file(name, mode, parent, data,
+> 				    &debugfs_full_proxy_file_operations,
+> 				     fops);
+>
+> CCing Nicolai Stange who first introduced debugfs_create_file_unsafe.
+
+I'm not strictly against your proposal, but I somewhat dislike the idea
+of adding runtime checks for special cases to work around a historic
+issue. Also, we'd either have to touch the ~63 existing call sites of
+debugfs_create_file_unsafe() again or had to live with inconsistent
+debugfs usage patterns.
+
+AFAICT, your approach wouldn't really put a relieve on maintainers
+wrt. patch count as the cocci check for the DEFINE_SIMPLE_ATTRIBUTE ->
+DEFINE_DEBUGFS_ATTRIBUTE conversion would still be needed.
+
+And then there's grepability: right now it would be possible to find all
+fully proxied debugfs files by means of "git grep 'debugfs_file_create('".
+I'm not saying I'm about to convert these, but in theory it could be
+done easily.
+
+How about introducing a
+  #define debugfs_create_attr debugfs_create_file_unsafe
+instead to make those
+s/DEFINE_SIMPLE_ATTRIBUTE/DEFINE_DEBUGFS_ATTRIBUTE/
+patches look less scary?
+
+Ideally, for the sake of additional safety, DEFINE_DEBUGFS_ATTRIBUTE
+could be made to wrap the file_operations within something like a
+struct debugfs_attr_file_operations and debugfs_create_attr() would
+take that instead of a plain file_operations. But again, this would
+require touching the existing users of debugfs_create_file_unsafe()...
+So I'm not sure it would be worth it.
+c
+
+Thanks,
+
+Nicolai
+
+-- 
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
