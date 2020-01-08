@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0C8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ADC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63B52070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1DB2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730578AbgAHTqQ (ORCPT
+        id S1730561AbgAHTqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:16 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43566 "EHLO
+        Wed, 8 Jan 2020 14:46:15 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43558 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730432AbgAHTqD (ORCPT
+        by vger.kernel.org with ESMTP id S1730430AbgAHTqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:03 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006om-83; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006oc-1l; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dn1-BA; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007dmc-1Z; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Hackmann" <ghackmann@google.com>,
-        "Jin Qian" <jinqian@android.com>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Alan" <alan@linux.intel.com>
-Date:   Wed, 08 Jan 2020 19:43:30 +0000
-Message-ID: <lsq.1578512578.905333479@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Lorenzo Colitti" <lorenzo@google.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Wed, 08 Jan 2020 19:43:25 +0000
+Message-ID: <lsq.1578512578.936131181@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 32/63] staging: goldfish: audio: fix compiliation on arm
+Subject: [PATCH 3.16 27/63] net: diag: support v4mapped sockets in
+ inet_diag_find_one_icsk()
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,31 +58,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Greg Hackmann <ghackmann@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 4532150762ceb0d6fd765ebcb3ba6966fbb8faab upstream.
+commit 7c1306723ee916ea9f1fa7d9e4c7a6d029ca7aaf upstream.
 
-We do actually need slab.h, by luck we get it on other platforms but not
-always on ARM. Include it properly.
+Lorenzo reported that we could not properly find v4mapped sockets
+in inet_diag_find_one_icsk(). This patch fixes the issue.
 
-Signed-off-by: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Jin Qian <jinqian@android.com>
-Signed-off-by: Alan <alan@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Cc: Arnd Bergmann <arnd@arndb.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/goldfish/goldfish_audio.c | 1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/staging/goldfish/goldfish_audio.c
-+++ b/drivers/staging/goldfish/goldfish_audio.c
-@@ -26,6 +26,7 @@
- #include <linux/sched.h>
- #include <linux/dma-mapping.h>
- #include <linux/uaccess.h>
-+#include <linux/slab.h>
- #include <linux/goldfish.h>
- 
- MODULE_AUTHOR("Google, Inc.");
+--- a/net/ipv4/inet_diag.c
++++ b/net/ipv4/inet_diag.c
+@@ -318,12 +318,18 @@ int inet_diag_dump_one_icsk(struct inet_
+ 	}
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	else if (req->sdiag_family == AF_INET6) {
+-		sk = inet6_lookup(net, hashinfo,
+-				  (struct in6_addr *)req->id.idiag_dst,
+-				  req->id.idiag_dport,
+-				  (struct in6_addr *)req->id.idiag_src,
+-				  req->id.idiag_sport,
+-				  req->id.idiag_if);
++		if (ipv6_addr_v4mapped((struct in6_addr *)req->id.idiag_dst) &&
++		    ipv6_addr_v4mapped((struct in6_addr *)req->id.idiag_src))
++			sk = inet_lookup(net, hashinfo, req->id.idiag_dst[3],
++					 req->id.idiag_dport, req->id.idiag_src[3],
++					 req->id.idiag_sport, req->id.idiag_if);
++		else
++			sk = inet6_lookup(net, hashinfo,
++					  (struct in6_addr *)req->id.idiag_dst,
++					  req->id.idiag_dport,
++					  (struct in6_addr *)req->id.idiag_src,
++					  req->id.idiag_sport,
++					  req->id.idiag_if);
+ 	}
+ #endif
+ 	else {
 
