@@ -2,93 +2,122 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C88C33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BEEC33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45828207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9370207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578446768;
+	bh=7zxvCiU+gHGR4GRmG1cvHE0RiTtR7+LpexvhzNKlKpg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KUnJM/PzrVGSXiJch2BjbqcFuRe4UFjxnEHvjiCI1FgzdDfA1o4eR/FLC6j9Xusob
+	 3UAuD5hXCL7cE4ZJCjip2oriffl86dO6i4KkxhqpWzNzOL7nVC6KmHsaWGQe8yy/dc
+	 YPn2zpKDer8MayG3LUUassy+6aXnXG473+ikCgbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgAHBUQ (ORCPT
+        id S1726368AbgAHB0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:20:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:41392 "EHLO mga05.intel.com"
+        Tue, 7 Jan 2020 20:26:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgAHBUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:20:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 17:20:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
-   d="scan'208";a="271694238"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Jan 2020 17:20:15 -0800
-Date:   Tue, 7 Jan 2020 17:20:15 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Barret Rhoden <brho@google.com>
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jason.zeng@intel.com
-Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
-Message-ID: <20200108012014.GF16987@linux.intel.com>
-References: <20191212182238.46535-1-brho@google.com>
- <20191212182238.46535-3-brho@google.com>
- <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
- <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
- <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com>
- <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
- <20191213171950.GA31552@linux.intel.com>
- <e012696f-f13e-5af1-2b14-084607d69bfa@google.com>
- <20200107190522.GA16987@linux.intel.com>
- <08a36944-ad5a-ca49-99b3-d3908ce0658b@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08a36944-ad5a-ca49-99b3-d3908ce0658b@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725601AbgAHB0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 20:26:07 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD66D20692;
+        Wed,  8 Jan 2020 01:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578446767;
+        bh=7zxvCiU+gHGR4GRmG1cvHE0RiTtR7+LpexvhzNKlKpg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hQnK0UEw9ZlsNOsV4p4QPfA2+YF/whGABIKaCI7XlawRupGhk/Mkt2NS1qgLRIuwl
+         +2hmKYHnJRmWHztA9m8vO4s1qy3dEmoZ5zxn+9PHUx5R+YDvUYho5ff9p0npuOPG7+
+         5qfTN85lMMl+a+GnuaL4uIGUj5KP+pRnt80ceECI=
+Date:   Wed, 8 Jan 2020 10:26:02 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oleksandr Natalenko <oleksandr@redhat.com>, linux-mm@kvack.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kallsyms: work around bogus -Wrestrict warning
+Message-Id: <20200108102602.43d4c5433eb495cdbf387e9b@kernel.org>
+In-Reply-To: <20200107214042.855757-1-arnd@arndb.de>
+References: <20200107214042.855757-1-arnd@arndb.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 02:19:06PM -0500, Barret Rhoden wrote:
-> On 1/7/20 2:05 PM, Sean Christopherson wrote:
-> >Hopefully you haven't put too much effort into the rework, because I want
-> >to commandeer the proposed changes and use them as the basis for a more
-> >aggressive overhaul of KVM's hugepage handling.  Ironically, there's a bug
-> >in KVM's THP handling that I _think_ can be avoided by using the DAX
-> >approach of walking the host PTEs.
-> >
-> >I'm in the process of testing, hopefully I'll get a series sent out later
-> >today.  If not, I should at least be able to provide an update.
+Hi Arnd,
+
+On Tue,  7 Jan 2020 22:40:26 +0100
+Arnd Bergmann <arnd@arndb.de> wrote:
+
+> gcc -O3 produces some really odd warnings for this file:
 > 
-> Nice timing.  I was just about to get back to this, so I haven't put any
-> time in yet.  =)
+> kernel/kallsyms.c: In function 'sprint_symbol':
+> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+>    strcpy(buffer, name);
+>    ^~~~~~~~~~~~~~~~~~~~
+> kernel/kallsyms.c: In function 'sprint_symbol_no_offset':
+> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+>    strcpy(buffer, name);
+>    ^~~~~~~~~~~~~~~~~~~~
+> kernel/kallsyms.c: In function 'sprint_backtrace':
+> kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+>    strcpy(buffer, name);
+>    ^~~~~~~~~~~~~~~~~~~~
 > 
-> Please CC me, and I'll try your patches out on my end.
+> This obviously cannot be since it is preceded by an 'if (name != buffer)'
+> check.
 
-Will do.  Barring last minute hiccups, the code is ready, just need to
-finish off a few changelogs.  Should get it out early tomorrow.
+Hmm, this looks like a bug in gcc.
 
-One question that may help avoid some churn: are huge DAX pages not
-tracked as compound pages?  The comment from your/this patch is pretty
-unequivocal, but I wanted to double check that they will really return
-false for PageCompound(), as opposed to only returning false for
-PageTransCompoundMap().
+> 
+> Using sprintf() instead of strcpy() is a bit wasteful but is
+> the best workaround I could come up with.
+> 
+> Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  kernel/kallsyms.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> index d812b90f4c86..726b8eeb223e 100644
+> --- a/kernel/kallsyms.c
+> +++ b/kernel/kallsyms.c
+> @@ -366,7 +366,7 @@ static int __sprint_symbol(char *buffer, unsigned long address,
+>  		return sprintf(buffer, "0x%lx", address - symbol_offset);
+>  
+>  	if (name != buffer)
+> -		strcpy(buffer, name);
+> +		sprintf(buffer, "%s", name);
 
-	/*
-	 * DAX pages do not use compound pages.  ...
-	 */
+BTW, this seems not happen. kallsyms_lookup() (and it's subfunctions)
+always stores the result into buffer unless name == NULL.
+Maybe we can remove these 2 lines?
+(and add a comment line for kallsyms_lookup() so that it guarantees the
+ symbol name always stored in namebuf argument)
 
-Thanks!
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
