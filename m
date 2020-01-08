@@ -2,180 +2,269 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C337C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A666C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBAA206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A4F2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHOLhO+V"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="uwBavAbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgAHKkf (ORCPT
+        id S1727870AbgAHKku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:40:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40445 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbgAHKke (ORCPT
+        Wed, 8 Jan 2020 05:40:50 -0500
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60706 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727145AbgAHKku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:40:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so2803332wrn.7;
-        Wed, 08 Jan 2020 02:40:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=siCClIKYBSJbbyV9Fx1AWH7B6zrtxbk84GPvmjQP9HY=;
-        b=uHOLhO+V1x6pLXu/z7YfTI/wnHQzDFdVV7yVLl1IfGKQbRkCVrCICV6jG9rUypPsF9
-         EogGLFTvAc9j8fguwf7uI8r1ci5Eno7V6B31z8o6eeMIjLkNllMihdtgr6ONtTV3rLA6
-         qMI+PxRjF4lxg7C8mUT4jw4QaynGlrHAy5d7/f5ruZFpxiwtFbyLEF0XI9hO3ZSjH8ef
-         uXd5QquKbtlHMm8U+vYgedKflsRpd1zv/+W/WqlQcZz8jcF+uIF1I3L2HLz/kIjy77fw
-         +ELCoR22idD9rWtySjLDPAh859wY7yAb/wZO4WZQte2D+lie7CFagsBJrPBf732+TA87
-         Zvvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=siCClIKYBSJbbyV9Fx1AWH7B6zrtxbk84GPvmjQP9HY=;
-        b=CISM/1kjCeZGCWAiX8R9vPhSj0HF+maqWzljevAUeD9MBMtQOXwZQVbIGXsxAZDdT+
-         HAbCY6bnvglc31IzMqh+maU5zkjiDcPbA3A6oWAJZ4I2L6mee4L+uBfn42nSV9nrom3L
-         XPQekWvauTgvZyngvZXDznInXt0RQOuaoQsREB28CdQx/cF7YZjhQ4i8rCjN7FTF6rH+
-         1KpCtmMVx7DPB0sUhSr+yGEm7oDCMaqgvqUNqQb/vO3BiyJEc6esL3n7Yn4LcQeeZG5/
-         AKOR3AyjR3E0DVOS6Ua1yCdZVPNT8WnUl2B9aHkVz42faDObXF7429XvN8MjVVwStjQR
-         hcJA==
-X-Gm-Message-State: APjAAAU2hsMj/gSDOEMfNrM9jBwqj3KqK8nkrUbPvrjwp3bDIFyriiQA
-        YOAy1f6u0KIwYDJrte6/z74CqlQWHIMvplqRum46XDMB
-X-Google-Smtp-Source: APXvYqzPoDrHqZH8i5DPEVIqG+zBSIYdBoE603DpxkU4fYvZsdM0T7mXmsW5RIww8qDtkz4nKlMDh3Cmy9bUzC2jXMw=
-X-Received: by 2002:adf:f7c4:: with SMTP id a4mr3640527wrq.332.1578480032491;
- Wed, 08 Jan 2020 02:40:32 -0800 (PST)
+        Wed, 8 Jan 2020 05:40:50 -0500
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id DCB102E0AFA;
+        Wed,  8 Jan 2020 13:40:45 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id xiDn97EXhN-ejxC014f;
+        Wed, 08 Jan 2020 13:40:45 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1578480045; bh=h8TqHUKCaAAQKw55zN/07ofF/giKyOejw/hzfdo2G5k=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=uwBavAbpfsorILVu9J+So8q/1gEdvfoJ6h2HbsQMALVWFhWIq+3RjIboX3Tn2LyxH
+         5jjdjYg7g47AKuH9wZuCrjUXnxGvfZ9NJxNI1FFdfRkrM2w3x9jHHNMTeT/0L8Q3rY
+         5y0vuX2DIe0Rrz9bFjb2KXn5G3/I+2/t7HPpwzOk=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6702::1:0])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id iPRdRkyGPY-ejV4b69B;
+        Wed, 08 Jan 2020 13:40:45 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v2 1/2] mm/rmap: fix and simplify reusing mergeable
+ anon_vma as parent when fork
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Rik van Riel <riel@redhat.com>,
+        Li Xinhai <lixinhai.lxh@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <157839239609.694.10268055713935919822.stgit@buzz>
+ <20200108023211.GC13943@richard>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <b019b294-61fa-85fc-cf43-c6d3e9fddc71@yandex-team.ru>
+Date:   Wed, 8 Jan 2020 13:40:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191124172908.10804-1-peron.clem@gmail.com>
-In-Reply-To: <20191124172908.10804-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Wed, 8 Jan 2020 11:40:21 +0100
-Message-ID: <CAJiuCce_zg_E99EKbQa3aQ1fjziB4Ead9p6J8F0wYWk2_VcFZg@mail.gmail.com>
-Subject: Re: [PATCH v9 0/6] Add support for H6 PWM
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200108023211.GC13943@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe, Thierry,
+On 08/01/2020 05.32, Wei Yang wrote:
+> On Tue, Jan 07, 2020 at 01:19:56PM +0300, Konstantin Khlebnikov wrote:
+>> This fixes some misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
+>> mergeable anon_vma as parent when fork"). It merges anon-vma in unexpected
+>> way but fortunately still produces valid anon-vma tree, so nothing crashes.
+>>
+>> If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
+>> before all patches in child process related VMAs: DST1 DST2 .. DSTn will
+>> fork indepndent anon-vmas: ANON1 ANON2 .. ANONn (each is child of ANON0).
+>> Before this patch only DST1 will fork new ANON1 and following DST2 .. DSTn
+>> will share parent's ANON0 (i.e. anon-vma tree is valid but isn't optimal).
+>> With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
+>>
+>> Root problem caused by initialization order in dup_mmap(): vma->vm_prev
+>> is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
+>> previous VMA in parent mm.
+>>
+>> Second problem is hidden behind first one: assumption "Parent has vm_prev,
+>> which implies we have vm_prev" is wrong if first VMA in parent mm has set
+>> flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
+>> because in current code 'prev' actually is same as 'pprev'.
+>>
+>> Third hidden problem is linking between VMA and anon-vmas whose pages it
+>> could contain. Loop in anon_vma_clone() attaches only parent's anon-vmas,
+>> shared anon-vma isn't attached. But every mapped page stays reachable in
+>> rmap because we erroneously share anon-vma from parent's previous VMA.
+>>
+>> This patch moves sharing logic out of anon_vma_clone() into more specific
+>> anon_vma_fork() because this supposed to work only at fork() and simply
+>> reuses anon_vma from previous VMA if it is forked from the same anon-vma.
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
+>> Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
+>> Link: https://lore.kernel.org/linux-mm/CALYGNiNzz+dxHX0g5-gNypUQc3B=8_Scp53-NTOh=zWsdUuHAw@mail.gmail.com/T/#t
+>> ---
+>> include/linux/rmap.h |    3 ++-
+>> kernel/fork.c        |    2 +-
+>> mm/rmap.c            |   23 +++++++++--------------
+>> 3 files changed, 12 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+>> index 988d176472df..560e4480dcd0 100644
+>> --- a/include/linux/rmap.h
+>> +++ b/include/linux/rmap.h
+>> @@ -143,7 +143,8 @@ void anon_vma_init(void);	/* create anon_vma_cachep */
+>> int  __anon_vma_prepare(struct vm_area_struct *);
+>> void unlink_anon_vmas(struct vm_area_struct *);
+>> int anon_vma_clone(struct vm_area_struct *, struct vm_area_struct *);
+>> -int anon_vma_fork(struct vm_area_struct *, struct vm_area_struct *);
+>> +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
+>> +		  struct vm_area_struct *prev);
+>>
+>> static inline int anon_vma_prepare(struct vm_area_struct *vma)
+>> {
+>> diff --git a/kernel/fork.c b/kernel/fork.c
+>> index 2508a4f238a3..c33626993831 100644
+>> --- a/kernel/fork.c
+>> +++ b/kernel/fork.c
+>> @@ -556,7 +556,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+>> 			tmp->anon_vma = NULL;
+>> 			if (anon_vma_prepare(tmp))
+>> 				goto fail_nomem_anon_vma_fork;
+>> -		} else if (anon_vma_fork(tmp, mpnt))
+>> +		} else if (anon_vma_fork(tmp, mpnt, prev))
+>> 			goto fail_nomem_anon_vma_fork;
+>> 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
+>> 		tmp->vm_next = tmp->vm_prev = NULL;
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index b3e381919835..3c1e04389291 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>> {
+>> 	struct anon_vma_chain *avc, *pavc;
+>> 	struct anon_vma *root = NULL;
+>> -	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
+>> -
+>> -	/*
+>> -	 * If parent share anon_vma with its vm_prev, keep this sharing in in
+>> -	 * child.
+>> -	 *
+>> -	 * 1. Parent has vm_prev, which implies we have vm_prev.
+>> -	 * 2. Parent and its vm_prev have the same anon_vma.
+>> -	 */
+>> -	if (!dst->anon_vma && src->anon_vma &&
+>> -	    pprev && pprev->anon_vma == src->anon_vma)
+>> -		dst->anon_vma = prev->anon_vma;
+>> -
+>>
+>> 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+>> 		struct anon_vma *anon_vma;
+>> @@ -332,7 +319,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>   * the corresponding VMA in the parent process is attached to.
+>>   * Returns 0 on success, non-zero on failure.
+>>   */
+>> -int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
+>> +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
+>> +		  struct vm_area_struct *prev)
+>> {
+>> 	struct anon_vma_chain *avc;
+>> 	struct anon_vma *anon_vma;
+>> @@ -342,6 +330,13 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
+>> 	if (!pvma->anon_vma)
+>> 		return 0;
+>>
+>> +	/* Share anon_vma with previous VMA if it has the same parent. */
+>> +	if (prev && prev->anon_vma &&
+>> +	    prev->anon_vma->parent == pvma->anon_vma) {
+>> +		vma->anon_vma = prev->anon_vma;
+>> +		return anon_vma_clone(vma, prev);
+>> +	}
+>> +
+> 
+> I am afraid this one change the intended behavior. Let's put a chart to
+> describe.
+> 
+> Commit 4e4a9eb92133 ("mm/rmap.c: reusemergeable anon_vma as parent when
+> fork") tries to improve the following situation.
+> 
+> Before the commit, the behavior is like this:
+> 
+> Parent process:
+> 
+>        +-----+
+>        | pav |<-----------------+----------------------+
+>        +-----+                  |                      |
+>                                 |                      |
+>                     +-----------+          +-----------+
+>                     |pprev      |          |pvma       |
+>                     +-----------+          +-----------+
+> 
+> Child Process
+> 
+> 
+>        +-----+                     +-----+
+>        | av1 |<-----------------+  | av2 |<------------+
+>        +-----+                  |  +-----+             |
+>                                 |                      |
+>                     +-----------+          +-----------+
+>                     |prev       |          |vma        |
+>                     +-----------+          +-----------+
+> 
+> 
+> Parent pprev and pvma share the same anon_vma due to
+> find_mergeable_anon_vma(). While the anon_vma_clone() would pick up different
+> anon_vma for child process's vma.
+> 
+> The purpose of my commit is to give child process the following shape.
+> 
+>        +-----+
+>        | av  |<-----------------+----------------------+
+>        +-----+                  |                      |
+>                                 |                      |
+>                     +-----------+          +-----------+
+>                     |prev       |          |vma        |
+>                     +-----------+          +-----------+
+> 
+> After this, we reduce the extra "av2" for child process. But yes, because of
+> the two reasons you found, it didn't do the exact thing.
+> 
+> While if my understanding is correct, the anon_vma_clone() would pick up any
+> anon_vma in its process tree, except parent's. If this fails to get a reusable
+> one, anon_vma_fork() would allocate one, whose parent is pvma->anon_vma.
+> 
+> Let me summarise original behavior:
+> 
+>    * if anon_vma_clone succeed, it find one anon_vma in the process tree, but
+>      it could not be pvma->anon_vma
+>    * if anon_vma_clone fail, it will allocate a new anon_vma and its parent is
+>      pvma->anon_vam
+> 
+> Then take a look into your code here.
+> 
+> "prev->anon_vma->parent == pvma->anon_vma" means prev->anon_vma parent is
+> pvma's anon_vma. If my understanding is correct, this just match the second
+> case. For "prev", we didn't find a reusable anon_vma and allocate a new one.
+> 
+> But how about the first case? prev reuse an anon_vma in the process tree which
+> is not parent's?
 
-On Sun, 24 Nov 2019 at 18:29, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Hi,
->
-> This is a rework of Jernej's previous work[1] taking account all the
-> previous remarks.
+If anon_vma_clone() pick old anon-vma for first vma in sharing chain (prev)
+then second vma (vma) will fork new anon-vma (unless pick another old anon-vma),
+then third vma will share it. And so on.
 
-Is this series ok for you?
-FYI the device-tree bindings is merged in sunxi-next.
+Fork works left to right - we don't known about next vma to predict sharing and
+choose better options.
 
-Thanks,
-Clement
+But reusing old vma doesn't allocates new one. It's better to not reuse them
+second time because this makes tree less optimal (and actually not a tree anymore).
+This is just a trick to prevent unlimited growth anon-vma chains in background:
+while each anon-vma has at least one vma or two childs then their count is
+limited with count of vmas which are visible and limited.
 
->
-> Bindings is still strict but probe in the driver are now optionnals.
->
-> If someone could confirm that the PWM is not broken, as my board
-> doesn't output it.
->
-> Thanks,
-> Cl=C3=A9ment
->
-> Jernej's cover:
-> Allwinner H6 SoC has PWM core which is basically the same as that found
-> in A20, it's just depends on additional bus clock and reset line.
->
-> This series adds support for it and extends PWM driver functionality in
-> a way that it's now possible to bypass whole core and output PWM source
-> clock directly as a PWM signal. This functionality is needed by AC200
-> chip, which is bundled in same physical package as H6 SoC, to serve as a
-> clock source of 24 MHz. AC200 clock input pin is bonded internally to
-> the second PWM channel.
->
-> I would be grateful if anyone can test this patch series for any kind of
-> regression on other SoCs.
->
-> [1]: https://patchwork.kernel.org/cover/11061737/
->
-> Changes in v9:
->  - print error code in error message
->  - no capital letter to keep coherency
->
-> Changes in v8:
->  - Display error return code
->  - split commit
->  - bypass is false if unsupported
->  - return instead of goto
->
-> Changes in v7:
->  - Fix indent in Yaml bindings
->
-> Changes in v6:
->  - Update git commit log
->  - Distinguish error message
->
-> Changes in v5:
->  - Move bypass calculation to pwm_calculate
->  - Split mod_clock fallback from bus_clk probe
->  - Update comment
->  - Move my SoB after acked-by/reviewed-by
->
-> Changes in v4:
->  - item description in correct order and add a blank line
->  - use %pe for printing PTR_ERR
->  - don't print error when it's an EPROBE_DEFER
->  - change output clock bypass formula to match PWM policy
->
-> Changes in v3:
->  - Documentation update to allow one clock without name
->  - Change reset optional to shared
->  - If reset probe failed return an error
->  - Remove old clock probe
->  - Update bypass enabled formula
->
-> Changes in v2:
->  - Remove allOf in Documentation
->  - Add H6 example in Documentation
->  - Change clock name from "pwm" to "mod"
->  - Change reset quirk to optional probe
->  - Change bus_clock quirk to optional probe
->  - Add limitation comment about mod_clk_output
->  - Add quirk for mod_clk_output
->  - Change bypass formula
->
-> Cl=C3=A9ment P=C3=A9ron (2):
->   pwm: sun4i: Prefer "mod" clock to unnamed
->   pwm: sun4i: Always calculate params when applying new parameters
->
-> Jernej Skrabec (4):
->   pwm: sun4i: Add an optional probe for reset line
->   pwm: sun4i: Add an optional probe for bus clock
->   pwm: sun4i: Add support to output source clock directly
->   pwm: sun4i: Add support for H6 PWM
->
->  drivers/pwm/pwm-sun4i.c | 187 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 156 insertions(+), 31 deletions(-)
->
+> 
+>> 	/* Drop inherited anon_vma, we'll reuse existing or allocate new. */
+>> 	vma->anon_vma = NULL;
+>>
+> 
 > --
-> 2.20.1
->
+> Wei Yang
+> Help you, Help me
+> 
