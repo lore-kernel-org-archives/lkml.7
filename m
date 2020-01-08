@@ -2,192 +2,93 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3531EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3858C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06C02070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gqbvtODk"
+	by mail.kernel.org (Postfix) with ESMTP id B3DE120673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgAHQHu (ORCPT
+        id S1729360AbgAHQH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:07:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58506 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbgAHQHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:07:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vTWY1coa2Uglbk+2ijUNU4PAcTKo3OAi9shtTNMi0Rk=; b=gqbvtODkaNnvdu0BtI1I+oz9W
-        A/2kAzeM+Of8bAddV33sSuyFB5xF+Iq5ljJRIvioI+k+R95x57awB/8d2/OaCxPEWI73HH3ggqw/b
-        sRuPnU/M3cuEf3KHzciBaTOkOpg9la+z/euW56512nmDwFzNGDIve2Ho4jXCQShNWbCSAJw0jVzgp
-        W73rwpfbOnlx/JXYvxqZG+ueOUqg0TTsDyxTW539J3TnC4nfAFSqo8UjcEPXCvaV8lYoYsU9cKROX
-        c5nXwgc0c5to6F7JUcDXFL8eRwzCCSZ1nK2sOxQ5uehPgx5U+VprgiM8abXXvQlwSBJdkTRyrU3JI
-        mPuHTmEYQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipDrb-0002aV-JF; Wed, 08 Jan 2020 16:07:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BFB530018B;
-        Wed,  8 Jan 2020 17:05:40 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 08A5520B79C82; Wed,  8 Jan 2020 17:07:14 +0100 (CET)
-Date:   Wed, 8 Jan 2020 17:07:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-Message-ID: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+        Wed, 8 Jan 2020 11:07:57 -0500
+Received: from mga11.intel.com ([192.55.52.93]:65235 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727338AbgAHQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:07:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:07:55 -0800
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="211581775"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:07:52 -0800
+Message-ID: <783a534b37500c36a0255b5a7615b667a89b5b76.camel@linux.intel.com>
+Subject: Re: [PATCH v16 7/9] mm: Rotate free list so reported pages are
+ moved to the tail of the list
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Wed, 08 Jan 2020 08:07:52 -0800
+In-Reply-To: <1ee73115-b5b7-9de8-08b0-528035111ea8@redhat.com>
+References: <20200103210509.29237.18426.stgit@localhost.localdomain>
+         <20200103211657.29237.50194.stgit@localhost.localdomain>
+         <1ee73115-b5b7-9de8-08b0-528035111ea8@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
+On Wed, 2020-01-08 at 14:38 +0100, David Hildenbrand wrote:
+> On 03.01.20 22:16, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Rather than walking over the same pages again and again to get to the pages
+> > that have yet to be reported we can save ourselves a significant amount of
+> > time by simply rotating the list so that when we have a full list of
+> > reported pages the head of the list is pointing to the next non-reported
+> > page. Doing this should save us some significant time when processing each
+> > free list.
+> > 
+> > This doesn't gain us much in the standard case as all of the non-reported
+> > pages should be near the top of the list already. However in the case of
+> > page shuffling this results in a noticeable improvement. Below are the
+> > will-it-scale page_fault1 w/ THP numbers for 16 tasks with and without
+> > this patch.
+> > 
+> > Without:
+> > tasks   processes       processes_idle  threads         threads_idle
+> > 16      8093776.25      0.17            5393242.00      38.20
+> > 
+> > With:
+> > tasks   processes       processes_idle  threads         threads_idle
+> > 16      8283274.75      0.17            5594261.00      38.15
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  mm/page_reporting.c |   30 ++++++++++++++++++++++--------
+> >  1 file changed, 22 insertions(+), 8 deletions(-)
 > 
-> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
-> processes. For backward compatibility reasons access to perf_events
-> subsystem remains open for CAP_SYS_ADMIN privileged processes but
-> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
-> with respect to CAP_SYS_PERFMON capability.
+> Just a minor comment while scanning over the patches (will do more
+> review soon), you might want to switch to "mm/page_reporting: " styled
+> subjects for these optimizations.
 > 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  include/linux/perf_event.h | 6 +++---
->  kernel/events/core.c       | 6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 34c7c6910026..f46acd69425f 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
->  
->  static inline int perf_allow_kernel(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
-> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
->  		return -EACCES;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
-> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
->  
->  static inline int perf_allow_cpu(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
-> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
->  		return -EACCES;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
-> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
->  
->  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
->  {
-> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
-> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
->  		return -EPERM;
->  
->  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
 
-These are OK I suppose.
+Okay, I will update if needed for the next version.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 059ee7116008..d9db414f2197 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->  	if (event->attr.type != perf_kprobe.type)
->  		return -ENOENT;
->  
-> -	if (!capable(CAP_SYS_ADMIN))
-> +	if (!perfmon_capable())
->  		return -EACCES;
->  
->  	/*
-
-This one only allows attaching to already extant kprobes, right? It does
-not allow creation of kprobes.
-
-> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
->  	if (event->attr.type != perf_uprobe.type)
->  		return -ENOENT;
->  
-> -	if (!capable(CAP_SYS_ADMIN))
-> +	if (!perfmon_capable())
->  		return -EACCES;
->  
->  	/*
-
-Idem, I presume.
-
-> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
->  	}
->  
->  	if (attr.namespaces) {
-> -		if (!capable(CAP_SYS_ADMIN))
-> +		if (!perfmon_capable())
->  			return -EACCES;
->  	}
-
-And given we basically make the entire kernel observable with this CAP,
-busting namespaces shoulnd't be a problem either.
-
-So yeah, I suppose that works.
