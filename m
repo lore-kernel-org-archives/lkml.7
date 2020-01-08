@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D9C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CADC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C91820692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6644D20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgAHPG4 (ORCPT
+        id S1728892AbgAHPHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:06:56 -0500
+        Wed, 8 Jan 2020 10:07:09 -0500
 Received: from mga09.intel.com ([134.134.136.24]:20675 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgAHPGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:06:54 -0500
+        id S1728777AbgAHPG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:06:56 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:06:53 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:06:55 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="422942740"
+   d="scan'208";a="422942762"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.113])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 07:06:53 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 07:06:55 -0800
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org
 Cc:     eranian@google.com, alexey.budankov@linux.intel.com,
         vitaly.slobodskoy@intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [RFC PATCH V3 5/7] perf/x86: Remove swap_task_ctx()
-Date:   Wed,  8 Jan 2020 07:03:07 -0800
-Message-Id: <1578495789-95006-5-git-send-email-kan.liang@linux.intel.com>
+Subject: [RFC PATCH V3 7/7] perf: Clean up event context from sched_task()
+Date:   Wed,  8 Jan 2020 07:03:09 -0800
+Message-Id: <1578495789-95006-7-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
 References: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
@@ -47,10 +47,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The pmu specific data is saved in task_struct now. It doesn't need to
-swap between context.
+No one uses event context in sched_task() anymore.
 
-Remove swap_task_ctx() support.
+Remove the event context parameters from sched_task().
+ctx_lock is useless as well.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
@@ -58,125 +58,171 @@ Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
 No changes since V2
 
- arch/x86/events/core.c       |  8 --------
- arch/x86/events/intel/core.c |  7 -------
- arch/x86/events/intel/lbr.c  | 23 -----------------------
- arch/x86/events/perf_event.h | 11 -----------
- 4 files changed, 49 deletions(-)
+ arch/powerpc/perf/core-book3s.c | 8 ++------
+ arch/x86/events/core.c          | 5 ++---
+ arch/x86/events/intel/core.c    | 7 +++----
+ arch/x86/events/intel/ds.c      | 2 +-
+ arch/x86/events/intel/lbr.c     | 3 +--
+ arch/x86/events/perf_event.h    | 8 +++-----
+ include/linux/perf_event.h      | 3 +--
+ kernel/events/core.c            | 4 +---
+ 8 files changed, 14 insertions(+), 26 deletions(-)
 
+diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+index 99cb809..3c3631d 100644
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -126,10 +126,7 @@ static unsigned long ebb_switch_in(bool ebb, struct cpu_hw_events *cpuhw)
+ 
+ static inline void power_pmu_bhrb_enable(struct perf_event *event) {}
+ static inline void power_pmu_bhrb_disable(struct perf_event *event) {}
+-static void power_pmu_sched_task(struct perf_event_context *ctx,
+-				 struct task_struct *task, bool sched_in)
+-{
+-}
++static void power_pmu_sched_task(struct task_struct *task, bool sched_in) {}
+ static inline void power_pmu_bhrb_read(struct perf_event *event, struct cpu_hw_events *cpuhw) {}
+ static void pmao_restore_workaround(bool ebb) { }
+ #endif /* CONFIG_PPC32 */
+@@ -406,8 +403,7 @@ static void power_pmu_bhrb_disable(struct perf_event *event)
+ /* Called from ctxsw to prevent one process's branch entries to
+  * mingle with the other process's entries during context switch.
+  */
+-static void power_pmu_sched_task(struct perf_event_context *ctx,
+-				 struct task_struct *task, bool sched_in)
++static void power_pmu_sched_task(struct task_struct *task, bool sched_in)
+ {
+ 	if (!ppmu->bhrb_nr)
+ 		return;
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 3874a2d..7046a59 100644
+index 7046a59..43d0918 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -2244,13 +2244,6 @@ static void x86_pmu_sched_task(struct perf_event_context *ctx,
- 		x86_pmu.sched_task(ctx, task, sched_in);
+@@ -2237,11 +2237,10 @@ static const struct attribute_group *x86_pmu_attr_groups[] = {
+ 	NULL,
+ };
+ 
+-static void x86_pmu_sched_task(struct perf_event_context *ctx,
+-			       struct task_struct *task, bool sched_in)
++static void x86_pmu_sched_task(struct task_struct *task, bool sched_in)
+ {
+ 	if (x86_pmu.sched_task)
+-		x86_pmu.sched_task(ctx, task, sched_in);
++		x86_pmu.sched_task(task, sched_in);
  }
  
--static void x86_pmu_swap_task_ctx(struct perf_event_context *prev,
--				  struct perf_event_context *next)
--{
--	if (x86_pmu.swap_task_ctx)
--		x86_pmu.swap_task_ctx(prev, next);
--}
--
  void perf_check_microcode(void)
- {
- 	if (x86_pmu.check_microcode)
-@@ -2305,7 +2298,6 @@ static struct pmu pmu = {
- 	.event_idx		= x86_pmu_event_idx,
- 	.sched_task		= x86_pmu_sched_task,
- 	.task_ctx_size          = sizeof(struct x86_perf_task_context),
--	.swap_task_ctx		= x86_pmu_swap_task_ctx,
- 	.check_period		= x86_pmu_check_period,
- 
- 	.aux_output_match	= x86_pmu_aux_output_match,
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 439306b..bd18c83 100644
+index bd18c83..f43ec24 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3820,12 +3820,6 @@ static void intel_pmu_sched_task(struct perf_event_context *ctx,
- 	intel_pmu_lbr_sched_task(ctx, task, sched_in);
+@@ -3813,11 +3813,10 @@ static void intel_pmu_cpu_dead(int cpu)
+ 	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
  }
  
--static void intel_pmu_swap_task_ctx(struct perf_event_context *prev,
--				    struct perf_event_context *next)
--{
--	intel_pmu_lbr_swap_task_ctx(prev, next);
--}
--
- static int intel_pmu_check_period(struct perf_event *event, u64 value)
+-static void intel_pmu_sched_task(struct perf_event_context *ctx,
+-				 struct task_struct *task, bool sched_in)
++static void intel_pmu_sched_task(struct task_struct *task, bool sched_in)
  {
- 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
-@@ -3961,7 +3955,6 @@ static __initconst const struct x86_pmu intel_pmu = {
+-	intel_pmu_pebs_sched_task(ctx, sched_in);
+-	intel_pmu_lbr_sched_task(ctx, task, sched_in);
++	intel_pmu_pebs_sched_task(sched_in);
++	intel_pmu_lbr_sched_task(task, sched_in);
+ }
  
- 	.guest_get_msrs		= intel_guest_get_msrs,
- 	.sched_task		= intel_pmu_sched_task,
--	.swap_task_ctx		= intel_pmu_swap_task_ctx,
+ static int intel_pmu_check_period(struct perf_event *event, u64 value)
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index ce83950..d22af4b 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -908,7 +908,7 @@ static inline bool pebs_needs_sched_cb(struct cpu_hw_events *cpuc)
+ 	return cpuc->n_pebs && (cpuc->n_pebs == cpuc->n_large_pebs);
+ }
  
- 	.check_period		= intel_pmu_check_period,
+-void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in)
++void intel_pmu_pebs_sched_task(bool sched_in)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
  
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 855628a..20c1d7e 100644
+index 20c1d7e..97fadfa 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -423,29 +423,6 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+@@ -423,8 +423,7 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
  	cpuc->last_log_id = ++task_ctx->log_id;
  }
  
--void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
--				 struct perf_event_context *next)
--{
--	struct x86_perf_task_context *prev_ctx_data, *next_ctx_data;
--
--	swap(prev->task_ctx_data, next->task_ctx_data);
--
--	/*
--	 * Architecture specific synchronization makes sense in
--	 * case both prev->task_ctx_data and next->task_ctx_data
--	 * pointers are allocated.
--	 */
--
--	prev_ctx_data = next->task_ctx_data;
--	next_ctx_data = prev->task_ctx_data;
--
--	if (!prev_ctx_data || !next_ctx_data)
--		return;
--
--	swap(prev_ctx_data->lbr_callstack_users,
--	     next_ctx_data->lbr_callstack_users);
--}
--
- void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
- 			      struct task_struct *task, bool sched_in)
+-void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
+-			      struct task_struct *task, bool sched_in)
++void intel_pmu_lbr_sched_task(struct task_struct *task, bool sched_in)
  {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct x86_perf_task_context *task_ctx;
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index b8b7280..ed287ba 100644
+index ed287ba..84822cb 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -684,14 +684,6 @@ struct x86_pmu {
- 	atomic_t	lbr_exclusive[x86_lbr_exclusive_max];
+@@ -638,8 +638,7 @@ struct x86_pmu {
+ 	void		(*cpu_dead)(int cpu);
+ 
+ 	void		(*check_microcode)(void);
+-	void		(*sched_task)(struct perf_event_context *ctx,
+-				      struct task_struct *task, bool sched_in);
++	void		(*sched_task)(struct task_struct *task, bool sched_in);
  
  	/*
--	 * perf task context (i.e. struct perf_event_context::task_ctx_data)
--	 * switch helper to bridge calls from perf/core to perf/x86.
--	 * See struct pmu::swap_task_ctx() usage for examples;
--	 */
--	void		(*swap_task_ctx)(struct perf_event_context *prev,
--					 struct perf_event_context *next);
--
--	/*
- 	 * AMD bits
- 	 */
- 	unsigned int	amd_nb_constraints : 1;
-@@ -1025,9 +1017,6 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
+ 	 * Intel Arch Perfmon v2+
+@@ -1009,7 +1008,7 @@ void intel_pmu_pebs_enable_all(void);
+ 
+ void intel_pmu_pebs_disable_all(void);
+ 
+-void intel_pmu_pebs_sched_task(struct perf_event_context *ctx, bool sched_in);
++void intel_pmu_pebs_sched_task(bool sched_in);
+ 
+ void intel_pmu_auto_reload_read(struct perf_event *event);
+ 
+@@ -1017,8 +1016,7 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
  
  void intel_ds_init(void);
  
--void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
--				 struct perf_event_context *next);
--
- void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
- 			      struct task_struct *task, bool sched_in);
+-void intel_pmu_lbr_sched_task(struct perf_event_context *ctx,
+-			      struct task_struct *task, bool sched_in);
++void intel_pmu_lbr_sched_task(struct task_struct *task, bool sched_in);
+ 
+ u64 lbr_from_signext_quirk_wr(u64 val);
+ 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 364b0d0..91d2d28 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -405,8 +405,7 @@ struct pmu {
+ 	/*
+ 	 * context-switches callback
+ 	 */
+-	void (*sched_task)		(struct perf_event_context *ctx,
+-					 struct task_struct *task, bool sched_in);
++	void (*sched_task)		(struct task_struct *task, bool sched_in);
+ 	/*
+ 	 * PMU specific data size
+ 	 */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 23db381..623e520 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3347,13 +3347,11 @@ static void perf_pmu_sched_task(struct task_struct *prev,
+ 		if (WARN_ON_ONCE(!pmu->sched_task))
+ 			continue;
+ 
+-		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 		perf_pmu_disable(pmu);
+ 
+-		pmu->sched_task(cpuctx->task_ctx, sched_in ? next : prev, sched_in);
++		pmu->sched_task(sched_in ? next : prev, sched_in);
+ 
+ 		perf_pmu_enable(pmu);
+-		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ 	}
+ }
  
 -- 
 2.7.4
