@@ -2,190 +2,113 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE2CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F198C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7995F20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F37E20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="C0rT988u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzH6zeJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgAHP2i (ORCPT
+        id S1728636AbgAHPbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:28:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38479 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbgAHP2e (ORCPT
+        Wed, 8 Jan 2020 10:31:48 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45768 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgAHPbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:28:34 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so3841611wrh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:28:33 -0800 (PST)
+        Wed, 8 Jan 2020 10:31:48 -0500
+Received: by mail-io1-f66.google.com with SMTP id i11so3570410ioi.12;
+        Wed, 08 Jan 2020 07:31:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V+jjQ4Ip9VghYx4Ogoeys27CKAs+Gf9yYIGWHjojKP4=;
-        b=C0rT988ua9tw5YGgg+iHRVuWkLt2IMZ3t00QD8f68MvEHxgNT+gI8znrD7VGuk4VF1
-         sXanIE0z0BKh2924mEqk4nzNVKcwuH8ZLaWf/kUAhI1ZioPspwFKA2TQlmQTaeUHp9Gz
-         0huHTUXygWfK0o+XLbzjgnU2Q/WN3dV5MtCd1bSvkeg9I+hrDQVFRv503UNJy4LGVWbK
-         T6mtftG0hSe89xQq7iNt4JksgEAvouw9RxfAz/hieIM+LSKpc6/EahQipNFdSEsv8QYt
-         d2j9Ta2W4gEuZitnCWpUsG/VpO00CUiYCpRuJl+YJyGHdLI56QLzsnpAxV+UXe6HO9KQ
-         egUg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X7o/cbIbWQtFq2kL2V0bbwvA4L0Ugp+mDyf5FeCjV9Y=;
+        b=pzH6zeJaZTB+65guQIjtWt9OrS+TW0egL1dGYCFmTIHGpenTiH806NyUQYIC79mO49
+         C8Fa9hJUcTGI4ZtrRFkjTnG0RBBe2RMBrvyAFbxlFlbLZ7Xpltr5VOXhbU8ITg7lH62Z
+         OUGs7mIljKQ+eW/ya9De02u7zuWf9FZvGvZT78FHAUWNVwELEFCSzNtZwShhQunJPI+E
+         7mXgOQ/k50NurhHMFU661OVKF/nFoybb2MJlyXCb7NtMl674a6Bht+abPya5Yf/p0d1M
+         iKH2WYcrDnD4veK9QnQi4Dp9tZbx/ujf4vIk9+J/FzDFCcuoN6FN948J4T7SHp1pKVwX
+         r7GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=V+jjQ4Ip9VghYx4Ogoeys27CKAs+Gf9yYIGWHjojKP4=;
-        b=S2Wc5Q+E5GppY7xK/mdffXNWVVmEQfQXRNfMJCwdUdpTb8NgIqFmLwP3rTvPgrIdH+
-         PD1jy00t4EFNR6zDCB+nam/JdnBDW0v4uIS27UbugobOyoN35OwOrSKMqJ6FjUTgams7
-         4m8YTd/z9RW6+ISzmpvXyqOkmCaYBHlEWn24+dtD+7PrSAepLaMwcmgw3/fpw/E3COQ9
-         JxztUL+GTR7OWK2oi9BLN9MlFTEdWTjnV8Buw51kMo8EvFd/AnFrWFfaJ9+qglRnXG6C
-         LWqgAcawpeQEETMRK+2Bf4zBQcPXwTeXfFYoHUoCXPzXlH0lC7R4wffuqRzn7BxlKyxl
-         5svg==
-X-Gm-Message-State: APjAAAUcHoX6iEAwDQ+BRRa+zW1E9ZYT4H6w7KOoVQK+tomgXifwVv+0
-        T0m4jl3l7J2oQwU0aOfKE4PivAA/lmKqww4BEysByfH5GHEBBlK7CQ0QJNET2nARw+fCHd0xCHB
-        pPRHbIWFhtl+DyqQJcZ7hQrXRcJ+L1/DCQHbDkKhJ28IL9Ki1u65cs6HeTYO1oINtzg93ZOBa3e
-        lOuACJIUTdsjSA
-X-Google-Smtp-Source: APXvYqxJ9aRKfVFIyCU1I4W0biSdU30z65gLa9YVZJeeUyxUmuOg/X4T5ZLLlGSvgZ0V6HWusdrRSA==
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr5200645wru.154.1578497311918;
-        Wed, 08 Jan 2020 07:28:31 -0800 (PST)
-Received: from [172.20.1.104] ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id s1sm4181780wmc.23.2020.01.08.07.28.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 07:28:31 -0800 (PST)
-Subject: Re: [PATCH bpf-next v2 2/2] bpftool: Add misc secion and probe for
- large INSN limit
-To:     Michal Rostecki <mrostecki@opensuse.org>
-Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200107130308.20242-1-mrostecki@opensuse.org>
- <20200107130308.20242-3-mrostecki@opensuse.org>
- <70565317-89af-358f-313c-c4b327cdca4a@netronome.com>
- <20200108134148.GD2954@wotan.suse.de>
-From:   Quentin Monnet <quentin.monnet@netronome.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=quentin.monnet@netronome.com; prefer-encrypt=mutual; keydata=
- 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
- RHhSHGnKaQ6MfrTge5Q0h5A=
-Message-ID: <091b68b1-d651-6b23-c3d7-7334ccde1700@netronome.com>
-Date:   Wed, 8 Jan 2020 15:28:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X7o/cbIbWQtFq2kL2V0bbwvA4L0Ugp+mDyf5FeCjV9Y=;
+        b=sqFxfBR4zQ8IixfwGJWUNTRERgJBMu1+NfJN1L6DrCPO92mA4JtHRAnfaDJp21CL/q
+         nYsqMl+nYnEG/nqCWwEbh1WAjbkpC4NzYa9RskS8CDTr1Nh7mLXZGtN43xyNeCrirgdt
+         HNMiFCkV/bHOTB2MqfaYtwf4mEdTCr88bem8HccvaLrw7TiCTWBegSvNzonS43wJjhlH
+         8Oi6XGN1NpqN+cbhXL8D4TU0gJFwjAUXomq32ytOpWhcobvp5ryLNsPbJzbFY83uINDT
+         Ford0Kre4lhHod3YdnIckyBy0b0vrWUb6l3q3XxhXf7Op2FVsH4PWXwqz0aG8pSS1Apn
+         wOtg==
+X-Gm-Message-State: APjAAAWujnN4Hzsj+nmYsYAAKUw3PR3SE/3AkLl/EEA+rpDla9dLm5t9
+        IaFf+SEfYsO9PDadjaHzUB2u7L45U1jyxXSveBM=
+X-Google-Smtp-Source: APXvYqysDvAgpDgc999+aM9DXdNxlGSltgKcUBQi08cAjKgH4hCse5laLHXcIpWa76h+Wts3egveXx+XtlDD8dK4JTQ=
+X-Received: by 2002:a5e:8d14:: with SMTP id m20mr3593782ioj.282.1578497507212;
+ Wed, 08 Jan 2020 07:31:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200108134148.GD2954@wotan.suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200107210256.2426176-1-arnd@arndb.de>
+In-Reply-To: <20200107210256.2426176-1-arnd@arndb.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 8 Jan 2020 16:31:36 +0100
+Message-ID: <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
+Subject: Re: [PATCH] rbd: work around -Wuninitialized warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sage Weil <sage@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Jason Dillaman <dillaman@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-08 13:41 UTC+0000 ~ Michal Rostecki <mrostecki@opensuse.org>
-> On Tue, Jan 07, 2020 at 02:36:15PM +0000, Quentin Monnet wrote:
->> Nit: typo in subject ("secion").
->>
->> 2020-01-07 14:03 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
->>> Introduce a new probe section (misc) for probes not related to concrete
->>> map types, program types, functions or kernel configuration. Introduce a
->>> probe for large INSN limit as the first one in that section.
->>>
->>> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
->>> ---
->>>  tools/bpf/bpftool/feature.c | 18 ++++++++++++++++++
->>>  1 file changed, 18 insertions(+)
->>>
->>> diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
->>> index 03bdc5b3ac49..d8ce93092c45 100644
->>> --- a/tools/bpf/bpftool/feature.c
->>> +++ b/tools/bpf/bpftool/feature.c
->>> @@ -572,6 +572,18 @@ probe_helpers_for_progtype(enum bpf_prog_type prog_type, bool supported_type,
->>>  		printf("\n");
->>>  }
->>>  
->>> +static void
->>> +probe_large_insn_limit(const char *define_prefix, __u32 ifindex)
->>> +{
->>> +	bool res;
->>> +
->>> +	res = bpf_probe_large_insn_limit(ifindex);
->>> +	print_bool_feature("have_large_insn_limit",
->>> +			   "Large complexity and program size limit",
->>
->> I am not sure we should mention "complexity" here. Although it is
->> related to program size in the kernel commit you describe, the probe
->> that is run is only on instruction number. This can make a difference
->> for offloaded programs: When you probe a device, if kernel has commit
->> c04c0d2b968a and supports up to 1M instructions, but hardware supports
->> no more than 4k instructions, you may still benefit from the new value
->> for BPF_COMPLEXITY_LIMIT_INSNS for complexity, but not for the total
->> number of available instructions. In that case the probe will fail, and
->> the message on complexity would not be accurate.
->>
->> Looks good otherwise, thanks Michal!
->>
->> Quentin
-> 
-> Thanks for review! Should I change the description just to "Large
-> program size limit" or "Large instruction limit"?
-> 
-> Michal
-> 
+On Tue, Jan 7, 2020 at 10:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> gcc -O3 warns about a dummy variable that is passed
+> down into rbd_img_fill_nodata without being initialized:
+>
+> drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+> drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+>   fctx->iter = *fctx->pos;
+>
+> Since this is a dummy, I assume the warning is harmless, but
+> it's better to initialize it anyway and avoid the warning.
+>
+> Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/block/rbd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index 29be02838b67..070edc5983df 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+>                                u64 off, u64 len)
+>  {
+>         struct ceph_file_extent ex = { off, len };
+> -       union rbd_img_fill_iter dummy;
+> +       union rbd_img_fill_iter dummy = {};
+>         struct rbd_img_fill_ctx fctx = {
+>                 .pos_type = OBJ_REQUEST_NODATA,
+>                 .pos = &dummy,
 
-I don't really have a preference here, let's keep "program size"?
-Quentin
+Applied, but slightly confused.  Wasn't selecting -O3/s/etc supposed to
+automatically disable -Wmaybe-uninitialized via Kconfig?
+
+Thanks,
+
+                Ilya
