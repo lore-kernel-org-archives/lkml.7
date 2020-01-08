@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F99C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F5DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16F22077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E612075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgAHTsU (ORCPT
+        id S1729230AbgAHTsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:48:20 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43726 "EHLO
+        Wed, 8 Jan 2020 14:48:25 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43676 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730463AbgAHTqE (ORCPT
+        by vger.kernel.org with ESMTP id S1730459AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHE-0006p4-76; Wed, 08 Jan 2020 19:46:00 +0000
+        id 1ipHHD-0006oj-9Q; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-007dod-6C; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHC-007dmr-8c; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Adrian Bunk" <bunk@kernel.org>
-Date:   Wed, 08 Jan 2020 19:43:50 +0000
-Message-ID: <lsq.1578512578.688246585@decadent.org.uk>
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "John Stultz" <john.stultz@linaro.org>,
+        "Rom Lemarchand" <romlem@android.com>,
+        "Android Kernel Team" <kernel-team@android.com>
+Date:   Wed, 08 Jan 2020 19:43:28 +0000
+Message-ID: <lsq.1578512578.876547930@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 52/63] mwifiex: Fix NL80211_TX_POWER_LIMITED
+Subject: [PATCH 3.16 30/63] staging: ashmem: Add missing include
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,108 +58,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Adrian Bunk <bunk@kernel.org>
+From: Rom Lemarchand <romlem@android.com>
 
-commit 65a576e27309120e0621f54d5c81eb9128bd56be upstream.
+commit 90a2f171383b5ae43b33ab4d9d566b9765622ac7 upstream.
 
-NL80211_TX_POWER_LIMITED was treated as NL80211_TX_POWER_AUTOMATIC,
-which is the opposite of what should happen and can cause nasty
-regulatory problems.
+Include <linux/types.h> into ashmem.h to ensure referenced types
+are defined
 
-if/else converted to a switch without default to make gcc warn
-on unhandled enum values.
-
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filenames]
+Cc: Android Kernel Team <kernel-team@android.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Signed-off-by: Rom Lemarchand <romlem@android.com>
+[jstultz: Minor commit message tweaks]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/cfg80211.c  | 13 +++++++++++--
- drivers/net/wireless/mwifiex/ioctl.h     |  1 +
- drivers/net/wireless/mwifiex/sta_ioctl.c | 11 +++++++----
- 3 files changed, 19 insertions(+), 6 deletions(-)
+ drivers/staging/android/uapi/ashmem.h | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/mwifiex/cfg80211.c
-@@ -343,11 +343,20 @@ mwifiex_cfg80211_set_tx_power(struct wip
- 	struct mwifiex_power_cfg power_cfg;
- 	int dbm = MBM_TO_DBM(mbm);
+--- a/drivers/staging/android/uapi/ashmem.h
++++ b/drivers/staging/android/uapi/ashmem.h
+@@ -13,6 +13,7 @@
+ #define _UAPI_LINUX_ASHMEM_H
  
--	if (type == NL80211_TX_POWER_FIXED) {
-+	switch (type) {
-+	case NL80211_TX_POWER_FIXED:
- 		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 1;
- 		power_cfg.power_level = dbm;
--	} else {
-+		break;
-+	case NL80211_TX_POWER_LIMITED:
-+		power_cfg.is_power_auto = 0;
-+		power_cfg.is_power_fixed = 0;
-+		power_cfg.power_level = dbm;
-+		break;
-+	case NL80211_TX_POWER_AUTOMATIC:
- 		power_cfg.is_power_auto = 1;
-+		break;
- 	}
+ #include <linux/ioctl.h>
++#include <linux/types.h>
  
- 	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);
---- a/drivers/net/wireless/mwifiex/ioctl.h
-+++ b/drivers/net/wireless/mwifiex/ioctl.h
-@@ -245,6 +245,7 @@ struct mwifiex_ds_encrypt_key {
+ #define ASHMEM_NAME_LEN		256
  
- struct mwifiex_power_cfg {
- 	u32 is_power_auto;
-+	u32 is_power_fixed;
- 	u32 power_level;
- };
- 
---- a/drivers/net/wireless/mwifiex/sta_ioctl.c
-+++ b/drivers/net/wireless/mwifiex/sta_ioctl.c
-@@ -659,6 +659,9 @@ int mwifiex_set_tx_power(struct mwifiex_
- 	txp_cfg = (struct host_cmd_ds_txpwr_cfg *) buf;
- 	txp_cfg->action = cpu_to_le16(HostCmd_ACT_GEN_SET);
- 	if (!power_cfg->is_power_auto) {
-+		u16 dbm_min = power_cfg->is_power_fixed ?
-+			      dbm : priv->min_tx_power_level;
-+
- 		txp_cfg->mode = cpu_to_le32(1);
- 		pg_tlv = (struct mwifiex_types_power_group *)
- 			 (buf + sizeof(struct host_cmd_ds_txpwr_cfg));
-@@ -673,7 +676,7 @@ int mwifiex_set_tx_power(struct mwifiex_
- 		pg->last_rate_code = 0x03;
- 		pg->modulation_class = MOD_CLASS_HR_DSSS;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class OFDM */
-@@ -681,7 +684,7 @@ int mwifiex_set_tx_power(struct mwifiex_
- 		pg->last_rate_code = 0x07;
- 		pg->modulation_class = MOD_CLASS_OFDM;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg++;
- 		/* Power group for modulation class HTBW20 */
-@@ -689,7 +692,7 @@ int mwifiex_set_tx_power(struct mwifiex_
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_20;
- 		pg++;
-@@ -698,7 +701,7 @@ int mwifiex_set_tx_power(struct mwifiex_
- 		pg->last_rate_code = 0x20;
- 		pg->modulation_class = MOD_CLASS_HT;
- 		pg->power_step = 0;
--		pg->power_min = (s8) dbm;
-+		pg->power_min = (s8) dbm_min;
- 		pg->power_max = (s8) dbm;
- 		pg->ht_bandwidth = HT_BW_40;
- 	}
 
