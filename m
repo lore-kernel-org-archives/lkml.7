@@ -2,194 +2,187 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ADFC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE8EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283C920692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578501588;
-	bh=ruuzExV/WTi+BrYKewR74kS7+Oa/N/k38qdbcAPzcrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WE5fPDIKfS1HjeL+iFtMlObLZf4b7g2r+h8o1Npn1FvmFVwBeG/JvrZ7WBQ8QLRRm
-	 J882xiWCqsyU2Xygh5mywohz50n+ALM96Qe2bwY1p7S2lWnReAknq9OsrAk5i1gpUg
-	 qwZJOX1TGo6EK+hvbkMr9G3jhpdsIQc8fhu+c/mw=
+	by mail.kernel.org (Postfix) with ESMTP id 7EEFD20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgAHQjr (ORCPT
+        id S1728320AbgAHQkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:39:47 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43019 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728958AbgAHQjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:39:46 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so3145842oif.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:39:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7YuLu/5ssx5qi8ML+jSjpakNJXIUPRCs4C4ET7aw5Z8=;
-        b=l/xPxWcFp5zq8vAv/oTzQGvrW3UCYjqORV7WUdnh4jqfMLAe8nymhhJU6za00dNhj4
-         6UWo0k2kKasX7TY0Wq2SJ+hPsvVwiolbYfx8yU7joFPMT8ZxVfTly5f17pbwdQ5A4CtW
-         mlU22QbEtZ+gAf7rJv0EPSFDWb3ogomCsWJXTVDAtFXovwNJWRARVshsSZVb5dae7ACS
-         rBFsj6pT7YxKPG/zu2Vkavj86isB7uinb3a66D3amu9oDnCwtIRUhq9LmmBSB12Qhqjn
-         aXr81gBrWN0NK3o6NOR+74VNgC56HTkEjj3EFK206QqEzVedZnJFeINNEIkndQHUOj1v
-         KNvg==
-X-Gm-Message-State: APjAAAXWuMdVmVmK6DJUS26SieaFIC7nHTc2UDUNRWndxVv5JywfRL5j
-        IYioylKM4BNvRfsD+VAsxEUa34U=
-X-Google-Smtp-Source: APXvYqyfDtA2DA5If70LZd3RMRCaoUumt1Se1DiKlFhbbq26An/QIEW9WzdPUdf1UaBfRv9WtNzFMA==
-X-Received: by 2002:aca:50cd:: with SMTP id e196mr3783405oib.178.1578501585811;
-        Wed, 08 Jan 2020 08:39:45 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 69sm1286199oth.17.2020.01.08.08.39.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:39:45 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 22001a
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 10:39:43 -0600
-Date:   Wed, 8 Jan 2020 10:39:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Shyam Kumar Thella <sthella@codeaurora.org>
-Cc:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Message-ID: <20200108163943.GA26863@bogus>
-References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+        Wed, 8 Jan 2020 11:40:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:27667 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727370AbgAHQkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:40:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:40:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="370992633"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jan 2020 08:40:45 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipENy-0005T1-0v; Wed, 08 Jan 2020 18:40:46 +0200
+Date:   Wed, 8 Jan 2020 18:40:46 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/36] platform/x86: intel_scu_ipc: Fix interrupt
+ support
+Message-ID: <20200108164046.GZ32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-7-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+In-Reply-To: <20200108114201.27908-7-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 11:02:12AM +0530, Shyam Kumar Thella wrote:
-> QTI SDAM allows PMIC peripherals to access the shared memory that is
-> available on QTI PMICs. Add documentation for it.
+On Wed, Jan 08, 2020 at 02:41:31PM +0300, Mika Westerberg wrote:
+> Currently the driver has disabled interrupt support for Tangier but
+> actually interrupt works just fine if the command is not written twice
+> in a row. Also we need to ack the interrupt in the handler.
 > 
-> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+>  drivers/platform/x86/intel_scu_ipc.c | 48 ++++++----------------------
+>  1 file changed, 10 insertions(+), 38 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> new file mode 100644
-> index 0000000..8961a99
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-Please spread the word in QCom. 
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-> +
-> +maintainers:
-> +  - Shyam Kumar Thella <sthella@codeaurora.org>
-> +
-> +description: |
-> +  The SDAM provides scratch register space for the PMIC clients. This
-> +  memory can be used by software to store information or communicate
-> +  to/from the PBUS.
-> +
-> +allOf:
-> +  - $ref: "nvmem.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,spmi-sdam
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-
-ranges? The child addresses should be translateable I assume.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          Offset and size in bytes within the storage device.
-> +
-> +      bits:
-
-Needs a type reference. 
-
-> +        maxItems: 1
-> +        items:
-> +          items:
-> +            - minimum: 0
-> +              maximum: 7
-> +              description:
-> +                Offset in bit within the address range specified by reg.
-> +            - minimum: 1
-
-max is 7?
-
-> +              description:
-> +                Size in bit within the address range specified by reg.
-> +
-> +    required:
-> +      - reg
-> +
-> +    additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      sdam_1: nvram@b000 {
-> +         #address-cells = <1>;
-> +         #size-cells = <1>;
-> +         compatible = "qcom,spmi-sdam";
-> +          reg = <0xb000 0x100>;
-> +
-> +          /* Data cells */
-> +          restart_reason: restart@50 {
-> +              reg = <0x50 0x1>;
-> +              bits = <7 2>;
-
-How do you have bit 8 in a 1 byte register?
-
-> +          };
-> +      };
-> +...
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index b39680b53387..43eaf9400c67 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -58,24 +58,6 @@
+>  #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+>  #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+>  
+> -#define PCI_DEVICE_ID_PENWELL		0x080e
+> -#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+> -#define PCI_DEVICE_ID_TANGIER		0x11a0
+> -
+> -/* intel scu ipc driver data */
+> -struct intel_scu_ipc_pdata_t {
+> -	u8 irq_mode;
+> -};
+> -
+> -/* Penwell and Cloverview */
+> -static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+> -	.irq_mode = 1,
+> -};
+> -
+> -static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+> -	.irq_mode = 0,
+> -};
+> -
+>  struct intel_scu_ipc_dev {
+>  	struct device *dev;
+>  	void __iomem *ipc_base;
+> @@ -86,6 +68,7 @@ struct intel_scu_ipc_dev {
+>  static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+>  
+>  #define IPC_STATUS		0x04
+> +#define IPC_STATUS_IRQ		BIT(2)
+>  #define IPC_STATUS_ERR		BIT(1)
+>  #define IPC_STATUS_BUSY		BIT(0)
+>  
+> @@ -107,11 +90,8 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+>   */
+>  static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+>  {
+> -	if (scu->irq_mode) {
+> -		reinit_completion(&scu->cmd_complete);
+> -		writel(cmd | IPC_IOC, scu->ipc_base);
+> -	}
+> -	writel(cmd, scu->ipc_base);
+> +	reinit_completion(&scu->cmd_complete);
+> +	writel(cmd | IPC_IOC, scu->ipc_base);
+>  }
+>  
+>  /*
+> @@ -549,9 +529,10 @@ EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
+>  static irqreturn_t ioc(int irq, void *dev_id)
+>  {
+>  	struct intel_scu_ipc_dev *scu = dev_id;
+> +	int status = ipc_read_status(scu);
+>  
+> -	if (scu->irq_mode)
+> -		complete(&scu->cmd_complete);
+> +	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
+> +	complete(&scu->cmd_complete);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -568,17 +549,10 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	int err;
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+> -	struct intel_scu_ipc_pdata_t *pdata;
+>  
+>  	if (scu->dev)		/* We support only one SCU */
+>  		return -EBUSY;
+>  
+> -	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+> -	if (!pdata)
+> -		return -ENODEV;
+> -
+> -	scu->irq_mode = pdata->irq_mode;
+> -
+>  	err = pcim_enable_device(pdev);
+>  	if (err)
+>  		return err;
+> @@ -605,13 +579,11 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	return 0;
+>  }
+>  
+> -#define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+> -
+>  static const struct pci_device_id pci_ids[] = {
+> -	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+> -	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+> -	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+> -	{}
+> +	{ PCI_VDEVICE(INTEL, 0x080e) },
+> +	{ PCI_VDEVICE(INTEL, 0x08ea) },
+> +	{ PCI_VDEVICE(INTEL, 0x11a0) },
+> +	{ }
+>  };
+>  
+>  static struct pci_driver ipc_driver = {
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
+> 2.24.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
