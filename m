@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AC4C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18801C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAF52070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF090214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgAHTrM (ORCPT
+        id S1727993AbgAHTrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:47:12 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43858 "EHLO
+        Wed, 8 Jan 2020 14:47:15 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43826 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730488AbgAHTqG (ORCPT
+        by vger.kernel.org with ESMTP id S1730481AbgAHTqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:46:06 -0500
+        Wed, 8 Jan 2020 14:46:05 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006oc-R8; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006oo-VY; Wed, 08 Jan 2020 19:46:00 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-007dpH-Fy; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-007doo-92; Wed, 08 Jan 2020 19:45:59 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "Hulk Robot" <hulkci@huawei.com>
-Date:   Wed, 08 Jan 2020 19:43:58 +0000
-Message-ID: <lsq.1578512578.733548525@decadent.org.uk>
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Siddharth Chandrasekaran" <csiddharth@vmware.com>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        "Jann Horn" <jannh@google.com>
+Date:   Wed, 08 Jan 2020 19:43:52 +0000
+Message-ID: <lsq.1578512578.759211401@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 60/63] media: cpia2: Fix use-after-free in cpia2_exit
+Subject: [PATCH 3.16 54/63] Make filldir[64]() verify the directory entry
+ filename is valid
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,122 +59,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit dea37a97265588da604c6ba80160a287b72c7bfd upstream.
+commit 8a23eb804ca4f2be909e372cf5a9e7b30ae476cd upstream.
 
-Syzkaller report this:
+This has been discussed several times, and now filesystem people are
+talking about doing it individually at the filesystem layer, so head
+that off at the pass and just do it in getdents{64}().
 
-BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
-Read of size 8 at addr ffff8881f59a6b70 by task syz-executor.0/8363
+This is partially based on a patch by Jann Horn, but checks for NUL
+bytes as well, and somewhat simplified.
 
-CPU: 0 PID: 8363 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- usb_remove_newid_files drivers/usb/core/driver.c:212 [inline]
- usb_deregister+0x12a/0x3b0 drivers/usb/core/driver.c:1005
- cpia2_exit+0xa/0x16 [cpia2]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f86f3754c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f86f37556bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+There's also commentary about how it might be better if invalid names
+due to filesystem corruption don't cause an immediate failure, but only
+an error at the end of the readdir(), so that people can still see the
+filenames that are ok.
 
-Allocated by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
- driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
- usb_register_driver+0x267/0x520 drivers/usb/core/driver.c:965
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+There's also been discussion about just how much POSIX strictly speaking
+requires this since it's about filesystem corruption.  It's really more
+"protect user space from bad behavior" as pointed out by Jann.  But
+since Eric Biederman looked up the POSIX wording, here it is for context:
 
-Freed by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
- slab_free_hook mm/slub.c:1430 [inline]
- slab_free_freelist_hook mm/slub.c:1457 [inline]
- slab_free mm/slub.c:3005 [inline]
- kfree+0xe1/0x270 mm/slub.c:3957
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- usb_register_driver+0x341/0x520 drivers/usb/core/driver.c:980
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ "From readdir:
 
-The buggy address belongs to the object at ffff8881f59a6b40
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8881f59a6b40, ffff8881f59a6c40)
-The buggy address belongs to the page:
-page:ffffea0007d66980 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6c02e00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+   The readdir() function shall return a pointer to a structure
+   representing the directory entry at the current position in the
+   directory stream specified by the argument dirp, and position the
+   directory stream at the next entry. It shall return a null pointer
+   upon reaching the end of the directory stream. The structure dirent
+   defined in the <dirent.h> header describes a directory entry.
 
-Memory state around the buggy address:
- ffff8881f59a6a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881f59a6a80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff8881f59a6b00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881f59a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881f59a6c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  From definitions:
 
-cpia2_init does not check return value of cpia2_init, if it failed
-in usb_register_driver, there is already cleanup using driver_unregister.
-No need call cpia2_usb_cleanup on module exit.
+   3.129 Directory Entry (or Link)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+   An object that associates a filename with a file. Several directory
+   entries can associate names with the same file.
+
+  ...
+
+   3.169 Filename
+
+   A name consisting of 1 to {NAME_MAX} bytes used to name a file. The
+   characters composing the name may be selected from the set of all
+   character values excluding the slash character and the null byte. The
+   filenames dot and dot-dot have special meaning. A filename is
+   sometimes referred to as a 'pathname component'."
+
+Note that I didn't bother adding the checks to any legacy interfaces
+that nobody uses.
+
+Also note that if this ends up being noticeable as a performance
+regression, we can fix that to do a much more optimized model that
+checks for both NUL and '/' at the same time one word at a time.
+
+We haven't really tended to optimize 'memchr()', and it only checks for
+one pattern at a time anyway, and we really _should_ check for NUL too
+(but see the comment about "soft errors" in the code about why it
+currently only checks for '/')
+
+See the CONFIG_DCACHE_WORD_ACCESS case of hash_name() for how the name
+lookup code looks for pathname terminating characters in parallel.
+
+Link: https://lore.kernel.org/lkml/20190118161440.220134-2-jannh@google.com/
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jann Horn <jannh@google.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Siddharth Chandrasekaran <csiddharth@vmware.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/cpia2/cpia2_v4l.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/readdir.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
---- a/drivers/media/usb/cpia2/cpia2_v4l.c
-+++ b/drivers/media/usb/cpia2/cpia2_v4l.c
-@@ -1249,8 +1249,7 @@ static int __init cpia2_init(void)
- 	LOG("%s v%s\n",
- 	    ABOUT, CPIA_VERSION);
- 	check_parameters();
--	cpia2_usb_init();
--	return 0;
-+	return cpia2_usb_init();
- }
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -51,6 +51,40 @@ out:
+ EXPORT_SYMBOL(iterate_dir);
  
+ /*
++ * POSIX says that a dirent name cannot contain NULL or a '/'.
++ *
++ * It's not 100% clear what we should really do in this case.
++ * The filesystem is clearly corrupted, but returning a hard
++ * error means that you now don't see any of the other names
++ * either, so that isn't a perfect alternative.
++ *
++ * And if you return an error, what error do you use? Several
++ * filesystems seem to have decided on EUCLEAN being the error
++ * code for EFSCORRUPTED, and that may be the error to use. Or
++ * just EIO, which is perhaps more obvious to users.
++ *
++ * In order to see the other file names in the directory, the
++ * caller might want to make this a "soft" error: skip the
++ * entry, and return the error at the end instead.
++ *
++ * Note that this should likely do a "memchr(name, 0, len)"
++ * check too, since that would be filesystem corruption as
++ * well. However, that case can't actually confuse user space,
++ * which has to do a strlen() on the name anyway to find the
++ * filename length, and the above "soft error" worry means
++ * that it's probably better left alone until we have that
++ * issue clarified.
++ */
++static int verify_dirent_name(const char *name, int len)
++{
++	if (WARN_ON_ONCE(!len))
++		return -EIO;
++	if (WARN_ON_ONCE(memchr(name, '/', len)))
++		return -EIO;
++	return 0;
++}
++
++/*
+  * Traditional linux readdir() handling..
+  *
+  * "count=1" is a special case, meaning that the buffer is one
+@@ -157,6 +191,9 @@ static int filldir(void * __buf, const c
+ 	int reclen = ALIGN(offsetof(struct linux_dirent, d_name) + namlen + 2,
+ 		sizeof(long));
  
++	buf->error = verify_dirent_name(name, namlen);
++	if (unlikely(buf->error))
++		return buf->error;
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
+@@ -240,6 +277,9 @@ static int filldir64(void * __buf, const
+ 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
+ 		sizeof(u64));
+ 
++	buf->error = verify_dirent_name(name, namlen);
++	if (unlikely(buf->error))
++		return buf->error;
+ 	buf->error = -EINVAL;	/* only used if we fail.. */
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
 
