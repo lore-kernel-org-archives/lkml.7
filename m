@@ -2,92 +2,158 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBFAC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F68C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A2D20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D39320720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dev-mellanox-co-il.20150623.gappssmtp.com header.i=@dev-mellanox-co-il.20150623.gappssmtp.com header.b="ZXUvw/vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgAHPYO (ORCPT
+        id S1728732AbgAHPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:24:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50383 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPYO (ORCPT
+        Wed, 8 Jan 2020 10:24:24 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37506 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbgAHPYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:24:14 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ipDB8-0001aV-Vt; Wed, 08 Jan 2020 16:23:27 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C48DA1060B2; Wed,  8 Jan 2020 16:23:25 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Anchal Agarwal <anchalag@amazon.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
-        sstabellini@kernel.org, konrad.wilk@oracle.co,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        anchalag@amazon.com, xen-devel@lists.xenproject.org,
-        vkuznets@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
-        fllinden@amaozn.com
-Cc:     anchalag@amazon.com
-Subject: Re: [RFC PATCH V2 09/11] xen: Clear IRQD_IRQ_STARTED flag during shutdown PIRQs
-In-Reply-To: <20200107234420.GA18738@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <20200107234420.GA18738@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Date:   Wed, 08 Jan 2020 16:23:25 +0100
-Message-ID: <877e22ezv6.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Jan 2020 10:24:23 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so3825940wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:24:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dev-mellanox-co-il.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WY8LswhWtBe+DJC/DEGAG0v0KweIWUFyKsy0DnI+itc=;
+        b=ZXUvw/vhiVbJH+1wtwf5xxWbV9B3EDKLGgk9nZLyC9y0XZMJuFRdJO5tuYwtkFbOyP
+         FralA2sMLvFQDB14ET8u6vgtQdJbh4cvA9p55FRNByr2yf3FXy/NIY9nTBGpK5LUxcq4
+         1by3MPlRENUwrEj+Sezq+4Hy2bCik9nFCqlZYFmw9NvFsGy8I8giq3+itv9gstEAWAmQ
+         2kV7+GrmtGpLDfnI2DKBBwsLOzcLLw9vSGgYAxKhrEejMx8BPnZpMfueADS0lPsoEpQB
+         1Wb/L2J/vP/di06i2RyNw0jRZM8kmLnNDOKlFV52GSMVHcCpiwYy7ZVl2Hil9XybPnRb
+         zn1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WY8LswhWtBe+DJC/DEGAG0v0KweIWUFyKsy0DnI+itc=;
+        b=WMNrfUKZYJbM9YSuYO/3S1auBeUv3dK55avqIIA15ZUBto6qwWc+VZvlk2IASuiD4L
+         IhiQSdFhAKQXF2Kzo8/PBEBEWoexH9Ju5fuy8f1Vh2H37gVEbtGv/8/TYhwPdSkavrpt
+         dtS2ybSazU7wmSnmpgjV52RAQoW/snmBOiuLRBq+xdt5AUS/JI4eJFSZZQaKEI9yqOrd
+         cMSHqmYgV5CpBzAY92wZRhP8i+zYyUfHX9XA29/h1A0gOqzUTXInYDsy15XI/poWlM1g
+         BTvdmkltd0MHBQRWm3tvsz9v8A9aloV82xAJI9f2r/wfPCknm11sP1KQBnp9EnXColxV
+         sIug==
+X-Gm-Message-State: APjAAAX5qqGpAwxo4UDqmOu9ru1izs5fhXe2w6q/blHeIwFiTM9QbmoW
+        m8Y6F/UssK5JCUrv9UkiL3Dblg==
+X-Google-Smtp-Source: APXvYqy/vleudjcx/xMUWMn9iSG/9C+uIhSD3GlJinfMIalsB8y/BxdVFOkayIHlOLB7/RHQFVWGOw==
+X-Received: by 2002:adf:b605:: with SMTP id f5mr4964464wre.383.1578497061827;
+        Wed, 08 Jan 2020 07:24:21 -0800 (PST)
+Received: from [10.80.2.221] ([193.47.165.251])
+        by smtp.googlemail.com with ESMTPSA id o16sm4337490wmc.18.2020.01.08.07.24.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 07:24:21 -0800 (PST)
+Subject: Re: [PATCH rdma-rc 3/3] IB/core: Fix ODP with IB_ACCESS_HUGETLB
+ handling
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20191219134646.413164-1-leon@kernel.org>
+ <20191219134646.413164-4-leon@kernel.org>
+ <alpine.DEB.2.21.2001081352560.23971@ramsan.of.borg>
+From:   Yishai Hadas <yishaih@dev.mellanox.co.il>
+Message-ID: <ff4da6a1-609a-546c-e56c-e3ac529d4496@dev.mellanox.co.il>
+Date:   Wed, 8 Jan 2020 17:24:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <alpine.DEB.2.21.2001081352560.23971@ramsan.of.borg>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anchal Agarwal <anchalag@amazon.com> writes:
+On 1/8/2020 2:56 PM, Geert Uytterhoeven wrote:
+>      Hi Leon,
+> 
+> On Thu, 19 Dec 2019, Leon Romanovsky wrote:
+>> From: Yishai Hadas <yishaih@mellanox.com>
+>>
+>> As VMAs for a given range might not be available as part of the
+>> registration phase in ODP, IB_ACCESS_HUGETLB/page_shift must be checked
+>> as part of the page fault flow.
+>>
+>> If the application didn't mmap the backed memory with huge pages or
+>> released part of that hugepage area, an error will be set as part of the
+>> page fault flow once be detected.
+>>
+>> Fixes: 0008b84ea9af ("IB/umem: Add support to huge ODP")
+>> Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+>> Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+>> Reviewed-by: Aviad Yehezkel <aviadye@mellanox.com>
+>> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/infiniband/core/umem_odp.c
+>> +++ b/drivers/infiniband/core/umem_odp.c
+>> @@ -241,22 +241,10 @@ struct ib_umem_odp *ib_umem_odp_get(struct 
+>> ib_udata *udata, unsigned long addr,
+>>     umem_odp->umem.owning_mm = mm = current->mm;
+>>     umem_odp->notifier.ops = ops;
+>>
+>> -    umem_odp->page_shift = PAGE_SHIFT;
+>> -    if (access & IB_ACCESS_HUGETLB) {
+>> -        struct vm_area_struct *vma;
+>> -        struct hstate *h;
+>> -
+>> -        down_read(&mm->mmap_sem);
+>> -        vma = find_vma(mm, ib_umem_start(umem_odp));
+>> -        if (!vma || !is_vm_hugetlb_page(vma)) {
+>> -            up_read(&mm->mmap_sem);
+>> -            ret = -EINVAL;
+>> -            goto err_free;
+>> -        }
+>> -        h = hstate_vma(vma);
+>> -        umem_odp->page_shift = huge_page_shift(h);
+>> -        up_read(&mm->mmap_sem);
+>> -    }
+>> +    if (access & IB_ACCESS_HUGETLB)
+>> +        umem_odp->page_shift = HPAGE_SHIFT;
+>> +    else
+>> +        umem_odp->page_shift = PAGE_SHIFT;
+>>
+>>     umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
+>>     ret = ib_init_umem_odp(umem_odp, ops);
+> 
+> noreply@ellerman.id.au reports for linux-next/m68k-allmodconfig/m68k:
+> 
+>      drivers/infiniband/core/umem_odp.c:245:26: error: 'HPAGE_SHIFT' 
+> undeclared (first use in this function); did you mean 'PAGE_SHIFT'?
+> 
+> Should this depend on some HUGETLBFS option?
+> 
 
-> shutdown_pirq is invoked during hibernation path and hence
-> PIRQs should be restarted during resume.
-> Before this commit'020db9d3c1dc0a' xen/events: Fix interrupt lost
-> during irq_disable and irq_enable startup_pirq was automatically
-> called during irq_enable however, after this commit pirq's did not
-> get explicitly started once resumed from hibernation.
->
-> chip->irq_startup is called only if IRQD_IRQ_STARTED is unset during
-> irq_startup on resume. This flag gets cleared by free_irq->irq_shutdown
-> during suspend. free_irq() never gets explicitly called for ioapic-edge
-> and ioapic-level interrupts as respective drivers do nothing during
-> suspend/resume. So we shut them down explicitly in the first place in
-> syscore_suspend path to clear IRQ<>event channel mapping. shutdown_pirq
-> being called explicitly during suspend does not clear this flags, hence
-> .irq_enable is called in irq_startup during resume instead and pirq's
-> never start up.
+Thanks for pointing on,
+We would expect to use #ifdef CONFIG_HUGETLB_PAGE as done in below 
+kernel code [1] that also used HPAGE_SHIFT.
 
-What? 
+I'll send some patch to 'for-next' to handle it.
 
-> +void irq_state_clr_started(struct irq_desc *desc)
->  {
->  	irqd_clear(&desc->irq_data, IRQD_IRQ_STARTED);
->  }
-> +EXPORT_SYMBOL_GPL(irq_state_clr_started);
-
-This is core internal state and not supposed to be fiddled with by
-drivers.
-
-irq_chip has irq_suspend/resume/pm_shutdown callbacks for a reason.
-
-Thanks,
-
-       tglx
+[1] 
+https://elixir.bootlin.com/linux/v5.3-rc7/source/drivers/misc/sgi-gru/grufault.c#L183
