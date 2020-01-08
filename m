@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB718C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D28C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB162070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B9620720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgAHTtC (ORCPT
+        id S1728860AbgAHTtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:02 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43604 "EHLO
+        Wed, 8 Jan 2020 14:49:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43614 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730438AbgAHTqD (ORCPT
+        by vger.kernel.org with ESMTP id S1730439AbgAHTqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:03 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006p9-Ir; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006ov-BY; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dnz-Pq; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007dnR-Fk; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Will Deacon" <will.deacon@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>, "Pavel Machek" <pavel@ucw.cz>,
         "Arnd Bergmann" <arnd@arndb.de>,
-        "Eric Biggers" <ebiggers@google.com>
-Date:   Wed, 08 Jan 2020 19:43:42 +0000
-Message-ID: <lsq.1578512578.323963673@decadent.org.uk>
+        "James Morse" <james.morse@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Catalin Marinas" <catalin.marinas@arm.com>
+Date:   Wed, 08 Jan 2020 19:43:35 +0000
+Message-ID: <lsq.1578512578.174710898@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 44/63] arm64: support keyctl() system call in 32-bit mode
+Subject: [PATCH 3.16 37/63] PM / Hibernate: Call flush_icache_range() on
+ pages restored in-place
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +59,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: James Morse <james.morse@arm.com>
 
-commit 5c2a625937ba49bc691089370638223d310cda9a upstream.
+commit f6cf0545ec697ddc278b7457b7d0c0d86a2ea88e upstream.
 
-As is the case for a number of other architectures that have a 32-bit
-compat mode, enable KEYS_COMPAT if both COMPAT and KEYS are enabled.
-This allows AArch32 programs to use the keyctl() system call when
-running on an AArch64 kernel.
+Some architectures require code written to memory as if it were data to be
+'cleaned' from any data caches before the processor can fetch them as new
+instructions.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+During resume from hibernate, the snapshot code copies some pages directly,
+meaning these architectures do not get a chance to perform their cache
+maintenance. Modify the read and decompress code to call
+flush_icache_range() on all pages that are restored, so that the restored
+in-place pages are guaranteed to be executable on these architectures.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rafael J. Wysocki <rjw@rjwysocki.net>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+[will: make clean_pages_on_* static and remove initialisers]
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm64/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/power/swap.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -352,6 +352,10 @@ config SYSVIPC_COMPAT
- 	def_bool y
- 	depends on COMPAT && SYSVIPC
+--- a/kernel/power/swap.c
++++ b/kernel/power/swap.c
+@@ -36,6 +36,14 @@
+ #define HIBERNATE_SIG	"S1SUSPEND"
  
-+config KEYS_COMPAT
-+	def_bool y
-+	depends on COMPAT && KEYS
+ /*
++ * When reading an {un,}compressed image, we may restore pages in place,
++ * in which case some architectures need these pages cleaning before they
++ * can be executed. We don't know which pages these may be, so clean the lot.
++ */
++static bool clean_pages_on_read;
++static bool clean_pages_on_decompress;
 +
- endmenu
++/*
+  *	The swap map is a data structure used for keeping track of each page
+  *	written to a swap partition.  It consists of many swap_map_page
+  *	structures that contain each an array of MAP_PAGE_ENTRIES swap entries.
+@@ -244,6 +252,9 @@ static void hib_end_io(struct bio *bio,
  
- menu "Power management options"
+ 	if (bio_data_dir(bio) == WRITE)
+ 		put_page(page);
++	else if (clean_pages_on_read)
++		flush_icache_range((unsigned long)page_address(page),
++				   (unsigned long)page_address(page) + PAGE_SIZE);
+ 
+ 	if (error && !hb->error)
+ 		hb->error = error;
+@@ -1052,6 +1063,7 @@ static int load_image(struct swap_map_ha
+ 
+ 	hib_init_batch(&hb);
+ 
++	clean_pages_on_read = true;
+ 	printk(KERN_INFO "PM: Loading image data pages (%u pages)...\n",
+ 		nr_to_read);
+ 	m = nr_to_read / 10;
+@@ -1127,6 +1139,10 @@ static int lzo_decompress_threadfn(void
+ 		d->unc_len = LZO_UNC_SIZE;
+ 		d->ret = lzo1x_decompress_safe(d->cmp + LZO_HEADER, d->cmp_len,
+ 		                               d->unc, &d->unc_len);
++		if (clean_pages_on_decompress)
++			flush_icache_range((unsigned long)d->unc,
++					   (unsigned long)d->unc + d->unc_len);
++
+ 		atomic_set(&d->stop, 1);
+ 		wake_up(&d->done);
+ 	}
+@@ -1192,6 +1208,8 @@ static int load_image_lzo(struct swap_ma
+ 	}
+ 	memset(crc, 0, offsetof(struct crc_data, go));
+ 
++	clean_pages_on_decompress = true;
++
+ 	/*
+ 	 * Start the decompression threads.
+ 	 */
 
