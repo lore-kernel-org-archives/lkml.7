@@ -2,140 +2,108 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EADBC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5ECC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFB320705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0520705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mqUzBXXo"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="m/kaMwLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgAHN5Y (ORCPT
+        id S1728555AbgAHN5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:57:24 -0500
-Received: from mail-mw2nam10on2081.outbound.protection.outlook.com ([40.107.94.81]:19564
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726411AbgAHN5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:57:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fNwEf1fZ50n4GlkvpABul6brPwXojtYD+p9omDtNgG4C0RRPGQPQxEZTMCqPc+zSIOkaUH+Uh/679L9sb0wxWTo1EgHUAHj6vywO1EyUrwSxAmwOAFEZ/Gwwa4xpTDFYc4V4AO01uEsVraHeE14lwIvC3Bk6hS/KrrqpiWAu6dGm3HgaxZSJRbybu0PClHAGuGTbgPL6PzwtWX2rWdTTc4cpDdtWRSIsdmrLRSu+aGuXFxBn2DNcy3RTVWFTdaI3VjFw5AD+UqL69SMMwQB6nHu76BFUIFHMo2OrqXhLdmh9PdycdR47rCoJqUralk4BoQ1YWpeStbjU/UP91/dIzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T83LAauHoeOdzAcUhrtlU61Xls3P2KIPGz6kr7asEUA=;
- b=cgQAP7Rl220Nu8FqZ/QaZvJ+VvBK4XoK473kGlfAC0ZUTzShQOFTIJudDnv5j59pm2n9eHvSmXbLp4d9PeTrIkKUn569oXVGAJAVOH7StMLQWuzBHcljXGDbOCqWwa/CYZ0cKweEcBT2mOV8G5uPbYW8hdk8jUsc5QZMpSl4H5Ov9FNwBzR9HALrwotQiDPkv+MX5sx0JTLkEF11ksEwfAICq08r96bodXror5cP4slMwKMMkmZJjGMlcIg25+FYF1nI9bw2p0a/dYw6AJ2ZLIoBgRbYLHL6dgbRtQcz/dMkz+2Y6P+BuGELywmfojS/sltlmisKyHAYSsw8dwVH3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 8 Jan 2020 08:57:32 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37929 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgAHN5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:57:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so3491561wrh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T83LAauHoeOdzAcUhrtlU61Xls3P2KIPGz6kr7asEUA=;
- b=mqUzBXXoZV8Yw9si5VkKfGS1YgpSVvL6+aMsiD4jgwru1vckf1nlRPn0PwkJe5BhhEADeQ8n6p+ytpMxCbwC3i21n2uxV5oXcI1pJ8blAR+3YpytcJXjIfQYTLNOw7ik69NUj6p9JoaE2O7TUBPrN+iAbTRb2JPoyawM5NK7tlI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB3449.namprd12.prod.outlook.com (20.178.198.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 8 Jan 2020 13:57:21 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
- 13:57:20 +0000
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
- <20200106233846.GC12879@linux.intel.com>
- <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
- <20200107222813.GB16987@linux.intel.com>
- <298352c6-7670-2929-9621-1124775bfaed@amd.com>
- <20200107233102.GC16987@linux.intel.com>
- <c60d15f2-ca10-678c-30aa-5369cf3864c7@amd.com>
- <20200108000412.GE16987@linux.intel.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <e2b183a8-ffea-2df4-2929-a7f67cba8a81@amd.com>
-Date:   Wed, 8 Jan 2020 07:57:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20200108000412.GE16987@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0102.namprd05.prod.outlook.com
- (2603:10b6:803:42::19) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tjibdcrm0F2gBrVSaGaYRxNAqKq2VCoLQH5KirTsjuc=;
+        b=m/kaMwLbBcSL4lPor8Mo+VgfcRizesHQjejcmUNPWa7XkwV5ZIn7hrCEOLYXHV9/T8
+         AaorCkeLtPS27njH+cQJo1u7AjgxISd32W4iSFFzARbEBSavlQnGrJCL1+RmIuxT1/V9
+         EYPiqhCCxh3giok7xWROLKif3J9WBqOWxHUSYERvNjIB4pLaQOVgoAWB1wgDn7N/cp8Q
+         HrcG/pYdnG8SQgS4r0w4ZaOZ+aZ4otAmnLWRyQCl4LOoZrfCY4PUhSiPeeKtzqoBKh+r
+         dxN7riv+TNU9KNrl55J3szBIMR2vXJqksOoHTGffMk69SAmPkAk7inrwmVnwG/M5ps9W
+         UZLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tjibdcrm0F2gBrVSaGaYRxNAqKq2VCoLQH5KirTsjuc=;
+        b=kJpWNhYMmRCUkuYUnJ64H/M07R/cWLg6DsMSckcP5jOkDzUEkopnedhrJfdVX03OIl
+         Ot8SQQIve2VIzuChVGBq2QBzwSsa1Rk5gLQQp0H0Kos4cMTtHIdTle+/As0JyL/80oJx
+         zmYvJTY8DZ/JHkT5EhKRXQY4FAUFkc1kjXulUpNHVde6Mk9b7iOe3znDB2aECojkfQOQ
+         W15De9VRROAFJcFTg/pT1EHi38CAqWHzWiy1e6fvlLzf+KniHx6EktZwHo+XAmqBXgvG
+         MYQ8nbPZVn3Yxn43ZdyjfAR11RRhRcAZ0SRCdQ6soNEqNWSzeSWEJPZdz4FZk62qI5d3
+         lAlA==
+X-Gm-Message-State: APjAAAW1odDm/5jtlkPm4OdiUCPANn4aH/Us74uFIv7CRidEyv0eJO2q
+        BJJc3ZMSdQw1x13QxgqlPYHVcQ==
+X-Google-Smtp-Source: APXvYqx0hay0UMpM7/Vwis+yM8OlqmCCEDSkMJxGOVcZg7bXXpcCn/9V1E3VQGokgXSL6zJJcnAMOA==
+X-Received: by 2002:a5d:404b:: with SMTP id w11mr4973101wrp.171.1578491850026;
+        Wed, 08 Jan 2020 05:57:30 -0800 (PST)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id p15sm3678288wma.40.2020.01.08.05.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 05:57:29 -0800 (PST)
+Date:   Wed, 8 Jan 2020 14:57:28 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: remove redundant assignment to variable icid
+Message-ID: <20200108135728.GA19220@netronome.com>
+References: <20200107180013.124501-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Received: from [10.236.30.74] (165.204.77.1) by SN4PR0501CA0102.namprd05.prod.outlook.com (2603:10b6:803:42::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.7 via Frontend Transport; Wed, 8 Jan 2020 13:57:19 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7da248c7-6de5-47ed-f407-08d79442adf2
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3449:|DM6PR12MB3449:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3449609A5EE49241BD940430EC3E0@DM6PR12MB3449.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 02760F0D1C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(199004)(189003)(81156014)(478600001)(31686004)(86362001)(5660300002)(2906002)(6486002)(16576012)(81166006)(316002)(8676002)(54906003)(36756003)(8936002)(66476007)(66556008)(66946007)(26005)(2616005)(956004)(52116002)(53546011)(31696002)(16526019)(4326008)(6916009)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3449;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DJCthGWL77v1fGhN1ue64hvdLLuTzcoihxpgtWc70FV9tX3+WckgvCG4J7HLCJllGHU7D8H7dS94HrM/KhnXFCHhna/0qYRhtn6l+Dom0F+VdrdOcoRc6uYQwVZrgc5uY9Uy2HduUMRU5pLAFYVuTpD9csL6mDR8qOg90o4M7eCBB2M2DwU7uz1S8ueMaPBi7B0sVe16eQtHjC0qNWBuvnMW2fjax3rBMqebagQraBg2iIqulxTRyV9bDU3TCeYqvJgu/nqU0N6/ql3r4K4BnI5DkykKmTiy2jrAbMQqsQBWeY5wrAMrvHZCO75iHVsQV1JeH1Ze5LEiwuYbLvwKp8sbHWDuwn+Mh6JB69gsTYW4hli+gsWfc7tvUz8EQZy3Ti/qhQZBUPNOwds49U1S800iJPiGSNvTpujyURgkP+jxujTMbRbj7AmErdOXgJVQ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7da248c7-6de5-47ed-f407-08d79442adf2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 13:57:20.6665
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1wWcqpoS0OvMNSoHQkrHDdoMsOj9zi9NE2XG06b+uLCt3bVK6rcolBMfGChjbwe3RYcAnv1JRk0kZ4X4aqdfsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3449
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107180013.124501-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 6:04 PM, Sean Christopherson wrote:
-> On Tue, Jan 07, 2020 at 05:51:51PM -0600, Tom Lendacky wrote:
->> On 1/7/20 5:31 PM, Sean Christopherson wrote:
->>> AIUI, using phys_bits=48, then the standard scenario is Cbit=47 and some
->>> additional bits 46:M are reserved.  Applying that logic to phys_bits=52,
->>> then Cbit=51 and bits 50:M are reserved, so there's a collision but it's
->>
->> There's no requirement that the C-bit correspond to phys_bits. So, for
->> example, you can have C-bit=51 and phys_bits=48 and so 47:M are reserved.
+On Tue, Jan 07, 2020 at 06:00:13PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> But then using blindly using x86_phys_bits would break if the PA bits
-> aren't reduced, e.g. C-bit=47 and phys_bits=47. AFAICT, there's no
-> requirement that there be reduced PA bits when there is a C-bit.  I'm
-> guessing there aren't plans to ship such CPUs, but I don't see anything
-> in the APM to prevent such a scenario.
-
-I can add in extra checks to see if C-bit == phys_bits, etc. and adjust
-with appropriate limit checking. It's in the init path, so the extra
-checks aren't a big deal.
-
-Thanks,
-Tom
-
+> Variable icid is being rc is assigned with a value that is never
+> read. The assignment is redundant and can be removed.
 > 
-> Maybe the least painful approach would be to go with a version of this
-> patch and add a check that there are indeeded reserved/reduced bits?
-> Probably with a WARN_ON_ONCE if the check fails.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+
+> ---
+>  net/bluetooth/l2cap_core.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+> index 1bca608e0170..195459a1e53e 100644
+> --- a/net/bluetooth/l2cap_core.c
+> +++ b/net/bluetooth/l2cap_core.c
+> @@ -5081,7 +5081,6 @@ static inline int l2cap_move_channel_req(struct l2cap_conn *conn,
+>  	chan->move_role = L2CAP_MOVE_ROLE_RESPONDER;
+>  	l2cap_move_setup(chan);
+>  	chan->move_id = req->dest_amp_id;
+> -	icid = chan->dcid;
+>  
+>  	if (req->dest_amp_id == AMP_ID_BREDR) {
+>  		/* Moving to BR/EDR */
+> -- 
+> 2.24.0
 > 
