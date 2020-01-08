@@ -2,387 +2,111 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C34C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECF3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6EA2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD152082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfSBKC9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgAHLWl (ORCPT
+        id S1726692AbgAHLYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:22:41 -0500
-Received: from mga05.intel.com ([192.55.52.43]:19723 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgAHLWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:22:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:22:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="246316350"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2020 03:22:33 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ip9Q1-0001q6-Be; Wed, 08 Jan 2020 13:22:33 +0200
-Date:   Wed, 8 Jan 2020 13:22:33 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     fengping yu <fengping.yu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200108112233.GM32742@smile.fi.intel.com>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
+        Wed, 8 Jan 2020 06:24:46 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36067 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgAHLYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:24:46 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so2317583oic.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 03:24:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=QFQ9MzNR3N8+jCKSFbC/snv1ofUy7bS229pDEsG4jtU=;
+        b=BfSBKC9urrCfL+mnO1wDRiAIf3kvrUAK0zCMfKv3A2Nivl2OaQw1dNxFOIBX86ylrP
+         rYgOOTUO/HQDnD/zc1XkjpuUASqyWQI9CzirZWviiktrYETdU6r8etl0Y0yxJGsSviuU
+         wEv2TR39OsGQRTp/K2XmYVevlUrZnvFmRFVreWJzXgegipHdKA0P+N4yFTPhBxkxC02D
+         M8s5WP2PPW04v+VK8lSTJQEU55xtHHLdyNrniaRMQ4K9BbYSHtJXAHHsiCfaJ3cElKzJ
+         9i0vt0PDlUiG9abu4hOGc/li01v0s9DqA8NBYZ9ycI3KftuOhCcz/h7nGEj14pX8YSu7
+         76EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=QFQ9MzNR3N8+jCKSFbC/snv1ofUy7bS229pDEsG4jtU=;
+        b=EO4HZJuL3VKD4EVVaBO/vjEdGf70BLNTNyvqcI/6LYHl8PYQgg+DzEgf+izEPR3LvF
+         CICNZwnio4epzzfgOgymoZMnDUcIOtauW4+iFlcV1CDfckOqBJTbQtTvxMxDx3wagsaB
+         w8e5sRPfsMzSDSLjloitTEbdmTpliu7pM3QaIyt3+kjL2w4I96pZY6syuQjoB0o/NP3s
+         AEV2Cxc5+tvgB1DH/YsLLDr1QXd6qwfIybrdMFb8a3ii+utob78a2Re/13kxa+CvEsdE
+         ZT5eWbbHAzK3x+t+1jYPN6C80Q4WAJK2xEnnqPZBqIYjWdfiQ1RGxN+8re+LOff2QsbP
+         EOXQ==
+X-Gm-Message-State: APjAAAVBHj1xh+ph2+lbmagq/Qw9yMOkgvOM9vdER7AM1f0DqysUtXqe
+        pmZj7KM7V5Jh1ymxe6BSwWioAA==
+X-Google-Smtp-Source: APXvYqzOWV+sbUpUBdYUxYwIk/nJwIoBL6vcjOmXeYbyU08FMkPZ2OYEZkrYkv7PKP8zAf5XscqRDw==
+X-Received: by 2002:aca:ab0e:: with SMTP id u14mr2709116oie.1.1578482685125;
+        Wed, 08 Jan 2020 03:24:45 -0800 (PST)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id a74sm1002436oii.37.2020.01.08.03.24.43
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 08 Jan 2020 03:24:44 -0800 (PST)
+Date:   Wed, 8 Jan 2020 03:24:42 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Chris Mason <clm@fb.com>
+cc:     Dave Chinner <david@fromorbit.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
+In-Reply-To: <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
+Message-ID: <alpine.LSU.2.11.2001080259350.1884@eggly.anvils>
+References: <cover.1578225806.git.chris@chrisdown.name> <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name> <20200107001039.GM23195@dread.disaster.area> <20200107001643.GA485121@chrisdown.name> <20200107003944.GN23195@dread.disaster.area>
+ <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com> <alpine.LSU.2.11.2001070002040.1496@eggly.anvils> <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com> <20200107210715.GQ23195@dread.disaster.area>
+ <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108062923.14684-3-fengping.yu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:29:23PM +0800, fengping yu wrote:
-> From: "fengping.yu" <fengping.yu@mediatek.com>
+On Tue, 7 Jan 2020, Chris Mason wrote:
+> On 7 Jan 2020, at 16:07, Dave Chinner wrote:
 > 
-> add mtk keypad driver
-
-A bit more details, perhaps?
-Also, what about proper English grammar and punctuation?
-
-> Change-Id: I20bb26ee4112f51f60476b7ff7d6e42b43f729dc
-
-Are you sure it's ready for upstream?
-
-...
-
->  arch/arm64/configs/defconfig                  |   1 +
-
-Why?
-
-...
-
-> --- a/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> @@ -38,8 +38,15 @@ Example:
->  	};
->  
->  	&keypad {
-> -		mediatek,key-debounce-ms = <1024>;
-> +		mediatek,key-debounce-ms = <32>;
->  		/*HW Keycode [0~71] -> Linux Keycode*/
-> -		mediatek,khw-map-num = <72>;
-> -		mediatek,hw-init-map = <114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 >;
-> +		mediatek,hw-map-num = <72>;
-> +		mediatek,hw-init-map = <114 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0 >;
->  	};
-
-Why above in this patch?
-
-...
-
-> +obj-$(CONFIG_KEYBOARD_MTK) 		+= mtk-kpd.o
-
-TABs/spaces mix.
-
-...
-
-> +#include <linux/atomic.h>
-> +#include <linux/clk.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/delay.h>
-> +#include <linux/fs.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/ioctl.h>
-> +#include <linux/kernel.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_wakeup.h>
-> +#include <linux/regmap.h>
-> +#include <linux/timer.h>
-> +#include <linux/workqueue.h>
-
-Do you really need all of them?!
-
-...
-
-> +#define KP_STA			(0x0000)
-> +#define KP_MEM1			(0x0004)
-> +#define KP_MEM2			(0x0008)
-> +#define KP_MEM3			(0x000c)
-> +#define KP_MEM4			(0x0010)
-> +#define KP_MEM5			(0x0014)
-> +#define KP_DEBOUNCE		(0x0018)
-> +#define KP_SEL			(0x0020)
-> +#define KP_EN			(0x0024)
-
-What the purpose of parentheses?
-
-...
-
-> +#define KP_COL0_SEL		(1 << 10)
-> +#define KP_COL1_SEL		(1 << 11)
-> +#define KP_COL2_SEL		(1 << 12)
-
-BIT()
-
-> +#define KPD_DEBOUNCE_MASK	((1U << 14) - 1)
-> +#define KPD_DOUBLE_KEY_MASK	(1U << 0)
-
-GENMASK() / BIT_MASK() / BIT()
-
-...
-
-> +static int kpd_pdrv_probe(struct platform_device *pdev);
-
-Why this forward declaration is present?
-
-...
-
-> +static void kpd_get_keymap_state(void __iomem *kp_base, u16 state[])
-> +{
-> +	state[0] = readw(kp_base + KP_MEM1);
-> +	state[1] = readw(kp_base + KP_MEM2);
-> +	state[2] = readw(kp_base + KP_MEM3);
-> +	state[3] = readw(kp_base + KP_MEM4);
-> +	state[4] = readw(kp_base + KP_MEM5);
-
-> +	pr_debug("kpd register = %x %x %x %x %x\n",
-> +		 state[0], state[1], state[2], state[3], state[4]);
-
-Consider print_hex_dump() instead. But do you need this at all?
-
-> +}
-
-...
-
-> +		for (j = 0; j < 16U; j++) {
-> +			mask = (u16)1 << j;
-> +			if (!(change & mask))
-> +				continue;
-
-for_each_set_bit() ?
-
-> +		}
-
-...
-
-> +static int kpd_get_dts_info(struct mtk_keypad *keypad,
-> +			    struct device_node *node)
-> +{
-> +	int ret;
-
-Consider pr_*() -> dev_*() in all below code.
-
-> +
-> +	ret = of_property_read_u32(node, "mediatek,key-debounce-ms",
-> +				   &keypad->key_debounce);
-> +	if (ret) {
-> +		pr_debug("read mediatek,key-debounce-ms error.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "mediatek,hw-map-num",
-> +				   &keypad->hw_map_num);
-> +	if (ret) {
-> +		pr_debug("read mediatek,hw-map-num error.\n");
-> +		return ret;
-> +	}
-> +
-> +	if (keypad->hw_map_num > KPD_NUM_KEYS) {
-> +		pr_debug("hw-map-num error, it cannot bigger than %d.\n",
-> +			 KPD_NUM_KEYS);
-
-dev_err() ?
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_u32_array(node, "mediatek,hw-init-map",
-> +					 keypad->hw_init_map,
-> +					 keypad->hw_map_num);
-> +
-> +	if (ret) {
-> +		pr_debug("hw-init-map was not defined in dts.\n");
-> +		return ret;
-> +	}
-> +
-> +	pr_debug("deb= %d\n", keypad->key_debounce);
-> +
-> +	return 0;
-> +}
-
-It's for ARM64 which might support ACPI. Perhaps you may use device property
-API instead of be OF-centric.
-
-...
-
-> +	keypad_pinctrl = devm_pinctrl_get(dev);
-> +	if (IS_ERR(keypad_pinctrl)) {
-
-> +		pr_debug("Cannot find keypad_pinctrl!\n");
-> +
-
-These kind of messages are not for production.
-
-> +		return (int)PTR_ERR(keypad_pinctrl);
-
-Why explicit casting? (Same for similar places all over the driver)
-Is it really a fatal error?
-
-> +	}
-
-...
-
-> +	return pinctrl_select_state(keypad_pinctrl,
-> +				kpd_default);
-
-One line. Perhaps you need to configure your text editor.
-
-...
-
-> +	keypad->clk = devm_clk_get(&pdev->dev, "kpd");
-> +	if (IS_ERR(keypad->clk)) {
-
-> +		pr_notice("get kpd-clk fail: %d\n", (int)PTR_ERR(keypad->clk));
-
-Noise as a lot of such messages.
-
-> +		return (int)PTR_ERR(keypad->clk);
-
-Casting?!
-
-> +	}
-
-...
-
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		err = -ENODEV;
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	keypad->base = devm_ioremap(&pdev->dev, res->start,
-> +				    resource_size(res));
-> +	if (!keypad->base) {
-> +		pr_notice("KP iomap failed\n");
-> +		err = -EBUSY;
-> +		goto err_unprepare_clk;
-> +	}
-
-What's wrong with devm_platform_ioremap_resource()?
-
-...
-
-> +	keypad->irqnr = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> +	if (!keypad->irqnr) {
-> +		pr_notice("KP get irqnr failed\n");
-> +		err = -ENODEV;
-> +		goto err_unprepare_clk;
-> +	}
-
-Can't you use platform_get_irq()?
-Why not?
-
-...
-
-> +	pr_info("kp base: 0x%p, addr:0x%p,  kp irq: %d\n",
-> +		keypad->base, &keypad->base, keypad->irqnr);
-
-Useless message. Moreover I believe it has wrong specifiers in use.
-
-...
-
-> +	memset(keypad->keymap_state, 0xff, sizeof(keypad->keymap_state));
-
-Shouldn't be bitmap_fill()? In such case the variable has to be type of
-unsigned long.
-
-...
-
-> +	writew((u16)(keypad->key_debounce & KPD_DEBOUNCE_MASK),
-> +		     keypad->base + KP_DEBOUNCE);
-
-Why explicit casting?
-
-...
-
-> +	/* register IRQ */
-> +	err = request_irq(keypad->irqnr, kpd_irq_handler, IRQF_TRIGGER_NONE,
-> +			  KPD_NAME, keypad);
-> +	if (err) {
-> +		pr_notice("register IRQ failed (%d)\n", err);
-> +		goto err_irq;
-> +	}
-
-Why not threaded IRQ handler instead of ugly tasklet?
-
-...
-
-> +	pr_info("kpd_probe OK.\n");
-
-Noise.
-
-...
-
-> +static const struct of_device_id kpd_of_match[] = {
-> +	{.compatible = "mediatek,mt6779-keypad"},
-> +	{.compatible = "mediatek,kp"},
-
-> +	{},
-
-Comma is not needed in terminator lines.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> > IOWs, there are *lots* of 64bit inode numbers out there on XFS
+> > filesystems....
+> 
+> It's less likely in btrfs but +1 to all of Dave's comments.  I'm happy 
+> to run a scan on machines in the fleet and see how many have 64 bit 
+> inodes (either buttery or x-y), but it's going to be a lot.
+
+Dave, Amir, Chris, many thanks for the info you've filled in -
+and absolutely no need to run any scan on your fleet for this,
+I think we can be confident that even if fb had some 15-year-old tool
+in use on its fleet of 2GB-file filesystems, it would not be the one
+to insist on a kernel revert of 64-bit tmpfs inos.
+
+The picture looks clear now: while ChrisD does need to hold on to his
+config option and inode32/inode64 mount option patch, it is much better
+left out of the kernel until (very unlikely) proved necessary.
+
+Thanks,
+Hugh
