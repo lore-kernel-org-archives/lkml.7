@@ -2,80 +2,104 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9663C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE74DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C75F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDCA2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="j2E/j3/e"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="saA6hY8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgAHLq5 (ORCPT
+        id S1727433AbgAHLsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:46:57 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57594 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgAHLq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:46:57 -0500
-Received: from zn.tnic (p200300EC2F0BD40029EAD32D10B1B629.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:d400:29ea:d32d:10b1:b629])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F0C1E1EC0CC9;
-        Wed,  8 Jan 2020 12:46:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578484016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=2K49B1IvTuR8ugKnVnlZ1/Wn6pxxM4e0MAEkpZoeWEI=;
-        b=j2E/j3/etEDUZgeHXudiatxCesvrsc9YPfXpU/we3L4Pylef+UCj+BtIu0utmVmHja5UNJ
-        EhkZPMoRj4/nPvWZsbdTdlpme5xaKLDpcZI7J1TRhK3omBY29RApTpxO2cdD0ArAJI/Y7m
-        4h1ZUakhzJ49IWemkuSjGzV+Amf2Jpo=
-Date:   Wed, 8 Jan 2020 12:46:51 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
-Subject: Re: [tip: x86/fpu] x86/fpu: Deactivate FPU state after failure
- during state load
-Message-ID: <20200108114651.GF27363@zn.tnic>
-References: <157840155965.30329.313988118654552721.tip-bot2@tip-bot2>
- <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
+        Wed, 8 Jan 2020 06:48:03 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33800 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbgAHLsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:48:02 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008Blr3L114272;
+        Wed, 8 Jan 2020 05:47:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578484074;
+        bh=9D1eEGCkq7fQxSaBELJBZQG3nVJjzIdnT0Oo/5zXMuQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=saA6hY8ETvgQq1v1QTr570isOCV7cIqSJS+pyEwA98tDt0fvWp1KdKRITSYssFxd8
+         dQ/UVZFW6CbP/309pK46+0xDITkyX+XlamRfmHNUGn1rLfkC56QMQqw/nmVAkGhmsW
+         hXHsROo3pyAKk/stItvTkWFNAUiYRmT53P7g3w6U=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008Blrg1023817
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 05:47:53 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 05:47:53 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 05:47:53 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008BloAY081874;
+        Wed, 8 Jan 2020 05:47:51 -0600
+Subject: Re: [PATCH 0/3] Fix issues with command queuing in arasan controllers
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <shawn.lin@rock-chips.com>
+References: <20191230092343.30692-1-faiz_abbas@ti.com>
+ <837996b2-c69f-1446-fda4-5577e28ba8e1@ti.com>
+ <a1b75d07-17ab-5dec-aa40-b9cff247eabf@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <b2600fd2-bcc9-19f6-8bf8-f3bb51da089f@ti.com>
+Date:   Wed, 8 Jan 2020 17:19:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <FA0D2929-63D0-4473-A492-42227D7A5D98@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a1b75d07-17ab-5dec-aa40-b9cff247eabf@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:41:52AM -1000, Andy Lutomirski wrote:
-> Wow, __fpu__restore_sig is a mess.
+Adrian,
 
-FWIW, I share your sentiment and I'd very much take patches which
-simplify that flow. It is causing me headaches each time I have to look
-at it.
+On 08/01/20 5:12 pm, Adrian Hunter wrote:
+> On 8/01/20 1:30 pm, Faiz Abbas wrote:
+>> Hi,
+>>
+>> On 30/12/19 2:53 pm, Faiz Abbas wrote:
+>>> In some Arasan SDHCI controllers, after tuning, the tuning pattern data
+>>> is leftover in the sdhci buffer. This leads to issues with future data
+>>> commands, especially when command queuing is enabled. The following
+>>> patches help fix this issue by resetting data lines after tuning is
+>>> finished. The first two patches have been tested with TI's am65x and
+>>> j721e SoCs using the sdhci_am654 driver.
+>>>
+>>> I have a strong suspicion that this is the same issue with
+>>> the sdhci-of-arasan driver where they are forced to dump data from the
+>>> buffer before enabling command queuing. I need help from someone with a
+>>> compatible platform to test this.
+>>>
+>>
+>> I had some discussions with our hardware team and they say we should be
+>> asserting both SRC and SRD reset after tuning to start from a clean
+>> state. Will update the patches to do that in v2.
+> 
+> Can you use the ->execute_tuning() for that instead of a quirk?
+> 
 
--- 
-Regards/Gruss,
-    Boris.
+->platform_execute_tuning() is called before __sdhci_execute_tuning(). I
+need this to be done after that. Should I add a post_tuning() callback?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Faiz
