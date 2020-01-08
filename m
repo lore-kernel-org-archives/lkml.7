@@ -2,83 +2,134 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D0C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053C1C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3557206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457D206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbgAHIhy (ORCPT
+        id S1727421AbgAHIh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:37:54 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2921 "EHLO huawei.com"
+        Wed, 8 Jan 2020 03:37:59 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8240 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726313AbgAHIhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:37:53 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 7B7B13D67110E36FE76C;
-        Wed,  8 Jan 2020 16:37:49 +0800 (CST)
-Received: from dggeme766-chm.china.huawei.com (10.3.19.112) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 8 Jan 2020 16:37:49 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 8 Jan 2020 16:37:48 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Wed, 8 Jan 2020 16:37:48 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
-Thread-Topic: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
-Thread-Index: AdXF/gTC8Mase5IDSN6uFk3TkzmHmw==
-Date:   Wed, 8 Jan 2020 08:37:48 +0000
-Message-ID: <09ad7e0c69264929a5508eab8833abdc@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726313AbgAHIh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:37:57 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8F768DF273F778ADA5C4;
+        Wed,  8 Jan 2020 16:37:54 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 8 Jan 2020
+ 16:37:53 +0800
+Subject: Re: [f2fs-dev] Multidevice f2fs mount after disk rearrangement
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Oleksandr Natalenko <oleksandr@natalenko.name>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <4c6cf8418236145f7124ac61eb2908ad@natalenko.name>
+ <2c4cafd35d1595a62134203669d7c244@natalenko.name>
+ <e773d576-9458-48d7-bad4-dd4f8c61ebd3@huawei.com>
+ <20200106184017.GD50058@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <7cf85056-ef3f-b78c-e7cf-8cce5d5ef1ee@huawei.com>
+Date:   Wed, 8 Jan 2020 16:37:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200106184017.GD50058@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGmjug0KPg0KPlVzZSBhIExvZ2ljYWwgT1IgaW4gX19pc19yc3ZkX2JpdHNfc2V0KCkgdG8gY29t
-YmluZSB0aGUgdHdvIHJlc2VydmVkIGJpdCBjaGVja3MsIHdoaWNoIGFyZSBvYnZpb3VzbHkgaW50
-ZW5kZWQgdG8gYmUgbG9naWNhbCBzdGF0ZW1lbnRzLiAgU3dpdGNoaW5nIHRvIGEgTG9naWNhbCBP
-UiBpcyBmdW5jdGlvbmFsbHkgYSBub3AsIGJ1dCBhbGxvd3MgdGhlIGNvbXBpbGVyIHRvIGJldHRl
-ciBvcHRpbWl6ZSB0aGUgY2hlY2tzLg0KPg0KPlNpZ25lZC1vZmYtYnk6IFNlYW4gQ2hyaXN0b3Bo
-ZXJzb24gPHNlYW4uai5jaHJpc3RvcGhlcnNvbkBpbnRlbC5jb20+DQo+LS0tDQo+IGFyY2gveDg2
-L2t2bS9tbXUvbW11LmMgfCAyICstDQo+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
-MSBkZWxldGlvbigtKQ0KPg0KPmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vbW11L21tdS5jIGIv
-YXJjaC94ODYva3ZtL21tdS9tbXUuYyBpbmRleCA3MjY5MTMwZWE1ZTIuLjcyZTg0NTcwOTAyNyAx
-MDA2NDQNCj4tLS0gYS9hcmNoL3g4Ni9rdm0vbW11L21tdS5jDQo+KysrIGIvYXJjaC94ODYva3Zt
-L21tdS9tbXUuYw0KPkBAIC0zOTcwLDcgKzM5NzAsNyBAQCBfX2lzX3JzdmRfYml0c19zZXQoc3Ry
-dWN0IHJzdmRfYml0c192YWxpZGF0ZSAqcnN2ZF9jaGVjaywgdTY0IHB0ZSwgaW50IGxldmVsKSAg
-ew0KPiAJaW50IGJpdDcgPSAocHRlID4+IDcpICYgMSwgbG93NiA9IHB0ZSAmIDB4M2Y7DQo+IA0K
-Pi0JcmV0dXJuIChwdGUgJiByc3ZkX2NoZWNrLT5yc3ZkX2JpdHNfbWFza1tiaXQ3XVtsZXZlbC0x
-XSkgfA0KPisJcmV0dXJuIChwdGUgJiByc3ZkX2NoZWNrLT5yc3ZkX2JpdHNfbWFza1tiaXQ3XVts
-ZXZlbC0xXSkgfHwNCj4gCQkoKHJzdmRfY2hlY2stPmJhZF9tdF94d3IgJiAoMXVsbCA8PCBsb3c2
-KSkgIT0gMCk7ICB9DQo+IA0KPi0tDQo+Mi4yNC4xDQoNCk9uIHRoZSBjYWxsIGNoYWluIHdhbGtf
-c2hhZG93X3BhZ2VfZ2V0X21taW9fc3B0ZSAtLT4gaXNfc2hhZG93X3plcm9fYml0c19zZXQgLS0+
-IF9faXNfcnN2ZF9iaXRzX3NldCwgdGhlDQpyZXR1cm4gdmFsdWUgaXMgdXNlZCBhczoNCglyZXNl
-cnZlZCB8PSBpc19zaGFkb3dfemVyb19iaXRzX3NldCh2Y3B1LT5hcmNoLm1tdSwgc3B0ZSwNCgkJ
-aXRlcmF0b3IubGV2ZWwpOw0KDQpCdXQgdGhpcyBzZWVtcyBvayBiZWNhdXNlIHZhbCByZXNlcnZl
-ZCBpcyBib29sIHR5cGUuDQoNClRoYW5rcy4NCg==
+On 2020/1/7 2:40, Jaegeuk Kim wrote:
+> On 01/06, Chao Yu wrote:
+>> Hello,
+>>
+>> Thanks for the report. :)
+>>
+>> On 2020/1/5 5:52, Oleksandr Natalenko via Linux-f2fs-devel wrote:
+>>> Hi.
+>>>
+>>> On 04.01.2020 17:29, Oleksandr Natalenko wrote:
+>>>> I was brave enough to create f2fs filesystem spanning through 2
+>>>> physical device using this command:
+>>>>
+>>>> # mkfs.f2fs -t 0 /dev/sdc -c /dev/sdd
+>>>>
+>>>> It worked fine until I removed /dev/sdb from my system, so f2fs devices 
+>>>> became:
+>>>>
+>>>> /dev/sdc -> /dev/sdb
+>>>> /dev/sdd -> /dev/sdc
+>>>>
+>>>> Now, when I try to mount it, I get the following:
+>>>>
+>>>> # mount -t f2fs /dev/sdb /mnt/fs
+>>>> mount: /mnt/fs: mount(2) system call failed: No such file or directory.
+>>>>
+>>>> In dmesg:
+>>>>
+>>>> [Jan 4 17:25] F2FS-fs (sdb): Mount Device [ 0]:             /dev/sdc,
+>>>>   59063,        0 -  1cd6fff
+>>>> [  +0,000024] F2FS-fs (sdb): Failed to find devices
+>>>>
+>>>> fsck also fails with the following assertion:
+>>>>
+>>>> [ASSERT] (init_sb_info: 908) !strcmp((char *)sb->devs[i].path, (char
+>>>> *)c.devices[i].path)
+>>>>
+>>>> Am I doing something obviously stupid, and the device path can be
+>>>> (somehow) changed so that the mount succeeds, or this is unfixable,
+>>>> and f2fs relies on persistent device naming?
+>>>>
+>>>> Please suggest.
+>>>>
+>>>> Thank you.
+>>>
+>>> Erm, fine. I studied f2fs-tools code a little bit and discovered that 
+>>> superblock indeed had /dev/sdX paths saved as strings. So I fired up 
+>>> hexedit and just changed the superblock directly on the first device, 
+>>> substituting sdc with sdb and sdd with sdc (I did it twice; I guess 
+>>> there are 2 copies of superblock), and after this the mount worked.
+>>
+>> Alright, it works if superblock checksum feature is off...
+>>
+>>>
+>>> Am I really supposed to do this manually ;)?
+>>
+>> We'd better add that ability in tune.f2fs. And I guess we need to let
+>> kernel/fsck to notice that case, and give hint to run tune.f2fs to
+>> reconfigure primary/secondary/... device paths.
+> 
+> I'm thinking to add tunesb.f2fs to edit superblock explicitly, since it has
+> to edit it without getting superblock/checkpoint and other f2fs metadata.
+> 
+> For example,
+> # tunesb.f2fs -c /dev/sdb -c /dev/sdc /dev/sda
+> .. superblock info ..
+> .. device list ..
+> .. hot/cold extensions ..
+> 
+> Will modify the device list, if it's different from parameter.
+
+Looks good to me.
+
+Thanks,
+
+> 
+>>
+>> Thanks,
+>>
+>>>
+> .
+> 
