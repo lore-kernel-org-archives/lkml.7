@@ -2,90 +2,105 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4F9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA57CC33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A648F206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B412073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V1s0lAH5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2/rzC7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgAHGag (ORCPT
+        id S1726182AbgAHGgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:30:36 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:51730 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725838AbgAHGaf (ORCPT
+        Wed, 8 Jan 2020 01:36:20 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36567 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgAHGgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:30:35 -0500
-X-UUID: df591dbc279b464287ded0fbe859fb19-20200108
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=C5uYcatcL7O3L8hFISr3vserMmDxuM/EyNyUSLNixHg=;
-        b=V1s0lAH50uITb/mMbf6zoKRKObLO8ODB3swlXB0MEvOnsPvXHCrJ314kUBwK8CM54OjzmEmUbfBRUPHXTTGNb528AnUwGYMYjxsBvAqswqZCNVYAGVsurNGNKaPEl9t8n3LyhM2Yclom4gGIwuGE4mTmcoUsl4xFC/iZ3F0Q+zk=;
-X-UUID: df591dbc279b464287ded0fbe859fb19-20200108
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 622843385; Wed, 08 Jan 2020 14:30:29 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 8 Jan 2020 14:31:03 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 8 Jan 2020 14:30:03 +0800
-From:   fengping yu <fengping.yu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>
-CC:     <linux-input@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Subject: Resend [PATCH V2] dt-bindings:input:keyboard:add MediaTek keypad controller binding 
-Date:   Wed, 8 Jan 2020 14:29:21 +0800
-Message-ID: <20200108062923.14684-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 8 Jan 2020 01:36:20 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n59so635184pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 22:36:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8RhMKbx7IOz/kJQWsLQ/3AV9S1f26zU9ELe7xp/VpYM=;
+        b=C2/rzC7VNdffZPMHWgzIWsp/F5/Bd9/aMLEwpUmqxIOYV4ReF3rgQZNtR738ecKXH8
+         EVZXhVZzVOLg1Rz0zczCDVCb1r7OPfCJ/NN+7NDPM0emjBw4wY5b7xsE9P8+853ka/LD
+         za/GZkCC0QXZmUwQ/dy0QPj9ms5HQrhHQMMxRBzCIuoyv8jM2LOnKaVJ4kao1YBYi0Ga
+         ERR85TZyKi0bjQH8cUO2xkBnFYgou2k7TuGID5DKjzuAA9AD2iHtDroH0OtrXUn/jV5l
+         tXGwHHG89KiUklsM0joTVChiHtMTxuRxGkWpa/frRZpgYIDQTJh8IvX9JXovNtI3LDSI
+         Qh+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8RhMKbx7IOz/kJQWsLQ/3AV9S1f26zU9ELe7xp/VpYM=;
+        b=itzh4NTye4QHcJxjBQJiwneLewJZazi6cRJVN8IM6slgvft2q/H0EPWvtneNo53imC
+         sP7wped32HoK/Wuw9ARTIUg3f8X8ip/SqIlxq0Upw8eWw4aEtjH0PgIM9guO7itAVK9v
+         ZhMLH5p57/TXfutUzZSEYkikUmv46Yasqj36pmmIF2oMwK2wDTyWUc9ObJsfSvYPnxxB
+         rL2U+BTYlIGCqnPjiImB3jTfVOyl3WPHuWVSNtoPYrg2FSuIgUZ4G597CXzfeybx1QqS
+         z+NKVjQ6D58XKoJWKkmz5TA6nKKraVCwPt1hJsdiM4tFXhzDWQev9b4B73HZouCQDFtP
+         NDQA==
+X-Gm-Message-State: APjAAAXkJPMqz3SB5LsIEZzLa8RDE1l9/iLHSo30uVZ5A2G4VojWyC5w
+        R3h7Tz4/CRQsHhdY7VHp0gvbLQ==
+X-Google-Smtp-Source: APXvYqzrFxy1mGS5tIP8Jdv5v+7KCKy9pVPNHbd8JnrHQeJd/Ti5qQZOvoWhAaNBAFill0ctaZDirQ==
+X-Received: by 2002:a17:90a:8545:: with SMTP id a5mr2610945pjw.3.1578465379251;
+        Tue, 07 Jan 2020 22:36:19 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id 64sm1853565pfd.48.2020.01.07.22.36.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Jan 2020 22:36:18 -0800 (PST)
+Date:   Wed, 8 Jan 2020 12:06:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Subject: Re: [PATCH] sched/fair: Load balance aggressively for SCHED_IDLE CPUs
+Message-ID: <20200108063615.x3qxzu3v6zbkdtca@vireshk-i7>
+References: <885b1be9af68d124f44a863f54e337f8eb6c4917.1577090998.git.viresh.kumar@linaro.org>
+ <20200102122901.6acbf857@gandalf.local.home>
+ <20200107112518.fqqzldnflqxonptf@vireshk-i7>
+ <20200107123144.2d6dc5a2@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107123144.2d6dc5a2@gandalf.local.home>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpmZW5ncGluZy55dSAoMik6DQogIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IGJpbmRpbmdz
-OiBpbnB1dA0KICBkcml2ZXJzOiBpbnB1dDoga2V5Ym9hcmQNCg0KIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lucHV0L210ay1rcGQudHh0ICAgICB8ICA1MiArKysNCiBhcmNoL2FybTY0L2NvbmZp
-Z3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5
-Ym9hcmQvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAgOCArDQogZHJpdmVycy9pbnB1dC9rZXli
-b2FyZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0L2tleWJv
-YXJkL210ay1rcGQuYyAgICAgICAgICAgICAgfCAzNTcgKysrKysrKysrKysrKysrKysrDQogNSBm
-aWxlcyBjaGFuZ2VkLCA0MTkgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQNCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMNCg==
+On 07-01-20, 12:31, Steven Rostedt wrote:
+> Thanks. I think I was able to reproduce it.
 
+Great.
+
+> Speaking of, I'd
+> recommend that you download and install the latest KernelShark
+> (https://www.kernelshark.org), as it looks like you're still using the
+> pre-1.0 version (which is now deprecated).
+
+I have trace-cmd of the latest version since a long time, not sure how
+kernelshark was left out (I must have done install_gui as well). Thanks for
+noticing though.
+
+> One nice feature of the
+> latest is that it has json session files that you can pass to others.
+
+Nice.
+
+-- 
+viresh
