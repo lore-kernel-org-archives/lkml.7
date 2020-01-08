@@ -2,180 +2,127 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E1BC33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8548C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883E420673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mubr9Yrx"
+	by mail.kernel.org (Postfix) with ESMTP id 8496D20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgAHKcS (ORCPT
+        id S1727805AbgAHKd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:32:18 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42679 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgAHKcR (ORCPT
+        Wed, 8 Jan 2020 05:33:59 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:42961 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgAHKd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:32:17 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p9so952647plk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 02:32:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
-        b=mubr9YrxsOv2C7hQ34JdHTW+nIwSF2+agoCwwGIe38uqhRdL/w+coigyFZAX/abKN4
-         53EXMRyLW1XlzXdjaYINHxBYivMQ71jxTtaj/3m8fTTW7uZn2QIMDC/RvBC2RX5GZGPj
-         IBcFRr22CvB2+x/Aylp6ue8NFLAW14HcKIalz5FP+DWrW3dxQvQ3TgOJOPaK8R/UwYdc
-         biITeYn18Tard2Om0MBmQyDsgP3WEQ9gqj55g4K2XjkzQKhBS7RkBn+FtnOEmmuVAsuN
-         rGzBh4icbFZFEcGCVFYu0z7HvX6DwNHGTPx29tI9i+nmvt7TnlbRX29hCZVWp0QuPdgo
-         Gc0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
-        b=gG8ue22AEw9JsvZ40Xa1XOruIVKKWjios1RqCO4xWcXaFZc7yBbWHrg9dE+RV/g4Of
-         9XlaVBsZ+e7TSffhLzqT3ioU0klnolyFj+bV1ZQ5+mJnqk5ZHxVJEsHF/yqqb1uT2oz+
-         EMZ9kWgoFsePXgPo6domP0Hn+CWw8+l0NveKoSvAbuOTjaq5q2eE1DE5mqEPRV8y10As
-         OYP6OfRLkrbEhpz/bs/7PMv29yIGPWLRsvwrTGsu+bQdK+T+ayWZ9wiCHvrMoZvbibGN
-         Y1z6XiVMvpW/iqLW2HVqL38s70tAb0QQ6wYwptc6mV20IkFaOH1eseqsUgtQw5AIGYJB
-         6VmA==
-X-Gm-Message-State: APjAAAUo3CsC7/ANRxJMnRPH3hli09CqQQ7YWXKrM0uR7VXRyH4UBjhr
-        vptvKxu8Flgg9fdaZyTgXDVVAw==
-X-Google-Smtp-Source: APXvYqzl2pKlCO2kMLeHPiwC65RgF/2o1TWeA38eJFNgsrc5MhPHh89c3t41AVilMN+OeoXZstB+vw==
-X-Received: by 2002:a17:90a:cb16:: with SMTP id z22mr3550255pjt.122.1578479535942;
-        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id d24sm3082639pfq.75.2020.01.08.02.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
-Date:   Wed, 8 Jan 2020 16:02:10 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
- opp-avg-kBps bindings
-Message-ID: <20200108103210.oyrqxlybrdbelkne@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-2-saravanak@google.com>
+        Wed, 8 Jan 2020 05:33:59 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MdNPq-1jOCQf1WKm-00ZM6v for <linux-kernel@vger.kernel.org>; Wed, 08 Jan
+ 2020 11:33:57 +0100
+Received: by mail-qv1-f42.google.com with SMTP id u10so1180888qvi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 02:33:57 -0800 (PST)
+X-Gm-Message-State: APjAAAWi6W0wG7HQ7ieAwb7Jb5YLAorTtipbKgQNICRw8Fh9h9DjVXt0
+        BRJTFZeFANvMKD3GCAHbnNlX/TiIv3gpPh7WSKI=
+X-Google-Smtp-Source: APXvYqxXCQd6CIRrMcZAzZ7Jb6On5M7WksNLfnrFz14xSPP1bwLoo6JqWqEWphK9g72g0rLwxLfzVPITgsRsCo+vDTw=
+X-Received: by 2002:a0c:ead1:: with SMTP id y17mr3277751qvp.210.1578479636142;
+ Wed, 08 Jan 2020 02:33:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207002424.201796-2-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200107203231.920256-1-arnd@arndb.de> <87zheyqnla.fsf@intel.com> <20200108100831.GA23308@ravnborg.org>
+In-Reply-To: <20200108100831.GA23308@ravnborg.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 11:33:40 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1FKOV=1No7Q0g1vF_NQmVHK+g0VOqzPL499Pxbbt1aPQ@mail.gmail.com>
+Message-ID: <CAK8P3a1FKOV=1No7Q0g1vF_NQmVHK+g0VOqzPL499Pxbbt1aPQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/drm_panel: fix export of drm_panel_of_backlight, try #3
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:L7zqKiPlDJkdUly7V9ueinJEQiEwKj47K8gm8+eKeFUwv2oJnEI
+ XAa0+ZITGd5IQsYOdHmoIO1SVFWekKL+ndlIAQ31UgEQ+ReP/aOxwEbSi4RUCUGyGbCGoTd
+ oBSY6WsxnYMq1UsKNZxftEhi6dzcUe3Z17u3rBiAoST4dvzpL1Usw0XQc2aDgjES4qPasRR
+ 6WyWt2OIGDemBrx+jCMZw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lz4cYoS1mHs=:VHbTjdYsCzDm07BGtqDzDE
+ wUSKRkcJz6BjijmPu1o5lx24medaASzxhkEafj0yCAUkBiXjqSUcjeZ9dz5GLszsr0mK/zabC
+ Wj/6lw7og47rIEOsBOEmFiCQ7iR/tTABUPf9l9fH0Xq/QeeP+D82pXWWTTAcdG0TG+p/1WD5s
+ yHYEuxQgysx9qNbWPnP255pivLUS6vNxIPRuBGagHtfBZRN7CDCOCil/y79f4pU0AVNA5t5Yi
+ s94pSWoptogYzxNF/EhHnEMHMLY9gwTPWDALDi7Md8pqptbbnYDzEMWDrTFdIssbNAcj48nQq
+ F5WU8fGtLYU9V8vNxuy1F5ZoTiiTgwG5Sqswq7JxlrGl7iiViQ6qrraBOHYnskgKoo3Pa5Muu
+ Bmb0jkPw1ev6v7uuiH1SA6Zm1VpFGtVZrY6AthTawHnztxsKtTf2l+T5JZI4y5e2yY0hLCx3/
+ MfOdM9GJdz8kyWfpQZSdhvnH6znr0torrRUJ7TzrW23pSMLPpJjTyR/40Bt6UZUtkUO44m3i2
+ bTccJSDPSNHWUhjfb6EqEN98jr3WphIq06zrB5m9Aix62+V1RyCjmg7otCB2D1OGRkZLtxO/v
+ JmlRyj+Ix9+GUhn0LTh6pTYk2eyDLFn917j7shc9feoybYlBSony6bAKsexueM0Z/SsPZAOD6
+ xzCEACeM7pHVhjvJ7SvA1HiPqV+hZ7/i16QnMiNB8N5BRzpllWFWufKplpBXs+Vzy6pKy4n/v
+ OlcqVuja9Sdh67T8mX2xGZQoCzx5DP00NgVvH9Va1OkaBUGb5u1tqGiFwb/48UecbwsUsaxkU
+ HwPS9cZ/IYrMj729WgumdVUVWeqPxuVVpPtOVlFXsIVDeqvuVee3UctCC3BP1kQTovfHdLwc8
+ rGnzQBKVkeGvfyT6nv3Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-12-19, 16:24, Saravana Kannan wrote:
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
-> 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-> tables.
-> 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
->  .../devicetree/bindings/property-units.txt        |  4 ++++
->  2 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 68592271461f..dbad8eb6c746 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -83,9 +83,14 @@ properties.
->  
->  Required properties:
->  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> -  required property for all device nodes but devices like power domains. The
-> -  power domain nodes must have another (implementation dependent) property which
-> -  uniquely identifies the OPP nodes.
-> +  required property for all device nodes except for devices like power domains
-> +  or bandwidth opp tables.
+On Wed, Jan 8, 2020 at 11:08 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Wed, Jan 08, 2020 at 11:55:29AM +0200, Jani Nikula wrote:
+> > On Tue, 07 Jan 2020, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > Making this IS_REACHABLE() was still wrong, as that just determines
+> > > whether the lower-level backlight code would be reachable from the panel
+> > > driver. However, with CONFIG_DRM=y and CONFIG_BACKLIGHT_CLASS_DEVICE=m,
+> > > the drm_panel_of_backlight is left out of drm_panel.o but the condition
+> > > tells the driver that it is there, leading to multiple link errors such as
+> > >
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sitronix-st7701.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sharp-ls043t1le01.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-seiko-43wvf1g.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-ronbo-rb070d30.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-rocktech-jh057n00900.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-panasonic-vvx10f034n00.ko] undefined!
+> > > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.ko] undefined!
+> > >
+> > > Change the condition to check for whether the function was actually part
+> > > of the drm module. This version of the patch survived a few hundred
+> > > randconfig builds, so I have a good feeling this might be the last
+> > > one for the export.
+> >
+> > Broken record, this will still be wrong, even if it builds and links. No
+> > backlight support for panel despite expectations.
+> >
+> > See http://mid.mail-archive.com/87d0cnynst.fsf@intel.com
+> >
+> > All of this is just another hack until the backlight config usage is
+> > fixed for good. Do we really want to make this the example to copy paste
+> > wherever we hit the issue next?
+> >
+> > I'm not naking, but I'm not acking either.
+>
+> I will try to take a look at your old BACKLIGHT_CLASS_DEVICE patch this
+> weekend. I think we need that one fixed - and then we can have this mess
+> with "drm_panel_of_backlight" fixed in the right way.
 
-Fine until here.
+I had also attempted to fix the larger mess around 'select' statements in DRM/FB
+around BACKLIGHT_CLASS_DEVICE  several times in the past, and even at
+some point sent a patch that was acked but never merged and later broke because
+of other changes.
 
-> The power domain nodes must have another
-> +  (implementation dependent) property which uniquely identifies the OPP nodes.
-> +  The interconnect opps are required to have the opp-peak-kBps property.
+If there is a new approach, I'm happy to add patches to my randconfig builder
+and see if there are regressions in some corner cases.
 
-Maybe rewrite it as:
-
-The devices which don't have this property must have another
-(implementation dependent) property which uniquely identifies the OPP
-nodes.
-
-So we won't be required to update this again for another property.
-
-> +
-> +- opp-peak-kBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> +  big-endian integer.
-
-> This is a required property for all devices that don't
-> +  have opp-hz.
-
-This statement is surely incorrect, isn't it ? What about power-domain
-tables ?
-
-Suggest rewriting it as:
-
-This is a required property for bandwidth OPP tables.
-
-> For example, bandwidth OPP tables for interconnect paths.
->  
->  Optional properties:
->  - opp-microvolt: voltage in micro Volts.
-> @@ -132,6 +137,10 @@ Optional properties:
->  - opp-level: A value representing the performance level of the device,
->    expressed as a 32-bit integer.
->  
-> +- opp-avg-kBps: Average bandwidth in kilobytes per second, expressed as a
-> +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> +  where opp-peak-kBps is present.
-> +
->  - clock-latency-ns: Specifies the maximum possible transition latency (in
->    nanoseconds) for switching to this OPP from any other OPP.
->  
-> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-> index e9b8360b3288..c80a110c1e26 100644
-> --- a/Documentation/devicetree/bindings/property-units.txt
-> +++ b/Documentation/devicetree/bindings/property-units.txt
-> @@ -41,3 +41,7 @@ Temperature
->  Pressure
->  ----------------------------------------
->  -kpascal	: kilopascal
-> +
-> +Throughput
-> +----------------------------------------
-> +-kBps		: kilobytes per second
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
-
--- 
-viresh
+      Arnd
