@@ -2,121 +2,323 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7094C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FC9C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF7B20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GTNCpgnT"
+	by mail.kernel.org (Postfix) with ESMTP id 3BCD820705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgAHRja (ORCPT
+        id S1729851AbgAHRkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:39:30 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36357 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgAHRja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:39:30 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x184so1981561pfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:39:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bKjvwLoHlC29TnvYqxLfJzXQCusKrCOIAaFwwH7cSJ0=;
-        b=GTNCpgnTvYnInEtO3QFpRZVybeL6CBYzJJx27ePUFw0/SafUvNxEYcOYQfvASQ6xqX
-         6j+5vDN0aFTy3n2vQk6NkoWpkjjM2jUwkxQaSbL/wj3TBgA2VXvX2hZcLRoUwLWwSopL
-         JoZOKKbVLSYcz5PbBGPmd9fCF6ZxmqIR6YilM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bKjvwLoHlC29TnvYqxLfJzXQCusKrCOIAaFwwH7cSJ0=;
-        b=AEfx0rnZMAh5yn2I4OQbuoLOBGbeb0OF43XlDv+ftuc9ta17ilI5VeuToGQTFRNeF7
-         N1c0BQCWRcLoQup9VqIw4j2FXp1ClUts4q0a6U4sqS2+YZ+jo7aru6MjiffO32sc+xFf
-         nOTco6fp+m/s7JXnCuQGF/zoV9AL5Wi992Cna+lA9fqXHsCOpO0wEEQGEUzZoX8LEWK3
-         8FPg0l9z7YxkxxOJR2fnSVy0RX9C2JifVooN2EiOKPiiUG2VuynP74gh29BvNMflR7e2
-         7azx7qFoLjPcliet4tQwMwWbPnJGvQqzUuN0hqz9I9GGJejJhT5bmuubdQ50l3yycd7Q
-         RSIg==
-X-Gm-Message-State: APjAAAWuHEHv9tx2wNPQrEdNoLkZpzLURmFxWbkl2P54nwHb9JaZpkt/
-        0fezphkSWW7kJAFK2A8qclfbRQ==
-X-Google-Smtp-Source: APXvYqxdgwKREsz1YZeH4VDxSzla/QubcfkdDOAeGwicuj/jBB+4Si/iUY0qR/AhKo7jBTllsOCHfg==
-X-Received: by 2002:a65:63ce:: with SMTP id n14mr6602246pgv.282.1578505169677;
-        Wed, 08 Jan 2020 09:39:29 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l8sm3901278pjy.24.2020.01.08.09.39.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 09:39:28 -0800 (PST)
-Date:   Wed, 8 Jan 2020 09:39:27 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     Tianlin Li <tli@digitalocean.com>,
-        kernel-hardening@lists.openwall.com,
-        Alex Deucher <alexander.deucher@amd.com>, David1.Zhou@amd.com,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/2] drm/radeon: have the callers of set_memory_*() check
- the return value
-Message-ID: <202001080936.A36005F1@keescook>
-References: <20200107192555.20606-1-tli@digitalocean.com>
- <b5984995-7276-97d3-a604-ddacfb89bd89@amd.com>
+        Wed, 8 Jan 2020 12:40:40 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:44730 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgAHRkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:40:40 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ipFJt-0004hZ-AQ; Wed, 08 Jan 2020 10:40:38 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ipFJq-0000uL-Sy; Wed, 08 Jan 2020 10:40:34 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed,  8 Jan 2020 10:40:24 -0700
+Message-Id: <20200108174030.3430-4-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200108174030.3430-1-logang@deltatee.com>
+References: <20200108174030.3430-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b5984995-7276-97d3-a604-ddacfb89bd89@amd.com>
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v10 3/9] nvme: Move nvme_passthru_[start|end]() calls to common helper
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:56:47PM +0100, Christian König wrote:
-> Am 07.01.20 um 20:25 schrieb Tianlin Li:
-> > Right now several architectures allow their set_memory_*() family of
-> > functions to fail, but callers may not be checking the return values.
-> > If set_memory_*() returns with an error, call-site assumptions may be
-> > infact wrong to assume that it would either succeed or not succeed at
-> > all. Ideally, the failure of set_memory_*() should be passed up the
-> > call stack, and callers should examine the failure and deal with it.
-> > 
-> > Need to fix the callers and add the __must_check attribute. They also
-> > may not provide any level of atomicity, in the sense that the memory
-> > protections may be left incomplete on failure. This issue likely has a
-> > few steps on effects architectures:
-> > 1)Have all callers of set_memory_*() helpers check the return value.
-> > 2)Add __must_check to all set_memory_*() helpers so that new uses do
-> > not ignore the return value.
-> > 3)Add atomicity to the calls so that the memory protections aren't left
-> > in a partial state.
-> > 
-> > This series is part of step 1. Make drm/radeon check the return value of
-> > set_memory_*().
-> 
-> I'm a little hesitate merge that. This hardware is >15 years old and nobody
-> of the developers have any system left to test this change on.
+Introduce a new nvme_execute_passthru_rq() helper which calls
+nvme_passthru_[start|end]() around blk_execute_rq(). This ensures
+all passthru calls (including nvme_submit_io()) will be wrapped
+appropriately.
 
-If that's true it should be removed from the tree. We need to be able to
-correctly make these kinds of changes in the kernel.
+nvme_execute_passthru_rq() will also be useful for the nvmet passthru
+code.
 
-> Would it be to much of a problem to just add something like: r =
-> set_memory_*(); (void)r; /* Intentionally ignored */.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/host/core.c | 193 ++++++++++++++++++++-------------------
+ 1 file changed, 100 insertions(+), 93 deletions(-)
 
-This seems like a bad idea -- we shouldn't be papering over failures
-like this when there is logic available to deal with it.
-
-> Apart from that certainly a good idea to add __must_check to the functions.
-
-Agreed!
-
--Kees
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 1cd325a8cf05..c79500b3b157 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -896,6 +896,105 @@ static void *nvme_add_user_metadata(struct bio *bio, void __user *ubuf,
+ 	return ERR_PTR(ret);
+ }
+ 
++static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++				u8 opcode)
++{
++	u32 effects = 0;
++
++	if (ns) {
++		if (ctrl->effects)
++			effects = le32_to_cpu(ctrl->effects->iocs[opcode]);
++		if (effects & ~(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC))
++			dev_warn(ctrl->device,
++				 "IO command:%02x has unhandled effects:%08x\n",
++				 opcode, effects);
++		return 0;
++	}
++
++	if (ctrl->effects)
++		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
++
++	switch (opcode) {
++	case nvme_admin_format_nvm:
++		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
++			NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	case nvme_admin_sanitize_nvm:
++		effects |= NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	default:
++		break;
++	}
++
++	return effects & ~NVME_CMD_EFFECTS_CSUPP;
++}
++
++static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++			       u8 opcode)
++{
++	u32 effects = nvme_command_effects(ctrl, ns, opcode);
++
++	/*
++	 * For simplicity, IO to all namespaces is quiesced even if the command
++	 * effects say only one namespace is affected.
++	 */
++	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
++		mutex_lock(&ctrl->scan_lock);
++		mutex_lock(&ctrl->subsys->lock);
++		nvme_mpath_start_freeze(ctrl->subsys);
++		nvme_mpath_wait_freeze(ctrl->subsys);
++		nvme_start_freeze(ctrl);
++		nvme_wait_freeze(ctrl);
++	}
++	return effects;
++}
++
++static void nvme_update_formats(struct nvme_ctrl *ctrl)
++{
++	struct nvme_ns *ns;
++
++	down_read(&ctrl->namespaces_rwsem);
++	list_for_each_entry(ns, &ctrl->namespaces, list)
++		if (ns->disk && nvme_revalidate_disk(ns->disk))
++			nvme_set_queue_dying(ns);
++	up_read(&ctrl->namespaces_rwsem);
++}
++
++static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
++{
++	/*
++	 * Revalidate LBA changes prior to unfreezing. This is necessary to
++	 * prevent memory corruption if a logical block size was changed by
++	 * this command.
++	 */
++	if (effects & NVME_CMD_EFFECTS_LBCC)
++		nvme_update_formats(ctrl);
++	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
++		nvme_unfreeze(ctrl);
++		nvme_mpath_unfreeze(ctrl->subsys);
++		mutex_unlock(&ctrl->subsys->lock);
++		nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
++		mutex_unlock(&ctrl->scan_lock);
++	}
++	if (effects & NVME_CMD_EFFECTS_CCC)
++		nvme_init_identify(ctrl);
++	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
++		nvme_queue_scan(ctrl);
++}
++
++static void nvme_execute_passthru_rq(struct request *rq)
++{
++	struct nvme_command *cmd = nvme_req(rq)->cmd;
++	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
++	struct nvme_ns *ns = rq->q->queuedata;
++	struct gendisk *disk = ns ? ns->disk : NULL;
++	u32 effects;
++
++	effects = nvme_passthru_start(ctrl, ns, cmd->common.opcode);
++	blk_execute_rq(rq->q, disk, rq, 0);
++	nvme_passthru_end(ctrl, effects);
++}
++
+ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		struct nvme_command *cmd, void __user *ubuffer,
+ 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
+@@ -934,7 +1033,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		}
+ 	}
+ 
+-	blk_execute_rq(req->q, disk, req, 0);
++	nvme_execute_passthru_rq(req);
+ 	if (nvme_req(req)->flags & NVME_REQ_CANCELLED)
+ 		ret = -EINTR;
+ 	else
+@@ -1298,99 +1397,12 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+-static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+-				u8 opcode)
+-{
+-	u32 effects = 0;
+-
+-	if (ns) {
+-		if (ctrl->effects)
+-			effects = le32_to_cpu(ctrl->effects->iocs[opcode]);
+-		if (effects & ~(NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC))
+-			dev_warn(ctrl->device,
+-				 "IO command:%02x has unhandled effects:%08x\n",
+-				 opcode, effects);
+-		return 0;
+-	}
+-
+-	if (ctrl->effects)
+-		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+-
+-	switch (opcode) {
+-	case nvme_admin_format_nvm:
+-		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+-			NVME_CMD_EFFECTS_CSE_MASK;
+-		break;
+-	case nvme_admin_sanitize_nvm:
+-		effects |= NVME_CMD_EFFECTS_CSE_MASK;
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	return effects;
+-}
+-
+-static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+-			       u8 opcode)
+-{
+-	u32 effects = nvme_command_effects(ctrl, ns, opcode);
+-
+-	/*
+-	 * For simplicity, IO to all namespaces is quiesced even if the command
+-	 * effects say only one namespace is affected.
+-	 */
+-	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
+-		mutex_lock(&ctrl->scan_lock);
+-		mutex_lock(&ctrl->subsys->lock);
+-		nvme_mpath_start_freeze(ctrl->subsys);
+-		nvme_mpath_wait_freeze(ctrl->subsys);
+-		nvme_start_freeze(ctrl);
+-		nvme_wait_freeze(ctrl);
+-	}
+-	return effects;
+-}
+-
+-static void nvme_update_formats(struct nvme_ctrl *ctrl)
+-{
+-	struct nvme_ns *ns;
+-
+-	down_read(&ctrl->namespaces_rwsem);
+-	list_for_each_entry(ns, &ctrl->namespaces, list)
+-		if (ns->disk && nvme_revalidate_disk(ns->disk))
+-			nvme_set_queue_dying(ns);
+-	up_read(&ctrl->namespaces_rwsem);
+-}
+-
+-static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+-{
+-	/*
+-	 * Revalidate LBA changes prior to unfreezing. This is necessary to
+-	 * prevent memory corruption if a logical block size was changed by
+-	 * this command.
+-	 */
+-	if (effects & NVME_CMD_EFFECTS_LBCC)
+-		nvme_update_formats(ctrl);
+-	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
+-		nvme_unfreeze(ctrl);
+-		nvme_mpath_unfreeze(ctrl->subsys);
+-		mutex_unlock(&ctrl->subsys->lock);
+-		nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
+-		mutex_unlock(&ctrl->scan_lock);
+-	}
+-	if (effects & NVME_CMD_EFFECTS_CCC)
+-		nvme_init_identify(ctrl);
+-	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
+-		nvme_queue_scan(ctrl);
+-}
+-
+ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 			struct nvme_passthru_cmd __user *ucmd)
+ {
+ 	struct nvme_passthru_cmd cmd;
+ 	struct nvme_command c;
+ 	unsigned timeout = 0;
+-	u32 effects;
+ 	u64 result;
+ 	int status;
+ 
+@@ -1417,12 +1429,10 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	if (cmd.timeout_ms)
+ 		timeout = msecs_to_jiffies(cmd.timeout_ms);
+ 
+-	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+ 			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+ 			(void __user *)(uintptr_t)cmd.metadata,
+ 			cmd.metadata_len, 0, &result, timeout);
+-	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+ 		if (put_user(result, &ucmd->result))
+@@ -1438,7 +1448,6 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	struct nvme_passthru_cmd64 cmd;
+ 	struct nvme_command c;
+ 	unsigned timeout = 0;
+-	u32 effects;
+ 	int status;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+@@ -1464,12 +1473,10 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	if (cmd.timeout_ms)
+ 		timeout = msecs_to_jiffies(cmd.timeout_ms);
+ 
+-	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+ 			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
+ 			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
+ 			0, &cmd.result, timeout);
+-	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+ 		if (put_user(cmd.result, &ucmd->result))
 -- 
-Kees Cook
+2.20.1
+
