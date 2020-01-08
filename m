@@ -2,98 +2,151 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAFCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE54C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188C020643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:28:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="glK3IIKQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4AA8520692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbgAHU2s (ORCPT
+        id S1727216AbgAHU3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:28:48 -0500
-Received: from ozlabs.org ([203.11.71.1]:41317 "EHLO ozlabs.org"
+        Wed, 8 Jan 2020 15:29:13 -0500
+Received: from mga06.intel.com ([134.134.136.31]:45383 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgAHU2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:28:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tLRs72xPz9sPJ;
-        Thu,  9 Jan 2020 07:28:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578515325;
-        bh=iXmqXirrsBQRqRiY/M5nTMqr0oBHja7Xprthl2OT4cg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=glK3IIKQZ2iculhRlejO4Jt0yy1e/dVbGNbRDnvAUfeNBIS2hMhmDX+8rFnBpILMc
-         341WGBr5hUIINTNUBmJ4BMzlKlkZjCnZXpwQS8OJ58Qt7P2NliBy3oXxNHdFf9lrDr
-         y6KVZlMEYzuxhPdLVBdnDThalt4A1t0Vl5BxLEtO2BFmGh10r8iJcoYVUw9Rrr+fqe
-         utWF8Q4BViQlRd1ii53mWqFEJmTkOkait/5Y1wHeSAR4cWXvL+44NRD5nKHvos9AZh
-         t1NqKPFCuXBf1I/usyZYyB//VBCxs8TAO/nQJWhT444z2lkJXx8oUMuDPB4ib8bPJd
-         4/HKe397EYfvA==
-Date:   Thu, 9 Jan 2020 07:28:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baruch Siach <baruch@tkos.co.il>
-Subject: linux-next: Fixes tag needs some work in the mvebu tree
-Message-ID: <20200109072840.0a8d1ef6@canb.auug.org.au>
+        id S1725446AbgAHU3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:29:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:29:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
+   d="scan'208";a="223034363"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga006.jf.intel.com with ESMTP; 08 Jan 2020 12:29:09 -0800
+Subject: Re: [PATCH v2 3/9] ntb: intel: Constify ioreadX() iomem argument (as
+ in generic implementation)
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+References: <20200108200528.4614-1-krzk@kernel.org>
+ <20200108200528.4614-4-krzk@kernel.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <64659f77-f807-7c8e-7595-731056c73bf4@intel.com>
+Date:   Wed, 8 Jan 2020 13:29:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fB+QLalH_DE.qdPRNRKeajb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200108200528.4614-4-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fB+QLalH_DE.qdPRNRKeajb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+On 1/8/20 1:05 PM, Krzysztof Kozlowski wrote:
+> The ioreadX() helpers have inconsistent interface.  On some architectures
+> void *__iomem address argument is a pointer to const, on some not.
+> 
+> Implementations of ioreadX() do not modify the memory under the address
+> so they can be converted to a "const" version for const-safety and
+> consistency among architectures.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-  66f5ff1bf632 ("arm64: dts: marvell: clearfog-gt-8k: fix switch cpu port n=
-ode")
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-Fixes tag
-
-  Fixes: a612083327 ("arm64: dts: add support for SolidRun Clearfog GT 8K")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/fB+QLalH_DE.qdPRNRKeajb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WO3gACgkQAVBC80lX
-0GzlBwf+IkqztACER0k99/iO/1AhWCYZOkD2h+h2E7BX8mxGC8uuswkNz37f0B+V
-1dvWtFY+iDtB9NEwwoNPPuiX/nvM7Pf7VLoVR/B72uz8XXlRuBQsshSBzDF1287r
-VECxdKw+K2pQkgZXLu4bkHfYhsbRrZgvLUaoIAbhpeihTtbmmboJ9G9wq9RPtKu8
-WI9Bb06Fw/cHmJkZF2EankNyn01TClE1UYd7kejZuB21wafFr9zsmaor4exDzoB4
-wjuW3l9Xl4gajI3BwmShCUG1nDrDORsK24OHpGREbctFyIFME+AyfdC85x5Slggm
-vCuZZO+It2+QgCJzt8grGpScsh7r3A==
-=uRcc
------END PGP SIGNATURE-----
-
---Sig_/fB+QLalH_DE.qdPRNRKeajb--
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Add Geert's review.
+> ---
+>   drivers/ntb/hw/intel/ntb_hw_gen1.c  | 2 +-
+>   drivers/ntb/hw/intel/ntb_hw_gen3.h  | 2 +-
+>   drivers/ntb/hw/intel/ntb_hw_intel.h | 2 +-
+>   3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+> index bb57ec239029..9202502a9787 100644
+> --- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
+> +++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
+> @@ -1202,7 +1202,7 @@ int intel_ntb_peer_spad_write(struct ntb_dev *ntb, int pidx, int sidx,
+>   			       ndev->peer_reg->spad);
+>   }
+>   
+> -static u64 xeon_db_ioread(void __iomem *mmio)
+> +static u64 xeon_db_ioread(const void __iomem *mmio)
+>   {
+>   	return (u64)ioread16(mmio);
+>   }
+> diff --git a/drivers/ntb/hw/intel/ntb_hw_gen3.h b/drivers/ntb/hw/intel/ntb_hw_gen3.h
+> index 75fb86ca27bb..d1455f24ec99 100644
+> --- a/drivers/ntb/hw/intel/ntb_hw_gen3.h
+> +++ b/drivers/ntb/hw/intel/ntb_hw_gen3.h
+> @@ -91,7 +91,7 @@
+>   #define GEN3_DB_TOTAL_SHIFT		33
+>   #define GEN3_SPAD_COUNT			16
+>   
+> -static inline u64 gen3_db_ioread(void __iomem *mmio)
+> +static inline u64 gen3_db_ioread(const void __iomem *mmio)
+>   {
+>   	return ioread64(mmio);
+>   }
+> diff --git a/drivers/ntb/hw/intel/ntb_hw_intel.h b/drivers/ntb/hw/intel/ntb_hw_intel.h
+> index e071e28bca3f..3c0a5a2da241 100644
+> --- a/drivers/ntb/hw/intel/ntb_hw_intel.h
+> +++ b/drivers/ntb/hw/intel/ntb_hw_intel.h
+> @@ -102,7 +102,7 @@ struct intel_ntb_dev;
+>   struct intel_ntb_reg {
+>   	int (*poll_link)(struct intel_ntb_dev *ndev);
+>   	int (*link_is_up)(struct intel_ntb_dev *ndev);
+> -	u64 (*db_ioread)(void __iomem *mmio);
+> +	u64 (*db_ioread)(const void __iomem *mmio);
+>   	void (*db_iowrite)(u64 db_bits, void __iomem *mmio);
+>   	unsigned long			ntb_ctl;
+>   	resource_size_t			db_size;
+> 
