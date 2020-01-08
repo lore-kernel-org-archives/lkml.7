@@ -2,38 +2,59 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF20C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91FBC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D3E20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6367920643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578492742;
+	bh=nXRbCIvWFni5/kkEcOEpwe39xSL34pDogwAjsOuipRg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qQ0tkbukMCKGehwy+bMFZxgqzfF9+0p/fIvob5T2e/lBlIOtXIgqp1dTsL6uaCmzd
+	 2LluYfKvIfmwctHGkzVfT84W3wWDmiLGm+kmuQr9vxQFRHwdFaJKyrDlcqT5l1TcGL
+	 aCfQ9YKN6KAolhOKtSWQlpv552aJWQY1JtDr0ikg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAHOL5 (ORCPT
+        id S1728796AbgAHOMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgAHOL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:11:57 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A625B20643;
-        Wed,  8 Jan 2020 14:11:56 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 09:11:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Shuah Khan <shuahkhan@gmail.com>
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] selftests/ftrace: fix glob selftest
-Message-ID: <20200108091155.4af8a2c5@gandalf.local.home>
-In-Reply-To: <20200108074043.21580-1-svens@linux.ibm.com>
-References: <20200108074043.21580-1-svens@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 Jan 2020 09:12:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57434 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbgAHOMV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 09:12:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fr9fRlz5jxrgjkeY4j9Bve4Yqtw4Ip+E2iegvsEk9jk=; b=PBzy4YDRvknqyOdLQyAz3OMtm
+        VKkkh+lcwJHiQz+AfDbo+JFL3kwsaJHo0GP4eQ8xuTmZMbnDEP1UIVlsYdY9sYN3rs+1rf0xxZbiZ
+        uX3ZrF1B8p/4OBrNzTU8JIOyEnxcyNQP+IfxRWacyHfRad6gde1Zo/Gpf56CeHm/wldNEzh8Hmso0
+        XfCRsmv1Lov+rld2P3P20MUTPD68Xk90QyZS3/2/tyX9XLhmtQHR77JFpnkYnsibTNaOFMihoeAqR
+        zQ51DvLE3lb5zfsz3bVNcIcFgF2uu/bE/q82ktdyTec8YZnpCyVysC1o0iBO3Wtj9V4iO+U8ERZq8
+        3wHU2WqDw==;
+Received: from 177.206.132.169.dynamic.adsl.gvt.net.br ([177.206.132.169] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipC4B-0002T4-CD; Wed, 08 Jan 2020 14:12:12 +0000
+Date:   Wed, 8 Jan 2020 15:11:57 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     mripard@kernel.org, paul.kocialkowski@bootlin.com,
+        hverkuil@xs4all.nl, gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] media: uapi: hevc: Add scaling matrix control
+Message-ID: <20200108151157.17cf9774@kernel.org>
+In-Reply-To: <20191213160428.54303-2-jernej.skrabec@siol.net>
+References: <20191213160428.54303-1-jernej.skrabec@siol.net>
+        <20191213160428.54303-2-jernej.skrabec@siol.net>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -42,52 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Fri, 13 Dec 2019 17:04:25 +0100
+Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
 
-Shuah,
+> HEVC has a scaling matrix concept. Add support for it.
 
-Want to take this through your tree?
+> +struct v4l2_ctrl_hevc_scaling_matrix {
+> +	__u8	scaling_list_4x4[6][16];
+> +	__u8	scaling_list_8x8[6][64];
+> +	__u8	scaling_list_16x16[6][64];
+> +	__u8	scaling_list_32x32[2][64];
+> +	__u8	scaling_list_dc_coef_16x16[6];
+> +	__u8	scaling_list_dc_coef_32x32[2];
+> +};
 
- https://lore.kernel.org/r/20200108074043.21580-1-svens@linux.ibm.com
+I never looked at HEVC spec, but the above seems really weird.
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Please correct me if I am wrong, but each of the above matrixes
+is independent, and the driver will use just one of the above on
+any specific time (for a given video output node), right?
 
-Thanks!
+If so, why would userspace be forced to update lots of matrixes, if would
+likely use just one at a given time?
 
--- Steve
+IMO, the proper way would be, instead, to use an uAPI like:
+
+/*
+ * Actually, as this is uAPI, we will use a fixed size integer type, like
+ *  unsigned int
+ */
+enum hevc_scaling_matrix_type {
+	HEVC_SCALING_MATRIX_4x4,
+	HEVC_SCALING_MATRIX_8x8,
+...
+	HEVC_SCALING_MATRIX_DC_COEF_32x32,
+};
+
+struct v4l2_ctrl_hevc_scaling_matrix {
+	__u32	scaling_type 		/* as defined by enum hevc_scaling_matrix_type */
+
+	union {
+		__u8	scaling_list_4x4[6][16];
+		__u8	scaling_list_8x8[6][64];
+		__u8	scaling_list_16x16[6][64];
+		__u8	scaling_list_32x32[2][64];
+		__u8	scaling_list_dc_coef_16x16[6];
+		__u8	scaling_list_dc_coef_32x32[2];
+	};
+};
+
+And let the core use a default for each scaling matrix, if userspace doesn't
+set it.
 
 
-On Wed,  8 Jan 2020 08:40:43 +0100
-Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> test.d/ftrace/func-filter-glob.tc is failing on s390 because it has
-> ARCH_INLINE_SPIN_LOCK and friends set to 'y'. So the usual
-> __raw_spin_lock symbol isn't in the ftrace function list. Change
-> '*aw*lock' to '*spin*lock' which would hopefully match some of the
-> locking functions on all platforms.
-> 
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> ---
-> 
-> Changes in v3:
->   change '*spin*lock' to '*pin*lock' to not match the beginning
-> 
-> Changes in v2:
->   use '*spin*lock' instead of '*ktime*ns'
-> 
->  .../testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc  | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-> index 27a54a17da65..f4e92afab14b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-> @@ -30,7 +30,7 @@ ftrace_filter_check '*schedule*' '^.*schedule.*$'
->  ftrace_filter_check 'schedule*' '^schedule.*$'
->  
->  # filter by *mid*end
-> -ftrace_filter_check '*aw*lock' '.*aw.*lock$'
-> +ftrace_filter_check '*pin*lock' '.*pin.*lock$'
->  
->  # filter by start*mid*
->  ftrace_filter_check 'mutex*try*' '^mutex.*try.*'
-
+Cheers,
+Mauro
