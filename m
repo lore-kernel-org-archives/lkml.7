@@ -2,145 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3ABC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1980FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B359F2073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wIZ1auYO"
+	by mail.kernel.org (Postfix) with ESMTP id DF25620692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgAHQtZ (ORCPT
+        id S1729508AbgAHQuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:49:25 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40494 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHQtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:49:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008GnMhY098921;
-        Wed, 8 Jan 2020 10:49:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578502162;
-        bh=RY2+pDL0Ybn6SAoSKXqWNf7C7aZKNuQoq94KgJgydn8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wIZ1auYOr+n4ggCmZNifI8nsb48C1L9mnN2DQVRkJMsPVsSN7e/QL2D2eWefDDcW1
-         6tqiTiStWi10VoCUOlBunkyrkDNAr6fPX5tllbRYCXtG1CLotXIGkSRl9kFNNd4eVX
-         2PZGWoOpc8Vw2NuQOqjUNe2+Fa30e5CCFyhIBfpk=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008GnMrN021268
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 10:49:22 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 10:49:21 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 10:49:21 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008GnLfN077466;
-        Wed, 8 Jan 2020 10:49:21 -0600
-Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
- remoteproc bindings
-To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200102131845.12992-2-t-kristo@ti.com>
- <20200102132512.13248-1-t-kristo@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <f4ac066a-e5ee-f888-42bb-3f6d444747ee@ti.com>
-Date:   Wed, 8 Jan 2020 10:49:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 Jan 2020 11:50:11 -0500
+Received: from mga05.intel.com ([192.55.52.43]:45717 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgAHQuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:50:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:50:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="218116149"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 08:50:09 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 9D8BF301003; Wed,  8 Jan 2020 08:50:09 -0800 (PST)
+Date:   Wed, 8 Jan 2020 08:50:09 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
+        eranian@google.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com
+Subject: Re: [RFC PATCH V3 2/7] perf: attach/detach PMU specific data
+Message-ID: <20200108165009.GQ15478@tassilo.jf.intel.com>
+References: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
+ <1578495789-95006-2-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200102132512.13248-1-t-kristo@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578495789-95006-2-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tero,
-
-On 1/2/20 7:25 AM, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> Add the device tree bindings document for the IPU and DSP
-> remote processor devices on OMAP4+ SoCs.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> [t-kristo@ti.com: converted to schema]
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
-> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
-
-You missed out on my v3 comment on the firmware-name on Example 2. Can
-you please address it when you post the next version?
-
-> 
->  .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
->  1 file changed, 329 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> new file mode 100644
-> index 000000000000..f53d58efaae3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-
-[snip]
-
-> +  - |+
+> +static int
+> +attach_system_wide_ctx_data(size_t ctx_size)
+> +{
+> +	int i, num_thread, pos, nr_failed_alloc;
+> +	unsigned long flags = GFP_ATOMIC;
+> +	struct perf_ctx_data *tsk_data;
+> +	struct perf_ctx_data **data;
+> +	struct task_struct *g, *p;
+> +	bool re_alloc = true;
 > +
-> +    //Example 2: OMAP5 IPU
+> +	/* Retrieve total number of threads */
+> +	num_thread = nr_threads;
 > +
-> +    /* IPU Reserved Memory node */
-> +    #include <dt-bindings/clock/omap5.h>
-> +    reserved-memory {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        ipu_memory_region: ipu-memory@95800000 {
-> +            compatible = "shared-dma-pool";
-> +            reg = <0 0x95800000 0 0x3800000>;
-> +            reusable;
-> +        };
-> +    };
-> +
-> +    /* IPU node */
-> +    ocp {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        ipu: ipu@55020000 {
-> +            compatible = "ti,omap5-ipu";
-> +            reg = <0x55020000 0x10000>;
-> +            reg-names = "l2ram";
-> +            iommus = <&mmu_ipu>;
-> +            mboxes = <&mailbox &mbox_ipu>;
-> +            memory-region = <&ipu_memory_region>;
-> +            ti,timers = <&timer3>, <&timer4>;
-> +            ti,watchdog-timers = <&timer9>, <&timer11>;
-> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
-> +            resets = <&prm_core 2>;
-> +            firmware-name = "omap5-ipu-fw.xem";
-> +        };
-> +    };
+> +	data = kcalloc(num_thread, sizeof(*data), GFP_KERNEL);
 
-regards
-Suman
+This probably needs kvcalloc for reliability and avoiding stalls.
+
+> +	if (!data) {
+> +		printk_once(KERN_DEBUG
+> +			    "Failed to allocate space for LBR callstack. "
+> +			    "The LBR callstack for all tasks may be cutoff.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	atomic_inc(&nr_task_data_sys_wide_events);
+> +
+> +repeat:
+> +	/*
+> +	 * Allocate perf_ctx_data for all existing threads.
+> +	 * The perf_ctx_data for new threads will be allocated in
+> +	 * perf_event_fork().
+> +	 * Do a quick allocation in first round with GFP_ATOMIC.
+> +	 */
+> +	for (i = 0; i < num_thread; i++) {
+> +		if (alloc_perf_ctx_data(ctx_size, flags, &data[i]))
+> +			break;
+> +	}
+> +	num_thread = i;
+> +	nr_failed_alloc = 0;
+> +	pos = 0;
+> +
+
+> +	rcu_read_lock();
+> +	for_each_process_thread(g, p) {
+> +		raw_spin_lock(&p->perf_ctx_data_lock);
+> +		tsk_data = p->perf_ctx_data;
+> +		if (tsk_data) {
+
+That will be a lot of locks even for tasks that don't use perf, but I guess we 
+really need it and it's bounded by the number of tasks.
+
+> +		}
+> +
+> +		if (pos < num_thread) {
+> +			refcount_set(&data[pos]->refcount, TASK_DATA_SYS_WIDE);
+> +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
+> +		} else {
+> +			/*
+> +			 * The quick allocation in first round may be failed.
+> +			 * Track the number in nr_failed_alloc.
+> +			 */
+> +			nr_failed_alloc++;
+> +		}
+> +		raw_spin_unlock(&p->perf_ctx_data_lock);
+> +	}
+> +	rcu_read_unlock();
+
+
+-Andi
