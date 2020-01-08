@@ -2,125 +2,137 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C417C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFD5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2712F206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TKWu/Ijo"
+	by mail.kernel.org (Postfix) with ESMTP id A0FAE2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578476447;
+	bh=06ZO+lZZtiA5khyjpH4A1yTTiaxpTEVlw9R/5uyxQHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i8LTLtPVmh3seb+yk5bkkdNR9ahyywwQ+H/V7Lk1/8qFh0RMq11/ZyWUTbCui0Nfb
+	 I6VPEto25DRbw+dtSXfO0LtoMJm0qktQDORUVi0iEUCe3bjXKGxPFqIDbC1fbuilLz
+	 /JYaCBmcnTFQCEqQRUkNZWjwX2bt1qNaOVLPi4b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgAHJhC (ORCPT
+        id S1727426AbgAHJkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:37:02 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33978 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727224AbgAHJhB (ORCPT
+        Wed, 8 Jan 2020 04:40:47 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54490 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHJkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:37:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578476220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=68cyakBuuqykyYfuVPtYJRYgfAWVoYk6H/O1x5botQ4=;
-        b=TKWu/IjoXLrV7Dq6he93ntbiVdZ86CenNo/c+fBX4bLXanOeiXFqb4gJ+qzlyHKJs1faOe
-        QJvhQHU4yNOMz3m6u0O7JlOsThqMXRZf3+L1HbqP4/2crFI8STf26D64qHvemcT9hfPQnq
-        SiBbs+eQnxWX5EverffID/NnqyPBIls=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-vtPIEzLhPiu5LuqOSatMyQ-1; Wed, 08 Jan 2020 04:36:59 -0500
-X-MC-Unique: vtPIEzLhPiu5LuqOSatMyQ-1
-Received: by mail-wr1-f69.google.com with SMTP id z10so1186622wrt.21
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:36:59 -0800 (PST)
+        Wed, 8 Jan 2020 04:40:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so1716076wmj.4;
+        Wed, 08 Jan 2020 01:40:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=68cyakBuuqykyYfuVPtYJRYgfAWVoYk6H/O1x5botQ4=;
-        b=WfyJ8MWrIJyXTgrOzJGk8XPNsCQ3Emw00KJZF4b2wo3yJ5UC8FkPxhacipwDxIO4rc
-         TlGxpHB3bnpHyZamfzhPKL5P9/bjks7osmECGEH9sbjkg4H14LzbmEQEoowwsZdiq37E
-         9pz1EbmmDMsucqpT56HnOFhwIuGFIH1gDRk74HD7XjVJu6qco35bK3bBBCazRalJM7kg
-         cUQdF9Ok6OC2ohJC8bWbmsg5LdVUllhrwQ4k/WwYHqM00+QuT/AE+5jXuzTJW/DRsioc
-         wEThRJu1l26Gxo5hMZ+MLk11fVEGvKqv0jxML4p1CJGRTIwMA7L4andXMwt90qvbJ5Lr
-         r1Ww==
-X-Gm-Message-State: APjAAAX5/k2xfV8jvNNUz4Ww8t4OQaRerru3Rcj8hhM5DZotnJl8BFJ1
-        keiamqjb128oVmwqMKvM4LenYPWztFBn/T8lljJvcHPxkhCobwQvGrZicY6TxwO8lzL0w5xeEkf
-        Svk/r7p6WsAqDSqRmlA0O+Gwo
-X-Received: by 2002:a05:600c:298:: with SMTP id 24mr2563067wmk.141.1578476218056;
-        Wed, 08 Jan 2020 01:36:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwOYbwL71jHMFOLZ5jV8xy/fR+AF+ZAxn6+Tt8MCWEEuGa8Xg+blvSitd6myXj3yx8d2Rz0jg==
-X-Received: by 2002:a05:600c:298:: with SMTP id 24mr2563033wmk.141.1578476217779;
-        Wed, 08 Jan 2020 01:36:57 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:bc4e:7fe8:2916:6a59? ([2001:b07:6468:f312:bc4e:7fe8:2916:6a59])
-        by smtp.gmail.com with ESMTPSA id q68sm3371147wme.14.2020.01.08.01.36.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 01:36:57 -0800 (PST)
-Subject: Re: discuss about pvpanic
-To:     zhenwei pi <pizhenwei@bytedance.com>
-Cc:     "yelu@bytedance.com" <yelu@bytedance.com>,
-        Greg KH <gregkh@linuxfoundation.org>, qemu-devel@nongnu.org,
-        linux-kernel@vger.kernel.org,
-        Michal Privoznik <mprivozn@redhat.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>
-References: <2feff896-21fe-2bbe-6f68-9edfb476a110@bytedance.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <dd8e46c4-eac4-046a-82ec-7ae17df75035@redhat.com>
-Date:   Wed, 8 Jan 2020 10:36:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=meLHATiTUUwiWD33DPkavEeGj5naCYHS6kL4s3+/juM=;
+        b=lzUQyloi4JgMMhaxX6DV2L82rczMp6YQ6c1mb+Qimfiltl0mQnYUiShbIL5EfqB6P3
+         UdYpGVii7e+xfv8DlBBJlFmijhBpzARHZYm709byNzu2SozLjDaX0UYxPz4xObzhSWW7
+         p6FtsUazhLLI+1XwlDXRtR2VGS+ULTVOcGeYJtxPaUumS5AsMMCXwgEO+zuhrTUzzFqW
+         3atBL/TgzTFWrIbtEt4Aw3uvOzyGMPP5wDZT/6G7dnLo0tQRa8xPq/HJ5B7QDkK5KL2u
+         DNXLgnRixpEnpNosETszw4nxre/VtPPDrS2rLdrlppo130ujZGdVXRKdyK2dae+wZHyZ
+         BrsQ==
+X-Gm-Message-State: APjAAAUq5hA9Vj0SgFImqLnwtTbDRugIQ8Ly4gdMm2R259LIXhtJT5uh
+        3aRBEbzy3jtZt/PXyGOvxSczwVdv
+X-Google-Smtp-Source: APXvYqzGlv3UyrOBEYEndGtbZQxn4HYfskoN+/gXiEDOTsWvFx0jPB8TFCI/W8XsPq4H8mmr5M7KMQ==
+X-Received: by 2002:a7b:cf26:: with SMTP id m6mr2553244wmg.17.1578476444398;
+        Wed, 08 Jan 2020 01:40:44 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id s19sm2998002wmj.33.2020.01.08.01.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 01:40:43 -0800 (PST)
+Date:   Wed, 8 Jan 2020 10:40:41 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200108094041.GQ32178@dhcp22.suse.cz>
+References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+ <20200106102345.GE12699@dhcp22.suse.cz>
+ <20200107012241.GA15341@richard>
+ <20200107083808.GC32178@dhcp22.suse.cz>
+ <20200108003543.GA13943@richard>
 MIME-Version: 1.0
-In-Reply-To: <2feff896-21fe-2bbe-6f68-9edfb476a110@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108003543.GA13943@richard>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/20 09:25, zhenwei pi wrote:
-> Hey, Paolo
+On Wed 08-01-20 08:35:43, Wei Yang wrote:
+> On Tue, Jan 07, 2020 at 09:38:08AM +0100, Michal Hocko wrote:
+> >On Tue 07-01-20 09:22:41, Wei Yang wrote:
+> >> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
+> >> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
+> >> >> As all the other places, we grab the lock before manipulate the defer list.
+> >> >> Current implementation may face a race condition.
+> >> >
+> >> >Please always make sure to describe the effect of the change. Why a racy
+> >> >list_empty check matters?
+> >> >
+> >> 
+> >> Hmm... access the list without proper lock leads to many bad behaviors.
+> >
+> >My point is that the changelog should describe that bad behavior.
+> >
+> >> For example, if we grab the lock after checking list_empty, the page may
+> >> already be removed from list in split_huge_page_list. And then list_del_init
+> >> would trigger bug.
+> >
+> >And how does list_empty check under the lock guarantee that the page is
+> >on the deferred list?
 > 
-> Currently, pvpapic only supports bit 0(PVPANIC_PANICKED).
-> We usually expect that guest writes ioport (typical 0x505) in panic_notifier_list callback
-> during handling panic, then we can handle pvpapic event PVPANIC_PANICKED in QEMU.
-> 
-> On the other hand, guest wants to handle the crash by kdump-tools, and reboots without any
-> panic_notifier_list callback. So QEMU only knows that guest has rebooted (because guest
-> write 0xcf9 ioport for RCR request), but QEMU can't identify why guest resets.
-> 
-> In production environment, we hit about 100+ guest reboot event everyday, sadly we 
-> can't separate the abnormal reboot from normal operation.
-> 
-> We want to add a new bit for pvpanic event(maybe PVPANIC_CRASHLOADED) to represent the guest has crashed, 
-> and the panic is handled by the guest kernel. (here is the previous patch https://lkml.org/lkml/2019/12/14/265)
-> 
-> What do you think about this solution? Or do you have any other suggestions?
+> Just one confusion, is this kind of description basic concept of concurrent
+> programming? How detail level we need to describe the effect?
 
-Hi Zhenwei,
+When I write changelogs for patches like this I usually describe, what
+is the potential race - e.g.
+	CPU1			CPU2
+	path1			path2
+	  check			  lock
+	  			    operation2
+				  unlock
+	    lock
+	    # check might not hold anymore
+	    operation1
+	    unlock
 
-the kernel-side patch certainly makes sense.  I assume that you want the
-event to propagate up from QEMU to Libvirt and so on?  The QEMU patch
-would need to declare a new event (qapi/misc.json) and send it in
-handle_event (hw/misc/pvpanic.c).  For Libvirt I'm not familiar, so I'm
-adding the respective list.
+and what is the effect of the race - e.g. a crash, data corruption,
+pointless attempt for operation1 which fails with user visible effect
+etc.
+This helps reviewers and everybody reading the code in the future to
+understand the locking scheme.
 
-Another possibility is to simply not write to pvpanic if
-kexec_crash_loaded() returns true; this would match what xen_panic_event
-does for example.  The kexec kernel would then log the panic normally,
-without the need for MMIO at all.  However, I have no problem with
-adding a new bit to the pvpanic I/O port so once you post the QEMU patch
-I will certainly ack the kernel side.
+> To me, grab the lock before accessing the critical section is obvious.
 
-Thanks,
+It might be obvious but in many cases it is useful to minimize the
+locking and do a potentially race check before the lock is taken if the
+resulting operation can handle that.
 
-Paolo
+> list_empty and list_del should be the critical section. And the
+> lock should protect the whole critical section instead of part of it.
 
+I am not disputing that. What I am trying to say is that the changelog
+should described the problem in the first place.
+
+Moreover, look at the code you are trying to fix. Sure extending the
+locking seem straightforward but does it result in a correct code
+though? See my question in the previous email. How do we know that the
+page is actually enqued in a non-empty list?
+-- 
+Michal Hocko
+SUSE Labs
