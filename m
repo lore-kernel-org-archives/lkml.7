@@ -2,199 +2,94 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01824C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C357BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C222C20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995BC2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baGZZ/Rm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJcPu2D7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgAHPmP (ORCPT
+        id S1727913AbgAHPnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:42:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45962 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729021AbgAHPmG (ORCPT
+        Wed, 8 Jan 2020 10:43:05 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54638 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHPnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:42:06 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so1271306pls.12;
-        Wed, 08 Jan 2020 07:42:05 -0800 (PST)
+        Wed, 8 Jan 2020 10:43:04 -0500
+Received: by mail-pj1-f67.google.com with SMTP id kx11so1231956pjb.4;
+        Wed, 08 Jan 2020 07:43:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a0DGQ1NyXBS1YH7DaQs4FMIy+9goKt2JJcyNuNbw5NM=;
-        b=baGZZ/RmRfsQfYAN9D3ZwCTZ49xzk10YRBistCKAbvK22uWGkHYdQyAGXnp5QvjIwl
-         VQiAVxp7yk2JRNOyddB8rzFk3QIE9HM6VSe5P8QsjDRAB7MWGz5VdHt798pAAI+qMkCV
-         3pNKk4Q4s9dFinUE21pf2CR5Yd1/s0GQrVMGjfKtzb9lGMloCVzhuWMR4/4Y7bEJ4kfA
-         T85urEyXMiwxXGRwFqQy0mM/ffJyOuCRZcSFHKc65JcCHfQcJxflZ7BZSJ1gBKG5zpya
-         SxYs0K8fAdMf1Q2Y0tavcEXEar0SMkc7LrsLJf4iisT+3tRLY6vMCqXPkeokJH4KTz8n
-         wxHg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VaYDiyKUVmJvWDMGJuT27lJYQZ/YihlSUlgaX0Q70Po=;
+        b=hJcPu2D7URepxUGAoP5Zwg5Bp6aGXbR+L4yQld2wRWdqm6OE4I3t17DvyFU4ACI0nf
+         g/filK0qQkmI4zqU8WKA7v3VhwnN4Z20WWi26zQX2ZcAToX97CgHZgiZX1ddSS5HVYZ+
+         4q1NHG6qH1ZZB8eAABCB2pCkNuzsfaxOJxyDZ5eaEUbqoH1knVGtZ5h8nJrz2Z2U5AuM
+         gCouVX+Z7lD6hbkHGMZHHSS7MbXJiNGgZ/VrkRY1E6Ylp8D9WwxeyRL5aNcPzsyNzYmt
+         enEh81KZgW7SL/YSkAF9cfVxaC53ZowYJrIeowKNAgKMAJI9JsEEuCuPWJ7VUfP/R5e3
+         GUFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a0DGQ1NyXBS1YH7DaQs4FMIy+9goKt2JJcyNuNbw5NM=;
-        b=IJzuv1bb+u4W/avCTnRSyfkrHbHh3fofx5ZlNGhO0FdpYlVK4IZ8UCZZwkfxemVEFc
-         WaziKNLRUIXyfeqHnJVvjg9J6LiJwZeK+rWFcHRCZREYE67gQyBU4dP8HWju6oQJ9sHP
-         4nsbuKmYm5LKGe1pGK1ZCQgtblFIYWG2hpBVUfrnw568seqecIBcCb7bvbW50Tm7JMkt
-         AwpN67qQwiZetG9PMkuvdLCHf3y7KYokhWJDTolt08U47bigh7Mfk2ullpobWdiKmNCW
-         rLh9+zICu8sUYhoPl69gi2ZNunQlOl8kraAWsifOkdeVXdlIUjHyE725WaZMiJW0jk2f
-         FKxg==
-X-Gm-Message-State: APjAAAV3eZNMZbqCom8zmWZAonD49D3mOvAn9VzM+9Yp4XLY5QnedKeM
-        9SGxJXCO275J8CpwnDWuEU6JkA+U
-X-Google-Smtp-Source: APXvYqxefgu5EZ5v1cP9TxmF+1BBmL5QKj+FOMDj+BcprSrAddOwDfj9ipsGJAfNVVXCQIgCjQK+sg==
-X-Received: by 2002:a17:902:a40c:: with SMTP id p12mr5911072plq.292.1578498124771;
-        Wed, 08 Jan 2020 07:42:04 -0800 (PST)
-Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id e1sm4286640pfl.98.2020.01.08.07.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 07:42:03 -0800 (PST)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v6 6/7] crypto: caam - enable prediction resistance in HRWNG
-Date:   Wed,  8 Jan 2020 07:40:46 -0800
-Message-Id: <20200108154047.12526-7-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200108154047.12526-1-andrew.smirnov@gmail.com>
-References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VaYDiyKUVmJvWDMGJuT27lJYQZ/YihlSUlgaX0Q70Po=;
+        b=pxwZyqp7G4ugSLEDSL5ylbYDTq8P08UV2LNZ/NUPo0USbdE3AgKNqu5q7y9hdLtdAj
+         piTuk8qnDvotkqLIVcirx5Rdw+EELIyLgGmQ9fmKTFpVhx8dK5QvvAR/KXTd4gm1/xe5
+         wlXLtwYE41DWbEJrPU29Dj3FvIIUPV7vuISByrGSbkbFQfuSIN2FHAfdX8LStZK8ZCd8
+         Pb4gphaUgeb9QkIIm+agDRZw/382z/kBT6CyfNTnaxlokdntcscPs1dlSfJLl6XtxR7d
+         nixmfn3F5X9HhQGm0CgvxQWNRhUv/N6exgJkZriLm0DC8ei1cang724bCNexVVoNkTd7
+         A9gQ==
+X-Gm-Message-State: APjAAAV/vVu8mHdm3pTkMu1C/N71zvOjD6cw96ICuSYZ58yAk2mKvDaK
+        74eggW6gkJM8QlKC8YSq0LmiV3ga
+X-Google-Smtp-Source: APXvYqyAhT8tiDk4AYesoJw0msEtDV3fiU7ZCmZlQtqRf0s91c5G+Ekg2BYX5wZ0+lfXG3Y2JUJ0Ow==
+X-Received: by 2002:a17:902:aa8f:: with SMTP id d15mr5505288plr.276.1578498183723;
+        Wed, 08 Jan 2020 07:43:03 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s24sm4266709pfd.161.2020.01.08.07.43.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 07:43:02 -0800 (PST)
+Date:   Wed, 8 Jan 2020 07:43:02 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/74] 4.14.163-stable review
+Message-ID: <20200108154302.GA28993@roeck-us.net>
+References: <20200107205135.369001641@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instantiate CAAM RNG with prediction resistance enabled to improve its
-quality (with PR on DRNG is forced to reseed from TRNG every time
-random data is generated).
+On Tue, Jan 07, 2020 at 09:54:25PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.163 release.
+> There are 74 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
----
- drivers/crypto/caam/caamrng.c |  3 ++-
- drivers/crypto/caam/ctrl.c    | 22 ++++++++++++++++++----
- drivers/crypto/caam/desc.h    |  2 ++
- drivers/crypto/caam/regs.h    |  4 +++-
- 4 files changed, 25 insertions(+), 6 deletions(-)
+For v4.14.162-73-g404399b2e7db:
 
-diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
-index 554aafbd4d11..91ccde0240fe 100644
---- a/drivers/crypto/caam/caamrng.c
-+++ b/drivers/crypto/caam/caamrng.c
-@@ -77,7 +77,8 @@ static u32 *caam_init_desc(u32 *desc, dma_addr_t dst_dma, int len)
- {
- 	init_job_desc(desc, 0);	/* + 1 cmd_sz */
- 	/* Generate random bytes: + 1 cmd_sz */
--	append_operation(desc, OP_ALG_ALGSEL_RNG | OP_TYPE_CLASS1_ALG);
-+	append_operation(desc, OP_ALG_ALGSEL_RNG | OP_TYPE_CLASS1_ALG |
-+			 OP_ALG_PR_ON);
- 	/* Store bytes */
- 	append_fifo_store(desc, dst_dma, len, FIFOST_TYPE_RNGSTORE);
- 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 22d8676dd610..85c2e831839a 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -36,7 +36,8 @@ static void build_instantiation_desc(u32 *desc, int handle, int do_sk)
- 	init_job_desc(desc, 0);
- 
- 	op_flags = OP_TYPE_CLASS1_ALG | OP_ALG_ALGSEL_RNG |
--			(handle << OP_ALG_AAI_SHIFT) | OP_ALG_AS_INIT;
-+			(handle << OP_ALG_AAI_SHIFT) | OP_ALG_AS_INIT |
-+			OP_ALG_PR_ON;
- 
- 	/* INIT RNG in non-test mode */
- 	append_operation(desc, op_flags);
-@@ -275,12 +276,25 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
- 		return -ENOMEM;
- 
- 	for (sh_idx = 0; sh_idx < RNG4_MAX_HANDLES; sh_idx++) {
-+		const u32 rdsta_if = RDSTA_IF0 << sh_idx;
-+		const u32 rdsta_pr = RDSTA_PR0 << sh_idx;
-+		const u32 rdsta_mask = rdsta_if | rdsta_pr;
- 		/*
- 		 * If the corresponding bit is set, this state handle
- 		 * was initialized by somebody else, so it's left alone.
- 		 */
--		if ((1 << sh_idx) & state_handle_mask)
--			continue;
-+		if (rdsta_if & state_handle_mask) {
-+			if (rdsta_pr & state_handle_mask)
-+				continue;
-+
-+			dev_info(ctrldev,
-+				 "RNG4 SH%d was previously instantiated without prediction resistance. Tearing it down\n",
-+				 sh_idx);
-+
-+			ret = deinstantiate_rng(ctrldev, rdsta_if);
-+			if (ret)
-+				break;
-+		}
- 
- 		/* Create the descriptor for instantiating RNG State Handle */
- 		build_instantiation_desc(desc, sh_idx, gen_sk);
-@@ -302,7 +316,7 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
- 
- 		rdsta_val = rd_reg32(&ctrl->r4tst[0].rdsta) & RDSTA_IFMASK;
- 		if ((status && status != JRSTA_SSRC_JUMP_HALT_CC) ||
--		    !(rdsta_val & (1 << sh_idx))) {
-+		    (rdsta_val & rdsta_mask) != rdsta_mask) {
- 			ret = -EAGAIN;
- 			break;
- 		}
-diff --git a/drivers/crypto/caam/desc.h b/drivers/crypto/caam/desc.h
-index 4b6854bf896a..e796d3cb9be8 100644
---- a/drivers/crypto/caam/desc.h
-+++ b/drivers/crypto/caam/desc.h
-@@ -1254,6 +1254,8 @@
- #define OP_ALG_ICV_OFF		(0 << OP_ALG_ICV_SHIFT)
- #define OP_ALG_ICV_ON		(1 << OP_ALG_ICV_SHIFT)
- 
-+#define OP_ALG_PR_ON		BIT(1)
-+
- #define OP_ALG_DIR_SHIFT	0
- #define OP_ALG_DIR_MASK		1
- #define OP_ALG_DECRYPT		0
-diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
-index c191e8fd0fa7..fe1f8c1409fd 100644
---- a/drivers/crypto/caam/regs.h
-+++ b/drivers/crypto/caam/regs.h
-@@ -524,9 +524,11 @@ struct rng4tst {
- 	u32 rsvd1[40];
- #define RDSTA_SKVT 0x80000000
- #define RDSTA_SKVN 0x40000000
-+#define RDSTA_PR0 BIT(4)
-+#define RDSTA_PR1 BIT(5)
- #define RDSTA_IF0 0x00000001
- #define RDSTA_IF1 0x00000002
--#define RDSTA_IFMASK (RDSTA_IF1 | RDSTA_IF0)
-+#define RDSTA_IFMASK (RDSTA_PR1 | RDSTA_PR0 | RDSTA_IF1 | RDSTA_IF0)
- 	u32 rdsta;
- 	u32 rsvd2[15];
- };
--- 
-2.21.0
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 373 pass: 373 fail: 0
 
+Guenter
