@@ -2,88 +2,185 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619E9C33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1BCC33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350BD20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B38207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:30:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=emypeople.us header.i=@emypeople.us header.b="D0iHptDq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AylLWoXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgAHBaU (ORCPT
+        id S1726594AbgAHBaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:30:20 -0500
-Received: from mail.emypeople.net ([216.220.167.73]:36211 "EHLO
-        mail.emypeople.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgAHBaT (ORCPT
+        Tue, 7 Jan 2020 20:30:23 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:56968 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgAHBaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:30:19 -0500
-DKIM-Signature: a=rsa-sha256; t=1578447018; x=1579051818; s=mail; d=emypeople.us; c=relaxed/relaxed; v=1; bh=22iFXTU4vD4bDSj9yiGlaXhxfpRMPEDgH7sSp1HcqfQ=; h=From:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References;
-   b=D0iHptDqb0nyOGjN68cPlUFSIQOZSDQ7hfW2fNmuDTvbhiRDpaLQIwBtl/TjDtfIaAyqc5F/N2dfNNS+kzxvaZXeJt/5iCA+w2fEcQeDL5GeyWb52On4e6dXOVb/pdppkPMAWsrgcgMh0OD7O88TOYkx+zS+b/RzVQkhoRoCvrA=
-Received: from [192.168.1.2] ([10.12.2.17])
-        by mail.emypeople.net (12.2.0 build 2 RHEL7 x64) with ASMTP id 202001072030183254;
-        Tue, 07 Jan 2020 20:30:18 -0500
-Subject: Re: [PATCH] x86/boot: fix cast to pointer compiler warning
-To:     Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        Matthew Garrett <mjg59@google.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Josh Boyer <jwboyer@redhat.com>
-References: <8dd48f03-4d7c-25bb-2a2f-27461c0004ba@211mainstreet.net>
- <0be4cdcc-a1f8-36a9-69f2-bac02c8f9a9f@infradead.org>
-From:   Edwin Zimmerman <edwin@211mainstreet.net>
-Message-ID: <049a6ca0-5f0d-0187-85d4-6d5f1e78af55@211mainstreet.net>
-Date:   Wed, 8 Jan 2020 01:30:14 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Jan 2020 20:30:22 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0081TKXe134517;
+        Wed, 8 Jan 2020 01:29:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=8789pjZRMhEt10VXzIey5jziJkLcr1FXiO0MyGZcbHU=;
+ b=AylLWoXPy4Oj5QevoFSTbo05w+Poh/wgJTwQOPO8UU38vgufdiTZyue/bgC2IDH+tA+Y
+ ffHDZSg4DppIOA1ohdF7+JSl96h41jqdCpeHVIoBprXSiWI8ET2gJQIZh8s6i8BTGOBl
+ vzRe6gLiTqLAUVl7IR9dN95ZeV0jp2lYOwx9cwQJW90CcURAeUnRK+nK3Nsk3sQt4R1C
+ vSeWR5XjDd+SM4To1KslVnWV1X9mN6J6yu964GNuG78qgsQ97Dm69xBjPMC1q43Qdx31
+ mPFpRpLhBrd/V8urAKuJUYo5Ik5wTpNZgsbL5iytcG1I4Sg4pjZkLp4mUDwruFYFz9i0 fw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xaj4u14h0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 01:29:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0081SNlr151251;
+        Wed, 8 Jan 2020 01:29:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2xcqbj178y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 01:29:55 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0081TqNx008054;
+        Wed, 8 Jan 2020 01:29:52 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 17:29:43 -0800
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191215174509.1847-1-linux@roeck-us.net>
+        <20191215174509.1847-2-linux@roeck-us.net>
+        <yq1r211dvck.fsf@oracle.com> <20191219003256.GA28144@roeck-us.net>
+        <yq17e233o0o.fsf@oracle.com>
+        <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net>
+Date:   Tue, 07 Jan 2020 20:29:40 -0500
+In-Reply-To: <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net> (Guenter
+        Roeck's message of "Tue, 7 Jan 2020 05:00:39 -0800")
+Message-ID: <yq1o8ve20sb.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <0be4cdcc-a1f8-36a9-69f2-bac02c8f9a9f@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001080012
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001080012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/2020 8:18 PM, Randy Dunlap wrote:
-> On 1/7/20 9:38 PM, Edwin Zimmerman wrote:
->> Fix cast-to-pointer compiler warning
->>
->> arch/x86/boot/compressed/acpi.c: In function ‘get_acpi_srat_table’:
->> arch/x86/boot/compressed/acpi.c:316:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->> rsdp = (struct acpi_table_rsdp *)get_cmdline_acpi_rsdp();
->>         ^
->> Fixes: 41fa1ee9c6d6 ("acpi: Ignore acpi_rsdp kernel param when the kernel has been locked down")
->> Signed-off-by: Edwin Zimmerman <edwin@211mainstreet.net>
->> ---
->> arch/x86/boot/compressed/acpi.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
->> index 25019d42ae93..5d2568066d58 100644
->> --- a/arch/x86/boot/compressed/acpi.c
->> +++ b/arch/x86/boot/compressed/acpi.c
->> @@ -313,7 +313,7 @@ static unsigned long get_acpi_srat_table(void)
->> * stash this in boot params because the kernel itself may have
->> * different ideas about whether to trust a command-line parameter.
->> */
->> - rsdp = (struct acpi_table_rsdp *)get_cmdline_acpi_rsdp();
->> + rsdp = (struct acpi_table_rsdp *)(long)get_cmdline_acpi_rsdp();
->> if (!rsdp)
->> rsdp = (struct acpi_table_rsdp *)(long)
->>
-> Lots of whitespace damage.  Probably your email client or some
-> intermediary.
-Email client, sorry.  Will resend.
+
+Guenter,
+
+> "scsi-8-140" is created by libsensors, so any change in that would
+> have to be made there, not in the kernel driver.
+
+Yes. Something like the patch below which will produce actual SCSI
+device instance names:
+
+	drivetemp-scsi-7:0:29:0
+	drivetemp-scsi-8:0:30:0
+	drivetemp-scsi-8:0:15:0
+	drivetemp-scsi-7:0:24:0
+
+Instead of the current:
+
+	drivetemp-scsi-7-1d0
+	drivetemp-scsi-8-1e0
+	drivetemp-scsi-8-f0
+	drivetemp-scsi-7-180
+
+Other question: Does hwmon have any notion of sensor topology? As I
+mentioned earlier, SCSI installations typically rely on SAF-TE or SES
+instead of the physical drive sensors. SES also includes monitoring of
+fans, power supplies, etc. And more importantly, it provides a
+representation of the location of a given component. E.g.: Tray number
+#4, disk drive bay #5.
+
+So it would be helpful if libsensors had a way to represent sensors in a
+way that mimics the physical device layout reported by SES.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
+
+
+diff --git a/lib/data.c b/lib/data.c
+index c5aea42967a6..06cfa86f353b 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -202,8 +202,9 @@ int sensors_snprintf_chip_name(char *str, size_t size,
+ 		return snprintf(str, size, "%s-mdio-%x", chip->prefix,
+ 				chip->addr);
+ 	case SENSORS_BUS_TYPE_SCSI:
+-		return snprintf(str, size, "%s-scsi-%hd-%x", chip->prefix,
+-				chip->bus.nr, chip->addr);
++		return snprintf(str, size, "%s-scsi-%u:%u:%u:%lu", chip->prefix,
++				chip->bus.nr, chip->addr, chip->sub_addr,
++				chip->sub_sub_addr);
+ 	}
+ 
+ 	return -SENSORS_ERR_CHIP_NAME;
+diff --git a/lib/sensors.h b/lib/sensors.h
+index 94f6f23051d2..f468cccabc72 100644
+--- a/lib/sensors.h
++++ b/lib/sensors.h
+@@ -65,6 +65,8 @@ typedef struct sensors_chip_name {
+ 	char *prefix;
+ 	sensors_bus_id bus;
+ 	int addr;
++	unsigned int sub_addr;
++	unsigned long sub_sub_addr;
+ 	char *path;
+ } sensors_chip_name;
+ 
+diff --git a/lib/sysfs.c b/lib/sysfs.c
+index e63688b72aba..f76b4a99aa7d 100644
+--- a/lib/sysfs.c
++++ b/lib/sysfs.c
+@@ -620,6 +620,7 @@ static int classify_device(const char *dev_name,
+                            sensors_chip_features *entry)
+ {
+ 	int domain, bus, slot, fn, vendor, product, id;
++	unsigned long lun;
+ 	char bus_path[NAME_MAX];
+ 	char *bus_attr;
+ 	int ret = 1;
+@@ -687,11 +688,13 @@ static int classify_device(const char *dev_name,
+ 		entry->chip.bus.nr = 0;
+ 	} else
+ 	if (subsys && !strcmp(subsys, "scsi") &&
+-	    sscanf(dev_name, "%d:%d:%d:%x", &domain, &bus, &slot, &fn) == 4) {
++	    sscanf(dev_name, "%u:%u:%u:%lu", &domain, &bus, &id, &lun) == 4) {
+ 		/* adapter(host), channel(bus), id(target), lun */
+-		entry->chip.addr = (bus << 8) + (slot << 4) + fn;
+-		entry->chip.bus.type = SENSORS_BUS_TYPE_SCSI;
+ 		entry->chip.bus.nr = domain;
++		entry->chip.addr = bus;
++		entry->chip.sub_addr = id;
++		entry->chip.sub_sub_addr = lun;
++		entry->chip.bus.type = SENSORS_BUS_TYPE_SCSI;
+ 	} else {
+ 		/* Unknown device */
+ 		ret = 0;
