@@ -2,122 +2,138 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D34C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF039C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DF220720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA94020705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHWNNR+e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MloR51gX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgAHRpD (ORCPT
+        id S1727842AbgAHRpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:45:03 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38385 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHRpD (ORCPT
+        Wed, 8 Jan 2020 12:45:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20660 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727145AbgAHRpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:45:03 -0500
-Received: by mail-io1-f68.google.com with SMTP id v3so4130640ioj.5;
-        Wed, 08 Jan 2020 09:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6hyJ1DuoNTvMLECij7nJ1OuGNCS8kZHJfhmP/ffNYNo=;
-        b=CHWNNR+eRdSuev8lOSlzlfo0DqL0/14B/lQMMIXS8/wk98dXoJpY8XgCHzeWjHT5iY
-         tVsjpxXn0AUANrnGOetRgdK7Popro7hl/DCKpNkkMc10uAd3MzxQTKxS1dFu41GPwYw+
-         ne2lWuZEtEbY1U/jxD83f9t86+TanI8htugq7A5ST9feiRyLuL10XukaOqVO4hCchwRa
-         ekW5yXKAVeeglSkAin8PvxqUhRCm3/jyc6x/t/3PLsKRNXDybdIcrGYXpWNjT53NxePz
-         oLTWoiNn3gocDh7HyJWE2SnhR4+3n8MJyVwc8NDQXaTN7h0R6qs1IuCfwtAY5/JVBawM
-         15ig==
+        Wed, 8 Jan 2020 12:45:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578505532;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vAbrCkrIuQhAIxDIFRpXY9taZ5SfRby6+FX1Mi+Hdt4=;
+        b=MloR51gXRDflbWqF9O2S0KYwn1whGXK1Hy3bWnhjfqls8KPEvJerHfty1wKiAPIqJ5yl5J
+        Ns5nuRMsB+YCgOJ2WwgnYzyCZ41Fq2+8xQ0DK1g9yKMW05mEBGxCxRRUgermXWzDl/YtA0
+        HbJ0qToLqOqOUmUy6WKrbrn1Oyj72PA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-cXVHUq7RMeOkObaa5ziBBQ-1; Wed, 08 Jan 2020 12:45:31 -0500
+X-MC-Unique: cXVHUq7RMeOkObaa5ziBBQ-1
+Received: by mail-wm1-f69.google.com with SMTP id c4so1104235wmb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:45:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6hyJ1DuoNTvMLECij7nJ1OuGNCS8kZHJfhmP/ffNYNo=;
-        b=CTOXxR9ls66crwtAN91KlZlP8Bw+pC7mEW3TB3co515FPs6vfdCVsqSx9cFQtboxWT
-         vrgmc3Ms1RcvE6I0NrCUunSYL9rsfpEZ49bCLZqZxp7QBDjAGDSGbSUBV3AKyH6m6lg4
-         KNm9mOlOC87eIhEJBJfZQWq1SPkL/Naa+JNEltFtVjrWMXA1/C6mJHs6NIj3gBGpLhbp
-         DRBvVLBg/8wwCiv9gtRnWvBR1jQz8BJZ7NQe/OK9y19ZV9hT4pSBa2mukki9SwVyTNuu
-         gh21txvLlwzRCV4WPjxxx3SALV9Y5xtrjZAhBv8OtLbOCD6oAkpBZ2cfwizMtritHt5v
-         XqGg==
-X-Gm-Message-State: APjAAAUiA3OwlUuSQnx9IYeQAVPZV0r6j6lomQluR6vu9UGf5/A08OaW
-        0l0O2pgfg4f7Em/n5XCJ9xc8yy+EpiCfezyPM9o=
-X-Google-Smtp-Source: APXvYqwdYoScam5JjtndbUpnijDwNfOgvcdpE+6bCGzbFM8VdqjmP4MaatuGDnWxG42J3U8AieJXYw3Z4SMHKfxRdog=
-X-Received: by 2002:a6b:7117:: with SMTP id q23mr4093934iog.153.1578505502409;
- Wed, 08 Jan 2020 09:45:02 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vAbrCkrIuQhAIxDIFRpXY9taZ5SfRby6+FX1Mi+Hdt4=;
+        b=Pn9pG+Um4kGdYxbC/4T0awzZU2rzGNpWUKw93wbHqVk4bvuCw32/3e93rz2Oynk5g7
+         P0fjBNjmAo27YfTpt6cIdKR8ppEPJ0SHTuIQs4fk9H4hPXwnQrg08SBVq4Z/KYYu9YQa
+         BjHYc7nZd2RngpHfbiM0upQ6re/hhjQF2Pagy4l/Vubvj9hbuilQCpQyd4sJaRfwcN4K
+         Nxd8L6GeWCD521UqvD+jrwKC5lCa7+Gu/Zh9Km3w7x93wR36mS/VTsJOUixzjcLrzDWE
+         S2V+NeBAvouHBk5bHbj1nkiTPPeYXyP5E0TJw/L0ZaF0TVWFxdshHB9ZfXZ9QD4KIT3u
+         8esw==
+X-Gm-Message-State: APjAAAWzsj1MY956SVdENlnudmmDrgU4Dfuu+vb8iQzAf3Z8H1QsRDEP
+        vLCuqB2LoR5ModgZEQb96OJT6jIyYRQiSH7T90qk6/Q32OaGbcMKh7ZsBczCNEOVT5F8ECKlH8k
+        DjnY6zlhF5mpFETeelOTFTTp+
+X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr5552200wmc.162.1578505529997;
+        Wed, 08 Jan 2020 09:45:29 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxUOQXtzLAkEHEjUID+HnRc2XOSMUnPPe6lslm3LAC2FtlfT9P1+XCgvOpBL4apTaLuisYbSw==
+X-Received: by 2002:a05:600c:1009:: with SMTP id c9mr5552179wmc.162.1578505529762;
+        Wed, 08 Jan 2020 09:45:29 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
+        by smtp.gmail.com with ESMTPSA id p17sm4658551wmk.30.2020.01.08.09.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 09:45:29 -0800 (PST)
+Subject: Re: [PATCH RESEND v2 01/17] KVM: Remove kvm_read_guest_atomic()
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-2-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <15bc02b7-595d-2564-b1f9-a4a8aae37252@redhat.com>
+Date:   Wed, 8 Jan 2020 18:45:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200104225052.27275-1-deepa.kernel@gmail.com>
- <20200106135455.GA104407@google.com> <CABeXuvownNp7ngp38vHzCgQfLA-tnH7FFT5pQQeHF3tLizmxcg@mail.gmail.com>
-In-Reply-To: <CABeXuvownNp7ngp38vHzCgQfLA-tnH7FFT5pQQeHF3tLizmxcg@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 8 Jan 2020 09:44:50 -0800
-Message-ID: <CABeXuvrJ-zZsw03BB+d-823xUc5xcQVHX8otJ=9_ESs6HUF7Zw@mail.gmail.com>
-Subject: Re: [PATCH] pci: Warn if BME cannot be turned off during kexec
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191221014938.58831-2-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 11:38 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->
-> On Mon, Jan 6, 2020 at 5:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > Hi Deepa,
-> >
-> > Thanks for the patches.  Since these two patches touch the same piece
-> > of code in pci_device_shutdown(), they conflict with each other.  I
-> > could resolve this myself, but maybe you could make them a series that
-> > applies cleanly together?
->
-> Sure, will make this a series.
->
-> > Can you also please edit the subject lines so they match the
-> > convention (use "git log --oneline drivers/pci/pci-driver.c" to see
-> > it).
->
-> Will do.
->
-> > On Sat, Jan 04, 2020 at 02:50:52PM -0800, Deepa Dinamani wrote:
-> > > BME not being off is a security risk, so for whatever
-> > > reason if we cannot disable it, print a warning.
-> >
-> > "BME" is not a common term in drivers/pci; can you use "Bus Master
-> > Enable" (to match the PCIe spec) or "PCI_COMMAND_MASTER" (to match the
-> > Linux code)?
->
-> Will do.
->
-> > Can you also explain why this is a security risk?  It looks like we
-> > disable bus mastering if the device is in D0-D3hot.  If the device is
-> > in D3cold, it's powered off, so we can't read/write config space.  But
-> > if it's in D3cold, the device is powered off, so it can't be a bus
-> > master either, so why would we warn about it?
->
-> I was mainly concerned about the PCI_UNKNOWN state here. Maybe we can
-> add a specific check for the unknown state if that is preferable.
+On 21/12/19 02:49, Peter Xu wrote:
+> Remove kvm_read_guest_atomic() because it's not used anywhere.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  include/linux/kvm_host.h |  2 --
+>  virt/kvm/kvm_main.c      | 11 -----------
+>  2 files changed, 13 deletions(-)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index d41c521a39da..2ea1ea79befd 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -730,8 +730,6 @@ void kvm_get_pfn(kvm_pfn_t pfn);
+>  
+>  int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+>  			int len);
+> -int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
+> -			  unsigned long len);
+>  int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len);
+>  int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  			   void *data, unsigned long len);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 13efc291b1c7..7ee28af9eb48 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2039,17 +2039,6 @@ static int __kvm_read_guest_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
+>  	return 0;
+>  }
+>  
+> -int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
+> -			  unsigned long len)
+> -{
+> -	gfn_t gfn = gpa >> PAGE_SHIFT;
+> -	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
+> -	int offset = offset_in_page(gpa);
+> -
+> -	return __kvm_read_guest_atomic(slot, gfn, data, offset, len);
+> -}
+> -EXPORT_SYMBOL_GPL(kvm_read_guest_atomic);
+> -
+>  int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+>  			       void *data, unsigned long len)
+>  {
+> 
 
-I did some more testing. You are right, these messages are printed
-more often than I had remembered.
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 
-For some more context on what I am trying to do: I recently merged
-another patch that disable iommu unconditionally at kexec:
-https://lkml.org/lkml/2019/11/10/146
-And, if we do not have IOMMU on and BME is on then we have no way of
-controlling memory accesses from devices. This is why I wanted these
-warning messages printed. Alternatively, it might just be enough to
-warn if we cannot turn off BME on root ports rather than all the
-devices. Does this seem like a better compromise?
-
--Deepa
