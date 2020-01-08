@@ -2,270 +2,384 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D62C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78865C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF7420848
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Le4Zpk76"
+	by mail.kernel.org (Postfix) with ESMTP id 3F3C3206ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578484296;
+	bh=UaIxLZUI75Nhbq0wZwJ9Y9VnTVdDPODF8I6Yh67fzSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UFLJ25b3fsk+CdT6Ogg/bnCZIVeuUL81o5Tw5Td2QBcn3TOkTqYJK/vR4azRgAWix
+	 uqtFrX/n8CgddNYl0xVX3tBxXJNzZSn6t38swm0GMrzb2VodB91sAsaI5BmP4XbeCT
+	 UkazL3GEy9sFM0sB9dPv229LCWNT/9RbU6PZMQhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgAHLuc (ORCPT
+        id S1727675AbgAHLvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:50:32 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60942 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgAHLua (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:50:30 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200108115028euoutp010b709fdeda69af75c2da1c71e068c7bb~n5wr2wN-70525005250euoutp01f
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 11:50:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200108115028euoutp010b709fdeda69af75c2da1c71e068c7bb~n5wr2wN-70525005250euoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578484228;
-        bh=+tf4GNTb84v10z63faMIMGJF9BpS6VYqSHVRHe4D8GQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Le4Zpk76bIibTVmOwU78VHbBOtjpJ6lrVCygD6Kr6b2Tt876+PZ1fnfnkXP9WJD9P
-         Xn4LU01uOR2awCY8ECTVU25vcT572IRVXF3VCIxEYR8sVHDvFuqmIA2trQZqj0z53q
-         +rmJvMsUyuvBiKuw/M6Hf+kkNDzWxbjJMq9NPr90=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200108115028eucas1p16b28b9fc0c43953728d94c2f857fd01f~n5wrORNFD2632626326eucas1p18;
-        Wed,  8 Jan 2020 11:50:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 46.A5.60679.302C51E5; Wed,  8
-        Jan 2020 11:50:27 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200108115027eucas1p1d3645ba53703780679c662921efbca78~n5wq2ZUJc0954609546eucas1p1D;
-        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200108115027eusmtrp2440bee433050820256d5907847ffbc3b~n5wq1vIf-1831018310eusmtrp2d;
-        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-4e-5e15c2038a2d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 0F.16.08375.302C51E5; Wed,  8
-        Jan 2020 11:50:27 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200108115027eusmtip130fdd566eb8e26c80f969ea589089877~n5wqXbJew1795217952eusmtip18;
-        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 2/2] ASoC: max98090: fix lockdep warning
-Date:   Wed,  8 Jan 2020 12:50:07 +0100
-Message-Id: <20200108115007.31095-2-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108115007.31095-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduznOV3mQ6JxBltvW1hcuXiIyWLjjPWs
-        FlMfPmGzOHG4kdmifWYHo8X58xvYLS7vmsNmMeP8PiaLtUfuslscftPOarHn4it2B26PDZ+b
-        2DwWbCr12LSqk82jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mt7+vcBaMFuvYsO2IywNjFPU
-        uhg5OSQETCQudM5h7GLk4hASWMEocezwdRYI5wujxOGn19ghnM+MEkdevWaFafn64xorRGI5
-        o8TmDYtY4Vo237zOBlLFJmAo0fW2C8wWEUiSOL/gNjNIEbPAZSaJ1Y39zCAJYQELiWffvwPZ
-        HBwsAqoS9xurQMK8ArYSB2a8YYbYJi+xesMBsBJOATuJR0ug7m5nlzixIQzCdpG4daUZqlxY
-        4tXxLewQtozE/53zmUDWSgg0M0o8PLeWHcLpYZS43DSDEaLKWuLOuV9sIAuYBTQl1u/Shwg7
-        Smza/J4dJCwhwCdx460gSJgZyJy0bTozRJhXoqNNCKJaTWLW8XVwaw9euAR1jofE87MzoME7
-        kVFi7ZPnrBMY5WchLFvAyLiKUTy1tDg3PbXYKC+1XK84Mbe4NC9dLzk/dxMjMJWc/nf8yw7G
-        XX+SDjEKcDAq8fD+WCwSJ8SaWFZcmXuIUYKDWUmEV0sHKMSbklhZlVqUH19UmpNafIhRmoNF
-        SZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVAOj0Zq7R3M5ZbfVl1c2F3ZVtP+Rctpg97Rnwfzc
-        p6uTJC73xa+SsG6J6O7W8mMM+XhBq/HD1n/n1T60Vh/gP27gM92XS+Lm59tdj5/KTdVV2d+Q
-        GvS89JdZruy8BaaPn5oUy+8pXR+uUt3qsHH+lsDSP+6Gsb/mnJoVEG7qXJnYacCwZJrP8g9K
-        LMUZiYZazEXFiQCSPfbeIQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsVy+t/xu7rMh0TjDJbdULa4cvEQk8XGGetZ
-        LaY+fMJmceJwI7NF+8wORovz5zewW1zeNYfNYsb5fUwWa4/cZbc4/Kad1WLPxVfsDtweGz43
-        sXks2FTqsWlVJ5tH35ZVjB6fN8kFsEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
-        WhmZKunb2aSk5mSWpRbp2yXoZbz9e4G1YLZexYZtR1gaGKeodTFyckgImEh8/XGNFcQWEljK
-        KLF7HhdEXEbi5LQGVghbWOLPtS62LkYuoJpPjBJ/ln4AS7AJGEp0vQVJcHKICKRI/JyxjhGk
-        iFngJpPEj8XLmUESwgIWEs++fweyOThYBFQl7jdWgYR5BWwlDsx4wwyxQF5i9YYDYCWcAnYS
-        j5aoQdxjK7H76ATmCYx8CxgZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgSG9bZjPzfvYLy0
-        MfgQowAHoxIP74/FInFCrIllxZW5hxglOJiVRHi1dIBCvCmJlVWpRfnxRaU5qcWHGE2BTprI
-        LCWanA+MubySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxCk0x2
-        Vi8o2OReIHbsw1rf3dYhOWmd6cI501Pj2247hcQvuHA6QqYzad1GkVde2Q0xvAqr6zqvN7ye
-        liC4sf3M4zfml9c8qolbHTYvrapukdCvk/VtgZIVTxbdyTx5VVxN69D1X70zmWxt7bJYA+1y
-        5wgKHU9W/vabM5+Z55RHdl5MrKPpcSWW4oxEQy3mouJEAM1aaCyBAgAA
-X-CMS-MailID: 20200108115027eucas1p1d3645ba53703780679c662921efbca78
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200108115027eucas1p1d3645ba53703780679c662921efbca78
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200108115027eucas1p1d3645ba53703780679c662921efbca78
-References: <20200108115007.31095-1-m.szyprowski@samsung.com>
-        <CGME20200108115027eucas1p1d3645ba53703780679c662921efbca78@eucas1p1.samsung.com>
+        Wed, 8 Jan 2020 06:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgAHLvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:51:35 -0500
+Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495E1206DA;
+        Wed,  8 Jan 2020 11:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578484293;
+        bh=UaIxLZUI75Nhbq0wZwJ9Y9VnTVdDPODF8I6Yh67fzSA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tFFKdgGabDv2XpV7p5rWZmsHOHdxYqIOYTmoNUoMI7xPlmiNp1RObtxD7yRvcSbHb
+         eKRLtPgSy39OK+usHe3gQVmMj7vkwqn+nMkZ9QSE8sGMkcqeimCxhcieeoWeqreZI1
+         1bzWtwfZcbYU1e2boj4CmHBo+rM2WbUrcIPue6gk=
+Date:   Wed, 8 Jan 2020 03:51:32 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chao Yu <chao@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20200108115132.GA28331@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191218130935.32402-1-agruenba@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218130935.32402-1-agruenba@redhat.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing
-sensitive registers") extended the code for handling many controls by
-adding a custom put function to them. That new custom put function
-properly handles relations between codec's hardware registers. However
-they used card->dapm_mutex to properly serialize those operations. This
-in turn triggers a lockdep warning about possible circular dependency.
-Fix this by introducing a separate mutex only for serializing the SHDN
-hardware register related operations.
+Hi Andreas,
 
-This fixes the following lockdep warning observed on Exynos4412-based
-Odroid U3 board:
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-rc5-next-20200107 #166 Not tainted
-------------------------------------------------------
-alsactl/1104 is trying to acquire lock:
-ed0d50f4 (&card->dapm_mutex){+.+.}, at: max98090_shdn_save+0x1c/0x28
+On 12/18, Andreas Gruenbacher wrote:
+> Hi Darrick,
+> 
+> can this fix go in via the xfs tree?
+> 
+> Thanks,
+> Andreas
+> 
+> --
+> 
+> The check in block_page_mkwrite that is meant to determine whether an
+> offset is within the inode size is off by one.  This bug has been copied
+> into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
+> ceph).
+> 
+> Fix that by introducing a new page_mkwrite_check_truncate helper that
+> checks for truncate and computes the bytes in the page up to EOF.  Use
+> the helper in the above mentioned filesystems.
+> 
+> In addition, use the new helper in btrfs as well.
+> 
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
+> Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
+> ---
+>  fs/btrfs/inode.c        | 15 ++++-----------
+>  fs/buffer.c             | 16 +++-------------
+>  fs/ceph/addr.c          |  2 +-
+>  fs/ext4/inode.c         | 14 ++++----------
+>  fs/f2fs/file.c          | 19 +++++++------------
+>  fs/iomap/buffered-io.c  | 18 +++++-------------
+>  fs/ubifs/file.c         |  3 +--
+>  include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
+>  8 files changed, 53 insertions(+), 62 deletions(-)
+> 
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 56032c518b26..86c6fcd8139d 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  	ret = VM_FAULT_NOPAGE; /* make the VM retry the fault */
+>  again:
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+>  
+> -	if ((page->mapping != inode->i_mapping) ||
+> -	    (page_start >= size)) {
+> -		/* page got truncated out from underneath us */
+> +	ret2 = page_mkwrite_check_truncate(page, inode);
+> +	if (ret2 < 0)
+>  		goto out_unlock;
+> -	}
+> +	zero_start = ret2;
+>  	wait_on_page_writeback(page);
+>  
+>  	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
+> @@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  		goto again;
+>  	}
+>  
+> +	size = i_size_read(inode);
+>  	if (page->index == ((size - 1) >> PAGE_SHIFT)) {
+>  		reserved_space = round_up(size - page_start,
+>  					  fs_info->sectorsize);
+> @@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  	ret2 = 0;
+>  
+> -	/* page is wholly or partially inside EOF */
+> -	if (page_start + PAGE_SIZE > size)
+> -		zero_start = offset_in_page(size);
+> -	else
+> -		zero_start = PAGE_SIZE;
+> -
+>  	if (zero_start != PAGE_SIZE) {
+>  		kaddr = kmap(page);
+>  		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index d8c7242426bb..53aabde57ca7 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vma->vm_file);
+>  	unsigned long end;
+> -	loff_t size;
+>  	int ret;
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	if ((page->mapping != inode->i_mapping) ||
+> -	    (page_offset(page) > size)) {
+> -		/* We overload EFAULT to mean page got truncated */
+> -		ret = -EFAULT;
+> +	ret = page_mkwrite_check_truncate(page, inode);
+> +	if (ret < 0)
+>  		goto out_unlock;
+> -	}
+> -
+> -	/* page is wholly or partially inside EOF */
+> -	if (((page->index + 1) << PAGE_SHIFT) > size)
+> -		end = size & ~PAGE_MASK;
+> -	else
+> -		end = PAGE_SIZE;
+> +	end = ret;
+>  
+>  	ret = __block_write_begin(page, 0, end, get_block);
+>  	if (!ret)
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index 7ab616601141..ef958aa4adb4 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault *vmf)
+>  	do {
+>  		lock_page(page);
+>  
+> -		if ((off > size) || (page->mapping != inode->i_mapping)) {
+> +		if (page_mkwrite_check_truncate(page, inode) < 0) {
+>  			unlock_page(page);
+>  			ret = VM_FAULT_NOPAGE;
+>  			break;
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 28f28de0c1b6..51ab1d2cac80 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct page *page = vmf->page;
+> -	loff_t size;
+>  	unsigned long len;
+>  	int err;
+>  	vm_fault_t ret;
+> @@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	/* Page got truncated from under us? */
+> -	if (page->mapping != mapping || page_offset(page) > size) {
+> +	err = page_mkwrite_check_truncate(page, inode);
+> +	if (err < 0) {
+>  		unlock_page(page);
+> -		ret = VM_FAULT_NOPAGE;
+> -		goto out;
+> +		goto out_ret;
+>  	}
+> +	len = err;
+>  
+> -	if (page->index == size >> PAGE_SHIFT)
+> -		len = size & ~PAGE_MASK;
+> -	else
+> -		len = PAGE_SIZE;
+>  	/*
+>  	 * Return if we have all the buffers mapped. This avoids the need to do
+>  	 * journal_start/journal_stop which can block and take a long time
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 85af112e868d..0e77b2e6f873 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>  	struct dnode_of_data dn = { .node_changed = false };
+> -	int err;
+> +	int offset, err;
+>  
+>  	if (unlikely(f2fs_cp_error(sbi))) {
+>  		err = -EIO;
+> @@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	file_update_time(vmf->vma->vm_file);
+>  	down_read(&F2FS_I(inode)->i_mmap_sem);
+>  	lock_page(page);
+> -	if (unlikely(page->mapping != inode->i_mapping ||
+> -			page_offset(page) > i_size_read(inode) ||
+> -			!PageUptodate(page))) {
+> +	err = -EFAULT;
+> +	if (likely(PageUptodate(page)))
+> +		err = page_mkwrite_check_truncate(page, inode);
+> +	if (unlikely(err < 0)) {
+>  		unlock_page(page);
+> -		err = -EFAULT;
+>  		goto out_sem;
+>  	}
+> +	offset = err;
 
-but task is already holding lock:
-edb4b49c (&card->controls_rwsem){++++}, at: snd_ctl_ioctl+0xcc/0xbb8
+This is a bit odd, so how about this?
 
-which lock already depends on the new lock.
+	offset = -EFAULT;
+	if (likely(PageUptodate(page))
+		offset = page_mkwrite_check_truncate(page, inode);
 
-the existing dependency chain (in reverse order) is:
+	if (unlikely(offset < 0) {
+		unlock_page(page);
+		err = offset;
+		goto out_sem;
+	}
 
--> #1 (&card->controls_rwsem){++++}:
-       snd_ctl_add_replace+0x3c/0x84
-       dapm_create_or_share_kcontrol+0x24c/0x2e0
-       snd_soc_dapm_new_widgets+0x308/0x594
-       snd_soc_bind_card+0x80c/0xad4
-       devm_snd_soc_register_card+0x34/0x6c
-       odroid_audio_probe+0x288/0x34c
-       platform_drv_probe+0x6c/0xa4
-       really_probe+0x200/0x490
-       driver_probe_device+0x78/0x1f8
-       bus_for_each_drv+0x74/0xb8
-       __device_attach+0xd4/0x16c
-       bus_probe_device+0x88/0x90
-       deferred_probe_work_func+0x3c/0xd0
-       process_one_work+0x22c/0x7c4
-       worker_thread+0x44/0x524
-       kthread+0x130/0x164
-       ret_from_fork+0x14/0x20
-       0x0
+I think Linus will address the merge conflict simply later.
 
--> #0 (&card->dapm_mutex){+.+.}:
-       lock_acquire+0xe8/0x270
-       __mutex_lock+0x9c/0xb18
-       mutex_lock_nested+0x1c/0x24
-       max98090_shdn_save+0x1c/0x28
-       max98090_put_enum_double+0x20/0x40
-       snd_ctl_ioctl+0x190/0xbb8
-       ksys_ioctl+0x470/0xaf8
-       ret_fast_syscall+0x0/0x28
-       0xbefaa564
+Thanks,
 
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&card->controls_rwsem);
-                               lock(&card->dapm_mutex);
-                               lock(&card->controls_rwsem);
-  lock(&card->dapm_mutex);
-
- *** DEADLOCK ***
-
-1 lock held by alsactl/1104:
- #0: edb4b49c (&card->controls_rwsem){++++}, at: snd_ctl_ioctl+0xcc/0xbb8
-
-stack backtrace:
-CPU: 0 PID: 1104 Comm: alsactl Not tainted 5.5.0-rc5-next-20200107 #166
-Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-(unwind_backtrace) from [<c010e180>] (show_stack+0x10/0x14)
-(show_stack) from [<c0b2a09c>] (dump_stack+0xb4/0xe0)
-(dump_stack) from [<c018a1c0>] (check_noncircular+0x1ec/0x208)
-(check_noncircular) from [<c018c5dc>] (__lock_acquire+0x1210/0x25ec)
-(__lock_acquire) from [<c018e2d8>] (lock_acquire+0xe8/0x270)
-(lock_acquire) from [<c0b49678>] (__mutex_lock+0x9c/0xb18)
-(__mutex_lock) from [<c0b4a110>] (mutex_lock_nested+0x1c/0x24)
-(mutex_lock_nested) from [<c0839b3c>] (max98090_shdn_save+0x1c/0x28)
-(max98090_shdn_save) from [<c083a5b8>] (max98090_put_enum_double+0x20/0x40)
-(max98090_put_enum_double) from [<c080d0e8>] (snd_ctl_ioctl+0x190/0xbb8)
-(snd_ctl_ioctl) from [<c02cafec>] (ksys_ioctl+0x470/0xaf8)
-(ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-...
-
-Fixes: 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing sensitive registers")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- sound/soc/codecs/max98090.c | 10 ++++++----
- sound/soc/codecs/max98090.h |  1 +
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index c01ce4a3f86d..454cb8e5b0a1 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -52,14 +52,14 @@ static void max98090_shdn_restore_locked(struct max98090_priv *max98090)
- 
- static void max98090_shdn_save(struct max98090_priv *max98090)
- {
--	mutex_lock(&max98090->component->card->dapm_mutex);
-+	mutex_lock(&max98090->shdn_lock);
- 	max98090_shdn_save_locked(max98090);
- }
- 
- static void max98090_shdn_restore(struct max98090_priv *max98090)
- {
- 	max98090_shdn_restore_locked(max98090);
--	mutex_unlock(&max98090->component->card->dapm_mutex);
-+	mutex_unlock(&max98090->shdn_lock);
- }
- 
- static int max98090_put_volsw(struct snd_kcontrol *kcontrol,
-@@ -2313,12 +2313,12 @@ static void max98090_pll_work(struct max98090_priv *max98090)
- 	 */
- 
- 	/* Toggle shutdown OFF then ON */
--	mutex_lock(&component->card->dapm_mutex);
-+	mutex_lock(&max98090->shdn_lock);
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, 0);
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, M98090_SHDNN_MASK);
--	mutex_unlock(&component->card->dapm_mutex);
-+	mutex_unlock(&max98090->shdn_lock);
- 
- 	for (i = 0; i < 10; ++i) {
- 		/* Give PLL time to lock */
-@@ -2731,6 +2731,8 @@ static int max98090_i2c_probe(struct i2c_client *i2c,
- 	if (max98090 == NULL)
- 		return -ENOMEM;
- 
-+	mutex_init(&max98090->shdn_lock);
-+
- 	if (ACPI_HANDLE(&i2c->dev)) {
- 		acpi_id = acpi_match_device(i2c->dev.driver->acpi_match_table,
- 					    &i2c->dev);
-diff --git a/sound/soc/codecs/max98090.h b/sound/soc/codecs/max98090.h
-index 0a31708b7df7..dabd8be34a01 100644
---- a/sound/soc/codecs/max98090.h
-+++ b/sound/soc/codecs/max98090.h
-@@ -1539,6 +1539,7 @@ struct max98090_priv {
- 	unsigned int pa2en;
- 	unsigned int sidetone;
- 	bool master;
-+	struct mutex shdn_lock;
- 	int saved_count;
- 	int saved_shdn;
- };
--- 
-2.17.1
-
+>  
+>  	/* block allocation */
+>  	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+> @@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	if (PageMappedToDisk(page))
+>  		goto out_sem;
+>  
+> -	/* page is wholly or partially inside EOF */
+> -	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
+> -						i_size_read(inode)) {
+> -		loff_t offset;
+> -
+> -		offset = i_size_read(inode) & ~PAGE_MASK;
+> +	if (offset != PAGE_SIZE)
+>  		zero_user_segment(page, offset, PAGE_SIZE);
+> -	}
+>  	set_page_dirty(page);
+>  	if (!PageUptodate(page))
+>  		SetPageUptodate(page);
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index d33c7bc5ee92..1aaf157fd6e9 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+>  	unsigned long length;
+> -	loff_t offset, size;
+> +	loff_t offset;
+>  	ssize_t ret;
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	offset = page_offset(page);
+> -	if (page->mapping != inode->i_mapping || offset > size) {
+> -		/* We overload EFAULT to mean page got truncated */
+> -		ret = -EFAULT;
+> +	ret = page_mkwrite_check_truncate(page, inode);
+> +	if (ret < 0)
+>  		goto out_unlock;
+> -	}
+> -
+> -	/* page is wholly or partially inside EOF */
+> -	if (offset > size - PAGE_SIZE)
+> -		length = offset_in_page(size);
+> -	else
+> -		length = PAGE_SIZE;
+> +	length = ret;
+>  
+> +	offset = page_offset(page);
+>  	while (length > 0) {
+>  		ret = iomap_apply(inode, offset, length,
+>  				IOMAP_WRITE | IOMAP_FAULT, ops, page,
+> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+> index cd52585c8f4f..91f7a1f2db0d 100644
+> --- a/fs/ubifs/file.c
+> +++ b/fs/ubifs/file.c
+> @@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  
+>  	lock_page(page);
+> -	if (unlikely(page->mapping != inode->i_mapping ||
+> -		     page_offset(page) > i_size_read(inode))) {
+> +	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
+>  		/* Page got truncated out from underneath us */
+>  		goto sigbus;
+>  	}
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 37a4d9e32cd3..ccb14b6a16b5 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *inode)
+>  			       PAGE_SHIFT;
+>  }
+>  
+> +/**
+> + * page_mkwrite_check_truncate - check if page was truncated
+> + * @page: the page to check
+> + * @inode: the inode to check the page against
+> + *
+> + * Returns the number of bytes in the page up to EOF,
+> + * or -EFAULT if the page was truncated.
+> + */
+> +static inline int page_mkwrite_check_truncate(struct page *page,
+> +					      struct inode *inode)
+> +{
+> +	loff_t size = i_size_read(inode);
+> +	pgoff_t index = size >> PAGE_SHIFT;
+> +	int offset = offset_in_page(size);
+> +
+> +	if (page->mapping != inode->i_mapping)
+> +		return -EFAULT;
+> +
+> +	/* page is wholly inside EOF */
+> +	if (page->index < index)
+> +		return PAGE_SIZE;
+> +	/* page is wholly past EOF */
+> +	if (page->index > index || !offset)
+> +		return -EFAULT;
+> +	/* page is partially inside EOF */
+> +	return offset;
+> +}
+> +
+>  #endif /* _LINUX_PAGEMAP_H */
+> -- 
+> 2.20.1
