@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1E4C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE46CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F57420692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BFB2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgAHQrW (ORCPT
+        id S1729482AbgAHQrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:47:22 -0500
-Received: from mga01.intel.com ([192.55.52.88]:37181 "EHLO mga01.intel.com"
+        Wed, 8 Jan 2020 11:47:36 -0500
+Received: from mga04.intel.com ([192.55.52.120]:31992 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgAHQrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:47:21 -0500
+        id S1728511AbgAHQrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:47:36 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:47:20 -0800
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:47:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="246394964"
+   d="scan'208";a="271875016"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jan 2020 08:47:16 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jan 2020 08:47:30 -0800
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEUG-0005Yf-16; Wed, 08 Jan 2020 18:47:16 +0200
-Date:   Wed, 8 Jan 2020 18:47:16 +0200
+        id 1ipEUU-0005Yt-KU; Wed, 08 Jan 2020 18:47:30 +0200
+Date:   Wed, 8 Jan 2020 18:47:30 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Darren Hart <dvhart@infradead.org>,
@@ -48,15 +48,15 @@ Cc:     Darren Hart <dvhart@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 22/36] platform/x86: intel_pmc_ipc: Drop
- ipc_data_readb()
-Message-ID: <20200108164716.GL32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 23/36] platform/x86: intel_pmc_ipc: Get rid of
+ unnecessary includes
+Message-ID: <20200108164730.GM32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-23-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-24-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-23-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-24-mika.westerberg@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,33 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:47PM +0300, Mika Westerberg wrote:
-> This function is not used anywhere so drop it completely.
+On Wed, Jan 08, 2020 at 02:41:48PM +0300, Mika Westerberg wrote:
+> There is no point including headers that are not needed in the driver so
+> drop them.
 > 
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_pmc_ipc.c | 5 -----
->  1 file changed, 5 deletions(-)
+>  drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+>  1 file changed, 10 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index 677ed470e14e..83b106f66fa6 100644
+> index 83b106f66fa6..8527327d88c7 100644
 > --- a/drivers/platform/x86/intel_pmc_ipc.c
 > +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -184,11 +184,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
->  	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
->  }
+> @@ -12,23 +12,13 @@
+>   */
 >  
-> -static inline u8 __maybe_unused ipc_data_readb(u32 offset)
-> -{
-> -	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
-> -}
-> -
->  static inline u32 ipc_data_readl(u32 offset)
->  {
->  	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+>  #include <linux/acpi.h>
+> -#include <linux/atomic.h>
+> -#include <linux/bitops.h>
+>  #include <linux/delay.h>
+> -#include <linux/device.h>
+>  #include <linux/errno.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> -#include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/notifier.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/pm.h>
+> -#include <linux/pm_qos.h>
+> -#include <linux/sched.h>
+> -#include <linux/spinlock.h>
+> -#include <linux/suspend.h>
+>  
+>  #include <asm/intel_pmc_ipc.h>
+>  
 > -- 
 > 2.24.1
 > 
