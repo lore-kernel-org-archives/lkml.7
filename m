@@ -2,106 +2,68 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283FCC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405C9C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E3020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:33:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvDZS20i"
+	by mail.kernel.org (Postfix) with ESMTP id 1CA9820673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgAHPdo (ORCPT
+        id S1728941AbgAHPek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:33:44 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35969 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPdn (ORCPT
+        Wed, 8 Jan 2020 10:34:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50432 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727260AbgAHPej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:33:43 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so1762439pgc.3;
-        Wed, 08 Jan 2020 07:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WyXcOmA2FR+YTuPVbgmSbQ9Ctc12k9J6QS5aQgtYwtE=;
-        b=uvDZS20iYP9KaAuiFu/nD1/lqQcz+NX7dyzPpQtjZTEUU3LKFPr7xiMGlGPnx4wJPj
-         wMWJmrKO97qI4/AwAYPJs4JL6R8fdKkzXzqxH9l9j3jnezLSMIkAWA3lnZVmXqB0JSi2
-         a5wxfZBhryyydDnrIxrcTjeN2N2pkJB02RtnzQ4ARckn9h5krfihSMI++qT8/r6r26pg
-         6B3dDtmv3nx+VJt4WwMw20upGWfEmggkHnAy9Z0waOFlA1xLesBL4cm8AGurGCMzdVF6
-         VhbwAv25S7IclxSsIBLgkOYJdDxY4aWMyn5kDhfZzCpqeIjY1GUCRzG/eIajVf+fvANO
-         88qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WyXcOmA2FR+YTuPVbgmSbQ9Ctc12k9J6QS5aQgtYwtE=;
-        b=tAGOHMUZBFdkSq1Vf/IjHtwguX2i1ELS+YMVTv/b2YnoXh+Gr0nWSa7P/ywB0vzPYR
-         iOi1T9gZo+gloZxKS2hjmDPFszBuwbhRAzbG9RC9UmwAaRGhoQQZTVjKV+6h8GLoX4z3
-         gI8lOEGJDfyUwb8TTbYammrXYOo5flUoEzWKPRO8/s3Kso/oupzlWpjJVm12+f18NW0G
-         J9ZAPtD7DRz3sRvX4a4bLvg4m3H+41u4YjIKqT85Jeqn/h5Kvf9z2HKIGg4Nd3qYnk2w
-         OftK9t385ZlVhMzq//Vi4lk706P6VzirDviP/zkre7QivdW5/MuvTG9nz0zLQ/51eDqF
-         36sQ==
-X-Gm-Message-State: APjAAAXvcXlYSq1QOCOQ7SwKIz3JvI0pTpgK3qFT2hufduv+u6LeYrwK
-        5Y0WQatZ2GHhQJxCd69R0bA=
-X-Google-Smtp-Source: APXvYqx4XxyCgoLUaNAdjTVwAPJUHnFqyiZqjcKi9caXl89EU9VXSYOwIKBb/pA8A2pwI5J8f0xnGw==
-X-Received: by 2002:a63:4e06:: with SMTP id c6mr5707782pgb.187.1578497622803;
-        Wed, 08 Jan 2020 07:33:42 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v4sm4440445pgo.63.2020.01.08.07.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 07:33:42 -0800 (PST)
-Date:   Wed, 8 Jan 2020 07:33:41 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-Message-ID: <20200108153341.GB28530@roeck-us.net>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com>
- <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
- <yq1sgkq21ll.fsf@oracle.com>
+        Wed, 8 Jan 2020 10:34:39 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipDLt-0001th-CA; Wed, 08 Jan 2020 16:34:33 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CC2F51060B2; Wed,  8 Jan 2020 16:34:32 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Julian Calaby <julian.calaby@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] y2038: sparc: remove use of struct timex
+In-Reply-To: <20191216144907.1931511-1-arnd@arndb.de>
+References: <20191216144907.1931511-1-arnd@arndb.de>
+Date:   Wed, 08 Jan 2020 16:34:32 +0100
+Message-ID: <871rsaezcn.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1sgkq21ll.fsf@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 08:12:06PM -0500, Martin K. Petersen wrote:
-> 
-> Guenter,
-> 
-> > Any idea how I might be able to reproduce this ? So far I have been
-> > unsuccessful.
-> >
-> > Building drivetemp into the kernel, with ahci and everything SCSI
-> > built as module, doesn't trigger the crash for me. This is with the
-> > drivetemp patch (v3) as well as commit d188b0675b ("scsi: core: Add
-> > sysfs attributes for VPD pages 0h and 89h") applied on top of v5.4.7.
-> 
-> This is with 5.5-rc1. I'll try another kernel.
-> 
-> My repro is:
-> 
-> # modprobe drivetemp
-> # modprobe <any SCSI driver, including ahci>
-> 
-No luck on my side. Can you provide a traceback ? Maybe we can use it
-to find out what is happening.
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Thanks,
-Guenter
+> 'struct timex' is one of the last users of 'struct timeval' and is
+> only referenced in one place in the kernel any more, to convert the
+> user space timex into the kernel-internal version on sparc64, with a
+> different tv_usec member type.
+>
+> As a preparation for hiding the time_t definition and everything
+> using that in the kernel, change the implementation once more
+> to only convert the timeval member, and then enclose the
+> struct definition in an #ifdef.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
