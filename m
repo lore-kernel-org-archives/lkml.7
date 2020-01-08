@@ -2,107 +2,264 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D61C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9131EC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C906820720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9912067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYN11j2i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8knQN1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgAHQRa (ORCPT
+        id S1729231AbgAHQWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:17:30 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44121 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgAHQR3 (ORCPT
+        Wed, 8 Jan 2020 11:22:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40782 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbgAHQWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:17:29 -0500
-Received: by mail-ed1-f68.google.com with SMTP id bx28so2997927edb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:17:28 -0800 (PST)
+        Wed, 8 Jan 2020 11:22:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so4020884wrn.7;
+        Wed, 08 Jan 2020 08:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ixNLloMM7MEsta6mQM3CnnoI5zVcxQu1H3iGtxld7Kc=;
-        b=IYN11j2i2b3yDnBf7f+iDcswMuW/81T76Q/ozJTLIk0XuvyeDwwSw3JwBU6setSBRD
-         M4c1qsBA5BaTA+pUkJsOuHyJG1aegZXhnzDCpNvdaeH6L8tysTVA+ymH53FRFXXCzHiU
-         2n23JOOooOkuOKHvlQG7bnkvczZJRKZzfhG/9rjU5yNi33ZDxgUk+NO6iCTaYA+wRK0c
-         cbjaYWyjFQPc3lcQTNCdiE/v9XIjEb7FFN61NZj9FrPgxiYQgO0Y3si9ZNMp7reKiNoz
-         w9To10GYO48mMyUUwaCuHFt/lwb30c2MJRScrjk+wSHxdPfQ1dEvmurQW92dEbBsVYfC
-         nqgg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cUbkapGV6usokmQ+FjkB5jOvk1qHqcO9wl6AKNn00Nk=;
+        b=h8knQN1o2rUkXrs6cmqV6R0pZjpNIqTB7V3oR6JagTvF2BpOTk33TgZQ2VL93ruQ7P
+         NNtDsRaibXPh7F02dYHtJ23M3Y3TC1viY/GMDwFXVwsH7Drp2dVaq+ui+IOEhKqEWxww
+         RkI1XxZjkJLPRpBc3L41n30oe3o1GEAs4M3Vf0C9LFw4uYItxRTiYzLwTXE8YL6e6lF7
+         ejW2UtnyvBVNEuAw3RGFEgpsA20udS2bYVFlzlOWNZ6OhFIWCLIfEayHqXthpZXu3lfl
+         ruevaOxPDyQiiiDNRjoGGGj4DGK0ynXBLEITcvzszreVeWlDIGmLWGx9Dl8JZK2FYWcR
+         rrxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ixNLloMM7MEsta6mQM3CnnoI5zVcxQu1H3iGtxld7Kc=;
-        b=VZKShel7nu06pG6rFBLBXmS6bLwwrAKylOMqWwzsmwlhbYUvY9d2CwTlYQbW0a5cwp
-         65EjWPh8m1BNeMlWvg5UR5Cv0sJBM84NWQ9gQZswXBWO+OAXPBG6FjMICc7T46aWykex
-         XKvbXsg5Q9w5/pCwyD8sn0ZvvVOaUre9WdmnEdHAwADJ5YPdgiWpZEqIKWW2FC/2ZwuE
-         PyhBTqR2vAMNIVsQv/ASPIAbv3weAOzMqRSH1ELGJQUPBhIxaD5C3IvTsaX9r/nQGyLC
-         RbvAdYA3DBk3bU8ZR6qX5Q95JfXSK+WfeMTJQf/RsktrYaSeZspSkJJvTHekUotsOnfn
-         g2AQ==
-X-Gm-Message-State: APjAAAXszQjMKICA41NTmRg4b8qwrwwYjcw/dbR3jrzZbTdc/LjcXMx6
-        Gzk4KQjf6yEVLYCjeFqqxna0JQ==
-X-Google-Smtp-Source: APXvYqyNCsBoBb6b0+/VFgEFHT6BCXMQhc38kBy0a5iYr3sUoeSElD5NnXUq55ySz//tov60JWmR9g==
-X-Received: by 2002:a17:906:229b:: with SMTP id p27mr5692899eja.21.1578500248323;
-        Wed, 08 Jan 2020 08:17:28 -0800 (PST)
-Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id dn12sm89884edb.89.2020.01.08.08.17.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 08:17:27 -0800 (PST)
-Subject: Re: [PATCH v4 06/12] dt-bindings: media: venus: Convert msm8916 to DT
- schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        dikshita@codeaurora.org
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
- <20200106154929.4331-7-stanimir.varbanov@linaro.org>
- <20200106220414.GA10744@bogus>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <a224bad9-2eee-a906-80ba-573c1525afb1@linaro.org>
-Date:   Wed, 8 Jan 2020 18:17:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        bh=cUbkapGV6usokmQ+FjkB5jOvk1qHqcO9wl6AKNn00Nk=;
+        b=nkDqtskOAfVkvyShgRwxCXv+owi2GHE//gTa7CCDDPLnruO8InaXQZ4rE1ejbyhclv
+         +oV1DM5gjRhppxMKCknUjq/VkoIudrTTrDk+2q42Ef8g4+iqisxt+lZ1twqRgPA7bzzd
+         +A5LmZ6LYtK0NYTy6o+gKOq9uMljaOhVWNlnViMiwQPVQJU3nJw5c684ZC5Q2QpHUP19
+         hvEt9lkRNVeCvy3UKpWEUQ9ejFs6Y1fsiqsZ3zfbrvDdFJwcXskcEDeHPwOmWOG21Pb1
+         A0Wn77qixXvKEwVoFUDTnWp7Pnjdso3pv5FI4l5JZXOpNi3kEIMadWm3/UR85ERDe6uq
+         zHHA==
+X-Gm-Message-State: APjAAAWYIKLIiegsRceJUZwGVTQfDPc5ru9Tdib8JE/kZvfr+0QBwWC/
+        b6hyDtttjtftfwb8MIHT0E0=
+X-Google-Smtp-Source: APXvYqwhZnXB7Q+A6al2Q81sPowDetau5NML4GV6kVoXXoSM8NYtMGUCa8Dyubp6uMZAvSBs3Fp6EA==
+X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr5761235wrx.304.1578500533082;
+        Wed, 08 Jan 2020 08:22:13 -0800 (PST)
+Received: from prasmi.home ([2a00:23c6:d18:6d00:2811:8b65:294e:fa09])
+        by smtp.gmail.com with ESMTPSA id q3sm5112180wrn.33.2020.01.08.08.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:22:12 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [v3 0/6] Add support for PCIe controller to work in endpoint mode on R-Car SoCs
+Date:   Wed,  8 Jan 2020 16:22:05 +0000
+Message-Id: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200106220414.GA10744@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+This patch series adds support for PCIe controller on rcar to work in
+endpoint mode, this also extends the epf framework to handle base region
+for mapping PCI address locally..
 
-Thanks for the review!
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-On 1/7/20 12:04 AM, Rob Herring wrote:
-> On Mon,  6 Jan 2020 17:49:23 +0200, Stanimir Varbanov wrote:
->> Convert qcom,msm8916-venus Venus binding to DT schema
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  .../bindings/media/qcom,msm8916-venus.yaml    | 119 ++++++++++++++++++
->>  1 file changed, 119 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8916-venus.yaml
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
 
-I guess you are agree with merging dt-binding patches from this series
-through linux-media tree, right?
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+lspci output on host:
+=====================
+
+01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0
+        Interrupt: pin A routed to IRQ 152
+        Region 0: Memory at fe200200 (64-bit, non-prefetchable) [size=128]
+        Region 2: Memory at fe200000 (64-bit, non-prefetchable) [size=256]
+        Region 4: Memory at fe200100 (64-bit, non-prefetchable) [size=256]
+        Capabilities: [40] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+        Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+                Address: 00000004fa36d000  Data: 0001
+                Masking: fffffffe  Pending: 00000000
+        Capabilities: [70] Express (v2) Endpoint, MSI 00
+                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+                DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+                        RlxdOrd- ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+                        MaxPayload 128 bytes, MaxReadReq 128 bytes
+                DevSta: CorrErr+ UncorrErr+ FatalErr- UnsuppReq+ AuxPwr- TransPend-
+                LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s, Exit Latency L0s unlimited
+                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 5GT/s, Width x1, TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+                DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR-, OBFF Not Supported
+                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+                         AtomicOpsCtl: ReqEn-
+                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+                         Compliance De-emphasis: -6dB
+                LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+                         EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+        Capabilities: [100 v1] Virtual Channel
+                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+                Arb:    Fixed- WRR32- WRR64- WRR128-
+                Ctrl:   ArbSelect=Fixed
+                Status: InProgress-
+                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+                        Status: NegoPending- InProgress-
+        Kernel driver in use: pci-endpoint-test
+
+BAR Test
+========
+root@g2e:~# pcitest -b 0
+BAR0:           OKAY
+root@g2e:~# pcitest -b 1
+BAR1:           NOT OKAY
+root@g2e:~# pcitest -b 2
+BAR2:           OKAY
+root@g2e:~# pcitest -b 3
+BAR3:           NOT OKAY
+root@g2e:~# pcitest -b 4
+BAR4:           OKAY
+root@g2e:~# pcitest -b 5
+BAR5:           NOT OKAY
+
+Note: BAR test for 1/3/5 fail because they are configured to be 64bits
+
+Interrupt Test
+==============
+root@g2e:~# pcitest -i 0
+SET IRQ TYPE TO LEGACY:         OKAY
+root@g2e:~# pcitest -l
+LEGACY IRQ:     OKAY
+
+Read Test
+=========
+root@g2e:~# pcitest -r -s 1
+READ (      1 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024
+READ (   1024 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1025
+READ (   1025 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024000
+READ (1024000 bytes):           OKAY
+root@g2e:~# pcitest -r -s 1024001
+READ (1024001 bytes):           OKAY
+
+Write Test
+==========
+root@g2e:~# pcitest -w -s 1
+WRITE (      1 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024
+WRITE (   1024 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1025
+WRITE (   1025 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024000
+WRITE (1024000 bytes):          OKAY
+root@g2e:~# pcitest -w -s 1024001
+WRITE (1024001 bytes):          OKAY
+
+Copy Test
+=========
+root@g2e:~# pcitest -c -s 1
+COPY (      1 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024
+COPY (   1024 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1025
+COPY (   1025 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024000
+COPY (1024000 bytes):           OKAY
+root@g2e:~# pcitest -c -s 1024001
+COPY (1024001 bytes):           OKAY
+
+
+Lad Prabhakar (6):
+  PCI: rcar: Preparation for adding endpoint support
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add support for rcar PCIe controller in endpoint mode
+  misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   76 +
+ arch/arm64/configs/defconfig                  |    2 +-
+ drivers/misc/pci_endpoint_test.c              |    3 +
+ drivers/pci/controller/Kconfig                |   11 +-
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   12 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   31 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  497 +++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1044 ++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1232 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  132 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |   14 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
+ drivers/pci/endpoint/pci-epc-core.c           |    7 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  199 ++-
+ include/linux/pci-epc.h                       |   46 +-
+ 16 files changed, 2064 insertions(+), 1274 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
 
 -- 
-regards,
-Stan
+2.20.1
+
