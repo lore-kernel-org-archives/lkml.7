@@ -2,125 +2,167 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E40C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10685C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250F42067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD20420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8TgNDuz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+By21YM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgAHQaq (ORCPT
+        id S1728852AbgAHQa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:30:46 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37272 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbgAHQap (ORCPT
+        Wed, 8 Jan 2020 11:30:56 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38960 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgAHQaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:30:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so3086763edb.4;
-        Wed, 08 Jan 2020 08:30:44 -0800 (PST)
+        Wed, 8 Jan 2020 11:30:55 -0500
+Received: by mail-ed1-f68.google.com with SMTP id t17so3068729eds.6;
+        Wed, 08 Jan 2020 08:30:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7o9krT2FUFfJzalxomNVkht5y8lOkSzgYqZOdm5yd0M=;
-        b=X8TgNDuz+uEj76NEkllamJk67PcA5BUx9CHYIBn0iZCL1hhHXUlYs14iUvNwIuuS7f
-         kTTfoDZxbxkhEIZLHTP4UQ3cCdGf28XCWMfZ9WIr3KBzfiTihOqAjllKOzkWCKE1DGAR
-         svr5zwYLmkCY+wocqYDhNi5qyjWvN80z8QvAZEINIiB96tTe1HtDtSwe+yT/qjqGv7pM
-         0DVCSJefobFFR3r0Jazu9+7z1cRsncaZqKySZzYhssuLnMc58cjMCUDsSX1gKNQH+6Rg
-         FVxYDocWq5DzrIhtY2iEVv4/YIi0jygNC7pBCJdH2QfpjFthNLvQ8+9CX0YWyKrMP2so
-         hU+w==
+         :cc;
+        bh=CmdeZPKAzWMubu2XNK5KT8RXc9jP8l1vb7Bp6B2rpwE=;
+        b=a+By21YMez7ITO7fBJ5SLtyuGYWCEAYTizKG265xum56+yJwU8VkuDpOIB9EmPTwpZ
+         z8ktcq3D4MzSK3oQsul8sGaxE5b5CgNMzR4E91Me2KfuJviwNSsJLeIYQEOGXWsztwhJ
+         vNtwFw7D1wOLUWaDQZTo/e3maaxky7GzLFRwks4F2Bp32ffT8VxHSCubnyguDjR2Px2V
+         eTvj6oSGecD7iN1nIDorZ08CLcYaU7GCNfYMfH1Q6mD2PyPBUn5QJQw33R6NxyPQ87jf
+         YzrWq1mkpKwL+vcCdQ+NEJGZc1ATYIJCDMkfeHtIgvrvZFSgNpmF5cuOfmI4sHTLSF37
+         z0eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7o9krT2FUFfJzalxomNVkht5y8lOkSzgYqZOdm5yd0M=;
-        b=CgbOac+xOxRm7UxAdFcjKnXYM+1mxa0FPjr812YAXY+uoDq/6QbDNrDAAiTfIIszlW
-         mG1obcBJ6xKELrxzCq2DpuTCYqbwhiL2UZfngb7TBSTgoCvdcrR0yrN/FKyR3GGJGwtw
-         UdDI6bwDp3Qet0EHazJmixAGZoIfOdg62DcGDikX2MgrJZRNLGLQ5CM1LXiy+KqRszzS
-         VCZ4RyXb2hTOObOFBr7uza7bULV9XUW13CS1bg0qTdbssYf1Umy2um8/WNmXnkyS3NCJ
-         HicCQlSH+gb1+PL7OcJLvqxlEEXXsPVAuJOd5B4JRY+5ryKJuuzQFXJt/R5T/R4rcPvL
-         +0sg==
-X-Gm-Message-State: APjAAAVUHfxhRY72T9xBATfrbwsMCAzVW4i719kppu9kMcEAzFieyWG6
-        NDCUz8TBBE1f/FeCaEiX1yoWpqo97WGubIOtf3U=
-X-Google-Smtp-Source: APXvYqzF4ARmkb+wNjI820dBjXqHoID1H5hB7nCDR7eZCrEtV123/DMTKyIfpgBjt0+My1LvwCjXkpgwBJXhyAFw3xo=
-X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr5803958ejb.164.1578501043781;
- Wed, 08 Jan 2020 08:30:43 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=CmdeZPKAzWMubu2XNK5KT8RXc9jP8l1vb7Bp6B2rpwE=;
+        b=pdyiYtGAYpn1SWGAisYWGvX0rxJAlK8bMhI9D6QlXi33OJDPSB6Bl6tXab4eamoUYW
+         VRBZTm3XMqCqfhUDJHLmPHxSFBqOPs9YFuJrcQqL2BwTv+nsfAXp75523Lp8RUTyR44A
+         fC5T1+1glF32l21/nCbRjSlrZQUHjmo6b2Uz/SooCBqq/uFBEKjQg2BN+woPGtc4yW5h
+         90upHxkf0qMs1qZvX1QWJ5KZvueAnY8HKJbSzGWwgWtLsSkXMwGb8IAql87YjHPado4K
+         xy78ap2/vQcUc2xlTi1edX3RLs4amJ16nfNT1kxpj7VE8uQRrJJXcV7ERyznNexk1bDK
+         QKaw==
+X-Gm-Message-State: APjAAAWaNXCyyXfmoYFBIeur5paPqOPlorm8fSkWfOasXPz8NTVGJQIk
+        yfYNYQQ6VcU9gIS6+Cs50zfdZV11E+86hWnylnE=
+X-Google-Smtp-Source: APXvYqyQOzz6ctl8+x8JNHU9GUZ2T9OCNNPHssMymx62PLknY+EMQ1OGWhEPaloBmbuu9VP3yynCUB3xfwFaEQBhE+Y=
+X-Received: by 2002:a17:906:2296:: with SMTP id p22mr5818691eja.269.1578501053123;
+ Wed, 08 Jan 2020 08:30:53 -0800 (PST)
 MIME-Version: 1.0
-References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
- <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com> <HK0PR01MB35219F5DF16CE54D088ACE2CFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
-In-Reply-To: <HK0PR01MB35219F5DF16CE54D088ACE2CFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 8 Jan 2020 18:30:31 +0200
-Message-ID: <CA+h21hrb70QTaaXzxSxXGE=JaOLPazKmAEqSdMxOEcAYFVrxCg@mail.gmail.com>
-Subject: Re: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
-To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zero19850401@gmail.com" <zero19850401@gmail.com>
+References: <20200108013847.899170-1-robdclark@gmail.com> <20200108013847.899170-2-robdclark@gmail.com>
+ <37d0baaa-3f94-9414-88e7-7e849b0c5de5@redhat.com>
+In-Reply-To: <37d0baaa-3f94-9414-88e7-7e849b0c5de5@redhat.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 8 Jan 2020 08:30:42 -0800
+Message-ID: <CAF6AEGseE9iV1xDd1_hRDiKp0-a1usk+xqnyyqbuphwsvLTZmQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
+To:     Tom Rix <trix@redhat.com>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johnson,
+On Wed, Jan 8, 2020 at 7:38 AM Tom Rix <trix@redhat.com> wrote:
+>
+>
+> On 1/7/20 5:38 PM, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Since zap firmware can be device specific, allow for a firmware-name
+> > property in the zap node to specify which firmware to load, similarly to
+> > the scheme used for dsp/wifi/etc.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
+> >  1 file changed, 29 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > index 112e8b8a261e..aa8737bd58db 100644
+> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> >  {
+> >       struct device *dev = &gpu->pdev->dev;
+> >       const struct firmware *fw;
+> > +     const char *signed_fwname = NULL;
+> >       struct device_node *np, *mem_np;
+> >       struct resource r;
+> >       phys_addr_t mem_phys;
+> > @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> >
+> >       mem_phys = r.start;
+> >
+> > -     /* Request the MDT file for the firmware */
+> > -     fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> > +     /*
+> > +      * Check for a firmware-name property.  This is the new scheme
+> > +      * to handle firmware that may be signed with device specific
+> > +      * keys, allowing us to have a different zap fw path for different
+> > +      * devices.
+> > +      *
+> > +      * If the firmware-name property is found, we bypass the
+> > +      * adreno_request_fw() mechanism, because we don't need to handle
+> > +      * the /lib/firmware/qcom/* vs /lib/firmware/* case.
+> > +      *
+> > +      * If the firmware-name property is not found, for backwards
+> > +      * compatibility we fall back to the fwname from the gpulist
+> > +      * table.
+> > +      */
+> > +     of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
+> > +     if (signed_fwname) {
+> > +             fwname = signed_fwname;
+> > +             ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
+> > +             if (ret) {
+> > +                     DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
+> Could adreno_request_fw be called with fwname if request_firmware_direct fails ?
 
-On Wed, 8 Jan 2020 at 09:15, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=B3)
-<JohnsonCH.Chen@moxa.com> wrote:
->
-> Hi Vladimir,
->
-> Vladimir Oltean <olteanv@gmail.com> =E6=96=BC 2020=E5=B9=B41=E6=9C=887=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> >
-> > Hi Chen,
-> >
-> > On Tue, 7 Jan 2020 at 12:37, Johnson CH Chen (=E9=99=B3=E6=98=AD=E5=8B=
-=B3)
-> > <JohnsonCH.Chen@moxa.com> wrote:
-> > >
-> > > Add dma_endian_le to solve ethernet TX/RX problems for freescale
-> > > ls1021a. Without this, it will result in rx-busy-errors by ethtool, a=
-nd transmit queue timeout in ls1021a's platforms.
-> > >
-> > > Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
-> > > ---
-> >
-> > This patch is not valid. The endianness configuration in
-> > eTSECx_DMACTRL is reserved and not applicable.
-> > What is the value of SCFG_ETSECDMAMCR bits ETSEC_BD and ETSEC_FR_DATA
-> > on your board? Typically this is configured by the bootloader.
-> >
->
-> Thanks your suggestion. I use linux-fsl-sdk-v1.7, and find "dma-endian-le=
-" is used in ls1021a.dtsi and gianfar.c/.h. For bootloader, version is U-Bo=
-ot version is 2015.01-dirty and it seems old and not includes "SCFG_ETSECDM=
-AMCR bits".
->
-> It seems solution is included in bootloader, not in device tree for
-> freescale/NXP: https://lxr.missinglinkelectronics.com/uboot/board/freesca=
-le/ls1021aiot/ls1021aiot.c
->
-> It means bootloader provides functions are the same as device tree's.
-> So what's benefit for this desgin? It seems we need to upgrade kernel and=
- bootloader to satisfy our need, not just upgrade kernel only. So many than=
-ks!
->
 
-I'm not sure that the Freescale SDK 1.7 is of any relevance here. The
-point is that this patch is breaking Ethernet for every other LS1021A
-board except yours.
+*possibly*.. initially I avoided this because the failure mode for
+incorrectly signed firmware was silent and catestrophic.  But Bjorn
+tells me this has been fixed.. in which case we could try and detect
+if it is the incorrect fw.  I need to try some experiments to confirm
+we can detect this case properly.
 
-Regards,
--Vladimir
+BR,
+-R
+
+> > +                     fw = ERR_PTR(ret);
+> > +             }
+> > +     } else {
+> > +             /* Request the MDT file for the firmware */
+> > +             fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> > +     }
+> > +
+> >       if (IS_ERR(fw)) {
+> >               DRM_DEV_ERROR(dev, "Unable to load %s\n", fwname);
+> >               return PTR_ERR(fw);
+> > @@ -95,7 +121,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> >        * not.  But since we've already gotten through adreno_request_fw()
+> >        * we know which of the two cases it is:
+> >        */
+> > -     if (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY) {
+> > +     if (signed_fwname || (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY)) {
+> >               ret = qcom_mdt_load(dev, fw, fwname, pasid,
+> >                               mem_region, mem_phys, mem_size, NULL);
+> >       } else {
+>
