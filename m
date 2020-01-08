@@ -2,98 +2,143 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DDC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DECBC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7C52072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578500855;
-	bh=Qp+tEQvjJBXTymbKNXSpzRHKMqxJbBtdk5mkOGAUajM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wzRTSwccX9MrX1u2T1hTMYrDDp+nuhkZ+OiuD/zZoxbLQzeUl9xXHgHWdIj3sA7gn
-	 sm1HtQE0mkdZAJfMHCOSk5KrL1Ol1qFbYdB8ullORfOO933escOeD6WXwQ0azTsYSW
-	 pcfgSUoMHq+CufKEX9+7ArrprUR2mYG6Im9o0DlM=
+	by mail.kernel.org (Postfix) with ESMTP id 484CD21744
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgAHQ1e (ORCPT
+        id S1727988AbgAHQ3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:27:34 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36991 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgAHQ1d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:27:33 -0500
-Received: by mail-oi1-f194.google.com with SMTP id z64so3147561oia.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:27:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hlPj6SA9VOkT0SEDoGb32WMgkDWrYAi1UZe0L9iyH6k=;
-        b=O7kruooCwgM1i8CZ5gECwWlq/zFRMYTwytrpEIzfvAlsHbPnnR7pkNaAmaCe+uvej0
-         icWwVJbFc9cdSA8Jeyg7vJCzQ4GrRNoqcliasbe/ukyIX5BkHSPtK2CSHuNlYmgC5CUT
-         RT+8skW8SG8hb90ae2Wmq2xz8rnMBToNWCTbSlQAICWKIq9gNizbg0MR62yOiNRHph3L
-         RLDZ5xGuPOhTI2dNTWmTFQECTFh+HFcIPbc75qH4x3nuaKOdydNUIseVrb23hKB+5lpD
-         PMHfqGxUVYNjoz4HwybjIGnH8COSc2XkwJFzzpC3WtQUyxwb3ASL6SJayJH1rVoOA8lB
-         YEzQ==
-X-Gm-Message-State: APjAAAW0ie35Iy58/mkZ/YqqF7cMIgrO/SCNfmx2j/Zfw1SBecCDzPbI
-        p+xqNbl1pC39YWe+zzoJCvmqobY=
-X-Google-Smtp-Source: APXvYqwjaEFpo1QJ05oRIvwbv+qn5yj/g2Y85HsOiDHwbFjZACs6SVZSqPvJrHcn54n3ZUGwueH/zg==
-X-Received: by 2002:aca:c7cb:: with SMTP id x194mr3738000oif.157.1578500851902;
-        Wed, 08 Jan 2020 08:27:31 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h1sm1261734otn.6.2020.01.08.08.27.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:27:30 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220adc
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 10:27:29 -0600
-Date:   Wed, 8 Jan 2020 10:27:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, od@zcrc.me,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Convert jz47*-codec doc to YAML
-Message-ID: <20200108162729.GA26720@bogus>
-References: <20191224002708.1207884-1-paul@crapouillou.net>
+        Wed, 8 Jan 2020 11:29:03 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35418 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgAHQ3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:29:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:29:02 -0800
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="395791419"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:29:02 -0800
+Message-ID: <7d17cfca5edc9b26f194b7086e4a7ef7aaedf5db.camel@linux.intel.com>
+Subject: Re: [PATCH v16 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Wed, 08 Jan 2020 08:29:02 -0800
+In-Reply-To: <aebf72d6-3383-fcc5-7cea-efb930e4e245@redhat.com>
+References: <20200103210509.29237.18426.stgit@localhost.localdomain>
+         <aebf72d6-3383-fcc5-7cea-efb930e4e245@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224002708.1207884-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Dec 2019 01:27:07 +0100, Paul Cercueil wrote:
-> Convert ingenic,jz4740-codec.txt and ingenic,jz4725b-codec.txt to one
-> single ingenic,codec.yaml file, since they share the same binding.
-> 
-> Add the ingenic,jz4770-codec compatible string in the process.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/sound/ingenic,codec.yaml         | 55 +++++++++++++++++++
->  .../bindings/sound/ingenic,jz4725b-codec.txt  | 20 -------
->  .../bindings/sound/ingenic,jz4740-codec.txt   | 20 -------
->  3 files changed, 55 insertions(+), 40 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/ingenic,codec.yaml
->  delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
->  delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
-> 
+On Wed, 2020-01-08 at 02:57 -0500, Nitesh Narayan Lal wrote:
+> On 1/3/20 4:16 PM, Alexander Duyck wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+<snip>
+
+> > Below are the results from various benchmarks. I primarily focused on two
+> > tests. The first is the will-it-scale/page_fault2 test, and the other is
+> > a modified version of will-it-scale/page_fault1 that was enabled to use
+> > THP. I did this as it allows for better visibility into different parts
+> > of the memory subsystem. The guest is running with 32G for RAM on one
+> > node of a E5-2630 v3. The host has had some features such as CPU turbo
+> > disabled in the BIOS.
+> > 
+> > Test                   page_fault1 (THP)    page_fault2
+> > Name            tasks  Process Iter  STDEV  Process Iter  STDEV
+> > Baseline            1    1012402.50  0.14%     361855.25  0.81%
+> >                    16    8827457.25  0.09%    3282347.00  0.34%
+> > 
+> > Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
+> >                    16    8784741.75  0.39%    3240669.25  0.48%
+> > 
+> > Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
+> >                    16    8756219.00  0.24%    3226608.75  0.97%
+> > 
+> > Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
+> >  page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
+> > 
+> > Patches Enabled     1    1003238.00  0.22%     360211.00  0.22%
+> >  shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
+> 
+> Just to be sure that I understand your test setup correctly:
+> - You have a 32GB guest with a single node affined to a single node of your host
+> (E5-2630).
+> - You have THP in both host and the guest enabled and set to 'madvise'.
+> - On top of the default x86_64 config and other virtio config options you have
+> CONFIG_SLAB_FREELIST_RANDOM and CONFIG_SHUFFLE_PAGE_ALLOCATOR enabled for the
+> third observation (Patches Enabled page shuffle).
+> did I miss anything?
+
+So the only things I think you overlooked was that CPU turbo was disbled
+int eh BIOS. Without that my numbers were much more unpredictable as the
+CPUs were turboing up and down and me and giving me inconsistent results.
+
+Also one thing I forgot to mention is that I had to modify the grub kernel
+command line to include page_alloc.shuffle=Y so that the page shuffling
+was actually active.
+
+> Can you also remind me of the reason you have skipped recording the number of
+> threads count reported as part of page_fault tests? Was it because you were
+> observing different values with every fresh boot?
+
+Mainly because the threads test gave me data that was all over the place
+at higher task counts and because it doesn't scale as well as the
+processes test case. The averages between the two worked out to be about
+the same, but the standard deviation was maxing out at 7% for the baseline
+and 8% for the patches enabled case. However the differences in the
+averages is still less than 1%.
+
+So for example the same data using the threads values for Baseline vs
+Patches enabled comes out as follows:
+Baseline                1    1133900.25  0.24%     358395.25  0.30%
+                       16    5848684.75  6.96%    2181989.00  1.69%
+
+Patches Enabled         1    1132748.50  0.20%     356615.00  0.11%
+                       16    5796647.00  8.38%    2160475.50  1.84%
+
+> > The results above are for a baseline with a linux-next-20191219 kernel,
+> > that kernel with this patch set applied but page reporting disabled in
+> > virtio-balloon, the patches applied and page reporting fully enabled, the
+> > patches enabled with page shuffling enabled, and the patches applied with
+> > page shuffling enabled and an RFC patch that makes used of MADV_FREE in
+> > QEMU. These results include the deviation seen between the average value
+> > reported here versus the high and/or low value. I observed that during the
+> > test memory usage for the first three tests never dropped whereas with the
+> > patches fully enabled the VM would drop to using only a few GB of the
+> > host's memory when switching from memhog to page fault tests.
+> 
+> Do you mean that in the later case you run the page fault tests after memhog?
+> If so how much memory do you pass to memhog?
+
+For every test I would run memhog 32g in the guest to make sure all memory
+was allocated at least once before running the page fault tests. I was
+using that to make certain that the page reporting was working before
+running the test.
+
+That way the baseline gives more consistent results as we don't have to
+worry about there being any memory the guest has yet to fault in.
+
