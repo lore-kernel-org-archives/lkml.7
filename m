@@ -2,104 +2,100 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D51C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC81C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBFD20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F88B20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578507786;
+	bh=wJkO4jwYR01OobwJluN3nVcvloMFyriIEFSdls9FHjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MH/T9lPatWWOdTjcZv606Efxq2W2oqf82d4Juqmgrvm5IqrGCi25P4tT5j3IytCU2
+	 LSrSBkNkCEQ7o6j081EwDnlZQ9X1hp1HyCSdyFKXPUe+/y6SOQKw5dbpqvoLyHKZ59
+	 uXYd2oRXVmcU0u2/AM3Mict9AJ+s/1GpmrKQ3Jc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgAHSWd (ORCPT
+        id S1730199AbgAHSXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:22:33 -0500
-Received: from namei.org ([65.99.196.166]:56096 "EHLO namei.org"
+        Wed, 8 Jan 2020 13:23:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbgAHSWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:22:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 008ILnMB026782;
-        Wed, 8 Jan 2020 18:21:49 GMT
-Date:   Thu, 9 Jan 2020 05:21:49 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     KP Singh <kpsingh@chromium.org>
-cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v1 10/13] bpf: lsm: Handle attachment of the
- same program
-In-Reply-To: <20191220154208.15895-11-kpsingh@chromium.org>
-Message-ID: <alpine.LRH.2.21.2001090521340.9683@namei.org>
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-11-kpsingh@chromium.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1727169AbgAHSXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:23:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D3B220692;
+        Wed,  8 Jan 2020 18:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578507784;
+        bh=wJkO4jwYR01OobwJluN3nVcvloMFyriIEFSdls9FHjU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p6mt2Rz2DgWSaXx9seCc5HKNtTBmpdebhNG+ZgfeY6lyzDJsIZZP6rG99rcpCrfwi
+         cRqKWsuA0+KPR0pmIRvt5WzyAaJofCwPPjgHGdm0zZneWrbKTnIrD9AOR6S1Fb8dMI
+         LJsybpa8UA76gf1lvLhVijAVf5orTHFIgVJZ0B6E=
+Date:   Wed, 8 Jan 2020 19:23:02 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
+Message-ID: <20200108182302.GB2547623@kroah.com>
+References: <20200107205332.984228665@linuxfoundation.org>
+ <87bea213-7dd5-412b-0faa-fc3b336da673@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bea213-7dd5-412b-0faa-fc3b336da673@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, KP Singh wrote:
+On Wed, Jan 08, 2020 at 04:24:07PM +0000, Jon Hunter wrote:
+> 
+> On 07/01/2020 20:52, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.9 release.
+> > There are 191 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.9-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> > -------------
+> 
+> All tests for Tegra are passing ...
+> 
+> Test results for stable-v5.4:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
+> 
+> Linux version:	5.4.9-rc2-gdd269ce619cb
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
-> From: KP Singh <kpsingh@google.com>
-> 
-> Allow userspace to attach a newer version of a program without having
-> duplicates of the same program.
-> 
-> If BPF_F_ALLOW_OVERRIDE is passed, the attachment logic compares the
-> name of the new program to the names of existing attached programs. The
-> names are only compared till a "__" (or '\0', if there is no "__"). If
-> a successful match is found, the existing program is replaced with the
-> newer attachment.
-> 
-> ./loader Attaches "env_dumper__v1" followed by "env_dumper__v2"
-> to the bprm_check_security hook..
-> 
-> ./loader
-> ./loader
-> 
-> Before:
-> 
->   cat /sys/kernel/security/bpf/process_execution
->   env_dumper__v1
->   env_dumper__v2
-> 
-> After:
-> 
->   cat /sys/kernel/security/bpf/process_execution
->   env_dumper__v2
-> 
-> Signed-off-by: KP Singh <kpsingh@google.com>
+Wonderful, thanks for testing and letting me know.
 
-
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+greg k-h
