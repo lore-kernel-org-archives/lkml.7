@@ -2,152 +2,108 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A6BC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB8CC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7A72070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CCE20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bXKUEXfK";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="A8NA/g5+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h/kFLln8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgAHJGq (ORCPT
+        id S1727514AbgAHJIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:06:46 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53996 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726891AbgAHJGq (ORCPT
+        Wed, 8 Jan 2020 04:08:17 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13856 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727205AbgAHJIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:06:46 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 8 Jan 2020 04:08:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578474495; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=IYgOyQID9FWtcNH2f8jj8HDLZy8aqYdaotmPOLn64AE=; b=h/kFLln8pHh2WOMpm1/XW6Pv+MLeeF/m3t6ITLFH8naxBZLWGNXdiALyLXSpgmKRsIw2robr
+ /qXpo3ajX7kxZPKL2KiZ3i1SHoK7Viw1yTXxedH7aBIloWpJNhY9cG5oE8QlFnvICX8w/v1E
+ sswEy8t4CI4reR+tcmpLvb1+mbw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e159bfe.7f9b9ec4a688-smtp-out-n03;
+ Wed, 08 Jan 2020 09:08:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 21E11C4479C; Wed,  8 Jan 2020 09:08:14 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 883594016E;
-        Wed,  8 Jan 2020 09:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578474405; bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=bXKUEXfKzCZbQaHkkW/jcse2DTcLIMduLUk2hm+81RwkO0ZDkvLcyxjkbfRNbYt02
-         9uZVAVAjxf3+aqC0yrFokvswgvfsA1AVtCpGBYRqHfaXZN0XyLJOLN78ISz3gE3OB6
-         wrI+vS9GmAjTJlz6wHsrC9UyQD6crMtWLWo48pcmirAUiITREz6gTPwWAgew/RuvIa
-         G70u/RRslRhvnX/wICaiydk5k3R3gw0O5RoIfLvobvfsSAP7HqKSQASUfkWX7zudFj
-         hA+1fxiWY2YHwCEPQr5Spie5jsoET/ioGMCk9vHdWe835/BgsNaXI8v0+glYAZyqE/
-         oydqs6R6PZYew==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 2B4B0A006C;
-        Wed,  8 Jan 2020 09:06:42 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 8 Jan 2020 01:06:36 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 8 Jan 2020 01:06:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NJABM+RCwZ9/syV7YZw8Z+yHhy2/pZ7xtkmDBUg5Lh6xE37861sUTrpTvvLC7IcNf+ieOSXpWx+Ia80If6q2WkqOeEQRxSIKhHusgmVuO9ivj0yFF1938FSQW6tfbAdQpfBVdUJGQJvIxQhVLH5nMNf5duMA4a1ZlZgfR+2GLApNlJ6LEo9SATJnarcHrIBPQyRCEN7qz8kbpn2LHN1TzZfLKJym/49fvT/j3JnEjMQpMR9jws5+r1DW2X7k7fy5Ly1olwoYAzphni0+JBJKQzk4D8HL5VyKA5GJMrTYC+DwW0zbSMYfT2lyOb/SOvnF5XEGl1xR6PrmSzhcGIhRDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
- b=KWIszj4v40zInddRXpwAuBPXJAD+Ut1CmtiRZ/BrirYv/iu1ciBw6tLEoRHA/xCkxU1VWou4cAdoN2Zzif2cixf01EdMC5C4doWBfvCFvh7RH8hIgcVruds2da+6/4LT7mnWIGulY7OMmRQzItKU+q6OWUqKVIoIcWL2+Rc9ncxxp4GI0kwb0PkgEIv7jg6ymXKPeMZpeicpJpp/rkXfiYZAvC/eeaZ8fBcXOfJobVFHPGJtP/4XJVtdsoge3v/7pzeNfsZuGrdJaNFyw2nUWjUolmAD5yWyVoD8H4MPp/ZYNtuXAmZGICkrdUhD7BH9wQfWJA0NUMTBzCASj11QxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
- b=A8NA/g5+EfSKAkSNcKlrnky5TKDpvAl2+G/WDe26ZcPAxR5FAC7TFI8/NteD7PRxVew3nmLyMnM+ZtDAnbrLUB3Wf59ZhWWC7wOv3GVXW7GaDRaFe7jqjxoguuboMfmgc/dqr6kaOgiq8hgdJ3x+SPmNGlq0KA514W3DEh/HoRw=
-Received: from BN7PR12MB2802.namprd12.prod.outlook.com (20.176.27.97) by
- BN7PR12MB2755.namprd12.prod.outlook.com (20.176.178.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.10; Wed, 8 Jan 2020 09:06:34 +0000
-Received: from BN7PR12MB2802.namprd12.prod.outlook.com
- ([fe80::e420:5711:3657:f3ca]) by BN7PR12MB2802.namprd12.prod.outlook.com
- ([fe80::e420:5711:3657:f3ca%3]) with mapi id 15.20.2623.008; Wed, 8 Jan 2020
- 09:06:34 +0000
-From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Discussions about the Letux Kernel" <letux-kernel@openphoenux.org>,
-        "kernel@pyra-handheld.com" <kernel@pyra-handheld.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
-Subject: Re: [BUG]: usb: dwc3: gadget: broken on OMAP5432
-Thread-Topic: [BUG]: usb: dwc3: gadget: broken on OMAP5432
-Thread-Index: AQHVxgIdUvY8PDkJv0e4ULUpdkC8K6fgedIA
-Date:   Wed, 8 Jan 2020 09:06:34 +0000
-Message-ID: <7daf64ba-7efb-e2f1-a449-f5f3791a3c8e@synopsys.com>
-References: <703DD239-8E3B-405C-A531-FF7DEEED38DC@goldelico.com>
-In-Reply-To: <703DD239-8E3B-405C-A531-FF7DEEED38DC@goldelico.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joglekar@synopsys.com; 
-x-originating-ip: [198.182.52.26]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 603c1523-1e4c-452d-3cc7-08d7941a0f6c
-x-ms-traffictypediagnostic: BN7PR12MB2755:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN7PR12MB2755132D07B3FA466F3E4BF9A43E0@BN7PR12MB2755.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(376002)(366004)(396003)(136003)(189003)(199004)(2906002)(54906003)(86362001)(26005)(6512007)(110136005)(6506007)(186003)(966005)(71200400001)(53546011)(66556008)(8936002)(81166006)(81156014)(66446008)(64756008)(5660300002)(76116006)(91956017)(478600001)(8676002)(2616005)(4326008)(31686004)(66946007)(31696002)(316002)(6486002)(66476007)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN7PR12MB2755;H:BN7PR12MB2802.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QH8joqfYbsMGETjpTuRP9c6UzOnhEzTqtC/KjJ3p1YScMhdlvFWg/mfH4rmwyTurXW3XGHNjxG+my1NRQoIjl/q4ZdBU9r23zIiQPP7rPZtWPiEbBi2dcK0NkcxBxEQ8JhauS+3ZLNtcRKVq6aR7rCcvKvO04Uy19787lyFmnb9ufh4Yn31lQ6nP+hfpJ0zL5RnR3gIl1Cc4fasaHrRx5bkcPM7Y0O4sqJyzMHeEjTvaHQXYTmUbRL4mv7oLjomg1VowxdWkwEBGuHeK8+tqZufQVsQOAJM/vdvv9KbTywEWdtrKD21s5zG8r1P5JAZeA8cGiANsTw8OPlJoo/qGqRR8IZU91UIKwuUMf7Wr1KckbtKQgn+d8bstPCFaGWs7O2CFt1ujKzbYLnfhDsUdIExiTAlxAexACATqFf9bO2A5LXMnF/TfFYm+QldqsRWgflTLfknNEZCVjvxMjrOURi/w43F+63MccopZK9c2LHs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <666903A83C10EE4E9B4A21EC16F6DBCE@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 603c1523-1e4c-452d-3cc7-08d7941a0f6c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 09:06:34.3597
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zxOlL6skl9P32ieUmJ2kHGgipUzAU2hrho1lvtRMijf2R0Ro+DYZAYdlQBb04eXOkS58OsNCBVSxpeU+dXjpFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2755
-X-OriginatorOrg: synopsys.com
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1B0CC433CB;
+        Wed,  8 Jan 2020 09:08:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1B0CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v2 1/3] Bluetooth: hci_qca: Add qca_power_on() API to support both wcn399x and Rome power up
+Date:   Wed,  8 Jan 2020 17:08:02 +0800
+Message-Id: <20200108090804.22889-1-rjliao@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200107052601.32216-1-rjliao@codeaurora.org>
+References: <20200107052601.32216-1-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpPbiAxLzgvMjAyMCAyOjI5IFBNLCBILiBOaWtvbGF1cyBTY2hhbGxlciB3cm90ZToNCj4g
-SGksDQo+IEkgbm90aWNlZCB0aGF0IHRoZSB1c2IgZXRoZXJuZXQgZ2FkZ2V0IGRyaXZlciBpcyBi
-cm9rZW4gc2luY2UgdjUuNS1yYzINCj4gYW5kIDUuNC40LCBidXQgb25seSBmb3Igb3VyIE9NQVA1
-IGJvYXJkLiBPdXIgT01BUDMgYm9hcmRzIHdvcmsgd2l0aA0KPiB0aGUgc2FtZSB0cmVlLCBrZXJu
-ZWwgYmluYXJ5IGFuZCB1c2VyLXNwYWNlIChEZWJpYW4gU3RyZXRjaCkuDQo+IA0KPiBUaGUgc3lt
-cHRvbSBpcyB0aGF0IEkgY2FuIHNlZSB0aGUgaW50ZXJmYWNlIG9uIHRoZSBob3N0IFBDIGJlaW5n
-DQo+IGVudW1lcmF0ZWQgYW5kIElQIGFkZHJlc3NlcyBldGMuIGFyZSBzZXQgdXAuIEJ1dCBhIHBp
-bmcgaW4gZWl0aGVyDQo+IGRpcmVjdGlvbiBmYWlscy90aW1lcyBvdXQuDQo+IA0KPiBBZnRlciBp
-bnNwZWN0aW5nIGRpZmZzIEkgZm91bmQgc29tZSBjaGFuZ2VzIGluIGR3YzM6Z2FkZ2V0DQo+IGFu
-ZCBpbmRlZWQgb21hcDMvdHdsNDAzMCB1c2VzIG11c2IgYW5kIG9tYXA1IHVzZXMgZHdjMy4NCj4g
-DQo+IFJldmVydGluZw0KPiANCj4gYTdmN2U2MTI3MGYxICgidXNiOiBkd2MzOiBnYWRnZXQ6IEZp
-eCBsb2dpY2FsIGNvbmRpdGlvbiIpOw0KPiANCj4gb24gdjUuNS1yYyBtYWtlcyBpdCB3b3JrIGFn
-YWluLg0KPiANCj4gQlRXOiB2NC4xOS45MCB3b3JrcyBhbHRob3VnaCBpdCBpbmNsdWRlcyB0aGlz
-IGxvZ2ljYWwgY29uZGl0aW9uIGZpeC4NCj4gU28gdGhlIHJlYWwgZGlmZmVyZW5jZSBiZXR3ZWVu
-IHY0LjE5IGFuZCB2NS41IG1heSBiZSBlbHNld2hlcmUgaW4NCj4gbmV3ZXIga2VybmVscyBhbmQg
-b25seSBiZSByZXZlYWxlZCBieSB0aGUgcGF0Y2guDQo+IA0KPiBJZiBpbXBvcnRhbnQ6IG15IHNl
-dHVwIGlzIHJ1bm5pbmcgd2l0aCBVU0IyIGNhYmxlIGFuZCBzcGVlZA0KPiBvbmx5Lg0KPiANCj4g
-U28gcGxlYXNlIGNoZWNrIHRoaXMgYW5kIG90aGVyIHJlY2VudCBkd2MzIHBhdGNoZXMgZm9yIGlu
-dHJvZHVjaW5nDQo+IGEgc3RhbGwgb2YgY29tbXVuaWNhdGlvbi4NCj4gDQpBbm90aGVyIGdhZGdl
-dCBkcml2ZXIgaXNzdWUgd2FzIHJlcG9ydGVkIGJ5IFRoaW5oIGFmdGVyIG15IGZpeCwgYW5kIGhl
-IGhhcyBzdWJtaXR0ZWQgYSBwYXRjaCBmb3IgdGhlIHNhbWUuIFlvdSBjYW4gcmVmZXIgdGhlIGRp
-c2N1c3Npb24gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTI5MjA4Ny8uDQpD
-YW4geW91IGNoZWNrIGlmIHRoYXQgcGF0Y2ggd29ya3MgZm9yIHlvdSA/DQoNCj4gQlIgYW5kIHRo
-YW5rcywNCj4gTmlrb2xhdXMgU2NoYWxsZXINCj4gDQo+IA0KDQpUaGFua3MgJiBSZWdhcmRzLA0K
-IFRlamFzIEpvZ2xla2FyDQo=
+This patch adds a unified API qca_power_on() to support both wcn399x and
+Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
+regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
+
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
+
+Changes in v2: None
+
+ drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 9392cc7f9908..f6555bd1adbc 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+ 	return 0;
+ }
+ 
++static int qca_power_on(struct hci_dev *hdev)
++{
++	struct hci_uart *hu = hci_get_drvdata(hdev);
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
++	struct qca_serdev *qcadev;
++	int ret = 0;
++
++	if (qca_is_wcn399x(soc_type)) {
++		ret = qca_wcn3990_init(hu);
++	} else {
++		if (hu->serdev) {
++			qcadev = serdev_device_get_drvdata(hu->serdev);
++			gpiod_set_value_cansleep(qcadev->bt_en, 1);
++			/* Controller needs time to bootup. */
++			msleep(150);
++		}
++	}
++
++	return ret;
++}
++
+ static int qca_setup(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev = hu->hdev;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
