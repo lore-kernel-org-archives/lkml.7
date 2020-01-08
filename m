@@ -2,151 +2,90 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E120CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4F9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05EF206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A648F206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V1s0lAH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgAHG3u (ORCPT
+        id S1726736AbgAHGag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:29:50 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23681 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgAHG3r (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:29:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 22:29:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
-   d="scan'208";a="233506801"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jan 2020 22:29:45 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v3 4/4] perf util: Support color ops to print block percents in color
-Date:   Wed,  8 Jan 2020 07:03:54 +0800
-Message-Id: <20200107230354.30132-4-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107230354.30132-1-yao.jin@linux.intel.com>
-References: <20200107230354.30132-1-yao.jin@linux.intel.com>
+        Wed, 8 Jan 2020 01:30:36 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51730 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725838AbgAHGaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 01:30:35 -0500
+X-UUID: df591dbc279b464287ded0fbe859fb19-20200108
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=C5uYcatcL7O3L8hFISr3vserMmDxuM/EyNyUSLNixHg=;
+        b=V1s0lAH50uITb/mMbf6zoKRKObLO8ODB3swlXB0MEvOnsPvXHCrJ314kUBwK8CM54OjzmEmUbfBRUPHXTTGNb528AnUwGYMYjxsBvAqswqZCNVYAGVsurNGNKaPEl9t8n3LyhM2Yclom4gGIwuGE4mTmcoUsl4xFC/iZ3F0Q+zk=;
+X-UUID: df591dbc279b464287ded0fbe859fb19-20200108
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 622843385; Wed, 08 Jan 2020 14:30:29 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 Jan 2020 14:31:03 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 Jan 2020 14:30:03 +0800
+From:   fengping yu <fengping.yu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>
+CC:     <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Subject: Resend [PATCH V2] dt-bindings:input:keyboard:add MediaTek keypad controller binding 
+Date:   Wed, 8 Jan 2020 14:29:21 +0800
+Message-ID: <20200108062923.14684-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice to print the block percents with colors.
-
-This patch supports the 'Sampled Cycles%' and 'Avg Cycles%'
-printed in colors.
-
-For example,
-
-perf record -b ...
-perf report --total-cycles or perf report --total-cycles --stdio
-
-percent > 5%, colored in red
-percent > 0.5%, colored in green
-percent < 0.5%, default color
-
- v3:
- ---
- No change
-
- v2:
- ---
- No functional change
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/util/block-info.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 7b654917ace0..c208f9dbb32d 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -185,6 +185,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
- 	return block_fmt->width;
- }
- 
-+static int color_pct(struct perf_hpp *hpp, int width, double pct)
-+{
-+#ifdef HAVE_SLANG_SUPPORT
-+	if (use_browser) {
-+		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
-+						 width - 1, pct);
-+	}
-+#endif
-+	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
-+}
-+
- static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 					struct perf_hpp *hpp,
- 					struct hist_entry *he)
-@@ -192,14 +203,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
--	char buf[16];
- 
- 	if (block_fmt->total_cycles)
- 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
-@@ -252,16 +260,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
- 	u64 avg;
--	char buf[16];
- 
- 	if (block_fmt->block_cycles && bi->num_aggr) {
- 		avg = bi->cycles_aggr / bi->num_aggr;
- 		ratio = (double)avg / (double)block_fmt->block_cycles;
- 	}
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
--
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
-@@ -348,7 +353,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 
- 	switch (idx) {
- 	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
--		fmt->entry = block_total_cycles_pct_entry;
-+		fmt->color = block_total_cycles_pct_entry;
- 		fmt->cmp = block_info__cmp;
- 		fmt->sort = block_total_cycles_pct_sort;
- 		break;
-@@ -356,7 +361,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 		fmt->entry = block_cycles_lbr_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
--		fmt->entry = block_cycles_pct_entry;
-+		fmt->color = block_cycles_pct_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
- 		fmt->entry = block_avg_cycles_entry;
--- 
-2.17.1
+DQpmZW5ncGluZy55dSAoMik6DQogIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IGJpbmRpbmdz
+OiBpbnB1dA0KICBkcml2ZXJzOiBpbnB1dDoga2V5Ym9hcmQNCg0KIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lucHV0L210ay1rcGQudHh0ICAgICB8ICA1MiArKysNCiBhcmNoL2FybTY0L2NvbmZp
+Z3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5
+Ym9hcmQvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAgOCArDQogZHJpdmVycy9pbnB1dC9rZXli
+b2FyZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0L2tleWJv
+YXJkL210ay1rcGQuYyAgICAgICAgICAgICAgfCAzNTcgKysrKysrKysrKysrKysrKysrDQogNSBm
+aWxlcyBjaGFuZ2VkLCA0MTkgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMNCg==
 
