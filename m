@@ -2,208 +2,192 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56FFC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3531EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6222070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06C02070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:07:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gqbvtODk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgAHQGJ (ORCPT
+        id S1729066AbgAHQHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:06:09 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726651AbgAHQGG (ORCPT
+        Wed, 8 Jan 2020 11:07:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58506 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgAHQHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:06:06 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008G3Zbw125146
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Jan 2020 11:06:05 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xctgr0p82-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:06:04 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 8 Jan 2020 16:06:03 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Jan 2020 16:05:58 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 008G5vX934865562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jan 2020 16:05:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0627AE045;
-        Wed,  8 Jan 2020 16:05:57 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9B4DAE055;
-        Wed,  8 Jan 2020 16:05:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.223.32])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jan 2020 16:05:56 +0000 (GMT)
-Subject: Re: [PATCH v2] ima: add the ability to query the hash of a given
- file.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Florent Revest <revest@chromium.org>,
-        linux-integrity@vger.kernel.org
-Cc:     kpsingh@chromium.org, mjg59@google.com, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Date:   Wed, 08 Jan 2020 11:05:56 -0500
-In-Reply-To: <20200106162524.164650-1-revest@chromium.org>
-References: <20200106162524.164650-1-revest@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010816-4275-0000-0000-00000395D6AF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010816-4276-0000-0000-000038A9C44D
-Message-Id: <1578499556.5222.157.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_04:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 suspectscore=0 mlxscore=0 adultscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001080131
+        Wed, 8 Jan 2020 11:07:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vTWY1coa2Uglbk+2ijUNU4PAcTKo3OAi9shtTNMi0Rk=; b=gqbvtODkaNnvdu0BtI1I+oz9W
+        A/2kAzeM+Of8bAddV33sSuyFB5xF+Iq5ljJRIvioI+k+R95x57awB/8d2/OaCxPEWI73HH3ggqw/b
+        sRuPnU/M3cuEf3KHzciBaTOkOpg9la+z/euW56512nmDwFzNGDIve2Ho4jXCQShNWbCSAJw0jVzgp
+        W73rwpfbOnlx/JXYvxqZG+ueOUqg0TTsDyxTW539J3TnC4nfAFSqo8UjcEPXCvaV8lYoYsU9cKROX
+        c5nXwgc0c5to6F7JUcDXFL8eRwzCCSZ1nK2sOxQ5uehPgx5U+VprgiM8abXXvQlwSBJdkTRyrU3JI
+        mPuHTmEYQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipDrb-0002aV-JF; Wed, 08 Jan 2020 16:07:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0BFB530018B;
+        Wed,  8 Jan 2020 17:05:40 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 08A5520B79C82; Wed,  8 Jan 2020 17:07:14 +0100 (CET)
+Date:   Wed, 8 Jan 2020 17:07:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Message-ID: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-06 at 17:25 +0100, Florent Revest wrote:
-> From: Florent Revest <revest@google.com>
+On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
 > 
-> This allows other parts of the kernel (perhaps a stacked LSM allowing
-> system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
-> of a given file from IMA if it's present in the iint cache.
+> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+> processes. For backward compatibility reasons access to perf_events
+> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
+> with respect to CAP_SYS_PERFMON capability.
 > 
-> It's true that the existence of the hash means that it's also in the
-> audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
-> but it can be difficult to pull that information out for every
-> subsequent exec.  This is especially true if a given host has been up
-> for a long time and the file was first measured a long time ago.
-> 
-> This is based on Peter Moody's patch:
->  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
-
-FYI, but unlike the audit log/IMA measurement list, the iint cache
-entries can be removed.  Refer to security_inode_free().  Perhaps
-mention of this difference should be included, here, in the patch
-description.
-
-> 
-> [1] https://lkml.org/lkml/2019/9/10/393
-> 
-> Signed-off-by: Florent Revest <revest@google.com>
-
-Assuming, with the above difference, you're still interested in having
-this feature upstreamed and addressing the comments above and below:
-
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  include/linux/ima.h               |  6 ++++
->  security/integrity/ima/ima_main.c | 46 +++++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
+>  include/linux/perf_event.h | 6 +++---
+>  kernel/events/core.c       | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 6d904754d858..d621c65ba9a5 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
->  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  			      enum kernel_read_file_id id);
->  extern void ima_post_path_mknod(struct dentry *dentry);
-> +extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
->  extern void ima_kexec_cmdline(const void *buf, int size);
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 34c7c6910026..f46acd69425f 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
 >  
->  #ifdef CONFIG_IMA_KEXEC
-> @@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
->  	return;
->  }
+>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+>  		return -EACCES;
 >  
-> +static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static inline void ima_kexec_cmdline(const void *buf, int size) {}
->  #endif /* CONFIG_IMA */
+>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
 >  
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index d7e987baf127..3799b6c6c3b8 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -445,6 +445,52 @@ int ima_file_check(struct file *file, int mask)
->  }
->  EXPORT_SYMBOL_GPL(ima_file_check);
+>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+>  		return -EACCES;
 >  
-> +/**
-> + * ima_file_hash - return the stored measurement if a file has been hashed.
-> + * @file: pointer to the file
-> + * @buf: buffer in which to store the hash
-> + * @buf_size: length of the buffer
-> + *
-> + * On success, return the hash algorithm (as defined in the enum hash_algo).
-> + * If buf is not NULL, this function also outputs the hash into buf.
+>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  
+>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+>  		return -EPERM;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
 
-As of Linux 5.4.y, IMA support for appended file signatures was added.
- Should we indicate that the file hash returned is based on the entire
-file, including the appended signature?
+These are OK I suppose.
 
-Mimi
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 059ee7116008..d9db414f2197 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+>  	if (event->attr.type != perf_kprobe.type)
+>  		return -ENOENT;
+>  
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!perfmon_capable())
+>  		return -EACCES;
+>  
+>  	/*
 
+This one only allows attaching to already extant kprobes, right? It does
+not allow creation of kprobes.
 
-> + * If the hash is larger than buf_size, then only buf_size bytes will be copied.
-> + * It generally just makes sense to pass a buffer capable of holding the largest
-> + * possible hash: IMA_MAX_DIGEST_SIZE
-> + *
-> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
-> + * If the parameters are incorrect, return -EINVAL.
-> + */
-> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	struct inode *inode;
-> +	struct integrity_iint_cache *iint;
-> +	int hash_algo;
-> +
-> +	if (!file)
-> +		return -EINVAL;
-> +
-> +	if (!ima_policy_flag)
-> +		return -EOPNOTSUPP;
-> +
-> +	inode = file_inode(file);
-> +	iint = integrity_iint_find(inode);
-> +	if (!iint)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&iint->mutex);
-> +	if (buf) {
-> +		size_t copied_size;
-> +
-> +		copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
-> +		memcpy(buf, iint->ima_hash->digest, copied_size);
-> +	}
-> +	hash_algo = iint->ima_hash->algo;
-> +	mutex_unlock(&iint->mutex);
-> +
-> +	return hash_algo;
-> +}
-> +EXPORT_SYMBOL_GPL(ima_file_hash);
-> +
->  /**
->   * ima_post_create_tmpfile - mark newly created tmpfile as new
->   * @file : newly created tmpfile
+> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+>  	if (event->attr.type != perf_uprobe.type)
+>  		return -ENOENT;
+>  
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!perfmon_capable())
+>  		return -EACCES;
+>  
+>  	/*
 
+Idem, I presume.
+
+> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	}
+>  
+>  	if (attr.namespaces) {
+> -		if (!capable(CAP_SYS_ADMIN))
+> +		if (!perfmon_capable())
+>  			return -EACCES;
+>  	}
+
+And given we basically make the entire kernel observable with this CAP,
+busting namespaces shoulnd't be a problem either.
+
+So yeah, I suppose that works.
