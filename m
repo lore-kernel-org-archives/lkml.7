@@ -2,277 +2,174 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A75EC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4FFC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55BC206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECE1206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:59:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kF/rFIjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgAHO5T (ORCPT
+        id S1727812AbgAHO71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:57:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:45718 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgAHO5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:57:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08D7531B;
-        Wed,  8 Jan 2020 06:57:18 -0800 (PST)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1BE13F703;
-        Wed,  8 Jan 2020 06:57:16 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] x86: mm: Avoid allocating struct mm_struct on the stack
-Date:   Wed,  8 Jan 2020 14:57:10 +0000
-Message-Id: <20200108145710.34314-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200108145248.GA2584@arm.com>
-References: <20200108145248.GA2584@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jan 2020 09:59:27 -0500
+Received: from mail.efficios.com ([167.114.142.138]:58158 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgAHO71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 09:59:27 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A12006959E6;
+        Wed,  8 Jan 2020 09:59:25 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id uGb2HplhVTXv; Wed,  8 Jan 2020 09:59:25 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C00A76959CD;
+        Wed,  8 Jan 2020 09:59:22 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C00A76959CD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1578495562;
+        bh=csmXiMR894cheYBJKST2fVas13SXJ+OppF5lHATVWIs=;
+        h=From:To:Date:Message-Id;
+        b=kF/rFIjYU6pzhYQQoiLv1a+lDJ6XnzLG4nfCeapqzamCqpKamE9E1saWOkr8+ZRxU
+         sIPdkjoVurzsbTmhArqg857rMRGLSUuo4hb6UAJLKqgJY/lHV37DKSxmDxZWeU+z+i
+         lkTYGYmM8U9d3RtKbWnjokQ5ciDVv1l+P3xGKxuSoAekD8OC6POlVji7FWUaATH2xh
+         34YSL/FM4bvOXFXbl/KzP4vptXcLYW4UMfl23YK0Y6ZsxdJvzxI8XX3XTRBUq44IN5
+         JTBCnLyWAeYGFvDAOrOCoPSGV9I1mcZ/V9dbsXyYgp000jPpFnagA/aCmEKuoaZfgr
+         tqKQzFhQiG9Eg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id Js-LS6a-xGbz; Wed,  8 Jan 2020 09:59:22 -0500 (EST)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 508216959BF;
+        Wed,  8 Jan 2020 09:59:20 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [RFC PATCH glibc 5/8] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v5)
+Date:   Wed,  8 Jan 2020 09:58:48 -0500
+Message-Id: <20200108145851.13594-6-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200108145851.13594-1-mathieu.desnoyers@efficios.com>
+References: <20200108145851.13594-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct mm_struct is quite large (~1664 bytes) and so allocating on the
-stack may cause problems as the kernel stack size is small.
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-Since ptdump_walk_pgd_level_core() was only allocating the structure so
-that it could modify the pgd argument we can instead introduce a pgd
-override in struct mm_walk and pass this down the call stack to where it
-is needed.
+Benchmarks:
 
-Since the correct mm_struct is now being passed down, it is now also
-unnecessary to take the mmap_sem semaphore because ptdump_walk_pgd()
-will now take the semaphore on the real mm.
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
 
-Signed-off-by: Steven Price <steven.price@arm.com>
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
+
+	* sysdeps/unix/sysv/linux/sched_getcpu.c: use rseq cpu_id TLS on
+	Linux.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
 ---
- arch/arm64/mm/dump.c           |  4 ++--
- arch/x86/mm/debug_pagetables.c | 10 ++--------
- arch/x86/mm/dump_pagetables.c  | 18 +++++++-----------
- include/linux/pagewalk.h       |  3 +++
- include/linux/ptdump.h         |  2 +-
- mm/pagewalk.c                  |  7 ++++++-
- mm/ptdump.c                    |  4 ++--
- 7 files changed, 23 insertions(+), 25 deletions(-)
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index ef4b3ca1e058..860c00ec8bd3 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -323,7 +323,7 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
- 		}
- 	};
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 29 ++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index c019cfb3cf..6d3541333d 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,10 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ #include <sysdep-vdso.h>
  
--	ptdump_walk_pgd(&st.ptdump, info->mm);
-+	ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
- }
- 
- static void ptdump_initialize(void)
-@@ -361,7 +361,7 @@ void ptdump_check_wx(void)
- 		}
- 	};
- 
--	ptdump_walk_pgd(&st.ptdump, &init_mm);
-+	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
- 
- 	if (st.wx_pages || st.uxn_pages)
- 		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
-diff --git a/arch/x86/mm/debug_pagetables.c b/arch/x86/mm/debug_pagetables.c
-index d0efec713c6c..4a3b62f780b4 100644
---- a/arch/x86/mm/debug_pagetables.c
-+++ b/arch/x86/mm/debug_pagetables.c
-@@ -15,11 +15,8 @@ DEFINE_SHOW_ATTRIBUTE(ptdump);
- 
- static int ptdump_curknl_show(struct seq_file *m, void *v)
+-int
+-sched_getcpu (void)
++#ifdef HAVE_GETCPU_VSYSCALL
++# define HAVE_VSYSCALL
++#endif
++
++static int
++vsyscall_sched_getcpu (void)
  {
--	if (current->mm->pgd) {
--		down_read(&current->mm->mmap_sem);
-+	if (current->mm->pgd)
- 		ptdump_walk_pgd_level_debugfs(m, current->mm, false);
--		up_read(&current->mm->mmap_sem);
--	}
- 	return 0;
- }
- 
-@@ -28,11 +25,8 @@ DEFINE_SHOW_ATTRIBUTE(ptdump_curknl);
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- static int ptdump_curusr_show(struct seq_file *m, void *v)
- {
--	if (current->mm->pgd) {
--		down_read(&current->mm->mmap_sem);
-+	if (current->mm->pgd)
- 		ptdump_walk_pgd_level_debugfs(m, current->mm, true);
--		up_read(&current->mm->mmap_sem);
--	}
- 	return 0;
- }
- 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 411f6a758998..64229dad7eab 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -357,7 +357,8 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 	}
- }
- 
--static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
-+static void ptdump_walk_pgd_level_core(struct seq_file *m,
-+				       struct mm_struct *mm, pgd_t *pgd,
- 				       bool checkwx, bool dmesg)
- {
- 	const struct ptdump_range ptdump_ranges[] = {
-@@ -386,12 +387,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 		.seq		= m
- 	};
- 
--	struct mm_struct fake_mm = {
--		.pgd = pgd
--	};
--	init_rwsem(&fake_mm.mmap_sem);
--
--	ptdump_walk_pgd(&st.ptdump, &fake_mm);
-+	ptdump_walk_pgd(&st.ptdump, mm, pgd);
- 
- 	if (!checkwx)
- 		return;
-@@ -404,7 +400,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
- 
- void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm)
- {
--	ptdump_walk_pgd_level_core(m, mm->pgd, false, true);
-+	ptdump_walk_pgd_level_core(m, mm, mm->pgd, false, true);
- }
- 
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
-@@ -415,7 +411,7 @@ void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
- 	if (user && boot_cpu_has(X86_FEATURE_PTI))
- 		pgd = kernel_to_user_pgdp(pgd);
+   unsigned int cpu;
+   int r = -1;
+@@ -32,3 +37,23 @@ sched_getcpu (void)
  #endif
--	ptdump_walk_pgd_level_core(m, pgd, false, false);
-+	ptdump_walk_pgd_level_core(m, mm, pgd, false, false);
+   return r == -1 ? r : cpu;
  }
- EXPORT_SYMBOL_GPL(ptdump_walk_pgd_level_debugfs);
- 
-@@ -430,13 +426,13 @@ void ptdump_walk_user_pgd_level_checkwx(void)
- 
- 	pr_info("x86/mm: Checking user space page tables\n");
- 	pgd = kernel_to_user_pgdp(pgd);
--	ptdump_walk_pgd_level_core(NULL, pgd, true, false);
-+	ptdump_walk_pgd_level_core(NULL, &init_mm, pgd, true, false);
- #endif
- }
- 
- void ptdump_walk_pgd_level_checkwx(void)
- {
--	ptdump_walk_pgd_level_core(NULL, INIT_PGD, true, false);
-+	ptdump_walk_pgd_level_core(NULL, &init_mm, INIT_PGD, true, false);
- }
- 
- static int __init pt_dump_init(void)
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index 745a654c6ea7..b1cb6b753abb 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -74,6 +74,7 @@ enum page_walk_action {
-  * mm_walk - walk_page_range data
-  * @ops:	operation to call during the walk
-  * @mm:		mm_struct representing the target process of page table walk
-+ * @pgd:	pointer to PGD; only valid with no_vma (otherwise set to NULL)
-  * @vma:	vma currently walked (NULL if walking outside vmas)
-  * @action:	next action to perform (see enum page_walk_action)
-  * @no_vma:	walk ignoring vmas (vma will always be NULL)
-@@ -84,6 +85,7 @@ enum page_walk_action {
- struct mm_walk {
- 	const struct mm_walk_ops *ops;
- 	struct mm_struct *mm;
-+	pgd_t *pgd;
- 	struct vm_area_struct *vma;
- 	enum page_walk_action action;
- 	bool no_vma;
-@@ -95,6 +97,7 @@ int walk_page_range(struct mm_struct *mm, unsigned long start,
- 		void *private);
- int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
- 			  unsigned long end, const struct mm_walk_ops *ops,
-+			  pgd_t *pgd,
- 			  void *private);
- int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
- 		void *private);
-diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
-index b28f3f2acf90..a67065c403c3 100644
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -17,6 +17,6 @@ struct ptdump_state {
- 	const struct ptdump_range *range;
- };
- 
--void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm);
-+void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd);
- 
- #endif /* _LINUX_PTDUMP_H */
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 5895ce4f1a85..928df1638c30 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -206,7 +206,10 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
- 	const struct mm_walk_ops *ops = walk->ops;
- 	int err = 0;
- 
--	pgd = pgd_offset(walk->mm, addr);
-+	if (walk->pgd)
-+		pgd = walk->pgd + pgd_index(addr);
-+	else
-+		pgd = pgd_offset(walk->mm, addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
- 		if (pgd_none_or_clear_bad(pgd)) {
-@@ -436,11 +439,13 @@ int walk_page_range(struct mm_struct *mm, unsigned long start,
-  */
- int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
- 			  unsigned long end, const struct mm_walk_ops *ops,
-+			  pgd_t *pgd,
- 			  void *private)
- {
- 	struct mm_walk walk = {
- 		.ops		= ops,
- 		.mm		= mm,
-+		.pgd		= pgd,
- 		.private	= private,
- 		.no_vma		= true
- 	};
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index ad18a9839d6f..26208d0d03b7 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -122,14 +122,14 @@ static const struct mm_walk_ops ptdump_ops = {
- 	.pte_hole	= ptdump_hole,
- };
- 
--void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
-+void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm, pgd_t *pgd)
- {
- 	const struct ptdump_range *range = st->range;
- 
- 	down_read(&mm->mmap_sem);
- 	while (range->start != range->end) {
- 		walk_page_range_novma(mm, range->start, range->end,
--				      &ptdump_ops, st);
-+				      &ptdump_ops, pgd, st);
- 		range++;
- 	}
- 	up_read(&mm->mmap_sem);
++
++#ifdef __NR_rseq
++#include <sys/rseq.h>
++#endif
++
++#if defined __NR_rseq && defined RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
 -- 
-2.20.1
+2.17.1
 
