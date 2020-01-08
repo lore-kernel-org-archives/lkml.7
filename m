@@ -2,109 +2,112 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F23C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A74AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3260206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAFC206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3NAVIM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgAHL0R (ORCPT
+        id S1727105AbgAHL05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:26:17 -0500
-Received: from mga18.intel.com ([134.134.136.126]:44512 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgAHL0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:26:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:26:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="218043679"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 03:26:09 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ip9TV-0001sB-6p; Wed, 08 Jan 2020 13:26:09 +0200
-Date:   Wed, 8 Jan 2020 13:26:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc:     fengping yu <fengping.yu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200108112609.GN32742@smile.fi.intel.com>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
- <1578473162.12131.13.camel@mtksdaap41>
+        Wed, 8 Jan 2020 06:26:57 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38964 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHL05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:26:57 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so1474804pfs.6;
+        Wed, 08 Jan 2020 03:26:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OyEwIf+brcpdIFP5riG0lncLBlwH96PTMEeMCIA2zzA=;
+        b=D3NAVIM7clRMhS/BZxyoNCJNM+BYQBpegIc9wBhDjGqfApLd5n9Nv/ynfk6/6oM3oJ
+         YgdPdNOTXxUEXbDSdCDABMCmDjaYibstmrINYgVo5rPaRHcMRn9vQSucVDKF6EfxpNo3
+         Bc1qfwBOPV8u73bTwcHGS4Itg1v6X1sZQ6Q4uvoTsmgkS/KbgTdW9V7CVVHNsOg2JluG
+         +WSFFi3KEyYrZUM7hYq8jpjWXk6rtQj8ajFKPtkCeBcMkxsdgUuT3wGAgrAGT2OelZG5
+         8T5uqPSa9jdnX225AzmhovdA4fABGD8WZmBAocWpRaDUBJEOSIJ8hLQ0VJsXgNuMa/E7
+         CUnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OyEwIf+brcpdIFP5riG0lncLBlwH96PTMEeMCIA2zzA=;
+        b=Xv11fPfDQyUNMw9Aescy6Ri/f+xDacxhAI8dP+igD0AS/IlgbTjxTgXah5Y9H8P/vs
+         qFKwaPqem2oDJ5UbhxSwxlAdbk5wpMHmZUGmmXq78tNMMw9G/wJq1tgPyqfqFVuJyT5y
+         thyHhD55t12SNfA7Vy/MrMmY3A1Zz5dm+JYPQDiQX/75AVUXBLNTto9yh+eyTsSMdRoJ
+         Bupesp9lPISnzftvPcTMHUah/2P5wGKBKyj4v0b9Ue3kkbSUR/0Kh8OiT1jjomzDfwJH
+         AE1Qags5QjDnwkwlTGC/NDUagY91pX0/bw8keRIfrn46AOD2judp4RINTfVal6oGuU4+
+         eymQ==
+X-Gm-Message-State: APjAAAVP8oUCok89lDdDBdd/4s818wDsptNrfCSX8trCW+XTGNke+qEp
+        6VViIgZHgeL1PkBLgVrKaKA=
+X-Google-Smtp-Source: APXvYqxLYaAC/+wgObu27QstOjgjV05SmQu9JZgFn+fS5p/fUwMT2k3N03riIS+dfV4lMRDQ1G3iug==
+X-Received: by 2002:a63:4723:: with SMTP id u35mr4546002pga.194.1578482816504;
+        Wed, 08 Jan 2020 03:26:56 -0800 (PST)
+Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
+        by smtp.gmail.com with ESMTPSA id w20sm3297806pfi.86.2020.01.08.03.26.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 03:26:55 -0800 (PST)
+Date:   Wed, 8 Jan 2020 19:26:52 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "weifeng.voon@intel.com" <weifeng.voon@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] net: stmmac: remove useless code of phy_mask
+Message-ID: <20200108112652.GA5316@nuc8i5>
+References: <20200108072550.28613-1-zhengdejin5@gmail.com>
+ <BN8PR12MB326627D0E1F17AE7515B78E4D33E0@BN8PR12MB3266.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578473162.12131.13.camel@mtksdaap41>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BN8PR12MB326627D0E1F17AE7515B78E4D33E0@BN8PR12MB3266.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:46:02PM +0800, Yingjoe Chen wrote:
-> On Wed, 2020-01-08 at 14:29 +0800, fengping yu wrote:
-
-> > +	tasklet_init(&keypad->tasklet, kpd_keymap_handler,
-> > +		     (unsigned long)keypad);
-> > +
-> > +	writew((u16)(keypad->key_debounce & KPD_DEBOUNCE_MASK),
-> > +		     keypad->base + KP_DEBOUNCE);
+On Wed, Jan 08, 2020 at 07:57:14AM +0000, Jose Abreu wrote:
+> From: Dejin Zheng <zhengdejin5@gmail.com>
+> Date: Jan/08/2020, 07:25:48 (UTC+00:00)
 > 
-> You use a 13 bits mask and set it directly to KP_DEBOUNCE register. Are
-> you sure the debounce unit is ms?
+> > Changes since v1:
+> > 	1, add a new commit for remove the useless member phy_mask.
 > 
-> > +
-> > +	/* register IRQ */
-> > +	err = request_irq(keypad->irqnr, kpd_irq_handler, IRQF_TRIGGER_NONE,
-> > +			  KPD_NAME, keypad);
-> 
-> please consider using devm_request_irq, otherwise you have to free it in
-> _remove function.
+> No, this is not useless. It's an API for developers that need only 
+> certain PHYs to be detected. Please do not remove this.
+>
+Hi Jose:
 
-No, you may not use devm_*_irq() when tasklets are in use. There is a nasty
-race condition.
+Okay, If you think it is a feature that needs to be retained, I will
+abandon it. since I am a newbie, after that, Do I need to update the
+other commit in this patchset for patch v3? Thanks!
 
-Actually the rule of thumb is to NOT use devm_*_irq() unless you exactly know
-what you are doing.
+BR,
+dejin
 
-P.S. Why simple not to switch to threaded IRQ handler and drop tasklet? In such
-case devm_*_irq() is fine.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> ---
+> Thanks,
+> Jose Miguel Abreu
