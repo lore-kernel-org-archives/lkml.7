@@ -2,99 +2,105 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CB2C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B12BC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F972206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290582072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgAHJls (ORCPT
+        id S1726823AbgAHJnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:41:48 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8242 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726098AbgAHJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:41:48 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4020ED9CD9FD658F6AFA;
-        Wed,  8 Jan 2020 17:41:46 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 8 Jan 2020 17:41:37 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH v2] drm/hisilicon: Add the mode_valid function
-Date:   Wed, 8 Jan 2020 17:41:41 +0800
-Message-ID: <1578476501-45807-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 8 Jan 2020 04:43:09 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43715 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHJnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 04:43:09 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A72C020007;
+        Wed,  8 Jan 2020 09:43:04 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>, jassisinghbrar@gmail.com,
+        nsaenzjulienne@suse.de, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        lftan@altera.com, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: Re: [PATCH 13/13] mailbox: armada-37xx-rwtm: convert to devm_platform_ioremap_resource
+In-Reply-To: <20191228183538.26189-13-tiny.windzz@gmail.com>
+References: <20191228183538.26189-1-tiny.windzz@gmail.com> <20191228183538.26189-13-tiny.windzz@gmail.com>
+Date:   Wed, 08 Jan 2020 10:43:04 +0100
+Message-ID: <87imlmb7x3.fsf@FE-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add mode_valid function, we can make sure the resolution is valid.
+Hi Yangtao Li,
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Use devm_platform_ioremap_resource() to simplify code.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
----
-v2:	declare hibmc_crtc_mode_valid as static.
-	Modify the return value of hibmc_crtc_mode_valid .
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Applied on mvebu/drivers
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-index 843d784..675d629 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-@@ -242,6 +242,24 @@ static void hibmc_crtc_atomic_disable(struct drm_crtc *crtc,
- 	hibmc_set_current_gate(priv, reg);
- }
- 
-+static enum drm_mode_status hibmc_crtc_mode_valid(struct drm_crtc *crtc,
-+					const struct drm_display_mode *mode)
-+{
-+	int i = 0;
-+	int vrefresh = drm_mode_vrefresh(mode);
-+
-+	if (vrefresh < 59 || vrefresh > 61)
-+		return MODE_NOCLOCK;
-+
-+	for (i = 0; i < ARRAY_SIZE(hibmc_pll_table); i++) {
-+		if (hibmc_pll_table[i].hdisplay == mode->hdisplay &&
-+			hibmc_pll_table[i].vdisplay == mode->vdisplay)
-+			return MODE_OK;
-+	}
-+
-+	return MODE_BAD;
-+}
-+
- static unsigned int format_pll_reg(void)
- {
- 	unsigned int pllreg = 0;
-@@ -510,6 +528,7 @@ static const struct drm_crtc_helper_funcs hibmc_crtc_helper_funcs = {
- 	.atomic_flush	= hibmc_crtc_atomic_flush,
- 	.atomic_enable	= hibmc_crtc_atomic_enable,
- 	.atomic_disable	= hibmc_crtc_atomic_disable,
-+	.mode_valid = hibmc_crtc_mode_valid,
- };
- 
- int hibmc_de_init(struct hibmc_drm_private *priv)
+Thanks,
+
+Gregory
+
+> ---
+>  drivers/mailbox/armada-37xx-rwtm-mailbox.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/mailbox/armada-37xx-rwtm-mailbox.c b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+> index 19f086716dc5..02b7b28e6969 100644
+> --- a/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+> +++ b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+> @@ -143,7 +143,6 @@ static const struct mbox_chan_ops a37xx_mbox_ops = {
+>  static int armada_37xx_mbox_probe(struct platform_device *pdev)
+>  {
+>  	struct a37xx_mbox *mbox;
+> -	struct resource *regs;
+>  	struct mbox_chan *chans;
+>  	int ret;
+>  
+> @@ -156,9 +155,7 @@ static int armada_37xx_mbox_probe(struct platform_device *pdev)
+>  	if (!chans)
+>  		return -ENOMEM;
+>  
+> -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	mbox->base = devm_ioremap_resource(&pdev->dev, regs);
+> +	mbox->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(mbox->base)) {
+>  		dev_err(&pdev->dev, "ioremap failed\n");
+>  		return PTR_ERR(mbox->base);
+> -- 
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 -- 
-2.7.4
-
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
