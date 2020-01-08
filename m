@@ -7,43 +7,42 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B2C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2DD20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A462073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578499181;
-	bh=Y/5yh0fNKsHZcEskW1SKZ3Yed3TsS25tP9/+oLiTZMQ=;
+	s=default; t=1578499183;
+	bh=bncoRBkAH3LCg0XV0WmIZfOAH8qsJCT7tyVQVQuAxZw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2jaTKBCIwfbvM5NSCwP05L/hrtDX766fYmz016Ge4ba4JyKwLlNS2QFWE6arCybVb
-	 xtdR6OzOIB5ud9XBScB0wKKX+lMedvNr7SOzV+G/D12csd0iXdiBJMapFycJYyw5cf
-	 2/JM8/FOl6JSX6UedbLYPJp0rumldWxyibqjq2K4=
+	b=itxUzxN1zHudKJBWW02/9bJIFKvbxnB+d38kXkW+VoyiIvJqVCfaIXr19XF8D1IUJ
+	 bEhLLz2ZOlpy81hWqJkNLbZPSHRG1r4iJ1m6iyBBX5cU5AO306cVTZkOSwaO54icpE
+	 9gAWfwOu6qtzjFs4Ljtu6VhpUbAieJwV69WllPwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgAHP71 (ORCPT
+        id S1729296AbgAHP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:59:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:46770 "EHLO foss.arm.com"
+        Wed, 8 Jan 2020 10:59:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:46748 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbgAHP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:59:24 -0500
+        id S1729282AbgAHP7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:59:20 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 274B831B;
-        Wed,  8 Jan 2020 07:59:24 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D70F328;
+        Wed,  8 Jan 2020 07:59:19 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A669A3F534;
-        Wed,  8 Jan 2020 07:59:23 -0800 (PST)
-Date:   Wed, 08 Jan 2020 15:59:22 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 271DB3F534;
+        Wed,  8 Jan 2020 07:59:19 -0800 (PST)
+Date:   Wed, 08 Jan 2020 15:59:17 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: bcm-qspi: Use platform_get_irq_byname_optional() to avoid error message" to the spi tree
-In-Reply-To: <20200107040912.16426-1-rayagonda.kokatanur@broadcom.com>
-Message-Id: <applied-20200107040912.16426-1-rayagonda.kokatanur@broadcom.com>
+        Mark Brown <broonie@kernel.org>,
+        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>
+Subject: Applied "spi: sh-msiof: Convert to generic unused native cs handling." to the spi tree
+In-Reply-To: <20200102133822.29346-3-geert+renesas@glider.be>
+Message-Id: <applied-20200102133822.29346-3-geert+renesas@glider.be>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,7 +51,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: bcm-qspi: Use platform_get_irq_byname_optional() to avoid error message
+   spi: sh-msiof: Convert to generic unused native cs handling.
 
 has been applied to the spi tree at
 
@@ -77,42 +76,126 @@ to this mail.
 Thanks,
 Mark
 
-From e9aa3b851428282d5e5151a49d4bf0bfdcd72bfe Mon Sep 17 00:00:00 2001
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date: Tue, 7 Jan 2020 09:39:12 +0530
-Subject: [PATCH] spi: bcm-qspi: Use platform_get_irq_byname_optional() to
- avoid error message
+From aa32f76e0a409adcd40ef11ed1ed668df8b034f6 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 2 Jan 2020 14:38:18 +0100
+Subject: [PATCH] spi: sh-msiof: Convert to generic unused native cs handling.
 
-Use platform_get_irq_byname_optional() instead of platform_get_irq_byname()
-to avoid below error message during probe:
+Currently the MSIOF SPI driver uses custom code to handle the unused
+native chip select with GPIO chip selects.
+Convert the driver to use the new generic handling in the SPI core.
 
-[3.265115] bcm_iproc 68c70200.spi: IRQ spi_lr_fullness_reached not found
-[3.272121] bcm_iproc 68c70200.spi: IRQ spi_lr_session_aborted not found
-[3.284965] bcm_iproc 68c70200.spi: IRQ spi_lr_impatient not found
-[3.291344] bcm_iproc 68c70200.spi: IRQ spi_lr_session_done not found
-[3.297992] bcm_iproc 68c70200.spi: IRQ mspi_done not found
-[3.303742] bcm_iproc 68c70200.spi: IRQ mspi_halted not found
-
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Link: https://lore.kernel.org/r/20200107040912.16426-1-rayagonda.kokatanur@broadcom.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200102133822.29346-3-geert+renesas@glider.be
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-bcm-qspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-sh-msiof.c | 53 +++-----------------------------------
+ 1 file changed, 3 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 85bad70f59e3..23d295f36c80 100644
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -1293,7 +1293,7 @@ int bcm_qspi_probe(struct platform_device *pdev,
- 		name = qspi_irq_tab[val].irq_name;
- 		if (qspi_irq_tab[val].irq_source == SINGLE_L2) {
- 			/* get the l2 interrupts */
--			irq = platform_get_irq_byname(pdev, name);
-+			irq = platform_get_irq_byname_optional(pdev, name);
- 		} else if (!num_ints && soc_intc) {
- 			/* all mspi, bspi intrs muxed to one L1 intr */
- 			irq = platform_get_irq(pdev, 0);
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index 8f134735291f..b3732dc231cb 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -14,8 +14,6 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+ #include <linux/err.h>
+-#include <linux/gpio.h>
+-#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+@@ -55,7 +53,6 @@ struct sh_msiof_spi_priv {
+ 	void *rx_dma_page;
+ 	dma_addr_t tx_dma_addr;
+ 	dma_addr_t rx_dma_addr;
+-	unsigned short unused_ss;
+ 	bool native_cs_inited;
+ 	bool native_cs_high;
+ 	bool slave_aborted;
+@@ -587,7 +584,7 @@ static int sh_msiof_prepare_message(struct spi_controller *ctlr,
+ 
+ 	/* Configure pins before asserting CS */
+ 	if (spi->cs_gpiod) {
+-		ss = p->unused_ss;
++		ss = ctlr->unused_native_cs;
+ 		cs_high = p->native_cs_high;
+ 	} else {
+ 		ss = spi->chip_select;
+@@ -1124,46 +1121,6 @@ static struct sh_msiof_spi_info *sh_msiof_spi_parse_dt(struct device *dev)
+ }
+ #endif
+ 
+-static int sh_msiof_get_cs_gpios(struct sh_msiof_spi_priv *p)
+-{
+-	struct device *dev = &p->pdev->dev;
+-	unsigned int used_ss_mask = 0;
+-	unsigned int cs_gpios = 0;
+-	unsigned int num_cs, i;
+-	int ret;
+-
+-	ret = gpiod_count(dev, "cs");
+-	if (ret <= 0)
+-		return 0;
+-
+-	num_cs = max_t(unsigned int, ret, p->ctlr->num_chipselect);
+-	for (i = 0; i < num_cs; i++) {
+-		struct gpio_desc *gpiod;
+-
+-		gpiod = devm_gpiod_get_index(dev, "cs", i, GPIOD_ASIS);
+-		if (!IS_ERR(gpiod)) {
+-			devm_gpiod_put(dev, gpiod);
+-			cs_gpios++;
+-			continue;
+-		}
+-
+-		if (PTR_ERR(gpiod) != -ENOENT)
+-			return PTR_ERR(gpiod);
+-
+-		if (i >= MAX_SS) {
+-			dev_err(dev, "Invalid native chip select %d\n", i);
+-			return -EINVAL;
+-		}
+-		used_ss_mask |= BIT(i);
+-	}
+-	p->unused_ss = ffz(used_ss_mask);
+-	if (cs_gpios && p->unused_ss >= MAX_SS) {
+-		dev_err(dev, "No unused native chip select available\n");
+-		return -EINVAL;
+-	}
+-	return 0;
+-}
+-
+ static struct dma_chan *sh_msiof_request_dma_chan(struct device *dev,
+ 	enum dma_transfer_direction dir, unsigned int id, dma_addr_t port_addr)
+ {
+@@ -1373,17 +1330,12 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+ 	if (p->info->rx_fifo_override)
+ 		p->rx_fifo_size = p->info->rx_fifo_override;
+ 
+-	/* Setup GPIO chip selects */
+-	ctlr->num_chipselect = p->info->num_chipselect;
+-	ret = sh_msiof_get_cs_gpios(p);
+-	if (ret)
+-		goto err1;
+-
+ 	/* init controller code */
+ 	ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 	ctlr->mode_bits |= SPI_LSB_FIRST | SPI_3WIRE;
+ 	ctlr->flags = chipdata->ctlr_flags;
+ 	ctlr->bus_num = pdev->id;
++	ctlr->num_chipselect = p->info->num_chipselect;
+ 	ctlr->dev.of_node = pdev->dev.of_node;
+ 	ctlr->setup = sh_msiof_spi_setup;
+ 	ctlr->prepare_message = sh_msiof_prepare_message;
+@@ -1392,6 +1344,7 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+ 	ctlr->auto_runtime_pm = true;
+ 	ctlr->transfer_one = sh_msiof_transfer_one;
+ 	ctlr->use_gpio_descriptors = true;
++	ctlr->max_native_cs = MAX_SS;
+ 
+ 	ret = sh_msiof_request_dma(p);
+ 	if (ret < 0)
 -- 
 2.20.1
 
