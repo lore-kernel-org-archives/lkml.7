@@ -2,141 +2,86 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6CCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2805C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05EA206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E8C206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+2mzgmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgAHNto (ORCPT
+        id S1728384AbgAHNvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:49:44 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:54747 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgAHNto (ORCPT
+        Wed, 8 Jan 2020 08:51:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34560 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgAHNvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:49:44 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MUGmJ-1jFpMw3wu3-00RIIe; Wed, 08 Jan 2020 14:49:38 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] of: add more dummy helper functions
-Date:   Wed,  8 Jan 2020 14:49:28 +0100
-Message-Id: <20200108134936.3617013-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 8 Jan 2020 08:51:07 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008Dox0C115657;
+        Wed, 8 Jan 2020 07:50:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578491459;
+        bh=ZQvcg0rastnxK0vE7baWU38XIonrEiIs4ECCAsgMIA4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=X+2mzgmO+zvrZV0G+H/1km2xl+vivf3Kco49RirE/4dW9yQ8/6X0le3VTY2qY1Twv
+         Dab3pu5i7da1it+II70cY4Cq9d9ZFWZgnxIlwfcJwdSqjaHUBc9HepltQv1W+3GAe5
+         vUKqiZk3NKIej3avdtcJFgnD7vP6y2Q+6VLudz0k=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008Dox6N125933
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 07:50:59 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 07:50:59 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 07:50:59 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008Dowmn016932;
+        Wed, 8 Jan 2020 07:50:58 -0600
+Subject: Re: [PATCH v17 00/19] Multicolor Framework
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191114133023.32185-1-dmurphy@ti.com>
+ <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
+Message-ID: <63fd7446-d051-5ef2-3901-dbc290b158e0@ti.com>
+Date:   Wed, 8 Jan 2020 07:48:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JQOAbVK0LWH8+kGq3OdUd50ufs2YEZV3baqlPgyjnJ1EKClaWfd
- 3RQXwmRqR6iIRfGAw0SJ6ykQeTSDGMKgHSCbCWFQmagnm4q8JsA4OZv2kn6aO/2YbFoOexC
- a0EbrrHdfgzLnQ7iOLnvVORt0r2SlDlgWGY5Hk2Jyx/wHu7LKeT53tI+XkSjtiMeoR/DuIC
- TcX6eu2WCN17t6VfERARw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2pHzSasBQPo=:KLVRXx6QyUgV/cEWTC5tkr
- /QQavo2hzouhq7JHsZQS9eVUwqmQ8ifQwgwycTIC9ask6pVnFnkRXCfuIVhXHSSbnoTsFe3+3
- jZww/noej6zIfZ2qurhMV2XaIe8gwcGRwg5MOKx5YvoUbTTAyQS6w7URRm3NINnydKDOelVh0
- KhssziFYqRk0q+k1SUh+So2ZPKnQBrG/HZuW6pC5ySkdNyNs/MZRSgT1BPYi7QmiKZZQwtQFT
- k3/2RIwWI4Ya2+vbsK3DOCeyAGreJrMvIlbHT6WnTyVY7IT+zer/LmOrRwxFz3bY8/0/qLtLB
- mwlRsPOIpe/l2OHnxlc+zW9fIGPA5w3q2TsbbvGpaxJkSNRy0g4T15kgsrWPq0QYOPfIA8xrv
- tBJYisaY1J83fk+spOaoAqJYM4C/jKcPl5/IbK0qqeHOcJhzsrKEC4ZPE3H0WN6ogWH/tKgt7
- LdYwNIkYBSdJ+upWFTJbYxxU46mSkzm1DIT1FunawjyOSdoO6X/j32/HdhubicCRvKPaz75Ni
- 4HTX/XbhVm3SjlcBOVf/RVY9maywbgOJcY9QzSAltGPWvjOkw2iA93Sym2R0k3d9umC5KGbFF
- 3uvSjFD5m6FUPLi6frVfZSrdm8TSb3lNsEEs6WCyu5n6Q8Zx9See4yEv127ki/G6npw1cz67s
- aQmenEh+CUaj6eZh5Q6+WwjEnLlUoa6ejO6k9+dqVwsmZlXGO2SKwX0V2x4rxDQRASRZFNr5y
- CF+GYclP67xC4CxoEYk+P6LQQqDlWXZHnV56TDMv83UCeijBgoUkbgT6qr6X3PMU2cDfAqL/q
- 8L7JtdN+u9EWyJPelSangHh88Pw2FI1UY8wCMbACpijNVF9l2xqYYCd5Z0uqKaqrsEv0aKF/d
- bdmh3RFFZmZUSA4cFL8Q==
+In-Reply-To: <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new phy-j721e-wiz driver causes a link failure without CONFIG_OF:
+Hello
 
-drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
-phy-j721e-wiz.c:(.text+0x40): undefined reference to `of_platform_device_destroy'
+Do you have a time frame in applying this patch set?
 
-Add a dummy version of of_platform_device_destroy to avoid having to add
-Kconfig dependencies for the driver. As there are a few other functions
-without dummy implementations, add those as well for completeness.
+Dan
 
-Fixes: 42440de5438a ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/of_platform.h | 39 ++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 84a966623e78..f5dea3de4856 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -48,28 +48,49 @@ struct of_dev_auxdata {
- 
- extern const struct of_device_id of_default_bus_match_table[];
- 
-+#ifdef CONFIG_OF
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 const char *bus_id,
- 					 struct device *parent);
--#ifdef CONFIG_OF
- extern struct platform_device *of_find_device_by_node(struct device_node *np);
--#else
--static inline struct platform_device *of_find_device_by_node(struct device_node *np)
--{
--	return NULL;
--}
--#endif
--
- /* Platform devices and busses creation */
- extern struct platform_device *of_platform_device_create(struct device_node *np,
- 						   const char *bus_id,
- 						   struct device *parent);
--
- extern int of_platform_device_destroy(struct device *dev, void *data);
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
- 				 struct device *parent);
-+#else
-+static inline struct platform_device *of_device_alloc(struct device_node *np,
-+						      const char *bus_id,
-+						      struct device *parent)
-+{
-+	return NULL;
-+}
-+static inline struct platform_device *of_find_device_by_node(struct device_node *np)
-+{
-+	return NULL;
-+}
-+static inline struct platform_device *of_platform_device_create(struct device_node *np,
-+								const char *bus_id,
-+								struct device *parent)
-+{
-+	return NULL;
-+}
-+static inline int of_platform_device_destroy(struct device *dev, void *data)
-+{
-+	return 0;
-+}
-+static inline int of_platform_bus_probe(struct device_node *root,
-+					const struct of_device_id *matches,
-+					struct device *parent)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- #ifdef CONFIG_OF_ADDRESS
- extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
--- 
-2.20.0
-
+On 12/18/19 8:45 AM, Dan Murphy wrote:
+> Hello
+>
+> Bump for application to leds-next
+>
+> Dan
+>
+> On 11/14/19 7:30 AM, Dan Murphy wrote:
+>> Hello
+>>
