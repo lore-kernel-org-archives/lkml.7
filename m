@@ -2,100 +2,148 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8257BC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D86C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0220705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:36:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xq3DWXnU"
+	by mail.kernel.org (Postfix) with ESMTP id E471720720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgAHFgS (ORCPT
+        id S1726254AbgAHFok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:36:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47590 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgAHFgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:36:18 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0085aCIJ100921;
-        Tue, 7 Jan 2020 23:36:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578461772;
-        bh=HZPNRJuzdDiBHJDwYy9Z3EAqsCKdw2svb8xwWgVcoNQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xq3DWXnUUHz9GP1rVPMP1Jbe6mLEkncf6PFQTjuYLiiWQ/SZk81Q3BvS9XCwtbruM
-         jHh8uHeqJVmIWBJoFSF43jJtuCtI6kCpXjYYkuS4P98sST/gCMzQ/PD7VHeEINhY+t
-         Mk+KFY5YUFfB7bk2kPvJV6mvG18YkqQrCAvQYKsU=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0085aCvP093219
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 23:36:12 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 23:36:11 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 23:36:11 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0085a8TV003220;
-        Tue, 7 Jan 2020 23:36:09 -0600
-Subject: Re: [PATCH v3] phy: Add DisplayPort configuration options
-To:     Jyri Sarha <jsarha@ti.com>, Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <maxime@cerno.tech>
-CC:     <praneeth@ti.com>, <tomi.valkeinen@ti.com>, <mparab@cadence.com>,
-        <sjakhade@cadence.com>
-References: <1578313360-18124-1-git-send-email-yamonkar@cadence.com>
- <9d849a10-493f-e297-f4c3-b34a341635ed@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <5e3853dd-719b-c6a0-4af0-04967a2c6e3a@ti.com>
-Date:   Wed, 8 Jan 2020 11:08:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 8 Jan 2020 00:44:40 -0500
+Received: from mga04.intel.com ([192.55.52.120]:47785 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgAHFok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 00:44:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 21:44:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
+   d="scan'208";a="215851240"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2020 21:44:37 -0800
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id 2523058033E;
+        Tue,  7 Jan 2020 21:44:34 -0800 (PST)
+Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <e89cf037-217b-cd61-79ee-a11e2a118c01@ti.com>
+ <66b9f427-83c2-f56c-3d38-fa955429118d@linux.intel.com>
+ <9b95a30f-6d2d-2202-248a-24186d5ddb2a@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <8b0816ba-f74f-6ed7-7a85-679031104568@linux.intel.com>
+Date:   Wed, 8 Jan 2020 13:44:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <9d849a10-493f-e297-f4c3-b34a341635ed@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <9b95a30f-6d2d-2202-248a-24186d5ddb2a@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 08/01/20 12:22 AM, Jyri Sarha wrote:
-> On 06/01/2020 14:22, Yuti Amonkar wrote:
->> Allow DisplayPort PHYs to be configured through the generic
->> functions through a custom structure added to the generic union.
->> The configuration structure is used for reconfiguration of
->> DisplayPort PHYs during link training operation.
+On 8/1/2020 1:14 PM, Vignesh Raghavendra wrote:
+>
+> On 06/01/20 4:49 pm, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
 >>
->> The parameters added here are the ones defined in the DisplayPort
->> spec v1.4 which include link rate, number of lanes, voltage swing
->> and pre-emphasis.
+>> Thank you for the review comments.
 >>
->> Add the DisplayPort phy mode to the generic phy_mode enum.
+>> On 6/1/2020 6:40 PM, Vignesh Raghavendra wrote:
+>>> Hi,
+>>>
+>>> On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
+>>> [...]
+>>>> +static u32 cqspi_cmd2addr(const unsigned char *addr_buf, u32
+>>>> addr_width)
+>>>> +{
+>>>> +    unsigned int addr = 0;
+>>>> +    int i;
+>>>> +
+>>>> +    /* Invalid address return zero. */
+>>>> +    if (addr_width > 4)
+>>>> +        return 0;
+>>>> +
+>>>> +    for (i = 0; i < addr_width; i++) {
+>>>> +        addr = addr << 8;
+>>>> +        addr |= addr_buf[i];
+>>>> +    }
+>>>> +
+>>>> +    return addr;
+>>>> +}
+>>>> +
+>>> [...]
+>>>> +static int cqspi_apb_read_setup(struct struct_cqspi *cqspi,
+>>>> +                const struct spi_mem_op *op,
+>>>> +                const u8 *addrbuf)
+>>>> +{
+>>>> +    void __iomem *reg_base = cqspi->iobase;
+>>>> +    size_t addrlen = op->addr.nbytes;
+>>>> +    size_t dummy_bytes = op->dummy.nbytes;
+>>>> +    unsigned int addr_value, dummy_clk, reg;
+>>>> +
+>>>> +    if (addrlen) {
+>>>> +        addr_value = cqspi_cmd2addr(&addrbuf[0], addrlen);
+>>>> +        writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
+>>>> +    }
+>>>> +
+>>> Why do you need to swap the address bytes to SPI bus order?
+>> Yes , you are right to align with spi bus order swap is done .
+>>>    You are
+>>> writing to a controller register that accepts 24 bit or 32 bit address.
+>> 32bit address.
+> There is no need to swap the address bytes. The current driver
+> (drivers/mtd/spi-nor/cadence-quadspi.c) does not swap the address to SPI
+> bus order, why does the new driver required to do so?
+Thanks! for clarification, actually we are not swapping , just 
+Converting address buffer into word format (MSB first).
+>>>> +    reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
+>>>> +    reg |= (op->data.buswidth & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
+>>>> +        CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
+>>>> +
+>>> This is wrong... op->data.buswidth's range is 1 to 8 whereas
+>>> CQSPI_REG_RD_INSTR_TYPE range is 0 to 3. I wonder whether you tested
+>>> dual/quad mode with this driver?
+>> Yes I have tested with Quad mode since Cadence-IP supports dual/quad on
+>> my platform, used to validate
+>> before sending the patch that's  standard procedure here.
+>> please let me know if you have any further queries.
 >>
->> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> 
-> Reviewed-by: Jyri Sarha <jsarha@ti.com>
-> 
-> Kishon, can you still pick this for v5.6?
+> Then I have no idea how it works on your platform..
+while testing on my platform I have hardcoded to 4 instead of 8, for me 
+it is working fine.
+should be handled properly for OCTAL mode once your changes are ready
 
-Thank you Jyri and Maxime for reviewing this.
+>   What you are
+> programming above overflows the assigned bit fields for bus width, right?
+yes, overflow should be handled
+once started working on your platform with your changes, I will squash 
+and send it back.
+Thanks for your time.
 
-Merged it now.
-
-Thanks
-Kishon
+Regards
+Vadivel
+>> ---
+>> Best Regards
+>> Vadivel
+>>> I am still unable to get this series to work on my platform. Will
+>>> continue to debug...
+>>>
