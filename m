@@ -2,93 +2,172 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE63C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E97C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73580205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0846A205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aI0ASofZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgAHIPd convert rfc822-to-8bit (ORCPT
+        id S1727165AbgAHIRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:15:33 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57481 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgAHIPd (ORCPT
+        Wed, 8 Jan 2020 03:17:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39304 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHIRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:15:33 -0500
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CB699240010;
-        Wed,  8 Jan 2020 08:15:29 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 09:15:28 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Wenwen Wang <wenwen@cs.uga.edu>, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: sm_ftl: fix NULL pointer warning
-Message-ID: <20200108091528.2c89d97f@xps13>
-In-Reply-To: <20200107212509.4004137-1-arnd@arndb.de>
-References: <20200107212509.4004137-1-arnd@arndb.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 8 Jan 2020 03:17:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so2340189wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=abwTz2beL2gLghCfDY6LQgHixzJKFXuNxR9Ws8d7RDM=;
+        b=aI0ASofZ8Mua6VCbXQHpsVOKk4LmrksJUB9HHWJ4R//7YVTf+AUhqMkWJH0W9VehP8
+         hO4J7xnWfhFJ3/BjgARnjAydkUNLG6miKqZXznSTmYG7NbXK/nCVrNLCgMgMDgwZW17h
+         //+Qlu+yDH80bAB+zotUnImUeyCrF9shYMSmq5TxYR+EcUA9NiQwKAyiiJ3qw9kw6LAY
+         gdy7z21xh2Qa9I2UJPvmYXXDxdKMod6+yjf1nzPgX1eWzeSCDQhhxqEnQovgazaNQfCM
+         qQBVz3rFWrQyGcD678n9tQ0zwItTkphu7bT8QJNWvgAOvheUlsYrjQA5omq0vUDdpVS1
+         gUXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abwTz2beL2gLghCfDY6LQgHixzJKFXuNxR9Ws8d7RDM=;
+        b=YNehIaCRdlz6rAEt2t0H+zsha5TYajG7pEtftN+xhACE5gvt5s4NtoG13gngDkbTnc
+         cMFtA6Epx38gzEott2nfEGIfLLZHcQrvA7xrGIwHLLI3fvWj4lbHvW7nzoysBYGEr587
+         O48K/0PuDdN8lyUJ0WvxpqiyNSHIzrRhejW4u9W3iEMrq4TsLy0HmEux+EL5Hu3NguqT
+         kCOzfGxR1l6g4NJYjrSuel6twujPOCUHGu9ryR4LLBp3drRn6Lnc++LoWoNMahwdfcGP
+         dO/Yft87OLw5ht/LfuHWs8T5emmCgXr0BSlaM5joc+nh3USmYfbSHK22lfNf9brise1x
+         TqDw==
+X-Gm-Message-State: APjAAAVcAgAOGfbcIuPGG+e4KRHIOmbAUIHY7NVUwuLCQOrBRSe+tPCZ
+        b5k2GXV2CTi55xW/vzmAxETH9Z0Vr+h/iWqJWhFrPQ==
+X-Google-Smtp-Source: APXvYqz5y0daA1TT4hH3Zv+jz1/iOuMW0TLllfiMXuVE3LIZXrDCM1nG4BRrP8A84+6/wpPPnvOZ98XBmvbco7MQBPg=
+X-Received: by 2002:adf:d850:: with SMTP id k16mr2893460wrl.96.1578471450572;
+ Wed, 08 Jan 2020 00:17:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 8 Jan 2020 13:47:19 +0530
+Message-ID: <CAAhSdy2UAAQrzD4mgbAu1p022YLLLhUX2dJjYomyiTifoE0mBg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@alien8.de>, mchehab@kernel.org,
+        tony.luck@intel.com, James Morse <james.morse@arm.com>,
+        rrichter@marvell.com,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-Arnd Bergmann <arnd@arndb.de> wrote on Tue,  7 Jan 2020 22:24:52 +0100:
-
-> With gcc -O3, we get a new warning:
-> 
-> In file included from arch/arm64/include/asm/processor.h:28,
->                  from drivers/mtd/sm_ftl.c:8:
-> In function 'memset',
->     inlined from 'sm_read_sector.constprop' at drivers/mtd/sm_ftl.c:250:3:
-> include/linux/string.h:411:9: error: argument 1 null where non-null expected [-Werror=nonnull]
->   return __builtin_memset(p, c, size);
-> 
-> From all I can tell, this cannot happen (the function is called
-> either with a NULL buffer or with a -1 block number but not both),
-> but adding a check makes it more robust and avoids the warning.
-> 
-> Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jan 8, 2020 at 11:39 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+> moves the sifive L2 cache driver to driver/soc. It did not move the
+> header file along with the driver. Therefore this patch moves the header
+> file to driver/soc
+>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  drivers/mtd/sm_ftl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/sm_ftl.c b/drivers/mtd/sm_ftl.c
-> index 4744bf94ad9a..b9f272408c4d 100644
-> --- a/drivers/mtd/sm_ftl.c
-> +++ b/drivers/mtd/sm_ftl.c
-> @@ -247,7 +247,8 @@ static int sm_read_sector(struct sm_ftl *ftl,
->  
->  	/* FTL can contain -1 entries that are by default filled with bits */
->  	if (block == -1) {
-> -		memset(buffer, 0xFF, SM_SECTOR_SIZE);
-> +		if (buffer)
-> +			memset(buffer, 0xFF, SM_SECTOR_SIZE);
->  		return 0;
->  	}
->  
+>  arch/riscv/include/asm/sifive_l2_cache.h | 16 ----------------
+>  drivers/edac/sifive_edac.c               |  2 +-
+>  drivers/soc/sifive/sifive_l2_cache.c     |  2 +-
+>  include/soc/sifive/sifive_l2_cache.h     | 16 ++++++++++++++++
+>  4 files changed, 18 insertions(+), 18 deletions(-)
+>  delete mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+>  create mode 100644 include/soc/sifive/sifive_l2_cache.h
+>
+> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+> deleted file mode 100644
+> index 04f6748..0000000
+> --- a/arch/riscv/include/asm/sifive_l2_cache.h
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -/*
+> - * SiFive L2 Cache Controller header file
+> - *
+> - */
+> -
+> -#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+> -#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+> -
+> -extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+> -extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+> -
+> -#define SIFIVE_L2_ERR_TYPE_CE 0
+> -#define SIFIVE_L2_ERR_TYPE_UE 1
+> -
+> -#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+> index 413cdb4..c0cc72a 100644
+> --- a/drivers/edac/sifive_edac.c
+> +++ b/drivers/edac/sifive_edac.c
+> @@ -10,7 +10,7 @@
+>  #include <linux/edac.h>
+>  #include <linux/platform_device.h>
+>  #include "edac_module.h"
+> -#include <asm/sifive_l2_cache.h>
+> +#include <soc/sifive/sifive_l2_cache.h>
+>
+>  #define DRVNAME "sifive_edac"
+>
+> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> index a9ffff3..a506939 100644
+> --- a/drivers/soc/sifive/sifive_l2_cache.c
+> +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_address.h>
+> -#include <asm/sifive_l2_cache.h>
+> +#include <soc/sifive/sifive_l2_cache.h>
+>
+>  #define SIFIVE_L2_DIRECCFIX_LOW 0x100
+>  #define SIFIVE_L2_DIRECCFIX_HIGH 0x104
+> diff --git a/include/soc/sifive/sifive_l2_cache.h b/include/soc/sifive/sifive_l2_cache.h
+> new file mode 100644
+> index 0000000..04f6748
+> --- /dev/null
+> +++ b/include/soc/sifive/sifive_l2_cache.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * SiFive L2 Cache Controller header file
+> + *
+> + */
+> +
+> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+> +
+> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+> +
+> +#define SIFIVE_L2_ERR_TYPE_CE 0
+> +#define SIFIVE_L2_ERR_TYPE_UE 1
+> +
+> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+> --
+> 2.7.4
+>
 
-What about a simpler form:
+LGTM.
 
-        if (buffer && block == -1) { ...
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-Instead of an additional indentation level? 
-
-Thanks,
-Miquèl
+Regards,
+Anup
