@@ -2,113 +2,126 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F198C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13478C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F37E20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC89820720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzH6zeJa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcH8Hddz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgAHPbs (ORCPT
+        id S1728803AbgAHPc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:31:48 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45768 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPbs (ORCPT
+        Wed, 8 Jan 2020 10:32:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34180 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgAHPc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:31:48 -0500
-Received: by mail-io1-f66.google.com with SMTP id i11so3570410ioi.12;
-        Wed, 08 Jan 2020 07:31:47 -0800 (PST)
+        Wed, 8 Jan 2020 10:32:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s94so6437378pjc.1;
+        Wed, 08 Jan 2020 07:32:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X7o/cbIbWQtFq2kL2V0bbwvA4L0Ugp+mDyf5FeCjV9Y=;
-        b=pzH6zeJaZTB+65guQIjtWt9OrS+TW0egL1dGYCFmTIHGpenTiH806NyUQYIC79mO49
-         C8Fa9hJUcTGI4ZtrRFkjTnG0RBBe2RMBrvyAFbxlFlbLZ7Xpltr5VOXhbU8ITg7lH62Z
-         OUGs7mIljKQ+eW/ya9De02u7zuWf9FZvGvZT78FHAUWNVwELEFCSzNtZwShhQunJPI+E
-         7mXgOQ/k50NurhHMFU661OVKF/nFoybb2MJlyXCb7NtMl674a6Bht+abPya5Yf/p0d1M
-         iKH2WYcrDnD4veK9QnQi4Dp9tZbx/ujf4vIk9+J/FzDFCcuoN6FN948J4T7SHp1pKVwX
-         r7GQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1SOA3Ah7Rg4qtqYtLQcb6jr3zIfhzYvMEvCqqOZp10s=;
+        b=hcH8HddzSr1Lo2BeOG/EscmmwduKGPUQti+1Ls3aYlbDVwLieDuKmKNFQ7tZ5dur8p
+         uCLBqkSgM+YmReBEn67r9b9fP3qU+se7HvNsNxWOmKKmED0dk3rcxbGGpUIEi7PLjwl9
+         cW0D1BMPhGHhc7l7hHqpS3AC9E7JHvqe1UQxUZrFJEvUwZP3Kh6n6W90WhlHBgVIGSKc
+         BXI0Ojcnlz5awvU8Al7d06rFjOvxJH/npCCtVZN3kpIhZQ/5bMSy6/3BfXAIZgrgj85o
+         L2D/byLXUGhhEWVIZnGOGlm1r/J+gz6o/FpZDYOi9f2jdqIU2CmCbVik0tn8FqTUfQ8w
+         COmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X7o/cbIbWQtFq2kL2V0bbwvA4L0Ugp+mDyf5FeCjV9Y=;
-        b=sqFxfBR4zQ8IixfwGJWUNTRERgJBMu1+NfJN1L6DrCPO92mA4JtHRAnfaDJp21CL/q
-         nYsqMl+nYnEG/nqCWwEbh1WAjbkpC4NzYa9RskS8CDTr1Nh7mLXZGtN43xyNeCrirgdt
-         HNMiFCkV/bHOTB2MqfaYtwf4mEdTCr88bem8HccvaLrw7TiCTWBegSvNzonS43wJjhlH
-         8Oi6XGN1NpqN+cbhXL8D4TU0gJFwjAUXomq32ytOpWhcobvp5ryLNsPbJzbFY83uINDT
-         Ford0Kre4lhHod3YdnIckyBy0b0vrWUb6l3q3XxhXf7Op2FVsH4PWXwqz0aG8pSS1Apn
-         wOtg==
-X-Gm-Message-State: APjAAAWujnN4Hzsj+nmYsYAAKUw3PR3SE/3AkLl/EEA+rpDla9dLm5t9
-        IaFf+SEfYsO9PDadjaHzUB2u7L45U1jyxXSveBM=
-X-Google-Smtp-Source: APXvYqysDvAgpDgc999+aM9DXdNxlGSltgKcUBQi08cAjKgH4hCse5laLHXcIpWa76h+Wts3egveXx+XtlDD8dK4JTQ=
-X-Received: by 2002:a5e:8d14:: with SMTP id m20mr3593782ioj.282.1578497507212;
- Wed, 08 Jan 2020 07:31:47 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1SOA3Ah7Rg4qtqYtLQcb6jr3zIfhzYvMEvCqqOZp10s=;
+        b=oZhu++31zZE5xQ/xr9iBQODsm/XFTOiDDY+X6euhLpEqk1XqszdkxontDNg1xjlNEc
+         l7sCdKEM74csW0nQ/RlM4mvdtuqIY5SvyslC0IQllmXsqajdhZJ+o6gSfhl0Z5a21Cnc
+         g4NKEh3e0pZ6BBo6yLjIhoYVoAc5o+VINY8MFJs3cD5+YTKxuDp5D5GlzkluzcRkqavb
+         aBkSrw05ArgNVb3y2Nx78nJAWqt/Ldc/VCVGwb4aZzlN2vdli2tbNUlC40yRRF1Xjjp0
+         p8oc538ZzWYYv01ZU0pGrtWNlOnEmKyDg0Tf7wGTN0akYKh0EdQYaSlcHQuOg71WPaUM
+         fxug==
+X-Gm-Message-State: APjAAAXOaDXIPCIcgpPoXTZO0KIWzaCzLMT8tdndnDbNegM8503etHG2
+        kQRTAsSCIXMUOpg/vVuTwVA=
+X-Google-Smtp-Source: APXvYqx0Zlx7AqZ48rQaShfquzyMapi4bxSa5qydlFyXVoGn4oFYV20TZyAhgNrStbY5tlGCbex9RA==
+X-Received: by 2002:a17:90a:bd10:: with SMTP id y16mr5007799pjr.108.1578497545665;
+        Wed, 08 Jan 2020 07:32:25 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l66sm3782432pga.30.2020.01.08.07.32.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 07:32:24 -0800 (PST)
+Date:   Wed, 8 Jan 2020 07:32:22 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+Message-ID: <20200108153222.GA28530@roeck-us.net>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net>
+ <yq1r211dvck.fsf@oracle.com>
+ <20191219003256.GA28144@roeck-us.net>
+ <yq17e233o0o.fsf@oracle.com>
+ <d42990af-78e4-e6c4-37ae-8043d27e565a@roeck-us.net>
+ <yq1o8ve20sb.fsf@oracle.com>
 MIME-Version: 1.0
-References: <20200107210256.2426176-1-arnd@arndb.de>
-In-Reply-To: <20200107210256.2426176-1-arnd@arndb.de>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 8 Jan 2020 16:31:36 +0100
-Message-ID: <CAOi1vP_j1Mhdev5yGqxWVyfCvFMtmFzGw+34TdsJiQ53vWOQpA@mail.gmail.com>
-Subject: Re: [PATCH] rbd: work around -Wuninitialized warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sage Weil <sage@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Jason Dillaman <dillaman@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1o8ve20sb.fsf@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 10:02 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> gcc -O3 warns about a dummy variable that is passed
-> down into rbd_img_fill_nodata without being initialized:
->
-> drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
-> drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
->   fctx->iter = *fctx->pos;
->
-> Since this is a dummy, I assume the warning is harmless, but
-> it's better to initialize it anyway and avoid the warning.
->
-> Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/block/rbd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 29be02838b67..070edc5983df 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -2664,7 +2664,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
->                                u64 off, u64 len)
->  {
->         struct ceph_file_extent ex = { off, len };
-> -       union rbd_img_fill_iter dummy;
-> +       union rbd_img_fill_iter dummy = {};
->         struct rbd_img_fill_ctx fctx = {
->                 .pos_type = OBJ_REQUEST_NODATA,
->                 .pos = &dummy,
+Hi Martin,
 
-Applied, but slightly confused.  Wasn't selecting -O3/s/etc supposed to
-automatically disable -Wmaybe-uninitialized via Kconfig?
+On Tue, Jan 07, 2020 at 08:29:40PM -0500, Martin K. Petersen wrote:
+> 
+> Guenter,
+> 
+> > "scsi-8-140" is created by libsensors, so any change in that would
+> > have to be made there, not in the kernel driver.
+> 
+> Yes. Something like the patch below which will produce actual SCSI
+> device instance names:
+> 
+> 	drivetemp-scsi-7:0:29:0
+> 	drivetemp-scsi-8:0:30:0
+> 	drivetemp-scsi-8:0:15:0
+> 	drivetemp-scsi-7:0:24:0
+> 
+> Instead of the current:
+> 
+> 	drivetemp-scsi-7-1d0
+> 	drivetemp-scsi-8-1e0
+> 	drivetemp-scsi-8-f0
+> 	drivetemp-scsi-7-180
+> 
+> Other question: Does hwmon have any notion of sensor topology? As I
+> mentioned earlier, SCSI installations typically rely on SAF-TE or SES
+> instead of the physical drive sensors. SES also includes monitoring of
+> fans, power supplies, etc. And more importantly, it provides a
+> representation of the location of a given component. E.g.: Tray number
+> #4, disk drive bay #5.
+> 
+
+Please go ahead and submit the patch for libsensors.
+
+> So it would be helpful if libsensors had a way to represent sensors in a
+> way that mimics the physical device layout reported by SES.
+> 
+
+I guess it would be up to you to come up with a proposal.
 
 Thanks,
-
-                Ilya
+Guenter
