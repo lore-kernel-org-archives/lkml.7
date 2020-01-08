@@ -2,198 +2,75 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93264C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D31C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697852077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I/QT89u9"
+	by mail.kernel.org (Postfix) with ESMTP id D8BB4206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgAHLTw (ORCPT
+        id S1726594AbgAHLVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:19:52 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44796 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgAHLTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:19:52 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 195so1450786pfw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 03:19:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cOGvD7y5HQkBlYF9N0NkWtEGiRyDw5Hk/20diZQAQAA=;
-        b=I/QT89u9dGq6KzbLwqtEEmn/0AiFljz/rRwWBalIGmgNls+lZ9nYd5DXSIv9m05O2Z
-         SZKKVkwM3oOOZODQB1o592LcPoEvG7Ja7SL0pSrPQSloyXq9KBwWsHOBATXFlx7mrNEE
-         oueZQP/zINGY37BWRcZ+BZGgNt4BEFuYBFhqDFY6DfFXYINZNNIAqjsij2h7BhluqmYJ
-         MY6lk9SKV67tqYvS4NcOvT9FKs9ZrmuKS9g/3KM15PGlNE3DI3Z/rk8NOG6z66HOAwAM
-         Yi0mLF/L6qJBN1ZQDoWMOAzD8/Nno07zII52xCpgJ/ah9SXNXLBZf707rByTlpFQ5ldx
-         R8Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cOGvD7y5HQkBlYF9N0NkWtEGiRyDw5Hk/20diZQAQAA=;
-        b=RTQFT9HKrwnAZeaCyTa0g+vfzdop0CcadIrhS3+OUSmE+aa9OmpSC9Dv5j4xVPhsck
-         9ZegTQLX28HZWmYGLFLDHNb/NnjjJN9M8yY7RwrWetkjVnjQ2s7Zz3mGBksDhIE1/xJX
-         b7ueUIyySwWq9k+w5ucHdGteJ3vfW1ovleF3z85r+WkaNtyTfUAmH4pzsjxiJUcbxBqG
-         4kfXok4tjR+bgrhhQQ0SXSKYOdU6AqY1EAaC/loASGHv6J9WGEbcEpoque7pSN9mPEux
-         /PDfwh0wUis4pMlsrOYUaXlTRbrQ1hDm7FGcHgWzpuLHsvnxeV9wpjJIWWxDV2E/YIb/
-         ws0g==
-X-Gm-Message-State: APjAAAWaSWkLybAeO2cuIZxpCGhen5WfSgVvNfdVSB5bPFogwI/gfBaz
-        kaPCiEAxvOS8XiYtZO2h/+OGhQ==
-X-Google-Smtp-Source: APXvYqzywDkjkEjHqoRKd7VAHnkY87bW3tIFt9/TraoWF+Ti+CuLoHpFVbqgQ0f1lIJZz3L5tlYXog==
-X-Received: by 2002:a63:201d:: with SMTP id g29mr4778115pgg.427.1578482390987;
-        Wed, 08 Jan 2020 03:19:50 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id o7sm3513384pfg.138.2020.01.08.03.19.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 03:19:49 -0800 (PST)
-Date:   Wed, 8 Jan 2020 16:49:47 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
-Message-ID: <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-4-saravanak@google.com>
+        Wed, 8 Jan 2020 06:21:10 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8243 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726107AbgAHLVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:21:10 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E1441D60C144FDC3B04F;
+        Wed,  8 Jan 2020 19:21:07 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 8 Jan 2020 19:20:59 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <me@bobcopeland.com>
+CC:     <linux-karma-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
+Subject: [PATCH] fs: omfs: use kmemdup
+Date:   Wed, 8 Jan 2020 19:16:48 +0800
+Message-ID: <20200108111648.36050-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207002424.201796-4-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-12-19, 16:24, Saravana Kannan wrote:
-> The frequency OPP tables have helper functions to search for entries in the
-> table based on frequency and get the frequency values for a given (or
-> suspend) OPP entry.
-> 
-> Add similar helper functions for bandwidth OPP tables to search for entries
-> in the table based on peak bandwidth and to get the peak and average
-> bandwidth for a given (or suspend) OPP entry.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/core.c     | 301 +++++++++++++++++++++++++++++++++++------
->  include/linux/pm_opp.h |  43 ++++++
->  2 files changed, 305 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c79bbfac7289..3ff33a08198e 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
->  
-> +/**
-> + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-> + * @opp:	opp for which peak bandwidth has to be returned for
+Fix memdup.cocci warnings:
+./fs/omfs/inode.c:366:9-16: WARNING opportunity for kmemdup
 
-s/peak //
+Use kmemdup rather than duplicating its implementation.
 
-> + * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-> + *		Can be NULL.
-> + *
-> + * Return: Peak bandwidth in kBps corresponding to the opp, else
-> + * return 0
-> + */
-> +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-> +{
-> +	if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> +		pr_err("%s: Invalid parameters\n", __func__);
-> +		return 0;
-> +	}
-> +
-> +	if (avg_bw)
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ fs/omfs/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Do you see this being NULL in practice ? If no, then we can make it
-mandatory for now ?
-
-> +		*avg_bw = opp->avg_bw;
-> +
-> +	return opp->peak_bw;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-> +
->  /**
->   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
->   * @opp:	opp for which level value has to be returned for
-> @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
->  
-> +/**
-> + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
-
-Hmm, I wasn't expecting this. So the interconnects will also have a
-suspend OPP ?
-
-> + * @dev:	device for which we do this operation
-> + * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-> + *		Can be NULL.
-> + *
-> + * Return: This function returns the peak bandwidth of the OPP marked as
-> + * suspend_opp if one is available, else returns 0;
-> + */
-> +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-> +					    unsigned long *avg_bw)
-> +{
-> +	struct opp_table *opp_table;
-> +	unsigned long peak_bw = 0;
-> +
-> +	opp_table = _find_opp_table(dev);
-> +	if (IS_ERR(opp_table))
-> +		return 0;
-> +
-> +	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-> +		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-> +
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +
-> +	return peak_bw;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-> +
->  int _get_opp_count(struct opp_table *opp_table)
->  {
->  	struct dev_pm_opp *opp;
-> @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
->  
-
-I think we should add function header here instead of the helpers
-which get exact match for freq, bw or level. And then pass a enum
-value to it, which tells what we are looking to compare. After that
-rest of the routines will be just one liners, make them macros in
-header file itself.
-
-> +struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
-> +					      struct dev_pm_opp *opp_key,
-> +					      bool available)
-
+diff --git a/fs/omfs/inode.c b/fs/omfs/inode.c
+index b76ec6b..8867cef 100644
+--- a/fs/omfs/inode.c
++++ b/fs/omfs/inode.c
+@@ -363,12 +363,11 @@ static int omfs_get_imap(struct super_block *sb)
+ 		bh = sb_bread(sb, block++);
+ 		if (!bh)
+ 			goto nomem_free;
+-		*ptr = kmalloc(sb->s_blocksize, GFP_KERNEL);
++		*ptr = kmemdup(bh->b_data, sb->s_blocksize, GFP_KERNEL);
+ 		if (!*ptr) {
+ 			brelse(bh);
+ 			goto nomem_free;
+ 		}
+-		memcpy(*ptr, bh->b_data, sb->s_blocksize);
+ 		if (count < sb->s_blocksize)
+ 			memset((void *)*ptr + count, 0xff,
+ 				sb->s_blocksize - count);
 -- 
-viresh
+2.7.4
+
