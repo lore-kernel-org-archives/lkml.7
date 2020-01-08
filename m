@@ -2,120 +2,106 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E374DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F22C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4642077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B59C2073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oRQZMXS5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I69W7MIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgAHGtG (ORCPT
+        id S1726346AbgAHGyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:49:06 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43752 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgAHGtF (ORCPT
+        Wed, 8 Jan 2020 01:54:45 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37235 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgAHGyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:49:05 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x6so1101969pfo.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 22:49:05 -0800 (PST)
+        Wed, 8 Jan 2020 01:54:45 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q127so1088759pga.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 22:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XfnflGZ6oSzY+MaLoyJpJ8yAdxfSU+oZoFb75ber0eQ=;
-        b=oRQZMXS5BPcdeOERB4pNNVbYLVT8+DpXr8U+UcJ8gw8uIslp6j9jSsr429ZOJAxoji
-         +pN9S6F601Z1Uf/ZHSEYWRtIWlrqgqOzr/7raG+viem8rqLoQldnlqfii7cCy7BJ8ZCq
-         PBw7/QsasSqrNRZtBQdl5xCSy3mOELWFD0GZ+Fg+9wml4PjmonL6bDfrq0BDCA7KDZ91
-         YhxAYp+gPmz7GP5dxOMgKS4j6+Fc+HiYliG6oQH4I1Qapr0TVhg+ZUfXGK4RnwDeKBR/
-         ETwk/VfGEpW8zJ0Lkj6lZ2sWswLcbkOgb2mQwjKObo195/u6ho3YaEiJa59eQFpldVMG
-         tbUQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=jrDSpPlac7LfKsNtNNcdyco4L0d7qWfB7luT8Ldf28Y=;
+        b=I69W7MImSC2wNVx/FY0O7PzWcgYEwrZUPpWt7h55LmqvKIrIQDJUgcvL643IVqK6mN
+         bvfR68TMy3Dls/cKYwYlmiG8iVgRgxM2v08um2gSy4qJG0HRE4DwpZOvX88psHT0NT2z
+         b/Q/gp1vjy0nAnB5/nlsA9NHEByMbm188IcJY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XfnflGZ6oSzY+MaLoyJpJ8yAdxfSU+oZoFb75ber0eQ=;
-        b=SCBy9V5KhwohF9ebvMenS5g8mI+PwlPMH+i4lGqFTVELrC6URArBXwNjfheDCQ4F0I
-         BZtvsSkWu5eIHJgBS+TMKgvTLlD9X3QwkDEPkZ9yfwks48tZt182GkNngg2CHpgw04g7
-         +/HZbA4TV5T7CLzreOQ0vbflGn8w+DGuTpKXT3nK4hZA1gkzT5o2isZOnYcrEPRxeL5z
-         dO1R6/SH9mL6s1x2bPLN3DynVs21WIAFcEavrBpkgmu2xHY22JpmKOe0rfsPfdzoYDoK
-         1UjyIvvslfALXEKQZcyYeTW4U/mzsGLSJ57uzU6yWNI6qkBpirerjla4qwB3XTHHGPrs
-         piuA==
-X-Gm-Message-State: APjAAAXwKFzyqPbFovhXS4YM6x5500mZWnDCXZqKrgdONmi0nKH5CNOC
-        m1H7kAPRTL1kw5wNczM9mHverQ==
-X-Google-Smtp-Source: APXvYqwihXTTTzoaBd499RsWz0IN7S6x7DMn+MdqYf7L1dPxI2620/DVar1McatTo8xPCGImgowKtA==
-X-Received: by 2002:a65:5786:: with SMTP id b6mr3737898pgr.316.1578466144857;
-        Tue, 07 Jan 2020 22:49:04 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id s24sm1670546pjp.17.2020.01.07.22.49.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Jan 2020 22:49:04 -0800 (PST)
-Date:   Wed, 8 Jan 2020 12:19:01 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] opp: quiet down WARN when no valid OPPs remain
-Message-ID: <20200108064901.rf6r7buy6tcxsrzc@vireshk-i7>
-References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
- <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
- <20200107064128.gkeq2ejtvx4bmyhj@vireshk-i7>
- <20200107095834.GB3515@qmqm.qmqm.pl>
- <20200107113055.d4ebweisve73yf3m@vireshk-i7>
- <20200107135743.GA20159@qmqm.qmqm.pl>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=jrDSpPlac7LfKsNtNNcdyco4L0d7qWfB7luT8Ldf28Y=;
+        b=Ues/pNC0kO8KTZi6t85HsPGwCEYHe9goJCfpizn4BcQNyFypuZYascNCsqyFlUaieV
+         OjoX48ReNvUU5rP1pCZInWijKTE2dij7C63aYDa2Ociqr3TQM7li6aQIt8vsiLjQj2NE
+         v9Tj4km5ABWSl+T6di7u3A66wr355fvS+ir/THBNQNWmLpfhdGcN0oyquJI48HXhPi8l
+         kSAlYAKXoZSNG7FDMHcJ9aCKmDL43N7sRzmDPzvTBxsnfrth3K5qWibSDVurUPgSG+7P
+         qZVB1CTiAs/QEdSaxrhwvlrN0VweNLlsljMMpodm+S4/IW6pKP5PbWimcaBJcewIhQLA
+         uJfQ==
+X-Gm-Message-State: APjAAAUhpPIH6kRSEyzHDAxQ1o81rSkuw96NaO4/I1QOWVQfMOfsqBSk
+        4RxGkFxiBpiW7JYE1bgWqclsE8W0s5iVZg==
+X-Google-Smtp-Source: APXvYqz8or0Ls9NkRnH1QhAOAttYIbiRMPl/me//+J1jryiU1iq3zijNwoGBlvn8iwQILz//9BLm+w==
+X-Received: by 2002:a63:1b54:: with SMTP id b20mr3695731pgm.312.1578466484350;
+        Tue, 07 Jan 2020 22:54:44 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x11sm1836650pfn.53.2020.01.07.22.54.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 22:54:43 -0800 (PST)
+Message-ID: <5e157cb3.1c69fb81.4f0ae.6172@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200107135743.GA20159@qmqm.qmqm.pl>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200108064253.GB4023550@builder>
+References: <1578431066-19600-1-git-send-email-eberman@codeaurora.org> <20200108064253.GB4023550@builder>
+Cc:     agross@kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        Brian Masney <masneyb@onstation.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 00/17] Restructure, improve target support for qcom_scm driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Elliot Berman <eberman@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 07 Jan 2020 22:54:43 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-01-20, 14:57, Michał Mirosław wrote:
-> On Tue, Jan 07, 2020 at 05:00:55PM +0530, Viresh Kumar wrote:
-> > On 07-01-20, 10:58, Michał Mirosław wrote:
-> > > On Tue, Jan 07, 2020 at 12:11:29PM +0530, Viresh Kumar wrote:
-> > > > On 03-01-20, 20:36, Michał Mirosław wrote:
-> > > > > Per CPU screenful of backtraces is not really that useful. Replace
-> > > > > WARN with a diagnostic discriminating common causes of empty OPP table.
-> > > > But why should a platform have an OPP table in DT where none of them works for
-> > > > it ? I added the warn intentionally here just for that case.
-> > > Hmm. I guess we can make it WARN_ON_ONCE instead of removing it
-> > I am not sure this will get triggered more than once normally anyway, isn't it ?
-> 
-> It is triggered once per core.
+Quoting Bjorn Andersson (2020-01-07 22:42:53)
+> On Tue 07 Jan 13:04 PST 2020, Elliot Berman wrote:
+>=20
+> > This series improves support for 32-bit Qualcomm targets on qcom_scm dr=
+iver and cleans
+> > up the driver for 64-bit implementations.
+> >=20
+> > Currently, the qcom_scm driver supports only 64-bit Qualcomm targets an=
+d very
+> > old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
+> > Convention to communicate with secure world. Older 32-bit targets use a
+> > "buffer-based" legacy approach for communicating with secure world (as
+> > implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM SMCCC.
+> > Currently, SMCCC-based communication is enabled only on ARM64 config and
+> > buffer-based communication only on ARM config. This patch-series combin=
+es SMCCC
+> > and legacy conventions and selects the correct convention by querying t=
+he secure
+> > world [1].
+> >=20
+> > We decided to take the opportunity as well to clean up the driver rathe=
+r than
+> > try to patch together qcom_scm-32 and qcom_scm-64.
+> >=20
+>=20
+> Series applied.
 
-What platform it is ? Maybe because cpufreq driver failed to initialize the
-policy for all CPUs and so this is getting repeated.
+Without the change-ids presumably? I was going to review the patch
+series tomorrow but I guess no more need! ;-)
 
-> > > , but I
-> > > don't think the backtrace is ever useful in this case.
-> > Hmm, I am less concerned about backtraces than highlighting problem in a serious
-> > way. The simple print messages are missed many times by people and probably
-> > that's why I used a WARN instead.
-> 
-> > 
-> > > Empty table can
-> > > be because eg. you run old DT on newer hardware version.
-> > 
-> > Hmm, but then a big warning isn't that bad as we need to highlight the issue to
-> > everyone as cpufreq won't be working. isn't it ?
-> 
-> A user normally can't do much about it. Rather this is a developer targeted
-> message. Maybe a rewording of the messages be better? Something to also
-> include consequences of the error?
-
-I agree that a WARN may be a bit excessive here.
-
--- 
-viresh
