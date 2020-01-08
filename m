@@ -2,121 +2,110 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBBEC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18295C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC0F20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEA62082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgAHM5G (ORCPT
+        id S1727991AbgAHM5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:57:06 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:39522 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbgAHM5E (ORCPT
+        Wed, 8 Jan 2020 07:57:10 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:15794 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgAHM5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:57:04 -0500
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id nowz2100E5USYZQ01owzo3; Wed, 08 Jan 2020 13:57:01 +0100
-Received: from geert (helo=localhost)
-        by ramsan with local-esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ipAtP-0006Id-27; Wed, 08 Jan 2020 13:56:59 +0100
-Date:   Wed, 8 Jan 2020 13:56:58 +0100 (CET)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Leon Romanovsky <leon@kernel.org>
-cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH rdma-rc 3/3] IB/core: Fix ODP with IB_ACCESS_HUGETLB
- handling
-In-Reply-To: <20191219134646.413164-4-leon@kernel.org>
-Message-ID: <alpine.DEB.2.21.2001081352560.23971@ramsan.of.borg>
-References: <20191219134646.413164-1-leon@kernel.org> <20191219134646.413164-4-leon@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 8 Jan 2020 07:57:08 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: ix45JeaUMxHbr5AU0CVJMK3ny3iXJcUXITcGZWjACrY3Mj2cKs7Rhiy3iWBcp8nSxg94IOONkR
+ iJXYhOB+QjW8tb7xJJS/Ap3hOWsiCrS9aGa8ywYj8+2wdg4zLEWrdVsHzNHWPkk1aBB4n0KtWx
+ /GpeQpGgFVxqM9s0GjL7MTc1X6SsTgp0Dn1l6v5x11EXBzUZG3dtD+7WOaEUJEgKkqsXh1+OqH
+ LQUW+bBan2oS2g0ZVplMpyDZhr0H0XFXsnm3uiCwkfB6uFIceni3Y1iEj4skicBES02Je1EBA4
+ sLs=
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="64014420"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 05:57:07 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 8 Jan 2020 05:56:48 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 8 Jan 2020 05:56:41 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
+        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <mchehab@kernel.org>, <lee.jones@linaro.org>,
+        <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
+        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
+        <mkl@pengutronix.de>, <a.zummo@towertech.it>, <broonie@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH 06/16] dt-bindings: atmel-matrix: add microchip,sam9x60-matrix
+Date:   Wed, 8 Jan 2020 14:55:13 +0200
+Message-ID: <1578488123-26127-7-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- 	Hi Leon,
+Add microchip,sam9x60-matrix to DT bindings documentation.
 
-On Thu, 19 Dec 2019, Leon Romanovsky wrote:
-> From: Yishai Hadas <yishaih@mellanox.com>
->
-> As VMAs for a given range might not be available as part of the
-> registration phase in ODP, IB_ACCESS_HUGETLB/page_shift must be checked
-> as part of the page fault flow.
->
-> If the application didn't mmap the backed memory with huge pages or
-> released part of that hugepage area, an error will be set as part of the
-> page fault flow once be detected.
->
-> Fixes: 0008b84ea9af ("IB/umem: Add support to huge ODP")
-> Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-> Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-> Reviewed-by: Aviad Yehezkel <aviadye@mellanox.com>
-> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ Documentation/devicetree/bindings/mfd/atmel-matrix.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for your patch!
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-matrix.txt b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+index e3ef50ca02a5..89d05c64fb01 100644
+--- a/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
++++ b/Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 			"atmel,at91sam9n12-matrix", "syscon"
+ 			"atmel,at91sam9x5-matrix", "syscon"
+ 			"atmel,sama5d3-matrix", "syscon"
++			"microchip,sam9x60-matrix", "syscon"
+ - reg:			Contains offset/length value of the Bus Matrix
+ 			memory region.
+ 
+-- 
+2.7.4
 
-> --- a/drivers/infiniband/core/umem_odp.c
-> +++ b/drivers/infiniband/core/umem_odp.c
-> @@ -241,22 +241,10 @@ struct ib_umem_odp *ib_umem_odp_get(struct ib_udata *udata, unsigned long addr,
-> 	umem_odp->umem.owning_mm = mm = current->mm;
-> 	umem_odp->notifier.ops = ops;
->
-> -	umem_odp->page_shift = PAGE_SHIFT;
-> -	if (access & IB_ACCESS_HUGETLB) {
-> -		struct vm_area_struct *vma;
-> -		struct hstate *h;
-> -
-> -		down_read(&mm->mmap_sem);
-> -		vma = find_vma(mm, ib_umem_start(umem_odp));
-> -		if (!vma || !is_vm_hugetlb_page(vma)) {
-> -			up_read(&mm->mmap_sem);
-> -			ret = -EINVAL;
-> -			goto err_free;
-> -		}
-> -		h = hstate_vma(vma);
-> -		umem_odp->page_shift = huge_page_shift(h);
-> -		up_read(&mm->mmap_sem);
-> -	}
-> +	if (access & IB_ACCESS_HUGETLB)
-> +		umem_odp->page_shift = HPAGE_SHIFT;
-> +	else
-> +		umem_odp->page_shift = PAGE_SHIFT;
->
-> 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
-> 	ret = ib_init_umem_odp(umem_odp, ops);
-
-noreply@ellerman.id.au reports for linux-next/m68k-allmodconfig/m68k:
-
-     drivers/infiniband/core/umem_odp.c:245:26: error: 'HPAGE_SHIFT' undeclared (first use in this function); did you mean 'PAGE_SHIFT'?
-
-Should this depend on some HUGETLBFS option?
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
