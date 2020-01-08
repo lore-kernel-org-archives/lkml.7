@@ -2,261 +2,411 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0250AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828E4C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B120705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EB72075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vIYHyMjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgAHRzD (ORCPT
+        id S1730013AbgAHRzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:55:03 -0500
-Received: from mga09.intel.com ([134.134.136.24]:41182 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgAHRzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:55:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:55:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="211617373"
-Received: from cozturk-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.17.77])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 09:54:59 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org (open list:DOCUMENTATION)
-Subject: [PATCH 2/6] soundwire: stream: update state machine and add state checks
-Date:   Wed,  8 Jan 2020 11:54:34 -0600
-Message-Id: <20200108175438.13121-3-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
-References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
+        Wed, 8 Jan 2020 12:55:40 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51012 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgAHRzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:55:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008HtYAk091533;
+        Wed, 8 Jan 2020 11:55:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578506134;
+        bh=rrt89s0lbbO8y1roB9zbieTNnsl4Ad9G+2l8YFm9RMw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vIYHyMjmP0UVEcbgjOXSB7JbAWCpOHmMKkooCjJ6Bje0Hqhd8JN8J0gRVR6ow4b7K
+         JZ6IBPDyrkfwnTCNY6WLerteG8HmwuboVhZ3TPAI/PUazkDlz+A7iQrnVi2FYpYjjp
+         lHreyidulSsbiWNvdAmoBp5HiB3CLCvnVYyc1Rwk=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008HtYo2093864;
+        Wed, 8 Jan 2020 11:55:34 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 11:55:34 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 11:55:34 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008HtYRr014529;
+        Wed, 8 Jan 2020 11:55:34 -0600
+Subject: Re: [PATCHv4 02/14] remoteproc/omap: Add device tree support
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
+References: <20200102131845.12992-1-t-kristo@ti.com>
+ <20200102131845.12992-3-t-kristo@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <1f9f69df-6b92-7d29-7769-4d10811dfffe@ti.com>
+Date:   Wed, 8 Jan 2020 11:55:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200102131845.12992-3-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The state machine and notes don't accurately explain or allow
-transitions from STREAM_DEPREPARED and STREAM_DISABLED.
+Hi Tero,
 
-Add more explanations and allow for more transitions as a result of a
-trigger_stop(), trigger_suspend() and prepare(), depending on the
-ALSA/ASoC layer behavior defined by the INFO_RESUME and INFO_PAUSE
-flags.
+On 1/2/20 7:18 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> OMAP4+ SoCs support device tree boot only. The OMAP remoteproc
+> driver is enhanced to support remoteproc devices created through
+> Device Tree, support for legacy platform devices has been
+> deprecated. The current DT support handles the IPU and DSP
+> processor subsystems on OMAP4 and OMAP5 SoCs.
+> 
+> The OMAP remoteproc driver relies on the ti-sysc, reset, and
+> syscon layers for performing clock, reset and boot vector
+> management (DSP remoteprocs only) of the devices, but some of
+> these are limited only to the machine-specific layers
+> in arch/arm. The dependency against control module API for boot
+> vector management of the DSP remoteprocs has now been removed
+> with added logic to parse the boot register from the DT node
+> and program it appropriately directly within the driver.
+> 
+> The OMAP remoteproc driver expects the firmware names to be
+> provided via device tree entries (firmware-name.) These are used
+> to load the proper firmware during boot of the remote processor.
+> 
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo@ti.com: converted to use ti-sysc framework]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> v4:
+>   - error handling improvements
 
-Also add basic checks to help debug inconsistent states and illegal
-state machine transitions.
+Thanks for taking care of these comments.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- Documentation/driver-api/soundwire/stream.rst | 63 +++++++++++++------
- drivers/soundwire/stream.c                    | 37 +++++++++++
- 2 files changed, 82 insertions(+), 18 deletions(-)
+>   - dropped has_bootreg from platform data (instead parsed from DT)
 
-diff --git a/Documentation/driver-api/soundwire/stream.rst b/Documentation/driver-api/soundwire/stream.rst
-index 5351bd2f34a8..9b7418ff8d59 100644
---- a/Documentation/driver-api/soundwire/stream.rst
-+++ b/Documentation/driver-api/soundwire/stream.rst
-@@ -156,22 +156,27 @@ Below shows the SoundWire stream states and state transition diagram. ::
- 	+-----------+     +------------+     +----------+     +----------+
- 	| ALLOCATED +---->| CONFIGURED +---->| PREPARED +---->| ENABLED  |
- 	|   STATE   |     |    STATE   |     |  STATE   |     |  STATE   |
--	+-----------+     +------------+     +----------+     +----+-----+
--	                                                           ^
--	                                                           |
--	                                                           |
--	                                                           v
--	         +----------+           +------------+        +----+-----+
-+	+-----------+     +------------+     +---+--+---+     +----+-----+
-+	                                         ^  ^              ^
-+				                 |  |              |
-+				               __|  |___________   |
-+				              |                 |  |
-+	                                      v                 |  v
-+	         +----------+           +-----+------+        +-+--+-----+
- 	         | RELEASED |<----------+ DEPREPARED |<-------+ DISABLED |
- 	         |  STATE   |           |   STATE    |        |  STATE   |
- 	         +----------+           +------------+        +----------+
- 
--NOTE: State transition between prepare and deprepare is supported in Spec
--but not in the software (subsystem)
-+NOTE: State transitions between ``SDW_STREAM_ENABLED`` and
-+``SDW_STREAM_DISABLED`` are only relevant when then INFO_PAUSE flag is
-+supported at the ALSA/ASoC level. Likewise the transition between
-+``SDW_DISABLED_STATE`` and ``SDW_PREPARED_STATE`` depends on the
-+INFO_RESUME flag.
- 
--NOTE2: Stream state transition checks need to be handled by caller
--framework, for example ALSA/ASoC. No checks for stream transition exist in
--SoundWire subsystem.
-+NOTE2: The framework implements basic state transition checks, but
-+does not e.g. check if a transition from DISABLED to ENABLED is valid
-+on a specific platform. Such tests need to be added at the ALSA/ASoC
-+level.
- 
- Stream State Operations
- -----------------------
-@@ -246,6 +251,9 @@ SDW_STREAM_PREPARED
- 
- Prepare state of stream. Operations performed before entering in this state:
- 
-+  (0) Steps 1 and 2 are omitted in the case of a resume operation,
-+      where the bus bandwidth is known.
-+
-   (1) Bus parameters such as bandwidth, frame shape, clock frequency,
-       are computed based on current stream as well as already active
-       stream(s) on Bus. Re-computation is required to accommodate current
-@@ -270,13 +278,15 @@ Prepare state of stream. Operations performed before entering in this state:
- After all above operations are successful, stream state is set to
- ``SDW_STREAM_PREPARED``.
- 
--Bus implements below API for PREPARE state which needs to be called once per
--stream. From ASoC DPCM framework, this stream state is linked to
--.prepare() operation.
-+Bus implements below API for PREPARE state which needs to be called
-+once per stream. From ASoC DPCM framework, this stream state is linked
-+to .prepare() operation. Since the .trigger() operations may not
-+follow the .prepare(), a direct transitions from
-+``SDW_STREAM_PREPARED`` to ``SDW_STREAM_DEPREPARED`` is allowed.
- 
- .. code-block:: c
- 
--  int sdw_prepare_stream(struct sdw_stream_runtime * stream);
-+  int sdw_prepare_stream(struct sdw_stream_runtime * stream, bool resume);
- 
- 
- SDW_STREAM_ENABLED
-@@ -332,6 +342,14 @@ Bus implements below API for DISABLED state which needs to be called once
- per stream. From ASoC DPCM framework, this stream state is linked to
- .trigger() stop operation.
- 
-+When the INFO_PAUSE flag is supported, a direct transition to
-+``SDW_STREAM_ENABLED`` is allowed.
-+
-+For resume operations where ASoC will use the .prepare() callback, the
-+stream can transition from ``SDW_STREAM_DISABLED`` to
-+``SDW_STREAM_PREPARED``, with all required settings restored but
-+without updating the bandwidth and bit allocation.
-+
- .. code-block:: c
- 
-   int sdw_disable_stream(struct sdw_stream_runtime * stream);
-@@ -353,9 +371,18 @@ state:
- After all above operations are successful, stream state is set to
- ``SDW_STREAM_DEPREPARED``.
- 
--Bus implements below API for DEPREPARED state which needs to be called once
--per stream. From ASoC DPCM framework, this stream state is linked to
--.trigger() stop operation.
-+Bus implements below API for DEPREPARED state which needs to be called
-+once per stream. ALSA/ASoC do not have a concept of 'deprepare', and
-+the mapping from this stream state to ALSA/ASoC operation may be
-+implementation specific.
-+
-+When the INFO_PAUSE flag is supported, the stream state is linked to
-+the .hw_free() operation - the stream is not deprepared on a
-+TRIGGER_STOP.
-+
-+Other implementations may transition to the ``SDW_STREAM_DEPREPARED``
-+state on TRIGGER_STOP, should they require a transition through the
-+``SDW_STREAM_PREPARED`` state.
- 
- .. code-block:: c
- 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 178ae92b8cc1..6aa0b5d370c0 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1553,8 +1553,18 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_CONFIGURED &&
-+	    stream->state != SDW_STREAM_DEPREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_prepare_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1619,8 +1629,17 @@ int sdw_enable_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_PREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_enable_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1693,8 +1712,16 @@ int sdw_disable_stream(struct sdw_stream_runtime *stream)
- 
- 	sdw_acquire_bus_lock(stream);
- 
-+	if (stream->state != SDW_STREAM_ENABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_disable_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
-@@ -1749,8 +1776,18 @@ int sdw_deprepare_stream(struct sdw_stream_runtime *stream)
- 	}
- 
- 	sdw_acquire_bus_lock(stream);
-+
-+	if (stream->state != SDW_STREAM_PREPARED &&
-+	    stream->state != SDW_STREAM_DISABLED) {
-+		pr_err("%s: %s: inconsistent state state %d\n",
-+		       __func__, stream->name, stream->state);
-+		ret = -EINVAL;
-+		goto state_err;
-+	}
-+
- 	ret = _sdw_deprepare_stream(stream);
- 
-+state_err:
- 	sdw_release_bus_lock(stream);
- 	return ret;
- }
--- 
-2.20.1
+So, I originally used this to ensure that the DT node is not missing the
+bootreg property on the required devices (since it is not present on
+all). I guess this is no longer needed since the idea is that it would
+be caught during the schema check, please confirm.
+
+regards
+Suman
+
+> 
+>  drivers/remoteproc/omap_remoteproc.c | 177 ++++++++++++++++++++++++---
+>  1 file changed, 160 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 6398194075aa..fb4902e4dacf 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * OMAP Remote Processor driver
+>   *
+> - * Copyright (C) 2011 Texas Instruments, Inc.
+> + * Copyright (C) 2011-2020 Texas Instruments Incorporated - http://www.ti.com/
+>   * Copyright (C) 2011 Google, Inc.
+>   *
+>   * Ohad Ben-Cohen <ohad@wizery.com>
+> @@ -16,27 +16,51 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/err.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/remoteproc.h>
+>  #include <linux/mailbox_client.h>
+>  #include <linux/omap-mailbox.h>
+> -
+> -#include <linux/platform_data/remoteproc-omap.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/reset.h>
+>  
+>  #include "omap_remoteproc.h"
+>  #include "remoteproc_internal.h"
+>  
+> +/**
+> + * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+> + * @syscon: regmap handle for the system control configuration module
+> + * @boot_reg: boot register offset within the @syscon regmap
+> + */
+> +struct omap_rproc_boot_data {
+> +	struct regmap *syscon;
+> +	unsigned int boot_reg;
+> +};
+> +
+>  /**
+>   * struct omap_rproc - omap remote processor state
+>   * @mbox: mailbox channel handle
+>   * @client: mailbox client to request the mailbox channel
+> + * @boot_data: boot data structure for setting processor boot address
+>   * @rproc: rproc handle
+> + * @reset: reset handle
+>   */
+>  struct omap_rproc {
+>  	struct mbox_chan *mbox;
+>  	struct mbox_client client;
+> +	struct omap_rproc_boot_data *boot_data;
+>  	struct rproc *rproc;
+> +	struct reset_control *reset;
+> +};
+> +
+> +/**
+> + * struct omap_rproc_dev_data - device data for the omap remote processor
+> + * @device_name: device name of the remote processor
+> + */
+> +struct omap_rproc_dev_data {
+> +	const char *device_name;
+>  };
+>  
+>  /**
+> @@ -92,6 +116,21 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>  			ret);
+>  }
+>  
+> +/**
+> + * omap_rproc_write_dsp_boot_addr - set boot address for a DSP remote processor
+> + * @rproc: handle of a remote processor
+> + *
+> + * Set boot address for a supported DSP remote processor.
+> + */
+> +static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+> +{
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+> +	u32 offset = bdata->boot_reg;
+> +
+> +	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+> +}
+> +
+>  /*
+>   * Power up the remote processor.
+>   *
+> @@ -103,13 +142,11 @@ static int omap_rproc_start(struct rproc *rproc)
+>  {
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	struct device *dev = rproc->dev.parent;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+>  	int ret;
+>  	struct mbox_client *client = &oproc->client;
+>  
+> -	if (pdata->set_bootaddr)
+> -		pdata->set_bootaddr(rproc->bootaddr);
+> +	if (oproc->boot_data)
+> +		omap_rproc_write_dsp_boot_addr(rproc);
+>  
+>  	client->dev = dev;
+>  	client->tx_done = NULL;
+> @@ -117,7 +154,7 @@ static int omap_rproc_start(struct rproc *rproc)
+>  	client->tx_block = false;
+>  	client->knows_txdone = false;
+>  
+> -	oproc->mbox = omap_mbox_request_channel(client, pdata->mbox_name);
+> +	oproc->mbox = mbox_request_channel(client, 0);
+>  	if (IS_ERR(oproc->mbox)) {
+>  		ret = -EBUSY;
+>  		dev_err(dev, "mbox_request_channel failed: %ld\n",
+> @@ -138,9 +175,9 @@ static int omap_rproc_start(struct rproc *rproc)
+>  		goto put_mbox;
+>  	}
+>  
+> -	ret = pdata->device_enable(pdev);
+> +	ret = reset_control_deassert(oproc->reset);
+>  	if (ret) {
+> -		dev_err(dev, "omap_device_enable failed: %d\n", ret);
+> +		dev_err(dev, "reset control deassert failed: %d\n", ret);
+>  		goto put_mbox;
+>  	}
+>  
+> @@ -154,13 +191,10 @@ static int omap_rproc_start(struct rproc *rproc)
+>  /* power off the remote processor */
+>  static int omap_rproc_stop(struct rproc *rproc)
+>  {
+> -	struct device *dev = rproc->dev.parent;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	int ret;
+>  
+> -	ret = pdata->device_shutdown(pdev);
+> +	ret = reset_control_assert(oproc->reset);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -175,12 +209,115 @@ static const struct rproc_ops omap_rproc_ops = {
+>  	.kick		= omap_rproc_kick,
+>  };
+>  
+> +static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+> +	.device_name	= "dsp",
+> +};
+> +
+> +static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+> +	.device_name	= "ipu",
+> +};
+> +
+> +static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+> +	.device_name	= "dsp",
+> +};
+> +
+> +static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+> +	.device_name	= "ipu",
+> +};
+> +
+> +static const struct of_device_id omap_rproc_of_match[] = {
+> +	{
+> +		.compatible     = "ti,omap4-dsp",
+> +		.data           = &omap4_dsp_dev_data,
+> +	},
+> +	{
+> +		.compatible     = "ti,omap4-ipu",
+> +		.data           = &omap4_ipu_dev_data,
+> +	},
+> +	{
+> +		.compatible     = "ti,omap5-dsp",
+> +		.data           = &omap5_dsp_dev_data,
+> +	},
+> +	{
+> +		.compatible     = "ti,omap5-ipu",
+> +		.data           = &omap5_ipu_dev_data,
+> +	},
+> +	{
+> +		/* end */
+> +	},
+> +};
+> +MODULE_DEVICE_TABLE(of, omap_rproc_of_match);
+> +
+> +static const char *omap_rproc_get_firmware(struct platform_device *pdev)
+> +{
+> +	const char *fw_name;
+> +	int ret;
+> +
+> +	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
+> +				      &fw_name);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return fw_name;
+> +}
+> +
+> +static int omap_rproc_get_boot_data(struct platform_device *pdev,
+> +				    struct rproc *rproc)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	const struct omap_rproc_dev_data *data;
+> +	int ret;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	if (!of_property_read_bool(np, "ti,bootreg"))
+> +		return 0;
+> +
+> +	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
+> +					GFP_KERNEL);
+> +	if (!oproc->boot_data)
+> +		return -ENOMEM;
+> +
+> +	oproc->boot_data->syscon =
+> +			syscon_regmap_lookup_by_phandle(np, "ti,bootreg");
+> +	if (IS_ERR(oproc->boot_data->syscon)) {
+> +		ret = PTR_ERR(oproc->boot_data->syscon);
+> +		return ret;
+> +	}
+> +
+> +	if (of_property_read_u32_index(np, "ti,bootreg", 1,
+> +				       &oproc->boot_data->boot_reg)) {
+> +		dev_err(&pdev->dev, "couldn't get the boot register\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int omap_rproc_probe(struct platform_device *pdev)
+>  {
+> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct omap_rproc *oproc;
+>  	struct rproc *rproc;
+> +	const char *firmware;
+>  	int ret;
+> +	struct reset_control *reset;
+> +
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "only DT-based devices are supported\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	reset = devm_reset_control_array_get_exclusive(&pdev->dev);
+> +	if (IS_ERR(reset))
+> +		return PTR_ERR(reset);
+> +
+> +	firmware = omap_rproc_get_firmware(pdev);
+> +	if (IS_ERR(firmware))
+> +		return PTR_ERR(firmware);
+>  
+>  	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+>  	if (ret) {
+> @@ -188,16 +325,21 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	rproc = rproc_alloc(&pdev->dev, pdata->name, &omap_rproc_ops,
+> -			    pdata->firmware, sizeof(*oproc));
+> +	rproc = rproc_alloc(&pdev->dev, dev_name(&pdev->dev), &omap_rproc_ops,
+> +			    firmware, sizeof(*oproc));
+>  	if (!rproc)
+>  		return -ENOMEM;
+>  
+>  	oproc = rproc->priv;
+>  	oproc->rproc = rproc;
+> +	oproc->reset = reset;
+>  	/* All existing OMAP IPU and DSP processors have an MMU */
+>  	rproc->has_iommu = true;
+>  
+> +	ret = omap_rproc_get_boot_data(pdev, rproc);
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	platform_set_drvdata(pdev, rproc);
+>  
+>  	ret = rproc_add(rproc);
+> @@ -226,6 +368,7 @@ static struct platform_driver omap_rproc_driver = {
+>  	.remove = omap_rproc_remove,
+>  	.driver = {
+>  		.name = "omap-rproc",
+> +		.of_match_table = omap_rproc_of_match,
+>  	},
+>  };
+>  
+> 
 
