@@ -4,130 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DF4C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC2C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5B320705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D44920692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578514683;
-	bh=k29/a7uEuYqNAIhFsBFDfjAE0p9XzbeHTZjXgbV00jY=;
+	s=default; t=1578514908;
+	bh=xbnZweZysNvjJs5HrwfqefXp1VjWQsaLFHlxz4jQYzo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YqnjdRjWm2Yov4cf7w6iz+GKkXSBqpVD3piGtdyO7PF3p6IQlJwWVWm/VgiM1D9Mt
-	 OjWsKuh0RJqjTltLrlVECS7OCFIDNZdwfblm4rYNwRArEjToQjLX/mSI8MTEQ/NWdq
-	 qCgyIH06498B9sjky7xxeyaJKIEM5hIJyGtTM/Yk=
+	b=n+G1QpXjIkBycUh10wNenSN8ClK+crBAOwDFg1Tck68im98mUerIq0hFWWbTkH+ol
+	 AZuXgefbPN4Zc7pyQ/vKXkoY774oxYxEp9td+vJ1tbUGisuGgtZTA0g5lKxfB9xy/j
+	 7oRiKyW67CxTRRW3hAslw/u6As3ZKMkHBQf4MME0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgAHUSC (ORCPT
+        id S1726735AbgAHUVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:18:02 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41132 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgAHUSC (ORCPT
+        Wed, 8 Jan 2020 15:21:47 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55533 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgAHUVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:18:02 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so4838859otc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:18:02 -0800 (PST)
+        Wed, 8 Jan 2020 15:21:47 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so297944wmj.5;
+        Wed, 08 Jan 2020 12:21:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UM9Yhyyn+nTPYkkQGog0oC/YJwVnBTJCjtlyMYqJ2Ow=;
-        b=YK4cLfj7OcGTCOMGd4+NthrodO1jG8NEW9eg+puUTcG6XhOG9kYk/A8/F0Jdx2vAxK
-         GkOMmm2sfyc3UtYH5ijrr4ZygHxfWWpbWPsF6UoaN0HJhqOoa8FJk5iCQOYvPtXPRRv2
-         6AlKdzL4bcFjl3kwrnL6IQRzRNXNBP/g8zwSmLL1HsJFcUTOQVd1bsLEUxAc/A6gEanS
-         oxeSt5Y/eJdC97taQw/OcrOigb3Tmbe72GJ6TW/ApvhrwoaUC1rui7JkRVBnF/W4QrwC
-         q1PG+n9I/SZqj1GWe0ABfycNdITGY0K5ZkWWPDNZLI/z/AKCB0LTZaz8U56hJqMElXIQ
-         8Hlg==
-X-Gm-Message-State: APjAAAVZRqCKHxvVVHMz4mwm33PGirsE35EPXDuVw+Xlu70PhqMCP+oV
-        8zscvisvX40DyhU8L0mAZ9k+qd4=
-X-Google-Smtp-Source: APXvYqx87qI5fGttDvLBk/HCFRXZdDmQcszWYJDZyrnpd0rQPuPNMSY1f65VchUWfdWvWuN6jf8kjA==
-X-Received: by 2002:a9d:369:: with SMTP id 96mr5219243otv.228.1578514681284;
-        Wed, 08 Jan 2020 12:18:01 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l17sm1519191ota.27.2020.01.08.12.18.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 12:18:00 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2208fa
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 14:17:59 -0600
-Date:   Wed, 8 Jan 2020 14:17:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        linux-mtd@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code
- check
-Message-ID: <20200108201759.GA28519@bogus>
-References: <20200106045833.1725-1-masahiroy@kernel.org>
+        bh=DAChl6Ul9fKSKLSUyoPgGNo0ChhyAr0XJVth8mI90zs=;
+        b=MOPb+EvtynICKVb4YpklQxm9YdA2sGVaK1Bl47sG/ChZVWWUVkL7eP3lYVuj2dyRma
+         l91eqPosW4LgGGtMWM+7IJjQk0H8t4iLkhvyQ4RqgLNFpwaZVTO4wDwbhy9POvAPyKq2
+         G0bLrWOY/dw04ymaLWrNT1EuFJBVELceZxygSmjZIM+7MAeZP/02zkGGKyng+pX39eZo
+         FaDh5s2PT5r9ADpomlPW+uprxxyIju6zt8dgGW5r5d+EYC1zA6uwm+QXjmmz9oWpJUaE
+         i82OAbp/JkF2TA5mq/JXoWsVxEJuIw350pSWSoi7BVbO84XeQ7vDeSXlZCeLrA1QRElw
+         cGQw==
+X-Gm-Message-State: APjAAAVdbCh1Yz73cntUKfR0A5imwKzUC4JR6tApCF5vxVb2cYM+4Q3b
+        /o99l5DcktgelvzHFDMZXrSDt64tZuP12Q==
+X-Google-Smtp-Source: APXvYqzpZx5bVmQEcf1bpPT5tN7m0CBp56yBmQq5PdtRIz3mJs/1AeH+ujtV+juGwD4/yfPcficuPA==
+X-Received: by 2002:a7b:c93a:: with SMTP id h26mr408703wml.83.1578514905607;
+        Wed, 08 Jan 2020 12:21:45 -0800 (PST)
+Received: from kozik-book ([83.218.167.187])
+        by smtp.googlemail.com with ESMTPSA id q3sm238868wmj.38.2020.01.08.12.21.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 12:21:44 -0800 (PST)
+Date:   Wed, 8 Jan 2020 21:21:42 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: dts: exynos: tiny4412: enable fimd node and add
+ proper panel node
+Message-ID: <20200108202142.GA8492@kozik-book>
+References: <20200107191020.27475-1-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200107191020.27475-1-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 Jan 2020 13:58:33 +0900, Masahiro Yamada wrote:
-> 'PTR_ERR(p) == -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
+On Tue, Jan 07, 2020 at 07:10:20PM +0000, Yangtao Li wrote:
+> Enable fimd device node which is a display controller, and add panel
+> node required by it.
 > 
-> The semantic patch that generates this commit is as follows:
-> 
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) == - error_code)
-> +PTR_ERR(ptr) == - error_code
-> // </smpl>
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > ---
-> 
->  crypto/af_alg.c                      | 2 +-
->  drivers/acpi/scan.c                  | 2 +-
->  drivers/char/hw_random/bcm2835-rng.c | 2 +-
->  drivers/char/hw_random/omap-rng.c    | 4 ++--
->  drivers/clk/clk.c                    | 2 +-
->  drivers/dma/mv_xor_v2.c              | 2 +-
->  drivers/gpio/gpiolib-devres.c        | 2 +-
->  drivers/gpio/gpiolib-of.c            | 8 ++++----
->  drivers/gpio/gpiolib.c               | 2 +-
->  drivers/i2c/busses/i2c-mv64xxx.c     | 5 ++---
->  drivers/i2c/busses/i2c-synquacer.c   | 2 +-
->  drivers/mtd/ubi/build.c              | 2 +-
->  drivers/of/device.c                  | 2 +-
->  drivers/pci/controller/pci-tegra.c   | 2 +-
->  drivers/phy/phy-core.c               | 4 ++--
->  drivers/spi/spi-orion.c              | 3 +--
->  drivers/video/fbdev/imxfb.c          | 2 +-
->  fs/ext4/super.c                      | 2 +-
->  fs/f2fs/node.c                       | 2 +-
->  fs/ocfs2/suballoc.c                  | 2 +-
->  fs/sysfs/group.c                     | 2 +-
->  net/core/dev.c                       | 2 +-
->  net/core/filter.c                    | 2 +-
->  net/xfrm/xfrm_policy.c               | 2 +-
->  sound/soc/codecs/ak4104.c            | 3 +--
->  sound/soc/codecs/cs4270.c            | 3 +--
->  sound/soc/codecs/tlv320aic32x4.c     | 6 ++----
->  sound/soc/sunxi/sun4i-spdif.c        | 2 +-
->  28 files changed, 35 insertions(+), 41 deletions(-)
-> 
+> v2:
+> -update commit msg and merge to one patch
+> ---
+>  arch/arm/boot/dts/exynos4412-tiny4412.dts | 25 +++++++++++++++++++++++
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks, applied.
+
+Best regards,
+Krzysztof
+
