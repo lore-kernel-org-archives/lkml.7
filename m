@@ -2,153 +2,148 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFB4C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A9FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6DB20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9461D20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:15:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXshFjai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgAHRMt (ORCPT
+        id S1729684AbgAHRPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:12:49 -0500
-Received: from mga17.intel.com ([192.55.52.151]:14599 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbgAHRMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:12:49 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:12:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="216013815"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 09:12:44 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEsu-0005pI-6f; Wed, 08 Jan 2020 19:12:44 +0200
-Date:   Wed, 8 Jan 2020 19:12:44 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        Wed, 8 Jan 2020 12:15:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38175 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729583AbgAHRPA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:15:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578503699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vnM+x6Ssb1mcduODxbe5+uNany1GBwa/Hz6WtXlr7O4=;
+        b=KXshFjaiK+BY8WVt7xLYXKQN7/HZeV/wxWpsgHAFAh6tMF2fvSDbr2zFX8qJ5p4HD/SxcT
+        cdOZ0fIiVKwWaf4y4vLaGoC/Kx+9wlHnYn9R6qtsDLHRklKFTmjsTzCgVY6v3vEfUZi4dm
+        A9NxLl9Ztc75t7HFuhcQw13hEzjRvHc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-zgY4dCtzPgeivscO2AQDPA-1; Wed, 08 Jan 2020 12:14:58 -0500
+X-MC-Unique: zgY4dCtzPgeivscO2AQDPA-1
+Received: by mail-wm1-f71.google.com with SMTP id b9so1076087wmj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:14:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vnM+x6Ssb1mcduODxbe5+uNany1GBwa/Hz6WtXlr7O4=;
+        b=MFHnIiVx3kJu6bQDCR5KIHV13Kep4VZVlbDnAXEr3aEihoE3jM4cFupMv1xw1FZKeI
+         r2hqxNBRWg5uV1/LvLvkL9nNO1CUeclq2FWCTB9Pju6Qzlb/o/J9Z50zEx294mBxktRR
+         1pD+FYp9j6VDFnaY1CBCKXiKPFVpCepFsszsMoZEqg6k+o6OvrPGHLN/Gul+TaO2Z7BW
+         KGkYCXIVTWCDv4UDTPBeCBnn5Am6zARauUIeF34eq7rc3CmLQdu4SNsDUUK9VDr5zREl
+         6uM7BWRPKDTbeaXMRxT3CKGaSmB3VPgoIG/rBXHGNiCACMCJ7b9xuOBor0hgQRV685uI
+         YPng==
+X-Gm-Message-State: APjAAAWUcC4Urbe3pyqxs4Dr7ETLTzVO6VtTU1Fp5D4yajeIF1jKApLj
+        +fyO3GyV5E6Wj2RzXPxSvFKrTijF/1cJ2m6z3DftjntZRp82w52cTDt4iuBh9lTvgphi7wuDsrY
+        JaImosaOzXC0cxgkay4NKNLb8
+X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr5225232wme.151.1578503696577;
+        Wed, 08 Jan 2020 09:14:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz6QfyCjkkc/cn5N9B3HuvF1UbjB6DCyXC1I49m1Q5gG7DdVR/OqIU5VsKS3NDGqXBnTP1SDQ==
+X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr5225208wme.151.1578503696324;
+        Wed, 08 Jan 2020 09:14:56 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
+        by smtp.gmail.com with ESMTPSA id b21sm4680093wmd.37.2020.01.08.09.14.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 09:14:55 -0800 (PST)
+Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes
+ mwait/hlt
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/36] platform/x86: intel_scu_ipc: Sleeping is fine
- when polling
-Message-ID: <20200108171244.GT32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-8-mika.westerberg@linux.intel.com>
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>
+References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
+ <20200108155040.GB2827@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
+Date:   Wed, 8 Jan 2020 18:14:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-8-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200108155040.GB2827@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:32PM +0300, Mika Westerberg wrote:
-> There is no reason why the driver would need to block other threads from
-> running the CPU while it is waiting for the SCU IPC to complete its
-> work. For this reason switch the driver to use usleep_range() instead
-> with a bit more relaxed polling loop.
+On 08/01/20 16:50, Peter Zijlstra wrote:
+> On Wed, Jan 08, 2020 at 09:50:01AM +0800, Wanpeng Li wrote:
+>> From: Wanpeng Li <wanpengli@tencent.com>
+>>
+>> To deliver all of the resources of a server to instances in cloud, there are no 
+>> housekeeping cpus reserved. libvirtd, qemu main loop, kthreads, and other agent/tools 
+>> etc which can't be offloaded to other hardware like smart nic, these stuff will 
+>> contend with vCPUs even if MWAIT/HLT instructions executed in the guest.
 
-I agree on this and if somebody finds a race condition that had been hidden by
-the original code it will mean that somewhere else something is completely
-broken.
+^^ this is the problem statement:
 
+He has VCPU threads which are being pinned 1:1 to physical CPUs.  He
+needs to have various housekeeping threads preempting those vCPU
+threads, but he'd rather preempt vCPU threads that are doing HLT/MWAIT
+than those that are keeping the CPU busy.
+
+>> The is no trap and yield the pCPU after we expose mwait/hlt to the guest [1][2],
+>> the top command on host still observe 100% cpu utilization since qemu process is 
+>> running even though guest who has the power management capability executes mwait. 
+>> Actually we can observe the physical cpu has already enter deeper cstate by 
+>> powertop on host.
+>>
+>> For virtualization, there is a HLT activity state in CPU VMCS field which indicates 
+>> the logical processor is inactive because it executed the HLT instruction, but 
+>> SDM 24.4.2 mentioned that execution of the MWAIT instruction may put a logical 
+>> processor into an inactive state, however, this VMCS field never reflects this 
+>> state.
 > 
-> Also add constant for the timeout and use the same value for both
-> polling and interrupt modes.
+> So far I think I can follow, however it does not explain who consumes
+> this VMCS state if it is set and how that helps. Also, this:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I think what Wanpeng was saying is: "KVM could gather this information
+using the activity state field in the VMCS.  However, when the guest
+does MWAIT the processor can go into an inactive state without updating
+the VMCS."  Hence looking at the APERFMPERF ratio.
 
+>> This patch avoids fine granularity intercept and reschedule vCPU if MWAIT/HLT
+>> instructions executed, because it can worse the message-passing workloads which 
+>> will switch between idle and running frequently in the guest. Lets penalty the 
+>> vCPU which is long idle through tick-based sampling and preemption.
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 43eaf9400c67..8db0644900a3 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
->  #define IPC_WRITE_BUFFER	0x80
->  #define IPC_READ_BUFFER		0x90
->  
-> +/* Timeout in jiffies */
-> +#define IPC_TIMEOUT		(3 * HZ)
-> +
->  static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
->  
->  /*
-> @@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
->  /* Wait till scu status is busy */
->  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
->  {
-> -	u32 status = ipc_read_status(scu);
-> -	u32 loop_count = 100000;
-> +	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
->  
-> -	/* break if scu doesn't reset busy bit after huge retry */
-> -	while ((status & IPC_STATUS_BUSY) && --loop_count) {
-> -		udelay(1); /* scu processing time is in few u secods */
-> -		status = ipc_read_status(scu);
-> -	}
-> +	do {
-> +		u32 status;
->  
-> -	if (status & IPC_STATUS_BUSY) {
-> -		dev_err(scu->dev, "IPC timed out");
-> -		return -ETIMEDOUT;
-> -	}
-> +		status = ipc_read_status(scu);
-> +		if (!(status & IPC_STATUS_BUSY))
-> +			return (status & IPC_STATUS_ERR) ? -EIO : 0;
->  
-> -	if (status & IPC_STATUS_ERR)
-> -		return -EIO;
-> +		usleep_range(50, 100);
-> +	} while (time_before(jiffies, end));
->  
-> -	return 0;
-> +	dev_err(scu->dev, "IPC timed out");
-> +	return -ETIMEDOUT;
->  }
->  
->  /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
-> @@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
->  {
->  	int status;
->  
-> -	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
-> +	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
->  		dev_err(scu->dev, "IPC timed out\n");
->  		return -ETIMEDOUT;
->  	}
-> -- 
-> 2.24.1
-> 
+> is just complete gibberish. And I have no idea what problem you're
+> trying to solve how.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is just explaining why MWAIT and HLT is not being trapped in his
+setup.  (Because vmexit on HLT or MWAIT is awfully expensive).
 
+> Also, I don't think the TSC/MPERF ratio is architected, we can't assume
+> this is true for everything that has APERFMPERF.
+
+Right, you have to look at APERF/MPERF, not TSC/MPERF.  My scheduler-fu
+is zero so I can't really help with a nicer solution.
+
+Paolo
 
