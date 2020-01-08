@@ -2,124 +2,420 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CBDC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE63C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8041206ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF37206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JyQC4KlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgAHLxt (ORCPT
+        id S1727630AbgAHLyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:53:49 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2235 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726290AbgAHLxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:53:48 -0500
-Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 3E7AA4C5978AABF20FD3;
-        Wed,  8 Jan 2020 11:53:47 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 8 Jan 2020 11:53:46 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 8 Jan 2020
- 11:53:46 +0000
-Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
- device_links_purge()
-To:     Luo Jiaxing <luojiaxing@huawei.com>, <gregkh@linuxfoundation.org>,
-        <saravanak@google.com>, <jejb@linux.ibm.com>,
-        <James.Bottomley@suse.de>, <James.Bottomley@HansenPartnership.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <875eb2dc-a0d3-72e5-a27b-48fa38687c8c@huawei.com>
-Date:   Wed, 8 Jan 2020 11:53:45 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 8 Jan 2020 06:54:16 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:18537 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgAHLyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:54:16 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200108115411epoutp0461945b68a9c3680d2e99f0e271b1f7e6~n5z7KDuqJ0453004530epoutp04Z
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 11:54:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200108115411epoutp0461945b68a9c3680d2e99f0e271b1f7e6~n5z7KDuqJ0453004530epoutp04Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578484451;
+        bh=E+xYphWDk51rG6p9tUxpQQhRIWmuC8pU8XdEZwNuIYo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=JyQC4KlPgMZbZqBmlyZQR3F0UKM1P2DXxM1DB3cqoUQN5Kyc1j/h1RcFKuniC60H5
+         9Tw6hrATvHtHj4cxagpxVMZPaCxUatSzMybC7PbrfD28HLJRnIxRjmoACFUWU1d4QY
+         6009kRdqRGzOwLtVtk4Qogt56wwy1N8E0zEgnaOw=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200108115410epcas1p133239b8d06846a1ed4cb4e127c5c8b21~n5z6hcZf41987819878epcas1p1J;
+        Wed,  8 Jan 2020 11:54:10 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47t7283BBjzMqYlm; Wed,  8 Jan
+        2020 11:54:08 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        27.E9.51241.0E2C51E5; Wed,  8 Jan 2020 20:54:08 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200108115407epcas1p282f5f030bd277a1fe42a51b675679de2~n5z4Bwjx61269712697epcas1p2L;
+        Wed,  8 Jan 2020 11:54:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200108115407epsmtrp213193ac176de8796a442dfa7b73235c0~n5z4A86BK0259302593epsmtrp22;
+        Wed,  8 Jan 2020 11:54:07 +0000 (GMT)
+X-AuditID: b6c32a39-14bff7000001c829-a8-5e15c2e0d320
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B6.19.06569.FD2C51E5; Wed,  8 Jan 2020 20:54:07 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200108115407epsmtip13a66c989c2d5977912a1e13e41138767~n5z3w0tZB0448304483epsmtip1R;
+        Wed,  8 Jan 2020 11:54:07 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+Organization: Samsung Electronics
+Message-ID: <e58888d7-9803-da5e-1054-690fe52284a1@samsung.com>
+Date:   Wed, 8 Jan 2020 21:01:14 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <92367824-d0ac-1be3-e432-292ea1796143@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmge6DQ6JxBjt/ilvcn9fKaHF6/zsW
+        i4k3rrBYrP74mNFize1DjBY/Npxitti4INvibNMbdosVdz+yWlzeNYfN4nPvEUaLhU0t7BZr
+        j9xlt7jduILNgc9jzbw1jB6X+3qZPHbcXcLosXPWXXaPTas62TzuXNvD5rHx3Q4mj7+z9rN4
+        9G1ZxejxeZNcAFdUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKL
+        T4CuW2YO0AdKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnALLAr3ixNzi0rx0veT8
+        XCtDAwMjU6DChOyMyde3sRZ0RFTMeLuMtYHxh3MXIyeHhICJRPeE4+xdjFwcQgI7GCUW/joE
+        5XxilOhtbmeBcL4xStydPJWxi5EDrOXN8kCI+F5Gia/fNzFDOO8ZJdbP/ckCMldYwFtiftcS
+        MJtNQEti/4sbbCC2iECCxJE//5hAGpgFpjBJzD3dywyS4BdQlLj64zEjiM0rYCdx//gPVhCb
+        RUBFYv/hC+wgtqhAmMTJbS1QNYISJ2c+AVvAKWAvseHoDLA5zALiEreezGeCsOUlmrfOBrtO
+        QuAUu8Sn/pNsEF+7SEzfvpMJwhaWeHV8CzuELSXx+d1eqJpqiZUnj7BBNHcwSmzZf4EVImEs
+        sX/pZCZQWDALaEqs36UPEVaU2Pl7LiPEYj6Jd197WCHBxSvR0SYEUaIscfnBXai1khKL2zvZ
+        JjAqzULyziwkL8xC8sIshGULGFlWMYqlFhTnpqcWGxaYIkf3JkZw8tay3MF47JzPIUYBDkYl
+        Ht4fi0XihFgTy4orcw8xSnAwK4nwaukAhXhTEiurUovy44tKc1KLDzGaAkN7IrOUaHI+MLPk
+        lcQbmhoZGxtbmBiamRoaKonzcvy4GCskkJ5YkpqdmlqQWgTTx8TBKdXAaLiy6RLHhdzrf4S9
+        Jk1U7FPba7Lasmf266SrFw5/eSpec1z5sMT+h7WcR1x/BHxqCL33f8Jz6cayz88c9UqW+qy4
+        sSX3eNebdkaGmpzFrNx9x/zvarOv3v30x56dzXHSN00SJgZU3pOPPvPCcIGE8gudmoQlS+d/
+        /bfFqLQo/VuP5VxOnh09IkosxRmJhlrMRcWJAA3R9XL0AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWy7bCSnO79Q6JxBtdnGVjcn9fKaHF6/zsW
+        i4k3rrBYrP74mNFize1DjBY/Npxitti4INvibNMbdosVdz+yWlzeNYfN4nPvEUaLhU0t7BZr
+        j9xlt7jduILNgc9jzbw1jB6X+3qZPHbcXcLosXPWXXaPTas62TzuXNvD5rHx3Q4mj7+z9rN4
+        9G1ZxejxeZNcAFcUl01Kak5mWWqRvl0CV8bk69tYCzoiKma8XcbawPjDuYuRg0NCwETizfLA
+        LkYuDiGB3YwSS/vWMXcxcgLFJSWmXTzKDFEjLHH4cDFEzVtGiU17f7CD1AgLeEvM71rCAmKz
+        CWhJ7H9xgw3EFhFIkPj7/yMjSAOzwBQmiTm9txghupcySTy+8wysg19AUeLqj8eMIDavgJ3E
+        /eM/WEFsFgEVif2HL4BtEBUIk9i55DETRI2gxMmZT8B6OQXsJTYcnQF2KbOAusSfeZegbHGJ
+        W0/mM0HY8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0
+        L10vOT93EyM4irW0djCeOBF/iFGAg1GJh3fBQpE4IdbEsuLK3EOMEhzMSiK8WjpAId6UxMqq
+        1KL8+KLSnNTiQ4zSHCxK4rzy+ccihQTSE0tSs1NTC1KLYLJMHJxSDYzzEmRSJKMKV94z/2oW
+        oPFuRcPlmldrD6RtnjtBjFG1zrrd3lJ111LVlksvtxXLP3zFkXrR+azxQgf7vccqd3xt3dLJ
+        ++eJrYxa8YZZ749VJgovyFFdYLtH5XvwnspMnSR+7S6Jj1uf7LCvmRfEveD+8dBt9ZdmzeaT
+        +x9xovDT3ocqJfb/DrcosRRnJBpqMRcVJwIA1sTlid4CAAA=
+X-CMS-MailID: 20200108115407epcas1p282f5f030bd277a1fe42a51b675679de2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com>
+        <2c259936-f099-a239-9d6b-08f9b253644f@gmail.com>
+        <92367824-d0ac-1be3-e432-292ea1796143@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 11:34, Luo Jiaxing wrote:
+On 1/8/20 7:56 PM, Chanwoo Choi wrote:
+> Hi,
+> 
+> On 1/8/20 6:31 AM, Dmitry Osipenko wrote:
+>> Hello Chanwoo,
+>>
+>> 07.01.2020 12:05, Chanwoo Choi пишет:
+>>> Add new devfreq_transitions debugfs file to track the frequency transitions
+>>> of all devfreq devices for the simple profiling as following:
+>>> - /sys/kernel/debug/devfreq/devfreq_transitions
+>>>
+>>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+>>> in Kconfig in order to save the transition history.
+>>>
+>>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+>>> - time_ms	: Change time of frequency transition. (unit: millisecond)
+>>> - dev_name	: Device name of h/w.
+>>> - dev		: Device name made by devfreq core.
+>>> - parent_dev	: If devfreq device uses the passive governor,
+>>> 		  show parent devfreq device name.
+>>> - load_%	: If devfreq device uses the simple_ondemand governor,
+>>> 		  load is used by governor whene deciding the new frequency.
+>>> 		  (unit: percentage)
+>>> - old_freq_hz	: Frequency before changing. (unit: hz)
+>>> - new_freq_hz	: Frequency after changed. (unit: hz)
+>>>
+>>> [For example on Exynos5422-based Odroid-XU3 board]
+>>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+>>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+>>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+>>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+>>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+>>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+>>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+>>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+>>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+>>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+>>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+>>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+>>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+>>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+>>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+>>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+>>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+>>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+>>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+>>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+>>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+>>> [snip]
+>>>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> ---
+>>>  drivers/devfreq/Kconfig            |  13 +++
+>>>  drivers/devfreq/devfreq.c          | 126 +++++++++++++++++++++++++++++
+>>>  drivers/devfreq/governor.h         |   3 +
+>>>  drivers/devfreq/governor_passive.c |   2 +
+>>>  include/linux/devfreq.h            |   1 +
+>>>  5 files changed, 145 insertions(+)
+>>>
+>>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>>> index 0b1df12e0f21..84936eec0ef9 100644
+>>> --- a/drivers/devfreq/Kconfig
+>>> +++ b/drivers/devfreq/Kconfig
+>>> @@ -74,6 +74,19 @@ config DEVFREQ_GOV_PASSIVE
+>>>  	  through sysfs entries. The passive governor recommends that
+>>>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>>>  
+>>> +comment "DEVFREQ Debugging"
+>>> +
+>>> +config NR_DEVFREQ_TRANSITIONS
+>>> +	int "Maximum storage size to save DEVFREQ Transitions (10-1000)"
+>>> +	depends on DEBUG_FS
+>>> +	range 10 1000
+>>> +	default "100"
+>>> +	help
+>>> +	  Show the frequency transitions of all devfreq devices via
+>>> +	  '/sys/kernel/debug/devfreq/devfreq_transitions' for the simple
+>>> +	  profiling. It needs to decide the storage size to save transition
+>>> +	  history of all devfreq devices.
+>>> +
+>>>  comment "DEVFREQ Drivers"
+>>>  
+>>>  config ARM_EXYNOS_BUS_DEVFREQ
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index c7f5e4e06420..7abaae06fa65 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -268,6 +268,57 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>>>  }
+>>>  EXPORT_SYMBOL(devfreq_update_status);
+>>> +/**
+>>> + * devfreq_update_transitions() - Update frequency transitions for debugfs file
+>>> + * @devfreq:	the devfreq instance
+>>> + * @old_freq:	the previous frequency before changing the frequency
+>>> + * @new_freq:	the new frequency after frequency is changed
+>>> + */
+>>> +struct devfreq_transitions {
+>>> +	struct devfreq *devfreq;
+>>> +	struct devfreq_freqs freqs;
+>>> +	unsigned long load;
+>>> +} debugfs_transitions[CONFIG_NR_DEVFREQ_TRANSITIONS];
+>>> +
+>>> +static spinlock_t devfreq_debugfs_lock;
+>>
+>> This could be:
+>>
+>> static DEFINE_SPINLOCK(devfreq_debugfs_lock);
+>>
+>> and then spin_lock_init() isn't needed.
+> 
+> OK
+> 
+>>
+>>
+>> Also, The "<linux/spinlock.h>" should be included directly by devfreq.c
+> 
+> OK.
+> 
+>>
+>>> +static int debugfs_transitions_index;
+>>> +
+>>> +void devfreq_update_transitions(struct devfreq *devfreq,
+>>> +			unsigned long old_freq, unsigned long new_freq,
+>>> +			unsigned long busy_time, unsigned long total_time)
+>>> +{
+>>> +	unsigned long load;
+>>> +	int i;
+>>> +
+>>> +	if (!devfreq_debugfs || !devfreq || (old_freq == new_freq))
+>>> +		return;
+>>> +
+>>> +	spin_lock_nested(&devfreq_debugfs_lock, SINGLE_DEPTH_NESTING);
+>>> +
+>>> +	i = debugfs_transitions_index;
+>>> +
+>>> +	/*
+>>> +	 * Calculate the load and if load is larger than 100,
+>>> +	 * initialize to 100 because the unit of load is percentage.
+>>> +	 */
+>>> +	load = (total_time == 0 ? 0 : (100 * busy_time) / total_time);
+>>> +	if (load > 100)
+>>> +		load = 100;
+>>> +
+>>> +	debugfs_transitions[i].devfreq = devfreq;
+>>> +	debugfs_transitions[i].freqs.time = ktime_to_ms(ktime_get());
+>>> +	debugfs_transitions[i].freqs.old = old_freq;
+>>> +	debugfs_transitions[i].freqs.new = new_freq;
+>>> +	debugfs_transitions[i].load = load;
+>>> +
+>>> +	if (++i == CONFIG_NR_DEVFREQ_TRANSITIONS)
+>>> +		i = 0;
+>>> +	debugfs_transitions_index = i;
+>>> +
+>>> +	spin_unlock(&devfreq_debugfs_lock);
+>>> +}
+>>> +EXPORT_SYMBOL(devfreq_update_transitions);
+>>
+>> What about EXPORT_SYMBOL_GPL()?
+> 
+> I'll remove it.
 
-+ linux-scsi, Martin
-
-> We found that enabling kernel compilation options CONFIG_SCSI_ENCLOSURE and
-> CONFIG_ENCLOSURE_SERVICES, repeated initialization and deletion of the same
-> SCSI device will cause system panic, as follows:
-> [72.425705] Unable to handle kernel paging request at virtual address
-> dead000000000108
-> ...
-> [72.595093] Call trace:
-> [72.597532] device_del + 0x194 / 0x3a0
-> [72.601012] enclosure_remove_device + 0xbc / 0xf8
-> [72.605445] ses_intf_remove + 0x9c / 0xd8
-> [72.609185] device_del + 0xf8 / 0x3a0
-> [72.612576] device_unregister + 0x14 / 0x30
-> [72.616489] __scsi_remove_device + 0xf4 / 0x140
-> [72.620747] scsi_remove_device + 0x28 / 0x40
-> [72.624745] scsi_remove_target + 0x1c8 / 0x220
-
-please share the full crash stack frame and the commands used to trigger 
-it. Some people prefer the timestamp removed also.
+Ah. It is needed to support module build.
+it is used by passive governor.
 
 > 
-> After analysis, we see that in the error scenario, the ses module has the
-> following calling sequence:
-> device_register() -> device_del() -> device_add() -> device_del().
-> The first call to device_del() is fine, but the second call to device_del()
-> will cause a system panic.
+>>
+>>>  /**
+>>>   * find_devfreq_governor() - Find devfreq governor from name
+>>>   * @name:	name of the governor
+>>> @@ -401,6 +452,10 @@ static int set_target(struct devfreq *devfreq,
+>>>  		return err;
+>>>  	}
+>>>  
+>>> +	devfreq_update_transitions(devfreq, cur_freq, new_freq,
+>>> +					devfreq->last_status.busy_time,
+>>> +					devfreq->last_status.total_time);
+>>> +
+>>>  	freqs.new = new_freq;
+>>>  	notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>>  
+>>> @@ -1787,6 +1842,72 @@ static int devfreq_summary_show(struct seq_file *s, void *data)
+>>>  }
+>>>  DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
+>>>  
+>>> +/**
+>>> + * devfreq_transitions_show() - Show the frequency transitions of the registered
+>>> + *			devfreq devices via 'devfreq_transitions' debugfs file.
+>>> + */
+>>> +static int devfreq_transitions_show(struct seq_file *s, void *data)
+>>> +{
+>>> +	struct devfreq *devfreq = NULL;
+>>> +	struct devfreq *p_devfreq = NULL;
+>>> +	struct devfreq_freqs *freqs = NULL;
+>>> +	unsigned long load;
+>>> +	int i = debugfs_transitions_index;
+>>> +	int count;
+>>> +
+>>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>>> +			"time_ms",
+>>> +			"dev_name",
+>>> +			"dev",
+>>> +			"parent_dev",
+>>> +			"load_%",
+>>> +			"old_freq_hz",
+>>> +			"new_freq_hz");
+>>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>>> +			"----------",
+>>> +			"------------------------------",
+>>> +			"----------",
+>>> +			"----------",
+>>> +			"----------",
+>>> +			"------------",
+>>> +			"------------");
+>>> +
+>>> +	spin_lock(&devfreq_debugfs_lock);> +	for (count = 0; count < CONFIG_NR_DEVFREQ_TRANSITIONS; count++) {
+>>> +		devfreq = debugfs_transitions[i].devfreq;
+>>> +		freqs = &debugfs_transitions[i].freqs;
+>>> +		load = debugfs_transitions[i].load;
+>>> +
+>>> +		i = (CONFIG_NR_DEVFREQ_TRANSITIONS == ++i) ? 0 : i;
+>>> +		if (!devfreq)
+>>> +			continue;
+>>> +
+>>> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+>>> +		if (!strncmp(devfreq->governor_name,
+>>> +				DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
+>>> +			struct devfreq_passive_data *data = devfreq->data;
+>>> +
+>>> +			if (data)
+>>> +				p_devfreq = data->parent;
+>>> +		} else {
+>>> +			p_devfreq = NULL;
+>>> +		}
+>>> +#endif
+>>> +		seq_printf(s, "%-10lld %-30s %-10s %-10s %-6ld %-12ld %-12ld\n",
+>>> +			freqs->time,
+>>> +			dev_name(devfreq->dev.parent),
+>>> +			dev_name(&devfreq->dev),
+>>> +			p_devfreq ? dev_name(&p_devfreq->dev) : "",
+>>> +			load,
+>>> +			freqs->old,
+>>> +			freqs->new);
+>>> +	}
+>>> +	spin_unlock(&devfreq_debugfs_lock);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +DEFINE_SHOW_ATTRIBUTE(devfreq_transitions);
+>>> +
+>>>  static int __init devfreq_init(void)
+>>>  {
+>>>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
+>>> @@ -1808,9 +1929,14 @@ static int __init devfreq_init(void)
+>>>  		devfreq_debugfs = NULL;
+>>>  		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
+>>>  	} else {
+>>> +		spin_lock_init(&devfreq_debugfs_lock);
+>>> +
+>>>  		debugfs_create_file("devfreq_summary", 0444,
+>>>  				devfreq_debugfs, NULL,
+>>>  				&devfreq_summary_fops);
+>>> +		debugfs_create_file("devfreq_transitions", 0444,
+>>> +				devfreq_debugfs, NULL,
+>>> +				&devfreq_transitions_fops);
+>>>  	}
+>>>  
+>>>  	return 0;
+>>> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+>>> index dc7533ccc3db..01eecfdaf2d6 100644
+>>> --- a/drivers/devfreq/governor.h
+>>> +++ b/drivers/devfreq/governor.h
+>>> @@ -68,6 +68,9 @@ extern int devfreq_add_governor(struct devfreq_governor *governor);
+>>>  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+>>>  
+>>>  extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+>>> +extern void devfreq_update_transitions(struct devfreq *devfreq,
+>>> +			unsigned long old_freq, unsigned long new_freq,
+>>> +			unsigned long busy_time, unsigned long total_time);
+>>
+>> The 'extern' attribute isn't needed for function prototypes defined in
+>> header files.
+>>
+>>
 > 
-> Through disassembly, we locate that panic happen when device_links_purge()
-> call list_del() to remove device_links.needs_suppliers from list, and
-> list_del() will set this list entry's prev and next pointers to poison.
-> So if INIT_LIST_HEAD() is not re-executed before the next list_del(), It
-> will cause the system to access a memory address which is posioned.
+> Right. I'll remove it.
 > 
-> Therefore, replace list_del() with list_del_init() can avoid such issue.
 > 
-> Fixes: e2ae9bcc4aaa ("driver core: Add support for linking devices during device addition")
-> Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-> Reviewed-by: John Garry <john.garry@huawei.com>
 
-This tag was only implicitly granted, but I thought that the fix looked 
-ok, so:
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
->   drivers/base/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 42a6724..7b9b0d6 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1103,7 +1103,7 @@ static void device_links_purge(struct device *dev)
->   	struct device_link *link, *ln;
->   
->   	mutex_lock(&wfs_lock);
-> -	list_del(&dev->links.needs_suppliers);
-> +	list_del_init(&dev->links.needs_suppliers);
->   	mutex_unlock(&wfs_lock);
->   
->   	/*
-> 
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
