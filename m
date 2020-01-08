@@ -2,236 +2,163 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A3C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57428C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0E1206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1io/82z"
+	by mail.kernel.org (Postfix) with ESMTP id 2C6D4206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbgAHJaE (ORCPT
+        id S1727595AbgAHJcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:30:04 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44977 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbgAHJaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:30:04 -0500
-Received: by mail-qv1-f66.google.com with SMTP id n8so1091983qvg.11;
-        Wed, 08 Jan 2020 01:30:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
-        b=f1io/82ztPz4bFPaOPr46ckbgnYVY94PXievQr73C+rowMuyOHKiSNrmuascnB2cze
-         h03T47dhOjR86Dt4+dh1p5suEVfENZ4d6otja4ynHrN8Y/AkVV7JDKsDgRzjdw0YoD4J
-         v21ym8pM4mxz8OHeBSloSUy5dhzb7B6vL1xVE9B0E+soNiQ3xbEWdWQ+pZoiZoE6j9WD
-         4KAhq6HGZ5Xi6gcU1IwQCu4dcFDBfiHsblTYD+laPFzVGomS+6yFfX3O6l6OyWbP01J+
-         ZP/LKr4ThZX0/ZN9ogymhRtyvt0IMG6mba+oUevS5RE2McnKNGvP8b70YbwvEiPLVRya
-         aPfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
-        b=kE1t6WTQ7oFwM12gF4YhZTYzwbnQE20znTiqD9dHzUzIsyHb976VSD24pUTHLNZMAC
-         wcI06YxxbaZ7MJqmPDgKDoa+L6kcdFpWvj0kEVTltJuq5/CP/zDNCxrSafc9QSu9fYnd
-         cfIR8GLDhpaDu3typKaanQE9J8UWzkhUcbqidrkPTSw1APEr9hEXGI+2T5J2G0FjJgpU
-         9kO6Lypm3xBDk0lnLgW2RREFQsLRbAZ72t2/GBCvWytx442UU69kl5s1fW1D/N2Uhi8g
-         OUoFHkl/B+tXVWKTUXbeu6Ztm/Uc3pZRMjcdXrYiEh4u/GdbVW0t4TfOVngMi81vfKCn
-         qePA==
-X-Gm-Message-State: APjAAAWevDF6X3lCqQ3nLc+z7B/tTLlIqmuw10WmIxvSxeRCsbz6UCp1
-        MNC+PtTR2TYPBWwSGqN9k9dmrEdQOAEQGB4iu1I=
-X-Google-Smtp-Source: APXvYqyBrSSS+aT2CW4js6+jBTqkMjLw2OzZRXJCjT67nXeKRwAZ5gsI59ky8XuqOn13xntwvOGG55Pa0BGIb3OB4zY=
-X-Received: by 2002:ad4:496f:: with SMTP id p15mr3146294qvy.191.1578475802943;
- Wed, 08 Jan 2020 01:30:02 -0800 (PST)
+        Wed, 8 Jan 2020 04:32:23 -0500
+Received: from mga01.intel.com ([192.55.52.88]:3452 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727205AbgAHJcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 04:32:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 01:32:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
+   d="scan'208";a="303510529"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 01:32:20 -0800
+Subject: Re: BUG: KASAN: use-after-free in
+ xhci_trb_virt_to_dma.part.24+0x1c/0x80
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Greg KH <greg@kroah.com>, Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <95b4bdb2-962f-561e-ac14-79cd44395915@molgen.mpg.de>
+ <20180720095410.GA11904@kroah.com>
+ <107dbdd1-4e45-836f-7f8f-85bc63374e4f@molgen.mpg.de>
+ <30b069b5-63f6-dd9e-b323-668f06bff6cf@molgen.mpg.de>
+ <20200103110451.GJ465886@lahna.fi.intel.com>
+ <81c6f906-3f5a-729d-f3b4-1ac6ac607c05@linux.intel.com>
+ <84369435-d355-0462-98ab-91bb1c5d3871@molgen.mpg.de>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <572bea6f-06d4-938a-802e-93386acf59d9@linux.intel.com>
+Date:   Wed, 8 Jan 2020 11:34:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-4-faiz_abbas@ti.com>
- <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com> <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-In-Reply-To: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 8 Jan 2020 17:29:51 +0800
-Message-ID: <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA devices
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <84369435-d355-0462-98ab-91bb1c5d3871@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Faiz,
+On 7.1.2020 17.35, Paul Menzel wrote:
+> Dear Mathias, dear Mika,
+> 
+> 
+> On 2020-01-07 13:09, Mathias Nyman wrote:
+>> On 3.1.2020 13.04, Mika Westerberg wrote:
+>>> On Thu, Jan 02, 2020 at 03:10:14PM +0100, Paul Menzel wrote:
+>>>> Mika, as you fixed the other leak, any idea, how to continue from the
+>>>> kmemleak log below?
+>>>>
+>>>> ```
+>>>> unreferenced object 0xffff8c207a1e1408 (size 8):
+>>>>     comm "systemd-udevd", pid 183, jiffies 4294667978 (age 752.292s)
+>>>>     hex dump (first 8 bytes):
+>>>>       34 01 05 00 00 00 00 00                          4.......
+>>>>     backtrace:
+>>>>       [<00000000aea7b46d>] xhci_mem_init+0xcfa/0xec0 [xhci_hcd]
+>>>
+>>> There are probably better ways for doing this but you can use objdump
+>>> for example:
+>>>
+>>>     $ objdump -l --prefix-addresses -j .text --disassemble=xhci_mem_init drivers/usb/host/xhci-hcd.ko
+>>>
+>>> then find the offset xhci_mem_init+0xcfa. It should show you the line
+>>> numbers as well if you have compiled your kernel with debug info. This
+>>> should be close to the line that allocated the memory that was leaked.
+> 
+> Thank you. I actually remembered `script/f2addr2line`.
+> 
+>      $ scripts/faddr2line drivers/usb/host/xhci-hcd.o xhci_mem_init+0xcfa
+>      xhci_mem_init+0xcfa/0xec0:
+>      xhci_add_in_port at /mnt/drivers/usb/host/xhci-mem.c:2161
+>      (inlined by) xhci_setup_port_arrays at /mnt/drivers/usb/host/xhci-mem.c:2309
+>      (inlined by) xhci_mem_init at /mnt/drivers/usb/host/xhci-mem.c:2538
+> 
+>> Paul, it possible that your xhci controller has several
+>> supported protocol extended capabilities for usb 3 ports, each
+>> with their own custom protocol speed ID table.
+>>
+>> xhci driver assumes there is only one custome PSI table per roothub,
+>> and we will end up allocating the second PSI table on top of the first,
+>> leaking the first.
+>>
+>> Could you boot with xhci dynamic debug enabled, and show dmesg after boot, add:
+>> xhci_hcd.dyndbg=+p
+>> to you kernel cmdline.
+>>
+>> Or as an alternative, show output of:
+>>
+>> sudo cat /sys/kernel/debug/usb/xhci/*/reg-ext-protocol*
+> 
+> `/sys/kernel/debug/` cannot be read by unprivileged users, so the wildcard does
+> not work with `sudo`.
+> 
+> ```
+> $ sudo ls /sys/kernel/debug/usb/xhci
+> 0000:12:00.0  0000:26:00.3  0000:26:00.4
+> # cat /sys/kernel/debug/usb/xhci/*/reg-ext-protocol*
 
-On Wed, Jan 8, 2020 at 5:19 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Hi Baolin,
->
-> On 08/01/20 6:58 am, Baolin Wang wrote:
-> > Hi Faiz,
-> >
-> > On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
-> >>
-> >> From: Chunyan Zhang <zhang.chunyan@linaro.org>
-> >>
-> >> Some standard SD host controllers can support both external dma
-> >> controllers as well as ADMA/SDMA in which the SD host controller
-> >> acts as DMA master. TI's omap controller is the case as an example.
-> >>
-> >> Currently the generic SDHCI code supports ADMA/SDMA integrated in
-> >> the host controller but does not have any support for external DMA
-> >> controllers implemented using dmaengine, meaning that custom code is
-> >> needed for any systems that use an external DMA controller with SDHCI.
-> >>
-> >> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
-> >> 1. Map scatterlists before dmaengine_prep_slave_sg()
-> >> 2. Use dma_async() functions inside of the send_command() path and call
-> >> terminate_sync() in non-atomic context in case of an error.
-> >>
-> >> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> >> ---
-> >>  drivers/mmc/host/Kconfig |   3 +
-> >>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
-> >>  drivers/mmc/host/sdhci.h |   8 ++
-> >>  3 files changed, 237 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> >> index d06b2dfe3c95..adef971582a1 100644
-> >> --- a/drivers/mmc/host/Kconfig
-> >> +++ b/drivers/mmc/host/Kconfig
-> >> @@ -1040,3 +1040,6 @@ config MMC_OWL
-> >>         help
-> >>           This selects support for the SD/MMC Host Controller on
-> >>           Actions Semi Owl SoCs.
-> >> +
-> >> +config MMC_SDHCI_EXTERNAL_DMA
-> >> +       bool
-> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >> index f6999054abcf..8cc78c76bc3d 100644
-> >> --- a/drivers/mmc/host/sdhci.c
-> >> +++ b/drivers/mmc/host/sdhci.c
-> >> @@ -10,6 +10,7 @@
-> >>   */
-> >>
-> >>  #include <linux/delay.h>
-> >> +#include <linux/dmaengine.h>
-> >>  #include <linux/ktime.h>
-> >>  #include <linux/highmem.h>
-> >>  #include <linux/io.h>
-> >> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> >>         sdhci_set_block_info(host, data);
-> >>  }
-> >>
-> >> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
-> >> +
-> >> +static int sdhci_external_dma_init(struct sdhci_host *host)
-> >> +{
-> >> +       int ret = 0;
-> >> +       struct mmc_host *mmc = host->mmc;
-> >> +
-> >> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
-> >> +       if (IS_ERR(host->tx_chan)) {
-> >> +               ret = PTR_ERR(host->tx_chan);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       pr_warn("Failed to request TX DMA channel.\n");
-> >> +               host->tx_chan = NULL;
-> >> +               return ret;
-> >> +       }
-> >> +
-> >> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
-> >> +       if (IS_ERR(host->rx_chan)) {
-> >> +               if (host->tx_chan) {
-> >> +                       dma_release_channel(host->tx_chan);
-> >> +                       host->tx_chan = NULL;
-> >> +               }
-> >> +
-> >> +               ret = PTR_ERR(host->rx_chan);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       pr_warn("Failed to request RX DMA channel.\n");
-> >> +               host->rx_chan = NULL;
-> >> +       }
-> >> +
-> >> +       return ret;
-> >> +}
-> >> +
-> >> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
-> >> +                                                  struct mmc_data *data)
-> >> +{
-> >> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
-> >> +}
-> >> +
-> >> +static int sdhci_external_dma_setup(struct sdhci_host *host,
-> >> +                                   struct mmc_command *cmd)
-> >> +{
-> >> +       int ret, i;
-> >> +       struct dma_async_tx_descriptor *desc;
-> >> +       struct mmc_data *data = cmd->data;
-> >> +       struct dma_chan *chan;
-> >> +       struct dma_slave_config cfg;
-> >> +       dma_cookie_t cookie;
-> >> +       int sg_cnt;
-> >> +
-> >> +       if (!host->mapbase)
-> >> +               return -EINVAL;
-> >> +
-> >> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
-> >> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
-> >> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> >> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> >> +       cfg.src_maxburst = data->blksz / 4;
-> >> +       cfg.dst_maxburst = data->blksz / 4;
-> >> +
-> >> +       /* Sanity check: all the SG entries must be aligned by block size. */
-> >> +       for (i = 0; i < data->sg_len; i++) {
-> >> +               if ((data->sg + i)->length % data->blksz)
-> >> +                       return -EINVAL;
-> >> +       }
-> >> +
-> >> +       chan = sdhci_external_dma_channel(host, data);
-> >> +
-> >> +       ret = dmaengine_slave_config(chan, &cfg);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
-> >> +       if (sg_cnt <= 0)
-> >> +               return -EINVAL;
-> >> +
-> >> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
-> >> +                                      mmc_get_dma_dir(data),
-> >> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> >> +       if (!desc)
-> >> +               return -EINVAL;
-> >> +
-> >> +       desc->callback = NULL;
-> >> +       desc->callback_param = NULL;
-> >> +
-> >> +       cookie = dmaengine_submit(desc);
-> >> +       if (cookie < 0)
-> >
-> > We usually use the DMA engine standard API: dma_submit_error() to
-> > validate the cookie.
-> >
->
-> The if condition is doing the same thing as the API. Do we really
-> require it?
+problematic xhci:
+capability for first four USB 2 ports
+> EXTCAP_REVISION = 0x02000402
+> EXTCAP_NAME = 0x20425355
+> EXTCAP_PORTINFO = 0x00180401
+> EXTCAP_PORTTYPE = 0x00000000
 
-Yes, now it did the same thing. But in future if the DMA engine expand
-the cookie indication, which may break your current condition, but use
-dma_submit_error() is more safe, that will help to cover the internal
-cookie things. So I recommend to use the standard API as far as
-possible.
+capability for one USB 3.1 port (5th port)
+> EXTCAP_REVISION = 0x03100802
+> EXTCAP_NAME = 0x20425355
+> EXTCAP_PORTINFO = 0x10000105
+> EXTCAP_PORTTYPE = 0x00000000
+> EXTCAP_MANTISSA1 = 0x00050134
+capability for one USB 3.1 port (6th port)
+> EXTCAP_REVISION = 0x03100802
+> EXTCAP_NAME = 0x20425355
+> EXTCAP_PORTINFO = 0x10000106
+> EXTCAP_PORTTYPE = 0x00000000
+> EXTCAP_MANTISSA1 = 0x00050134
+capability for one USB 3.1 port (7th port)
+> EXTCAP_REVISION = 0x03100802
+> EXTCAP_NAME = 0x20425355
+> EXTCAP_PORTINFO = 0x10000107
+> EXTCAP_PORTTYPE = 0x00000000
+> EXTCAP_MANTISSA1 = 0x00050134
+capability for one USB 3.1 port (8th port)
+> EXTCAP_REVISION = 0x03100802
+> EXTCAP_NAME = 0x20425355
+> EXTCAP_PORTINFO = 0x10000108
+> EXTCAP_PORTTYPE = 0x00000000
+> EXTCAP_MANTISSA1 = 0x00050134
 
-But if Ulf does not care about this, it's Okay for me too :)
+It has eight ports.  last four of them are USB 3.1 ports.
+It has a very odd setup where each 3.1 port has their own
+supported protocol capability with a custom PSI, but all the PSI's are similar,
+telling the port only support a 5Gbps speed.
+
+We leak all the custom PSI tables for USB 3.1 ports except the last,
+these would be the EXTCAP_MANTISSA1 = 0x00050134, which is the same as
+the hex dump of the unreferenced object you posted earlier (considering byte order):
+
+hex dump (first 8 bytes):
+34 01 05 00 00 00 00 00                          4.......
+
+I'm working on a patch for this
+
+-Mathias
