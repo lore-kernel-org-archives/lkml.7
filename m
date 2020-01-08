@@ -2,276 +2,110 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3A8C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7703AC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476E4206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578472918;
-	bh=PXWKCUXCMzVMdtKOBwvy5/oEvTcWRUdl1Vb3OkpTR5Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z0bo23bUbCeGBb2NHY7j/ta3MTfszvvJ2FHsrMh4p6P4RFQMWFoeyCDJUYOcoRH+H
-	 ZzTLBPwk88DVBkKpWaRksxTve+Qvr6vsv+Z2cACOEps1RzboX9Av3oRFJGqCkZzMtk
-	 u2DTBdXQJazIf6yRHCF+DO++BM96+U8xuWzvKv3A=
+	by mail.kernel.org (Postfix) with ESMTP id 48A2A206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XCN6f8uB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgAHIl5 (ORCPT
+        id S1727411AbgAHImY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:41:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgAHIl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:41:56 -0500
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656742075D
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 08:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578472915;
-        bh=PXWKCUXCMzVMdtKOBwvy5/oEvTcWRUdl1Vb3OkpTR5Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M9aBQBAFTIEBSLVIQXPNQIx5xRl6tnG/w3q7ncmKz18laMS58AwmCyudHt7Qg8sHU
-         wAJInX4TicDjT7rDP7P/3lyWC/WIIRxyDuEly0J4sPtTb/jQ8fHh4KuLct3rHblfVC
-         00D/ugrWbEdzQ/AqiuuqnUiFnZgoHR2yuW8MSmUg=
-Received: by mail-wm1-f51.google.com with SMTP id p9so1529386wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:41:55 -0800 (PST)
-X-Gm-Message-State: APjAAAXbT4vL4L3IBf8hgleyKwwK74AK2RrzeXToA1Sp4CRsANx5B9C6
-        FpmnHLS7CjwB5KM61TmoaD3xbiETM+u/tTZbakU+nQ==
-X-Google-Smtp-Source: APXvYqzt1cPoPFTMpvv8naNX973P9NV0bYWBJukID4v73DLtgoV6pd86vv2LMqwu+M/KA1E78eCU3sePwfHYc8Tqidg=
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr2335219wma.95.1578472913806;
- Wed, 08 Jan 2020 00:41:53 -0800 (PST)
+        Wed, 8 Jan 2020 03:42:24 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:5284 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726313AbgAHImX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:42:23 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0088fDpq012604;
+        Wed, 8 Jan 2020 02:42:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=lisIv/cYYX3/XbCnto9J4u5jwGUifUtblow0rZiTlcU=;
+ b=XCN6f8uB2wDbFU9kd/K9t8s9VRSyCzUTNAdncVw+TmFENG3j6cUHjATN8GhyXky6S8A1
+ iFntn33FgexHjd/vg9VFh/NGC9HQx5anREelhyspG/WIQHBwprA96Jj4IxkeCRdUM/U0
+ FUOK58Hmzw6VCcTYJ5LS2NCsyjuN28QMQT+bfq17tsz5bVRPUcIoKUrdG4O8usVVZ9Ym
+ Yq9dbWsiazjDadFKrCi8iIeTtjDNIv104fH9n9aar8InKBI1mnjISGoMHKqqVfhoYAu4
+ eT2GblWHX0G6/6r+DJ/u8s1eZLy3oYVt8wrs6fl/knqWAwLIZUe0aH5WbWzs9AUjDIxl bg== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2xas06vw31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 08 Jan 2020 02:42:22 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 8 Jan
+ 2020 08:42:20 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 8 Jan 2020 08:42:20 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 40F7E2B1;
+        Wed,  8 Jan 2020 08:42:20 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 08:42:20 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 2/2] mfd: madera: Wait for boot done before accessing any
+ other registers
+Message-ID: <20200108084220.GH10451@ediswmail.ad.cirrus.com>
+References: <20200106102834.31301-1-ckeepax@opensource.cirrus.com>
+ <20200106102834.31301-2-ckeepax@opensource.cirrus.com>
+ <20200107142942.GO14821@dell>
 MIME-Version: 1.0
-References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
- <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net> <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
-In-Reply-To: <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 8 Jan 2020 00:41:42 -0800
-X-Gmail-Original-Message-ID: <CALCETrV_tGk=B3Hw0h9viW45wMqB_W+rwWzx6LnC3-vSATOUOA@mail.gmail.com>
-Message-ID: <CALCETrV_tGk=B3Hw0h9viW45wMqB_W+rwWzx6LnC3-vSATOUOA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "songliubraving@fb.com" <songliubraving@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "mjg59@google.com" <mjg59@google.com>,
-        "thgarnie@chromium.org" <thgarnie@chromium.org>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "revest@chromium.org" <revest@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "jackmanb@chromium.org" <jackmanb@chromium.org>,
-        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "mhalcrow@google.com" <mhalcrow@google.com>,
-        "andriin@fb.com" <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107142942.GO14821@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 mlxlogscore=802
+ clxscore=1015 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001080074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jan 7, 2020, at 9:01 AM, Edgecombe, Rick P <rick.p.edgecombe@intel.com=
-> wrote:
->
-> =EF=BB=BFCC Nadav and Jessica.
->
-> On Mon, 2020-01-06 at 15:36 -1000, Andy Lutomirski wrote:
->>> On Jan 6, 2020, at 12:25 PM, Edgecombe, Rick P <rick.p.edgecombe@intel.=
-com>
->>> wrote:
->>>
->>> =EF=BB=BFOn Sat, 2020-01-04 at 09:49 +0900, Andy Lutomirski wrote:
->>>>>>> On Jan 4, 2020, at 8:47 AM, KP Singh <kpsingh@chromium.org> wrote:
->>>>>>
->>>>>> =EF=BB=BFFrom: KP Singh <kpsingh@google.com>
->>>>>>
->>>>>> The image for the BPF trampolines is allocated with
->>>>>> bpf_jit_alloc_exe_page which marks this allocated page executable. T=
-his
->>>>>> means that the allocated memory is W and X at the same time making i=
-t
->>>>>> susceptible to WX based attacks.
->>>>>>
->>>>>> Since the allocated memory is shared between two trampolines (the
->>>>>> current and the next), 2 pages must be allocated to adhere to W^X an=
-d
->>>>>> the following sequence is obeyed where trampolines are modified:
->>>>>
->>>>> Can we please do better rather than piling garbage on top of garbage?
->>>>>
->>>>>>
->>>>>> - Mark memory as non executable (set_memory_nx). While module_alloc =
-for
->>>>>> x86 allocates the memory as PAGE_KERNEL and not PAGE_KERNEL_EXEC, no=
-t
->>>>>> all implementations of module_alloc do so
->>>>>
->>>>> How about fixing this instead?
->>>>>
->>>>>> - Mark the memory as read/write (set_memory_rw)
->>>>>
->>>>> Probably harmless, but see above about fixing it.
->>>>>
->>>>>> - Modify the trampoline
->>>>>
->>>>> Seems reasonable. It=E2=80=99s worth noting that this whole approach =
-is
->>>>> suboptimal:
->>>>> the =E2=80=9Cmodule=E2=80=9D allocator should really be returning a l=
-ist of pages to be
->>>>> written (not at the final address!) with the actual executable mappin=
-g to
->>>>> be
->>>>> materialized later, but that=E2=80=99s a bigger project that you=E2=
-=80=99re welcome to
->>>>> ignore
->>>>> for now.  (Concretely, it should produce a vmap address with backing =
-pages
->>>>> but
->>>>> with the vmap alias either entirely unmapped or read-only. A subseque=
-nt
->>>>> healer
->>>>> would, all at once, make the direct map pages RO or not-present and m=
-ake
->>>>> the
->>>>> vmap alias RX.)
->>>>>> - Mark the memory as read-only (set_memory_ro)
->>>>>> - Mark the memory as executable (set_memory_x)
->>>>>
->>>>> No, thanks. There=E2=80=99s very little excuse for doing two IPI flus=
-hes when one
->>>>> would suffice.
->>>>>
->>>>> As far as I know, all architectures can do this with a single flush
->>>>> without
->>>>> races  x86 certainly can. The module freeing code gets this sequence
->>>>> right.
->>>>> Please reuse its mechanism or, if needed, export the relevant interfa=
-ces.
->>>
->>> So if I understand this right, some trampolines have been added that ar=
-e
->>> currently set as RWX at modification time AND left that way during runt=
-ime?
->>> The
->>> discussion on the order of set_memory_() calls in the commit message ma=
-de me
->>> think that this was just a modification time thing at first.
->>
->> I=E2=80=99m not sure what the status quo is.
->>
->> We really ought to have a genuinely good API for allocation and initiali=
-zation
->> of text.  We can do so much better than set_memory_blahblah.
->>
->> FWIW, I have some ideas about making kernel flushes cheaper. It=E2=80=99=
-s currently
->> blocked on finding some time and on tglx=E2=80=99s irqtrace work.
->>
->
-> Makes sense to me. I guess there are 6 types of text allocations now:
-> - These two BPF trampolines
-> - BPF JITs
-> - Modules
-> - Kprobes
-> - Ftrace
->
-> All doing (or should be doing) pretty much the same thing. I believe Jess=
-ica had
-> said at one point that she didn't like all the other features using
-> module_alloc() as it was supposed to be just for real modules. Where woul=
-d the
-> API live?
+On Tue, Jan 07, 2020 at 02:29:42PM +0000, Lee Jones wrote:
+> On Mon, 06 Jan 2020, Charles Keepax wrote:
+> 
+> > It is advised to wait for the boot done bit to be set before reading
+> > any other register, update the driver to respect this.
+> > 
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> >  drivers/mfd/madera-core.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> I'm assuming this patch is orthogonal to the last?
+> 
+> Can I take it on its own?
+> 
 
-New header?  This shouldn=E2=80=99t matter that much.
+Yeah these can be taken separately to the other series we are
+waiting on Mark to review.
 
-Here are two strawman proposals.  All of this is very rough -- the
-actual data structures and signatures are likely problematic for
-multiple reasons.
+Thanks,
+Charles
 
---- First proposal ---
-
-struct text_allocation {
-  void *final_addr;
-  struct page *pages;
-  int npages;
-};
-
-int text_alloc(struct text_allocation *out, size_t size);
-
-/* now final_addr is not accessible and pages is writable. */
-
-int text_freeze(struct text_allocation *alloc);
-
-/* now pages are not accessible and final_addr is RO.  Alternatively,
-pages are RO and final_addr is unmapped. */
-
-int text_finish(struct text_allocation *alloc);
-
-/* now final_addr is RX.  All done. */
-
-This gets it with just one flush and gives a chance to double-check in
-case of race attacks from other CPUs.  Double-checking is annoying,
-though.
-
---- Second proposal ---
-
-struct text_allocation {
-  void *final_addr;
-  /* lots of opaque stuff including an mm_struct */
-  /* optional: list of struct page, but this isn't obviously useful */
-};
-
-int text_alloc(struct text_allocation *out, size_t size);
-
-/* Memory is allocated.  There is no way to access it at all right
-now.  The memory is RO or not present in the direct map. */
-
-void __user *text_activate_mapping(struct text_allocation *out);
-
-/* Now the text is RW at *user* address given by return value.
-Preemption is off if required by use_temporary_mm().  Real user memory
-cannot be accessed. */
-
-void text_deactivate_mapping(struct text_allocation *alloc);
-
-/* Now the memory is inaccessible again. */
-
-void text_finalize(struct text_allocation *alloc);
-
-/* Now it's RX or XO at the final address. */
-
-
-Pros of second approach:
-
- - Inherently immune to cross-CPU attack.  No double-check.
-
- - If we ever implement a cache of non-direct-mapped, unaliased pages,
-then it works with no flushes at all.  We could even relax it a bit to
-allow non-direct-mapped pages that may have RX / XO aliases but no W
-aliases.
-
- - Can easily access without worrying about page boundaries.
-
-Cons:
-
- - The use of a temporary mm is annoying -- you can't copy from user
-memory, for example.
+> For my own reference:
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
