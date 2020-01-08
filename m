@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54076C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFAB2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207772070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgAHTts (ORCPT
+        id S1729862AbgAHTt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:48 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43426 "EHLO
+        Wed, 8 Jan 2020 14:49:57 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43436 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730400AbgAHTqB (ORCPT
+        by vger.kernel.org with ESMTP id S1730403AbgAHTqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:01 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-0006o5-56; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHB-0006ns-Qm; Wed, 08 Jan 2020 19:45:57 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dle-Fx; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dlJ-BM; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
         "Arnd Bergmann" <arnd@arndb.de>,
-        "Konstantin Khlebnikov" <khlebnikov@yandex-team.ru>,
-        "Vasily Averin" <vvs@virtuozzo.com>
-Date:   Wed, 08 Jan 2020 19:43:13 +0000
-Message-ID: <lsq.1578512578.674062023@decadent.org.uk>
+        "Russell King" <rmk+kernel@arm.linux.org.uk>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>
+Date:   Wed, 08 Jan 2020 19:43:09 +0000
+Message-ID: <lsq.1578512578.248052110@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 15/63] mm/rmap: replace BUG_ON(anon_vma->degree) with
- VM_WARN_ON
+Subject: [PATCH 3.16 11/63] mmc: core: shut up "voltage-ranges
+ unspecified" pr_info()
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,35 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
 
-commit e4c5800a3991f0c6a766983535dfc10d51802cf6 upstream.
+commit 10a16a01d8f72e80f4780e40cf3122f4caffa411 upstream.
 
-This check effectively catches anon vma hierarchy inconsistence and some
-vma corruptions.  It was effective for catching corner cases in anon vma
-reusing logic.  For now this code seems stable so check could be hidden
-under CONFIG_DEBUG_VM and replaced with WARN because it's not so fatal.
+Each time a driver such as sdhci-esdhc-imx is probed, we get a info
+printk complaining that the DT voltage-ranges property has not been
+specified.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Vasily Averin <vvs@virtuozzo.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+However, the DT binding specifically says that the voltage-ranges
+property is optional.  That means we should not be complaining that
+DT hasn't specified this property: by indicating that it's optional,
+it is valid not to have the property in DT.
+
+Silence the warning if the property is missing.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- mm/rmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -403,7 +403,7 @@ void unlink_anon_vmas(struct vm_area_str
- 	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
- 		struct anon_vma *anon_vma = avc->anon_vma;
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1181,8 +1181,12 @@ int mmc_of_parse_voltage(struct device_n
  
--		BUG_ON(anon_vma->degree);
-+		VM_WARN_ON(anon_vma->degree);
- 		put_anon_vma(anon_vma);
+ 	voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
+ 	num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
+-	if (!voltage_ranges || !num_ranges) {
+-		pr_info("%s: voltage-ranges unspecified\n", np->full_name);
++	if (!voltage_ranges) {
++		pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
++		return -EINVAL;
++	}
++	if (!num_ranges) {
++		pr_err("%s: voltage-ranges empty\n", np->full_name);
+ 		return -EINVAL;
+ 	}
  
- 		list_del(&avc->same_vma);
 
