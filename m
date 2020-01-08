@@ -2,92 +2,125 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B16C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E6BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6FE20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506BD20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578508151;
+	bh=6zjORTcadsJG3lFVKDoJP+hFIkS8FvrSkmNU0jxtPCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rw+aSiTVxpIC+/EWfmuS3Gj9mXiKsAh3MQDJBzvQlCFCvzxPUu+ze0/xObIutdjm4
+	 0OmHlDkJC4f9yBhted/z4mHjKVylMnFn8ITDdvc/ZbtdKCw9gITgn06I53O6J0Ziuj
+	 khxvoVrUXclkYhD7+IEAaVzNDN4iBjjccy7xRAPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgAHS1v (ORCPT
+        id S1728726AbgAHS3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:27:51 -0500
-Received: from namei.org ([65.99.196.166]:56196 "EHLO namei.org"
+        Wed, 8 Jan 2020 13:29:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbgAHS1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:27:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 008IRGfL027152;
-        Wed, 8 Jan 2020 18:27:16 GMT
-Date:   Thu, 9 Jan 2020 05:27:16 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Kees Cook <keescook@chromium.org>
-cc:     KP Singh <kpsingh@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF
- (KRSI)
-In-Reply-To: <201912301112.A1A63A4@keescook>
-Message-ID: <alpine.LRH.2.21.2001090525540.9683@namei.org>
-References: <20191220154208.15895-1-kpsingh@chromium.org> <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com> <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com> <201912301112.A1A63A4@keescook>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1727169AbgAHS3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:29:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C321820692;
+        Wed,  8 Jan 2020 18:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578508149;
+        bh=6zjORTcadsJG3lFVKDoJP+hFIkS8FvrSkmNU0jxtPCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ueYpDdxRfD3k2XWZcytTO0CgtCwh87hNnBlLDtjVzQXfFuf6yAPXiGv7hfYyhQkKY
+         YIz+nGrpqqoZDev5qkDrpp0QDRHLeoLmjJuHNMHXj0VFkcRvCsDOFLC53uVkyHNa4W
+         EzP3RimgDB/VO/QLWGydZ3gnxtlCFi4LCMAVCFFA=
+Date:   Wed, 8 Jan 2020 19:29:07 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>
+Subject: Re: [PATCH v5 0/4] usb: xhci: Add support for Renesas USB controllers
+Message-ID: <20200108182907.GB2549996@kroah.com>
+References: <20191106083843.1718437-1-vkoul@kernel.org>
+ <CANcMJZDqX6-+naGEbBiyM+1cZS6jfMoP9bm5Uk4ZuP_mw5aNWw@mail.gmail.com>
+ <20200108040707.GU2818@vkoul-mobl>
+ <20200108062436.GA2276347@kroah.com>
+ <b0dc038b-cc25-1d37-9339-689bb5b61ff7@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0dc038b-cc25-1d37-9339-689bb5b61ff7@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019, Kees Cook wrote:
-
+On Wed, Jan 08, 2020 at 06:00:48PM +0200, Mathias Nyman wrote:
+> On 8.1.2020 8.24, Greg Kroah-Hartman wrote:
+> > On Wed, Jan 08, 2020 at 09:37:07AM +0530, Vinod Koul wrote:
+> > > Hi John,
+> > > 
+> > > On 07-01-20, 11:51, John Stultz wrote:
+> > > > On Wed, Nov 6, 2019 at 12:40 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > > > > 
+> > > > > This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> > > > > These require firmware to be loaded and in case devices have ROM those can
+> > > > > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> > > > > 
+> > > > > This includes two patches from Christian which supported these controllers
+> > > > > w/o ROM and later my patches for ROM support and multiple firmware versions.
+> > > > > 
+> > > > 
+> > > > Hey Vinod!
+> > > >     In pushing this series to one of the Android trees for the db845c,
+> > > > there was some concern raised that this series is adding a lot of
+> > > > renesas specific logic to the more generic xhci-pci driver. There was
+> > > > some question if instead that logic should be added to its own
+> > > > file/module? Do you have any thoughts on this?
+> > > 
+> > > TBH I have not thought about that and in previous post neither Greg or
+> > > Mathias gave a feedback that this was not acceptable...
+> > > 
+> > > We can think about splitting but apart from firmware load there is not
+> > > much extra functionality that we need to add, the controller behaviour
+> > > as a standard xhci-pci. So i am not sure if we gain much by splitting.
+> > > 
+> > > > Also, It seems there hasn't been much feedback on this for a few
+> > > > months now. Is there a newer version of the patchset I should sync
+> > > > with? Do you have plans to resubmit soon?
+> > > 
+> > > Well am still waiting for feedback :( I dont have any update on top of
+> > > this, I can repost but I dont think that really serves a purpose.
+> > > 
+> > > I would really like to hear from Greg if this series is acceptable and
+> > > if not what would he like to see changed.
+> > 
+> > Greg is not the xhci maintainer :)
+> > 
 > 
-> Given the discussion around tracing and stable ABI at the last kernel
-> summit, Linus's mandate is mainly around "every day users" and not
-> around these system-builder-sensitive cases where everyone has a strong
-> expectation to rebuild their policy when the kernel changes. i.e. it's
-> not "powertop", which was Linus's example of "and then everyone running
-> Fedora breaks".
+> Reviewing this always got bumped down on my todo list as other urgent issues
+> came up.
 > 
-> So, while I know we've tried in the past to follow the letter of the
-> law, it seems Linus really expects this only to be followed when it will
-> have "real world" impact on unsuspecting end users.
-> 
-> Obviously James Morris has the final say here, but as I understand it,
-> it is fine to expose these here for the same reasons it's fine to expose
-> the (ever changing) tracepoints and BPF hooks.
+> I think the concern about adding this amount of renesas specific code to
+> xhci-pci.c is valid. This series adds over 900 lines of Renesas FW loading
+> code to a 600 line xhci-pci.c
 
-Agreed. This API should be seen in the same light as tracing / debugging, 
-and it should not be exposed by users directly to general purpose 
-applications.
+Yeah, that's not good, should be simple to split it into a separate file
+that's only build if that hardware is selected.
 
+thanks,
 
--- 
-James Morris
-<jmorris@namei.org>
-
+greg k-h
