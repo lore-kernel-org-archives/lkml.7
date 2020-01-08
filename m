@@ -2,102 +2,244 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E9CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23D5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6B520705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578505732;
-	bh=DQI/BkNpa8zJ1+g1hyWRHV8tS4MMtyayFbWxc2vgiyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pNzVdywGu4sSkI2nUDzOiIxRt7WBuWIES1JsVuu61G7cmklgsDsFWMSy8zoMcNERe
-	 XznhBPjJW9s2Xtm4oHGOJZ9QIJuu5igMRSieUk6GClQz0Ect9O3ylHq30f5rj4z5/1
-	 Etqmw+4zq7L/aYveeyb2viMaqOjy/YE9Bi+pR7KM=
+	by mail.kernel.org (Postfix) with ESMTP id D76BD20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgAHRsv (ORCPT
+        id S1729244AbgAHRus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        Wed, 8 Jan 2020 12:50:48 -0500
+Received: from verein.lst.de ([213.95.11.211]:50484 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728604AbgAHRsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:48:50 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00E920692;
-        Wed,  8 Jan 2020 17:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578505729;
-        bh=DQI/BkNpa8zJ1+g1hyWRHV8tS4MMtyayFbWxc2vgiyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h3yBxc/hA4bjF3KvLqRSYfytL3Up7Y+v8A9JJKzEHJYjVPObRZWSc3q39pJffsUBA
-         5LDXlu5EaJrlbSkaclji1p+Y/IqUoHRs0UrSuL6+WR5M7vse0Adw0xVbxeL0aP3z4W
-         LengscAomIVlEEBl1lKGo81DzhKZSnNzIoCKjNEE=
-Date:   Wed, 8 Jan 2020 17:48:39 +0000
-From:   Will Deacon <will@kernel.org>
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        pasha.tatashin@soleen.com
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
-        frowand.list@gmail.com, bhsharma@redhat.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        james.morse@arm.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] arm64: kexec_file: add crash dump support
-Message-ID: <20200108174839.GB21242@willie-the-truck>
-References: <20191216021247.24950-1-takahiro.akashi@linaro.org>
- <20191216021247.24950-3-takahiro.akashi@linaro.org>
+        id S1727181AbgAHRur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:50:47 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8DE3968BFE; Wed,  8 Jan 2020 18:50:44 +0100 (CET)
+Date:   Wed, 8 Jan 2020 18:50:44 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com
+Subject: Re: [PATCH v9 03/13] exfat: add inode operations
+Message-ID: <20200108175044.GA14009@lst.de>
+References: <20200102082036.29643-1-namjae.jeon@samsung.com> <CGME20200102082402epcas1p47cdc0873473f99c5d81f56865bb94abc@epcas1p4.samsung.com> <20200102082036.29643-4-namjae.jeon@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216021247.24950-3-takahiro.akashi@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200102082036.29643-4-namjae.jeon@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:12:47AM +0900, AKASHI Takahiro wrote:
-> Enabling crash dump (kdump) includes
-> * prepare contents of ELF header of a core dump file, /proc/vmcore,
->   using crash_prepare_elf64_headers(), and
-> * add two device tree properties, "linux,usable-memory-range" and
->   "linux,elfcorehdr", which represent respectively a memory range
->   to be used by crash dump kernel and the header's location
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Tested-and-reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  arch/arm64/include/asm/kexec.h         |   4 +
->  arch/arm64/kernel/kexec_image.c        |   4 -
->  arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
->  3 files changed, 106 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 12a561a54128..d24b527e8c00 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -96,6 +96,10 @@ static inline void crash_post_resume(void) {}
->  struct kimage_arch {
->  	void *dtb;
->  	unsigned long dtb_mem;
-> +	/* Core ELF header buffer */
-> +	void *elf_headers;
-> +	unsigned long elf_headers_mem;
-> +	unsigned long elf_headers_sz;
->  };
+On Thu, Jan 02, 2020 at 04:20:26PM +0800, Namjae Jeon wrote:
+> +#include "exfat_fs.h"
+> +
+> +/* 2-level option flag */
+> +enum {
+> +	BMAP_NOT_CREATE,
+> +	BMAP_ADD_CLUSTER,
+> +};
 
-This conflicts with the cleanup work from Pavel. Please can you check my
-resolution? [1]
+I looked at how this flag is used and found the get_block code a little
+confusing.  Let me know what you think of the following untested patch to
+streamline that area:
 
-Will
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/diff/?h=for-kernelci&id=aef73191765a88cadc0a627cdc070e5a0086b015
-
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index c2b04537cb24..ccf9700c6a55 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -17,12 +17,6 @@
+ #include "exfat_raw.h"
+ #include "exfat_fs.h"
+ 
+-/* 2-level option flag */
+-enum {
+-	BMAP_NOT_CREATE,
+-	BMAP_ADD_CLUSTER,
+-};
+-
+ static int __exfat_write_inode(struct inode *inode, int sync)
+ {
+ 	int ret = -EIO;
+@@ -298,109 +292,91 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 	return 0;
+ }
+ 
+-static int exfat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
+-		unsigned long *mapped_blocks, int *create)
++static int exfat_map_new_buffer(struct exfat_inode_info *ei,
++		struct buffer_head *bh, loff_t pos)
+ {
+-	struct super_block *sb = inode->i_sb;
+-	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	sector_t last_block;
+-	unsigned int cluster, clu_offset, sec_offset;
+-	int err = 0;
+-
+-	*phys = 0;
+-	*mapped_blocks = 0;
+-
+-	last_block = EXFAT_B_TO_BLK_ROUND_UP(i_size_read(inode), sb);
+-	if (sector >= last_block && *create == BMAP_NOT_CREATE)
+-		return 0;
+-
+-	/* Is this block already allocated? */
+-	clu_offset = sector >> sbi->sect_per_clus_bits;  /* cluster offset */
+-
+-	err = exfat_map_cluster(inode, clu_offset, &cluster,
+-		*create & BMAP_ADD_CLUSTER);
+-	if (err) {
+-		if (err != -ENOSPC)
+-			return -EIO;
+-		return err;
+-	}
+-
+-	if (cluster != EXFAT_EOF_CLUSTER) {
+-		/* sector offset in cluster */
+-		sec_offset = sector & (sbi->sect_per_clus - 1);
+-
+-		*phys = exfat_cluster_to_sector(sbi, cluster) + sec_offset;
+-		*mapped_blocks = sbi->sect_per_clus - sec_offset;
+-	}
++	if (buffer_delay(bh) && pos > ei->i_size_aligned)
++		return -EIO;
++	set_buffer_new(bh);
+ 
+-	if (sector < last_block)
+-		*create = BMAP_NOT_CREATE;
++	/*
++	 * Adjust i_size_aligned if i_size_ondisk is bigger than it.
++	 * (i.e. non-DA)
++	 */
++	if (ei->i_size_ondisk > ei->i_size_aligned)
++		ei->i_size_aligned = ei->i_size_ondisk;
+ 	return 0;
+ }
+ 
+ static int exfat_get_block(struct inode *inode, sector_t iblock,
+ 		struct buffer_head *bh_result, int create)
+ {
++	struct exfat_inode_info *ei = EXFAT_I(inode);
+ 	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	unsigned long max_blocks = bh_result->b_size >> inode->i_blkbits;
+ 	int err = 0;
+-	unsigned long mapped_blocks;
+-	sector_t phys;
++	unsigned long mapped_blocks = 0;
++	unsigned int cluster, sec_offset;
++	sector_t last_block;
++	sector_t phys = 0;
+ 	loff_t pos;
+-	int bmap_create = create ? BMAP_ADD_CLUSTER : BMAP_NOT_CREATE;
++	
++	mutex_lock(&sbi->s_lock);
++	last_block = EXFAT_B_TO_BLK_ROUND_UP(i_size_read(inode), sb);
++	if (iblock >= last_block && !create)
++		goto done;
+ 
+-	mutex_lock(&EXFAT_SB(sb)->s_lock);
+-	err = exfat_bmap(inode, iblock, &phys, &mapped_blocks, &bmap_create);
++	/* Is this block already allocated? */
++	err = exfat_map_cluster(inode, iblock >> sbi->sect_per_clus_bits,
++				&cluster, create);
+ 	if (err) {
+-		if (err != -ENOSPC)
+-			exfat_fs_error_ratelimit(sb,
+-				"failed to bmap (inode : %p iblock : %llu, err : %d)",
+-				inode, (unsigned long long)iblock, err);
++		if (err == -ENOSPC)
++			goto unlock_ret;
++
++		exfat_fs_error_ratelimit(sb,
++			"failed to bmap (inode : %p iblock : %llu, err : %d)",
++			inode, (unsigned long long)iblock, err);
+ 		goto unlock_ret;
+ 	}
+ 
+-	if (phys) {
+-		max_blocks = min(mapped_blocks, max_blocks);
+-
+-		/* Treat newly added block / cluster */
+-		if (bmap_create || buffer_delay(bh_result)) {
+-			/* Update i_size_ondisk */
+-			pos = EXFAT_BLK_TO_B((iblock + 1), sb);
+-			if (EXFAT_I(inode)->i_size_ondisk < pos)
+-				EXFAT_I(inode)->i_size_ondisk = pos;
+-
+-			if (bmap_create) {
+-				if (buffer_delay(bh_result) &&
+-				    pos > EXFAT_I(inode)->i_size_aligned) {
+-					exfat_fs_error(sb,
+-						"requested for bmap out of range(pos : (%llu) > i_size_aligned(%llu)\n",
+-						pos,
+-						EXFAT_I(inode)->i_size_aligned);
+-					err = -EIO;
+-					goto unlock_ret;
+-				}
+-				set_buffer_new(bh_result);
+-
+-				/*
+-				 * adjust i_size_aligned if i_size_ondisk is
+-				 * bigger than it. (i.e. non-DA)
+-				 */
+-				if (EXFAT_I(inode)->i_size_ondisk >
+-				    EXFAT_I(inode)->i_size_aligned) {
+-					EXFAT_I(inode)->i_size_aligned =
+-						EXFAT_I(inode)->i_size_ondisk;
+-				}
+-			}
++	if (cluster == EXFAT_EOF_CLUSTER)
++		goto done;
++
++	/* sector offset in cluster */
++	sec_offset = iblock & (sbi->sect_per_clus - 1);
++
++	phys = exfat_cluster_to_sector(sbi, cluster) + sec_offset;
++	mapped_blocks = sbi->sect_per_clus - sec_offset;
++	max_blocks = min(mapped_blocks, max_blocks);
+ 
+-			if (buffer_delay(bh_result))
+-				clear_buffer_delay(bh_result);
++	/* Treat newly added block / cluster */
++	if (iblock < last_block)
++		create = 0;
++
++	if (create || buffer_delay(bh_result)) {
++		pos = EXFAT_BLK_TO_B((iblock + 1), sb);
++		if (ei->i_size_ondisk < pos)
++			ei->i_size_ondisk = pos;
++	}
++
++	if (create) {
++		err = exfat_map_new_buffer(ei, bh_result, pos);
++		if (err) {
++			exfat_fs_error(sb,
++				"requested for bmap out of range(pos : (%llu) > i_size_aligned(%llu)\n",
++				pos, ei->i_size_aligned);
++			goto unlock_ret;
+ 		}
+-		map_bh(bh_result, sb, phys);
+ 	}
+ 
++	if (buffer_delay(bh_result))
++		clear_buffer_delay(bh_result);
++	map_bh(bh_result, sb, phys);
++done:
+ 	bh_result->b_size = EXFAT_BLK_TO_B(max_blocks, sb);
+ unlock_ret:
+-	mutex_unlock(&EXFAT_SB(sb)->s_lock);
++	mutex_unlock(&sbi->s_lock);
+ 	return err;
+ }
+ 
