@@ -2,211 +2,272 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BAFC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EFC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9762067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B372E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slsvJMEW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xcyZ1eba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgAHSDp (ORCPT
+        id S1730067AbgAHSFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:03:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44180 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgAHSDp (ORCPT
+        Wed, 8 Jan 2020 13:05:45 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51750 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgAHSFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:03:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id bx28so3303918edb.11;
-        Wed, 08 Jan 2020 10:03:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i1tfu3hzWGLcDtJ61MWCbPmVimgAN/gzhifzT41dVSE=;
-        b=slsvJMEWqH1SBUQ69EjoLHEAPtsa9rsw8bbf3/XGhip3C1CCmzLkiGl3cUcznFm6d0
-         YoBIga6QCDw27V99V2ZBJLd0qBM+GGz9af4fyNZ79CSKIE2v52agOHj4JXN5+dyq8IIs
-         akLLAwXmagBWpCp9CL7fGMpvu5eqxneFlNLjgj6B6USW7rCBU1iqvJfGxAYAE66Xdlk2
-         3GzIwvOKDwet90x5/PVhFa97Q+uQmNlpMJKjs0/3ESKYoDZuclXsuWRnyqTQPcF/eLER
-         G93ocb1YDmrLGeLNGBkXUawvL3cK0z1UGwRQuTKEyr6lBnhhCKrebk15ZQ3vFZb1n/NJ
-         hajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=i1tfu3hzWGLcDtJ61MWCbPmVimgAN/gzhifzT41dVSE=;
-        b=Rg/gQF9xtovPl2JxqngtAhOxnx9p51LuE8YbwTBJDEBx3QiqCY/p8u13cRlyYx3oFx
-         kSKtrCqsr7xWiRdEdMW2C8R8I68WQdPpnceN2xpl2Eiff1urhHQd3b8McXA0CG+aVp3m
-         ge1L0oIyHDpEV6MYYvEI7yNW1ue/BaJwenfZpyNwUi0ceKmkR2gMytUYV6g34c0xJFpP
-         KSW54p5oucQEzhWsGn3/cMU2UcxwhSchHrvgswcXu3jmoxadwS8Af/pWC37otd7Mg3xn
-         EW7ezHZA56n9mPtycO5wSFFQ8nHMx1DsVbQGj8No78c3Jg9YyoRcN7+R/I/WR5bjtkEF
-         zDFQ==
-X-Gm-Message-State: APjAAAXPwc4qNY/vHGCjvBvK/ZCf3yaCUYCkyg7r8dF9cmiN1G6KKnnn
-        6lnHLQKFEWxrplI0E+WL0qs=
-X-Google-Smtp-Source: APXvYqwNUefmVlHNoyJRH4hhCju9yadMsulixPytlLWF1oSaxWokTX9EwW5ecLI0qm1p6Qt1Zx18NA==
-X-Received: by 2002:aa7:c550:: with SMTP id s16mr6827862edr.297.1578506622735;
-        Wed, 08 Jan 2020 10:03:42 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u13sm55092ejz.69.2020.01.08.10.03.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 10:03:42 -0800 (PST)
-Subject: Re: [PATCH net-next] net: dsa: Remove indirect function call for flow
- dissection
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-References: <20200102233657.12933-1-f.fainelli@gmail.com>
- <CA+h21hrLO2Nfryu74Joj-T3-ithgoSFOQZsw4Z5QWOnhttvGiA@mail.gmail.com>
- <91eb2720-d933-f1fd-8d50-e9a81434545b@gmail.com>
- <CA+h21hqEnFjPHyK9ZanzwXdvkcdTA3uZzJMf0eo0FZWRTFzouw@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <1d56362d-2c8c-6cf2-86a3-8b082d5085c2@gmail.com>
-Date:   Wed, 8 Jan 2020 10:03:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 13:05:45 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008I5hJE127737;
+        Wed, 8 Jan 2020 12:05:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578506743;
+        bh=MyAcD8gYuWkyJod2asTuxTN9Bz4DgSK+GcIpfSC1stI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xcyZ1ebaGZuTJyoYRI/IKayv9AncjTgKizI1dnAE4iNbRTJ3k8hm2u3TRhI757RTm
+         RdXkqPQHcNGMLkhBOD6hqiFcpNRVfD/9489cVPbcBQd0Xv3eXfRzc3NWqe/DQRcNs+
+         TxhSjVPFHUMpjrwcoRqOc5Zbd6UKmH1Y6dQuT00U=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008I5h85085263
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 12:05:43 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 12:05:43 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 12:05:43 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008I5gZM032410;
+        Wed, 8 Jan 2020 12:05:42 -0600
+Subject: Re: [PATCHv4 04/14] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200102131845.12992-1-t-kristo@ti.com>
+ <20200102131845.12992-5-t-kristo@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <b9690449-5edc-e8f0-2c26-5da6900e23e3@ti.com>
+Date:   Wed, 8 Jan 2020 12:05:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hqEnFjPHyK9ZanzwXdvkcdTA3uZzJMf0eo0FZWRTFzouw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200102131845.12992-5-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/3/20 1:28 PM, Vladimir Oltean wrote:
-> On Fri, 3 Jan 2020 at 22:50, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> The call path is the following on TX (e.g.: when you run a DHCP client),
-> 
-> Oh, it gets called on TX too, ok.
-> In that case, static proto_off information won't work for asymmetric
-> taggers such as ocelot which may have an independently configurable
-> prefix length on RX and TX.
-> I want to get rid of the RX tag prefix in ocelot though, but just saying.
-> 
->> I don't think your formula works for EDSA which has an EtherType, but
-> 
-> Why doesn't it work with edsa?
+Hi Tero,
 
-It would, my bad.
-
+On 1/2/20 7:18 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
->> this would probably work for all tags we currently support except trailer.
->>
->> proto = (__be16 *)(skb->data)[overhead / 2 - 1];
->>
+> The OMAP remoteproc driver has been enhanced to parse and store
+> the kernel mappings for different internal RAM memories that may
+> be present within each remote processor IP subsystem. Different
+> devices have varying memories present on current SoCs. The current
+> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+> L2 RAM memories.
 > 
-> I wasn't suggesting to do this exact calculation in flow_dissector.c,
-> but rather to pre-populate proto_off with a value statically derived
-> from it on a piece of paper, with the trailer exception where it would
-> be -2 in bytes or -1 in shorts, but nonetheless a negative and valid
-> value.
-
-With the trailer, the EtherType is actually at the expected location,
-that is 12 bytes from the beginning of the Ethernet frame, so we can
-simplify things even more.
-
+> IPUs are expected to have the L2RAM at a fixed device address of
+> 0x20000000, based on the current limitations on Attribute MMU
+> configurations.
 > 
->>
->> I don't think anyone except Alexander did serious investigation this.
->> For now, what I am interested in is reducing the amount of technical
->> debt and expensive function calls.
+> NOTE:
+> The current logic doesn't handle the parsing of memories for DRA7
+> remoteproc devices, and will be added alongside the DRA7 support.
 > 
-> Does the change bring any measurable improvement?
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo: converted to parse mem names / device addresses from pdata]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> v4:
+>   - moved device data mem definitions under single struct
+> 
+>  drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 557c439571c1..e429b2296d7a 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>  	unsigned int boot_reg;
+>  };
+>  
+> +/**
+> + * struct omap_rproc_mem - internal memory structure
+> + * @cpu_addr: MPU virtual address of the memory region
+> + * @bus_addr: bus address used to access the memory region
+> + * @dev_addr: device address of the memory region from DSP view
+> + * @size: size of the memory region
+> + */
+> +struct omap_rproc_mem {
+> +	void __iomem *cpu_addr;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr;
+> +	size_t size;
+> +};
+> +
+>  /**
+>   * struct omap_rproc - omap remote processor state
+>   * @mbox: mailbox channel handle
+>   * @client: mailbox client to request the mailbox channel
+>   * @boot_data: boot data structure for setting processor boot address
+> + * @mem: internal memory regions data
+> + * @num_mems: number of internal memory regions
+>   * @rproc: rproc handle
+>   * @reset: reset handle
+>   */
+> @@ -51,16 +67,30 @@ struct omap_rproc {
+>  	struct mbox_chan *mbox;
+>  	struct mbox_client client;
+>  	struct omap_rproc_boot_data *boot_data;
+> +	struct omap_rproc_mem *mem;
+> +	int num_mems;
+>  	struct rproc *rproc;
+>  	struct reset_control *reset;
+>  };
+>  
+> +/**
+> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
+> + * @mem_name: name for this memory entry
+> + * @dev_addr: device address for the memory entry
+> + */
+> +struct omap_rproc_mem_data {
+> +	const char *name;
+> +	const u32 dev_addr;
+> +};
+> +
+>  /**
+>   * struct omap_rproc_dev_data - device data for the omap remote processor
+>   * @device_name: device name of the remote processor
+> + * @mems: memory definitions for this remote processor
+>   */
+>  struct omap_rproc_dev_data {
+>  	const char *device_name;
+> +	const struct omap_rproc_mem_data *mems;
+>  };
+>  
+>  /**
+> @@ -221,12 +251,18 @@ static const struct rproc_ops omap_rproc_ops = {
+>  	.kick		= omap_rproc_kick,
+>  };
+>  
+> +static const struct omap_rproc_mem_data ipu_mems[] = {
+> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
+> +	{ },
+> +};
+> +
+>  static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>  	.device_name	= "dsp",
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+> @@ -235,6 +271,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>  
+>  static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct of_device_id omap_rproc_of_match[] = {
+> @@ -309,6 +346,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+> +					       struct rproc *rproc)
+> +{
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	struct device *dev = &pdev->dev;
+> +	const struct omap_rproc_dev_data *data;
+> +	struct resource *res;
+> +	int num_mems;
+> +	int i;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	if (!data->mems)
+> +		return 0;
+> +
+> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
+> +		;
 
-I did not implement flow dissection for Broadcom tags largely because it
-did not show up as a performance problem with the different customers
-but I will try to collect some numbers. At any rate, the patch is not
-meant to be a performance improvement (though it might provide some
-improvements) but ease maintenance and make it more straight forward for
-future protocols to automatically gain dissection without having to
-provide a function pointer.
--- 
-Florian
+Think you can restore back the ARRAY_SIZE here? Don't think you need the
+sentinel in the names either.
+
+> +
+> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+> +				  GFP_KERNEL);
+> +	if (!oproc->mem)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_mems; i++) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   data->mems[i].name);
+> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+> +			dev_err(dev, "failed to parse and map %s memory\n",
+> +				data->mems[i].name);
+> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+> +		}
+> +		oproc->mem[i].bus_addr = res->start;
+> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
+> +		oproc->mem[i].size = resource_size(res);
+> +
+> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+
+Would appreciate if you can fix up to use %pK here.
+
+regards
+Suman
+
+> +			data->mems[i].name, &oproc->mem[i].bus_addr,
+> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+> +			oproc->mem[i].dev_addr);
+> +	}
+> +	oproc->num_mems = num_mems;
+> +
+> +	return 0;
+> +}
+> +
+>  static int omap_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -348,6 +433,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	/* All existing OMAP IPU and DSP processors have an MMU */
+>  	rproc->has_iommu = true;
+>  
+> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	ret = omap_rproc_get_boot_data(pdev, rproc);
+>  	if (ret)
+>  		goto free_rproc;
+> 
+
