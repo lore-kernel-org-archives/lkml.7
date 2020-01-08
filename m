@@ -2,152 +2,109 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ACBC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A4C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058A320720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HCXL15JG"
+	by mail.kernel.org (Postfix) with ESMTP id 742312053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgAHUPd (ORCPT
+        id S1726401AbgAHURv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:15:33 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42789 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgAHUPc (ORCPT
+        Wed, 8 Jan 2020 15:17:51 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:37177 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgAHURv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:15:32 -0500
-Received: by mail-pg1-f196.google.com with SMTP id s64so2076537pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f5jGtDQk4W/7kwbhzU422zx3kqGO5CGZj+6s6uDuarU=;
-        b=HCXL15JGGpFaynGNaL35XNOBOhFcVvFiz86bi5HRcq3rPFIk85hjdnNO9yc4y4Gugo
-         rkYq0StJw4ZX5lEmrcWGyvfDiy8pSkVtHwZboU695QuhKFWVA4L/H7M75pa0EFcO5iFf
-         e8GZNpNMzFRbgSPJcQ/Skm06ncZUpZPlvO9Ax71bWUFSBa02IkHW/2/Oh6rKTsBtY0Xt
-         2yUOve/P8iTosvZLexlSdmE8xdSubQJAtfqaoA1xslqStZfCyTVH8HB7UQqyh4hCFsRT
-         b3T1dGMPjztHMhivo/IKz0zJ/u1pZYgZIm84/k3a+e7zdw7Dx5wv23FwAzNo9AC+5DwT
-         6kwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f5jGtDQk4W/7kwbhzU422zx3kqGO5CGZj+6s6uDuarU=;
-        b=Jn8vEKZOtNw0Defmgg5FkNqIKeJTss3Hn5BGgxGcTObb8UYIaJlb5dC4XNPdMYSKn1
-         Jr0pIoO5ujCe1F2Ctc1SFVjDHaNOpDflVQkGFtiL+QGTwtbNCfAVUQdxFjQZZweKJtiR
-         EtsN4SzGWvFxqBgHmKnqWVM3jpsmaoC4TaSx4+MXsXf+LD2iJQzQ91lc3rECcV5zfWBF
-         cMbwXaiT2e0PISoZDZk0vmqi7oFJqQRLMjMC6L4/Yz7/8MB9FipZ6ieN2C6yTgQ5jkM0
-         PqfE/KB3t1uR1ZlraF6PMzGBHjjJ92hXHzANcvaIAJeS/E/zHOWc17vRcjQ/p3JhYoJV
-         kNoA==
-X-Gm-Message-State: APjAAAU9X/K5Txd0Y0uCnI3mNnZxgBchKpnH0QGdTBJylk3te0IPkV7i
-        S1dVqL0QHKfCUyZft2NH2jfJ9vPNuL2dBRN1PVhqPEElE0k=
-X-Google-Smtp-Source: APXvYqx4CBdSrQfhaOLOac9tubqeO/y0WB3biPm8WlBtKUwxlgvmmGxE7IIroMkJWyqCRH6CB/DvdVrVkBEbZ+PyGNk=
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr7091599pfg.51.1578514531446;
- Wed, 08 Jan 2020 12:15:31 -0800 (PST)
+        Wed, 8 Jan 2020 15:17:51 -0500
+Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MnJdC-1jWI1J3dsC-00jMcm for <linux-kernel@vger.kernel.org>; Wed, 08 Jan
+ 2020 21:17:50 +0100
+Received: by mail-qv1-f43.google.com with SMTP id p2so1974366qvo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:17:49 -0800 (PST)
+X-Gm-Message-State: APjAAAWYO60VpRJXD7yJGoPYWGEguWsAPlXppejViFcfamfOUvx6ixlO
+        uwJhd1seIqiwLD1t/kHTobnco+2DVAIYsedMbZQ=
+X-Google-Smtp-Source: APXvYqzAnhWsLJVUU5gIZirzQYVUkqnaExIjs6+GxvB+JpeQ3bcq39GJcmTczRoqMdXQWqf27Oikx5ybv5fsl0NqlYk=
+X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr5886413qvo.222.1578514668816;
+ Wed, 08 Jan 2020 12:17:48 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1576697098.git.andreyknvl@google.com>
-In-Reply-To: <cover.1576697098.git.andreyknvl@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 8 Jan 2020 21:15:20 +0100
-Message-ID: <CAAeHK+xDNwRat=BS7Jv02tNJcFZQefozuTW=CaGfUvGoUMg+DQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/1] usb: gadget: add raw-gadget interface
-To:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
+References: <20200107203231.920256-1-arnd@arndb.de> <87zheyqnla.fsf@intel.com>
+ <20200108100831.GA23308@ravnborg.org> <CAK8P3a1FKOV=1No7Q0g1vF_NQmVHK+g0VOqzPL499Pxbbt1aPQ@mail.gmail.com>
+ <20200108164618.GA28588@ravnborg.org>
+In-Reply-To: <20200108164618.GA28588@ravnborg.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 21:17:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1TmfqXA3gK0YwbPBSeydEs=b8Tae=JWvju4OZaSMUscA@mail.gmail.com>
+Message-ID: <CAK8P3a1TmfqXA3gK0YwbPBSeydEs=b8Tae=JWvju4OZaSMUscA@mail.gmail.com>
+Subject: Re: [PATCH] drm/drm_panel: fix export of drm_panel_of_backlight, try #3
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:KM+7TQVlpJCb1GisxjjTNILj9flw+ear3Ihr79VLp22TAwd3qhx
+ O5wRjaqooxF6L6kCfnit5EDBCtg7ubGxiaK70liVkEjPBlcumr7RXoOlbk78x5efaGdpBT2
+ SeOfFE11t7L83ed6PUW5xSbxGV0ryt6NcrHFa18qlpZsD/ccK2VvCQDn9vWb7eyixaoDN99
+ 38gjUz5wHUBBD6putBeGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZXSvl7cY6d8=:793k/lBklweH2Td0TAU2cs
+ WWdF2LG4CAqKLMBybFPKuYtbmFgT+WqwK0l3uSj6hEMjPAnWDIs+t5IIKGFOisrOKbP8wQ498
+ 8nySQEQjF3oK3RJUmcjEJSgG50jTFA/OYoB3rmlQcJEIJSnvrMtw1mbbCyREAoRL6aQc/iLHI
+ mmZZ/iwCAf8h1EHox+4jTkcPHsXUiXcI46XLZjWD/u0SSRiYdDP8SWVfyMBbpa7iSdYC73SzE
+ zNKgD12u1QIV7t1wj+2euV5p2DXyJKLg16FTWldMAPy93SDrKpCVxZuOYigb4gNCl3k6vnzgt
+ z4uh803laPXecN6r0aNp2NI+DGEfYPTOmNBBYPSBNp/XaOChSlVd3/zK2/tevDMccw0pWGrzv
+ 0+KGwupeDyJ4iP4NXZ3doVCPfmZU1Pzrr6GsIvRK7a/cS9XBCnOFdLX/ikL7hT2nDxAcQ56Pt
+ SLHXm/HLeh3OYS0xkSSFRLyWhqDwHkXOAC0zWei8bGjjtSTA16OR2rfvKyvMf64Pfe8Ascg6p
+ 6scUZwHL/2Lt25grToLa41xfONmk19lRqMTgdfQt6HPRqQ/9GFsfODLfR/tAJlVwzC+8OY29T
+ VudgMaQ3fhd6IGA3gi9XS0zOdaODQcdw6WEv6kxylBtvpfX6ab8bTuWfx5eIet6x7K/okg8mY
+ pg+jkoDQmx5mslzc8cVcEm92aTDY1NOFIFnG6HRMw/S+SEDKKcbR5PeHNZq4asvuWqU1IgB/X
+ 3nlkVfA2fNFxI4SbCklDA4axDz5DYiAkTQ9UWUooWYHJ8gO42j/DKGRsAVEIfuBmju1PLYGuw
+ QTlTikl9cVicm97My6W9vPefpfD0vPmX1jxyQkP6gsT/db51eUHASqrvgsNJkrxRUAk4UEi0I
+ siF2OUtyK9recT/CUbZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 8:27 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+On Wed, Jan 8, 2020 at 5:46 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> This patchset (currently a single patch) adds a new userspace interface
-> for the USB Gadget subsystem called USB Raw Gadget (I don't mind changing
-> the name to something else if there are better ideas). This is what
-> currently being used to enable coverage-buided USB fuzzing with syzkaller:
+> Hi Arnd.
 >
-> https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
+> > > > All of this is just another hack until the backlight config usage is
+> > > > fixed for good. Do we really want to make this the example to copy paste
+> > > > wherever we hit the issue next?
+> > > >
+> > > > I'm not naking, but I'm not acking either.
+> > >
+> > > I will try to take a look at your old BACKLIGHT_CLASS_DEVICE patch this
+> > > weekend. I think we need that one fixed - and then we can have this mess
+> > > with "drm_panel_of_backlight" fixed in the right way.
+> >
+> > I had also attempted to fix the larger mess around 'select' statements in DRM/FB
+> > around BACKLIGHT_CLASS_DEVICE  several times in the past, and even at
+> > some point sent a patch that was acked but never merged and later broke because
+> > of other changes.
 >
-> Initially I was using GadgetFS (together with the Dummy HCD/UDC module)
-> to perform emulation of USB devices for fuzzing, but later switched to a
-> custom written interface. The incentive to implement a different interface
-> was to provide a somewhat raw and direct access to the USB Gadget layer
-> for the userspace, where every USB request is passed to the userspace to
-> get a response. See documentation for the list of differences between
-> Raw Gadget and GadgetFS.
->
-> This patchset has been pushed to the public Linux kernel Gerrit instance:
->
-> https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2144
+> Any chance you have the patch around or can dig up a pointer?
+> My google foo did not turn up anything.
 
-Hi Greg,
+I found it now:
+https://lore.kernel.org/lkml/20170726135312.2214309-1-arnd@arndb.de/
 
-Just an after holidays reminder that I've sent v4 of this patchset and
-looking forward to a review.
-
-Thanks!
-
->
-> Changes v3 -> v4:
-> - Print debug message when maxpacket check fails.
-> - Use module_misc_device() instead of module_init/exit().
-> - Reuse DRIVER_NAME macro in raw_device struct definition.
-> - Don't print WARNING in raw_release().
-> - Add comment that explains locking into raw_event_queue_fetch().
-> - Print a WARNING when event queue size is exceeded.
-> - Rename raw.c to raw_gadget.c.
-> - Mention module name in Kconfig.
-> - Reworked logging to use dev_err/dbg() instead of pr_err/debug().
->
-> Changes v2 -> v3:
-> - Updated device path in documentation.
-> - Changed usb_raw_init struct layout to make it the same for 32 bit compat
->   mode.
-> - Added compat_ioctl to raw_fops.
-> - Changed raw_ioctl_init() to return EINVAL for invalid USB speeds, except
->   for USB_SPEED_UNKNOWN, which defaults to USB_SPEED_HIGH.
-> - Reject endpoints with maxpacket = 0 in raw_ioctl_ep_enable().
->
-> Changes v1 -> v2:
-> - Moved raw.c to legacy/.
-> - Changed uapi header to use __u* types.
-> - Switched from debugfs entry to a misc device.
-> - Changed raw_dev from refcount to kref.
-> - Moved UDC_NAME_LENGTH_MAX to uapi headers.
-> - Used usb_endpoint_type() and usb_endpoint_dir_in/out() functions instead
->   of open coding them.
-> - Added "WITH Linux-syscall-note" to SPDX id in the uapi header.
-> - Removed pr_err() if case dev_new() fails.
-> - Reduced the number of debugging messages.
->
-> Andrey Konovalov (1):
->   usb: gadget: add raw-gadget interface
->
->  Documentation/usb/index.rst            |    1 +
->  Documentation/usb/raw-gadget.rst       |   59 ++
->  drivers/usb/gadget/legacy/Kconfig      |   11 +
->  drivers/usb/gadget/legacy/Makefile     |    1 +
->  drivers/usb/gadget/legacy/raw_gadget.c | 1071 ++++++++++++++++++++++++
->  include/uapi/linux/usb/raw_gadget.h    |  167 ++++
->  6 files changed, 1310 insertions(+)
->  create mode 100644 Documentation/usb/raw-gadget.rst
->  create mode 100644 drivers/usb/gadget/legacy/raw_gadget.c
->  create mode 100644 include/uapi/linux/usb/raw_gadget.h
->
-> --
-> 2.24.1.735.g03f4e72817-goog
->
+      Arnd
