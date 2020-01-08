@@ -2,262 +2,117 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921F7C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFADC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE5F2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZPfneF+4"
+	by mail.kernel.org (Postfix) with ESMTP id 5BADF206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgAHHtd (ORCPT
+        id S1726955AbgAHHw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:49:33 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:35758 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgAHHtc (ORCPT
+        Wed, 8 Jan 2020 02:52:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38135 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgAHHw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:49:32 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200108074928epoutp01cb3829db240e7676aa07b9d9983d3394~n2eRJ3kFO1374913749epoutp01C
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 07:49:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200108074928epoutp01cb3829db240e7676aa07b9d9983d3394~n2eRJ3kFO1374913749epoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578469768;
-        bh=584aCk63e5RA1sUDbXlX9a2aW2l9YA7m6z16yqgJX6A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZPfneF+46JXkshCG1wuIZGK4SkFScDHEDHEdlvEA0B2kVg5UtqtkBw0CDOpTxPoOj
-         9Wy4kaZi7xlc7pCprXgfCfaO57a58TObDffo3cnAIS3kSLKGLCWcyp74uPAlTonOCb
-         xAHG88eSTHzYATDn+2u0PoMb55ftLHgfHDyO2kM4=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200108074928epcas1p1990be9c2c6e1a00e8f3c43464a8640ce~n2eQvGCcc1326313263epcas1p1M;
-        Wed,  8 Jan 2020 07:49:28 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47t1bn5xZBzMqYkb; Wed,  8 Jan
-        2020 07:49:25 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        56.59.48498.589851E5; Wed,  8 Jan 2020 16:49:25 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200108074924epcas1p29f306b5822b708e7cb49a486e320ec4e~n2eNfEaD30550105501epcas1p2Z;
-        Wed,  8 Jan 2020 07:49:24 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200108074924epsmtrp14165ba136856d964b19f112cd90c8658~n2eNeP2Pv1352513525epsmtrp1U;
-        Wed,  8 Jan 2020 07:49:24 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-27-5e15898563fd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A8.56.10238.489851E5; Wed,  8 Jan 2020 16:49:24 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200108074924epsmtip1635caef54c86d2336297feca6ed0e951~n2eNLBgav2771127711epsmtip1T;
-        Wed,  8 Jan 2020 07:49:24 +0000 (GMT)
-Subject: Re: [PATCH 1/2] PM / devfreq: Add debugfs support with
- devfreq_summary file
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, jcrouse@codeaurora.org,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <19fd2201-2a7d-46df-09cf-e39f6668b488@samsung.com>
-Date:   Wed, 8 Jan 2020 16:56:32 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 8 Jan 2020 02:52:57 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ip696-0006TA-I9; Wed, 08 Jan 2020 08:52:52 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ip691-0007Fs-TD; Wed, 08 Jan 2020 08:52:47 +0100
+Date:   Wed, 8 Jan 2020 08:52:47 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Peng Fan <peng.fan@nxp.com>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Message-ID: <20200108075247.y5ex44flp6lvqeoc@pengutronix.de>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
+ <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com>
+ <20191218145955.GE26938@lunn.ch>
+ <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200107211558.GA738324@yoga>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmnm5rp2icQXOLocX9ea2MFqf3v2Ox
-        mHjjCovF6o+PGS3W3D7EaPFjwylmi40Lsi3ONr1ht1hx9yOrxeVdc9gsPvceYbRY2NTCbrH2
-        yF12i9uNK9gc+DzWzFvD6HG5r5fJY8fdJYweO2fdZffYtKqTzePOtT1sHhvf7WDy+DtrP4tH
-        35ZVjB6fN8kFcEVl22SkJqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4
-        BOi6ZeYAfaCkUJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87P
-        tTI0MDAyBSpMyM6YcGgxe8E+vYp5i/+yNTBeVuhi5OSQEDCReHP9KTuILSSwg1FieqtUFyMX
-        kP2JUeLjqpVMEM43RomLz3ezwnS8O/OWDSKxl1Hi4ZqvrBDOe0aJQ/9usYFUCQuESUy4PZEJ
-        xBYRMJA4euYyC0gRs8ARJoldq3+BJdgEtCT2v7gB1sAvoChx9cdjRhCbV8BO4uGOOywgNouA
-        isTsk/PA4qJAQ09ua4GqEZQ4OfMJWA2ngLbEyf6fYE8wC4hL3HoynwnClpfY/nYOM8hiCYFT
-        7BLNS7qgfnCRWHhpLxOELSzx6vgWdghbSuJlfxuUXS2x8uQRNojmDkaJLfsvQDUbS+xfOhmo
-        mQNog6bE+l36EGFFiZ2/5zJCLOaTePe1hxWkREKAV6KjTQiiRFni8oO7UGslJRa3d7JNYFSa
-        heSdWUhemIXkhVkIyxYwsqxiFEstKM5NTy02LDBCju5NjODkrWW2g3HROZ9DjAIcjEo8vD8W
-        i8QJsSaWFVfmHmKU4GBWEuHV0gEK8aYkVlalFuXHF5XmpBYfYjQFhvZEZinR5HxgZskriTc0
-        NTI2NrYwMTQzNTRUEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoGxSZpT8mL/qZUGCVdSt+Yy
-        VkvNXdm37MCixeceVz7KcGHc9/H9nZ031Sf95l1xaaFHvsH6ipLcAzb5+uZujHG26Rk7ctiv
-        2W28n199v3ifVf2iD58Wx8jfWWpnfcxwM4PhgfcV15M0AvrKOL9+3FiX2f4obY9z1vV9vnfK
-        VCS4OWasyWuolrmixFKckWioxVxUnAgA7oJ2OvQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWy7bCSnG5Lp2icwfu7hhb357UyWpze/47F
-        YuKNKywWqz8+ZrRYc/sQo8WPDaeYLTYuyLY42/SG3WLF3Y+sFpd3zWGz+Nx7hNFiYVMLu8Xa
-        I3fZLW43rmBz4PNYM28No8flvl4mjx13lzB67Jx1l91j06pONo871/aweWx8t4PJ4++s/Swe
-        fVtWMXp83iQXwBXFZZOSmpNZllqkb5fAlTHh0GL2gn16FfMW/2VrYLys0MXIySEhYCLx7sxb
-        NhBbSGA3o8ShVj6IuKTEtItHmbsYOYBsYYnDh4u7GLmASt4ySiybtIYZpEZYIExiwu2JTCC2
-        iICBxNEzl1lAipgFjjBJvH15hRGi4w6jxMK1U9hBqtgEtCT2v7gBto1fQFHi6o/HjCA2r4Cd
-        xMMdd1hAbBYBFYnZJ+eBxUWBNuxc8pgJokZQ4uTMJ2A1nALaEif7f4LNZBZQl/gz7xIzhC0u
-        cevJfCYIW15i+9s5zBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0u
-        zUvXS87P3cQIjmItzR2Ml5fEH2IU4GBU4uH9sVgkTog1say4MvcQowQHs5IIr5YOUIg3JbGy
-        KrUoP76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQZGJ/YjelcryzpYOL5c
-        6D7APneSAYOuRYZ25oGYgM9Cx+d08BhMtbPvVZkms9t+7bGYWbaum1ki7ob+mq7M9LKqX8hj
-        6ezPPea7sg9IqzxdsE25ynzLMv3ZE3lYL2UeyJrXIvuRd+fy3hcndlZxXbFRKDIV6d67vuOd
-        1M0f0ixXJvqUeVhvU5NUYinOSDTUYi4qTgQAyYGH/t4CAAA=
-X-CMS-MailID: 20200108074924epcas1p29f306b5822b708e7cb49a486e320ec4e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200107085812epcas1p12121f8ef6492ed78053dea4977216788
-References: <20200107090519.3231-1-cw00.choi@samsung.com>
-        <CGME20200107085812epcas1p12121f8ef6492ed78053dea4977216788@epcas1p1.samsung.com>
-        <20200107090519.3231-2-cw00.choi@samsung.com> <20200107211558.GA738324@yoga>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/20 6:15 AM, Bjorn Andersson wrote:
-> On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
-> 
->> Add debugfs interface to provide debugging information of devfreq device.
->> It contains 'devfreq_summary' entry to show the summary of registered
->> devfreq devices as following and the additional debugfs file will be added.
->> - /sys/kernel/debug/devfreq/devfreq_summary
->>
->> [Detailed description of each field of 'devfreq_summary' debugfs file]
->> - dev_name	: Device name of h/w.
->> - dev		: Device name made by devfreq core.
->> - parent_dev	: If devfreq device uses the passive governor,
->> 		  show parent devfreq device name.
->> - governor	: Devfreq governor.
->> - polling_ms	: If devfreq device uses the simple_ondemand governor,
->> 		  polling_ms is necessary for the period. (unit: millisecond)
->> - cur_freq_hz	: Current Frequency (unit: hz)
->> - old_freq_hz	: Frequency before changing. (unit: hz)
->> - new_freq_hz	: Frequency after changed. (unit: hz)
->>
->> [For example on Exynos5422-based Odroid-XU3 board]
->> - In order to show the multiple governors on devfreq_summay result,
->> change the governor of devfreq0 from simple_ondemand to userspace.
->>
->> $ cat /sys/kernel/debug/devfreq/devfreq_summary
->> dev_name                       dev        parent_dev governor        polling_ms cur_freq_hz  min_freq_hz  max_freq_hz
->> ------------------------------ ---------- ---------- --------------- ---------- ------------ ------------ ------------
->> 10c20000.memory-controller     devfreq0              userspace       0          206000000    165000000    825000000
->> soc:bus_wcore                  devfreq1              simple_ondemand 50         532000000    88700000     532000000
->> soc:bus_noc                    devfreq2   devfreq1   passive         0          111000000    66600000     111000000
->> soc:bus_fsys_apb               devfreq3   devfreq1   passive         0          222000000    111000000    222000000
->> soc:bus_fsys                   devfreq4   devfreq1   passive         0          200000000    75000000     200000000
->> soc:bus_fsys2                  devfreq5   devfreq1   passive         0          200000000    75000000     200000000
->> soc:bus_mfc                    devfreq6   devfreq1   passive         0          333000000    83250000     333000000
->> soc:bus_gen                    devfreq7   devfreq1   passive         0          266000000    88700000     266000000
->> soc:bus_peri                   devfreq8   devfreq1   passive         0          66600000     66600000     66600000
->> soc:bus_g2d                    devfreq9   devfreq1   passive         0          0            83250000     333000000
->> soc:bus_g2d_acp                devfreq10  devfreq1   passive         0          0            66500000     266000000
->> soc:bus_jpeg                   devfreq11  devfreq1   passive         0          0            75000000     300000000
->> soc:bus_jpeg_apb               devfreq12  devfreq1   passive         0          0            83250000     166500000
->> soc:bus_disp1_fimd             devfreq13  devfreq1   passive         0          0            120000000    200000000
->> soc:bus_disp1                  devfreq14  devfreq1   passive         0          0            120000000    300000000
->> soc:bus_gscl_scaler            devfreq15  devfreq1   passive         0          0            150000000    300000000
->> soc:bus_mscl                   devfreq16  devfreq1   passive         0          0            84000000     666000000
-> 
-> This looks quite useful.
-> 
->>
->> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> May I ask how the build test robot came up with this idea?
+Hello Fabio,
 
-I'm missing the detailed what are the reported by kbuild test robot.
-It reported the possible build error. I'll add the following description
-on next version:
-	[lkp: Reported the build error]
+On Wed, Dec 18, 2019 at 12:09:42PM -0300, Fabio Estevam wrote:
+> On Wed, Dec 18, 2019 at 12:00 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> 
+> > Hi Fabio
+> >
+> > Look closer. This is not about returning an error, it is about
+> > printing an error.
+> >
+> > I think the API could better. A %ie formatter would make a lot of
+> > sense, so avoiding the ERR_PTR().
+> 
+> Yes, I think that returning the error like:
+> 
+> dev_err(dev, "Couldn't determine irq count: %d\n", nr_irq_parent);
+> 
+> would make the code cleaner.
 
-> 
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  drivers/devfreq/devfreq.c | 80 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 80 insertions(+)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> [..]
->> +/**
->> + * devfreq_summary_show() - Show the summary of the registered devfreq devices
->> + *				via 'devfreq_summary' debugfs file.
-> 
-> Please make this proper kerneldoc, i.e:
-> 
->  * func() - short description
->  * @s:
->  * @data:
->  * 
->  * Long description
->  * 
->  * Return: foo on bar
+Are you aware of the semantic difference between
 
-OK.
+	dev_err(..., "Couldn't determine irq count: %d\n", nr_irq_parent);
 
-> 
-> [..]
->> @@ -1733,6 +1803,16 @@ static int __init devfreq_init(void)
->>  	}
->>  	devfreq_class->dev_groups = devfreq_groups;
->>  
->> +	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
->> +	if (PTR_ERR(devfreq_debugfs) != -ENODEV && IS_ERR(devfreq_debugfs)) {
-> 
-> Don't PTR_ERR() before IS_ERR().
+and
 
-Before checking IS_ERR(), have to check the PTR_ERR(devfreq_debugfs)
-is -ENODEV or not because debugfs_create_dir return the '-ENODEV'
-if DEBUG_FS is disabled. If return the -ENODEV, it is not error.
+	dev_err(..., "Couldn't determine irq count: %pe\n", ERR_PTR(nr_irq_parent));
 
-> 
->> +		devfreq_debugfs = NULL;
-> 
-> I don't think you need this, given that debugfs_create_file() will fail
-> gracefully when passed and IS_ERR()
+? The first yields:
 
-Right. Jut on patch2 checks the 'devfreq_debugfs' is NULL or not
-in order to catch the DEBUG_FS is well working for devfreq.
-Anyway, it would be better to add it to patch2 because devfreq_debugfs
-is not used when failed to create debugfs dir.
+	Couldn't determine irq count: -5
 
-> 
->> +		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
-> 
-> Afaict debugfs_create_() won't fail without printing a message already.
+while the latter yields
 
-It just print the error message when DEBUG_FS is enabled
-and debugfs_create_dir() returns the error.
+	Couldn't determine irq count: -EIO
 
-> 
->> +	} else {
->> +		debugfs_create_file("devfreq_summary", 0444,
->> +				devfreq_debugfs, NULL,
->> +				&devfreq_summary_fops);
->> +	}
->> +
->>  	return 0;
->>  }
->>  subsys_initcall(devfreq_init);
-> 
-> Regards,
-> Bjorn
-> 
-> 
+which is more expressive.
 
+I agree that having a format for printing an integer error code would be
+useful. I have this on my todo-list but having some %pe with ERR_PTR
+conversion would help me arguing my case.
+
+So I would like the patch to go in with ERR_PTR even though v2 was sent
+using %d today.
+
+Best regards
+Uwe
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
