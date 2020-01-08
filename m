@@ -2,138 +2,183 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ECEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1391BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB992077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA87620705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oSrJg21E"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="pISRR3lt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgAHGIL (ORCPT
+        id S1726346AbgAHGJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:08:11 -0500
-Received: from ozlabs.org ([203.11.71.1]:54673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgAHGIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:08:11 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47szLr5WMjz9sRf;
-        Wed,  8 Jan 2020 17:08:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578463688;
-        bh=yjtgJYNjpLiclzKCjvm2LhAxhBOEzXwYBtw3gLFNUQ0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oSrJg21EzaCtDsk137+ZXZD+jbOysqR5DCxGgr8GMlS/99oGDgQEhm16yv7Ie28t3
-         0MLHtGaRgnlm3zL81MiTEqsfVaqxLIxe7kV+9VepMYTfl+MfSOZNb+URUwxQAXizJ8
-         MtqnTO6G5HS6s6qBSp8FrOXz3gEmDP3pl8AxX3quJbXMsSDjonyiYehELoaujmu5c1
-         jaon4HXpzUyJjsPrr2W3kAcH6HJGmzvzE0YFRxoCoTPhY4qHzVLfMy5VygoKCFeXr2
-         ChxoPXGY/CLU+FUNkprOMQFTBE1qtq4rBORmQIYGjc26tGxgiTIpLsQQ7Hq3G0zYXD
-         s8izXNc24P9nQ==
-Date:   Wed, 8 Jan 2020 17:08:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the generic-ioremap tree with the
- drm-intel tree
-Message-ID: <20200108170803.1c91b20d@canb.auug.org.au>
+        Wed, 8 Jan 2020 01:09:25 -0500
+Received: from mail-bn8nam12on2070.outbound.protection.outlook.com ([40.107.237.70]:6123
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbgAHGJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 01:09:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U2RpV9OQLCcWBAuHfyxVd6MiHjHWMWFPzqFlHr1VUFHwJWN/qQf7fb9sG6lBgoyY6hCv+CoXGWIcTGgfcDICXWbe6qcFtQv35loh5gkAdi6EKai9zrxXou3ceUCXAgyij8R5cKxHT+JFgjIZQEbsf8M9QuZewkqGQsiRp/VBSdEVTSDblW7/mJV135+E0OaHbKKVWTiz1wTIrCL/MF0cH4ugohXX43gyMtrhNFN0631vgYNd+RZ0H+xySi3ElQOkXMgzr/YFKc2DcLqSZl3XkAe/ItJt0gdHbFv9nkQdium4Szr+VRfqW42q0ANJxPkG3eCWaeYFxAmT6xOKkCOATw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=peLYY282PBg7aicRw1OrSAXJys5aHQoyp7o10RRemB8=;
+ b=FIMi/OliCehzuZHOMURE0p24vhQqanWUMfMMx75W/fZ7FFTkP4j67IvkiSMBvp7LkubekehsArv78ckpW171Ug6pViiFAWfGma/wZMAiNvpCaZrL8FaILa1DZaQgcHEVyagYaWgpXl87Z2ySTiYslseun7wmQpn8pLkdNZ1tSraXT61mHh2ejt/uGk3GOD4+rRDu1wuScdRjUUdxlxvJ0grZyu3AIlaVbRwBViyP+N/lmBqrxR3Uz7oEFcfD5w2pdPx42GyUmt2Mmd8ijddqgyFSPnp+mgSSG0oX4letIOTQoKMUOv4AzbaCHc1rB+exhMUY+833r+By5Z2tjLlpJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=peLYY282PBg7aicRw1OrSAXJys5aHQoyp7o10RRemB8=;
+ b=pISRR3ltCMYpYi7WEFtPW/Yany0+9uV//gVbc8cy/CXKyxetANdRuCCGje1ZFzcONJmiAylB3oZa/OmHxZdxaS36H0yWcwo8PT+8P29qcqZnEUB9OHq0qLwH+Gx6Fyuo7j/vYrGCWmzbnz1Gc6+Eq+1pV++rNW6m/lPupDzmp0U=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3767.namprd13.prod.outlook.com (20.180.13.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.5; Wed, 8 Jan 2020 06:09:21 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2623.008; Wed, 8 Jan 2020
+ 06:09:21 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com
+Cc:     aou@eecs.berkeley.edu, bp@alien8.de, mchehab@kernel.org,
+        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+Date:   Tue,  7 Jan 2020 22:09:06 -0800
+Message-Id: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR08CA0035.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::48) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DY3X6u8aQ1_kIqeYq914ZXw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: from betel.internal.sifive.com (64.62.193.194) by BYAPR08CA0035.namprd08.prod.outlook.com (2603:10b6:a03:100::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.15 via Frontend Transport; Wed, 8 Jan 2020 06:09:20 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [64.62.193.194]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0f547482-cd75-4838-62a1-08d794014db5
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3767:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB3767A8E73EF088A2BC503ED88C3E0@CH2PR13MB3767.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:264;
+X-Forefront-PRVS: 02760F0D1C
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(366004)(136003)(396003)(346002)(39850400004)(376002)(199004)(189003)(52116002)(86362001)(2616005)(478600001)(16526019)(7696005)(316002)(26005)(186003)(8936002)(107886003)(4326008)(6486002)(2906002)(44832011)(7416002)(66476007)(66556008)(81166006)(81156014)(36756003)(66946007)(5660300002)(8676002)(6666004)(956004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3767;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SVmVN+zJ04bL+s/n3XjpSeKJa4KLBHjh+H2vyOfJt5tDyCXeIjtyorGAKBZJ2+eBqpi/p4WyWz0L0LdepjpuGiDNwqfP4wHVV7wedBxwmXwjpM7dGHFCT+e8GeeTKVmGjyejiOTW0P6wVO+dFA3YbuSw4EgPnfXJ5f9/AnOLQh+kDXli8EgzY+L6MnSp71L2PHUyzRyY8gxEs9+polgGOh29sqnqMG3UdbcM07HN6ttI6uCDaUKnLMmZGLseXY/+yqUsyFgICE0QOkWtIZVjpaS6Dlw7Oq6Xguv1g/Xl3R9mE5/jUOTLC3wuc9L5vvwatJEtbTw7QRHnLjhl10AerHNpQveqAtFUKcPvzB9WlZuFV1h4k592OCbz+BbdDt233XCF7ySe3hPtbwOAcbUAzcKbcN1hisaPNw05COvvFSkonksfOnoGeYWOgaSaywJC
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f547482-cd75-4838-62a1-08d794014db5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2020 06:09:21.7714
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mxDdelZdoNZ1OFbJSgE6LDRDaSWnsptMfcWiVeVUu7ceS+7jK4vnyvaDlPRjDW9Z9woILj9yPAW+Rm19vwWV1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DY3X6u8aQ1_kIqeYq914ZXw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+moves the sifive L2 cache driver to driver/soc. It did not move the
+header file along with the driver. Therefore this patch moves the header
+file to driver/soc
 
-Hi all,
-
-Today's linux-next merge of the generic-ioremap tree got a conflict in:
-
-  drivers/gpu/drm/i915/i915_gem_gtt.c
-
-between commit:
-
-  2c86e55d2ab5 ("drm/i915/gtt: split up i915_gem_gtt")
-
-from the drm-intel tree and commit:
-
-  4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
-
-from the generic-ioremap tree.
-
-I fixed it up (I used the file from the former and added the following
-merge fix patch) and can carry the fix as necessary. This is now fixed
-as far as linux-next is concerned, but any non trivial conflicts should
-be mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 8 Jan 2020 17:04:59 +1100
-Subject: [PATCH] fix up for "drm/i915/gtt: split up i915_gem_gtt"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
 ---
- drivers/gpu/drm/i915/gt/intel_ggtt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/include/asm/sifive_l2_cache.h | 16 ----------------
+ drivers/edac/sifive_edac.c               |  2 +-
+ drivers/soc/sifive/sifive_l2_cache.c     |  2 +-
+ include/soc/sifive/sifive_l2_cache.h     | 16 ++++++++++++++++
+ 4 files changed, 18 insertions(+), 18 deletions(-)
+ delete mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
+ create mode 100644 include/soc/sifive/sifive_l2_cache.h
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_ggtt.c b/drivers/gpu/drm/i915/gt=
-/intel_ggtt.c
-index 99189cdba8a9..1a2b5dcde960 100644
---- a/drivers/gpu/drm/i915/gt/intel_ggtt.c
-+++ b/drivers/gpu/drm/i915/gt/intel_ggtt.c
-@@ -801,7 +801,7 @@ static int ggtt_probe_common(struct i915_ggtt *ggtt, u6=
-4 size)
- 	 * readback check when writing GTT PTE entries.
- 	 */
- 	if (IS_GEN9_LP(i915) || INTEL_GEN(i915) >=3D 10)
--		ggtt->gsm =3D ioremap_nocache(phys_addr, size);
-+		ggtt->gsm =3D ioremap(phys_addr, size);
- 	else
- 		ggtt->gsm =3D ioremap_wc(phys_addr, size);
- 	if (!ggtt->gsm) {
---=20
-2.24.0
+diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+deleted file mode 100644
+index 04f6748..0000000
+--- a/arch/riscv/include/asm/sifive_l2_cache.h
++++ /dev/null
+@@ -1,16 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * SiFive L2 Cache Controller header file
+- *
+- */
+-
+-#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+-#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+-
+-extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+-extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+-
+-#define SIFIVE_L2_ERR_TYPE_CE 0
+-#define SIFIVE_L2_ERR_TYPE_UE 1
+-
+-#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+index 413cdb4..c0cc72a 100644
+--- a/drivers/edac/sifive_edac.c
++++ b/drivers/edac/sifive_edac.c
+@@ -10,7 +10,7 @@
+ #include <linux/edac.h>
+ #include <linux/platform_device.h>
+ #include "edac_module.h"
+-#include <asm/sifive_l2_cache.h>
++#include <soc/sifive/sifive_l2_cache.h>
+ 
+ #define DRVNAME "sifive_edac"
+ 
+diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+index a9ffff3..a506939 100644
+--- a/drivers/soc/sifive/sifive_l2_cache.c
++++ b/drivers/soc/sifive/sifive_l2_cache.c
+@@ -9,7 +9,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+-#include <asm/sifive_l2_cache.h>
++#include <soc/sifive/sifive_l2_cache.h>
+ 
+ #define SIFIVE_L2_DIRECCFIX_LOW 0x100
+ #define SIFIVE_L2_DIRECCFIX_HIGH 0x104
+diff --git a/include/soc/sifive/sifive_l2_cache.h b/include/soc/sifive/sifive_l2_cache.h
+new file mode 100644
+index 0000000..04f6748
+--- /dev/null
++++ b/include/soc/sifive/sifive_l2_cache.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * SiFive L2 Cache Controller header file
++ *
++ */
++
++#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
++#define _ASM_RISCV_SIFIVE_L2_CACHE_H
++
++extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
++extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
++
++#define SIFIVE_L2_ERR_TYPE_CE 0
++#define SIFIVE_L2_ERR_TYPE_UE 1
++
++#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DY3X6u8aQ1_kIqeYq914ZXw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VccMACgkQAVBC80lX
-0GzkLAf9GVolluU4K7M7MdQINLQMtBjkyGZqt480dJn7crPAZxq2s0usXsoXMT6x
-w066yy0zLuu9SzxoC5ixntHzRHwWFhhzqWji0MCHNNYv/bEQiAHEgYooEX3e2bVJ
-1QrnE4Y2VZylpE1DVPY1hHRqY8ybeEzpybU+LGWlu6cyL8X7FsIwPVru08K6DspV
-2FmhaxUx3fu0acr4TQ+2WdVxsjAtmZQLO52kq9pqiTmjncXaD7NwqT+l4LDxb52c
-Nd/8+V8gUp4lo4rjK4D10QEmBn8a74OKdHRnYuwjVeaTVRGCTw2tEAi/bCWSwuhJ
-viaB1+O9Sed9q0eKOmeO1bjm/hvJjA==
-=Z6gs
------END PGP SIGNATURE-----
-
---Sig_/DY3X6u8aQ1_kIqeYq914ZXw--
