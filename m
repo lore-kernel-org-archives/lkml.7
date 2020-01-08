@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ADC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35873C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1DB2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159112070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbgAHTqP (ORCPT
+        id S1727497AbgAHTrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:15 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43558 "EHLO
+        Wed, 8 Jan 2020 14:47:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:44148 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730430AbgAHTqD (ORCPT
+        by vger.kernel.org with ESMTP id S1730526AbgAHTqK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:46:03 -0500
+        Wed, 8 Jan 2020 14:46:10 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006oc-1l; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHC-0006oS-PU; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dmc-1Z; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHB-007dmN-Rp; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,21 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Lorenzo Colitti" <lorenzo@google.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 19:43:25 +0000
-Message-ID: <lsq.1578512578.936131181@decadent.org.uk>
+        "Colin Cross" <ccross@android.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "John Stultz" <john.stultz@linaro.org>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Shawn Lin" <shawn.lin@rock-chips.com>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
+        linux-mmc@vger.kernel.org,
+        "Android Kernel Team" <kernel-team@android.com>,
+        "Austin S Hemmelgarn" <ahferroin7@gmail.com>,
+        "Chuanxiao Dong" <chuanxiao.dong@intel.com>
+Date:   Wed, 08 Jan 2020 19:43:22 +0000
+Message-ID: <lsq.1578512578.249229927@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 27/63] net: diag: support v4mapped sockets in
- inet_diag_find_one_icsk()
+Subject: [PATCH 3.16 24/63] mmc: block: Allow more than 8 partitions per card
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,46 +63,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Colin Cross <ccross@android.com>
 
-commit 7c1306723ee916ea9f1fa7d9e4c7a6d029ca7aaf upstream.
+commit 382c55f88ffeb218c446bf0c46d0fc25d2795fe2 upstream.
 
-Lorenzo reported that we could not properly find v4mapped sockets
-in inet_diag_find_one_icsk(). This patch fixes the issue.
+It is quite common for Android devices to utilize more
+then 8 partitions on internal eMMC storage.
 
-Reported-by: Lorenzo Colitti <lorenzo@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Lorenzo Colitti <lorenzo@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The vanilla kernel can support this via
+CONFIG_MMC_BLOCK_MINORS, however that solution caps the
+system to 256 minors total, which limits the number of
+mmc cards the system can support.
+
+This patch, which has been carried for quite awhile in
+the AOSP common tree, provides an alternative solution
+that doesn't seem to limit the total card count. So I
+wanted to submit it for consideration upstream.
+
+This patch sets the GENHD_FL_EXT_DEVT flag, which will
+allocate minor number in major 259 for partitions past
+disk->minors.
+
+It also removes the use of disk_devt to determine devidx
+from md->disk. md->disk->first_minor is always initialized
+from devidx and can always be used to recover it.
+
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Cc: Chuanxiao Dong <chuanxiao.dong@intel.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Austin S Hemmelgarn <ahferroin7@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Android Kernel Team <kernel-team@android.com>
+Cc: linux-mmc@vger.kernel.org
+Signed-off-by: Colin Cross <ccross@android.com>
+[jstultz: Added context to commit message]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -318,12 +318,18 @@ int inet_diag_dump_one_icsk(struct inet_
- 	}
- #if IS_ENABLED(CONFIG_IPV6)
- 	else if (req->sdiag_family == AF_INET6) {
--		sk = inet6_lookup(net, hashinfo,
--				  (struct in6_addr *)req->id.idiag_dst,
--				  req->id.idiag_dport,
--				  (struct in6_addr *)req->id.idiag_src,
--				  req->id.idiag_sport,
--				  req->id.idiag_if);
-+		if (ipv6_addr_v4mapped((struct in6_addr *)req->id.idiag_dst) &&
-+		    ipv6_addr_v4mapped((struct in6_addr *)req->id.idiag_src))
-+			sk = inet_lookup(net, hashinfo, req->id.idiag_dst[3],
-+					 req->id.idiag_dport, req->id.idiag_src[3],
-+					 req->id.idiag_sport, req->id.idiag_if);
-+		else
-+			sk = inet6_lookup(net, hashinfo,
-+					  (struct in6_addr *)req->id.idiag_dst,
-+					  req->id.idiag_dport,
-+					  (struct in6_addr *)req->id.idiag_src,
-+					  req->id.idiag_sport,
-+					  req->id.idiag_if);
- 	}
- #endif
- 	else {
+ drivers/mmc/card/block.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+--- a/drivers/mmc/card/block.c
++++ b/drivers/mmc/card/block.c
+@@ -168,11 +168,7 @@ static struct mmc_blk_data *mmc_blk_get(
+ 
+ static inline int mmc_get_devidx(struct gendisk *disk)
+ {
+-	int devmaj = MAJOR(disk_devt(disk));
+-	int devidx = MINOR(disk_devt(disk)) / perdev_minors;
+-
+-	if (!devmaj)
+-		devidx = disk->first_minor / perdev_minors;
++	int devidx = disk->first_minor / perdev_minors;
+ 	return devidx;
+ }
+ 
+@@ -2169,6 +2165,7 @@ static struct mmc_blk_data *mmc_blk_allo
+ 	md->disk->queue = md->queue.queue;
+ 	md->disk->driverfs_dev = parent;
+ 	set_disk_ro(md->disk, md->read_only || default_ro);
++	md->disk->flags = GENHD_FL_EXT_DEVT;
+ 	if (area_type & MMC_BLK_DATA_AREA_RPMB)
+ 		md->disk->flags |= GENHD_FL_NO_PART_SCAN;
+ 
 
