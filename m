@@ -2,158 +2,113 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7386C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9410C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB322072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8333D2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEShmPzw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gzhPPRxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgAHPu0 (ORCPT
+        id S1728520AbgAHPuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:50:26 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45844 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgAHPu0 (ORCPT
+        Wed, 8 Jan 2020 10:50:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43552 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgAHPuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:50:26 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so3841922wrj.12;
-        Wed, 08 Jan 2020 07:50:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0N3N55mKu7D6d7h9hmn6IsvaDLGUWysqQq54G06xnmc=;
-        b=uEShmPzw5xgcVfK3GcKJ1pcAbUUKIEsRASYH9i+gdlGVyVcjN/bjZt8ucd4xpTahK6
-         glwEk3CBwPVEP34eMIfafPiylQFDJd7Ee75Er8GaCG0KEfZpuynSACF69GFFom7n499C
-         uQslmQ7fcLEVWISoJY2nFAJNc/282zr360qcqlhazBJBXjVoawMpqJW6jC0zOLV9MDXa
-         EPuF3iAtAPF2sCwRpZEdnFbml75XX3/6YdRh2iSR+mdI/WXQKIkTUj4BrMocvw6GmbsX
-         8plbDRm4oHg/3sCv9OkAsPM/6HY18h0R28eeMwKk5ty2UYPaXCcJj7MvTj03fR6BP4HK
-         Zh/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0N3N55mKu7D6d7h9hmn6IsvaDLGUWysqQq54G06xnmc=;
-        b=gYpO2GtInG8wYMJwWMQZam20NhqumYmtwjxrQ40UUkbLqfbLUHd56pkLWbKh1F4o6z
-         kc6McJiSrxYyEAWOvKxjW86Y8mEnIAUdWPNXLZ/LWqB9yJ/SVPIpijgQF+cz4SChDwXm
-         4XtgVgW+1zzci3YU+sOpDPuhJ0n0D1Ccq0PHUJqOfVDuYVGI+dL2RZAdCF2MPaYpD1j/
-         wVuEJhC70ljvbEMGsT4/54t3kd7aHVwTVTXfTmGAGC9XwCKOdOxAmMZ0dqwLq9kD8Wiv
-         g13iLej5R5rJJjjD5ibTWb9kUM/IEgut+0vkSqls3e+b8r7iTDQcdFH8f/Q2fRdNMtR3
-         UNeg==
-X-Gm-Message-State: APjAAAWmxCphBSRdbuADFplYmylcLDvkMcFEBbWFLio37+r0Hc3BWIwZ
-        yyKffDSRYvtEn+j87U8ZUUIqvS7nxcSVKUurFXQ=
-X-Google-Smtp-Source: APXvYqxPEibow2/dOPHBHRrXKbKanMI8VD5bNxb9vyWi016tP8DINM//hzIULp8SZLVtL0ef1MxEO7LiWO1kexZKxMk=
-X-Received: by 2002:adf:e78b:: with SMTP id n11mr5355464wrm.10.1578498624011;
- Wed, 08 Jan 2020 07:50:24 -0800 (PST)
+        Wed, 8 Jan 2020 10:50:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZclNq8Gr7pU/JCTXFFTTfRWQ9njV8jVe1K8Bz3Pzsz0=; b=gzhPPRxbWxKaI0bZ0WbwrbmXR
+        xlSTgzecSP6dVTnbBkKg9qkpoHergsjs7+VQhOuVJA5yY18MfdusUj+sC1u2dmzd3fG0V4ncwLsb8
+        yLJnCGRrWQ9v5J3QN2xm8R22Kh6EW/NR93PLH/hFGYY2+0PZeb7T1R8Q5QTjZd94Tje8wUD/f+d7l
+        ongVbMqAms69fs7UDvXoOHKwVx5qtVYtSE0LsTrLZiF7/V8/wEMAiLMk+mA8ql4KJJoKWHf0D+kd0
+        iWreXHPDj0vq8sBh5hYqpY7/ti2FbxBUbBYAspjZmI8w23DD6uxivJ8guinjSEH0/HvTTYnU9Av7C
+        dAcyzKaWg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipDbX-0002mT-5L; Wed, 08 Jan 2020 15:50:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 720FD30025A;
+        Wed,  8 Jan 2020 16:49:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 754D62B6157AC; Wed,  8 Jan 2020 16:50:40 +0100 (CET)
+Date:   Wed, 8 Jan 2020 16:50:40 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>
+Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes
+ mwait/hlt
+Message-ID: <20200108155040.GB2827@hirez.programming.kicks-ass.net>
+References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
- <DB7PR04MB4620E3087C59A26B865DEE988B790@DB7PR04MB4620.eurprd04.prod.outlook.com>
- <CAHQ1cqH5hstMwbO1vqOkZ3GVe-j5a+c3TX-yosq-TvuFFxPkHQ@mail.gmail.com>
- <VI1PR0402MB34851C1681F8A18341A8971098760@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <CAHQ1cqFPmJ7AR3ftTyCy4DiE0YQgspPBnp+EQLPOwxXo6tTcYg@mail.gmail.com> <CAHQ1cqE2PGKUPfc8SUAw2TkuDXRbFtnyux=bWyOny21KK8dhjA@mail.gmail.com>
-In-Reply-To: <CAHQ1cqE2PGKUPfc8SUAw2TkuDXRbFtnyux=bWyOny21KK8dhjA@mail.gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 8 Jan 2020 07:50:12 -0800
-Message-ID: <CAHQ1cqFR4ztK7zToN3OeTDYEXaGMkLa8uY3ka+Sgmf3dwxJsFg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] CAAM JR lifecycle
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     Vakul Garg <vakul.garg@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 10:15 PM Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
->
-> On Wed, Nov 13, 2019 at 11:25 AM Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
-> >
-> > On Wed, Nov 13, 2019 at 10:57 AM Horia Geanta <horia.geanta@nxp.com> wrote:
-> > >
-> > > On 11/6/2019 5:19 PM, Andrey Smirnov wrote:
-> > > > On Tue, Nov 5, 2019 at 11:27 PM Vakul Garg <vakul.garg@nxp.com> wrote:
-> > > >>
-> > > >>
-> > > >>
-> > > >>> -----Original Message-----
-> > > >>> From: linux-crypto-owner@vger.kernel.org <linux-crypto-
-> > > >>> owner@vger.kernel.org> On Behalf Of Andrey Smirnov
-> > > >>> Sent: Tuesday, November 5, 2019 8:44 PM
-> > > >>> To: linux-crypto@vger.kernel.org
-> > > >>> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>; Chris Healy
-> > > >>> <cphealy@gmail.com>; Lucas Stach <l.stach@pengutronix.de>; Horia Geanta
-> > > >>> <horia.geanta@nxp.com>; Herbert Xu <herbert@gondor.apana.org.au>;
-> > > >>> Iuliana Prodan <iuliana.prodan@nxp.com>; dl-linux-imx <linux-
-> > > >>> imx@nxp.com>; linux-kernel@vger.kernel.org
-> > > >>> Subject: [PATCH 0/5] CAAM JR lifecycle
-> > > >>>
-> > > >>> Everyone:
-> > > >>>
-> > > >>> This series is a different approach to addressing the issues brought up in
-> > > >>> [discussion]. This time the proposition is to get away from creating per-JR
-> > > >>> platfrom device, move all of the underlying code into caam.ko and disable
-> > > >>> manual binding/unbinding of the CAAM device via sysfs. Note that this series
-> > > >>> is a rough cut intented to gauge if this approach could be acceptable for
-> > > >>> upstreaming.
-> > > >>>
-> > > >>> Thanks,
-> > > >>> Andrey Smirnov
-> > > >>>
-> > > >>> [discussion] lore.kernel.org/lkml/20190904023515.7107-13-
-> > > >>> andrew.smirnov@gmail.com
-> > > >>>
-> > > >>> Andrey Smirnov (5):
-> > > >>>   crypto: caam - use static initialization
-> > > >>>   crypto: caam - introduce caam_jr_cbk
-> > > >>>   crypto: caam - convert JR API to use struct caam_drv_private_jr
-> > > >>>   crypto: caam - do not create a platform devices for JRs
-> > > >>>   crypto: caam - disable CAAM's bind/unbind attributes
-> > > >>>
-> > > >>
-> > > >> To access caam jobrings from DPDK (user space drivers), we unbind job-ring's platform device from the kernel.
-> > > >> What would be the alternate way to enable job ring drivers in user space?
-> > > >>
-> > > >
-> > > > Wouldn't either building your kernel with
-> > > > CONFIG_CRYPTO_DEV_FSL_CAAM_JR=n (this series doesn't handle that right
-> > > > currently due to being a rough cut) or disabling specific/all JRs via
-> > > > DT accomplish the same goal?
-> > > >
-> > > It's not a 1:1 match, the ability to move a ring to user space / VM etc.
-> > > *dynamically* goes away.
-> > >
-> >
-> > Wouldn't it be possible to do that dynamically using DT overlays? That
-> > is "modprobe -r caam; <apply overlay>; modprobe caam"?
-> >
->
-> Or, alternatively, could adding a module parameter, say "jr_mask", to
-> limit JRs controlled by the driver cover dynamic use case?
->
+On Wed, Jan 08, 2020 at 09:50:01AM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> To deliver all of the resources of a server to instances in cloud, there are no 
+> housekeeping cpus reserved. libvirtd, qemu main loop, kthreads, and other agent/tools 
+> etc which can't be offloaded to other hardware like smart nic, these stuff will 
+> contend with vCPUs even if MWAIT/HLT instructions executed in the guest.
+> 
+> The is no trap and yield the pCPU after we expose mwait/hlt to the guest [1][2],
+> the top command on host still observe 100% cpu utilization since qemu process is 
+> running even though guest who has the power management capability executes mwait. 
+> Actually we can observe the physical cpu has already enter deeper cstate by 
+> powertop on host.
+> 
+> For virtualization, there is a HLT activity state in CPU VMCS field which indicates 
+> the logical processor is inactive because it executed the HLT instruction, but 
+> SDM 24.4.2 mentioned that execution of the MWAIT instruction may put a logical 
+> processor into an inactive state, however, this VMCS field never reflects this 
+> state.
 
-Horia, could you please comment on the above? I think getting rid of
-struct device for JRs is the best approach to dealing with described
-corner case problems + it will allows us to get rid of this custom JR
-users lifecycle management
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/crypto/caam/jr.c?h=v5.4.8#n26
-since it can be just done as a part for caam_probe(), so I'd like to
-either move forward on this series or close this discussion.
+So far I think I can follow, however it does not explain who consumes
+this VMCS state if it is set and how that helps. Also, this:
 
-Thanks,
-Andrey Smirnov
+> This patch avoids fine granularity intercept and reschedule vCPU if MWAIT/HLT
+> instructions executed, because it can worse the message-passing workloads which 
+> will switch between idle and running frequently in the guest. Lets penalty the 
+> vCPU which is long idle through tick-based sampling and preemption.
+
+is just complete gibberish. And I have no idea what problem you're
+trying to solve how.
+
+Also, I don't think the TSC/MPERF ratio is architected, we can't assume
+this is true for everything that has APERFMPERF.
+
+/me tries to reconstruct intent from patch
+
+So what you're doing is, mark the CPU 'idle' when the MPERF/TSC ratio <
+1%, and then frob the vruntime such that it will hopefully preempt.
+That's pretty disgusting.
+
+Please, write a coherent problem statement and justify the magic
+choices. This is unreviewable.
