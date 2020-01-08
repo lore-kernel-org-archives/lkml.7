@@ -2,94 +2,153 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F32CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B74C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4F420692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578496520;
-	bh=z+wACr8+bbobxkG990dwpnGEkG+ThcyJ7Ml1MVRgT84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AaoZtIAkhJedBNlqhb2GXz+TZERcCAfZs56FBDcXEstyns44yUh6jBE/7fsWWK3AN
-	 Egqbm6nFQY8qenvcfV6BgxO/UtXEqmDGYClbc+Oj545L6S/dBQf3/sfdMZ21PhmcEP
-	 h1loMNUPZXKrviQwcmOW/3DvGKpyMNX3y3LXfOIU=
+	by mail.kernel.org (Postfix) with ESMTP id 7875220705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="JoZuPIXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgAHPPS (ORCPT
+        id S1728433AbgAHPPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:15:18 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37192 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHPPS (ORCPT
+        Wed, 8 Jan 2020 10:15:30 -0500
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:16993 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgAHPPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:15:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z64so2913246oia.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 07:15:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9MKeoU4FP/L/hIFVTYWRTXWHyDcNCL5GfbSqC8Dc1Ew=;
-        b=RFNK40GDMop5yOhyZ/JUUzZ04mogwNJb+JN12gmbxA/961Mlmx2xm4fRV3oALFI7//
-         XUob1RbMwIgPyetM6DpO//+TNAcd1AJVIwo6XbgnbAe+KrKEw0YWjMrPvcnERf0j1wGZ
-         4j1UL9Wu7NubHseSBIX8TB1RnV3h5/tmwigcSt60JjfGagp48z/VAkHJxagAumQyOqrL
-         QvPz6xVq04/R5KyVlLAQ4J0DGw4V7QnJ6911xtB6U3d62B43GNSeUQlyXOvb+2V3e2IK
-         vrVH+nD8tfLt48OWo8ajCORo6ltjc+V9F+aSmoqeCMYlaIPytjQ4pkfVmx4U5BkAqUcH
-         bOmw==
-X-Gm-Message-State: APjAAAWEWXotqLe3/ZSEYoc28r2Cw54OKQcxWAdE39/CRvzQLPHYOLMx
-        yXn6+Uz1IxHy2QmmIyYtp7XCVaM=
-X-Google-Smtp-Source: APXvYqxkDlBKuD9XOdj0xdarnmgThziZMzKxFDXzt/BUaZjWDcvnNZiG3vPUqackGx2tI1sUR7fHOg==
-X-Received: by 2002:aca:4ad1:: with SMTP id x200mr3249328oia.104.1578496517356;
-        Wed, 08 Jan 2020 07:15:17 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f3sm1174605oto.57.2020.01.08.07.15.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 07:15:16 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220333
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 09:15:15 -0600
-Date:   Wed, 8 Jan 2020 09:15:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ming-Fan Chen <ming-fan.chen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: mediatek: Add binding for MT6779 SMI
-Message-ID: <20200108151515.GA18724@bogus>
-References: <1578465691-30692-1-git-send-email-ming-fan.chen@mediatek.com>
- <1578465691-30692-3-git-send-email-ming-fan.chen@mediatek.com>
+        Wed, 8 Jan 2020 10:15:30 -0500
+X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jan 2020 10:15:29 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=FNzFi/EcyGrtsyvw5xdP4nm1o8qsGg4d42d45TMi1zc=;
+        b=JoZuPIXfmVMHmYBpgmG/X6eYGTg2lx8vIVnAZw2dcJ9rEOyo0UFUwPQmmGTGSizcnqJD
+        tupfhhweZHayNJAWCAcLHQBJTs5gIteDGEJdIH0Y4yzXG6l/Ili0cNOAn7EnZiHKYlR/Fh
+        xQaOrYTt/jL0LnX4ynVcgPqFJnSGds1J4=
+Received: by filterdrecv-p3mdw1-56c97568b5-f2xng with SMTP id filterdrecv-p3mdw1-56c97568b5-f2xng-18-5E15F0E3-59
+        2020-01-08 15:10:27.466849442 +0000 UTC m=+1952840.551967702
+Received: from [80.251.203.67] (unknown [80.251.203.67])
+        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP id LdEapv0HQIiUSkUxFUDRww
+        Wed, 08 Jan 2020 15:10:27.165 +0000 (UTC)
+Subject: Re: [PATCH v3 2/5] media: hantro: Reduce H264 extra space for motion
+ vectors
+References: <HE1PR06MB4011EDD5F2686A05BC35F61CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191106223408.2176-1-jonas@kwiboo.se>
+ <HE1PR06MB4011FF930111A869E4645C8CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <CAAFQd5CSWea=DNjySJxZmVi+2c5U4EKVPa1mf3vHh70+YrAQCA@mail.gmail.com>
+ <7b92111b0c6443653de45f1eeec867645c127f32.camel@collabora.com>
+ <CAAFQd5CZo5g2gtuvU+OuoRj18ZcCH8XEinGyAjRxqUXRfSQhgg@mail.gmail.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <9606106c-5c49-cbc1-cb8f-0389ff8281bd@kwiboo.se>
+Date:   Wed, 08 Jan 2020 15:10:27 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <CAAFQd5CZo5g2gtuvU+OuoRj18ZcCH8XEinGyAjRxqUXRfSQhgg@mail.gmail.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hw4wwBUrflS0pBfMy?=
+ =?us-ascii?Q?kCNRb7VG1Hvipht9ko5YRiRt2MGcELKDFGENYUR?=
+ =?us-ascii?Q?mSBZLGqIZZIsFu0QQJoCC=2F5A8McuNFH6cUvl3l4?=
+ =?us-ascii?Q?LNamw4KwZmnfVpxnGxUMBvQEDEQV5WLr19PI9Ff?=
+ =?us-ascii?Q?tqijw2OKMts7bCgsqxUPWZEFf6wwGwE8EvO0QBk?=
+ =?us-ascii?Q?op+fohN4RtdszkmzhmEUQ=3D=3D?=
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578465691-30692-3-git-send-email-ming-fan.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: sv
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:29PM +0800, Ming-Fan Chen wrote:
-> This patch add description for MT6779 SMI.
-> There are GALS in smi-larb but without clock of GALS alone.
+On 2020-01-08 13:59, Tomasz Figa wrote:
+> On Tue, Dec 10, 2019 at 3:11 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>>
+>> On Wed, 2019-11-20 at 21:44 +0900, Tomasz Figa wrote:
+>>> Hi Jonas,
+>>>
+>>> On Thu, Nov 7, 2019 at 7:34 AM Jonas Karlman <jonas@kwiboo.se> wrote:
+>>>> A decoded 8-bit 4:2:0 frame need memory for up to 448 bytes per
+>>>> macroblock with additional 32 bytes on multi-core variants.
+>>>>
+>>>> Memory layout is as follow:
+>>>>
+>>>> +---------------------------+
+>>>>> Y-plane   256 bytes x MBs |
+>>>> +---------------------------+
+>>>>> UV-plane  128 bytes x MBs |
+>>>> +---------------------------+
+>>>>> MV buffer  64 bytes x MBs |
+>>>> +---------------------------+
+>>>>> MC sync          32 bytes |
+>>>> +---------------------------+
+>>>>
+>>>> Reduce the extra space allocated now that motion vector buffer offset no
+>>>> longer is based on the extra space.
+>>>>
+>>>> Only allocate extra space for 64 bytes x MBs of motion vector buffer
+>>>> and 32 bytes for multi-core sync.
+>>>>
+>>>> Fixes: a9471e25629b ("media: hantro: Add core bits to support H264 decoding")
+>>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>>>> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+>>>> ---
+>>>> Changes in v3:
+>>>>   - add memory layout to code comment (Boris)
+>>>> Changes in v2:
+>>>>   - updated commit message
+>>>> ---
+>>>>  drivers/staging/media/hantro/hantro_v4l2.c | 20 ++++++++++++++++++--
+>>>>  1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>
+>>>
+>>> Thanks for the patch!
+>>>
+>>> What platform did you test it on and how? Was it tested with IOMMU enabled?
+>>
+>> Hello Tomasz,
+>>
+>> Please note that this series has been picked-up and is merged
+>> in v5.5-rc1.
+>>
+>> IIRC, we tested these patches on RK3399 and RK3288 (that means
+>> with an IOMMU). I've just ran some more extensive tests on RK3288,
+>> on media/master; and I plan to test some more on RK3399 later this week.
+>>
+>> Do you have any specific concern in mind?
 > 
-> changelog since v2:
-> Add GALS for mt6779 in smi-common.txt
-> 
-> Signed-off-by: Ming-Fan Chen <ming-fan.chen@mediatek.com>
-> ---
->  .../memory-controllers/mediatek,smi-common.txt     |    5 +++--
->  .../memory-controllers/mediatek,smi-larb.txt       |    3 ++-
->  2 files changed, 5 insertions(+), 3 deletions(-)
+> I specifically want to know whether we're 100% sure that those sizes
+> are correct. The IOMMU still works on page granularity so it's
+> possible that the allocation could be just big enough by luck.
 
-Acked-by: Rob Herring <robh@kernel.org>
+One of my RK3288 TRM [1] contains the following:
+
+Direct mode motion vector write:
+  Its base addr is right after decode output picture data
+  Its length is mbwidth*mbheight*64
+
+Also both the mpp library and imx-vpu-hantro code both use mbwidth*mbheight*64.
+So I feel confident that the buffer size is correct.
+
+[1] Rockchip RK3288TRM V1.1 Part3-Graphic and multi-media.pdf
+
+Regards,
+Jonas
+
+> 
+> Best regards,
+> Tomasz
+> 
