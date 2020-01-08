@@ -2,98 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7369C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46379C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF96C20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qaKEei73"
+	by mail.kernel.org (Postfix) with ESMTP id 1882920692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgAHI5q (ORCPT
+        id S1727525AbgAHI6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:57:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58016 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgAHI5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:57:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qYZOX4MN2BVKeqHiH0VTE4qb5nlSzzRTXM4p2InWJLQ=; b=qaKEei73SAog39nzSC3f692iP
-        X3ITf8gpehDIqYHYTMC/fLjnUruw1k2otHY9ai2939qu4hKbSu18jUhdPgawodTTBZLDlYwYQIV0D
-        VXPqFlbQ+4rem7ZkUfAW1h3IbOUFwC581Bcne2AvyoOVNNxdSo4qJicXzFGsNeN2CJbfy1oEWYiZc
-        CiZDza1W2wSCl63/7P35D54MczTsF2KtVr/rZh+9bMEDEpkWpi3CyF1eDIFM9Vf3lvD5Sdo9ILBJI
-        7F0/K1XguRgnyb4Rp5NSxUC0tUla9vk8svgVcvM4i/wtPwUsWDO5U7U7roSfzrpy/FmOPXc4nOflN
-        QR4Bq0qYA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ip79r-0002AT-Jc; Wed, 08 Jan 2020 08:57:43 +0000
-Date:   Wed, 8 Jan 2020 00:57:43 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>,
+        Wed, 8 Jan 2020 03:58:22 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2983 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727483AbgAHI6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:58:21 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id E73017C2A6CED79D2CF4;
+        Wed,  8 Jan 2020 16:58:19 +0800 (CST)
+Received: from dggeme710-chm.china.huawei.com (10.1.199.106) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 8 Jan 2020 16:58:19 +0800
+Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
+ dggeme710-chm.china.huawei.com (10.1.199.106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 8 Jan 2020 16:58:19 +0800
+Received: from dggeme759-chm.china.huawei.com ([10.7.64.73]) by
+ dggeme759-chm.china.huawei.com ([10.7.64.73]) with mapi id 15.01.1713.004;
+ Wed, 8 Jan 2020 16:58:19 +0800
+From:   "tiantao (H)" <tiantao6@hisilicon.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "xinliang.liu@linaro.org" <xinliang.liu@linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] xfs: disallow broken ioctls without
- compat-32-bit-time
-Message-ID: <20200108085743.GA6971@infradead.org>
-References: <20191218163954.296726-1-arnd@arndb.de>
- <20191218163954.296726-2-arnd@arndb.de>
- <20191224084514.GC1739@infradead.org>
- <CAK8P3a2ANKoV1DhJMUuAr0qKW7HgRvz9LM2yLkSVWP9Rn-LUhA@mail.gmail.com>
- <20200102180749.GA1508633@magnolia>
- <20200107141634.GC10628@infradead.org>
- <20200107181614.GA917713@magnolia>
+CC:     Linuxarm <linuxarm@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGRybS9oaXNpbGljb246IGFkZCB0aGUgbW9kZV92?=
+ =?utf-8?Q?alid_function?=
+Thread-Topic: [PATCH] drm/hisilicon: add the mode_valid function
+Thread-Index: AQHVxfxbpD+5L/GN/0KaWTRqEuV1/aff7sEAgACHSsA=
+Date:   Wed, 8 Jan 2020 08:58:19 +0000
+Message-ID: <53780a8769c44f5484a97882a0c8b642@hisilicon.com>
+References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
+ <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
+In-Reply-To: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.60.129]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107181614.GA917713@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:16:14AM -0800, Darrick J. Wong wrote:
-> Yeah.  Fixing that (and maybe adding an ioctl to set the FS UUID online)
-> were on my list for 5.6 but clearly I have to defer everything until 5.7
-> because we've just run out of time.
-> 
-> Uh... I started looking into unifying the ext4 and xfs defrag ioctl, but
-> gagged when I realized that the ext4 ioctl also handles the data copy
-> inside the kernel.  I think that's the sort of behavior we should /not/
-> allow into the new ioctl, though that also means that the required
-> changes for ext4/e4defrag will be non-trivial.
-
-Well, we should eventually end up with a common defrag tool (e.g. in
-util-linux).  We might as well start of with the xfs_fsr codebase
-for that or whatever suits us best.
-
-> The btrfs defrag ioctl also contains thresholding information and
-> optional knobs to enable compression, which makes me wonder if we should
-> focus narrowly on swapext being "swap these extents but only if the
-> source file hasn't changed" and not necessarily defrag?
-
-That sounds like the most useful common API.
-
-> ...in which case I wonder, can people (ab)use this interface for atomic
-> file updates?  Create an O_TMPFILE, reflink the source file into the
-> temp file, make your updates to the tempfile, and then swapext the
-> donor's file data back into the source file, but only if the source file
-> hasn't changed?
-
-Sure.
+SGkgVGhvbWFzIFppbW1lcm1hbm46DQoNCglJIHdpbGwgbW9kaWZ5IHRoaXMgcGF0Y2ggYW5kIHNl
+bmQgdjIgYXMgeW91IHN1Z2dlc3RlZC4NCglUaGFuayB5b3UgdmVyeSBtdWNoLg0KDQpCZXN0DQoN
+Ci0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogVGhvbWFzIFppbW1lcm1hbm4gW21h
+aWx0bzp0emltbWVybWFubkBzdXNlLmRlXSANCuWPkemAgeaXtumXtDogMjAyMOW5tDHmnIg45pel
+IDE2OjQ5DQrmlLbku7bkuro6IHRpYW50YW8gKEgpIDx0aWFudGFvNkBoaXNpbGljb24uY29tPjsg
+Q2hlbmZlbmcgKHB1Y2spIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT47IGFpcmxpZWRAbGludXgu
+aWU7IGRhbmllbEBmZndsbC5jaDsga3JheGVsQHJlZGhhdC5jb207IGFsZXhhbmRlci5kZXVjaGVy
+QGFtZC5jb207IHRnbHhAbGludXRyb25peC5kZTsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZzsgeGlubGlhbmcubGl1QGxpbmFyby5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmcNCuaKhOmAgTogTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+DQrkuLvpopg6IFJlOiBb
+UEFUQ0hdIGRybS9oaXNpbGljb246IGFkZCB0aGUgbW9kZV92YWxpZCBmdW5jdGlvbg0KDQpIaSwN
+Cg0KaGVyZSBhcmUgYSBmZXcgbW9yZSBuaXRzIHRvIGZpeC4NCg0KQW0gMDguMDEuMjAgdW0gMDk6
+MTkgc2NocmllYiBUaWFuIFRhbzoNCj4gYWRkIG1vZGVfdmFsaWQgZnVuY3Rpb24sIGFuZCB3ZSBj
+YW4gYWxzbyB1c2UgaXQgdG8gbWFrZSBzdXNlIHRoZSANCj4gcmVzb2x1dGlvbiBpcyB2YWxpZC4N
+Cg0KU3RhcnQgd2l0aCBjYXBpdGFsICdBZGQnIGFuZCBtYWtlIGl0IGEgc2ltcGxlIHNlbnRlbmNl
+LiBDaGFuZ2UgJ3N1c2UnIHRvICdzdXJlJw0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUaWFuIFRh
+byA8dGlhbnRhbzZAaGlzaWxpY29uLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR29uZyBqdW5qaWUg
+PGdvbmdqdW5qaWUyQGh1YXdlaS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL2hpc2ls
+aWNvbi9oaWJtYy9oaWJtY19kcm1fZGUuYyB8IDIwIA0KPiArKysrKysrKysrKysrKysrKysrKw0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpYm1jL2hpYm1jX2RybV9kZS5jIA0KPiBiL2RyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2RlLmMNCj4gaW5kZXggODQzZDc4
+NC4uNmNiN2E3OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJt
+Yy9oaWJtY19kcm1fZGUuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpYm1j
+L2hpYm1jX2RybV9kZS5jDQo+IEBAIC0yNDIsNiArMjQyLDI1IEBAIHN0YXRpYyB2b2lkIGhpYm1j
+X2NydGNfYXRvbWljX2Rpc2FibGUoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAgCWhpYm1jX3Nl
+dF9jdXJyZW50X2dhdGUocHJpdiwgcmVnKTsNCj4gIH0NCj4gIA0KPiArZW51bSBkcm1fbW9kZV9z
+dGF0dXMgaGlibWNfY3J0Y19tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gKwkJ
+CQkJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpDQoNClBsZWFzZSBkZWNsYXJl
+IHRoaXMgZnVuY3Rpb24gYXMgc3RhdGljLg0KDQo+ICt7DQo+ICsJaW50IGkgPSAwOw0KPiArCWlu
+dCB2cmVmcmVzaCA9IGRybV9tb2RlX3ZyZWZyZXNoKG1vZGUpOw0KPiArDQo+ICsJaWYgKHZyZWZy
+ZXNoIDwgNTkgfHwgdnJlZnJlc2ggPiA2MSkNCj4gKwkJcmV0dXJuIE1PREVfTk9NT0RFOw0KDQpJ
+J2QgcmV0dXJuIE1PREVfTk9DTE9DSyBvciBNT0RFX0NMT0NLX1JBTkdFLg0KDQo+ICsNCj4gKwlm
+b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShoaWJtY19wbGxfdGFibGUpOyBpKyspIHsNCj4gKwkJ
+aWYgKGhpYm1jX3BsbF90YWJsZVtpXS5oZGlzcGxheSA9PSBtb2RlLT5oZGlzcGxheSAmJg0KPiAr
+CQkJaGlibWNfcGxsX3RhYmxlW2ldLnZkaXNwbGF5ID09IG1vZGUtPnZkaXNwbGF5KQ0KPiArCQkJ
+cmV0dXJuIE1PREVfT0s7DQo+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIE1PREVfTk9NT0RFOw0KDQpN
+YXliZSByZXR1cm4gTU9ERV9CQUQuIE1PREVfTk9NT0RFIGFwcGFyZW50bHkgcmVmZXJzIHRvIGEg
+ZGVzY3JpcHRpdmUgc3RyaW5nIGZvciB0aGUgbW9kZS4NCg0KPiArfQ0KPiArDQo+ICsNCg0KT25l
+IG9uZSBlbXB0eSBsaW5lIHBsZWFzZS4NCg0KV2l0aCB0aGVzZSBmaXhlcyBhcHBsaWVkLCB5b3Ug
+Y2FuIGFkZCBteQ0KDQpSZXZpZXdlZC1ieTogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5u
+QHN1c2UuZGU+DQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFzDQoNCg0KPiAgc3RhdGljIHVuc2lnbmVk
+IGludCBmb3JtYXRfcGxsX3JlZyh2b2lkKSAgew0KPiAgCXVuc2lnbmVkIGludCBwbGxyZWcgPSAw
+Ow0KPiBAQCAtNTEwLDYgKzUyOSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfaGVs
+cGVyX2Z1bmNzIGhpYm1jX2NydGNfaGVscGVyX2Z1bmNzID0gew0KPiAgCS5hdG9taWNfZmx1c2gJ
+PSBoaWJtY19jcnRjX2F0b21pY19mbHVzaCwNCj4gIAkuYXRvbWljX2VuYWJsZQk9IGhpYm1jX2Ny
+dGNfYXRvbWljX2VuYWJsZSwNCj4gIAkuYXRvbWljX2Rpc2FibGUJPSBoaWJtY19jcnRjX2F0b21p
+Y19kaXNhYmxlLA0KPiArCS5tb2RlX3ZhbGlkID0gaGlibWNfY3J0Y19tb2RlX3ZhbGlkLA0KPiAg
+fTsNCj4gIA0KPiAgaW50IGhpYm1jX2RlX2luaXQoc3RydWN0IGhpYm1jX2RybV9wcml2YXRlICpw
+cml2KQ0KPiANCg0KLS0NClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxv
+cGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUs
+IDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2Vz
+Y2jDpGZ0c2bDvGhyZXI6IEZlbGl4IEltZW5kw7ZyZmZlcg0KDQo=
