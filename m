@@ -2,88 +2,82 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006B2C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBE7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D149120720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920FD20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578507965;
+	bh=VEJd0lbqV7o/Vx/f4wGgyYUhD2rdodh6xlpE92Ogm5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bYI646nx33wixTNM4U51epI3LVU3SbcUwfxwMpZGTvjJdIpbLWiXxCE+nizPA7mkx
+	 YVQ2UA7X1VPeIRUeFDkvMqcm4iRpWEvKUXGrFGmOkwBMsOxU6VhWoH9+jtgPKbqYYB
+	 JDTWOJIALqmun06iuThP912CIqRTmToxaOEJ3P4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbgAHSZb (ORCPT
+        id S1730228AbgAHS0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:25:31 -0500
-Received: from namei.org ([65.99.196.166]:56160 "EHLO namei.org"
+        Wed, 8 Jan 2020 13:26:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbgAHSZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:25:30 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 008IP1Vu027011;
-        Wed, 8 Jan 2020 18:25:01 GMT
-Date:   Thu, 9 Jan 2020 05:25:01 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     KP Singh <kpsingh@chromium.org>
-cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v1 12/13] bpf: lsm: Add selftests for
- BPF_PROG_TYPE_LSM
-In-Reply-To: <20191220154208.15895-13-kpsingh@chromium.org>
-Message-ID: <alpine.LRH.2.21.2001090524390.9683@namei.org>
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-13-kpsingh@chromium.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1727169AbgAHS0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:26:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF25F20705;
+        Wed,  8 Jan 2020 18:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578507964;
+        bh=VEJd0lbqV7o/Vx/f4wGgyYUhD2rdodh6xlpE92Ogm5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0+kerRgFvq/wExQh+wfGtS/Ri9grPees+pWx51FJLDQOjtKhHPnueGeF64V1GeDxr
+         xHltIeTQ8BFz+vIIwJsjbWJVVcFIRw1kjAvoEsaqUyN280i8w4eop7S0kCOhFdgPpx
+         rYXs08Z7aVcWW93ob3YT/rutlfb4AkYkRYQyW83o=
+Date:   Wed, 8 Jan 2020 19:26:02 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
+Message-ID: <20200108182602.GD2547623@kroah.com>
+References: <20200107205332.984228665@linuxfoundation.org>
+ <20200107212436.GA18475@roeck-us.net>
+ <20200108064251.GC2278146@kroah.com>
+ <CA+G9fYt8hN=4NnnAO01JXmEQehcZ-csM5cT5AKa8i_BvzJ6-7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYt8hN=4NnnAO01JXmEQehcZ-csM5cT5AKa8i_BvzJ6-7A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, KP Singh wrote:
-
-> From: KP Singh <kpsingh@google.com>
+On Wed, Jan 08, 2020 at 10:04:23PM +0530, Naresh Kamboju wrote:
+> On Wed, 8 Jan 2020 at 16:47, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > Thanks for letting me know, Jens also pointed this out and I've now
+> > dropped it and will push out a -rc2 in a few minutes with it removed.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> * Load a BPF program that audits mprotect calls
-> * Attach the program to the "file_mprotect" LSM hook
-> * Verify if the program is actually loading by reading
->   securityfs
-> * Initialize the perf events buffer and poll for audit events
-> * Do an mprotect on some memory allocated on the heap
-> * Verify if the audit event was received
-> 
-> Signed-off-by: KP Singh <kpsingh@google.com>
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Good to see!
+Wonderful, thanks for testing these and letting me know.
 
-
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+greg k-h
