@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC8BC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5544FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BE920720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F0F20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S3tVQZXg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jfjo+Fag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgAHFYV (ORCPT
+        id S1726651AbgAHFYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:24:21 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36713 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgAHFYQ (ORCPT
+        Wed, 8 Jan 2020 00:24:08 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42636 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgAHFYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:24:16 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so982569pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 21:24:16 -0800 (PST)
+        Wed, 8 Jan 2020 00:24:05 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p9so627251plk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 21:24:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tLPzDvqsyKjpMgl6ZY+ZEjymtgHHsFzBQXHTW4eiM1M=;
-        b=S3tVQZXgAvZAvGKT4jucRDlF/M0TWOh+3V7E9ZFoKg0xoIXSRxIr5TYGLCUnvTfS9N
-         f+oKg6lg9u0QxJzV+FId6ptqevsKmNbYDMNZJ9DJAVLRY/8KFELoCSNhdge1SKfgY0Xy
-         AuK7NrZkfWLHM89vkHp0eJTBqDJW+EynagsuQ=
+        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
+        b=Jfjo+Faggwo7DaWWKVmhC7/00Vvhz+MTRYNmhAKQYX1HCOP3EYR8Lin5NwFPnmhjMY
+         4+Fb5Qu0e1wDWqALzow5cVbQpRrmDtK6+s0MWVLSCLeAn/oBigTNqV6pS0G3uvjzNP7g
+         ZOYd16bXAfTR+SPI/3E9hzT5bBEzHfFjf0IP8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tLPzDvqsyKjpMgl6ZY+ZEjymtgHHsFzBQXHTW4eiM1M=;
-        b=cKz8nGtWliLnXi6tqarM+D2p9B3s/i9mRqMYlw7zAOCWkqg6XHYWBJRGEVLczfbo7N
-         QZkJuCUepNrRtl8ov/Rzg8B89q+KscV9FuCYjiWeLgUleW19V3P3MG5tke/RHVS4vzes
-         YReoYhJXtTB5Wf3101IhHPAC/Iv5x80JJb/Xki/fybDMAHMEcC7qdfNDfprKMlM6Ohks
-         KxOQHw9sH/Tyif7JryniYE4EOF6+1zbHcgSGvWNNentRVtgvPJ30lI1Sf2JW8BoRcfYL
-         HATPN4AVKW0w6jyWu5CPmrDj/8Q1ge/FWnZ8jnUSkvbqzssqfw4tL4JyVgjSSG18vD1x
-         jDAQ==
-X-Gm-Message-State: APjAAAVCeELjOHXqqRvBXmsMXH5g86vBGQRhEUD3s/D8IJ9FwgCaxGAu
-        nFR/0ieQE6Ki9AlzlXVeg8ZpYg==
-X-Google-Smtp-Source: APXvYqzoefkOYFH4FXTTMbYJDxtsQiuVsYfMMaYxsSll0XpoVzmSh/ccdl9HE7eeGAdfYbzMduo/6Q==
-X-Received: by 2002:a63:ed56:: with SMTP id m22mr3334545pgk.261.1578461055680;
-        Tue, 07 Jan 2020 21:24:15 -0800 (PST)
+        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
+        b=YZSHtSOWS32msSqFWtb6R0iaf0Xv9jiD6K3LDMlG7pUex8BsfU3gtvBktm4yxJmSgu
+         c/QXxTJaVunbdQDsfbETEwct4Z7qvYQkzVAbV+1aTZReEA6DEs2Ed4zAsbsSVyNlAsLO
+         ghgrlL9w340uiuAfF6VUUIVm0eaXL8Ci2+qZxJUjSNbsdY5KnddpxiFUh99T3kCBRGGF
+         Z3VGzy7UyWp1s76KYHerImFzahEJshUKIN5dNdcWOXUOmHgtEWca1yQQvOSRS9CVEHaJ
+         skqmh7JQt+LCToclcXc9E3y1XBTlSCGcfg/kzn3/UEuuMORbHDOK4OZ7GeMIm/jx9YMZ
+         mJeQ==
+X-Gm-Message-State: APjAAAV/ebDdUKIAyqs29hMm5ke1F0aaaowj42OYmG8dtzHZukCI2zDN
+        9scrBXGD3KFYcw0o5vgGsmBG6g==
+X-Google-Smtp-Source: APXvYqyHC+8oOSDbkbTqCwSPnXshCUeDVww8reRuLxI2n62N7ExPieyrDCDC2ipIyCqYctUkgXWJYA==
+X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr2510426pjc.9.1578461044170;
+        Tue, 07 Jan 2020 21:24:04 -0800 (PST)
 Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.12
+        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:24:15 -0800 (PST)
+        Tue, 07 Jan 2020 21:24:03 -0800 (PST)
 From:   Nicolas Boichat <drinkcat@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -66,9 +66,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v2 7/7, RFC]: drm/panfrost: devfreq: Add support for 2 regulators
-Date:   Wed,  8 Jan 2020 13:23:37 +0800
-Message-Id: <20200108052337.65916-8-drinkcat@chromium.org>
+Subject: [PATCH v2 3/7] drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+Date:   Wed,  8 Jan 2020 13:23:33 +0800
+Message-Id: <20200108052337.65916-4-drinkcat@chromium.org>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
 References: <20200108052337.65916-1-drinkcat@chromium.org>
@@ -79,71 +79,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
-devfreq, and provides OPP table with 2 sets of voltages.
-
-TODO: This is incomplete as we'll need add support for setting
-a pair of voltages as well.
+It is useful to know which component cannot be powered on.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
----
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 18 ++++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_device.h  |  2 ++
- 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 413987038fbfccb..5eb0effded7eb09 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -79,6 +79,22 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	struct devfreq *devfreq;
- 	struct thermal_cooling_device *cooling;
+---
+
+Was useful when trying to probe bifrost GPU, to understand what
+issue we are facing.
+---
+ drivers/gpu/drm/panfrost/panfrost_gpu.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+index 8822ec13a0d619f..ba02bbfcf28c011 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+@@ -308,21 +308,26 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
+ 	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
+ 	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
+ 		val, val == pfdev->features.l2_present, 100, 1000);
++	if (ret)
++		dev_err(pfdev->dev, "error powering up gpu L2");
  
-+	/* If we have 2 regulator, we need an OPP table with 2 voltages. */
-+	if (pfdev->regulator_sram) {
-+		const char * const reg_names[] = { "mali", "sram" };
-+
-+		pfdev->devfreq.dev_opp_table =
-+			dev_pm_opp_set_regulators(dev,
-+					reg_names, ARRAY_SIZE(reg_names));
-+		if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
-+			ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
-+			pfdev->devfreq.dev_opp_table = NULL;
-+			dev_err(dev,
-+				"Failed to init devfreq opp table: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	ret = dev_pm_opp_of_add_table(dev);
- 	if (ret == -ENODEV) /* Optional, continue without devfreq */
- 		return 0;
-@@ -119,6 +135,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
- 	if (pfdev->devfreq.cooling)
- 		devfreq_cooling_unregister(pfdev->devfreq.cooling);
- 	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-+	if (pfdev->devfreq.dev_opp_table)
-+		dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
+ 	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
+-	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
++	ret = readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
+ 		val, val == pfdev->features.stack_present, 100, 1000);
++	if (ret)
++		dev_err(pfdev->dev, "error powering up gpu stack");
+ 
+ 	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
+-	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
++	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
+ 		val, val == pfdev->features.shader_present, 100, 1000);
++	if (ret)
++		dev_err(pfdev->dev, "error powering up gpu shader");
+ 
+ 	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
+-	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
++	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
+ 		val, val == pfdev->features.tiler_present, 100, 1000);
+-
+ 	if (ret)
+-		dev_err(pfdev->dev, "error powering up gpu");
++		dev_err(pfdev->dev, "error powering up gpu tiler");
  }
  
- void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 92d471676fc7823..581da3fe5df8b17 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -91,10 +91,12 @@ struct panfrost_device {
- 	struct {
- 		struct devfreq *devfreq;
- 		struct thermal_cooling_device *cooling;
-+		struct opp_table *dev_opp_table;
- 		ktime_t busy_time;
- 		ktime_t idle_time;
- 		ktime_t time_last_update;
- 		atomic_t busy_count;
-+		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
- 	} devfreq;
- };
- 
+ void panfrost_gpu_power_off(struct panfrost_device *pfdev)
 -- 
 2.24.1.735.g03f4e72817-goog
 
