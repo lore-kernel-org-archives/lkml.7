@@ -2,157 +2,159 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69780C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A561C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DFF20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A6E20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4jIXd4m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DXG1ZtsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgAHTEh (ORCPT
+        id S1729827AbgAHTEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:04:37 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53369 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbgAHTEh (ORCPT
+        Wed, 8 Jan 2020 14:04:53 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36765 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728846AbgAHTEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:04:37 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so20470pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:04:36 -0800 (PST)
+        Wed, 8 Jan 2020 14:04:52 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so1495757plm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 11:04:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0n0kPefBHiSC19l0ovBReI/qYH/7jl0rvMgWL0WWjxQ=;
-        b=b4jIXd4msFv9sJm5Ovk6gBM0SXekcbvnNTuyy78a06oxLVkDBkwOPLO5aaO4MMd9nL
-         oCAvINGo8w3LxPobNQDOVnM5zkd8P7347bZY0Vy3wnEf0P+YGt3zLIowXfqLOOA52ys3
-         dJFSxZi2Z8X5HRtUzyGhBtyqVB+nS5uTMJz6at20oIO8P8Gvs2OabenicoomQ2+1Eefi
-         nV7tzSRgRqccc6HRUX8IKRIkvnWmLTKXcnFhgd0I8uVYY9dNLnqtxr0a5Uwtoa3CS6dG
-         XnvZSUCJYIPI519MnqfgFBu6vgJJFjPExkvX6gycwysIsXlm2mxb5fFxInU1znxgV+ic
-         hsaw==
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WuNXLxL+1sMtBQwv2K4eumVoHhxOxma8tmqoVufR3Bo=;
+        b=DXG1ZtsIcjDxidZu/VinHygy2TnOOMWJCkW68fgKSoLzbNQuosPVTfeFICr2WeZO/o
+         jEz4NM8gdLtyyjADFqAgi02ttsRMWhyxHSbz5o4LuO+7Qy+BKExbX7qFidFEVzrX+vZK
+         KCmZzBTJoCG6A7mi/a10GpnVfSa38TbwRFAE5dP+gHSQ8rrsUTznxoim7ZKKbcFH5jgf
+         EpOSKff4YTs5tRjobJ+zZoXvlf/3o0g9v6X+GCj1MkzoIb8HMcjcLlj7XGqVNh8GXcsC
+         LANolYpfTQ6cB62xGw/ttyTOV93kTgQ0xpDe0xCWHoFl4YEWonrWZ0wIMwCzLzJBXHUe
+         FtpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=0n0kPefBHiSC19l0ovBReI/qYH/7jl0rvMgWL0WWjxQ=;
-        b=N1OPS4rJbDigQiGEFVN4POdxKvVqY5SF1lIHV1dBOlIrLZryFYgh9b9J0O6RWiNU4A
-         seugMduEyJMmwxf4GtBkRHs9HfgcI7z2t8AXQ5BLQ+BIUkQO1m+x6Jnanr4xbQIRwV27
-         oRgkhK0oWRZX3ASt2rprOsKMmXYhzEwNPrqBnrdmk1KfpusF1HXyu+3AtNqmzg6ss0pj
-         hct6XBLg+//I/QBozV8kgcMSLTElOJyqAHxrx8WSCAhibkeZbnT6ISwxGCD/UbFSphiN
-         QzEBLPbruz3gvMbEUswRLRHA+oN+bRdfQgjbJj3DoDp8rawyFtk/qvA347VK3CTAb8AE
-         CeNg==
-X-Gm-Message-State: APjAAAUSTm8SDSN+iX3YVLr0Sfy2ejbw+2146gV48bJx/WeHkTc5CYYS
-        grDFaFPVq/9qkBxceD+W7FU=
-X-Google-Smtp-Source: APXvYqzFwvD0Iq+02+WegVx913/Obvx/uWsda19NOBS/ufy+odIV+0jxasRqO8osYqntQyBTgqlBhA==
-X-Received: by 2002:a17:90a:9904:: with SMTP id b4mr106179pjp.104.1578510275828;
-        Wed, 08 Jan 2020 11:04:35 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d3sm4198000pfn.113.2020.01.08.11.04.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 11:04:35 -0800 (PST)
-Subject: Re: [GIT PULL] bcm2835-dt-next-2020-01-07
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stefan Wahren <wahrenst@gmx.net>
-References: <a2f77f1a8bb3b981d3e2fccd3fcb56733b63946a.camel@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <798e3bae-e991-7a98-9a0f-5616f1f24eb4@gmail.com>
-Date:   Wed, 8 Jan 2020 11:04:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WuNXLxL+1sMtBQwv2K4eumVoHhxOxma8tmqoVufR3Bo=;
+        b=oN6MfNn8KXlGRDD+Z+QcIsW1j3AEz0kGazhl/AIy6yT5ZVtlQfDc2sLXo0n6VA8hIJ
+         +GtHoyxRy74M3H2rzp63guP50pIJwzN2Ee85+FhmfEimRquZDE75PkkWQvkiyafHP5lQ
+         l6rFS/S9VuzNH18ZP2gIvHim7guan2vSDFgkfYE4ebGPkMm7fsqc3If5pW265NI9C4xt
+         PSI+txF1FAyd+EfdvxaafVO2SzAFb0tn1+GnJys7xlPA3xuylSNtoWwKXkYHZRTNUnkB
+         0SDOs9ytTMHN6W/p2uyeC+dfdk+lnNW2Zjf5bNj3Z80qSZUjBpdtubi10GeA+rC/48/U
+         bcpA==
+X-Gm-Message-State: APjAAAVSZMq8VZjVshTKuFOaXttkS0SnuJAYllnFpdZRsGHSL1ZWv6A6
+        4PtiaqQJPEumoT+Tw9058KezYw==
+X-Google-Smtp-Source: APXvYqzdDG6/dcVOe88U3YPEnVAhW9Km4txL2BJeQX8JE8h8UKIkAzsn0ducTYHl8ZhNVbgcVE0nwg==
+X-Received: by 2002:a17:902:b701:: with SMTP id d1mr5876172pls.280.1578510291991;
+        Wed, 08 Jan 2020 11:04:51 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u127sm4731367pfc.95.2020.01.08.11.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 11:04:51 -0800 (PST)
+Date:   Wed, 8 Jan 2020 11:04:48 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
+Message-ID: <20200108190448.GI1214176@minitux>
+References: <20200108013847.899170-1-robdclark@gmail.com>
+ <20200108013847.899170-2-robdclark@gmail.com>
+ <20200108184850.GA13260@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
-In-Reply-To: <a2f77f1a8bb3b981d3e2fccd3fcb56733b63946a.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108184850.GA13260@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 11:31 AM, Nicolas Saenz Julienne wrote:
-> Hi Florian,
-> 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> 
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/vianpl/linux tags/bcm2835-dt-next-2020-01-07
-> 
-> for you to fetch changes up to 530735df62582d5d1f41faf0e0d1ca7d21dca571:
-> 
->   ARM: dts: bcm2711: Enable HWRNG support (2020-01-07 20:11:51 +0100)
-> 
-> ----------------------------------------------------------------
+On Wed 08 Jan 10:48 PST 2020, Jordan Crouse wrote:
 
-Merged into devicetree/next, thanks Nicolas!
--- 
-Florian
+> On Tue, Jan 07, 2020 at 05:38:42PM -0800, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> > 
+> > Since zap firmware can be device specific, allow for a firmware-name
+> > property in the zap node to specify which firmware to load, similarly to
+> > the scheme used for dsp/wifi/etc.
+> > 
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
+> >  1 file changed, 29 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > index 112e8b8a261e..aa8737bd58db 100644
+> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> >  {
+> >  	struct device *dev = &gpu->pdev->dev;
+> >  	const struct firmware *fw;
+> > +	const char *signed_fwname = NULL;
+> >  	struct device_node *np, *mem_np;
+> >  	struct resource r;
+> >  	phys_addr_t mem_phys;
+> > @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> >  
+> >  	mem_phys = r.start;
+> >  
+> > -	/* Request the MDT file for the firmware */
+> > -	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> > +	/*
+> > +	 * Check for a firmware-name property.  This is the new scheme
+> > +	 * to handle firmware that may be signed with device specific
+> > +	 * keys, allowing us to have a different zap fw path for different
+> > +	 * devices.
+> > +	 *
+> > +	 * If the firmware-name property is found, we bypass the
+> > +	 * adreno_request_fw() mechanism, because we don't need to handle
+> > +	 * the /lib/firmware/qcom/* vs /lib/firmware/* case.
+> > +	 *
+> > +	 * If the firmware-name property is not found, for backwards
+> > +	 * compatibility we fall back to the fwname from the gpulist
+> > +	 * table.
+> > +	 */
+> > +	of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
+> > +	if (signed_fwname) {
+> > +		fwname = signed_fwname;
+> > +		ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
+> > +		if (ret) {
+> > +			DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
+> > +			fw = ERR_PTR(ret);
+> > +		}
+> > +	} else {
+> > +		/* Request the MDT file for the firmware */
+> > +		fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> > +	}
+> > +
+> 
+> Since DT seems to be the trend for target specific firmware names I think we
+> should plan to quickly deprecate the legacy name and not require new targets to
+> set it. If a zap node is going to be opt in then it isn't onerous to ask
+> the developer to set the additional property for each target platform.
+> 
+
+For the zap specifically I agree that it would be nice to require this
+property, but for non-zap firmware it seems reasonable to continue with
+the existing scheme.
+
+Regards,
+Bjorn
