@@ -2,145 +2,83 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3475C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8A7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A202080A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9CB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcG67RSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgAHDDy (ORCPT
+        id S1726346AbgAHDJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 22:03:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgAHDDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 22:03:53 -0500
-Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67FDC2075A;
-        Wed,  8 Jan 2020 03:03:51 +0000 (UTC)
-Date:   Tue, 7 Jan 2020 22:03:49 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/22] bootconfig: Add Extra Boot Config support
-Message-ID: <20200107220349.1e7424f9@rorschach.local.home>
-In-Reply-To: <20200107205945.63e5d35a@rorschach.local.home>
-References: <157736902773.11126.2531161235817081873.stgit@devnote2>
-        <157736904075.11126.16068256892686522924.stgit@devnote2>
-        <20200107205945.63e5d35a@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.4git76 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Jan 2020 22:09:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42618 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgAHDJu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 22:09:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so858290pfz.9;
+        Tue, 07 Jan 2020 19:09:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IVKJwWRb799YarBjaEupV/+AZd6qpWqomZcRlxpziH4=;
+        b=dcG67RSDeissWwWGUMFWQy0ewfmJHgoOC3cG74w15IFr0fT17shPSWD7nrkfCFFuiT
+         OYJiBAb13k50XE8em6SYsm8425I1u6kRx3UyWEmm7iTRv4W7BgXl0ZKtu/BX9T9W/7o/
+         +sGJSt4wJS8ZPQfN450vvdRWMGdaUwGO7uCcB2h0HwwQm1xoSia108+lD/MMWQzrjteJ
+         YZ/zmMTXg+ssBumLg9xe+dIjV+ZNAmD60mSkDh94mmDcy3f9VJ1ONclIoYk0FP9N1bEs
+         C9pp0Swx+2sgMygw8Fgat+ygg1aMm/dnbWMdUhf9qc+fbBhBc68NwGb46c/rulzj60g9
+         jjWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IVKJwWRb799YarBjaEupV/+AZd6qpWqomZcRlxpziH4=;
+        b=gENpKDGJ5RS1Mc5lxiEE2zqi9cIB9aBmaZfWFvBNttnS1U3y7JrACLKOCBGJlq3rQW
+         X8ghOM/skN/1//NnvFTZWKk9LmxXr2mcwPjRPWgTZwE/NBB0anEjITOYrMXdCblVfPK6
+         8v7u584H31EgnbSH4ZFfMlJ0MbJsFj2DteRAxmnZwyK5hvCyms208sNEaw7im5zlJHtK
+         dlEG033kic1yTJ191YDYzfc6dz0suAyDDOFNQfrjukDw7nHiZ59v8AIVQiUlR4xE5RDc
+         J5yfj2AO66PW5AgWBbQesqEZuTS+JrfXmejgahg2cQ/e/j3zzsZL7eRSjFbJsdHqmVyt
+         d7ZQ==
+X-Gm-Message-State: APjAAAWxqxXhE03i9G85YT1xTht6+FQTvD29svPMPccwVrgC70kIkDm5
+        UXWIxDxjJrHmXCy201OeVGs=
+X-Google-Smtp-Source: APXvYqwF9xbyXgjqvvO4QzVvKYZABKWyI8Zx0WfWaQIdag+lwTPI2vUU7MuJFZ2og3YhAQL8z19fQA==
+X-Received: by 2002:aa7:9484:: with SMTP id z4mr2756831pfk.88.1578452989513;
+        Tue, 07 Jan 2020 19:09:49 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l8sm946980pjy.24.2020.01.07.19.09.45
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 Jan 2020 19:09:49 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     baolin.wang7@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND 0/2] Some improvements for Qualcomm hwspinlock
+Date:   Wed,  8 Jan 2020 11:09:09 +0800
+Message-Id: <cover.1578452735.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 20:59:45 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+This patch set did some optimization for Qualcomm hwlock controller,
+including using devm_hwspin_lock_register() API to simplify code and
+removing redundant pm runtime functions.
 
-> 
-> > +
-> > +/*
-> > + * Return delimiter or error, no node added. As same as lib/cmdline.c,
-> > + * you can use " around spaces, but can't escape " for value.
-> > + */
-> > +static int __init __xbc_parse_value(char **__v, char **__n)
-> > +{
-> > +	char *p, *v = *__v;
-> > +	int c, quotes = 0;
-> > +
-> > +	v = skip_spaces(v);
-> > +	while (*v == '#') {
-> > +		v = skip_comment(v);
-> > +		v = skip_spaces(v);
-> > +	}
-> > +	if (*v == '"' || *v == '\'') {
-> > +		quotes = *v;
-> > +		v++;
-> > +	}
-> > +	p = v - 1;
-> > +	while ((c = *++p)) {
-> > +		if (!isprint(c) && !isspace(c))
-> > +			return xbc_parse_error("Non printable value", p);
-> > +		if (quotes) {
-> > +			if (c != quotes)
-> > +				continue;
-> > +			quotes = 0;
-> > +			*p++ = '\0';
-> > +			p = skip_spaces(p);  
-> 
-> Hmm, if p here == "    \0" then skip_spaces() will make p == "\0"
-> 
-> > +			c = *p;
-> > +			if (c && !strchr(",;\n#}", c))
-> > +				return xbc_parse_error("No value delimiter", p);
-> > +			p++;  
-> 
-> Now p == one passed "\0" which is in unknown territory.
+Baolin Wang (2):
+  hwspinlock: qcom: Remove redundant PM runtime functions
+  hwspinlock: qcom: Use devm_hwspin_lock_register() to register hwlock
+    controller
 
-I like how you have patch 3 use this code. It makes it easy to test,
-and valgrind pointed out that this is a bug. With a file that just
-contained:
+ drivers/hwspinlock/qcom_hwspinlock.c |   28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
 
-   foo = "1"
+-- 
+1.7.9.5
 
-I ran this:
-
-  $ valgrind -v --leak-check=full ./tools/bootconfig/bootconfig -a /tmp/boot-bad /tmp/initrd  2>/tmp/out
-
-Which gave me this:
-
-==18929== Invalid read of size 1
-==18929==    at 0x483FC02: strpbrk (vg_replace_strmem.c:1690)
-==18929==    by 0x40263C: xbc_init (bootconfig.c:724)
-==18929==    by 0x403162: apply_xbc (main.c:255)
-==18929==    by 0x403346: main (main.c:331)
-==18929==  Address 0x4a4e09f is 0 bytes after a block of size 15 alloc'd
-==18929==    at 0x483780B: malloc (vg_replace_malloc.c:309)
-==18929==    by 0x402B9D: load_xbc_fd (main.c:95)
-==18929==    by 0x402C87: load_xbc_file (main.c:120)
-==18929==    by 0x4030AC: apply_xbc (main.c:238)
-==18929==    by 0x403346: main (main.c:331)
-
-Which proves this the issue as when I apply the patch below, this goes
-away:
-
--- Steve
-
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 7a7cdc45bf62..0793ef9f48b8 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -468,7 +468,8 @@ static int __init __xbc_parse_value(char **__v, char **__n)
- 			c = *p;
- 			if (c && !strchr(",;\n#}", c))
- 				return xbc_parse_error("No value delimiter", p);
--			p++;
-+			if (*p)
-+				p++;
- 			break;
- 		}
- 		if (strchr(",;\n#}", c)) {
