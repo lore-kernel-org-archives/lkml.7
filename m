@@ -2,122 +2,112 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63234C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14CEC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C8220692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578502697;
-	bh=8kstCzcaZmd+YgRdW1aDqr4GzCRDQW1ZYslQh7akxw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=So8BYa8k8UZQM9/ZQgTYHNBG6XQW91obtFGVHsxCZrjChttP2KGN8dp5jjVodRrhZ
-	 uZYj+VbpqEnVvA9gVT8jbWSYXNNjVMi1kad0ZEJG0AHQkOCKHdDSJ6C1C1YUk2fu3N
-	 TbWMoNXChopgsWTERBEzSSqukM9K6/Eru7PUSktg=
+	by mail.kernel.org (Postfix) with ESMTP id AE2782072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgAHQ6Q (ORCPT
+        id S1729616AbgAHQ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:58:16 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37700 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgAHQ6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:58:16 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k14so4248573otn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:58:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AWmgSsfRzvwSL0sYtWV5JPk31n0xrdke8dXDCuRYCJA=;
-        b=uWlE7gy4CH18x6SCMg6jagFdvbiaXIMkv91FtLpv8u6l4hsrAsxiZLxOxHMzl1Xaz/
-         A16vMNyfcn6atphMFbNRiGLgM5UubsIL4AjM8dB9xD0cSLLNWtL5r/HnJ3m1hWhNATjt
-         3UKUXNA9U0iib07w2o8miA1tKHglPtzy9KgorcWPSYutzY2xgDWUz36ZMexkUj4BvlDq
-         OOMLTx0K8ZoXufKvneDcUgrsWPrH5P7Df+jwoPgyW2jMARILkkZAGFIpMM4lJwgl2bq7
-         z04lcEjiL9D5khugxGwf7Tzr3oGEc9uA0+tRIN5uCbQXi5ANr/x8BdyfWIjy5jinKfha
-         eQfg==
-X-Gm-Message-State: APjAAAUGi/VAVqFr0X73YNELfZYU5egCa8NdNXcZneJfriQwIPvvT386
-        2PJ0EhFGR9VwrTKRrj6XvsadU0Y=
-X-Google-Smtp-Source: APXvYqx6wMwdoUYu4Ab0xUHiVPoA5kBQ4AH7ZjJaV0Lj2N7SGBjPjE6q+efAPVcMqEtKmtCekQZSlg==
-X-Received: by 2002:a9d:7e8c:: with SMTP id m12mr5102251otp.346.1578502695237;
-        Wed, 08 Jan 2020 08:58:15 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm1266023oti.44.2020.01.08.08.58.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:58:14 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220333
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 10:58:13 -0600
-Date:   Wed, 8 Jan 2020 10:58:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: devantech-srf04.yaml: add pm feature
-Message-ID: <20200108165813.GA4472@bogus>
-References: <20200102172749.v7ufupd32ytf7jda@arbad>
+        Wed, 8 Jan 2020 11:58:33 -0500
+Received: from mga02.intel.com ([134.134.136.20]:22870 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727308AbgAHQ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:58:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:58:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="216008936"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 08:58:28 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipEf6-0005gm-7m; Wed, 08 Jan 2020 18:58:28 +0200
+Date:   Wed, 8 Jan 2020 18:58:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 33/36] platform/x86: intel_pmc_ipc: Use octal
+ permissions in sysfs attributes
+Message-ID: <20200108165828.GQ32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-34-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200102172749.v7ufupd32ytf7jda@arbad>
+In-Reply-To: <20200108114201.27908-34-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 06:27:51PM +0100, Andreas Klinger wrote:
-> Add GPIO line and startup time for usage of power management
+On Wed, Jan 08, 2020 at 02:41:58PM +0300, Mika Westerberg wrote:
+> This is the current preferred way so replace the S_IWUSR with the
+> corresponding octal value. While there move the attributes to follow
+> directly their store functions.
 > 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  .../bindings/iio/proximity/devantech-srf04.yaml          | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/platform/x86/intel_pmc_ipc.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> index 4e80ea7c1475..b3fcb3b79485 100644
-> --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> @@ -51,6 +51,22 @@ properties:
->        the time between two interrupts is measured in the driver.
->      maxItems: 1
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index acec1c6d2069..20a4bb72aeac 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -215,6 +215,7 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+>  	}
+>  	return (ssize_t)count;
+>  }
+> +static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
 >  
-> +  power-gpios:
-> +    description:
-> +      Definition of the GPIO for power management of connected peripheral
-> +      (output).
-> +      This GPIO can be used by the external hardware for power management.
-> +      When the device gets suspended it's switched off and when it resumes
-> +      it's switched on again. After some period of inactivity the driver
-> +      get suspended automatically (autosuspend feature).
-> +    maxItems: 1
-> +
-> +  startup-time-ms:
-
-Why isn't this implied by the compatible string? 
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-You can drop this for standard units. 
-
-0-2^32 is valid?
-
-> +    description:
-> +      This is the startup time the device needs after a resume to be up and
-> +      running.
-> +
->  required:
->    - compatible
->    - trig-gpios
+>  static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+>  					     struct device_attribute *attr,
+> @@ -240,11 +241,7 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+>  	}
+>  	return (ssize_t)count;
+>  }
+> -
+> -static DEVICE_ATTR(simplecmd, S_IWUSR,
+> -		   NULL, intel_pmc_ipc_simple_cmd_store);
+> -static DEVICE_ATTR(northpeak, S_IWUSR,
+> -		   NULL, intel_pmc_ipc_northpeak_store);
+> +static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
+>  
+>  static struct attribute *intel_ipc_attrs[] = {
+>  	&dev_attr_northpeak.attr,
 > -- 
-> 2.11.0
+> 2.24.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
