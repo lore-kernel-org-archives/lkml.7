@@ -2,152 +2,77 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A45C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC0C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A026F2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7922070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgAHQEM (ORCPT
+        id S1728855AbgAHQFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:04:12 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46689 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbgAHQEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:04:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id p206so2325910iod.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:04:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0ql51vCXD/7O9m49nxhLaO28UcXFQ02g+94droshIoE=;
-        b=ZOkMXD3d1nfwh2iRneyFFbVuDX+82JeF0QvDJXgph+OdYkZu5WtYINPZYWHiDmmFNN
-         axArlV9NYDUSWDIiCF4K8P/4TUOfKgJoOZMRD9gJkzuv0RWZ2c08w/dzQ/t3VMvXVSyX
-         EJEGf/ppGwtU2N97GKo89m23vv0HTCC0Nq18px/hFAUI78H/74Q1mz9+W2Q5NqSPONMm
-         NWpwdNh97ckhQtgyhEXuiAHNX8tS94BbamN2PgiOh/ypaMudYadiJNBWZ8UynngHl9AE
-         nAUxTMGy8lkDSVvGSJioZdNyqqbzcQ+qC13y5C9UQvak8AWNq144Xe6//rCwNs/0Hefg
-         mAmQ==
-X-Gm-Message-State: APjAAAVvcPRo7rs3IMebRegw2eajD+a/rZzY74qypXeW7yHoRe0QkqvG
-        Xj3No1zIDe070tSOnez97ZIGTP0I+CpniQBxTAXjzN/bs5yE
-X-Google-Smtp-Source: APXvYqzbavVTTUHbb/1qru7jc96xgIWfpvJ3CU5HKJ2OEEM3kmMgwTfD66qOwZQBjyWEktuzti8EI50faSKzA7oAtHUBrdjaxlg+
+        Wed, 8 Jan 2020 11:05:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:7093 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726922AbgAHQE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:04:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:04:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="211580709"
+Received: from dkurtaev-mobl.ccr.corp.intel.com ([10.252.22.167])
+  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 08:04:55 -0800
+Message-ID: <80272f0259d967fe61dacd1036cbbd9f555b8402.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm: handle negative priv->response_len in
+ tpm_common_read
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
+        labbott@redhat.com
+In-Reply-To: <b469b7e8454a69402529cc8e25244860e136308e.camel@linux.intel.com>
+References: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
+         <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
+         <b469b7e8454a69402529cc8e25244860e136308e.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-X-Received: by 2002:a02:cd31:: with SMTP id h17mr4602297jaq.94.1578499450243;
- Wed, 08 Jan 2020 08:04:10 -0800 (PST)
-Date:   Wed, 08 Jan 2020 08:04:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000002902c059ba30b4b@google.com>
-Subject: general protection fault in hash_ipportip6_uadt
-From:   syzbot <syzbot+19df0457b3f8383e02bd@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        info@metux.net, jeremy@azazel.net, kadlec@netfilter.org,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Date:   Wed, 08 Jan 2020 18:04:49 +0200
+User-Agent: Evolution 3.34.1-2 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 2020-01-08 at 17:58 +0200, Jarkko Sakkinen wrote:
+> On Tue, 2020-01-07 at 14:04 -0800, Tadeusz Struk wrote:
+> > The priv->responce_length can hold the size of an response or
+> > an negative error code, and the tpm_common_read() needs to handle
+> > both cases correctly. Changed the type of responce_length to
+> > signed and accounted for negative value in tpm_common_read()
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
+> > Reported-by: Laura Abbott <labbott@redhat.com>
+> > Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Adding to the next PR.
 
-syzbot found the following crash on:
+Applied but had to fix bunch of typos, missing punctaction and
+missing parentheses in the commit message. Even checkpatch.pl
+was complaining :-/
 
-HEAD commit:    ae608821 Merge tag 'trace-v5.5-rc5' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a8e885e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
-dashboard link: https://syzkaller.appspot.com/bug?extid=19df0457b3f8383e02bd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ccdf51e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123dd5fee00000
+Thanks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19df0457b3f8383e02bd@syzkaller.appspotmail.com
+/Jarkko
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9515 Comm: syz-executor397 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:hash_ipportip6_uadt+0x226/0xa00  
-net/netfilter/ipset/ip_set_hash_ipportip.c:285
-Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 14 07 00 00 4c 89  
-ea 45 8b 76 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 d9
-RSP: 0018:ffffc90001d07170 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90001d07320 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff867d0153 RDI: ffff888094d55430
-RBP: ffffc90001d072b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffff8880a6f34c00
-R13: 0000000000000000 R14: 0000000004000000 R15: 0000000000000002
-FS:  0000000001348880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000180 CR3: 00000000a2c54000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
-  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441469
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe390fa778 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441469
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00000000000166ea R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402290
-R13: 0000000000402320 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 12a892406cf2adb8 ]---
-RIP: 0010:hash_ipportip6_uadt+0x226/0xa00  
-net/netfilter/ipset/ip_set_hash_ipportip.c:285
-Code: 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 14 07 00 00 4c 89  
-ea 45 8b 76 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 d9
-RSP: 0018:ffffc90001d07170 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffffc90001d07320 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff867d0153 RDI: ffff888094d55430
-RBP: ffffc90001d072b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: ffff8880a6f34c00
-R13: 0000000000000000 R14: 0000000004000000 R15: 0000000000000002
-FS:  0000000001348880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000180 CR3: 00000000a2c54000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
