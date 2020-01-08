@@ -2,89 +2,143 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D65C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9FCC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC6A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EY7ctXSu"
+	by mail.kernel.org (Postfix) with ESMTP id CFAD92075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgAHQ50 (ORCPT
+        id S1729594AbgAHQ6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:57:26 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgAHQ5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:57:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2/grOTBgUAvethVaNAqsX059fFfNkvhqoW88UGGxm7k=; b=EY7ctXSukj3r60Zq9V0xRGPZt
-        pcoHDTBrU9/U/T9W/u7/lPBqYmJdHvn5joBgWqzJu1kAAB2agXa5CJ7F/4uJphAZaXGoYTLf6G5/P
-        gcJvpUoZeccH3ZtoOX32cTJpBHYG4bWhyo6nyjiT6dZmk740K9aOUnm8QH7rSdOi2RFCL8bD+uHyw
-        QMufaqnCW10JBHm5uCzrI3oylj/Q+JMQz+H5+Is4pS2PxVaj+FSGfRn1VBAKYsNfDu02oZlBsEDqJ
-        sDCbs19FvbQfZpWPe5oSLlGfx2J6RXwCniDvD/bOgDRH5OzetrI29+4h1GU4MPNhYPQahNaivzf1l
-        /o3ltpAug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipEdq-000890-Pg; Wed, 08 Jan 2020 16:57:10 +0000
-Date:   Wed, 8 Jan 2020 08:57:10 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, YueHaibing <yuehaibing@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, Chao Yu <yuchao0@huawei.com>
-Subject: Re: [PATCH v4] fs: Fix page_mkwrite off-by-one errors
-Message-ID: <20200108165710.GA18523@infradead.org>
-References: <20200108131528.4279-1-agruenba@redhat.com>
+        Wed, 8 Jan 2020 11:58:03 -0500
+Received: from mga05.intel.com ([192.55.52.43]:46379 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727308AbgAHQ6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:58:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:57:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="422974167"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 08:57:49 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipEeT-0005gJ-AJ; Wed, 08 Jan 2020 18:57:49 +0200
+Date:   Wed, 8 Jan 2020 18:57:49 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 30/36] platform/x86: intel_pmc_ipc: Drop
+ intel_pmc_ipc_command()
+Message-ID: <20200108165749.GP32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-31-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108131528.4279-1-agruenba@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200108114201.27908-31-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't want to be the party pooper, but shouldn't this be a series
-with one patch to add the helper, and then once for each fs / piece
-of common code switched over?
+On Wed, Jan 08, 2020 at 02:41:55PM +0300, Mika Westerberg wrote:
+> Now that all callers have been converted over to the SCU IPC API we can
+> drop intel_pmc_ipc_command().
 
-On Wed, Jan 08, 2020 at 02:15:28PM +0100, Andreas Gruenbacher wrote:
-> Hi Darrick,
-> 
-> here's an updated version with the latest feedback incorporated.  Hope
-> you find that useful.
-> 
-> As far as the f2fs merge conflict goes, I've been told by Linus not to
-> resolve those kinds of conflicts but to point them out when sending the
-> merge request.  So this shouldn't be a big deal.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Also this isn't really the proper way to write a commit message.  This
-text would go into the cover letter if it was a series..
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  arch/x86/include/asm/intel_pmc_ipc.h |  8 --------
+>  drivers/platform/x86/intel_pmc_ipc.c | 21 ---------------------
+>  2 files changed, 29 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+> index ddc964b9c78c..22848df5faaf 100644
+> --- a/arch/x86/include/asm/intel_pmc_ipc.h
+> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
+> @@ -27,19 +27,11 @@
+>  
+>  #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+>  
+> -int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> -		u32 *out, u32 outlen);
+>  int intel_pmc_s0ix_counter_read(u64 *data);
+>  int intel_pmc_gcr_read64(u32 offset, u64 *data);
+>  
+>  #else
+>  
+> -static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> -		u32 *out, u32 outlen)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  static inline int intel_pmc_s0ix_counter_read(u64 *data)
+>  {
+>  	return -EINVAL;
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 10505fbd01b5..241bce603183 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -194,27 +194,6 @@ static int update_no_reboot_bit(void *priv, bool set)
+>  				    PMC_CFG_NO_REBOOT_MASK, value);
+>  }
+>  
+> -/**
+> - * intel_pmc_ipc_command() -  IPC command with input/output data
+> - * @cmd:	IPC command code.
+> - * @sub:	IPC command sub type.
+> - * @in:		input data of this IPC command.
+> - * @inlen:	input data length in bytes.
+> - * @out:	output data of this IPC command.
+> - * @outlen:	output data length in dwords.
+> - *
+> - * Send an IPC command to PMC with input/output data.
+> - *
+> - * Return:	an IPC error code or 0 on success.
+> - */
+> -int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> -			  u32 *out, u32 outlen)
+> -{
+> -	return intel_scu_ipc_dev_command(NULL, cmd, sub, in, inlen, out,
+> -					 outlen);
+> -}
+> -EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
+> -
+>  static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct intel_pmc_ipc_dev *pmc = &ipcdev;
+> -- 
+> 2.24.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
