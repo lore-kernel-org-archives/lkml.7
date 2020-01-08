@@ -2,385 +2,100 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E333EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C4FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A825020692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A164B20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igeJOclL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LTssbe7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgAHRsB (ORCPT
+        id S1729082AbgAHRsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:48:01 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59701 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729008AbgAHRsA (ORCPT
+        Wed, 8 Jan 2020 12:48:14 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35121 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbgAHRsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:48:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578505679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QOnVxVMswYaD0ZumDnZ4gh4bs69+nER6Pzs0IsTXePc=;
-        b=igeJOclL6R0+CYiZn65iizSPsWYIczVJ4L8CB1ipTbnq9e58qJDAN1N0WkzWQTL0Lvndr2
-        eEfQiFkhnCn/0KEga5l+mjn1jfGyZ/Qt6dYJ6i1hrPaJydNL8jCSISmCIHnFE0Q9sOtTmo
-        mRsKQG497BZNqcYPnCYfKq8eGuKHzDU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-62s0hluNNb-hdTu8WlN7FQ-1; Wed, 08 Jan 2020 12:47:57 -0500
-X-MC-Unique: 62s0hluNNb-hdTu8WlN7FQ-1
-Received: by mail-wm1-f72.google.com with SMTP id q26so570218wmq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:47:57 -0800 (PST)
+        Wed, 8 Jan 2020 12:48:14 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x123so2431282vsc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6fjeBXfdA5v8j8/xbcj6l8Tou8rGGc9L+qfhjRz0QRI=;
+        b=LTssbe7xKtfJVDgsmMn2w88kRfx17N272Mz1utTbhfsLCjMFjPKI/5jq1OVsGaqA/q
+         XdMmhJqxW1e83ABFojZyXrW0egWKzCycXb0O62a+JoAHeY5Xx8k6d+4OXPTQq+lexwaq
+         twnq+XxLCP5A58S4nIVyd5jdb6MYrvhrtWTf8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QOnVxVMswYaD0ZumDnZ4gh4bs69+nER6Pzs0IsTXePc=;
-        b=jRK6lzIc94CW7gqccxEmkq3cV8b/UfnZM1h1lM+FG9HH1XEEWXV79KdF8UrUzG7kzD
-         vuSUKBFRk5I9MgYQJBW9WYYSep33uCmTEp982XYnootvlI6aZmRy/xRKoyRrUCEMiS4a
-         YH1bIczmkrgQGqzIdcMICCgX91QTLiJRVwJWJXQZ3vVwps36DoSnUZb1HFtddu3mHOvR
-         TYIn5lLRbR+djW9h31MaVZ2ATCbY5da7zdOJvTZrZuLGEAB55+qF/E2iDMrwTyUUxkUv
-         +vh1YcWSEGCU+NHLuYKjn8eGpErLFKdfKefiXR0cfbQkY9LCpB2YZDicNYdb2ZiNIi30
-         HB6g==
-X-Gm-Message-State: APjAAAW7FIb4ZIqT3KE6ezSZkMAXcTt9ZNWQKiyrNfmWZ78OA90K1FSW
-        dmeuxrrmot5Z9TaPY9NUhVD420hHVMNbeFFFdntQMhBph656h4UEFz4lbFcHdkhQR6K0euROKSz
-        c9crKmU055L1gI17B24ESAzFS
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr5740534wrp.238.1578505676513;
-        Wed, 08 Jan 2020 09:47:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqytiq8fGB4XJIfgnQFwfq6kd2frSthqbcpCRt1r2qYyVfikdhxnnHrB/7iMcCMqbAMEqp8kuA==
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr5740507wrp.238.1578505676165;
-        Wed, 08 Jan 2020 09:47:56 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
-        by smtp.gmail.com with ESMTPSA id p5sm5121993wrt.79.2020.01.08.09.47.55
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6fjeBXfdA5v8j8/xbcj6l8Tou8rGGc9L+qfhjRz0QRI=;
+        b=rNAqvPX8rWg21IMT2IoXaWWSuOfzSuL6XzkWaM/w6+E7abrv2qyh79DRbMV37zsYdf
+         i3ZJssOhOrbDTVP3WSUslZr1rfvWl71Hb4LXXXz3b2E09hDQkm6/IIhbxBvLwmsyTuho
+         T3eGnqHMCD8Ko7u9nsm96bavKt6VFlYYqNeiWlfKTE767R8eV18quLxBWOddipVuMY8u
+         MqlbYT0PuUUcnznfE2RGtr8EqAuFNvAnxOGWoVGCOGTaOm/vB7RoojKFvb7c6rQkw0jQ
+         yiJi7vf53nWuLS6an+5gsw07zbia3MJQpw4Hz8PWe5JFg7DpsXax3y8/8kQl+E1TWVyt
+         WOHQ==
+X-Gm-Message-State: APjAAAUlTxc6pOvrleBn9d+oojJK+mFI5J3YtU/WG+G5OE7c/roi7lnn
+        nS4BGk2WaWstY2927EpgYxa2X4Sfp4A=
+X-Google-Smtp-Source: APXvYqzWVUjW2oh4D930Tk+Ob+vYYeOD284XnX7TCRpGKdqYe3JTB0dr7BJwOrK6UFR8PWS5K/Aw9g==
+X-Received: by 2002:a67:e2c4:: with SMTP id i4mr3489804vsm.143.1578505693448;
+        Wed, 08 Jan 2020 09:48:13 -0800 (PST)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id g22sm903265uap.1.2020.01.08.09.48.12
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 09:47:55 -0800 (PST)
-Subject: Re: [PATCH RESEND v2 07/17] KVM: Move running VCPU from ARM to common
- code
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-8-peterx@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <34a05518-40dd-6b5a-cbb6-b01ba93638c4@redhat.com>
-Date:   Wed, 8 Jan 2020 18:47:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 08 Jan 2020 09:48:12 -0800 (PST)
+Received: by mail-vs1-f45.google.com with SMTP id b4so2393611vsa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:48:12 -0800 (PST)
+X-Received: by 2002:a67:e342:: with SMTP id s2mr1091753vsm.198.1578505692418;
+ Wed, 08 Jan 2020 09:48:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191221014938.58831-8-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200108092908.1.I3afd3535b65460e79f3976e9ebfa392a0dd75e01@changeid>
+In-Reply-To: <20200108092908.1.I3afd3535b65460e79f3976e9ebfa392a0dd75e01@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Jan 2020 09:48:00 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WFCjzRGv=8C-LU9O+fRi_C6E6zuyM7SyAX7CWx=wHnGw@mail.gmail.com>
+Message-ID: <CAD=FV=WFCjzRGv=8C-LU9O+fRi_C6E6zuyM7SyAX7CWx=wHnGw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Use ABI name for recovery mode pin on
+ veyron fievel/tiger
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/12/19 02:49, Peter Xu wrote:
-> From: Paolo Bonzini <pbonzini@redhat.com>
-> 
-> For ring-based dirty log tracking, it will be more efficient to account
-> writes during schedule-out or schedule-in to the currently running VCPU.
-> We would like to do it even if the write doesn't use the current VCPU's
-> address space, as is the case for cached writes (see commit 4e335d9e7ddb,
-> "Revert "KVM: Support vCPU-based gfn->hva cache"", 2017-05-02).
-> 
-> Therefore, add a mechanism to track the currently-loaded kvm_vcpu struct.
-> There is already something similar in KVM/ARM; one important difference
-> is that kvm_arch_vcpu_{load,put} have two callers in virt/kvm/kvm_main.c:
-> we have to update both the architecture-independent vcpu_{load,put} and
-> the preempt notifiers.
-> 
-> Another change made in the process is to allow using kvm_get_running_vcpu()
-> in preemptible code.  This is allowed because preempt notifiers ensure
-> that the value does not change even after the VCPU thread is migrated.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+Hi,
+
+On Wed, Jan 8, 2020 at 9:29 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The recovery mode pin is currently named 'REC_MODE_L', which is
+> how the signal is called in the schematics. The Chrome OS ABI
+> requires the pin to be named 'RECOVERY_SW_L', which is also how
+> it is called on all other veyron devices. Rename the pin to match
+> the ABI.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  arch/arm/include/asm/kvm_host.h   |  2 --
->  arch/arm64/include/asm/kvm_host.h |  2 --
->  include/linux/kvm_host.h          |  3 +++
->  virt/kvm/arm/arch_timer.c         |  2 +-
->  virt/kvm/arm/arm.c                | 29 -----------------------------
->  virt/kvm/arm/perf.c               |  6 +++---
->  virt/kvm/arm/vgic/vgic-mmio.c     | 15 +++------------
->  virt/kvm/kvm_main.c               | 25 ++++++++++++++++++++++++-
->  8 files changed, 34 insertions(+), 50 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-> index 8a37c8e89777..40eff9cc3744 100644
-> --- a/arch/arm/include/asm/kvm_host.h
-> +++ b/arch/arm/include/asm/kvm_host.h
-> @@ -274,8 +274,6 @@ int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64 __user *indices);
->  int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
->  int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
->  
-> -struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
-> -struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
->  void kvm_arm_halt_guest(struct kvm *kvm);
->  void kvm_arm_resume_guest(struct kvm *kvm);
->  
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index f656169db8c3..df8d72f7c20e 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -430,8 +430,6 @@ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
->  int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
->  int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
->  
-> -struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
-> -struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
->  void kvm_arm_halt_guest(struct kvm *kvm);
->  void kvm_arm_resume_guest(struct kvm *kvm);
->  
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 24854c9e3717..b4f7bef38e0d 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1323,6 +1323,9 @@ static inline void kvm_vcpu_set_dy_eligible(struct kvm_vcpu *vcpu, bool val)
->  }
->  #endif /* CONFIG_HAVE_KVM_CPU_RELAX_INTERCEPT */
->  
-> +struct kvm_vcpu *kvm_get_running_vcpu(void);
-> +struct kvm_vcpu __percpu **kvm_get_running_vcpus(void);
-> +
->  #ifdef CONFIG_HAVE_KVM_IRQ_BYPASS
->  bool kvm_arch_has_irq_bypass(void);
->  int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *,
-> diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-> index e2bb5bd60227..085e7fed850c 100644
-> --- a/virt/kvm/arm/arch_timer.c
-> +++ b/virt/kvm/arm/arch_timer.c
-> @@ -1022,7 +1022,7 @@ static bool timer_irqs_are_valid(struct kvm_vcpu *vcpu)
->  
->  bool kvm_arch_timer_get_input_level(int vintid)
->  {
-> -	struct kvm_vcpu *vcpu = kvm_arm_get_running_vcpu();
-> +	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
->  	struct arch_timer_context *timer;
->  
->  	if (vintid == vcpu_vtimer(vcpu)->irq.irq)
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 86c6aa1cb58e..f7dbb94ec525 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -47,9 +47,6 @@ __asm__(".arch_extension	virt");
->  DEFINE_PER_CPU(kvm_host_data_t, kvm_host_data);
->  static DEFINE_PER_CPU(unsigned long, kvm_arm_hyp_stack_page);
->  
-> -/* Per-CPU variable containing the currently running vcpu. */
-> -static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_arm_running_vcpu);
-> -
->  /* The VMID used in the VTTBR */
->  static atomic64_t kvm_vmid_gen = ATOMIC64_INIT(1);
->  static u32 kvm_next_vmid;
-> @@ -58,31 +55,8 @@ static DEFINE_SPINLOCK(kvm_vmid_lock);
->  static bool vgic_present;
->  
->  static DEFINE_PER_CPU(unsigned char, kvm_arm_hardware_enabled);
-> -
-> -static void kvm_arm_set_running_vcpu(struct kvm_vcpu *vcpu)
-> -{
-> -	__this_cpu_write(kvm_arm_running_vcpu, vcpu);
-> -}
-> -
->  DEFINE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->  
-> -/**
-> - * kvm_arm_get_running_vcpu - get the vcpu running on the current CPU.
-> - * Must be called from non-preemptible context
-> - */
-> -struct kvm_vcpu *kvm_arm_get_running_vcpu(void)
-> -{
-> -	return __this_cpu_read(kvm_arm_running_vcpu);
-> -}
-> -
-> -/**
-> - * kvm_arm_get_running_vcpus - get the per-CPU array of currently running vcpus.
-> - */
-> -struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
-> -{
-> -	return &kvm_arm_running_vcpu;
-> -}
-> -
->  int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
->  {
->  	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
-> @@ -374,7 +348,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  	vcpu->cpu = cpu;
->  	vcpu->arch.host_cpu_context = &cpu_data->host_ctxt;
->  
-> -	kvm_arm_set_running_vcpu(vcpu);
->  	kvm_vgic_load(vcpu);
->  	kvm_timer_vcpu_load(vcpu);
->  	kvm_vcpu_load_sysregs(vcpu);
-> @@ -398,8 +371,6 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->  	kvm_vcpu_pmu_restore_host(vcpu);
->  
->  	vcpu->cpu = -1;
-> -
-> -	kvm_arm_set_running_vcpu(NULL);
->  }
->  
->  static void vcpu_power_off(struct kvm_vcpu *vcpu)
-> diff --git a/virt/kvm/arm/perf.c b/virt/kvm/arm/perf.c
-> index 918cdc3839ea..d45b8b9a4415 100644
-> --- a/virt/kvm/arm/perf.c
-> +++ b/virt/kvm/arm/perf.c
-> @@ -13,14 +13,14 @@
->  
->  static int kvm_is_in_guest(void)
->  {
-> -        return kvm_arm_get_running_vcpu() != NULL;
-> +        return kvm_get_running_vcpu() != NULL;
->  }
->  
->  static int kvm_is_user_mode(void)
->  {
->  	struct kvm_vcpu *vcpu;
->  
-> -	vcpu = kvm_arm_get_running_vcpu();
-> +	vcpu = kvm_get_running_vcpu();
->  
->  	if (vcpu)
->  		return !vcpu_mode_priv(vcpu);
-> @@ -32,7 +32,7 @@ static unsigned long kvm_get_guest_ip(void)
->  {
->  	struct kvm_vcpu *vcpu;
->  
-> -	vcpu = kvm_arm_get_running_vcpu();
-> +	vcpu = kvm_get_running_vcpu();
->  
->  	if (vcpu)
->  		return *vcpu_pc(vcpu);
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-> index 0d090482720d..d656ebd5f9d4 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
-> @@ -190,15 +190,6 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
->   * value later will give us the same value as we update the per-CPU variable
->   * in the preempt notifier handlers.
->   */
-> -static struct kvm_vcpu *vgic_get_mmio_requester_vcpu(void)
-> -{
-> -	struct kvm_vcpu *vcpu;
-> -
-> -	preempt_disable();
-> -	vcpu = kvm_arm_get_running_vcpu();
-> -	preempt_enable();
-> -	return vcpu;
-> -}
->  
->  /* Must be called with irq->irq_lock held */
->  static void vgic_hw_irq_spending(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
-> @@ -221,7 +212,7 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
->  			      gpa_t addr, unsigned int len,
->  			      unsigned long val)
->  {
-> -	bool is_uaccess = !vgic_get_mmio_requester_vcpu();
-> +	bool is_uaccess = !kvm_get_running_vcpu();
->  	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
->  	int i;
->  	unsigned long flags;
-> @@ -274,7 +265,7 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
->  			      gpa_t addr, unsigned int len,
->  			      unsigned long val)
->  {
-> -	bool is_uaccess = !vgic_get_mmio_requester_vcpu();
-> +	bool is_uaccess = !kvm_get_running_vcpu();
->  	u32 intid = VGIC_ADDR_TO_INTID(addr, 1);
->  	int i;
->  	unsigned long flags;
-> @@ -335,7 +326,7 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
->  				    bool active)
->  {
->  	unsigned long flags;
-> -	struct kvm_vcpu *requester_vcpu = vgic_get_mmio_requester_vcpu();
-> +	struct kvm_vcpu *requester_vcpu = kvm_get_running_vcpu();
->  
->  	raw_spin_lock_irqsave(&irq->irq_lock, flags);
->  
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 17969cf110dd..5c606d158854 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -108,6 +108,7 @@ struct kmem_cache *kvm_vcpu_cache;
->  EXPORT_SYMBOL_GPL(kvm_vcpu_cache);
->  
->  static __read_mostly struct preempt_ops kvm_preempt_ops;
-> +static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
->  
->  struct dentry *kvm_debugfs_dir;
->  EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
-> @@ -199,6 +200,8 @@ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
->  void vcpu_load(struct kvm_vcpu *vcpu)
->  {
->  	int cpu = get_cpu();
-> +
-> +	__this_cpu_write(kvm_running_vcpu, vcpu);
->  	preempt_notifier_register(&vcpu->preempt_notifier);
->  	kvm_arch_vcpu_load(vcpu, cpu);
->  	put_cpu();
-> @@ -210,6 +213,7 @@ void vcpu_put(struct kvm_vcpu *vcpu)
->  	preempt_disable();
->  	kvm_arch_vcpu_put(vcpu);
->  	preempt_notifier_unregister(&vcpu->preempt_notifier);
-> +	__this_cpu_write(kvm_running_vcpu, NULL);
->  	preempt_enable();
->  }
->  EXPORT_SYMBOL_GPL(vcpu_put);
-> @@ -4294,8 +4298,8 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
->  	WRITE_ONCE(vcpu->preempted, false);
->  	WRITE_ONCE(vcpu->ready, false);
->  
-> +	__this_cpu_write(kvm_running_vcpu, vcpu);
->  	kvm_arch_sched_in(vcpu, cpu);
-> -
->  	kvm_arch_vcpu_load(vcpu, cpu);
->  }
->  
-> @@ -4309,6 +4313,25 @@ static void kvm_sched_out(struct preempt_notifier *pn,
->  		WRITE_ONCE(vcpu->ready, true);
->  	}
->  	kvm_arch_vcpu_put(vcpu);
-> +	__this_cpu_write(kvm_running_vcpu, NULL);
-> +}
-> +
-> +/**
-> + * kvm_get_running_vcpu - get the vcpu running on the current CPU.
-> + * Thanks to preempt notifiers, this can also be called from
-> + * preemptible context.
-> + */
-> +struct kvm_vcpu *kvm_get_running_vcpu(void)
-> +{
-> +        return __this_cpu_read(kvm_running_vcpu);
-> +}
-> +
-> +/**
-> + * kvm_get_running_vcpus - get the per-CPU array of currently running vcpus.
-> + */
-> +struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
-> +{
-> +        return &kvm_running_vcpu;
->  }
->  
->  static void check_processor_compat(void *rtn)
-> 
+> Another misnamed pin, I should have noticed when fixing the
+> name of the write protect pin ...
 
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+...and I should have noticed when reviewing.  Sorry about that.
 
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
