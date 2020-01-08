@@ -2,212 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35B9C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E7020673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A095920673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgAHLGl (ORCPT
+        id S1728034AbgAHLGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:06:41 -0500
-Received: from mga11.intel.com ([192.55.52.93]:42333 "EHLO mga11.intel.com"
+        Wed, 8 Jan 2020 06:06:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:20155 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgAHLGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:06:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726276AbgAHLGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:06:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:06:40 -0800
-X-ExtLoop1: 1
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:06:51 -0800
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="421415431"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2020 03:06:38 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ip9Ad-0001gj-Dp; Wed, 08 Jan 2020 13:06:39 +0200
-Date:   Wed, 8 Jan 2020 13:06:39 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 09/13] gpiolib: rework the locking mechanism for
- lineevent kfifo
-Message-ID: <20200108110639.GL32742@smile.fi.intel.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <20191224120709.18247-10-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224120709.18247-10-brgl@bgdev.pl>
+   d="scan'208";a="215920519"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:06:48 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] drm/i915/display: Fix inconsistent IS_ERR and PTR_ERR
+In-Reply-To: <20200106070152.GA13299@embeddedor>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200106070152.GA13299@embeddedor>
+Date:   Wed, 08 Jan 2020 13:06:45 +0200
+Message-ID: <87pnfuqkai.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 01:07:05PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The read_lock mutex is supposed to prevent collisions between reading
-> and writing to the line event kfifo but it's actually only taken when
-> the events are being read from it.
-> 
-> Drop the mutex entirely and reuse the spinlock made available to us in
-> the waitqueue struct. Take the lock whenever the fifo is modified or
-> inspected. Drop the call to kfifo_to_user() and instead first extract
-> the new element from kfifo when the lock is taken and only then pass
-> it on to the user after the spinlock is released.
+On Mon, 06 Jan 2020, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+> Fix inconsistent IS_ERR and PTR_ERR in intel_modeset_all_tiles().
+>
+> The proper pointer to be passed as argument is crtc_state.
+>
+> This bug was detected with the help of Coccinelle.
 
-Sounds like a plausible approach.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks, already fixed by Dan in commit 953cac3ec55f ("drm/i915: fix an
+error code in intel_modeset_all_tiles()").
 
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+BR,
+Jani.
+
+>
+> Fixes: a603f5bd1691 ("drm/i915/dp: Make sure all tiled connectors get added to the state with full modeset")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  drivers/gpio/gpiolib.c | 64 +++++++++++++++++++++++-------------------
->  1 file changed, 35 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 81d5eda4de7d..a859c0813e0d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -788,8 +788,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->   * @irq: the interrupt that trigger in response to events on this GPIO
->   * @wait: wait queue that handles blocking reads of events
->   * @events: KFIFO for the GPIO events
-> - * @read_lock: mutex lock to protect reads from colliding with adding
-> - * new events to the FIFO
->   * @timestamp: cache for the timestamp storing it between hardirq
->   * and IRQ thread, used to bring the timestamp close to the actual
->   * event
-> @@ -802,7 +800,6 @@ struct lineevent_state {
->  	int irq;
->  	wait_queue_head_t wait;
->  	DECLARE_KFIFO(events, struct gpioevent_data, 16);
-> -	struct mutex read_lock;
->  	u64 timestamp;
->  };
->  
-> @@ -818,7 +815,7 @@ static __poll_t lineevent_poll(struct file *filep,
->  
->  	poll_wait(filep, &le->wait, wait);
->  
-> -	if (!kfifo_is_empty(&le->events))
-> +	if (!kfifo_is_empty_spinlocked_noirqsave(&le->events, &le->wait.lock))
->  		events = EPOLLIN | EPOLLRDNORM;
->  
->  	return events;
-> @@ -831,43 +828,52 @@ static ssize_t lineevent_read(struct file *filep,
->  			      loff_t *f_ps)
->  {
->  	struct lineevent_state *le = filep->private_data;
-> -	unsigned int copied;
-> +	struct gpioevent_data event;
-> +	ssize_t bytes_read = 0;
->  	int ret;
->  
-> -	if (count < sizeof(struct gpioevent_data))
-> +	if (count < sizeof(event))
->  		return -EINVAL;
->  
->  	do {
-> +		spin_lock(&le->wait.lock);
->  		if (kfifo_is_empty(&le->events)) {
-> -			if (filep->f_flags & O_NONBLOCK)
-> +			if (bytes_read) {
-> +				spin_unlock(&le->wait.lock);
-> +				return bytes_read;
-> +			}
-> +
-> +			if (filep->f_flags & O_NONBLOCK) {
-> +				spin_unlock(&le->wait.lock);
->  				return -EAGAIN;
-> +			}
->  
-> -			ret = wait_event_interruptible(le->wait,
-> +			ret = wait_event_interruptible_locked(le->wait,
->  					!kfifo_is_empty(&le->events));
-> -			if (ret)
-> +			if (ret) {
-> +				spin_unlock(&le->wait.lock);
->  				return ret;
-> +			}
+>  drivers/gpu/drm/i915/display/intel_display.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> index da5266e76738..a96bee699a5e 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> @@ -14424,7 +14424,7 @@ intel_modeset_all_tiles(struct intel_atomic_state *state, int tile_grp_id)
+>  		crtc_state = drm_atomic_get_crtc_state(&state->base,
+>  						       conn_state->crtc);
+>  		if (IS_ERR(crtc_state)) {
+> -			ret = PTR_ERR(conn_state);
+> +			ret = PTR_ERR(crtc_state);
+>  			break;
 >  		}
->  
-> -		if (mutex_lock_interruptible(&le->read_lock))
-> -			return -ERESTARTSYS;
-> -		ret = kfifo_to_user(&le->events, buf, count, &copied);
-> -		mutex_unlock(&le->read_lock);
-> -
-> -		if (ret)
-> -			return ret;
-> -
-> -		/*
-> -		 * If we couldn't read anything from the fifo (a different
-> -		 * thread might have been faster) we either return -EAGAIN if
-> -		 * the file descriptor is non-blocking, otherwise we go back to
-> -		 * sleep and wait for more data to arrive.
-> -		 */
-> -		if (copied == 0 && (filep->f_flags & O_NONBLOCK))
-> -			return -EAGAIN;
-> +		ret = kfifo_out(&le->events, &event, 1);
-> +		spin_unlock(&le->wait.lock);
-> +		if (ret != 1) {
-> +			/*
-> +			 * This should never happen - we were holding the lock
-> +			 * from the moment we learned the fifo is no longer
-> +			 * empty until now.
-> +			 */
-> +			ret = -EIO;
-> +			break;
-> +		}
->  
-> -	} while (copied == 0);
-> +		if (copy_to_user(buf + bytes_read, &event, sizeof(event)))
-> +			return -EFAULT;
-> +		bytes_read += sizeof(event);
-> +	} while (count >= bytes_read + sizeof(event));
->  
-> -	return copied;
-> +	return bytes_read;
->  }
->  
->  static int lineevent_release(struct inode *inode, struct file *filep)
-> @@ -969,7 +975,8 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
->  		return IRQ_NONE;
->  	}
->  
-> -	ret = kfifo_put(&le->events, ge);
-> +	ret = kfifo_in_spinlocked_noirqsave(&le->events, &ge,
-> +					    1, &le->wait.lock);
->  	if (ret)
->  		wake_up_poll(&le->wait, EPOLLIN);
->  
-> @@ -1084,7 +1091,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->  
->  	INIT_KFIFO(le->events);
->  	init_waitqueue_head(&le->wait);
-> -	mutex_init(&le->read_lock);
->  
->  	/* Request a thread to read the events */
->  	ret = request_threaded_irq(le->irq,
-> -- 
-> 2.23.0
-> 
+>  		crtc_state->mode_changed = true;
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jani Nikula, Intel Open Source Graphics Center
