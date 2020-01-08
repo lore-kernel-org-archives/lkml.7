@@ -2,192 +2,134 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DE9C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EF0C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E6020705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578494449;
-	bh=W3XU/GMv+6uRzWowtVIdqgj36lNGNaFQwEDB2XAiKZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mX2nlF4/LUtl1eoDmZhjyrJSxGEr+QG1fE9+y99bZw1HKFeNUJqyIlM4LoowBhUpE
-	 ZYI/0OfraCo8Xs5LrGwnymOj3SsaHzp3gCOz8tV3K3Jqt75sClGB2D85DvhSn0X4xl
-	 OUBSMDPYf01myF85jN1fekG+6IsKiiwHPa3t0mD8=
+	by mail.kernel.org (Postfix) with ESMTP id 242AD20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H37n2vyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgAHOks (ORCPT
+        id S1728441AbgAHOlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:40:48 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41706 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgAHOkr (ORCPT
+        Wed, 8 Jan 2020 09:41:46 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41298 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgAHOlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:40:47 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so3615917wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:40:46 -0800 (PST)
+        Wed, 8 Jan 2020 09:41:46 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so1679271pgk.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 06:41:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pmfr4lT+9w9idepjsVRbi3vih8NhxWk03pCzh2kY1TM=;
+        b=H37n2vyIH55gzmQlLagmHwa+ll3F9/TwM2PMzE71ifUtYXqOpcSIaHMJq1YMdsVuOy
+         4Qh6w06cGhhxeRo3z3Ib+a6XxhOf1kjpCQOojK0GCr3P9mesVRYsOuvCHmXRJ9epZNLk
+         YopMferNnK1gLz6vW0EatYwdbceYUKyXGzxrW6A2vqtV6ksiHTuk9Why+mWTCEPDj2bU
+         rsp7itq17//T03fscxF7lam4D3IPEO7IZRHSB7wBo5dCu3djjZpRTkypjWyVnECgd9f6
+         I9qaeaWx6v7hX0MkFk/y8bpqKuNPnEQCyiLExjBTOH7q05TRi66QdKaHbbUv9GnWzyma
+         wXWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kj3sdKsTZaeIbGwmm89PcRIOcawKHePAIrmjBLLY4Uw=;
-        b=pLliBDHMSB1mixddfzOHsUohwvyY+a9GXGHjUWIbnQYjedQNB+5ksBqbvaGIKY5y5y
-         RI98+Wt4TtfWeiHuz5bmJ4I54AKPjFV/SfSCxhRDsHmEHMxLSrqW4n709aQ7j905Ai8s
-         bsYWcBb37Fx8BrkkKJQZX5vvdh/HDuDDCeiBnMTAemm0oqfg/BDowGfcEgxUbYD3sD3I
-         O3MXCUko4fVF3cvpGnEVM189Qt92JLMHt1EH+Kh0l09eoztEQT8aVrgqcIbWbQB+t4Tv
-         VwymeVnBhZruJJuEKnW3SjRkbbyisWzLFBhglHQF/alIlkJvBvdP2X4V93CT0Oq8vCN0
-         Jeig==
-X-Gm-Message-State: APjAAAWOTxy630/7KtwBZayxJIKNgQqab93sKHW11VPL4J7Nvf968NXh
-        //0LO4T9YO2LhgzWwDD1nDrt+aWq
-X-Google-Smtp-Source: APXvYqz4mHG7mUJHfog9TrthVEXEGMiJMAUt0zcWnEcdnAdrTfaZ5UARWF/oHyOf5XJSPt7w0+vigQ==
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr4958200wru.154.1578494446291;
-        Wed, 08 Jan 2020 06:40:46 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a1sm3971016wmj.40.2020.01.08.06.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 06:40:44 -0800 (PST)
-Date:   Wed, 8 Jan 2020 15:40:44 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
-        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
- initialization
-Message-ID: <20200108144044.GB30379@dhcp22.suse.cz>
-References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pmfr4lT+9w9idepjsVRbi3vih8NhxWk03pCzh2kY1TM=;
+        b=VskxJFjBIkLsPEvsF7Gr5Mh1dGr2ucVkGDEASsexb+aevd88wbiaAgQAKADgLMxYZq
+         K2Y0sSNcmcZGQudm0vY+k5a/7JJsDbGl7D54ni/CshKYULFs0HOnB17onqI9WfDh7YSv
+         IaA47zE3hWk1K1YSkLefTnrmp/STvwOYqTv5gyc1zdX5ZB2UktE1z/9hug6e+e6mmn5j
+         qU1skJ4dVnU02jgEoO9rx3oe5M2ep3CQvlBahTEC3QFpSJVHd7JrknDwOB/vJK1C90wb
+         TJnHlESsdaorVQdpRVjiBxRwRa5yFrPNOYW1JDJ/t2bCGQe1b54Zfhjn6EHBru6jfFN+
+         v1Uw==
+X-Gm-Message-State: APjAAAUIxsWLTVLlHB3Vu6W3eKSBstDoe24s++iSh1vMLajlseF9Dv1S
+        +AXTzOofYa6tjqFvDuJqw0KYaazynDtuKIniiUoK5A==
+X-Google-Smtp-Source: APXvYqxgRLFNG2TmAcrgc+v7RSS0iaETQOarqjz2xxveDTmD+eCmm8vd+A2S/avlEoADjQeCpeSplwQlcyX+xL17Reo=
+X-Received: by 2002:aa7:961b:: with SMTP id q27mr5376393pfg.23.1578494505168;
+ Wed, 08 Jan 2020 06:41:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <201912301716.xBUHGKTi016375@pmwg-server-01.pmwglab> <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
+In-Reply-To: <CAK8P3a1OsiUV5YuwzSJ4CsD8NHJHjedTA4K7xBKK6Q-4kA8t5g@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 8 Jan 2020 06:41:31 -0800
+Message-ID: <CAFd5g46YYiC-aeAGumqOMiNZ71h2dGH==F_bdj+pwQ5YOHo3GA@mail.gmail.com>
+Subject: Re: kunit stack usage, was: pmwg-ci report v5.5-rc4-147-gc62d43442481
+To:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>
+Cc:     PMWG CI <pmwg-ci@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Private Kernel Alias <private-kwg@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 30-12-19 12:38:28, Kirill A. Shutemov wrote:
-> memmap_init_zone() can be called on the ranges with holes during the
-> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
-> as holes are not too big.
-> 
-> But huge holes in the memory map causes a problem. It takes over 20
-> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
-> larger holes in the memory map which would practically hang the system.
-> 
-> Deferred struct page init doesn't help here. It only works on the
-> present ranges.
-> 
-> Skipping non-present sections would fix the issue.
++Stephen Boyd
 
-Makes sense to me.
+On Tue, Jan 7, 2020 at 4:37 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Dec 30, 2019 at 6:16 PM PMWG CI <pmwg-ci@linaro.org> wrote:
+> >
+> >
+> > The error/warning: 1 drivers/base/test/property-entry-test.c:214:1: warning: the frame size of 3128 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+> > ... was introduced by commit:
+> >
+> > commit c032ace71c29d513bf9df64ace1885fe5ff24981
+> > Author: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Date:   Wed Dec 4 10:53:15 2019 -0800
+> >
+> >     software node: add basic tests for property entries
+>
+> This problem is a result of the KUNIT_ASSERTION() definition that puts
+> a local struct on the stack interacting badly with the structleak_plugin
+> when CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL is set in
+> allmodconfig:
+>
+> pe_test_uint_arrays() contains a couple of larger variables, plus 41
+> instances of KUNIT_EXPECT_*() or KUNIT_ASSERT_*(), each one
+> of these adds its own copy of the structure, eventually exceeding
+> the warning limit.
 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Uh oh, sorry about that.
 
-That pfn inc back and forth is quite ugly TBH but whatever.
-Acked-by: Michal Hocko <mhocko@suse.com>
+> We can work around this locally by splitting up the largest four
+> functions in this file (pe_test_uints, pe_test_uint_arrays, pe_test_strings,
+> and pe_test_reference) into smaller functions that stay below the
+> warning limit, but it would be nice to find a way for kunit to not
+> use as much stack space. Any suggestions?
 
-> ---
-> 
-> The situation can be emulated using the following QEMU patch:
-> 
-> diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-> index ac08e6360437..f5f2258092e1 100644
-> --- a/hw/i386/pc.c
-> +++ b/hw/i386/pc.c
-> @@ -1159,13 +1159,14 @@ void pc_memory_init(PCMachineState *pcms,
->      memory_region_add_subregion(system_memory, 0, ram_below_4g);
->      e820_add_entry(0, x86ms->below_4g_mem_size, E820_RAM);
->      if (x86ms->above_4g_mem_size > 0) {
-> +        int shift = 45;
->          ram_above_4g = g_malloc(sizeof(*ram_above_4g));
->          memory_region_init_alias(ram_above_4g, NULL, "ram-above-4g", ram,
->                                   x86ms->below_4g_mem_size,
->                                   x86ms->above_4g_mem_size);
-> -        memory_region_add_subregion(system_memory, 0x100000000ULL,
-> +        memory_region_add_subregion(system_memory, 1ULL << shift,
->                                      ram_above_4g);
-> -        e820_add_entry(0x100000000ULL, x86ms->above_4g_mem_size, E820_RAM);
-> +        e820_add_entry(1ULL << shift, x86ms->above_4g_mem_size, E820_RAM);
->      }
->  
->      if (!pcmc->has_reserved_memory &&
-> diff --git a/target/i386/cpu.h b/target/i386/cpu.h
-> index cde2a16b941a..694c26947bf6 100644
-> --- a/target/i386/cpu.h
-> +++ b/target/i386/cpu.h
-> @@ -1928,7 +1928,7 @@ uint64_t cpu_get_tsc(CPUX86State *env);
->  /* XXX: This value should match the one returned by CPUID
->   * and in exec.c */
->  # if defined(TARGET_X86_64)
-> -# define TCG_PHYS_ADDR_BITS 40
-> +# define TCG_PHYS_ADDR_BITS 52
->  # else
->  # define TCG_PHYS_ADDR_BITS 36
->  # endif
-> 
-> ---
->  mm/page_alloc.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index df62a49cd09e..442dc0244bb4 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5873,6 +5873,30 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
->  	return false;
->  }
->  
-> +#ifdef CONFIG_SPARSEMEM
-> +/* Skip PFNs that belong to non-present sections */
-> +static inline __meminit unsigned long next_pfn(unsigned long pfn)
-> +{
-> +	unsigned long section_nr;
-> +
-> +	section_nr = pfn_to_section_nr(++pfn);
-> +	if (present_section_nr(section_nr))
-> +		return pfn;
-> +
-> +	while (++section_nr <= __highest_present_section_nr) {
-> +		if (present_section_nr(section_nr))
-> +			return section_nr_to_pfn(section_nr);
-> +	}
-> +
-> +	return -1;
-> +}
-> +#else
-> +static inline __meminit unsigned long next_pfn(unsigned long pfn)
-> +{
-> +	return pfn++;
-> +}
-> +#endif
-> +
->  /*
->   * Initially all pages are reserved - free ones are freed
->   * up by memblock_free_all() once the early boot process is
-> @@ -5912,8 +5936,10 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->  		 * function.  They do not exist on hotplugged memory.
->  		 */
->  		if (context == MEMMAP_EARLY) {
-> -			if (!early_pfn_valid(pfn))
-> +			if (!early_pfn_valid(pfn)) {
-> +				pfn = next_pfn(pfn) - 1;
->  				continue;
-> +			}
->  			if (!early_pfn_in_nid(pfn, nid))
->  				continue;
->  			if (overlap_memmap_init(zone, &pfn))
-> -- 
-> 2.24.1
-> 
+Agreed. I have a couple ideas. The grossest idea, which I am guessing
+most people won't like is to go back to the stream builder method,
+basically build the message as we go on the heap; however, the current
+method was created specifically to not do that which much help from
+Stephen (CC'ed), so probably not want we want to do.
 
--- 
-Michal Hocko
-SUSE Labs
+Another idea, the struct just exists to pack up data and ship it off
+to a function which handles the expectation/assertion. Consequently,
+the struct is only used inside the expectation/assertion macro; it is
+not needed before the macro block and is not needed after it. So could
+we maybe make some kind of expectation/assertion union so that we know
+they are all the same size, and then somehow tag the stack allocation
+so that we only ever have one copy in a stack frame? I am not sure if
+that kind of compiler magic exists. I guess one way to accomplish this
+is to make a dummy function in KUnit whose job it is to call the unit
+test function, which allocates the object, and then calls the unit
+test function with a reference to the object allocation; then we could
+just reuse that allocation and we can avoid making a bunch of
+piecemeal heap allocations.
+
+What do people think? Any other ideas?
+
+Also, sorry in advance for delayed responses: I am on vacation until
+the 13th and then I will be at LCA until the 18th.
+
+Cheers!
