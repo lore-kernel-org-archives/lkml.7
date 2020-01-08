@@ -2,76 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF1C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CC0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCCA206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7990520838
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgAHJ2P (ORCPT
+        id S1727608AbgAHJ2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:28:15 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41841 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbgAHJ2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:28:14 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ip7dN-0000N0-2c; Wed, 08 Jan 2020 10:28:13 +0100
-Message-ID: <b0a9e3473b869c273f923b7fb378362416570342.camel@pengutronix.de>
-Subject: Re: [PATCH v3] reset: qcom-aoss: Allow CONFIG_RESET_QCOM_AOSS to be
- a tristate
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>
-Date:   Wed, 08 Jan 2020 10:28:12 +0100
-In-Reply-To: <20200108002311.GG738324@yoga>
-References: <20200108001913.28485-1-john.stultz@linaro.org>
-         <20200108002311.GG738324@yoga>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 8 Jan 2020 04:28:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:41212 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727205AbgAHJ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 04:28:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1168B1FB;
+        Wed,  8 Jan 2020 01:28:33 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44DF53F6C4;
+        Wed,  8 Jan 2020 01:28:32 -0800 (PST)
+Subject: Re: [PATCH 4.14 65/74] coresight: tmc-etf: Do not call
+ smp_processor_id from preemptible
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200107205135.369001641@linuxfoundation.org>
+ <20200107205228.054429793@linuxfoundation.org>
+ <20200107230825.GA26430@ubuntu-m2-xlarge-x86>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <6deba573-6adb-ea29-329f-9a7bfb1e4e8f@arm.com>
+Date:   Wed, 8 Jan 2020 09:28:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
+In-Reply-To: <20200107230825.GA26430@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John, Bjorn,
+Hi Nathan,
 
-On Tue, 2020-01-07 at 16:23 -0800, Bjorn Andersson wrote:
-> On Tue 07 Jan 16:19 PST 2020, John Stultz wrote:
+On 07/01/2020 23:08, Nathan Chancellor wrote:
+> On Tue, Jan 07, 2020 at 09:55:30PM +0100, Greg Kroah-Hartman wrote:
+>> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>
+>> [ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
+>>
+
+...
+
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> index 336194d059fe..329a201c0c19 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> @@ -308,9 +308,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
+>>   	int node;
+>>   	struct cs_buffers *buf;
+>>   
+>> -	if (cpu == -1)
+>> -		cpu = smp_processor_id();
+>> -	node = cpu_to_node(cpu);
+>> +	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
 > 
-> > Allow CONFIG_RESET_QCOM_AOSS to be set as as =m to allow for the
-> > driver to be loaded from a modules.
-> > 
-> > Also replaces the builtin_platform_driver() line with
-> > module_platform_driver() and adds a MODULE_DEVICE_TABLE() entry.
-> > 
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Alistair Delva <adelva@google.com>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Amit Pundir <amit.pundir@linaro.org>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> This breaks the build on 4.14 (and I believe 4.19 from the looks of it)
+> because the event variable is not available without
+> commit a0f08a6a9fee ("coresight: Communicate perf event to sink buffer
+> allocation functions") from upstream. I am not sure how this should be
+> fixed (either backporting the above commit or changing this one somehow)
+> but it should be dropped in the meantime.
 
-Thank you, applied to reset/next.
+Thanks for the report. I will send a separate fix for the version where
+it breaks. We should be able to use the "cpu" argument directly in these
+cases, where event was not introduced.
 
-regards
-Philipp
-
+Cheers
+Suzuki
