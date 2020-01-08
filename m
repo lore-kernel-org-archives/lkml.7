@@ -2,89 +2,57 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5409DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795A2C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E875206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5233A206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgAHVym (ORCPT
+        id S1727388AbgAHV4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:54:42 -0500
-Received: from mga09.intel.com ([134.134.136.24]:5184 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgAHVyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:54:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 13:54:41 -0800
-X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="223053020"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.130]) ([10.24.14.130])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 08 Jan 2020 13:54:41 -0800
-Subject: Re: [bug report] resctrl high memory comsumption
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Shakeel Butt <shakeelb@google.com>, Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org
-References: <CALvZod7E9zzHwenzf7objzGKsdBmVwTgEJ0nPgs0LUFU3SN5Pw@mail.gmail.com>
- <20200108202311.GA40461@romley-ivt3.sc.intel.com>
- <bbc27400-68d9-13fd-7402-d158a6754122@intel.com>
- <20200108214250.GB40461@romley-ivt3.sc.intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <c1c19ba6-4113-fa4d-4313-4d1d551a95f2@intel.com>
-Date:   Wed, 8 Jan 2020 13:54:39 -0800
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 8 Jan 2020 16:56:14 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:58758 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgAHV4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 16:56:13 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipJJ6-004TJ9-Rn; Wed, 08 Jan 2020 21:56:05 +0000
+Date:   Wed, 8 Jan 2020 21:56:04 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Willem de Bruijn <willemb@google.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Pedro Tammela <pctammela@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [net-next] [v2] socket: fix unused-function warning
+Message-ID: <20200108215604.GI8904@ZenIV.linux.org.uk>
+References: <20200108214454.3950090-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20200108214250.GB40461@romley-ivt3.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108214454.3950090-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fenghua,
-
-On 1/8/2020 1:42 PM, Fenghua Yu wrote:
-> On Wed, Jan 08, 2020 at 12:42:17PM -0800, Reinette Chatre wrote:
->> Hi Fenghua,
->> On 1/8/2020 12:23 PM, Fenghua Yu wrote:
->>> On Wed, Jan 08, 2020 at 09:07:41AM -0800, Shakeel Butt wrote:
->>>> Recently we had a bug in the system software writing the same pids to
->>>> the tasks file of resctrl group multiple times. The resctrl code
->>> Subject: [RFC PATCH] x86/resctrl: Fix redundant task movements
->> I think your fix would address this specific use case but a slightly
->> different use case will still encounter the problem of high memory
->> consumption. If for example, sleeping tasks are moved (many times)
->> between resource or monitoring groups then their task_works queue would
->> just keep growing. It seems that a call to task_work_cancel() before
->> adding a new work item should address all these cases?
+On Wed, Jan 08, 2020 at 10:44:43PM +0100, Arnd Bergmann wrote:
+> When procfs is disabled, the fdinfo code causes a harmless
+> warning:
 > 
-> The checking code in this patch is also helpful to avoid redundant
-> task move preparation (kzalloc(), task_work_add(), etc) in the same
-> rdtgroup.
-
-Indeed.
-
+> net/socket.c:1000:13: error: 'sock_show_fdinfo' defined but not used [-Werror=unused-function]
+>  static void sock_show_fdinfo(struct seq_file *m, struct file *f)
 > 
-> How about adding both the checking code and task_work_cancel()?
+> Move the function definition up so we can use a single #ifdef
+> around it.
 
-That does sound good to me.
-
-There is something in the current implementation that I would appreciate
-your feedback on: Currently the task's closid and rmid are initialized
-_after_ the call to task_work_add() succeeds. Should these not be
-initialized before the call to task_work_add()?
-
-Thank you
-
-Reinette
+Looks sane...
