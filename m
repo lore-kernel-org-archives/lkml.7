@@ -2,123 +2,95 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A4C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A895C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B1E20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rKoC/5nW"
+	by mail.kernel.org (Postfix) with ESMTP id E532020692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgAHK77 (ORCPT
+        id S1728014AbgAHLAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:59:59 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53724 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHK76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:59:58 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 008AxHa3165485;
-        Wed, 8 Jan 2020 10:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=TBCgm4Vu22i7I5xmbu7En49CxqUX/dPa2wmYwXIMZew=;
- b=rKoC/5nWdIZ0+qvifgli0jvXieLDBJjYwcmIZ97OLyDNx2p3RtSfcoBU+j7lL3+q+icU
- DIzVks/86FwTWI5pYYh4+S1yR7UNpjsv+07H0+O+3Ub0j1795hb/xyM/IIWElRrpBnJQ
- gkTE62YjVmlqBoz+8JZqgd8l1SnbE4YCZkLxx0Hmgt1MS2CTtr2Tl191yIzrjYC8juDB
- KEVbjkHqXEb9Fwg2ZOD0Ubp/q4adUnPR31KuAitVVOeYIE++i1E6GlcE5ePSPhsvKrWp
- ogfRwPlb/EwWDHhAr4uxB1JGhHyLI8mOP7mqppKQ94FAEk/mEBZIF18npHdd2rAdCsU2 HQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xaj4u39qv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jan 2020 10:59:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 008As6Rd139851;
-        Wed, 8 Jan 2020 10:59:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2xcqbmyek9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jan 2020 10:59:47 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 008Axc8s009815;
-        Wed, 8 Jan 2020 10:59:38 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Jan 2020 02:59:37 -0800
-Date:   Wed, 8 Jan 2020 13:59:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Vandana BN <bnvandana@gmail.com>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [PATCH] media: v4l2-core: Fix Oops in ioctl
-Message-ID: <20200108105929.7kxwf5rthxnhwbuh@kili.mountain>
+        Wed, 8 Jan 2020 06:00:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:42304 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgAHLAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:00:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2868030E;
+        Wed,  8 Jan 2020 03:00:39 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76E0C3F703;
+        Wed,  8 Jan 2020 03:00:38 -0800 (PST)
+Subject: Re: [PATCH 4.19 102/115] coresight: tmc-etf: Do not call
+ smp_processor_id from preemptible
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200107205240.283674026@linuxfoundation.org>
+ <20200107205308.269793829@linuxfoundation.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <a4c7d0ef-41c5-4c77-6f45-1cc5d153a5c9@arm.com>
+Date:   Wed, 8 Jan 2020 11:00:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000119c91059b9d092f@google.com>
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001080093
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001080094
+In-Reply-To: <20200107205308.269793829@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot reported a crash in video_usercopy().  It turns out when we
-broke video_get_user() into a separate function then we accidentally
-moved it outside the if block so it tries to memset a user pointer.
+Hi Greg,
 
-Reported-by: syzbot+9240c422be249a8422bd@syzkaller.appspotmail.com
-Fixes: c8ef1a6076bf ("media: v4l2-core: split out data copy from video_usercopy")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Not actually tested.  :(  Sorry.
+On 07/01/2020 20:55, Greg Kroah-Hartman wrote:
+> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> [ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
+> 
+> During a perf session we try to allocate buffers on the "node" associated
+> with the CPU the event is bound to. If it is not bound to a CPU, we
+> use the current CPU node, using smp_processor_id(). However this is unsafe
+> in a pre-emptible context and could generate the splats as below :
+> 
+>   BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
+>   caller is tmc_alloc_etf_buffer+0x5c/0x60
 
- drivers/media/v4l2-core/v4l2-ioctl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: stable <stable@vger.kernel.org> # 4.7+
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> index e31061308e19..4644ac5582cf 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> @@ -304,9 +304,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
+>   	int node;
+>   	struct cs_buffers *buf;
+>   
+> -	if (cpu == -1)
+> -		cpu = smp_processor_id();
+> -	node = cpu_to_node(cpu);
+> +	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index b68ff06009cd..aaf83e254272 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -3205,12 +3205,12 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
- 			parg = mbuf;
- 		}
- 
-+		err = video_get_user((void __user *)arg, parg, orig_cmd,
-+				     &always_copy);
-+		if (err)
-+			goto out;
- 	}
- 
--	err = video_get_user((void __user *)arg, parg, orig_cmd, &always_copy);
--	if (err)
--		goto out;
--
- 	err = check_array_args(cmd, parg, &array_size, &user_ptr, &kernel_ptr);
- 	if (err < 0)
- 		goto out;
--- 
-2.11.0
+This will break the build on v4.19 to v4.9 as event was not available to
+the routine. So please drop this one for now. I will post a backport
+separately.
 
+Suzuki
