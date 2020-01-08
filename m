@@ -2,140 +2,183 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6913EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B08C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAC3206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578493911;
-	bh=/5qJUAikfHGkQE1xQ11F1gIy/J642JkoxW2N9r35E4Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ive3FmnS9uDWT9qPSmlPDXdvA9nzZPoJzgssPEzlCI3ikDUwZ9W3laLUT+6KATRX5
-	 P9e6S3hocEqhtjWaYmbTlEV0v5fBmetSt9QhEJ0OTI45Ksw8X38DEc7f8Xl5IZSn8r
-	 i12n6ZCNEcapWu2tb/k9xcUo7pt8GeGsRhR6Etyc=
+	by mail.kernel.org (Postfix) with ESMTP id A337F20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAVlmmal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgAHObu (ORCPT
+        id S1727751AbgAHOdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:31:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38064 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgAHObs (ORCPT
+        Wed, 8 Jan 2020 09:33:15 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36730 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgAHOdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:31:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cNdj1XMavqHERd1iC1GAYe1krXO6lCtmsBqdFjLoV6M=; b=PbopclKfzaHTWMFWXvcjUw6nY
-        J+aSr1Gq0dnWbRWG/b/BUdLz0FgWrxtH1Ky2Exq9dMwHsD1FihCk1yKNMrHYhS0KAUlMstssxS1S7
-        bSeO8i98ugtMsFXZ5gyrnEUGecnRfG/RGaJP17soQOqp50h3X60C6m2PXIiqUjAU4exeelCJnJ9ix
-        rjTQKpssdvimmIXCGSS5rV3wDyYZ2Ywgo73XxYp4kTs0kxILBBt99U8RXc2lDNHEFc1OTUEZhpVcO
-        UNMHxDaXlUx3NcOqT2jYUGE7CdeCNl9+ApbyKdu+5OhSvep5nLjyKS9kVIId2oNVHl+PsuytLEtbt
-        wt4BQ5lsA==;
-Received: from 177.206.132.169.dynamic.adsl.gvt.net.br ([177.206.132.169] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipCN2-0002Z1-Py; Wed, 08 Jan 2020 14:31:41 +0000
-Date:   Wed, 8 Jan 2020 15:31:26 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, paul.kocialkowski@bootlin.com,
-        hverkuil@xs4all.nl, gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] media: uapi: hevc: Add segment address field
-Message-ID: <20200108153126.49698491@kernel.org>
-In-Reply-To: <20191213160428.54303-4-jernej.skrabec@siol.net>
-References: <20191213160428.54303-1-jernej.skrabec@siol.net>
-        <20191213160428.54303-4-jernej.skrabec@siol.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 8 Jan 2020 09:33:15 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so2782548oic.3;
+        Wed, 08 Jan 2020 06:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Gt5l5oW7BvC/mIpqIR4dhr5zJ89efNCOAMpU+ZM12Dc=;
+        b=NAVlmmalYDq3O6wg7vc55R5x+f+KdJqkdndSqGJVogQAQgBWWVblmRq+8uXoFFY8Zb
+         11/kQglqK1JcGXlBNk9PFRWvZZkyHtYX3Ouac90MyEoRwISpgkM2UosFqmnMpb109A/z
+         KhFEIq6Z37JTpi5Zvx6MSeBbYGtIlxXIwEbA0rBoXNvya59Z+6gWIwCuIQ2DDh6hHZDU
+         OhzLDVKDicSrvAHgXw22TuY2YcUAFAT5bWs0Cz6IOf95S9CuFzQl3gypf5riQ7z5a43z
+         wOXa9ADqpFdfj27TtIoljAQU43+4BLrwbeSNYgDtw+rWD3iDKw8r8ENM6M2E4wUUU9eR
+         EJHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Gt5l5oW7BvC/mIpqIR4dhr5zJ89efNCOAMpU+ZM12Dc=;
+        b=cTJKFBR1QtCQi6jeh7Rnoupy2ACmteRVlhSAL5mJrAvGwmNAERSK9vN0YrgLv2aVoz
+         WHjiXrcXxKMARSGqnzylh0Ktx7omqv8afuP7A0tVcoQnTc9Uc6DAr8yRsQcuzt2mf9RZ
+         R5n+xAHw1G2ZmhznhWjp3Iul5VRcxZEI8navpg98O+GJgKahmylHS1mt0pmO7WS/j17I
+         kIIteQpQAGshW4Fw/4FXIjNvJb06ddBJehaOksFGNZCAtWkuKl2bFsPIJWbOBoNIiJ3S
+         hSaUWF9SdAgDc/pS7pq05Mn7UlDe4DhSRsRAFp5MypWsaqMaAPFdcj7iOajR/ry3mrhX
+         AwFw==
+X-Gm-Message-State: APjAAAVqKtCCJL2IPcPKpb28AC96lmaMfaUPq5AK5GMaP6szoy+hmWsc
+        BMskrvZ6RUDgsLHaJNIvcHvkRvj0qXzY89LLHb0eE8/H
+X-Google-Smtp-Source: APXvYqxH3FaBBajpQgXoLkcvI7TaBy7ZABU95YvvOEi8apxiNSjJUz+IR50c2jPfK53Chf3/5jI4LvBz1jn2kdZdlyE=
+X-Received: by 2002:a54:4396:: with SMTP id u22mr3315338oiv.128.1578493994294;
+ Wed, 08 Jan 2020 06:33:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
+In-Reply-To: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Wed, 8 Jan 2020 20:03:02 +0530
+Message-ID: <CAHhAz+jYdJnh26GU+8xcE4vcpCo-4Sudj7OEZ=y+hCOdz9FQ1g@mail.gmail.com>
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 13 Dec 2019 17:04:27 +0100
-Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
+On Tue, Jan 7, 2020 at 9:45 PM Muni Sekhar <munisekharrms@gmail.com> wrote:
+>
+> Hi,
+>
+> I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> I see that my system freezes without capturing the crash dump for
+> certain tests. I debugged this issue and it was tracked down to the
+> below mentioned interrupt handler code.
+>
+>
+> In ISR, first reads the Interrupt Status register using =E2=80=98readl()=
+=E2=80=99 as
+> given below.
+>     status =3D readl(ctrl->reg + INT_STATUS);
+>
+>
+> And then clears the pending interrupts using =E2=80=98writel()=E2=80=99 a=
+s given blow.
+>         writel(status, ctrl->reg + INT_STATUS);
+>
+>
+> I've noticed a kernel hang if INT_STATUS register read again after
+> clearing the pending interrupts.
+>
+> Can someone clarify me why the kernel hangs without crash dump incase
+> if I read the INT_STATUS register using readl() after clearing the
+> pending bits?
+>
+> Can readl() block?
+>
+>
+> Snippet of the ISR code is given blow:
+>
+> https://pastebin.com/WdnZJZF5
+The correct snippet of the ISR code is here: https://pastebin.com/as2tSPwE
+>
+>
+>
+> static irqreturn_t pcie_isr(int irq, void *dev_id)
+>
+> {
+>
+>         struct test_device *ctrl =3D data;
+>
+>         u32 status;
+>
+> =E2=80=A6
+>
+>
+>
+>         status =3D readl(ctrl->reg + INT_STATUS);
+>
+>         /*
+>
+>          * Check to see if it was our interrupt
+>
+>          */
+>
+>         if (!(status & 0x000C))
+>
+>                 return IRQ_NONE;
+>
+>
+>
+>         /* Clear the interrupt */
+>
+>         writel(status, ctrl->reg + INT_STATUS);
+>
+>
+>
+>         if (status & 0x0004) {
+>
+>                 /*
+>
+>                  * Tx interrupt pending.
+>
+>                  */
+>
+>                  ....
+>
+>        }
+>
+>
+>
+>         if (status & 0x0008) {
+>
+>                 /* Rx interrupt Pending */
+>
+>                 /* The system freezes if I read again the INT_STATUS
+> register as given below */
+>
+>                 status =3D readl(ctrl->reg + INT_STATUS);
+>
+>                 ....
+>
+>         }
+>
+> ..
+>
+>         return IRQ_HANDLED;
+> }
+>
+>
+>
+> --
+> Thanks,
+> Sekhar
 
-> If HEVC frame consists of multiple slices, segment address has to be
-> known in order to properly decode it.
-> 
-> Add segment address field to slice parameters.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 5 ++++-
->  include/media/hevc-ctrls.h                       | 5 ++++-
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> index aab1451e54d4..5415d5babcc2 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> @@ -3975,6 +3975,9 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
->      * - __u32
->        - ``data_bit_offset``
->        - Offset (in bits) to the video data in the current slice data.
-> +    * - __u32
-> +      - ``slice_segment_addr``
-> +      -
->      * - __u8
->        - ``nal_unit_type``
->        -
-> @@ -4052,7 +4055,7 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
->        - ``num_rps_poc_lt_curr``
->        - The number of reference pictures in the long-term set.
->      * - __u8
-> -      - ``padding[7]``
-> +      - ``padding[5]``
->        - Applications and drivers must set this to zero.
->      * - struct :c:type:`v4l2_hevc_dpb_entry`
->        - ``dpb[V4L2_HEVC_DPB_ENTRIES_NUM_MAX]``
-> diff --git a/include/media/hevc-ctrls.h b/include/media/hevc-ctrls.h
-> index 1592e52c3614..3e2e32098312 100644
-> --- a/include/media/hevc-ctrls.h
-> +++ b/include/media/hevc-ctrls.h
-> @@ -167,6 +167,9 @@ struct v4l2_ctrl_hevc_slice_params {
->  	__u32	bit_size;
->  	__u32	data_bit_offset;
->  
-> +	/* ISO/IEC 23008-2, ITU-T Rec. H.265: General slice segment header */
-> +	__u32	slice_segment_addr;
-> +
-
-Why are you adding it in the middle of the data? This will break any 
-existing userspace code that might be relying on it.
-
-Ok, I know that this header is not yet under include/uapi,and there's a
-warning on it for letting people know that it shouldn't be used anywhere.
-
-Still, people might be using it.
-
->  	/* ISO/IEC 23008-2, ITU-T Rec. H.265: NAL unit header */
->  	__u8	nal_unit_type;
->  	__u8	nuh_temporal_id_plus1;
-> @@ -200,7 +203,7 @@ struct v4l2_ctrl_hevc_slice_params {
->  	__u8	num_rps_poc_st_curr_after;
->  	__u8	num_rps_poc_lt_curr;
->  
-> -	__u8	padding;
-> +	__u8	padding[5];
->  
->  	/* ISO/IEC 23008-2, ITU-T Rec. H.265: General slice segment header */
->  	struct v4l2_hevc_dpb_entry dpb[V4L2_HEVC_DPB_ENTRIES_NUM_MAX];
 
 
-
-
-Cheers,
-Mauro
+--=20
+Thanks,
+Sekhar
