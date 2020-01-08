@@ -2,201 +2,88 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4884DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA5220692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507252072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578501725;
+	bh=j6P2//MHLKqz2GhzDg5E3HmPNrU87sDx/XYnqK6TwoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v+yQK7+N0yQbHpo28/pcD+6aC8nIxrxMjbbCf8xZ2wQxKQLUXqUGcvPmBpARKj3Xw
+	 q4xgLvvyPt0Ov4DdIiBHK1TaI5SEdaxQprkXvY7GMoeyB1j4RqmJMkrATOv1h9s+VE
+	 Lq9zsn/iJnmbybQ5C7UuO7SAZdGM+vOtaCYtXA+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgAHQl7 (ORCPT
+        id S1729147AbgAHQmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:41:59 -0500
-Received: from mga18.intel.com ([134.134.136.126]:3334 "EHLO mga18.intel.com"
+        Wed, 8 Jan 2020 11:42:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgAHQl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:41:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:41:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="303603172"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 08:41:53 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipEP3-0005U0-FY; Wed, 08 Jan 2020 18:41:53 +0200
-Date:   Wed, 8 Jan 2020 18:41:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/36] platform/x86: intel_scu_ipc: Drop
- intel_scu_ipc_io[read|write][8|16]()
-Message-ID: <20200108164153.GC32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-11-mika.westerberg@linux.intel.com>
+        id S1729081AbgAHQmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:42:03 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE2C2070E;
+        Wed,  8 Jan 2020 16:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578501722;
+        bh=j6P2//MHLKqz2GhzDg5E3HmPNrU87sDx/XYnqK6TwoI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LarfkwTKeSWJ3nkgtC+JFBvV2M2JwLQ74UCCoKAq4113MEIHBozlIYM4icKGMrjyd
+         HG4SrM4vMpw29MOoLMg08YPceYX8H5KVgMrZoBfoLVMf1NCWqZFltY+V4K9Z2wvxp6
+         CHoXf44CS2QcqCptzxOpEgrGvqTp99XFNYywwFS0=
+Date:   Wed, 8 Jan 2020 17:41:59 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     jassisinghbrar@gmail.com
+Cc:     balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 2/2] usb: gadget: add udc driver for max3420
+Message-ID: <20200108164159.GA2494836@kroah.com>
+References: <20200105225509.21590-1-jassisinghbrar@gmail.com>
+ <20200105225557.21729-1-jassisinghbrar@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-11-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200105225557.21729-1-jassisinghbrar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:35PM +0300, Mika Westerberg wrote:
-> There are no users for these so we can remove them.
+On Sun, Jan 05, 2020 at 04:55:57PM -0600, jassisinghbrar@gmail.com wrote:
+> --- /dev/null
+> +++ b/drivers/usb/gadget/udc/max3420_udc.c
+> @@ -0,0 +1,1333 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * MAX3420 Device Controller driver for USB.
+> + *
+> + * Author: Jaswinder Singh Brar <jaswinder.singh@linaro.org>
+> + * (C) Copyright 2019 Linaro Ltd
+> + *
+> + * Based on:
+> + *	o MAX3420E datasheet
+> + *		http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
+> + *	o MAX342{0,1}E Programming Guides
+> + *		https://pdfserv.maximintegrated.com/en/an/AN3598.pdf
+> + *		https://pdfserv.maximintegrated.com/en/an/AN3785.pdf
+> + *
+> + * This file is licenced under the GPL v2.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This line says that the SPDX line above is a lie :(
 
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel_scu_ipc.h | 12 -----
->  drivers/platform/x86/intel_scu_ipc.c | 68 ----------------------------
->  2 files changed, 80 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-> index b2dde96e0611..b59afa59a4cb 100644
-> --- a/arch/x86/include/asm/intel_scu_ipc.h
-> +++ b/arch/x86/include/asm/intel_scu_ipc.h
-> @@ -22,24 +22,12 @@
->  /* Read single register */
->  int intel_scu_ipc_ioread8(u16 addr, u8 *data);
->  
-> -/* Read two sequential registers */
-> -int intel_scu_ipc_ioread16(u16 addr, u16 *data);
-> -
-> -/* Read four sequential registers */
-> -int intel_scu_ipc_ioread32(u16 addr, u32 *data);
-> -
->  /* Read a vector */
->  int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
->  
->  /* Write single register */
->  int intel_scu_ipc_iowrite8(u16 addr, u8 data);
->  
-> -/* Write two sequential registers */
-> -int intel_scu_ipc_iowrite16(u16 addr, u16 data);
-> -
-> -/* Write four sequential registers */
-> -int intel_scu_ipc_iowrite32(u16 addr, u32 data);
-> -
->  /* Write a vector */
->  int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
->  
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 997fdac920c6..ba857e54800b 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -237,40 +237,6 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
->  }
->  EXPORT_SYMBOL(intel_scu_ipc_ioread8);
->  
-> -/**
-> - *	intel_scu_ipc_ioread16		-	read a word via the SCU
-> - *	@addr: register on SCU
-> - *	@data: return pointer for read word
-> - *
-> - *	Read a register pair. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> - *
-> - *	This function may sleep.
-> - */
-> -int intel_scu_ipc_ioread16(u16 addr, u16 *data)
-> -{
-> -	u16 x[2] = {addr, addr + 1};
-> -	return pwr_reg_rdwr(x, (u8 *)data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> -}
-> -EXPORT_SYMBOL(intel_scu_ipc_ioread16);
-> -
-> -/**
-> - *	intel_scu_ipc_ioread32		-	read a dword via the SCU
-> - *	@addr: register on SCU
-> - *	@data: return pointer for read dword
-> - *
-> - *	Read four registers. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> - *
-> - *	This function may sleep.
-> - */
-> -int intel_scu_ipc_ioread32(u16 addr, u32 *data)
-> -{
-> -	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
-> -	return pwr_reg_rdwr(x, (u8 *)data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> -}
-> -EXPORT_SYMBOL(intel_scu_ipc_ioread32);
-> -
->  /**
->   *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
->   *	@addr: register on SCU
-> @@ -287,40 +253,6 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
->  }
->  EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
->  
-> -/**
-> - *	intel_scu_ipc_iowrite16		-	write a word via the SCU
-> - *	@addr: register on SCU
-> - *	@data: word to write
-> - *
-> - *	Write two registers. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> - *
-> - *	This function may sleep.
-> - */
-> -int intel_scu_ipc_iowrite16(u16 addr, u16 data)
-> -{
-> -	u16 x[2] = {addr, addr + 1};
-> -	return pwr_reg_rdwr(x, (u8 *)&data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> -}
-> -EXPORT_SYMBOL(intel_scu_ipc_iowrite16);
-> -
-> -/**
-> - *	intel_scu_ipc_iowrite32		-	write a dword via the SCU
-> - *	@addr: register on SCU
-> - *	@data: dword to write
-> - *
-> - *	Write four registers. Returns 0 on success or an error code. All
-> - *	locking between SCU accesses is handled for the caller.
-> - *
-> - *	This function may sleep.
-> - */
-> -int intel_scu_ipc_iowrite32(u16 addr, u32 data)
-> -{
-> -	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
-> -	return pwr_reg_rdwr(x, (u8 *)&data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> -}
-> -EXPORT_SYMBOL(intel_scu_ipc_iowrite32);
-> -
->  /**
->   *	intel_scu_ipc_readvv		-	read a set of registers
->   *	@addr: register list
-> -- 
-> 2.24.1
-> 
+Please fix this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+As pennance, please re-read Documentation/process/license-rules.rst.
 
+thanks,
 
+greg k-h
