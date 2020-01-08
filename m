@@ -2,91 +2,89 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC59C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2C9C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722612077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578500659;
-	bh=AyZDBjBocC+JhoC3jD/7qgF1YLP3XWBZtmk2w6NbWac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oJjsiDES/zBl74txGno9gMBTqD68qL/Id8u1SXudl4NgqHqapDmUXo1zwfryicFe0
-	 vV8oNZf7tEfLYwVXzlgp67iX6ugbxVuFSS09eq87ADWvtz33N7KlLDsqQRks8xUvgH
-	 AU6LfR4iq6DrksPUn8Vjxq+mK2BbkVecNnvqaBZI=
+	by mail.kernel.org (Postfix) with ESMTP id E99CF2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAHQYS (ORCPT
+        id S1728879AbgAHQYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:24:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47112 "EHLO mail.kernel.org"
+        Wed, 8 Jan 2020 11:24:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32850 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgAHQYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:24:18 -0500
-Received: from linux-8ccs (x2f7fcda.dyn.telefonica.de [2.247.252.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704A02073A;
-        Wed,  8 Jan 2020 16:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578500657;
-        bh=AyZDBjBocC+JhoC3jD/7qgF1YLP3XWBZtmk2w6NbWac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uyJe6V3QLr8RurNjtkir+jhSsDNMC6vX/zU8V2moHR9Fz16neK8AIDepB+eab7aX+
-         ln1RmzBoN3lSyws4rXmplzV7polKkGFNp0Pz6qt1DY/JWpUJAtOxdX+VY5YddlpimR
-         SnoyQAvDOaHowFyeg+NxHubnQxjveIzFSChawZDw=
-Date:   Wed, 8 Jan 2020 17:24:12 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     mbenes@suse.cz, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/module: Fix memleak in module_add_modinfo_attrs()
-Message-ID: <20200108162412.GA12869@linux-8ccs>
-References: <20191228115455.24088-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191228115455.24088-1-yuehaibing@huawei.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727618AbgAHQYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:24:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BD268B281;
+        Wed,  8 Jan 2020 16:24:40 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@opensuse.org>
+To:     bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
+        Peter Wu <peter@lekensteyn.nl>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v3 0/2] bpftool/libbpf: Add probe for large INSN limit
+Date:   Wed,  8 Jan 2020 17:23:51 +0100
+Message-Id: <20200108162428.25014-1-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ YueHaibing [28/12/19 19:54 +0800]:
->In module_add_modinfo_attrs() if sysfs_create_file() fails
->on the first iteration of the loop (so i = 0), we forget to
->free the modinfo_attrs.
->
->Fixes: bc6f2a757d52 ("kernel/module: Fix mem leak in module_add_modinfo_attrs")
->Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+This series implements a new BPF feature probe which checks for the
+commit c04c0d2b968a ("bpf: increase complexity limit and maximum program
+size"), which increases the maximum program size to 1M. It's based on
+the similar check in Cilium, although Cilium is already aiming to use
+bpftool checks and eventually drop all its custom checks.
 
-Applied, thanks!
+Examples of outputs:
 
-Jessica
+# bpftool feature probe
+[...]
+Scanning miscellaneous eBPF features...
+Large complexity limit and maximum program size (1M) is available
 
->---
-> kernel/module.c | 2 ++
-> 1 file changed, 2 insertions(+)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index c3770b2..8ec670e 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -1784,6 +1784,8 @@ static int module_add_modinfo_attrs(struct module *mod)
-> error_out:
-> 	if (i > 0)
-> 		module_remove_modinfo_attrs(mod, --i);
->+	else
->+		kfree(mod->modinfo_attrs);
-> 	return error;
-> }
->
->-- 
->2.7.4
->
->
+# bpftool feature probe macros
+[...]
+/*** eBPF misc features ***/
+#define HAVE_HAVE_LARGE_INSN_LIMIT
+
+# bpftool feature probe -j | jq '.["misc"]'
+{
+  "have_large_insn_limit": true
+}
+
+v1 -> v2:
+- Test for 'BPF_MAXINSNS + 1' number of total insns.
+- Remove info about current 1M limit from probe's description.
+
+v2 -> v3:
+- Remove the "complexity" word from probe's description.
+
+Michal Rostecki (2):
+  libbpf: Add probe for large INSN limit
+  bpftool: Add misc section and probe for large INSN limit
+
+ tools/bpf/bpftool/feature.c   | 18 ++++++++++++++++++
+ tools/lib/bpf/libbpf.h        |  1 +
+ tools/lib/bpf/libbpf.map      |  1 +
+ tools/lib/bpf/libbpf_probes.c | 21 +++++++++++++++++++++
+ 4 files changed, 41 insertions(+)
+
+-- 
+2.16.4
+
