@@ -2,209 +2,204 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE14C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54E7C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1D820673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8421C20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GmeGN9fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgAHKb0 (ORCPT
+        id S1727789AbgAHKcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:31:26 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:40343 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgAHKbZ (ORCPT
+        Wed, 8 Jan 2020 05:32:07 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:24539 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgAHKcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:31:25 -0500
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N63NW-1jmRKF0pwW-016MwO for <linux-kernel@vger.kernel.org>; Wed, 08 Jan
- 2020 11:31:23 +0100
-Received: by mail-qk1-f169.google.com with SMTP id w127so2102058qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 02:31:22 -0800 (PST)
-X-Gm-Message-State: APjAAAVZvAyZXmIooq0zHL4BcCmen79dwCorVwbQ9Z9gsIlC/zvMtRjW
-        IflaFd2XNINY1UgArGX9gecBY45x9qwJ67JlGg4=
-X-Google-Smtp-Source: APXvYqyhlwawSyTf5aVJ0Eab5k8mO35w/P4gl0bOQkiomDlqk+RzlP137GT/eokTJwASNeOCqWrTC0WxbzatGEhiYf8=
-X-Received: by 2002:a37:a8d4:: with SMTP id r203mr3552221qke.394.1578479482002;
- Wed, 08 Jan 2020 02:31:22 -0800 (PST)
+        Wed, 8 Jan 2020 05:32:07 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 1sQMxfbxTI3rpvhkWFlXyq6q3aeFPTRGTmeYBudpcCcG7DhCDCV+3Rwevjj8CPgQtQRrkXIxQ4
+ jUGKbqEqDEZagXGEdXdCw6GiMi3GK76Xk3kKE8g1+fU4gho74ABPzPJT8kZJS17DjpoJkI3BJu
+ VpuS5Q9DO4c7YZZvWRc3KGimHWSILUoXZ6VIjze9wAxhAf3KZpbQ8bv/UsjDdI3ZW42pZku0/q
+ nlE9jkTE4IhbDUUFAJCUf2749ulUuQB2SvS1gpcO9XG9kAyYEav0uTIBspu9LbyqIcmP64sSbG
+ Z4o=
+X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
+   d="scan'208";a="61216849"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 03:32:06 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 8 Jan 2020 03:32:04 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 8 Jan 2020 03:32:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=juQ+pxH0KhPAm2LBIUhuF/ReEkFPVMSDIJ9xlc/q7DGAZX5IXabzbsHiA/x0jSDxPWLnWdAxrd+mrLA+8/lXvmHC7SCiBXbREprlnVQJWxySLJyChy54a9DeI7nKkr2bZhYA780r245P1J/Fe7GcZWf6fsxfPNBaUoZ8yd6QaZ38s/c9DpdFCRrednfKHaDrdnwsPpRfK0GHPAVL1ptp7gS28GDM25Up7tTJqH0W/KdzfHsQvbiNvcA9E+ccfuR+zZ8vWyQtcgoMW9Qi8WuHuQYJduUrrE/x2XQdLoErzXBRQeXf8O/iJIsciIcl9edVSbUZxFR+c+MLze3WpqOhKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t1HSrwjwBJLKF498NA0eoBK97xsuu1s0IdW/AL1BVl8=;
+ b=OqFyIZVOha3he+tfkO2PrYoXWrpM9dYxmQtDnR3TraYamp5xPKpR3CjqoQeZT0uEJ+kFc+4PzatCFYg/JBpOA80NVCU26c4X2tC3OcVblk8nSz+ni4BBYcGZIHBWfvaQkoszoI7XMfIynIs3ZiXa02chiwE8k2lY9NCgcgPk5qX/6bM62C57jsWPhAgzghxgwSVEoD3YTO3MV2rOhCh7G18WCodmwYosgqn9LpRTZFjknXN5OmGvjuAfYoMJs+xFtUQQQPSjIZSlyaiqdMfDQ5smcWmZ9yNLctFpmNBo2foCoPp+acX7lT/sHnz8udC8qgDiGTijPhu1QItaCvAheQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t1HSrwjwBJLKF498NA0eoBK97xsuu1s0IdW/AL1BVl8=;
+ b=GmeGN9flgY+hrCQljfqdGL3pBt2EkuLa71+3Ix6LbA41KYKcEPUnVByqJihNSXfh39xeWYOkb7+hrpDMTkvDvCBnGt2V3UgSFJDWUMpRnEUrtm4G0pJ0CDKMbc/n8Htw7P7kA/vIEuVAcaOJse4SgkafMGbmKh9JQnXCIq8sSyE=
+Received: from SN6PR11MB2830.namprd11.prod.outlook.com (52.135.91.21) by
+ SN6PR11MB3101.namprd11.prod.outlook.com (52.135.127.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Wed, 8 Jan 2020 10:32:03 +0000
+Received: from SN6PR11MB2830.namprd11.prod.outlook.com
+ ([fe80::9439:53a6:d896:d176]) by SN6PR11MB2830.namprd11.prod.outlook.com
+ ([fe80::9439:53a6:d896:d176%7]) with mapi id 15.20.2623.008; Wed, 8 Jan 2020
+ 10:32:03 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <linux@armlinux.org.uk>, <mparab@cadence.com>
+CC:     <antoine.tenart@bootlin.com>, <dkangude@cadence.com>,
+        <hkallweit1@gmail.com>, <andrew@lunn.ch>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <Claudiu.Beznea@microchip.com>,
+        <netdev@vger.kernel.org>, <f.fainelli@gmail.com>,
+        <a.fatoum@pengutronix.de>, <brad.mouring@ni.com>,
+        <pthombar@cadence.com>
+Subject: Re: [PATCH v2 3/3] net: macb: add support for high speed interface
+Thread-Topic: [PATCH v2 3/3] net: macb: add support for high speed interface
+Thread-Index: AQHVsZm5l82MVXLf60OyobQPmImAGae7UQaAgAACAgCAAWMWwIAACq4AgAe4FfCAHEGlAA==
+Date:   Wed, 8 Jan 2020 10:32:03 +0000
+Message-ID: <7aa36539595f52cbe5b5b084e1add6359149724e.camel@microchip.com>
+References: <1576230007-11181-1-git-send-email-mparab@cadence.com>
+         <1576230177-11404-1-git-send-email-mparab@cadence.com>
+         <20191215151249.GA25745@shell.armlinux.org.uk>
+         <20191215152000.GW1344@shell.armlinux.org.uk>
+         <BY5PR07MB65143D385836FF49966F5F6AD3510@BY5PR07MB6514.namprd07.prod.outlook.com>
+         <20191216130908.GI25745@shell.armlinux.org.uk>
+         <BY5PR07MB6514F3B5E2A1B910218F7EFBD32C0@BY5PR07MB6514.namprd07.prod.outlook.com>
+In-Reply-To: <BY5PR07MB6514F3B5E2A1B910218F7EFBD32C0@BY5PR07MB6514.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2a01:cb1c:a97:7600:749e:ccc3:b323:7b02]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3037f0b0-e0e2-42aa-365f-08d7942600cf
+x-ms-traffictypediagnostic: SN6PR11MB3101:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB3101713B9C384F2CDCAF547EE03E0@SN6PR11MB3101.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(136003)(39860400002)(346002)(199004)(189003)(6506007)(2616005)(2906002)(7416002)(66446008)(6486002)(186003)(66556008)(66946007)(76116006)(64756008)(66476007)(6512007)(81156014)(5660300002)(91956017)(4326008)(54906003)(478600001)(110136005)(66574012)(316002)(86362001)(81166006)(71200400001)(36756003)(8936002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB3101;H:SN6PR11MB2830.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vtZ/VKPHDShqG2JWyLkfyZqZtQsik+qKVazUY+AhxkbrWpfFxo+8FKnfcocEhCEP8EdKlmA/7madcwl0lWIzED4c8aT6quiHsEQQx84yV9evkYW0KHF1xKrXaDpfcLDLvC9G3FPBptWe63pO0C9c7gGT0AnPM9I056kgjrucKwXiMcTI1cFrmqI2PbhKLk75yWbltNzHwGlbuOEqDsWObVTw18QSCoTn9p/V6kBshTNy9BPfCHqRV0BbcOroZxvuGBtNGdcmJsMkI1Kt9yPJ+n6rcOnJ3aGBlsScD7qbZ6FPgcO+9GgR75JHA/A80B5P03dsuvKIxSzrW1096DViOQooaQi4ZUvsgj7ZN4HFknxZPEh7D08QkZj16HkDBLKtmPEVBhKfOo9jRTyFmel7hCJtRbnWD0i9T1TVk7SfsteMhWov0FHZQpk1tZ9e9hTM
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <083662BC94BD55418D71E2D987A2DD0D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200107212747.4182515-1-arnd@arndb.de> <20200107220019.GC7869@pendragon.ideasonboard.com>
- <CAK8P3a1Gt10_OLF1dXiNBxcO-seJfutcPu3w_dsHKNsDN4r7-A@mail.gmail.com>
- <20200107221222.GE7869@pendragon.ideasonboard.com> <CAK8P3a0ny0UhOpvVNE3x6gE=3SG7h_sBvtR7L7Hj2XsjrkavAA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0ny0UhOpvVNE3x6gE=3SG7h_sBvtR7L7Hj2XsjrkavAA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jan 2020 11:31:05 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3jAnFZA3GFRtdYdg1-i-oih3pOQzkkrK-X3BGsFrMiZQ@mail.gmail.com>
-Message-ID: <CAK8P3a3jAnFZA3GFRtdYdg1-i-oih3pOQzkkrK-X3BGsFrMiZQ@mail.gmail.com>
-Subject: Re: [PATCH] drm: panel: fix excessive stack usage in td028ttec1_prepare
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:GtSMX4d6Pz5+tPvODnEJzQvB/bhyjAvBIfauWzsYIVJcj5rA3VV
- YgaUAoun6UVgLndki4qxnDEglABz1M1fe0PLxqKXriQCL87uDX9IKb4/t/8b9FRWBcv6iKt
- K3n3GT3ng11csmax7QEGId9oQigxEQ90MFLER2+VDdXc9r5b8awHKY3Vw0URfFEljIQwEm5
- zdVrZhTalLTw4pCSYQO+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pcrRbgLk2R4=:UzMIkbY37PcIjyr9XH0v1S
- UU7wE7/ER2kiZpkZ5Y0MRsYa0+5gD/VC4RzzCqRYTpw8hjHj4Hda1r9JpgLk5r746lb0LvbZN
- fP94xZF82W2gOhpUGLU8YM+++O8OcH/RZ8hQ3JU20CjZuleQGgDf/7zAoz7DJrVTIrp8nD7Jd
- jK6CFqIOSzn9oNAgsanbrjJl4QeE9vv8p4rx8vWgchf6qCW3e2kFYdmkUSkBRoh7tUc4gExgo
- O4w/g5kFJPEHCidI2wenlnsAmVGH1jPiq2k/R2dGzDmBToWpfw3FHQJpkBnV3nm4vGTGt7kDn
- JkwD5cik4xVNJR81ZDBuHWMSTR7YrXv+m7aWA32bfpo7w56r/XnjSZB9qnuvTp08knCgX6Kst
- 6XTTYGRnUFmwgke+2LvaQKghAPywQJjGgSFmS7RSBVHMDIV/UfdBMMJGfl+uaS0Pbp6SKxU/K
- 4pokgr0ouiWSbvuWdFyO2cX33q6MReVfODcJ+xLP+mmVPTGI5+84RkeILsyBfj+TDhmlUIr6Z
- u+5W+FXEtLYu33/7yrcOaRTrjwJKyaAUGMRsb0TVnPunnVx6hoauAxOhySRuuNLDO9lCLadtD
- d/RdWEltuRx0VPXSW5b3zcWQCxoYtUSjLhZARrBFGieQdewsnMJrBDppCcynXM1kuZc2bwtQf
- ZDfl4Q7qLNYZX+HNIk00fDScVBnt2lZST8GOv31mXxGr0ZwdedUFyvaLzWQd2mxd645cjjWmT
- wdlmRvkV4G2uzki32x+K1xrU+Qq+FhkcF9P3OCjn259+57DDm5CPZ6dTBy3y996mLbRQPdzv6
- n9EQ26mV8QBpVgLhmGSP1YE5sCVgxnhI9g7A1f+KyKlZvnSYA+N55ek75AO0eTZ8BlWn/bz/s
- 2y8WafEgSnv2emJ28xKQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3037f0b0-e0e2-42aa-365f-08d7942600cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 10:32:03.7763
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S87Xe+gAQNUIemwPUgcNagw6BhfbY53rY7crFHVFkKvl65VnrMKwK+VlKRY/Nj4FKlasJUpiojethwzfw62vvUWXrA2ihWG8W4M3pYRIMgg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Jan 7, 2020 at 11:12 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > On Tue, Jan 07, 2020 at 11:09:13PM +0100, Arnd Bergmann wrote:
-> > > On Tue, Jan 7, 2020 at 11:00 PM Laurent Pinchart wrote:
->
-> > > > Isn't this something that should be fixed at the compiler level ?
-> > >
-> > > I suspect but have not verified that structleak gcc plugin is partly at
-> > > fault here as well, it has caused similar problems elsewhere.
->
-> I checked that now, and it's indeed the structleak plugin.
->
-> Interestingly the problem goes away without the -fconserve-stack
-> option, which is meant to reduce the stack usage bug has the
-> opposite effect here (!).
->
-> I'll do some more tests tomorrow.
-
-Here's a reduced test case:
-
-struct list_head {
-  struct list_head *next, *prev;
-} typedef initcall_t;
-struct sg_table {
-  int sgl;
-  int nents;
-  int orig_nents;
-};
-struct spi_transfer {
-  void *tx_buf;
-  void *rx_buf;
-  unsigned len;
-  int tx_dma;
-  int rx_dma;
-  struct sg_table tx_sg;
-  struct sg_table rx_sg;
-  short delay_usecs;
-  int delay;
-  int cs_change_delay;
-  int word_delay;
-  int speed_hz;
-  int effective_speed_hz;
-  int ptp_sts_word_pre;
-  int ptp_sts_word_post;
-  int ptp_sts;
-  _Bool timestamped_pre;
-  struct list_head transfer_list;
-};
-void spi_sync_transfer(struct spi_transfer *, int);
-void spi_write(void) {
-  struct spi_transfer t;
-  spi_sync_transfer(&t, 0);
-}
-int jbt_ret_write_0_err;
-void jbt_ret_write_0(void) {
-  if (jbt_ret_write_0_err)
-    spi_write();
-}
-void jbt_reg_write_1(int *err) {
-  if (*err) {
-    struct spi_transfer t;
-    spi_sync_transfer(&t, 1);
-  }
-}
-void jbt_reg_write_2(int *err) {
-  short tx_buf[3];
-  if (err) {
-    struct spi_transfer t = {tx_buf};
-    spi_sync_transfer(&t, 0);
-  }
-}
-int td028ttec1_prepare_i;
-void td028ttec1_prepare() {
-  int ret;
-  for (; td028ttec1_prepare_i; ++td028ttec1_prepare_i) {
-    jbt_ret_write_0();
-  }
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_2(&ret);
-  jbt_ret_write_0();
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-  jbt_reg_write_1(&ret);
-}
-
-$ arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc panel-tpo-td028ttec1.c
--fplugin=scripts/gcc-plugins/structleak_plugin.so
--fplugin-arg-structleak_plugin-byref-all  -S -O3
--Wframe-larger-than=128
-panel-tpo-td028ttec1.i: In function 'td028ttec1_prepare':
-panel-tpo-td028ttec1.i:80:1: warning: the frame size of 192 bytes is
-larger than 128 bytes [-Wframe-larger-than=]
-
-$ arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc panel-tpo-td028ttec1.c
--fplugin=scripts/gcc-plugins/structleak_plugin.so
--fplugin-arg-structleak_plugin-byref-all  -S -O3
--Wframe-larger-than=128 -fconserve-stack
-panel-tpo-td028ttec1.i: In function 'td028ttec1_prepare':
-panel-tpo-td028ttec1.i:80:1: warning: the frame size of 2032 bytes is
-larger than 128 bytes [-Wframe-larger-than=]
-
-I'm still not entirely sure what to make of this. The -fconserve-stack
-is supposed
-to prevent inlining when the frames get too large, but it appears that inlining
-less has the opposite effect here, as it leaves larger structures on the stack
-of the caller. structleak_plugin-byref-all causes each copy of the
-'struct spi_transfer'
-to be initialized (intentionally) and left on the stack (as a
-side-effect of a somewhat
-suboptimal implementation).
-
-         Arnd
+TGUgc2FtZWRpIDIxIGTDqWNlbWJyZSAyMDE5IMOgIDExOjA4ICswMDAwLCBNaWxpbmQgUGFyYWIg
+YSDDqWNyaXQgOg0KPiA+ID4gQWRkaXRpb25hbCAzcmQgcGFydHkgSTJDIElQIHJlcXVpcmVkIChu
+b3QgcGFydCBvZiBHRU0pIGZvciBtb2R1bGUNCj4gPiA+IGludGVycm9nYXRpb24gKE1ESU8gdG8g
+STJDIGhhbmRsZWQgYnkgU1cNCj4gPiA+ICArLS0tLS0tLS0tLS0tLS0rICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICstLS0tLS0tLS0tLSsNCj4gPiA+ICB8ICAgICAgICAgICAgICB8
+ICAgICAgIHwgICAgICAgIHwgICAgICAgICAgICAgICAgIHwgIFNGUCsgICAgIHwNCj4gPiA+ICB8
+IEdFTSBNQUMvRE1BICB8IDwtLS0+IHwgU2VyRGVzIHwgPC0tLS0gU0ZJLS0tLS0+IHwgT3B0aWNh
+bCAgIHwNCj4gPiA+ICB8ICAgVVNYIFBDU3wgICB8ICAgICAgIHwgKFBNQSkgIHwgICAgICAgICAg
+ICAgICAgIHwgTW9kdWxlICAgIHwNCj4gPiA+ICArLS0tLS0tLS0tLS0tLS0rICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICstLS0tLS0tLS0tLSsNCj4gPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gPiA+ICAgICAg
+ICAgKy0tLS0tLS0tKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4g
+PiA+ICAgICAgICAgfCBJMkMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwNCj4gPiA+ICAgICAgICAgfCBNYXN0ZXIgfCA8LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLXwNCj4gPiA+ICAgICAgICAgKy0tLS0tLS0tKw0KPiA+IFRoZSBrZXJuZWwg
+c3VwcG9ydHMgdGhpcyB0aHJvdWdoIHRoZSBzZnAgYW5kIHBoeWxpbmsgc3VwcG9ydC4gU0ZJIGlz
+DQo+ID4gbW9yZSBjb21tb25seSBrbm93biBhcyAxMEdCQVNFLVIuIE5vdGUgdGhhdCB0aGlzIGlz
+ICpub3QqIFVTWEdNSUkuDQo+ID4gTGluayBzdGF0dXMgbmVlZHMgdG8gY29tZSBmcm9tIHRoZSBN
+QUMgc2lkZSwgc28gbWFjYl9tYWNfcGNzX2dldF9zdGF0ZSgpDQo+ID4gaXMgcmVxdWlyZWQuDQo+
+ID4gDQo+ID4gPiBSYXRlIGRldGVybWluZWQgYnkgMTBHQkFTRS1UIFBIWSBjYXBhYmlsaXR5IHRo
+cm91Z2ggYXV0by1uZWdvdGlhdGlvbi4NCj4gPiA+IEkyQyBJUCByZXF1aXJlZA0KPiA+ID4gICst
+LS0tLS0tLS0tLS0tLSsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKy0tLS0tLS0t
+LS0tKw0KPiA+ID4gIHwgICAgICAgICAgICAgIHwgICAgICAgfCAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgfCAgU0ZQKyB0byAgfA0KPiA+ID4gIHwgR0VNIE1BQy9ETUEgIHwgPC0tLT4gfCBTZXJE
+ZXMgfCA8LS0tLSBTRkktLS0tLT4gfCAxMEdCQVNFLVQgfA0KPiA+ID4gIHwgICBVU1ggUENTfCAg
+IHwgICAgICAgfCAoUE1BKSAgfCAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgfA0KPiA+ID4g
+ICstLS0tLS0tLS0tLS0tLSsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKy0tLS0t
+LS0tLS0tKw0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgXg0KPiA+ID4gICAgICAgICArLS0tLS0tLS0rICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ID4gICAgICAgICB8IEkyQyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ID4gICAgICAgICB8IE1hc3Rl
+ciB8IDwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfA0KPiA+ID4gICAgICAg
+ICArLS0tLS0tLS0rDQo+ID4gDQo+ID4gVGhlIDEwRyBjb3BwZXIgbW9kdWxlIEkgaGF2ZSB1c2Vz
+IDEwR0JBU0UtUiwgNTAwMEJBU0UtWCwgMjUwMEJBU0UtWCwNCj4gPiBhbmQgU0dNSUkgKHdpdGhv
+dXQgaW4tYmFuZCBzdGF0dXMpLCBkeW5hbWljYWxseSBzd2l0Y2hpbmcgYmV0d2Vlbg0KPiA+IHRo
+ZXNlIGRlcGVuZGluZyBvbiB0aGUgcmVzdWx0cyBvZiB0aGUgY29wcGVyIHNpZGUgbmVnb3RpYXRp
+b24uDQo+ID4gDQo+ID4gPiBVU1hHTUlJIFBIWS4gVXNlcyBNRElPIG9yIGVxdWl2YWxlbnQgZm9y
+IHN0YXR1cyB4ZmVyDQo+ID4gPiAgKy0tLS0tLS0tLS0tLS0rICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgKy0tLS0tLS0tKw0KPiA+ID4gIHwgICAgICAgICAgICAgfCAgICAgICB8
+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgIHwgICAgICAgIHwNCj4gPiA+ICB8IEdFTSBNQUMv
+RE1BIHwgPC0tLT4gfCBTZXJEZXMgfCA8LS0tIFVTWEdNSUkgLS0tPiB8ICBQSFkgICB8DQo+ID4g
+PiAgfCAgVVNYIFBDUyAgICB8ICAgICAgIHwgKFBNQSkgIHwgICAgICAgICAgICAgICAgICAgfCAg
+ICAgICAgfA0KPiA+ID4gICstLS0tLS0tLS0tLS0tKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICstLS0tLS0tLSsNCj4gPiA+ICAgICAgICBeICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gPiA+ICAgICAgICB8X19fX19fX19fX19f
+X19fX19fX19fIE1ESU8gX19fX19fX19fX19fX19fX19fX19fX3wNCj4gPiANCj4gPiBPdmVyYWxs
+LCBwbGVhc2UgaW1wbGVtZW50IHBoeWxpbmsgcHJvcGVybHkgZm9yIHlvdXIgTUFDLCByYXRoZXIg
+dGhhbg0KPiA+IHRoZSBjdXJyZW50IGhhbGYtaGVhcnRlZCBhcHByb2FjaCB0aGF0ICp3aWxsKiBi
+cmVhayBpbiB2YXJpb3VzDQo+ID4gY2lyY3Vtc3RhbmNlcy4NCj4gPiANCj4gDQo+IFdlIHdvdWxk
+IG5lZWQgbW9yZSB0aW1lIHRvIGdldCBiYWNrIG9uIHRoZSByZXN0cnVjdHVyZWQgaW1wbGVtZW50
+YXRpb24uDQo+IFdoaWxlIHdlIHdvcmsgb24gdGhhdCwgaXMgaXQgb2theSB0byBhY2NlcHQgcGF0
+Y2ggMS8zIGFuZCBwYXRjaCAyLzM/DQoNCk1pbGluZCwNCg0KSSdtIG5vdCBhZ2FpbnN0IHF1ZXVp
+bmcgcGF0Y2hlcyAxICYgMiBvZiB0aGlzIHNlcmllcyB3aGlsZSB0aGUgM3JkIG9uZSBpcw0Kc3Rp
+bGwgaW4gcmV2aWV3Lg0KDQpIb3dldmVyLCBJIHdvdWxkIHByZWZlciB0aGF0IHlvdSBmb2xsb3ct
+dXAgSmFrdWIgS2ljaW5za2kncyBhZHZpY2Ugd2hlbiBoZQ0KYW5zd2VyZWQgdG8geW91ciB2MiBz
+ZXJyaWVzLg0KDQpTbyBwbGVhc2UsIHJlLXNlbmQgdGhlIHBhdGNoZXMgMSBhcyBhICJmaXgiIHR5
+cGUgb2YgcGF0Y2gsIG1ha2luZyBzdXJlIHRoYXQgaXQNCnN0aWxsIGFwcGxpZXMgYWZ0ZXIgbGF0
+ZXN0IEFudG9pbmUncyBjaGFuZ2VzLiBUaGVuLCByZS1zZW5kIHRoZSAyLzMgcGF0Y2ggb2YNCnRo
+ZSBzZXJpZXMgYXMgYSB2MyBjb2xsZWN0aW5nIHJldmlld3MgKGFzIEkgZGlkbid0IHJlY2VpdmVk
+IHYyKS4NCg0KV2hlbiB0aGUgZmlyc3QgMiBhcmUgcXVldWVkIGJ5IERhdmlkLCB3ZSBjYW4gcmVz
+dW1lIHRoZSBkaXNjdXNzaW9uIGFib3V0IHlvdXINCjNyZCBwYXRjaCBhbmQgd2hhdCBJIGNhbiB0
+ZWxsIHlvdSBhYm91dCB0aGlzIHRvcGljIGlzIHRoYXQgaXQncyByZWFsbHkgYnkNCmZvbGxvd2lu
+ZyBSdXNzZWxsIGNvbW1lbnRzIGFuZCBhZHZpY2UgdGhhdCB3ZSB3aWxsIG1ha2UgcHJvZ3Jlc3M6
+IEkgd29uJ3QNCmFjY2VwdCBhbnl0aGluZyB3aXRob3V0IGhpcyBhY2tub3dsZWRnbWVudCwgb2Yg
+Y291cnNlLg0KDQpCZXN0IHJlZ2FyZHMsDQogIE5pY29sYXMNCg0K
