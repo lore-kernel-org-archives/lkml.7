@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E304C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDBF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8623F206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 12:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgAHM5y (ORCPT
+        id S1728701AbgAHM6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:57:54 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:31512 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgAHM5p (ORCPT
+        Wed, 8 Jan 2020 07:58:05 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35665 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgAHM6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 07:57:45 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+        Wed, 8 Jan 2020 07:58:01 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: bfWcxfTLjwHWvKskPNueWaBafD9097362aP1KA/qJuSL/eIHIci1mCf8oxWq31wrKVNZlyPnr/
- W6XkI0q0j4KWgQuf0GVbP/oi4ZLnuTU5hI36nLgIldleCIvb4Mn4sQmpQIT8Bp/11EdHYTJVjE
- uEhx1S1/JrfIKNSj+8sdOU7UQzSEZjzOIZ4QHKqB8Jo3WEzzp45BWmDOJ4x1F11Ds2x7ov6v4a
- eR7jUJ3veMwdCc3IgAQxye/IN6QBBsFRhwnExeoU+eQ0jqqi0RQx10K8MuDeOXgQJqFApaTmbM
- vEw=
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 2cr4Fv0nVmqdhEF6lI/NU45OK1meoSPT8DldnErBFT8aIR60aoIt26+00XTJWRv2J+hy47heF7
+ xmyvzng2xBL0YA8sWXtU1ooKgpY8QIfSA49uWtlV9Hbil2irsUxRGN0859ekylemsQlC3rm9Hh
+ OOIy/mGII9z2RaKvtUGwGj7zVz4SnuUF1unahVbPXcCx7CiosA5+iQ9VDO/LsOHGA06DAp9WDp
+ rarMShttv2xY8A9pvHDllimO3iFfV4DnXA3du5E+OZCoiPo55CqF21wY0TdmtUFhqu9wMNCaKQ
+ rdU=
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="60517657"
+   d="scan'208";a="62569391"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 05:57:44 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jan 2020 05:57:59 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 8 Jan 2020 05:57:43 -0700
+ 15.1.1713.5; Wed, 8 Jan 2020 05:57:59 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 8 Jan 2020 05:57:36 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 8 Jan 2020 05:57:51 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -74,9 +74,9 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-rtc@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 13/16] dt-bindings: atmel-usart: add microchip,<chip>-usart
-Date:   Wed, 8 Jan 2020 14:55:20 +0200
-Message-ID: <1578488123-26127-14-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 15/16] ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
+Date:   Wed, 8 Jan 2020 14:55:22 +0200
+Message-ID: <1578488123-26127-16-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
@@ -87,33 +87,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add microchip,<chip>-usart to DT bindings documentation. This is for
-microchip,sam9x60-usart.
+Enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B. These are necessary
+for SAM9X60.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- Documentation/devicetree/bindings/mfd/atmel-usart.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/configs/at91_dt_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-usart.txt b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-index 699fd3c9ace8..e5c7331abe09 100644
---- a/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-+++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-@@ -1,10 +1,12 @@
- * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
- 
- Required properties for USART:
--- compatible: Should be "atmel,<chip>-usart" or "atmel,<chip>-dbgu"
-+- compatible: Should be "atmel,<chip>-usart", "microchip,<chip>-usart" or
-+  "atmel,<chip>-dbgu".
-   The compatible <chip> indicated will be the first SoC to support an
-   additional mode or an USART new feature.
--  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart"
-+  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart",
-+  "microchip,<chip>-usart".
- - reg: Should contain registers location and length
- - interrupts: Should contain interrupt
- - clock-names: tuple listing input clock names.
+diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
+index 5c5df8bc0074..f66bb98a5cce 100644
+--- a/arch/arm/configs/at91_dt_defconfig
++++ b/arch/arm/configs/at91_dt_defconfig
+@@ -160,6 +160,9 @@ CONFIG_USB_AT91=y
+ CONFIG_USB_ATMEL_USBA=y
+ CONFIG_USB_G_SERIAL=y
+ CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_SDHCI_OF_AT91=y
+ CONFIG_MMC_ATMELMCI=y
+ CONFIG_MMC_SPI=y
+ CONFIG_NEW_LEDS=y
+@@ -177,6 +180,7 @@ CONFIG_RTC_DRV_AT91SAM9=y
+ CONFIG_DMADEVICES=y
+ CONFIG_AT_HDMAC=y
+ CONFIG_AT_XDMAC=y
++CONFIG_MICROCHIP_PIT64B=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_IIO=y
+ CONFIG_AT91_ADC=y
 -- 
 2.7.4
 
