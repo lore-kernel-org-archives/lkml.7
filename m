@@ -2,106 +2,162 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC60CC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C24C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1DFB206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9542070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csq7vNU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgAHKIk (ORCPT
+        id S1727636AbgAHKJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:08:40 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:45684 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgAHKIk (ORCPT
+        Wed, 8 Jan 2020 05:09:00 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45069 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgAHKJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:08:40 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id C7B5C80566;
-        Wed,  8 Jan 2020 11:08:32 +0100 (CET)
-Date:   Wed, 8 Jan 2020 11:08:31 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/drm_panel: fix export of drm_panel_of_backlight, try
- #3
-Message-ID: <20200108100831.GA23308@ravnborg.org>
-References: <20200107203231.920256-1-arnd@arndb.de>
- <87zheyqnla.fsf@intel.com>
+        Wed, 8 Jan 2020 05:09:00 -0500
+Received: by mail-il1-f196.google.com with SMTP id p8so2151601iln.12;
+        Wed, 08 Jan 2020 02:08:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=rwZwmnt2UnOUu3Zp4GzpWfKBgqtgvpBiXHh9MTpc/Ko=;
+        b=csq7vNU92EUloQMY87mKOFEcnGkzWwWIkpD+9HhvMicHW4y30a90NNaBKe66GZ5wiX
+         JykB4KAL7PZk/0pZh+cwzYPqKb6Rlh/ZArVmt0n8WFX7HUAdaj0qzcoNh0n32q1/lwcG
+         TQLsWh8IQuZ0Z1yJy5onX6CiB8GwsE0Vjx6OwYLt2mc5guSO6DL9qTbzHCSoVtVLMFmr
+         NGFZ8pMXwx/Ii8cwSFh9338Iy5kS3iIVLiJNgxjlzw4tRY24xwmvZ9NX38DeEsTqH87P
+         Y6lAihPuhaQtSJNhLu59teIxDlBofKzIsA7QxJrsdTlChzwleJazsN+TY67VIQaWt0BB
+         gYdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=rwZwmnt2UnOUu3Zp4GzpWfKBgqtgvpBiXHh9MTpc/Ko=;
+        b=m+qQtYCCjiAgbQxlYrmWGGTQlEEKL6xvwDiBcuwQVmqsKXfd0XcNVzSrFOEs0wQNro
+         BeGbL8ujp5TmxpnqGHNArHzl82fm0M6hDfXLCC2Rd2yf8OtwB98swbPFJUysp/7WTsYA
+         jlkypUaDqJI1uwiRAD0fa6lCF/Y7t+kYIXNbXpU1YO+ybrkqE/FmXmQtkUNc5V7qQ+xQ
+         wKxAMquEd5fo8vWo/HuKG0tiLlIRIBvSEE2VwSOlK8VOEiGsoaPZfw2pRA97vbEDeGqg
+         z02vYFYGPLjasz2wE+HFX/n3KL6jmIXxXslrPYNkwBJGNX0UiOvlo40+nU9ErrtIkCX5
+         yhoA==
+X-Gm-Message-State: APjAAAW3+c/I0WxfSi89CPH8mC0Iwg3RH64TBw5/nA8e/GzxfBk73+B7
+        fh1Him0zYyhR+5pWZ/8lWUjgDDwT4NdSsE5mKh+xa7VuiSi5Tg==
+X-Google-Smtp-Source: APXvYqy4pcdY9LHO5DPZwzg4N4jxl2Y1E9DW547SqUjcsOvtecHqTLirlxVHPiyERPPjc3X6KFx6xRk0FQkoYxj1W7w=
+X-Received: by 2002:a92:b6d1:: with SMTP id m78mr3028711ill.245.1578478138417;
+ Wed, 08 Jan 2020 02:08:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zheyqnla.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Vt2AcnKqAAAA:8
-        a=QyXUC8HyAAAA:8 a=4k1t4WDYj-Gm4IL4ZnQA:9 a=CjuIK1q_8ugA:10
-        a=v10HlyRyNeVhbzM4Lqgd:22
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Wed, 8 Jan 2020 15:08:47 +0500
+Message-ID: <CABXGCsNu+nih5nZkuavoYot0eo5pF7quD4JviN+vWctPdmbu=A@mail.gmail.com>
+Subject: [rtw88] purge skb(s) not reported by firmware
+To:     Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        yhchuang@realtek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jani.
+Hi folks.
+I recently joined testing the rtw88 driver.
+In just a few days, I already catches such WARNING twice times:
 
-On Wed, Jan 08, 2020 at 11:55:29AM +0200, Jani Nikula wrote:
-> On Tue, 07 Jan 2020, Arnd Bergmann <arnd@arndb.de> wrote:
-> > Making this IS_REACHABLE() was still wrong, as that just determines
-> > whether the lower-level backlight code would be reachable from the panel
-> > driver. However, with CONFIG_DRM=y and CONFIG_BACKLIGHT_CLASS_DEVICE=m,
-> > the drm_panel_of_backlight is left out of drm_panel.o but the condition
-> > tells the driver that it is there, leading to multiple link errors such as
-> >
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sitronix-st7701.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-sharp-ls043t1le01.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-seiko-43wvf1g.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-ronbo-rb070d30.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-rocktech-jh057n00900.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-panasonic-vvx10f034n00.ko] undefined!
-> > ERROR: "drm_panel_of_backlight" [drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.ko] undefined!
-> >
-> > Change the condition to check for whether the function was actually part
-> > of the drm module. This version of the patch survived a few hundred
-> > randconfig builds, so I have a good feeling this might be the last
-> > one for the export.
-> 
-> Broken record, this will still be wrong, even if it builds and links. No
-> backlight support for panel despite expectations.
-> 
-> See http://mid.mail-archive.com/87d0cnynst.fsf@intel.com
-> 
-> All of this is just another hack until the backlight config usage is
-> fixed for good. Do we really want to make this the example to copy paste
-> wherever we hit the issue next?
-> 
-> I'm not naking, but I'm not acking either.
 
-I will try to take a look at your old BACKLIGHT_CLASS_DEVICE patch this
-weekend. I think we need that one fixed - and then we can have this mess
-with "drm_panel_of_backlight" fixed in the right way.
+[ 4899.601656] rtw_pci 0000:05:00.0: failed to send h2c command
+[ 9084.661382] rtw_pci 0000:05:00.0: firmware failed to restore hardware setting
+[ 9085.167364] ------------[ cut here ]------------
+[ 9085.167370] purge skb(s) not reported by firmware
+[ 9085.167417] WARNING: CPU: 9 PID: 0 at
+drivers/net/wireless/realtek/rtw88/tx.c:155
+rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+[ 9085.167419] Modules linked in: uinput rfcomm xt_CHECKSUM
+xt_MASQUERADE xt_conntrack ipt_REJECT nf_nat_tftp nf_conntrack_tftp
+tun bridge stp llc ccm nft_objref nf_conntrack_netbios_ns
+nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
+nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
+nf_tables_set nft_chain_nat nf_tables ebtable_nat ebtable_broute
+ip6table_nat ip6table_mangle ip6table_raw ip6table_security
+iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+iptable_mangle iptable_raw iptable_security ip_set nfnetlink
+ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter cmac
+bnep sunrpc vfat fat snd_hda_codec_realtek rtwpci
+snd_hda_codec_generic rtw88 ledtrig_audio snd_hda_codec_hdmi
+edac_mce_amd snd_hda_intel kvm_amd snd_intel_dspcfg snd_hda_codec
+btusb mac80211 kvm snd_hda_core btrtl btbcm snd_hwdep btintel snd_seq
+bluetooth eeepc_wmi snd_seq_device irqbypass snd_pcm asus_wmi
+snd_timer crct10dif_pclmul sp5100_tco cfg80211
+[ 9085.167456]  sparse_keymap ecdh_generic crc32_pclmul joydev video
+pcspkr snd i2c_piix4 wmi_bmof ghash_clmulni_intel k10temp rfkill ccp
+ecc libarc4 soundcore gpio_amdpt gpio_generic acpi_cpufreq binfmt_misc
+ip_tables xfs libcrc32c amdgpu amd_iommu_v2 gpu_sched ttm
+drm_kms_helper drm igb crc32c_intel dca nvme i2c_algo_bit nvme_core
+wmi pinctrl_amd fuse
+[ 9085.167480] CPU: 9 PID: 0 Comm: swapper/9 Not tainted
+5.5.0-0.rc5.git0.2.fc32.x86_64 #1
+[ 9085.167482] Hardware name: System manufacturer System Product
+Name/ROG STRIX X470-I GAMING, BIOS 2901 10/16/2019
+[ 9085.167492] RIP: 0010:rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+[ 9085.167496] Code: 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00 8b
+47 f0 85 c0 75 01 c3 41 54 55 53 48 89 fb 48 c7 c7 58 18 30 c1 e8 92
+c8 e4 e2 <0f> 0b 4c 8d 63 d8 4c 89 e7 e8 12 31 7a e3 48 8d 7b e0 48 89
+c5 e8
+[ 9085.167498] RSP: 0018:ffffab39c03ace78 EFLAGS: 00010286
+[ 9085.167501] RAX: 0000000000000000 RBX: ffff9ee2d73d5cf0 RCX: 0000000000000007
+[ 9085.167503] RDX: 0000000000000007 RSI: 0000000000000086 RDI: ffff9ee2fdc59cc0
+[ 9085.167505] RBP: ffff9ee2fdc5be80 R08: 00000000000005bf R09: 0000000000000034
+[ 9085.167506] R10: ffffab39c03acd20 R11: 0000000000000000 R12: ffff9ee2d73d5cf0
+[ 9085.167508] R13: ffffffffc1295180 R14: 0000000000000001 R15: ffff9ee2d73d5cf0
+[ 9085.167511] FS:  0000000000000000(0000) GS:ffff9ee2fdc40000(0000)
+knlGS:0000000000000000
+[ 9085.167513] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 9085.167515] CR2: 0000201f0874d000 CR3: 00000007dddec000 CR4: 00000000003406e0
+[ 9085.167517] Call Trace:
+[ 9085.167520]  <IRQ>
+[ 9085.167527]  call_timer_fn+0x2d/0x130
+[ 9085.167532]  __run_timers.part.0+0x16f/0x260
+[ 9085.167537]  ? timerqueue_add+0x96/0xb0
+[ 9085.167540]  ? enqueue_hrtimer+0x36/0x90
+[ 9085.167544]  run_timer_softirq+0x26/0x50
+[ 9085.167548]  __do_softirq+0xee/0x2ff
+[ 9085.167554]  irq_exit+0xe9/0xf0
+[ 9085.167557]  smp_apic_timer_interrupt+0x76/0x130
+[ 9085.167561]  apic_timer_interrupt+0xf/0x20
+[ 9085.167563]  </IRQ>
+[ 9085.167567] RIP: 0010:cpuidle_enter_state+0xc9/0x3e0
+[ 9085.167570] Code: e8 cc 04 8f ff 80 7c 24 0f 00 74 17 9c 58 0f 1f
+44 00 00 f6 c4 02 0f 85 ea 02 00 00 31 ff e8 9e 54 95 ff fb 66 0f 1f
+44 00 00 <45> 85 ed 0f 88 40 02 00 00 49 63 d5 4c 2b 64 24 10 48 8d 04
+52 48
+[ 9085.167572] RSP: 0018:ffffab39c0167e68 EFLAGS: 00000246 ORIG_RAX:
+ffffffffffffff13
+[ 9085.167575] RAX: ffff9ee2fdc6ad80 RBX: ffff9ee2f0d44800 RCX: 000000000000001f
+[ 9085.167577] RDX: 0000000000000000 RSI: 0000000022a8dc79 RDI: 0000000000000000
+[ 9085.167578] RBP: ffffffffa575a2c0 R08: 000008434e2c4d11 R09: 0000000000001d85
+[ 9085.167580] R10: 0000000000000018 R11: ffff9ee2fdc69b64 R12: 000008434e2c4d11
+[ 9085.167581] R13: 0000000000000001 R14: 0000000000000001 R15: ffff9ee2f9cc2680
+[ 9085.167588]  ? cpuidle_enter_state+0xa4/0x3e0
+[ 9085.167591]  cpuidle_enter+0x29/0x40
+[ 9085.167596]  do_idle+0x1e4/0x280
+[ 9085.167599]  cpu_startup_entry+0x19/0x20
+[ 9085.167603]  start_secondary+0x162/0x1b0
+[ 9085.167606]  secondary_startup_64+0xb6/0xc0
+[ 9085.167610] ---[ end trace f734f2b1bc40ebdb ]---
+[12111.505901] rtw_pci 0000:05:00.0: failed to send h2c command
+[12111.505956] rtw_pci 0000:05:00.0: failed to send h2c command
 
-Sigh...
 
-	Sam
+Yes, it seems like nothing bad happened, except frequent network disconnect.
+Unfortunately I don't know how exactly reproduce it.
+But I think if someone propose patch and this WARNING after applying
+didn't appears againn at least a week then we can assume that the
+problem is fixed.
+
+--
+Best Regards,
+Mike Gavrilov.
