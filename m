@@ -2,136 +2,141 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D21AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6CCC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3158206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3TS9Ajq"
+	by mail.kernel.org (Postfix) with ESMTP id E05EA206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgAHNpb (ORCPT
+        id S1727950AbgAHNto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:45:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42958 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726186AbgAHNpa (ORCPT
+        Wed, 8 Jan 2020 08:49:44 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:54747 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgAHNto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:45:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578491129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dG3i7yuSZ3ug5whVQjbMvnjTRjDpvRHXJetJ3lD56EE=;
-        b=N3TS9AjqM8uIVPjkito7dT+fJXqhfHDfNRMjXlcPDta56ptjS5BXxqqRoPfNnHHgpVLHBB
-        lVjznGD4WDrSEerDJDaNuTuRa7+qh4qIRr0maXxUhqZ33KEM9XWnSWrZoiBq3MqKqtJCsi
-        XZzcZHW4kW2SzmE9wS8cTuZV97CpP44=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-D-99LmD1OlaSQU5Xry_7AQ-1; Wed, 08 Jan 2020 08:45:28 -0500
-X-MC-Unique: D-99LmD1OlaSQU5Xry_7AQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31D8E107ACC4;
-        Wed,  8 Jan 2020 13:45:27 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99FC47C34A;
-        Wed,  8 Jan 2020 13:45:22 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 14:45:20 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Ben Gardon <bgardon@google.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Cannon Matthews <cannonmatthews@google.com>
-Subject: Re: [PATCH v3 1/8] KVM: selftests: Create a demand paging test
-Message-ID: <20200108134520.zcrg6bx6urv4zxea@kamzik.brq.redhat.com>
-References: <20191216213901.106941-1-bgardon@google.com>
- <20191216213901.106941-2-bgardon@google.com>
- <20200107143334.GF219677@xz-x1>
- <20200107145608.ogi34nkyh2abdgrq@kamzik.brq.redhat.com>
- <CANgfPd8_ei0WdF7t73TPveCAh1ifSp9p1B6BOkL32A+499nz=Q@mail.gmail.com>
+        Wed, 8 Jan 2020 08:49:44 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MUGmJ-1jFpMw3wu3-00RIIe; Wed, 08 Jan 2020 14:49:38 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] of: add more dummy helper functions
+Date:   Wed,  8 Jan 2020 14:49:28 +0100
+Message-Id: <20200108134936.3617013-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANgfPd8_ei0WdF7t73TPveCAh1ifSp9p1B6BOkL32A+499nz=Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:JQOAbVK0LWH8+kGq3OdUd50ufs2YEZV3baqlPgyjnJ1EKClaWfd
+ 3RQXwmRqR6iIRfGAw0SJ6ykQeTSDGMKgHSCbCWFQmagnm4q8JsA4OZv2kn6aO/2YbFoOexC
+ a0EbrrHdfgzLnQ7iOLnvVORt0r2SlDlgWGY5Hk2Jyx/wHu7LKeT53tI+XkSjtiMeoR/DuIC
+ TcX6eu2WCN17t6VfERARw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2pHzSasBQPo=:KLVRXx6QyUgV/cEWTC5tkr
+ /QQavo2hzouhq7JHsZQS9eVUwqmQ8ifQwgwycTIC9ask6pVnFnkRXCfuIVhXHSSbnoTsFe3+3
+ jZww/noej6zIfZ2qurhMV2XaIe8gwcGRwg5MOKx5YvoUbTTAyQS6w7URRm3NINnydKDOelVh0
+ KhssziFYqRk0q+k1SUh+So2ZPKnQBrG/HZuW6pC5ySkdNyNs/MZRSgT1BPYi7QmiKZZQwtQFT
+ k3/2RIwWI4Ya2+vbsK3DOCeyAGreJrMvIlbHT6WnTyVY7IT+zer/LmOrRwxFz3bY8/0/qLtLB
+ mwlRsPOIpe/l2OHnxlc+zW9fIGPA5w3q2TsbbvGpaxJkSNRy0g4T15kgsrWPq0QYOPfIA8xrv
+ tBJYisaY1J83fk+spOaoAqJYM4C/jKcPl5/IbK0qqeHOcJhzsrKEC4ZPE3H0WN6ogWH/tKgt7
+ LdYwNIkYBSdJ+upWFTJbYxxU46mSkzm1DIT1FunawjyOSdoO6X/j32/HdhubicCRvKPaz75Ni
+ 4HTX/XbhVm3SjlcBOVf/RVY9maywbgOJcY9QzSAltGPWvjOkw2iA93Sym2R0k3d9umC5KGbFF
+ 3uvSjFD5m6FUPLi6frVfZSrdm8TSb3lNsEEs6WCyu5n6Q8Zx9See4yEv127ki/G6npw1cz67s
+ aQmenEh+CUaj6eZh5Q6+WwjEnLlUoa6ejO6k9+dqVwsmZlXGO2SKwX0V2x4rxDQRASRZFNr5y
+ CF+GYclP67xC4CxoEYk+P6LQQqDlWXZHnV56TDMv83UCeijBgoUkbgT6qr6X3PMU2cDfAqL/q
+ 8L7JtdN+u9EWyJPelSangHh88Pw2FI1UY8wCMbACpijNVF9l2xqYYCd5Z0uqKaqrsEv0aKF/d
+ bdmh3RFFZmZUSA4cFL8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 10:41:55AM -0800, Ben Gardon wrote:
-> I'll try to implement Drew's suggestion re: syncing global variables
-> and then looking up CPU ID. If I can do that I'll upload another patch
-> set for s390, aarch64, and x86. If I can't I'll move this test to the
-> x86 subdirectory.
-> 
-> I apologize for not responding to the comments on the previous version
-> of this patch set. I'm still learning the mailing list etiquette. In
-> the future is it preferable that I reply to those comments when I
-> upload a new patch set addressing them, or should I add a note in the
-> new patch emails about the comments I addressed in that update?
+The new phy-j721e-wiz driver causes a link failure without CONFIG_OF:
 
-It's typically enough to just create a changelog in the cover letter.
-E.g.
+drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
+phy-j721e-wiz.c:(.text+0x40): undefined reference to `of_platform_device_destroy'
 
-v3:
- - Added ...
- - Dropped ...
- - Fixed ...
- - Picked up r-b's
+Add a dummy version of of_platform_device_destroy to avoid having to add
+Kconfig dependencies for the driver. As there are a few other functions
+without dummy implementations, add those as well for completeness.
 
-v2:
- - Added ...
- - Dropped ...
- - Fixed ...
- - Picked up r-b's
+Fixes: 42440de5438a ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/of_platform.h | 39 ++++++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 9 deletions(-)
 
-> 
-> I don't have any aarch64 or s390 hardware handy to test on so I'll try
-> to move support for those architectures to separate commits at the end
-> of the series, and mark them untested.
-
-I'll test on aarch64, and I can also provide fixes if necessary.
-
-Thanks,
-drew
-
-> 
-> Thank you for your quick responses!
-> 
-> On Tue, Jan 7, 2020 at 6:56 AM Andrew Jones <drjones@redhat.com> wrote:
-> >
-> > On Tue, Jan 07, 2020 at 09:33:34AM -0500, Peter Xu wrote:
-> > > On Mon, Dec 16, 2019 at 01:38:54PM -0800, Ben Gardon wrote:
-> > > > While userfaultfd, KVM's demand paging implementation, is not specific
-> > > > to KVM, having a benchmark for its performance will be useful for
-> > > > guiding performance improvements to KVM. As a first step towards creating
-> > > > a userfaultfd demand paging test, create a simple memory access test,
-> > > > based on dirty_log_test.
-> > > >
-> > > > Signed-off-by: Ben Gardon <bgardon@google.com>
-> > >
-> > > It's fine to start with x86-only for this test, but imho it would be
-> > > better to mention that in cover letter, or reply to reviewer comments
-> > > on that you removed aarch64 from previous post.
-> >
-> > I'd also prefer that if it's x86-only that it be put in the x86_64
-> > subdirectory and drop the arch #ifdefs. The question is why is it
-> > x86-only for now though? Will it take a lot of work to port it to
-> > other architectures? Or does it just need testing by someone with
-> > the hardware?
-> >
-> > Thanks,
-> > drew
-> >
-> 
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 84a966623e78..f5dea3de4856 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -48,28 +48,49 @@ struct of_dev_auxdata {
+ 
+ extern const struct of_device_id of_default_bus_match_table[];
+ 
++#ifdef CONFIG_OF
+ /* Platform drivers register/unregister */
+ extern struct platform_device *of_device_alloc(struct device_node *np,
+ 					 const char *bus_id,
+ 					 struct device *parent);
+-#ifdef CONFIG_OF
+ extern struct platform_device *of_find_device_by_node(struct device_node *np);
+-#else
+-static inline struct platform_device *of_find_device_by_node(struct device_node *np)
+-{
+-	return NULL;
+-}
+-#endif
+-
+ /* Platform devices and busses creation */
+ extern struct platform_device *of_platform_device_create(struct device_node *np,
+ 						   const char *bus_id,
+ 						   struct device *parent);
+-
+ extern int of_platform_device_destroy(struct device *dev, void *data);
+ extern int of_platform_bus_probe(struct device_node *root,
+ 				 const struct of_device_id *matches,
+ 				 struct device *parent);
++#else
++static inline struct platform_device *of_device_alloc(struct device_node *np,
++						      const char *bus_id,
++						      struct device *parent)
++{
++	return NULL;
++}
++static inline struct platform_device *of_find_device_by_node(struct device_node *np)
++{
++	return NULL;
++}
++static inline struct platform_device *of_platform_device_create(struct device_node *np,
++								const char *bus_id,
++								struct device *parent)
++{
++	return NULL;
++}
++static inline int of_platform_device_destroy(struct device *dev, void *data)
++{
++	return 0;
++}
++static inline int of_platform_bus_probe(struct device_node *root,
++					const struct of_device_id *matches,
++					struct device *parent)
++{
++	return -ENODEV;
++}
++#endif
++
+ #ifdef CONFIG_OF_ADDRESS
+ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+-- 
+2.20.0
 
