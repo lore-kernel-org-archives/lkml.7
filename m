@@ -2,128 +2,80 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C997BC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A061EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963B3205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="hooMOcE6"
+	by mail.kernel.org (Postfix) with ESMTP id 77590205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbgAHNJS (ORCPT
+        id S1727602AbgAHNJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:09:18 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39885 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgAHNJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:09:18 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c16so2517508qko.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:09:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=T1UOaKySeFJ0zKePKXqAI7V9b9QgvGnZL/Q3FtxcxRw=;
-        b=hooMOcE6opMbVdDJ7nmkFDN8Zp6CmRzc5r5pztAQmfT0T6Q1tdPnQ46RLDwiG02Day
-         Glb6+fWlPHqMGE9GXQWAQomFlk35zPedNaVupcNKQiNjMJXS4GUA/zJybWpFVHH9EkVZ
-         ixPvXakHhWguyTMogEGL06x+MLJtSPzn0mPEzm4240ZDFOvhNWXEK/XwxfZqgJz4G6gn
-         MlvgbeGwRwSubDfzRhlgQrFwi64Bhyo45xPY6tHjw9N8RDxY57R4G3aeOW/v7JfFqicR
-         pAbN58Z5EtHvqqLRPKnlkje8EyXgzlNToN4DZjPiMXLCH/G5TR3xSJDJv4JZMqrEACj3
-         V3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=T1UOaKySeFJ0zKePKXqAI7V9b9QgvGnZL/Q3FtxcxRw=;
-        b=fI+VrrqGTVDzxzL/v0x6pC4VQU8ZqPydUgL7E7eil/a64F8wUDVNoWybvmlZKC/KY7
-         ETthRTPNUNWLFgVRX5siF8YXLCvpGMXfyksH524UHBOgxFNNS7iodG3YRotmLv2VHq6u
-         kjVTgvuQCEJL0GAKqwNDzIFXSXP8Kn5skeQ/KFdzhecu2x28PF1q/BmCmSiSI9/D0Uzz
-         irb30urty684a4xkC+CGL/slPZ2z0FjPoHCYWHDv2sc0jxdchMX+UTO3f7XKXQ09kVyo
-         d3MDj34qM2H6hBizYC3L+AG69YOviDbjxjW+ifHq0yY3QlXXrAOJx+bQjLMFS56mc4l5
-         aEqg==
-X-Gm-Message-State: APjAAAWQbEIgUULvQfG6mmJ0N+lnlJo1J309ZjJElT+RtMZN5+/PPBQB
-        Iq/oxk3UGLU4QLGKorCVgKMVRw==
-X-Google-Smtp-Source: APXvYqzc8kfgPN9AN9MgcitXkpdCWilW0meQ9p/ArvJ2UJspNn9/Jjt6TwseF4fe6UUI8HtF11Z8UA==
-X-Received: by 2002:a37:66c2:: with SMTP id a185mr4060253qkc.211.1578488957243;
-        Wed, 08 Jan 2020 05:09:17 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s11sm1325512qkg.99.2020.01.08.05.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 05:09:17 -0800 (PST)
-Date:   Wed, 8 Jan 2020 05:09:12 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <simon.horman@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        oss-drivers@netronome.com, Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] netronome: fix ipv6 link error
-Message-ID: <20200108050912.6a07008b@cakuba.netronome.com>
-In-Reply-To: <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
-References: <20200107200659.3538375-1-arnd@arndb.de>
-        <20200107124417.5239a6cf@cakuba.netronome.com>
-        <CAK8P3a27tFJpMeEuJDQWCHvGyETjM+XbPKenQwroxjc8Qpw=TQ@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 8 Jan 2020 08:09:58 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45280 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726087AbgAHNJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:09:58 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1BAD161D0060090647B7;
+        Wed,  8 Jan 2020 21:09:57 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 Jan 2020
+ 21:09:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <qiang.zhao@nxp.com>, <leoyang.li@nxp.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: fsl: qe: remove set but not used variable 'mm_gc'
+Date:   Wed, 8 Jan 2020 21:09:26 +0800
+Message-ID: <20200108130926.45808-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 23:01:50 +0100, Arnd Bergmann wrote:
-> On Tue, Jan 7, 2020 at 9:44 PM Jakub Kicinski wrote:
-> > On Tue,  7 Jan 2020 21:06:40 +0100, Arnd Bergmann wrote:  
-> > > When the driver is built-in but ipv6 is a module, the flower
-> > > support produces a link error:
-> > >
-> > > drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.o: In function `nfp_tunnel_keep_alive_v6':
-> > > tunnel_conf.c:(.text+0x2aa8): undefined reference to `nd_tbl'  
-> >
-> > Damn, I guess the v2 of that patch set did not solve _all_ v6 linking
-> > issues :/ Thanks for the patch.
-> >  
-> > > Add a Kconfig dependency to avoid that configuration.
-> > >
-> > > Fixes: 9ea9bfa12240 ("nfp: flower: support ipv6 tunnel keep-alive messages from fw")
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > >  drivers/net/ethernet/netronome/Kconfig | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/net/ethernet/netronome/Kconfig b/drivers/net/ethernet/netronome/Kconfig
-> > > index bac5be4d4f43..dcb02ce28460 100644
-> > > --- a/drivers/net/ethernet/netronome/Kconfig
-> > > +++ b/drivers/net/ethernet/netronome/Kconfig
-> > > @@ -31,6 +31,7 @@ config NFP_APP_FLOWER
-> > >       bool "NFP4000/NFP6000 TC Flower offload support"
-> > >       depends on NFP
-> > >       depends on NET_SWITCHDEV
-> > > +     depends on IPV6 != m || NFP =m  
-> >
-> > Could we perhaps do the more standard:
-> >
-> >         depends on IPV6 || IPV6=n  
-> 
-> That would have to be on CONFIG_NFP instead of CONFIG_NFP_APP_FLOWER
-> then, making the entire driver a module if IPV6=m but always allowing
-> CONFIG_NFP_APP_FLOWER.
+drivers/soc/fsl/qe/gpio.c: In function qe_pin_request:
+drivers/soc/fsl/qe/gpio.c:163:26: warning: variable mm_gc set but not used [-Wunused-but-set-variable]
 
-Ah, indeed.
+commit 1e714e54b5ca ("powerpc: qe_lib-gpio: use gpiochip data pointer")
+left behind this unused variable.
 
-> > The whitespace around = and != seems a little random as is..  
-> 
-> Yep, my mistake. I can send a fixed version, please let me know which
-> version you want, or fix it up yourself if you find that easier.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/soc/fsl/qe/gpio.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Adding the dependency just to NFP_APP_FLOWER seems clean, please just
-fix the whitespace and feel free to add my Acked-by to v2.
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 12bdfd9..ed75198 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -160,7 +160,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ {
+ 	struct qe_pin *qe_pin;
+ 	struct gpio_chip *gc;
+-	struct of_mm_gpio_chip *mm_gc;
+ 	struct qe_gpio_chip *qe_gc;
+ 	int err;
+ 	unsigned long flags;
+@@ -186,7 +185,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ 		goto err0;
+ 	}
+ 
+-	mm_gc = to_of_mm_gpio_chip(gc);
+ 	qe_gc = gpiochip_get_data(gc);
+ 
+ 	spin_lock_irqsave(&qe_gc->lock, flags);
+-- 
+2.7.4
+
+
