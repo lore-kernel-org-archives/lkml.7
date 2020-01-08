@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C402C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6148C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3854120692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32D020692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgAHQiB (ORCPT
+        id S1728827AbgAHQiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:38:01 -0500
-Received: from mga14.intel.com ([192.55.52.115]:21187 "EHLO mga14.intel.com"
+        Wed, 8 Jan 2020 11:38:13 -0500
+Received: from mga12.intel.com ([192.55.52.136]:47566 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbgAHQiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:38:01 -0500
+        id S1727127AbgAHQiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 11:38:12 -0500
 X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:38:00 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 08:38:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="303602294"
+   d="scan'208";a="211591690"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 08:37:56 -0800
+  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 08:38:07 -0800
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipELE-0005Qd-BW; Wed, 08 Jan 2020 18:37:56 +0200
-Date:   Wed, 8 Jan 2020 18:37:56 +0200
+        id 1ipELP-0005Qp-W6; Wed, 08 Jan 2020 18:38:07 +0200
+Date:   Wed, 8 Jan 2020 18:38:07 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Darren Hart <dvhart@infradead.org>,
@@ -47,15 +47,15 @@ Cc:     Darren Hart <dvhart@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/36] platform/x86: intel_mid_powerbtn: Take a copy
- of ddata
-Message-ID: <20200108163756.GU32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 02/36] platform/x86: intel_scu_ipcutil: Remove default
+ y from Kconfig
+Message-ID: <20200108163807.GV32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-2-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-3-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-2-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-3-mika.westerberg@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,39 +63,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:26PM +0300, Mika Westerberg wrote:
-> The driver gets driver_data from memory that is marked as const (which
-> is probably put to read-only memory) and it then modifies it. This
-> likely causes some sort of fault to happen.
-> 
-> Fix this by taking a copy of the structure.
-> 
+On Wed, Jan 08, 2020 at 02:41:27PM +0300, Mika Westerberg wrote:
+> This driver is by no means essential for system to boot up so remove
+> default y from it.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+> 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-> index 292bace83f1e..6f436836fe50 100644
-> --- a/drivers/platform/x86/intel_mid_powerbtn.c
-> +++ b/drivers/platform/x86/intel_mid_powerbtn.c
-> @@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
->  
->  	input_set_capability(input, EV_KEY, KEY_POWER);
->  
-> -	ddata = (struct mid_pb_ddata *)id->driver_data;
-> +	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-> +			     sizeof(*ddata), GFP_KERNEL);
->  	if (!ddata)
-> -		return -ENODATA;
-> +		return -ENOMEM;
->  
->  	ddata->dev = &pdev->dev;
->  	ddata->irq = irq;
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 27d5b40fb717..dd4326736d11 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -997,7 +997,6 @@ config INTEL_SCU_IPC
+>  config INTEL_SCU_IPC_UTIL
+>  	tristate "Intel SCU IPC utility driver"
+>  	depends on INTEL_SCU_IPC
+> -	default y
+>  	---help---
+>  	  The IPC Util driver provides an interface with the SCU enabling
+>  	  low level access for debug work and updating the firmware. Say
 > -- 
 > 2.24.1
 > 
