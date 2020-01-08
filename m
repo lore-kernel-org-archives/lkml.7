@@ -2,167 +2,161 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10685C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51A7C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD20420720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A1B2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+By21YM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IgCye+Rg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgAHQa4 (ORCPT
+        id S1728288AbgAHQeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:30:56 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38960 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbgAHQaz (ORCPT
+        Wed, 8 Jan 2020 11:34:37 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39353 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbgAHQeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:30:55 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t17so3068729eds.6;
-        Wed, 08 Jan 2020 08:30:53 -0800 (PST)
+        Wed, 8 Jan 2020 11:34:37 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l2so3975630lja.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 08:34:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CmdeZPKAzWMubu2XNK5KT8RXc9jP8l1vb7Bp6B2rpwE=;
-        b=a+By21YMez7ITO7fBJ5SLtyuGYWCEAYTizKG265xum56+yJwU8VkuDpOIB9EmPTwpZ
-         z8ktcq3D4MzSK3oQsul8sGaxE5b5CgNMzR4E91Me2KfuJviwNSsJLeIYQEOGXWsztwhJ
-         vNtwFw7D1wOLUWaDQZTo/e3maaxky7GzLFRwks4F2Bp32ffT8VxHSCubnyguDjR2Px2V
-         eTvj6oSGecD7iN1nIDorZ08CLcYaU7GCNfYMfH1Q6mD2PyPBUn5QJQw33R6NxyPQ87jf
-         YzrWq1mkpKwL+vcCdQ+NEJGZc1ATYIJCDMkfeHtIgvrvZFSgNpmF5cuOfmI4sHTLSF37
-         z0eg==
+         :cc:content-transfer-encoding;
+        bh=WZNI1+DqZ7dhOcGMBf3FOgqzvgP3U/gwSgh20Voslag=;
+        b=IgCye+Rg1Qso0tNKnWBaqrOq/tpUwyMVLrvrGqITdm77sy5HoA41W3TaF7A+qhs73e
+         vtKtEJF3uPLapRgWABQLYVfyFOUtcMTZ6zT32PgK9aCZgpjeElk7wnHq7/dMvk2Zc9eJ
+         K54CVWCUxs7pcnkif/DJAikpCnOhMCPzvpSQ7kOYOQy5Wp2X7tiDNAgBKATzxTzQdxDM
+         aZyJ6oBqnw7s95n/pIHAxqBNPiddN7maU411jZtgTCRyGeEQFUoSwv41ZBZrn/YlP1bc
+         /yD5CM0Pmd9k2ZXLliTPqCiBNYjhfnwCddc3pf/fYIRqS0KEmouqAZgZjjhfZANmEv3L
+         NUVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CmdeZPKAzWMubu2XNK5KT8RXc9jP8l1vb7Bp6B2rpwE=;
-        b=pdyiYtGAYpn1SWGAisYWGvX0rxJAlK8bMhI9D6QlXi33OJDPSB6Bl6tXab4eamoUYW
-         VRBZTm3XMqCqfhUDJHLmPHxSFBqOPs9YFuJrcQqL2BwTv+nsfAXp75523Lp8RUTyR44A
-         fC5T1+1glF32l21/nCbRjSlrZQUHjmo6b2Uz/SooCBqq/uFBEKjQg2BN+woPGtc4yW5h
-         90upHxkf0qMs1qZvX1QWJ5KZvueAnY8HKJbSzGWwgWtLsSkXMwGb8IAql87YjHPado4K
-         xy78ap2/vQcUc2xlTi1edX3RLs4amJ16nfNT1kxpj7VE8uQRrJJXcV7ERyznNexk1bDK
-         QKaw==
-X-Gm-Message-State: APjAAAWaNXCyyXfmoYFBIeur5paPqOPlorm8fSkWfOasXPz8NTVGJQIk
-        yfYNYQQ6VcU9gIS6+Cs50zfdZV11E+86hWnylnE=
-X-Google-Smtp-Source: APXvYqyQOzz6ctl8+x8JNHU9GUZ2T9OCNNPHssMymx62PLknY+EMQ1OGWhEPaloBmbuu9VP3yynCUB3xfwFaEQBhE+Y=
-X-Received: by 2002:a17:906:2296:: with SMTP id p22mr5818691eja.269.1578501053123;
- Wed, 08 Jan 2020 08:30:53 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WZNI1+DqZ7dhOcGMBf3FOgqzvgP3U/gwSgh20Voslag=;
+        b=BgQYcLQL1uT5tubFi6jKEf6MuFyChTpLzrMENOIDKLa4IrA3GDdNZ15RHgy1R0F17J
+         cF/dBiuSuXVhqsffGoPyrHS70+pZrDMQnHUB2w0kvW55qJLcG8gmd1KnxY3bIYtetJJ+
+         G9aDNlMJS8I16Aa0xQ/Z4OYSlZEiwFHZHr3on6A1fC71Qqy9W+4IcWmjkkVkADcQcIqv
+         Ws3uMeje2jrPNYLsmn4WXeZRgekDbE01FB0u1cJ5td5w5NVTTm2RB1UQLUZYeWsaC+n5
+         jmoZS/IdkXqOkyJzbHP7HikEInMCPhc/F4S7qipnSstNL39mV4ukIICyUyGFi8tHHCkD
+         0LKA==
+X-Gm-Message-State: APjAAAXiYQv+9/YtoF3PkA3V3OVS+84aRTDZ9vMusKakQsT3DKZl0+9L
+        sYJVBYyynATrh02YDb0mFiGbdFtNprL4vn7RepWLDA==
+X-Google-Smtp-Source: APXvYqxwB0RrWmAOtoWeUcYHTSMCYJPWSib2Fa+SEwlkoXikltrHGicbKSEc2VBd9hBYyhzHhdoJPLJ9R7MydSJ8lK4=
+X-Received: by 2002:a2e:868c:: with SMTP id l12mr3076780lji.194.1578501275374;
+ Wed, 08 Jan 2020 08:34:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108013847.899170-1-robdclark@gmail.com> <20200108013847.899170-2-robdclark@gmail.com>
- <37d0baaa-3f94-9414-88e7-7e849b0c5de5@redhat.com>
-In-Reply-To: <37d0baaa-3f94-9414-88e7-7e849b0c5de5@redhat.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 8 Jan 2020 08:30:42 -0800
-Message-ID: <CAF6AEGseE9iV1xDd1_hRDiKp0-a1usk+xqnyyqbuphwsvLTZmQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
-To:     Tom Rix <trix@redhat.com>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200107205332.984228665@linuxfoundation.org> <20200107212436.GA18475@roeck-us.net>
+ <20200108064251.GC2278146@kroah.com>
+In-Reply-To: <20200108064251.GC2278146@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Jan 2020 22:04:23 +0530
+Message-ID: <CA+G9fYt8hN=4NnnAO01JXmEQehcZ-csM5cT5AKa8i_BvzJ6-7A@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 7:38 AM Tom Rix <trix@redhat.com> wrote:
+On Wed, 8 Jan 2020 at 16:47, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> Thanks for letting me know, Jens also pointed this out and I've now
+> dropped it and will push out a -rc2 in a few minutes with it removed.
 >
+> thanks,
 >
-> On 1/7/20 5:38 PM, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Since zap firmware can be device specific, allow for a firmware-name
-> > property in the zap node to specify which firmware to load, similarly to
-> > the scheme used for dsp/wifi/etc.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
-> >  1 file changed, 29 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > index 112e8b8a261e..aa8737bd58db 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> >  {
-> >       struct device *dev = &gpu->pdev->dev;
-> >       const struct firmware *fw;
-> > +     const char *signed_fwname = NULL;
-> >       struct device_node *np, *mem_np;
-> >       struct resource r;
-> >       phys_addr_t mem_phys;
-> > @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> >
-> >       mem_phys = r.start;
-> >
-> > -     /* Request the MDT file for the firmware */
-> > -     fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > +     /*
-> > +      * Check for a firmware-name property.  This is the new scheme
-> > +      * to handle firmware that may be signed with device specific
-> > +      * keys, allowing us to have a different zap fw path for different
-> > +      * devices.
-> > +      *
-> > +      * If the firmware-name property is found, we bypass the
-> > +      * adreno_request_fw() mechanism, because we don't need to handle
-> > +      * the /lib/firmware/qcom/* vs /lib/firmware/* case.
-> > +      *
-> > +      * If the firmware-name property is not found, for backwards
-> > +      * compatibility we fall back to the fwname from the gpulist
-> > +      * table.
-> > +      */
-> > +     of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
-> > +     if (signed_fwname) {
-> > +             fwname = signed_fwname;
-> > +             ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
-> > +             if (ret) {
-> > +                     DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
-> Could adreno_request_fw be called with fwname if request_firmware_direct fails ?
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.9-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: dd269ce619cbf8cc25d38f1872f7c5a29336500e
+git describe: v5.4.7-382-gdd269ce619cb
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.7-382-gdd269ce619cb
 
 
-*possibly*.. initially I avoided this because the failure mode for
-incorrectly signed firmware was silent and catestrophic.  But Bjorn
-tells me this has been fixed.. in which case we could try and detect
-if it is the incorrect fw.  I need to try some experiments to confirm
-we can detect this case properly.
+No regressions (compared to build v5.4.6-434-g6d21990a6f6c)
 
-BR,
--R
+No fixes (compared to build v5.4.6-434-g6d21990a6f6c)
 
-> > +                     fw = ERR_PTR(ret);
-> > +             }
-> > +     } else {
-> > +             /* Request the MDT file for the firmware */
-> > +             fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > +     }
-> > +
-> >       if (IS_ERR(fw)) {
-> >               DRM_DEV_ERROR(dev, "Unable to load %s\n", fwname);
-> >               return PTR_ERR(fw);
-> > @@ -95,7 +121,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> >        * not.  But since we've already gotten through adreno_request_fw()
-> >        * we know which of the two cases it is:
-> >        */
-> > -     if (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY) {
-> > +     if (signed_fwname || (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY)) {
-> >               ret = qcom_mdt_load(dev, fw, fwname, pasid,
-> >                               mem_region, mem_phys, mem_size, NULL);
-> >       } else {
->
+
+Ran 20015 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-fcntl-locktests-tests
+* ltp-hugetlb-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-fs-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* network-basic-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
