@@ -2,134 +2,111 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053C1C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5EAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D457D206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6B5206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgAHIh7 (ORCPT
+        id S1727426AbgAHIit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:37:59 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8240 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726313AbgAHIh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:37:57 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8F768DF273F778ADA5C4;
-        Wed,  8 Jan 2020 16:37:54 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 8 Jan 2020
- 16:37:53 +0800
-Subject: Re: [f2fs-dev] Multidevice f2fs mount after disk rearrangement
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Oleksandr Natalenko <oleksandr@natalenko.name>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <4c6cf8418236145f7124ac61eb2908ad@natalenko.name>
- <2c4cafd35d1595a62134203669d7c244@natalenko.name>
- <e773d576-9458-48d7-bad4-dd4f8c61ebd3@huawei.com>
- <20200106184017.GD50058@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <7cf85056-ef3f-b78c-e7cf-8cce5d5ef1ee@huawei.com>
-Date:   Wed, 8 Jan 2020 16:37:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Jan 2020 03:38:49 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:43986 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgAHIit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:38:49 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-1a-5e159517af7c
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 89.91.08102.715951E5; Wed,  8 Jan 2020 09:38:47 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Wed, 8 Jan 2020 09:38:42 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Thread-Topic: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Thread-Index: AQHVvKaMBN7j3D8ruE+qrH4t8rs946ffKzWAgAArhACAAR1FgA==
+Date:   Wed, 8 Jan 2020 08:38:42 +0000
+Message-ID: <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
+References: <20191227111235.GA3370@localhost.localdomain>
+         <20200107130155.GK14821@dell>
+         <CAL_JsqJzaS1G-ODb4A5QGdhhJ+SXXYPY0nXvKfJnZKoRP+WmAA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJzaS1G-ODb4A5QGdhhJ+SXXYPY0nXvKfJnZKoRP+WmAA@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AFEA5BC0FF8A474C8FB46774DF0B9065@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200106184017.GD50058@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUgTYRjvvZvbq3Zxm5t7XRl2BJaVFQUtkpKgWP0haREUOD3z3Cy9yW0r
+        DSIphKnRBynYNC2ZULacLW22lsnya0GKzYqiD8Yq1CilsjJBu9ss/et9nuf39cD7QFxmEatg
+        PmtiOJYuoMRRoq4b03fWKasV2g0NlavU1YEPYnVD90CE+v1kD1D/HLZgar+7TqxuejmEqeua
+        +kXqsofdklSosdfbgea+9a1E42wuF2vevPCINd+dy/dFHI5OyaFNx/fn69j127Oj9Q7bOXHR
+        mdji4L2MUtChqACREJGbkfd6L1YBoqCMfA7QkPXyXNPHN7degQoAoZhMQRWvJIJATmpR8PUF
+        XODgpBdDXzzBEBBD7kIP/C48TNqNXP2/5wQ70YjvDybUInIlqv1WLRE8CTINNd9kw1mNAPU8
+        c4U4kWQ6Kr/bGfIBZDwqL/0amuOkEjk//YoIb00im2cQD9cKNBqcmZtT6OFUQCT44+Rq5HCv
+        D0tTka+tHg/XK1BVZSC0GkFKke/KB9FFEGtdkGCdV1sXqK0L1NYF6msgohmgQjq/QEebmI3J
+        HGNO5gz6Qv45Yih0gvDP/ugAs949XoBB4AVxEKMUhP+xXCtbkmPILdHTRn0WZy5gjF6AIE7J
+        iaS1PEbk0iUnGc7wD1oKRZSSSAxcypSRQtYxhiliuH/oMggpRHy+rNDKpByjY4rz8gtM8zAG
+        IwXzKJXcyLC5DEebTfos4TyyjPx9CNBiPrddkBPGIrqQn4alT8AaeHH0aiMOu682NeIyEWtg
+        GZWS+HiJp5ICVW9m/weNASUEVAzBVvHoYv68//uM8REYHxE1IhUiTPQ8pCoFzphDurgHtdNb
+        qkY8Cadcuf1uqmxS2rF1Mratxb7lHVuzKXHQFv/NG7Q5zF0Jkq7htNj0vTsqtXnL+04fqLFw
+        mb3+vo/jM7cXPZ16HumzdGbHr7Jmt9NX7G9/lTh2ZqVS9yZKxqUTjzLsk9sGzIHW5oPOGu5o
+        Uuv52bMtObYTbkpk1NMbk3DOSP8FWT4zDpsDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/7 2:40, Jaegeuk Kim wrote:
-> On 01/06, Chao Yu wrote:
->> Hello,
->>
->> Thanks for the report. :)
->>
->> On 2020/1/5 5:52, Oleksandr Natalenko via Linux-f2fs-devel wrote:
->>> Hi.
->>>
->>> On 04.01.2020 17:29, Oleksandr Natalenko wrote:
->>>> I was brave enough to create f2fs filesystem spanning through 2
->>>> physical device using this command:
->>>>
->>>> # mkfs.f2fs -t 0 /dev/sdc -c /dev/sdd
->>>>
->>>> It worked fine until I removed /dev/sdb from my system, so f2fs devices 
->>>> became:
->>>>
->>>> /dev/sdc -> /dev/sdb
->>>> /dev/sdd -> /dev/sdc
->>>>
->>>> Now, when I try to mount it, I get the following:
->>>>
->>>> # mount -t f2fs /dev/sdb /mnt/fs
->>>> mount: /mnt/fs: mount(2) system call failed: No such file or directory.
->>>>
->>>> In dmesg:
->>>>
->>>> [Jan 4 17:25] F2FS-fs (sdb): Mount Device [ 0]:             /dev/sdc,
->>>>   59063,        0 -  1cd6fff
->>>> [  +0,000024] F2FS-fs (sdb): Failed to find devices
->>>>
->>>> fsck also fails with the following assertion:
->>>>
->>>> [ASSERT] (init_sb_info: 908) !strcmp((char *)sb->devs[i].path, (char
->>>> *)c.devices[i].path)
->>>>
->>>> Am I doing something obviously stupid, and the device path can be
->>>> (somehow) changed so that the mount succeeds, or this is unfixable,
->>>> and f2fs relies on persistent device naming?
->>>>
->>>> Please suggest.
->>>>
->>>> Thank you.
->>>
->>> Erm, fine. I studied f2fs-tools code a little bit and discovered that 
->>> superblock indeed had /dev/sdX paths saved as strings. So I fired up 
->>> hexedit and just changed the superblock directly on the first device, 
->>> substituting sdc with sdb and sdd with sdc (I did it twice; I guess 
->>> there are 2 copies of superblock), and after this the mount worked.
->>
->> Alright, it works if superblock checksum feature is off...
->>
->>>
->>> Am I really supposed to do this manually ;)?
->>
->> We'd better add that ability in tune.f2fs. And I guess we need to let
->> kernel/fsck to notice that case, and give hint to run tune.f2fs to
->> reconfigure primary/secondary/... device paths.
-> 
-> I'm thinking to add tunesb.f2fs to edit superblock explicitly, since it has
-> to edit it without getting superblock/checkpoint and other f2fs metadata.
-> 
-> For example,
-> # tunesb.f2fs -c /dev/sdb -c /dev/sdc /dev/sda
-> .. superblock info ..
-> .. device list ..
-> .. hot/cold extensions ..
-> 
-> Will modify the device list, if it's different from parameter.
-
-Looks good to me.
-
-Thanks,
-
-> 
->>
->> Thanks,
->>
->>>
-> .
-> 
+SGkgZGUgSG8gUGVlcHMsDQoNCk9uIFR1ZSwgMjAyMC0wMS0wNyBhdCAwOTozNyAtMDYwMCwgUm9i
+IEhlcnJpbmcgd3JvdGU6DQo+IE9uIFR1ZSwgSmFuIDcsIDIwMjAgYXQgNzowMSBBTSBMZWUgSm9u
+ZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiB3cm90ZToNCj4gPiBPbiBGcmksIDI3IERlYyAy
+MDE5LCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gDQo+ID4gPiBDb252ZXJ0IFJPSE0gYmQ3
+MTgzNyBhbmQgYmQ3MTg0NyBQTUlDIGJpbmRpbmcgdGV4dCBkb2NzIHRvIHlhbWwuDQo+ID4gPiBT
+cGxpdA0KPiA+ID4gdGhlIGJpbmRpbmcgZG9jdW1lbnQgdG8gdHdvIHNlcGFyYXRlIGRvY3VtZW50
+cyAob3duIGRvY3VtZW50cyBmb3INCj4gPiA+IEJENzE4MzcNCj4gPiA+IGFuZCBCRDcxODQ3KSBh
+cyB0aGV5IGhhdmUgZGlmZmVyZW50IGFtb3VudCBvZiByZWd1bGF0b3JzLiBUaGlzDQo+ID4gPiB3
+YXkgd2UgY2FuDQo+ID4gPiBiZXR0ZXIgZW5mb3JjZSB0aGUgbm9kZSBuYW1lIGNoZWNrIGZvciBy
+ZWd1bGF0b3JzLiBST0hNIGlzIGFsc28NCj4gPiA+IHByb3ZpZGluZw0KPiA+ID4gQkQ3MTg1MCAt
+IHdoaWNoIGlzIGFsbW9zdCBpZGVudGljYWwgdG8gQkQ3MTg0NyAtIG1haW4gZGlmZmVyZW5jZQ0K
+PiA+ID4gaXMgc29tZQ0KPiA+ID4gaW5pdGlhbCByZWd1bGF0b3Igc3RhdGVzLiBUaGUgQkQ3MTg1
+MCBjYW4gYmUgZHJpdmVuIGJ5IHNhbWUNCj4gPiA+IGRyaXZlciBhbmQgaXQNCj4gPiA+IGhhcyBz
+YW1lIGJ1Y2svTERPIHNldHVwIGFzIEJENzE4NDcgLSBhZGQgaXQgdG8gQkQ3MTg0NyBiaW5kaW5n
+DQo+ID4gPiBkb2N1bWVudCBhbmQNCj4gPiA+IGludHJvZHVjZSBjb21wYXRpYmxlIGZvciBpdC4N
+Cj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0
+dGluZW5AZmkucm9obWV1cm9wZS5jb20NCj4gPiA+ID4NCj4gPiA+IC0tLQ0KPiA+ID4gDQo+ID4g
+PiBjaGFuZ2VzIHNpbmNlIHYxOg0KPiA+ID4gLSBjb25zdHJhaW5zIHRvIHNob3J0IGFuZCBsb25n
+IHByZXNzZXMuDQo+ID4gPiAtIHJld29yZGVkIGNvbW1pdCBtZXNzYWdlIHRvIHNob3J0ZW4gYSBs
+aW5lIGV4Y2VlZGluZyA3NSBjaGFycw0KPiA+ID4gLSBhZGRlZCAnYWRkaXRpb25hbFByb3BlcnRp
+ZXM6IGZhbHNlJw0KPiA+ID4gLSByZW1vdmVkICdjbG9jay1uYW1lcycgZnJvbSBleGFtcGxlIG5v
+ZGUNCj4gPiA+IA0KPiA+ID4gIC4uLi9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODM3LXBtaWMudHh0
+ICAgICAgICB8ICA5MCAtLS0tLS0tDQo+ID4gPiAgLi4uL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4
+MzctcG1pYy55YW1sICAgICAgIHwgMjM2DQo+ID4gPiArKysrKysrKysrKysrKysrKysNCj4gPiA+
+ICAuLi4vYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTg0Ny1wbWljLnlhbWwgICAgICAgfCAyMjINCj4g
+PiA+ICsrKysrKysrKysrKysrKysNCj4gPiA+ICAuLi4vcmVndWxhdG9yL3JvaG0sYmQ3MTgzNy1y
+ZWd1bGF0b3IudHh0ICAgICAgfCAxNjIgLS0tLS0tLS0tLS0tDQo+ID4gPiAgLi4uL3JlZ3VsYXRv
+ci9yb2htLGJkNzE4MzctcmVndWxhdG9yLnlhbWwgICAgIHwgMTAzICsrKysrKysrDQo+ID4gPiAg
+Li4uL3JlZ3VsYXRvci9yb2htLGJkNzE4NDctcmVndWxhdG9yLnlhbWwgICAgIHwgIDk3ICsrKysr
+KysNCj4gPiANCj4gPiBDYW4geW91IHNwbGl0IHRoZXNlIG91dCBwZXItc3Vic3lzdGVtLCBzbyB0
+aGF0IEkgY2FuIGFwcGx5IHRoZSBNRkQNCj4gPiBjaGFuZ2VzIHBsZWFzZT8NCj4gDQo+IFRoYXQn
+cyBub3QgZ29pbmcgdG8gd29yayBhbnkgbW9yZS4gVGhlIE1GRCBiaW5kaW5nIHJlZmVyZW5jZXMg
+dGhlDQo+IGNoaWxkIGJpbmRpbmdzIGFuZCB0aGUgY29tcGxldGUgZXhhbXBsZShzKSByZXNpZGVz
+IGluIHRoZSBNRkQNCj4gYmluZGluZy4NCg0KU28gaXMgaXQgT2sgdG8gdGFrZSBhbGwgb2YgdGhl
+c2UgaW4gTUZEIHRyZWUgLSBvciBob3cgc2hvdWxkIHRoaXMgYmUNCmRvbmU/IENhbiBSb2IgZ2V0
+IHRoZW0gaW4gYWZ0ZXIgYWNrcyBmcm9tIExlZS9NYXJrPw0KDQpCciwNCglNYXR0aSBWYWl0dGlu
+ZW4NCg0K
