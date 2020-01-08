@@ -2,210 +2,170 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029EC33CA3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69774C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EEB20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A462072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578514352;
-	bh=22OobtloNvyA6wdbMtDQyiAM5CsGqya7WcK1rP/Rarw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hOWvuZxy3Dz+Xt6udJuTBFkpRIbRCrxKVuG5NL+RjiMH6DIN6DxsTq7It8NHiTdYV
-	 fA119wnI/eSlL+1B4zHTSwaIDVxxjIU0k9RA19prXfUpSFaW7M6IXdeItyZrrcr+tH
-	 471AlCDJUEQDRNUTwJsy9CPDWBXYeDuZWlrcf4GA=
+	s=default; t=1578514515;
+	bh=tBezumwZiXfw+iJuCA5Lb1jx5XYFSgomgl+Q0fDWQEg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=f38XVxpbFu6NGC8VwWQ5nMVn0Hj+vO7/Xh+svENiHkfijTrnx6UDceGOuH83XLeb7
+	 e80uLANXsiLT1XyB2PnLDJfW9z2ubqD7CcNdKseagmVAcu1MVK8tT38yd4HIAIUoZU
+	 31Aj5frWXRPFAr0NccfvQim7vwun5M4hE7J94fZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgAHUMb (ORCPT
+        id S1726514AbgAHUPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:12:31 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44766 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgAHUMa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:12:30 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so3794443oia.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:12:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k7+Uq6HkxozZICbgNkuKzFsXaFY2bmpVlgViuwauvZs=;
-        b=ugqUWp62PdPRw/bmo3yzCFmORpSr6TbBWssPI3eX832SFqBLZcMVS93RK0NfQGlz6e
-         J+iQlFiZabZHicWI8jozaQcjRf/ZAh+9VbJbw1B2amHTBFsXMb6vh+BZE//FizYdBZ8a
-         ljS4fFs0Hllxei+zq6ZBCPpVLEbbnuJ0Ecol2YnogC6+o5257wrmmztfi5ZxfiKBo5dp
-         r6NPmJibGUW3l6E9IkiQJ3p/4nPRQJ7LKhG+LNDXd3n641NAwaY6dXdRauBgmWatfA7c
-         8Hjg3A79FmDNMcuvLLkkgOKsQ2SR4LRaXs6GUjMaCYRX3X49aF6RTJO4nAOl2e9yz5zJ
-         LX5Q==
-X-Gm-Message-State: APjAAAXlxsGTlzsIf8vvHdljomb7Ch8Fj6YB8JWdHHriZt87FLuMhaH4
-        ApRVt9I904QW+E7LstKfvy7Jgyc=
-X-Google-Smtp-Source: APXvYqzFAnOM4I8ucFYrrdK1WP+L2h1OmGzAvpx80qk/aqm6ZSEXEgbRQmeyezbsM7mj+j5iwxA+KA==
-X-Received: by 2002:aca:815:: with SMTP id 21mr324138oii.52.1578514348775;
-        Wed, 08 Jan 2020 12:12:28 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s145sm1419952oie.44.2020.01.08.12.12.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 12:12:27 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220333
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 14:12:26 -0600
-Date:   Wed, 8 Jan 2020 14:12:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] dt-bindings: input: Add docs for ADC driven joystick.
-Message-ID: <20200108201226.GA10350@bogus>
-References: <20200105001639.142061-1-contact@artur-rojek.eu>
- <20200105001639.142061-4-contact@artur-rojek.eu>
+        Wed, 8 Jan 2020 15:15:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgAHUPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:15:14 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EA320720;
+        Wed,  8 Jan 2020 20:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578514513;
+        bh=tBezumwZiXfw+iJuCA5Lb1jx5XYFSgomgl+Q0fDWQEg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JA9MYxg2ki1Fe5w3z7DzwsYokFOH5foJzaqnzkIZNJwyAmJJlebcnJHLEPgqjqIHn
+         7l0uUFm5+S/T6rt62KSWWjkE7IFhcsN9HCSbYx63qstiC9qzJSgM/h0L5MmknoW0BQ
+         8rlaNSPjGMiBNmkUe2IXmAR9Wl84lUxL4bpuZCng=
+Date:   Wed, 8 Jan 2020 14:15:11 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+Message-ID: <20200108201511.GA195980@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200105001639.142061-4-contact@artur-rojek.eu>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 01:16:38AM +0100, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
+On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> Hi,
 > 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/input/adc-joystick.yaml          | 100 ++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> I see that my system freezes without capturing the crash dump for
+> certain tests. I debugged this issue and it was tracked down to the
+> below mentioned interrupt handler code.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
-> new file mode 100644
-> index 000000000000..97ae797348c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
-> @@ -0,0 +1,100 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019-2020 Artur Rojek
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: ADC attached joystick
-> +
-> +maintainers:
-> +  - Artur Rojek <contact@artur-rojek.eu>
-> +
-> +description: |
-> +  Bindings for joystick devices connected to ADC controllers supporting
-> +  the Industrial I/O subsystem.
-> +
-> +properties:
-> +  compatible:
-> +    const: adc-joystick
-> +
-> +  io-channels:
-> +    description: |
-> +      List of phandle and IIO specifier pairs.
-> +      Each pair defines one ADC channel to which a joystick axis is connected.
-> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
-> +
-> +required:
-> +  - compatible
-> +  - io-channels
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  "^axis@([0-9])$":
+> 
+> In ISR, first reads the Interrupt Status register using ‘readl()’ as
+> given below.
+>     status = readl(ctrl->reg + INT_STATUS);
+> 
+> 
+> And then clears the pending interrupts using ‘writel()’ as given blow.
+>         writel(status, ctrl->reg + INT_STATUS);
+> 
+> 
+> I've noticed a kernel hang if INT_STATUS register read again after
+> clearing the pending interrupts.
+> 
+> Can someone clarify me why the kernel hangs without crash dump incase
+> if I read the INT_STATUS register using readl() after clearing the
+> pending bits?
+> 
+> Can readl() block?
 
-A unit-address means there should be a 'reg' property. I'd just do 
-axis-x and axis-y instead.
+readl() should not block in software.  Obviously at the hardware CPU
+instruction level, the read instruction has to wait for the result of
+the read.  Since that data is provided by the device, i.e., your FPGA,
+it's possible there's a problem there.
 
-> +    type: object
-> +    description: |
-> +      Represents a joystick axis bound to the given ADC channel.
-> +      For each entry in the io-channels list, one axis subnode with a matching
-> +      index must be specified.
-> +
-> +    properties:
-> +      linux,abs-code:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: EV_ABS specific event code generated by the axis.
+Can you tell whether the FPGA has received the Memory Read for
+INT_STATUS and sent the completion?
 
-Existing 'linux,code' should be used here.
+On the architectures I'm familiar with, if a device doesn't respond,
+something would eventually time out so the CPU doesn't wait forever.
 
-> +
-> +      linux,abs-range:
-
-Drop 'linux,' here and on the rest of these.
-
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: minimum value
-> +          - description: maximum value
-> +        description: |
-> +          Minimum and maximum values produced by the axis.
-> +          For an ABS_X axis this will be the left-most and right-most
-> +          inclination of the joystick. If min > max, it is left to userspace to
-> +          treat the axis as inverted.
-> +          This property is interpreted as two signed 32 bit values.
-> +
-> +      linux,abs-fuzz:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Amount of noise in the input value.
-> +          Omitting this property indicates the axis is precise.
-> +
-> +      linux,abs-flat:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Axial "deadzone", or area around the center position, where the axis
-> +          is considered to be at rest.
-> +          Omitting this property indicates the axis always returns to exactly
-> +          the center position.
-> +
-> +    required:
-> +      - linux,abs-code
-> +      - linux,abs-range
-> +
-> +    additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
-> +    #include <dt-bindings/input/input.h>
-> +
-> +    joystick: adc-joystick {
-> +      compatible = "adc-joystick";
-> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
-> +                    <&adc INGENIC_ADC_TOUCH_YP>;
-> +
-> +      axis@0 {
-> +              linux,abs-code = <ABS_X>;
-> +              linux,abs-range = <3300 0>;
-> +              linux,abs-fuzz = <4>;
-> +              linux,abs-flat = <200>;
-> +      };
-> +      axis@1 {
-> +              linux,abs-code = <ABS_Y>;
-> +              linux,abs-range = <0 3300>;
-> +              linux,abs-fuzz = <4>;
-> +              linux,abs-flat = <200>;
-> +      };
-> +    };
+> Snippet of the ISR code is given blow:
+> 
+> https://pastebin.com/WdnZJZF5
+> 
+> 
+> 
+> static irqreturn_t pcie_isr(int irq, void *dev_id)
+> 
+> {
+> 
+>         struct test_device *ctrl = data;
+> 
+>         u32 status;
+> 
+> …
+> 
+> 
+> 
+>         status = readl(ctrl->reg + INT_STATUS);
+> 
+>         /*
+> 
+>          * Check to see if it was our interrupt
+> 
+>          */
+> 
+>         if (!(status & 0x000C))
+> 
+>                 return IRQ_NONE;
+> 
+> 
+> 
+>         /* Clear the interrupt */
+> 
+>         writel(status, ctrl->reg + INT_STATUS);
+> 
+> 
+> 
+>         if (status & 0x0004) {
+> 
+>                 /*
+> 
+>                  * Tx interrupt pending.
+> 
+>                  */
+> 
+>                  ....
+> 
+>        }
+> 
+> 
+> 
+>         if (status & 0x0008) {
+> 
+>                 /* Rx interrupt Pending */
+> 
+>                 /* The system freezes if I read again the INT_STATUS
+> register as given below */
+> 
+>                 status = readl(ctrl->reg + INT_STATUS);
+> 
+>                 ....
+> 
+>         }
+> 
+> ..
+> 
+>         return IRQ_HANDLED;
+> }
+> 
+> 
+> 
 > -- 
-> 2.24.1
-> 
+> Thanks,
+> Sekhar
