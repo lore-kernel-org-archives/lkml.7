@@ -2,157 +2,327 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2D2C33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B8CC33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7BD2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CE4206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="QcHkucgf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZM3lGfmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgAHBn2 (ORCPT
+        id S1726558AbgAHBuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:43:28 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38329 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgAHBn2 (ORCPT
+        Tue, 7 Jan 2020 20:50:23 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40293 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgAHBuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:43:28 -0500
-Received: by mail-pl1-f195.google.com with SMTP id f20so438354plj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 17:43:27 -0800 (PST)
+        Tue, 7 Jan 2020 20:50:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k25so745749pgt.7;
+        Tue, 07 Jan 2020 17:50:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=spfY7D/FNI5gIKHICDFwu+Xdo8HUZHocUVySs6C8SL8=;
-        b=QcHkucgf0gmzc/UHIlMiHT0Zs5zevnHdrAKbWR4au2r/kpOKK7wI8OSYbnhWlNRw2R
-         SwK+vwwTu3IluZDR1o5rCp0TyOJ1xWsxptsWHdNModvZElXfh2kb4Fvm8IFWS848ISVr
-         Q6xwnUH2BCxDxxKctixgdZ0YPfVJ0YFmGXHp5XD7F6PbEvwfoSVkjN0XGgtgfubdo8xp
-         BSbvoCfn+RQRe9soyTR4kgsAC3R4Xor5cWnmp4w5xcTQ1cvnMfjBFUNqBZTm1uF2MqXz
-         y4+y++4zdDH2tetig3gJQp8ZreERHgstVt9z8hwcMkSiGEia4b9wdbmiMQRf9MqMTYkf
-         vDBQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=k/xLHVr+E3Mm0ZHWLILeml/rw0rkew9DOHcx6ajd5sk=;
+        b=ZM3lGfmDx3evcWkdgiQL85j5d0lPcXoM1Q6+yAhQO2N2Uamr6u/T72rhsBCuOhlokr
+         p66L+m6lonmCQDVQA1uQi12ZbBpMWZjgmeW6liYuCqVyuRp5ueCA/EKfUttJVvwIM/El
+         6AqAJa3YmhumJ/hkEld5Y6AIjo3q1GhWHamGKkiA85nh0XPTb87txaxYJj03GrapnoAs
+         HpR4AHrljcMRB6AElLeBTnOSsAu/DpvuVFMSQy1UQYTpeNKUfBGdii74qNxwYMi5L+oi
+         52QUPUnaC/bOOl3ZZ0xeYnxvCd6hkjo9LzUd9gGBc4BMpeItOGH6GrKY2Sl7enbUm33q
+         2n1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=spfY7D/FNI5gIKHICDFwu+Xdo8HUZHocUVySs6C8SL8=;
-        b=aNi5XlzVUnIPiZ0UUmWdNJwZ0mPDz/qN6NnMeMeC/zoHYOe4JiaFHLmDG312o1pCT1
-         l68zsTrVQN6gDrVOKx4bVg3N7z4em0PNrb9BURv6BTbTts+SlmiNmx7Nxh+mxCSsdcFZ
-         vvgZZ+xc1dY9QGzQVKrcFuSaNPZ2Qd7KY5/EUj9MA6VPkBvp1fJ6jUU+cSzFm2zzOTsE
-         LiD9ZmNOdij3278E92AIoy5EecJUUelFokaK++hiRsR+vsKzxFkkWrA/wPGNVBfa2Jqk
-         hlh6BpkzGCSe/4gQuIln5t0tjQyzSLmz8zUQgEdqOYPABpGQyEOzRALZHHQD1JGh5JJs
-         qfjg==
-X-Gm-Message-State: APjAAAVFHC+ABKTr+Wlo6RCRRbyFebmczsFL6+dH/QaHxwasO2UlgRpr
-        Qm4dBcA+e9+1AOzWcDqvC1zA5Mh4esw=
-X-Google-Smtp-Source: APXvYqx8FppAeuLTUK+Tq8ybPzIYA1EMDxjzWw/AKfeaLwmadbX8QIcZn2JZH9FVngSnCVUZpR8izQ==
-X-Received: by 2002:a17:90a:b10a:: with SMTP id z10mr1676174pjq.115.1578447807092;
-        Tue, 07 Jan 2020 17:43:27 -0800 (PST)
-Received: from localhost.localdomain (118-171-129-36.dynamic-ip.hinet.net. [118.171.129.36])
-        by smtp.gmail.com with ESMTPSA id u18sm1064511pgn.9.2020.01.07.17.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 17:43:26 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: bd718x7: Simplify the code by removing struct bd718xx_pmic_inits
-Date:   Wed,  8 Jan 2020 09:42:55 +0800
-Message-Id: <20200108014256.11282-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=k/xLHVr+E3Mm0ZHWLILeml/rw0rkew9DOHcx6ajd5sk=;
+        b=Pt9JXscrESLyNG51SRACjBOsdo0PthP9F7Ci4APGveBuDv9/Ku0sWAUDZaUyHSmZxz
+         sxUGdW6maEMEI1ZU8GLMCAM9woWzPEkC6GOP6QKE3qiexMlWSJYE/P/ylmo3dRsfyl7y
+         0IsWwnYPrrZ6yizT+MaLR/lO0u1xBQ2uzJG5747kj6o8UUBOITd7eUvjHlC/mcKLJepd
+         YtqwSJGsOWRn/j0FjXUbnqC3n/qxIU+y1mSWIo97frF+0lHujNeynImF0Sgt7cpaCA8E
+         kZbY6GRt+WhTLFZeQ6jA5SzgMQOr7TluopahDwlQvyRoDdmmCnNJ9IR+tWh7pF6HfV+X
+         d5QA==
+X-Gm-Message-State: APjAAAXlkGTohXyztmD2D+bdq8bQjhOYNtezIDd9jFD+MUuUs69yX6LA
+        Pnk81atwhvHsr11MpyR/JwOKjTVo
+X-Google-Smtp-Source: APXvYqzhfG7ey2jgclGz8NpZCi23qZJLxeejPX1VOBywZUKXya5K8TE0j4F9XRbtYzi3xMa22VorQg==
+X-Received: by 2002:a62:7883:: with SMTP id t125mr2520413pfc.141.1578448222147;
+        Tue, 07 Jan 2020 17:50:22 -0800 (PST)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id w8sm825747pfn.186.2020.01.07.17.50.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 Jan 2020 17:50:21 -0800 (PST)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>
+Subject: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
+Date:   Wed,  8 Jan 2020 09:50:01 +0800
+Message-Id: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nowdays ROHM_CHIP_TYPE_AMOUNT includes not only BD71837/BD71847 but also
-BD70528/BD71828 which are not supported by this driver. So it seems not
-necessay to have pmic_regulators[ROHM_CHIP_TYPE_AMOUNT] as mapping table.
-Simplify the code by removing struct bd718xx_pmic_inits and
-pmic_regulators[ROHM_CHIP_TYPE_AMOUNT].
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+To deliver all of the resources of a server to instances in cloud, there are no 
+housekeeping cpus reserved. libvirtd, qemu main loop, kthreads, and other agent/tools 
+etc which can't be offloaded to other hardware like smart nic, these stuff will 
+contend with vCPUs even if MWAIT/HLT instructions executed in the guest.
+
+The is no trap and yield the pCPU after we expose mwait/hlt to the guest [1][2],
+the top command on host still observe 100% cpu utilization since qemu process is 
+running even though guest who has the power management capability executes mwait. 
+Actually we can observe the physical cpu has already enter deeper cstate by 
+powertop on host.
+
+For virtualization, there is a HLT activity state in CPU VMCS field which indicates 
+the logical processor is inactive because it executed the HLT instruction, but 
+SDM 24.4.2 mentioned that execution of the MWAIT instruction may put a logical 
+processor into an inactive state, however, this VMCS field never reflects this 
+state.
+
+This patch avoids fine granularity intercept and reschedule vCPU if MWAIT/HLT
+instructions executed, because it can worse the message-passing workloads which 
+will switch between idle and running frequently in the guest. Lets penalty the 
+vCPU which is long idle through tick-based sampling and preemption.
+
+Bind unixbench to one idle pCPU:
+Dhrystone 2 using register variables            26445969.1  (base)
+
+Bind unixbench and one vCPU which is idle to one pCPU:
+
+Before patch:
+
+Dhrystone 2 using register variables            21248475.1  (80% of base)
+
+After patch:
+
+Dhrystone 2 using register variables            24839863.6  (94% of base)
+
+[1] https://lists.gnu.org/archive/html/qemu-devel/2018-06/msg06794.html
+[2] https://lkml.org/lkml/2018/3/12/359
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: KarimAllah <karahmed@amazon.de>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- drivers/regulator/bd718x7-regulator.c | 34 +++++++++++----------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/smp.h      |  1 +
+ arch/x86/include/asm/topology.h |  7 ++++++
+ arch/x86/kernel/smpboot.c       | 53 ++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/core.c             |  1 +
+ kernel/sched/fair.c             | 10 +++++++-
+ kernel/sched/features.h         |  5 ++++
+ kernel/sched/sched.h            |  7 ++++++
+ 7 files changed, 82 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index 13a43eee2e46..8f9b2d8eaf10 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1142,28 +1142,14 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 	},
- };
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index e15f364..61e5b9b 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -28,6 +28,7 @@
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
+ DECLARE_PER_CPU_READ_MOSTLY(u16, cpu_llc_id);
+ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
++DECLARE_PER_CPU(bool, cpu_is_idle);
  
--struct bd718xx_pmic_inits {
--	const struct bd718xx_regulator_data *r_datas;
--	unsigned int r_amount;
--};
--
- static int bd718xx_probe(struct platform_device *pdev)
+ static inline struct cpumask *cpu_llc_shared_mask(int cpu)
  {
- 	struct bd718xx *mfd;
- 	struct regulator_config config = { 0 };
--	struct bd718xx_pmic_inits pmic_regulators[ROHM_CHIP_TYPE_AMOUNT] = {
--		[ROHM_CHIP_TYPE_BD71837] = {
--			.r_datas = bd71837_regulators,
--			.r_amount = ARRAY_SIZE(bd71837_regulators),
--		},
--		[ROHM_CHIP_TYPE_BD71847] = {
--			.r_datas = bd71847_regulators,
--			.r_amount = ARRAY_SIZE(bd71847_regulators),
--		},
--	};
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 4b14d23..13e2ffc 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -193,4 +193,11 @@ static inline void sched_clear_itmt_support(void)
+ }
+ #endif /* CONFIG_SCHED_MC_PRIO */
+ 
++#ifdef CONFIG_SMP
++#include <asm/cpufeature.h>
++
++#define arch_scale_freq_tick arch_scale_freq_tick
++extern void arch_scale_freq_tick(void);
++#endif
++
+ #endif /* _ASM_X86_TOPOLOGY_H */
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 69881b2..390534e 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -99,6 +99,9 @@
+ DEFINE_PER_CPU_READ_MOSTLY(struct cpuinfo_x86, cpu_info);
+ EXPORT_PER_CPU_SYMBOL(cpu_info);
+ 
++DEFINE_PER_CPU(bool, cpu_is_idle);
++EXPORT_PER_CPU_SYMBOL(cpu_is_idle);
++
+ /* Logical package management. We might want to allocate that dynamically */
+ unsigned int __max_logical_packages __read_mostly;
+ EXPORT_SYMBOL(__max_logical_packages);
+@@ -147,6 +150,8 @@ static inline void smpboot_restore_warm_reset_vector(void)
+ 	*((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
+ }
+ 
++static void set_cpu_sample(void);
++
+ /*
+  * Report back to the Boot Processor during boot time or to the caller processor
+  * during CPU online.
+@@ -183,6 +188,8 @@ static void smp_callin(void)
+ 	 */
+ 	set_cpu_sibling_map(raw_smp_processor_id());
+ 
++	set_cpu_sample();
++
+ 	/*
+ 	 * Get our bogomips.
+ 	 * Update loops_per_jiffy in cpu_data. Previous call to
+@@ -1337,7 +1344,7 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
+ 	set_sched_topology(x86_topology);
+ 
+ 	set_cpu_sibling_map(0);
 -
- 	int i, j, err;
- 	bool use_snvs;
-+	const struct bd718xx_regulator_data *reg_data;
-+	unsigned int num_reg_data;
++	set_cpu_sample();
+ 	smp_sanity_check();
  
- 	mfd = dev_get_drvdata(pdev->dev.parent);
- 	if (!mfd) {
-@@ -1172,8 +1158,16 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
+ 	switch (apic_intr_mode) {
+@@ -1764,3 +1771,47 @@ void native_play_dead(void)
+ }
  
--	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
--	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
-+	switch (mfd->chip.chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+		reg_data = bd71837_regulators;
-+		num_reg_data = ARRAY_SIZE(bd71837_regulators);
-+		break;
-+	case ROHM_CHIP_TYPE_BD71847:
-+		reg_data = bd71847_regulators;
-+		num_reg_data = ARRAY_SIZE(bd71847_regulators);
-+		break;
-+	default:
- 		dev_err(&pdev->dev, "Unsupported chip type\n");
- 		err = -EINVAL;
- 		goto err;
-@@ -1215,13 +1209,13 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		}
- 	}
+ #endif
++
++static DEFINE_PER_CPU(u64, arch_prev_tsc);
++static DEFINE_PER_CPU(u64, arch_prev_mperf);
++
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
++
++#define ICPU(model) \
++	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_APERFMPERF, 0}
++
++static void set_cpu_sample(void)
++{
++	u64 mperf;
++
++	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
++		return;
++
++	rdmsrl(MSR_IA32_MPERF, mperf);
++
++	this_cpu_write(arch_prev_tsc, rdtsc());
++	this_cpu_write(arch_prev_mperf, mperf);
++	this_cpu_write(cpu_is_idle, true);
++}
++
++void arch_scale_freq_tick(void)
++{
++	u64 mperf;
++	u64 mcnt, tsc;
++	int result;
++
++	if (!static_cpu_has(X86_FEATURE_APERFMPERF))
++		return;
++
++	rdmsrl(MSR_IA32_MPERF, mperf);
++
++	mcnt = mperf - this_cpu_read(arch_prev_mperf);
++	tsc = rdtsc() - this_cpu_read(arch_prev_tsc);
++	if (!mcnt)
++		return;
++
++	this_cpu_write(arch_prev_tsc, rdtsc());
++	this_cpu_write(arch_prev_mperf, mperf);
++	this_cpu_write(cpu_is_idle, (mcnt * 100 / tsc) == 0);
++}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dd05a37..e41ad01 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3593,6 +3593,7 @@ void scheduler_tick(void)
+ 	struct task_struct *curr = rq->curr;
+ 	struct rq_flags rf;
  
--	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
-+	for (i = 0; i < num_reg_data; i++) {
++	arch_scale_freq_tick();
+ 	sched_clock_tick();
  
- 		const struct regulator_desc *desc;
- 		struct regulator_dev *rdev;
- 		const struct bd718xx_regulator_data *r;
+ 	rq_lock(rq, &rf);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 83ab35e..5ff7431 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4118,10 +4118,18 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 	unsigned long ideal_runtime, delta_exec;
+ 	struct sched_entity *se;
+ 	s64 delta;
++	bool resched = false;
  
--		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
-+		r = &reg_data[i];
- 		desc = &r->desc;
+ 	ideal_runtime = sched_slice(cfs_rq, curr);
+ 	delta_exec = curr->sum_exec_runtime - curr->prev_sum_exec_runtime;
+-	if (delta_exec > ideal_runtime) {
++
++	if (sched_feat(IDLE_PENALTY) && this_cpu_read(cpu_is_idle) &&
++		(ideal_runtime > delta_exec)) {
++		curr->vruntime += calc_delta_fair(ideal_runtime - delta_exec, curr);
++		update_min_vruntime(cfs_rq);
++		resched = true;
++	}
++	if (delta_exec > ideal_runtime || resched) {
+ 		resched_curr(rq_of(cfs_rq));
+ 		/*
+ 		 * The current task ran long enough, ensure it doesn't get
+diff --git a/kernel/sched/features.h b/kernel/sched/features.h
+index 2410db5..bacf59d 100644
+--- a/kernel/sched/features.h
++++ b/kernel/sched/features.h
+@@ -13,6 +13,11 @@
+ SCHED_FEAT(START_DEBIT, true)
  
- 		config.dev = pdev->dev.parent;
+ /*
++ * Penalty the cfs task which executes mwait/hlt
++ */
++SCHED_FEAT(IDLE_PENALTY, true)
++
++/*
+  * Prefer to schedule the task we woke last (assuming it failed
+  * wakeup-preemption), since its likely going to consume data we
+  * touched, increases cache locality.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0db2c1b..0fe4f2d 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1953,6 +1953,13 @@ static inline int hrtick_enabled(struct rq *rq)
+ 
+ #endif /* CONFIG_SCHED_HRTICK */
+ 
++#ifndef arch_scale_freq_tick
++static __always_inline
++void arch_scale_freq_tick(void)
++{
++}
++#endif
++
+ #ifndef arch_scale_freq_capacity
+ static __always_inline
+ unsigned long arch_scale_freq_capacity(int cpu)
 -- 
-2.20.1
+1.8.3.1
 
