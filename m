@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880BBC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BACAC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B264206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DEE20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgAHRft (ORCPT
+        id S1729829AbgAHRhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:35:49 -0500
-Received: from mga05.intel.com ([192.55.52.43]:49567 "EHLO mga05.intel.com"
+        Wed, 8 Jan 2020 12:37:02 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41723 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbgAHRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:35:48 -0500
+        id S1727287AbgAHRhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:37:02 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:35:48 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:37:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="395811677"
+   d="scan'208";a="254297885"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jan 2020 09:35:42 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jan 2020 09:36:57 -0800
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipFF6-00064R-VV; Wed, 08 Jan 2020 19:35:40 +0200
-Date:   Wed, 8 Jan 2020 19:35:40 +0200
+        id 1ipFGL-00065H-9i; Wed, 08 Jan 2020 19:36:57 +0200
+Date:   Wed, 8 Jan 2020 19:36:57 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Darren Hart <dvhart@infradead.org>,
@@ -48,15 +48,15 @@ Cc:     Darren Hart <dvhart@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 28/36] mfd: intel_soc_pmic_mrfld: Convert to use new
- SCU IPC API
-Message-ID: <20200108173540.GA32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 31/36] x86/platform/intel-mid: Add empty stubs for
+ intel_scu_devices_[create|destroy]()
+Message-ID: <20200108173657.GB32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-29-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-32-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-29-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-32-mika.westerberg@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,59 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:53PM +0300, Mika Westerberg wrote:
-> This converts the Intel Merrifield PMIC driver over the new SCU IPC API
-> where the SCU IPC instance is passed to the functions.
+On Wed, Jan 08, 2020 at 02:41:56PM +0300, Mika Westerberg wrote:
+> This allows to call the functions even when CONFIG_X86_INTEL_MID is not
+> enabled.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  arch/x86/include/asm/intel-mid.h | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-> index 26a1551c5faf..bd94c989d232 100644
-> --- a/drivers/mfd/intel_soc_pmic_mrfld.c
-> +++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-> @@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
->  static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
->  				    unsigned int *val)
->  {
-> +	struct intel_soc_pmic *pmic = context;
->  	u8 ipc_out;
->  	int ret;
+> diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
+> index 8e5af119dc2d..de58391bdee0 100644
+> --- a/arch/x86/include/asm/intel-mid.h
+> +++ b/arch/x86/include/asm/intel-mid.h
+> @@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
+>  	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+>  }
 >  
-> -	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-> +	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
->  	if (ret)
->  		return ret;
->  
-> @@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
->  static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
->  				     unsigned int val)
->  {
-> +	struct intel_soc_pmic *pmic = context;
->  	u8 ipc_in = val;
->  	int ret;
->  
-> -	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-> +	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
->  	if (ret)
->  		return ret;
->  
-> @@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
->  	if (!pmic)
->  		return -ENOMEM;
->  
-> +	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
-> +	if (!pmic->scu)
-> +		return -ENOMEM;
+> +extern void intel_scu_devices_create(void);
+> +extern void intel_scu_devices_destroy(void);
 > +
->  	platform_set_drvdata(pdev, pmic);
->  	pmic->dev = &pdev->dev;
+>  #else /* !CONFIG_X86_INTEL_MID */
 >  
+>  #define intel_mid_identify_cpu()	0
+>  #define intel_mid_has_msic()		0
+>  
+> +static inline void intel_scu_devices_create(void) { }
+> +static inline void intel_scu_devices_destroy(void) { }
+> +
+>  #endif /* !CONFIG_X86_INTEL_MID */
+>  
+>  enum intel_mid_timer_options {
+> @@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
+>  #define SFI_MTMR_MAX_NUM		8
+>  #define SFI_MRTC_MAX			8
+>  
+> -extern void intel_scu_devices_create(void);
+> -extern void intel_scu_devices_destroy(void);
+> -
+>  /* VRTC timer */
+>  #define MRST_VRTC_MAP_SZ		1024
+>  /* #define MRST_VRTC_PGOFFSET		0xc00 */
 > -- 
 > 2.24.1
 > 
