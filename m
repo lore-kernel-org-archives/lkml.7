@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A35C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F9BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39A32072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDC32070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgAHTt7 (ORCPT
+        id S1727689AbgAHTuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:59 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43434 "EHLO
+        Wed, 8 Jan 2020 14:50:02 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43428 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730401AbgAHTqB (ORCPT
+        by vger.kernel.org with ESMTP id S1730398AbgAHTqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:01 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-0006oR-Ii; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-0006oF-Fz; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dmI-QQ; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dlz-Lg; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mathias Nyman" <mathias.nyman@linux.intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Wed, 08 Jan 2020 19:43:21 +0000
-Message-ID: <lsq.1578512578.222781441@decadent.org.uk>
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Baolin Wang" <baolin.wang@linaro.org>,
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>
+Date:   Wed, 08 Jan 2020 19:43:17 +0000
+Message-ID: <lsq.1578512578.11016460@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 23/63] xhci: Fix port resume done detection for SS
- ports with LPM enabled
+Subject: [PATCH 3.16 19/63] usb: gadget: Add the gserial port checking in
+ gs_start_tx()
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,57 +57,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
+commit 511a36d2f357724312bb3776d2f6eed3890928b2 upstream.
 
-A suspended SS port in U3 link state will go to U0 when resumed, but
-can almost immediately after that enter U1 or U2 link power save
-states before host controller driver reads the port status.
+When usb gadget is set gadget serial function, it will be crash in below
+situation.
 
-Host controller driver only checks for U0 state, and might miss
-the finished resume, leaving flags unclear and skip notifying usb
-code of the wake.
+It will clean the 'port->port_usb' pointer in gserial_disconnect() function
+when usb link is inactive, but it will release lock for disabling the endpoints
+in this function. Druing the lock release period, it maybe complete one request
+to issue gs_write_complete()--->gs_start_tx() function, but the 'port->port_usb'
+pointer had been set NULL, thus it will be crash in gs_start_tx() function.
 
-Add U1 and U2 to the possible link states when checking for finished
-port resume.
+This patch adds the 'port->port_usb' pointer checking in gs_start_tx() function
+to avoid this situation.
 
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[Mathias Nyman: backport to 3.18 stable.]
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/host/xhci-ring.c | 9 ++++++---
- drivers/usb/host/xhci.h      | 1 +
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/u_serial.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1645,10 +1645,13 @@ static void handle_port_status(struct xh
- 		}
- 	}
+--- a/drivers/usb/gadget/u_serial.c
++++ b/drivers/usb/gadget/u_serial.c
+@@ -363,10 +363,15 @@ __acquires(&port->port_lock)
+ */
+ {
+ 	struct list_head	*pool = &port->write_pool;
+-	struct usb_ep		*in = port->port_usb->in;
++	struct usb_ep		*in;
+ 	int			status = 0;
+ 	bool			do_tty_wake = false;
  
--	if ((temp & PORT_PLC) && (temp & PORT_PLS_MASK) == XDEV_U0 &&
--			DEV_SUPERSPEED(temp)) {
-+	if ((temp & PORT_PLC) &&
-+	    DEV_SUPERSPEED(temp) &&
-+	    ((temp & PORT_PLS_MASK) == XDEV_U0 ||
-+	     (temp & PORT_PLS_MASK) == XDEV_U1 ||
-+	     (temp & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
--		/* We've just brought the device into U0 through either the
-+		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
- 		 * initiated remote wake, don't pass up the link state change,
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -283,6 +283,7 @@ struct xhci_op_regs {
-  */
- #define PORT_PLS_MASK	(0xf << 5)
- #define XDEV_U0		(0x0 << 5)
-+#define XDEV_U1		(0x1 << 5)
- #define XDEV_U2		(0x2 << 5)
- #define XDEV_U3		(0x3 << 5)
- #define XDEV_INACTIVE	(0x6 << 5)
++	if (!port->port_usb)
++		return status;
++
++	in = port->port_usb->in;
++
+ 	while (!port->write_busy && !list_empty(pool)) {
+ 		struct usb_request	*req;
+ 		int			len;
 
