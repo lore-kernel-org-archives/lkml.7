@@ -2,134 +2,152 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A420AC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A6BC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73807206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7A72070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Syay9oqS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bXKUEXfK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="A8NA/g5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgAHJEB (ORCPT
+        id S1727492AbgAHJGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:04:01 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:47023 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgAHJEB (ORCPT
+        Wed, 8 Jan 2020 04:06:46 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53996 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726891AbgAHJGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:04:01 -0500
-Received: by mail-qt1-f196.google.com with SMTP id g1so2153509qtr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:04:00 -0800 (PST)
+        Wed, 8 Jan 2020 04:06:46 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 883594016E;
+        Wed,  8 Jan 2020 09:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578474405; bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=bXKUEXfKzCZbQaHkkW/jcse2DTcLIMduLUk2hm+81RwkO0ZDkvLcyxjkbfRNbYt02
+         9uZVAVAjxf3+aqC0yrFokvswgvfsA1AVtCpGBYRqHfaXZN0XyLJOLN78ISz3gE3OB6
+         wrI+vS9GmAjTJlz6wHsrC9UyQD6crMtWLWo48pcmirAUiITREz6gTPwWAgew/RuvIa
+         G70u/RRslRhvnX/wICaiydk5k3R3gw0O5RoIfLvobvfsSAP7HqKSQASUfkWX7zudFj
+         hA+1fxiWY2YHwCEPQr5Spie5jsoET/ioGMCk9vHdWe835/BgsNaXI8v0+glYAZyqE/
+         oydqs6R6PZYew==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2B4B0A006C;
+        Wed,  8 Jan 2020 09:06:42 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 Jan 2020 01:06:36 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 8 Jan 2020 01:06:36 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NJABM+RCwZ9/syV7YZw8Z+yHhy2/pZ7xtkmDBUg5Lh6xE37861sUTrpTvvLC7IcNf+ieOSXpWx+Ia80If6q2WkqOeEQRxSIKhHusgmVuO9ivj0yFF1938FSQW6tfbAdQpfBVdUJGQJvIxQhVLH5nMNf5duMA4a1ZlZgfR+2GLApNlJ6LEo9SATJnarcHrIBPQyRCEN7qz8kbpn2LHN1TzZfLKJym/49fvT/j3JnEjMQpMR9jws5+r1DW2X7k7fy5Ly1olwoYAzphni0+JBJKQzk4D8HL5VyKA5GJMrTYC+DwW0zbSMYfT2lyOb/SOvnF5XEGl1xR6PrmSzhcGIhRDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
+ b=KWIszj4v40zInddRXpwAuBPXJAD+Ut1CmtiRZ/BrirYv/iu1ciBw6tLEoRHA/xCkxU1VWou4cAdoN2Zzif2cixf01EdMC5C4doWBfvCFvh7RH8hIgcVruds2da+6/4LT7mnWIGulY7OMmRQzItKU+q6OWUqKVIoIcWL2+Rc9ncxxp4GI0kwb0PkgEIv7jg6ymXKPeMZpeicpJpp/rkXfiYZAvC/eeaZ8fBcXOfJobVFHPGJtP/4XJVtdsoge3v/7pzeNfsZuGrdJaNFyw2nUWjUolmAD5yWyVoD8H4MPp/ZYNtuXAmZGICkrdUhD7BH9wQfWJA0NUMTBzCASj11QxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3ookxX+35x4qDLLz6LNEDMg+8XBqMqjiEwb1lH1Me9U=;
-        b=Syay9oqSOC1d3cvHK1csdUdLyK5hU7YaoRTe6IAnxWCBk/nFDOCjAjZhkDApG2KQAA
-         IwTIR9YDDLWbd5qG49g3t/RGdUja310cww2o1PK83gfjrru5p5LBzmm3MtMQu3ZX8wDa
-         waLEJMsbvpeHrnrDvi+dUi+Kg66IuqEXhNml31a8Qu5ykaCBT18Cj+M207bdIBW6qYS4
-         NBCrVa04YJpOSx+LJu5ZlsSPaN/LghJFFSSt2w00Zf97Se34YUw5iCgUlAGvs0K6fdEw
-         avj/tn3mvB2s9mkAW3BS/bwN0YCUT1nhpjmE8oaanS2IbaE9SzvAzGyochShEt8WlAK7
-         QAIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3ookxX+35x4qDLLz6LNEDMg+8XBqMqjiEwb1lH1Me9U=;
-        b=M6o9VDNGAe0vPhZkL2lqG1aFqFsZrJj1lah8CjWDcZvFGi6IkIsMrgXzxZ+qtFjkxp
-         HXSYMpRibm5xAJvkq/1Ihf1sxFfw9rxBJqsUhX4KVy2yV9QDwO5aAtgHg8xeA6BXwptP
-         qKqV32AIpAo0/SDIDVQCgkRDNjTUxc9aTZsyyPazKJj1C4NFa2rrL8PYujQ82sw2w1zm
-         0HrkMPEX5JwMc8QUHhtQlFqDrX6u35mQshBz2/PkkXqWZBdzeN0RtEKDz57j+ETT/Le4
-         2THx+JTxIWVGr1TcUY0xTyTHxl/TTr08Qgwot83Z54VkckPvgo0xQZuLgRlyKwLj6tYu
-         XPJg==
-X-Gm-Message-State: APjAAAXf1kO+UDEOE7iZcB453GPIhQALunWSO4oUj7qFFS0xlyiysbVr
-        2tqb7Tsaphy+IHHX8/ipNhkOowUQXa56I2sQC3X0dA==
-X-Google-Smtp-Source: APXvYqzEDlPPdB37friKXKRTVKirFLwjQ9wv3hF9jtpO1FtnV/M2pPC00ktvS/D/3ZhLuwwIjANuYxtgJ+yfKPt5vGo=
-X-Received: by 2002:ac8:71d7:: with SMTP id i23mr2686568qtp.50.1578474239992;
- Wed, 08 Jan 2020 01:03:59 -0800 (PST)
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5WU7s3fuKPSImRBkNVD6MJh/UOcuYXmgsl8ADr8fvgk=;
+ b=A8NA/g5+EfSKAkSNcKlrnky5TKDpvAl2+G/WDe26ZcPAxR5FAC7TFI8/NteD7PRxVew3nmLyMnM+ZtDAnbrLUB3Wf59ZhWWC7wOv3GVXW7GaDRaFe7jqjxoguuboMfmgc/dqr6kaOgiq8hgdJ3x+SPmNGlq0KA514W3DEh/HoRw=
+Received: from BN7PR12MB2802.namprd12.prod.outlook.com (20.176.27.97) by
+ BN7PR12MB2755.namprd12.prod.outlook.com (20.176.178.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.10; Wed, 8 Jan 2020 09:06:34 +0000
+Received: from BN7PR12MB2802.namprd12.prod.outlook.com
+ ([fe80::e420:5711:3657:f3ca]) by BN7PR12MB2802.namprd12.prod.outlook.com
+ ([fe80::e420:5711:3657:f3ca%3]) with mapi id 15.20.2623.008; Wed, 8 Jan 2020
+ 09:06:34 +0000
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Discussions about the Letux Kernel" <letux-kernel@openphoenux.org>,
+        "kernel@pyra-handheld.com" <kernel@pyra-handheld.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: [BUG]: usb: dwc3: gadget: broken on OMAP5432
+Thread-Topic: [BUG]: usb: dwc3: gadget: broken on OMAP5432
+Thread-Index: AQHVxgIdUvY8PDkJv0e4ULUpdkC8K6fgedIA
+Date:   Wed, 8 Jan 2020 09:06:34 +0000
+Message-ID: <7daf64ba-7efb-e2f1-a449-f5f3791a3c8e@synopsys.com>
+References: <703DD239-8E3B-405C-A531-FF7DEEED38DC@goldelico.com>
+In-Reply-To: <703DD239-8E3B-405C-A531-FF7DEEED38DC@goldelico.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joglekar@synopsys.com; 
+x-originating-ip: [198.182.52.26]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 603c1523-1e4c-452d-3cc7-08d7941a0f6c
+x-ms-traffictypediagnostic: BN7PR12MB2755:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR12MB2755132D07B3FA466F3E4BF9A43E0@BN7PR12MB2755.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(376002)(366004)(396003)(136003)(189003)(199004)(2906002)(54906003)(86362001)(26005)(6512007)(110136005)(6506007)(186003)(966005)(71200400001)(53546011)(66556008)(8936002)(81166006)(81156014)(66446008)(64756008)(5660300002)(76116006)(91956017)(478600001)(8676002)(2616005)(4326008)(31686004)(66946007)(31696002)(316002)(6486002)(66476007)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN7PR12MB2755;H:BN7PR12MB2802.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QH8joqfYbsMGETjpTuRP9c6UzOnhEzTqtC/KjJ3p1YScMhdlvFWg/mfH4rmwyTurXW3XGHNjxG+my1NRQoIjl/q4ZdBU9r23zIiQPP7rPZtWPiEbBi2dcK0NkcxBxEQ8JhauS+3ZLNtcRKVq6aR7rCcvKvO04Uy19787lyFmnb9ufh4Yn31lQ6nP+hfpJ0zL5RnR3gIl1Cc4fasaHrRx5bkcPM7Y0O4sqJyzMHeEjTvaHQXYTmUbRL4mv7oLjomg1VowxdWkwEBGuHeK8+tqZufQVsQOAJM/vdvv9KbTywEWdtrKD21s5zG8r1P5JAZeA8cGiANsTw8OPlJoo/qGqRR8IZU91UIKwuUMf7Wr1KckbtKQgn+d8bstPCFaGWs7O2CFt1ujKzbYLnfhDsUdIExiTAlxAexACATqFf9bO2A5LXMnF/TfFYm+QldqsRWgflTLfknNEZCVjvxMjrOURi/w43F+63MccopZK9c2LHs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <666903A83C10EE4E9B4A21EC16F6DBCE@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <000000000000f04e43059b1ee697@google.com> <20200107205302.45yb2rkekz3nat6v@linutronix.de>
- <CACT4Y+ax6URhDKBREy6XLx=nKFLGSmt87Z-oU3E1D8SAJwBcrg@mail.gmail.com> <20200108085532.37ycr24gryqhkkto@linutronix.de>
-In-Reply-To: <20200108085532.37ycr24gryqhkkto@linutronix.de>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 8 Jan 2020 10:03:48 +0100
-Message-ID: <CACT4Y+a4ySF6dWwW7jhh9UN-5okJtTexSu_RFsxyQzOzw7ybWg@mail.gmail.com>
-Subject: Re: WARNING in switch_fpu_return
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     syzbot <syzbot+f2ca20d4aa1408b0385a@syzkaller.appspotmail.com>,
-        alexander.deucher@amd.com, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, nicholas.kazlauskas@amd.com,
-        Rik van Riel <riel@surriel.com>, sunpeng.li@amd.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>, zhan.liu@amd.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 603c1523-1e4c-452d-3cc7-08d7941a0f6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 09:06:34.3597
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zxOlL6skl9P32ieUmJ2kHGgipUzAU2hrho1lvtRMijf2R0Ro+DYZAYdlQBb04eXOkS58OsNCBVSxpeU+dXjpFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2755
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 9:55 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> Hi Dmitry,
->
-> On 2020-01-08 05:28:31 [+0100], Dmitry Vyukov wrote:
-> > > > userspace arch: i386
-> > >
-> > > So I tried to reproduce this. syz-prog2c made .c out of the above link.
-> > > It starts with:
-> > > |int main(void)
-> > > | {
-> > > |   syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 3ul, 0x32ul, -1, 0);
-> >
-> > Hi Sebastian,
-> >
-> > If you want to generate a C repro for 386 arch, you need to add
-> > -arch=386 flag to syz-prog2c (then it hopefully should use mmap2).
->
-> Ah okay. I've been looking at
->         https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
->
-> and it says
-> |Note: if the report contains userspace arch: i386, then the program
-> |needs to be built with -m32 flag.
->
-> and with the argument you mentioned it the compiled C code uses mmap2.
-> Thanks.
-> Now the 32bit testcase reboots, too :)
->
-> > But FWIW syzbot wasn't able to reproduce it with a C program,
-> > otherwise it would have been provided it. But that may be for various
-> > reasons.
->
-> Yeah, my memory was also that a C-testcase is provided. But there was this
->         https://syzkaller.appspot.com/x/repro.syz?x=10cc8971e00000
->
-> link so I assumed I should use it myself and I missed the update that
-> something changed.
-> So what should I do with the file above? Feed it to `syz-execprog' or is
-> it a rough idea what the test case should have done?
-
-Yes, the syz program can be executed with syz-execprog utility:
-
-https://github.com/google/syzkaller/blob/master/docs/executing_syzkaller_programs.md
-
-However, since it's a KVM bug, it may be somewhat special. At least
-there were some special ones historically. For example, behavior may
-also depend on the host OS. So maybe you already reproduced it, it's
-just that in syzbot environment it caused the WARNING, but in your
-environment it causes the reboot. I have no indication that it's
-actually the case. But I just want to warn that reproduction of some
-KVM bugs proved to be tricky in the past. I am sure that syzbot was
-able to trigger that exact warning on that exact kernel version/config
-using that exact program. But it happened in one particular
-environment.
+SGksDQpPbiAxLzgvMjAyMCAyOjI5IFBNLCBILiBOaWtvbGF1cyBTY2hhbGxlciB3cm90ZToNCj4g
+SGksDQo+IEkgbm90aWNlZCB0aGF0IHRoZSB1c2IgZXRoZXJuZXQgZ2FkZ2V0IGRyaXZlciBpcyBi
+cm9rZW4gc2luY2UgdjUuNS1yYzINCj4gYW5kIDUuNC40LCBidXQgb25seSBmb3Igb3VyIE9NQVA1
+IGJvYXJkLiBPdXIgT01BUDMgYm9hcmRzIHdvcmsgd2l0aA0KPiB0aGUgc2FtZSB0cmVlLCBrZXJu
+ZWwgYmluYXJ5IGFuZCB1c2VyLXNwYWNlIChEZWJpYW4gU3RyZXRjaCkuDQo+IA0KPiBUaGUgc3lt
+cHRvbSBpcyB0aGF0IEkgY2FuIHNlZSB0aGUgaW50ZXJmYWNlIG9uIHRoZSBob3N0IFBDIGJlaW5n
+DQo+IGVudW1lcmF0ZWQgYW5kIElQIGFkZHJlc3NlcyBldGMuIGFyZSBzZXQgdXAuIEJ1dCBhIHBp
+bmcgaW4gZWl0aGVyDQo+IGRpcmVjdGlvbiBmYWlscy90aW1lcyBvdXQuDQo+IA0KPiBBZnRlciBp
+bnNwZWN0aW5nIGRpZmZzIEkgZm91bmQgc29tZSBjaGFuZ2VzIGluIGR3YzM6Z2FkZ2V0DQo+IGFu
+ZCBpbmRlZWQgb21hcDMvdHdsNDAzMCB1c2VzIG11c2IgYW5kIG9tYXA1IHVzZXMgZHdjMy4NCj4g
+DQo+IFJldmVydGluZw0KPiANCj4gYTdmN2U2MTI3MGYxICgidXNiOiBkd2MzOiBnYWRnZXQ6IEZp
+eCBsb2dpY2FsIGNvbmRpdGlvbiIpOw0KPiANCj4gb24gdjUuNS1yYyBtYWtlcyBpdCB3b3JrIGFn
+YWluLg0KPiANCj4gQlRXOiB2NC4xOS45MCB3b3JrcyBhbHRob3VnaCBpdCBpbmNsdWRlcyB0aGlz
+IGxvZ2ljYWwgY29uZGl0aW9uIGZpeC4NCj4gU28gdGhlIHJlYWwgZGlmZmVyZW5jZSBiZXR3ZWVu
+IHY0LjE5IGFuZCB2NS41IG1heSBiZSBlbHNld2hlcmUgaW4NCj4gbmV3ZXIga2VybmVscyBhbmQg
+b25seSBiZSByZXZlYWxlZCBieSB0aGUgcGF0Y2guDQo+IA0KPiBJZiBpbXBvcnRhbnQ6IG15IHNl
+dHVwIGlzIHJ1bm5pbmcgd2l0aCBVU0IyIGNhYmxlIGFuZCBzcGVlZA0KPiBvbmx5Lg0KPiANCj4g
+U28gcGxlYXNlIGNoZWNrIHRoaXMgYW5kIG90aGVyIHJlY2VudCBkd2MzIHBhdGNoZXMgZm9yIGlu
+dHJvZHVjaW5nDQo+IGEgc3RhbGwgb2YgY29tbXVuaWNhdGlvbi4NCj4gDQpBbm90aGVyIGdhZGdl
+dCBkcml2ZXIgaXNzdWUgd2FzIHJlcG9ydGVkIGJ5IFRoaW5oIGFmdGVyIG15IGZpeCwgYW5kIGhl
+IGhhcyBzdWJtaXR0ZWQgYSBwYXRjaCBmb3IgdGhlIHNhbWUuIFlvdSBjYW4gcmVmZXIgdGhlIGRp
+c2N1c3Npb24gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTI5MjA4Ny8uDQpD
+YW4geW91IGNoZWNrIGlmIHRoYXQgcGF0Y2ggd29ya3MgZm9yIHlvdSA/DQoNCj4gQlIgYW5kIHRo
+YW5rcywNCj4gTmlrb2xhdXMgU2NoYWxsZXINCj4gDQo+IA0KDQpUaGFua3MgJiBSZWdhcmRzLA0K
+IFRlamFzIEpvZ2xla2FyDQo=
