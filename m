@@ -2,88 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27A0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4286DC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93C2205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SEKtLl/2"
+	by mail.kernel.org (Postfix) with ESMTP id 1F31B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgAHIRp (ORCPT
+        id S1727191AbgAHIS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:17:45 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32933 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgAHIRp (ORCPT
+        Wed, 8 Jan 2020 03:18:27 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:36587 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAHIS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:17:45 -0500
-Received: by mail-pf1-f194.google.com with SMTP id z16so1246885pfk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:17:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wKcCES/d4/KeU/NbfZOHeDU0TekdBewHLd32C6AO1ck=;
-        b=SEKtLl/2LU1rqULv4K0YiLjIIU6CfLWc6zgCHzvxXn6rxs3MloRGcaY+mmpntrk4bR
-         qqWP66RHO1/y3UFLDjZ5vX9LWA6WSWYaNyehUzftiFo/A/vpzLr7FOczpYhalxh/g+ct
-         a+Gfmtpi+1j4iZzOSb68bV8GqPo5Mpq4dFFwZdtm8i1akjAn93MM63gkF9aG74vL07jw
-         efvISDgtx7WPN8FQ3PapBNdjNSHXuyU5JaLAe48son4QVaPPZ0sHRPrbm8SedF+oLoOE
-         vkTH/LFqRemsKya0qnLlhZsrwR+UHjzxT+UA8MxOW9nVh6Qhd9DaGwjqEYzs6LeHwavn
-         ZdeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wKcCES/d4/KeU/NbfZOHeDU0TekdBewHLd32C6AO1ck=;
-        b=cHTCpZWP4Mi0iNedBeQ3VgYoZ8VSM/fCGs7GxaGlLvdkkPaluBJn4rxsn2cJmRSVVU
-         AbbIwmm0J0wH+vi/qBJX/ZTwhtF3hkX/LRV9QP16UpDOjgZjXQOQB5yZYdGPVZ7YZkSS
-         9lznhv1uT1fmwZ0z8zb47UWnj79zvr0susLzyVEu4LtE1FB+42HWIJJD90m7unR5Mf9e
-         ASvWvd3ol2I38t5TUDS8AATqJrFRLIyed/dXFtdMfVOAFbWh9PWuBjs24zf6KhUG/A5X
-         E5jQjcCJjppyGtKCkYeVqSmctmL7tMU2Yvk7V7rRQfJuvM15K+xaPa1rIdD5n3Lh1dph
-         B9Vg==
-X-Gm-Message-State: APjAAAXM4F8BUJtM9j15KynOhZWLLDMM0NP6uh6GPQZKdjb+oLo5Lt2Z
-        hLCuQViGaopYrxlbVJ4y9F1l0w==
-X-Google-Smtp-Source: APXvYqzegCxJYokSIFLdFNcsQ5hduGvbek0AbObhZQnUPnuTQ7IwQ4pkC8mnHCuGhr5jfepvFOz3+w==
-X-Received: by 2002:aa7:92c7:: with SMTP id k7mr3844330pfa.8.1578471464268;
-        Wed, 08 Jan 2020 00:17:44 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id j38sm2414849pgj.27.2020.01.08.00.17.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 00:17:43 -0800 (PST)
-Date:   Wed, 8 Jan 2020 13:47:40 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] opp: quiet down WARN when no valid OPPs remain
-Message-ID: <20200108073500.ir4nvvzlz6z7d22m@vireshk-i7>
-References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
- <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
+        Wed, 8 Jan 2020 03:18:27 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N0G5n-1jab9q2o4d-00xKuk for <linux-kernel@vger.kernel.org>; Wed, 08 Jan
+ 2020 09:18:25 +0100
+Received: by mail-qv1-f42.google.com with SMTP id o18so1057494qvf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 00:18:25 -0800 (PST)
+X-Gm-Message-State: APjAAAXx7YaQk0PxpQ2n8opEwXWHRwNnxY59U3ngOyMaAe/BygTpkK1y
+        Rh+SJ2PdEcWVpytIv+18SXuRxFd883JYZKAB1gA=
+X-Google-Smtp-Source: APXvYqw0ZBNJxzzyqnFyauYwGWHsDYTX8zgJMSpwqoHcf3dieGCqPMdb2QQItS7mU7UFLZCj05288vbPPvGH5wUT7Io=
+X-Received: by 2002:a0c:d788:: with SMTP id z8mr2851256qvi.211.1578471504503;
+ Wed, 08 Jan 2020 00:18:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5c2d6548aef35c690535fd8c985b980316745e91.1578077228.git.mirq-linux@rere.qmqm.pl>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200107212509.4004137-1-arnd@arndb.de> <20200108091528.2c89d97f@xps13>
+In-Reply-To: <20200108091528.2c89d97f@xps13>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 09:18:07 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0Q+-zYhkw_CpanXis7iM=9Hqw1Et8-GwxYw5d5Qy-sQA@mail.gmail.com>
+Message-ID: <CAK8P3a0Q+-zYhkw_CpanXis7iM=9Hqw1Et8-GwxYw5d5Qy-sQA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: sm_ftl: fix NULL pointer warning
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ikF0SShA2SnpNlUrvMlaqnepFl52sQ+iqqhZe8uq0vMNxVNb0T6
+ 3wQ+yOasyr5bSwfw4oMe8eTeOHq7MnJBqHPVla7r5jORjL2BT1O6bHa/kOs9M4Uu7hEl1GA
+ gQva9kMSIB5WfDCtT3U4a1MfhJyNa+gZuNEwfKmSv9fTWV1o5reYyqvr+y6LY+RBJbdMBzD
+ DsDZn829u6sp0h3eR3xzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wu+mK83V2tg=:MAuLS4lgg/yFo1LEVEDXfv
+ bA0UI9Z6lj5YNvejyEolbOOrMwY+13Z1x0jnHQ8HC9D7Nd9bn9uzs3LYfZf72l56u7/LDe+oU
+ SF1n/QxDixGwtmUk5cegLG8X6TN0orq+QRx0vRGGKsGCzbw8nGGR7aY9b77SLxowWxqyhmX2U
+ lRAM8uNIRNUTrqN48g1UdqWH2TqDOoe5xDJKsDPmwpraVq4RW2o5Mt5Y/DLzaEveYaixNclTP
+ 7tvlXyl1nu0pN8SXl1p7KKvfiObYJOBgD5JSIlyQJqHhFL0toR4pAb5M6qAq0FeeQ2bn6dj1c
+ UgD2yM5xQ0K7og6JF7tp51zKEz+1+JjwB9Eg6ZNr8bT9P8uy5g62GyIHfzx5ZXaC2GgrrXU6H
+ 3cT7KsjTygb3m1ZkBOOTKakXqeA52C3AHA0E7/C2YKAzCuT0AnMo4Qh7R7uJL3zMRonFOmOym
+ bIELUsJKukCTJjVh+6qJt4kJZw3mB5PhkRG3vJtjO5tnGhJ+jmCa3rCcFAUQm/Iuf0Ma919iE
+ 2g+YRMhOA+jzxA5UeJvq3n7FZnoHgyj4KXu/kbxVsbT0+9uAmdXBRuhFY3lqyjGtEZoTWLTeO
+ bzsJPOzidQMxDa0RjqXyAb41iV0Rzeo3HF69IrUx3k8epiWEcKQsyVyt+gsogMMh5Z4CsLAPE
+ 8t/kCPl69DQhrGPUPBI7uwK5WgAxHQjTrczTQLhWVV0/uVV3v5qwMtWklismyCkH8hbkEZKGV
+ xBliRR5L0lumYZduWMpdExAB5cnarz5xTihsfbO4L6a73p67kcZvIumhtYor19hWsbUCbJ1E7
+ cZOu8bxdRV5iaXT+jfIYHIr99CiqQsuASVQGda1qf+DL+IQmif7L2Mcs+svarBAzAV7ph2Irq
+ Tx3OXUN3gWY7bI/V1DOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-01-20, 20:36, Michał Mirosław wrote:
-> -	/* There should be one of more OPP defined */
-> -	if (WARN_ON(!count))
+On Wed, Jan 8, 2020 at 9:15 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> Hi Arnd,
+>
+> Arnd Bergmann <arnd@arndb.de> wrote on Tue,  7 Jan 2020 22:24:52 +0100:
+>
+> > With gcc -O3, we get a new warning:
+> >
+> > In file included from arch/arm64/include/asm/processor.h:28,
+> >                  from drivers/mtd/sm_ftl.c:8:
+> > In function 'memset',
+> >     inlined from 'sm_read_sector.constprop' at drivers/mtd/sm_ftl.c:250:3:
+> > include/linux/string.h:411:9: error: argument 1 null where non-null expected [-Werror=nonnull]
+> >   return __builtin_memset(p, c, size);
+> >
+> > From all I can tell, this cannot happen (the function is called
+> > either with a NULL buffer or with a -1 block number but not both),
+> > but adding a check makes it more robust and avoids the warning.
+> >
+> > Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/mtd/sm_ftl.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mtd/sm_ftl.c b/drivers/mtd/sm_ftl.c
+> > index 4744bf94ad9a..b9f272408c4d 100644
+> > --- a/drivers/mtd/sm_ftl.c
+> > +++ b/drivers/mtd/sm_ftl.c
+> > @@ -247,7 +247,8 @@ static int sm_read_sector(struct sm_ftl *ftl,
+> >
+> >       /* FTL can contain -1 entries that are by default filled with bits */
+> >       if (block == -1) {
+> > -             memset(buffer, 0xFF, SM_SECTOR_SIZE);
+> > +             if (buffer)
+> > +                     memset(buffer, 0xFF, SM_SECTOR_SIZE);
+> >               return 0;
+> >       }
+> >
+>
+> What about a simpler form:
+>
+>         if (buffer && block == -1) { ...
+>
+> Instead of an additional indentation level?
 
-Okay, you can remove the WARN but we don't need a lot of diagnostics around it.
-Just print a single error message and drop all other changes from the patch.
+That would fail to return early from the function if we ever get block==-1
+and buffer==NULL, probably resulting is worse problems later.
 
--- 
-viresh
+       Arnd
