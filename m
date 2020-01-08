@@ -2,261 +2,366 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734B4C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC1DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4469B20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ceZzOk/o"
+	by mail.kernel.org (Postfix) with ESMTP id 1571320882
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgAHS4F (ORCPT
+        id S1729584AbgAHS5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:56:05 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45930 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHS4E (ORCPT
+        Wed, 8 Jan 2020 13:57:07 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54491 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAHS5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:56:04 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so4491807wrj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 10:56:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qikF1UWtZ6eJF4mubyOKm+5IHWTeRRmYGvFpDMF351E=;
-        b=ceZzOk/osJcQAtkpzR91QtixWOdjRNYR+OCYMtv3WA8NOtb+JiZoZQVsdoVa4dxtGX
-         gN4EgS67E15UsEhjjgSBgDzEszlBRC0EDdXMO7ZrtN4jxssKHyE6qtDYveoHXMa0ipno
-         P7vxIJQxucBSpTrdEoYGqoS2EXkHqYg6458GE=
+        Wed, 8 Jan 2020 13:57:07 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so29985wmj.4;
+        Wed, 08 Jan 2020 10:57:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=qikF1UWtZ6eJF4mubyOKm+5IHWTeRRmYGvFpDMF351E=;
-        b=QbRZ4QnsztEmDnWwVB5deyuGdMuzG1pQD179+ztF856M+k+uUUbqg/Uu2uAt5vMj9x
-         sQUUjprw9BympxKXgeYI7J2gQ8v6z10T+X7oaIYEaFD/sZ1enk6b1HqpjrxMjmNW1Kb5
-         4tO+vJZtzJ2o5liLLMgCjwoOUyRyDwuEO8DRGFsEgWDkSHoAOC/SPWnzPM9wjysA8BDt
-         mYlqnUutrQmkVxooib3+DjJf44jVsLfV8IN3Ec1ARALXxca8POnP86wJX7hER60clU03
-         NHPYFVTXo8w93uzLmtkjoMxAVlELagBvRr8wPLjlG/HdoPxk4CjX5iNfce5P4K+hyxxl
-         PPGQ==
-X-Gm-Message-State: APjAAAWlXUqypMB4inRr6ds7k6y7HTE4+ZT6jCEKjETCoerJNCoapplw
-        yG8tQSIpJaHXTL5HpbHOD1ZdxQ==
-X-Google-Smtp-Source: APXvYqysOS8XXtQ6tjSokAq63/nT5KtQo5+V5djlv6ehXIu6gzFuO1bkC6VJiqoB1c6TjhqOqXvlJg==
-X-Received: by 2002:adf:edd0:: with SMTP id v16mr6201385wro.310.1578509762068;
-        Wed, 08 Jan 2020 10:56:02 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id s3sm22691wmh.25.2020.01.08.10.56.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 10:56:01 -0800 (PST)
-Date:   Wed, 8 Jan 2020 19:55:59 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Dave Airlie <airlied@redhat.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i915: fix backlight configuration issue
-Message-ID: <20200108185559.GK43062@phenom.ffwll.local>
-Mail-Followup-To: Jani Nikula <jani.nikula@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Dave Airlie <airlied@redhat.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20200108140227.3976563-1-arnd@arndb.de>
- <87o8veotf9.fsf@intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5b6WdJdM0aM6t81kIZ+9qAJNtKuxGXlZNzct5nHyCQE=;
+        b=K1HAfZ3CW3F0lgDRTQYww3xlvcKh6Ap7GPDnXMVylMZFxq+36d69L5UwnZH0+I/IW9
+         VAk6EduxWzwDH6mNXBnQpcme+a02Qg5uVIM5F0byyH3nlt8JEQYSaBWoH8I0fuuDnhut
+         s2DxkNHq+jw/0Z/9AwICZRMqDqdIrMrEoavq6IYu4VNG7m/R0UnavpCy+AEl2mVUNao9
+         KMA1cmtAKgTgKhEHnziHrhE7HEvJT27BDQRWgW8t1r8629NiCV1Qx5yeAgIWSDoDCodj
+         UrRxtepmVRJMiCEIZyn5aKv7/ywUj/Sbpkxw4kbc24LQSNUNI0XRiDMNovoDFGxbWtQF
+         sZlg==
+X-Gm-Message-State: APjAAAVRuvlVnOL81KB3LmJJjtEA6Nc8uI2JFvN059GSEsN8Iy7Ou51B
+        t0Qr6T0h39q9nIF6595yNHVl2Zmq5iEYN0kW
+X-Google-Smtp-Source: APXvYqxnzVlXJeROaPdxaaGHvWGUzrRrPOsQRflwmVudTvwGre+ehyr4Ka1V4MSAxR/Ht3Ozn3Ezvg==
+X-Received: by 2002:a7b:c00c:: with SMTP id c12mr56625wmb.174.1578509823710;
+        Wed, 08 Jan 2020 10:57:03 -0800 (PST)
+Received: from darkstar ([2a04:ee41:4:500b:c62:197d:80dc:1629])
+        by smtp.gmail.com with ESMTPSA id n3sm4906029wrs.8.2020.01.08.10.57.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 10:57:03 -0800 (PST)
+Date:   Wed, 8 Jan 2020 19:56:50 +0100
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200108185650.GA9635@darkstar>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o8veotf9.fsf@intel.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20191220164838.31619-1-qais.yousef@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 05:32:26PM +0200, Jani Nikula wrote:
-> On Wed, 08 Jan 2020, Arnd Bergmann <arnd@arndb.de> wrote:
-> > The i915 driver can use the backlight subsystem as an option, and usually
-> > selects it when CONFIG_ACPI is set. However it is possible to configure
-> > a kernel with modular backlight classdev support and a built-in i915
-> > driver, which leads to a linker error:
-> >
-> > drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_register':
-> > intel_panel.c:(.text+0x2f58): undefined reference to `backlight_device_register'
-> > drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_unregister':
-> > intel_panel.c:(.text+0x2fe4): undefined reference to `backlight_device_unregister'
-> >
-> > Add another Kconfig option to ensure the driver only tries to use
-> > the backlight support when it can in fact be linked that way. The
-> > new option is on by default to keep the existing behavior.
-> >
-> > This is roughly what other drivers like nouveau do as well.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > I've had this one lying around for a long time, it is still needed
-> > but I am not sure which solution is best here. This version is
-> > probably the least invasive, but it does not solve the bigger
-> > problem around too many 'select' statements in drm
-> 
-> This is just another hack that's only required because backlight is
-> selected instead of depended on throughout the kernel. (*)
-> 
-> i915 (and most drm drivers, with some variations) could easily handle
-> this with:
-> 
-> 	depends on (ACPI && ACPI_VIDEO) || ACPI=n
-> 	depends on BACKLIGHT_CLASS_DEVICE || BACKLIGHT_CLASS_DEVICE=n
-> 
-> Those two lines express the allowed configurations. It's just that we
-> can't do that in i915 *alone*. The combinations of depends and selects
-> lead to impossible configurations. It's all or nothing.
-> 
-> I am not amused by adding more hacks, and I am really *not* interested
-> in adding another useless i915 config option to "solve" this issue.
-> 
-> So thanks, but no thanks. I'm not taking this patch.
+Hi Qais,
 
-Yeah I'm also leaning towards that the real fix here is to convert
-backlight over to be a depends on symbol, not a select symbol. It's
-clearly not a simple stand-alone helper. Or someone makes select recursive
-and adds a SAT solver to Kconfig :-)
--Daniel
+On 20-Dec 16:48, Qais Yousef wrote:
+> RT tasks by default try to run at the highest capacity/performance
+> level. When uclamp is selected this default behavior is retained by
+> enforcing the uclamp_util_min of the RT tasks to be
+> uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
+> value.
+> 
+> See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
+> 
+> On battery powered devices, this default behavior could consume more
+> power, and it is desired to be able to tune it down. While uclamp allows
+> tuning this by changing the uclamp_util_min of the individual tasks, but
+> this is cumbersome and error prone.
+> 
+> To control the default behavior globally by system admins and device
+> integrators, introduce the new sysctl_sched_rt_uclamp_util_min to
+> change the default uclamp_util_min value of the RT tasks.
+> 
+> Whenever the new default changes, it'd be applied on the next wakeup of
+> the RT task, assuming that it still uses the system default value and
+> not a user applied one.
+> 
+> If the uclamp_util_min of an RT task is 0, then the RT utilization of
+> the rq is used to drive the frequency selection in schedutil for RT
+> tasks.
+> 
+> Tested on Juno-r2 in combination of the RT capacity awareness patches.
+> By default an RT task will go to the highest capacity CPU and run at the
+> maximum frequency. With this patch the RT task can run anywhere and
+> doesn't cause the frequency to be maximum all the time.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> ---
+>  include/linux/sched/sysctl.h |  1 +
+>  kernel/sched/core.c          | 54 ++++++++++++++++++++++++++++++++----
+>  kernel/sched/rt.c            |  6 ++++
+>  kernel/sched/sched.h         |  4 +++
+>  kernel/sysctl.c              |  7 +++++
+>  5 files changed, 67 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+> index d4f6215ee03f..ec73d8db2092 100644
+> --- a/include/linux/sched/sysctl.h
+> +++ b/include/linux/sched/sysctl.h
+> @@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
+>  #ifdef CONFIG_UCLAMP_TASK
+>  extern unsigned int sysctl_sched_uclamp_util_min;
+>  extern unsigned int sysctl_sched_uclamp_util_max;
+> +extern unsigned int sysctl_sched_rt_uclamp_util_min;
+>  #endif
+>  
+>  #ifdef CONFIG_CFS_BANDWIDTH
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 90e4b00ace89..a8ab0bb7a967 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -792,6 +792,23 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
+>  /* Max allowed maximum utilization */
+>  unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+>  
+> +/*
+> + * By default RT tasks run at the maximum performance point/capacity of the
+> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
+> + * SCHED_CAPACITY_SCALE.
+> + *
+> + * This knob allows admins to change the default behavior when uclamp is being
+> + * used. In battery powered devices particularly running at the maximum
+> + * capacity will increase energy consumption and shorten the battery life.
+> + *
+> + * This knob only affects the default value RT uses when a new RT task is
+> + * forked or has just changed policy to RT and no uclamp user settings were
+> + * applied (ie: the task didn't modify the default value to a new value.
+> + *
+> + * This knob will not override the system default values defined above.
+> + */
+> +unsigned int sysctl_sched_rt_uclamp_util_min = SCHED_CAPACITY_SCALE;
+> +
+>  /* All clamps are required to be less or equal than these values */
+>  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+>  
+> @@ -919,6 +936,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+>  	return uc_req;
+>  }
+>  
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> +{
+> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> +
+> +	if (!uc_se->user_defined)
+> +		uclamp_se_set(uc_se, sysctl_sched_rt_uclamp_util_min, false);
+> +}
+> +
 
-> 
-> 
-> BR,
-> Jani.
-> 
-> 
-> (*) The deeper issue is that people as well as the kconfig tools ignore
-> the warnings in Documentation/kbuild/kconfig-language.rst:
-> 
-> 	select should be used with care. select will force
-> 	a symbol to a value without visiting the dependencies.
-> 	By abusing select you are able to select a symbol FOO even
-> 	if FOO depends on BAR that is not set.
-> 	In general use select only for non-visible symbols
-> 	(no prompts anywhere) and for symbols with no dependencies.
-> 	That will limit the usefulness but on the other hand avoid
-> 	the illegal configurations all over.
-> 
-> I don't think we can, uh, fix the people, but it might be possible to
-> warn about selecting visible symbols or symbols with dependencies.
-> 
-> > ---
-> >  drivers/gpu/drm/i915/Kconfig               | 11 ++++++++++-
-> >  drivers/gpu/drm/i915/display/intel_panel.c |  4 ++--
-> >  drivers/gpu/drm/i915/display/intel_panel.h |  6 +++---
-> >  3 files changed, 15 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
-> > index ba9595960bbe..81d956040d18 100644
-> > --- a/drivers/gpu/drm/i915/Kconfig
-> > +++ b/drivers/gpu/drm/i915/Kconfig
-> > @@ -16,7 +16,7 @@ config DRM_I915
-> >  	select IRQ_WORK
-> >  	# i915 depends on ACPI_VIDEO when ACPI is enabled
-> >  	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
-> > -	select BACKLIGHT_CLASS_DEVICE if ACPI
-> > +	select DRM_I915_BACKLIGHT if ACPI
-> >  	select INPUT if ACPI
-> >  	select ACPI_VIDEO if ACPI
-> >  	select ACPI_BUTTON if ACPI
-> > @@ -68,6 +68,15 @@ config DRM_I915_FORCE_PROBE
-> >  
-> >  	  Use "*" to force probe the driver for all known devices.
-> >  
-> > +config DRM_I915_BACKLIGHT
-> > +	tristate "Control backlight support"
-> > +	depends on DRM_I915
-> > +	default DRM_I915
-> > +	select BACKLIGHT_CLASS_DEVICE
-> > +	help
-> > +          Say Y here if you want to control the backlight of your display
-> > +          (e.g. a laptop panel).
-> > +
-> >  config DRM_I915_CAPTURE_ERROR
-> >  	bool "Enable capturing GPU state following a hang"
-> >  	depends on DRM_I915
-> > diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-> > index 7b3ec6eb3382..e2fe7a50dcbf 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_panel.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_panel.c
-> > @@ -1203,7 +1203,7 @@ void intel_panel_enable_backlight(const struct intel_crtc_state *crtc_state,
-> >  	mutex_unlock(&dev_priv->backlight_lock);
-> >  }
-> >  
-> > -#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
-> > +#if IS_ENABLED(CONFIG_DRM_I915_BACKLIGHT)
-> >  static u32 intel_panel_get_backlight(struct intel_connector *connector)
-> >  {
-> >  	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
-> > @@ -1370,7 +1370,7 @@ void intel_backlight_device_unregister(struct intel_connector *connector)
-> >  		panel->backlight.device = NULL;
-> >  	}
-> >  }
-> > -#endif /* CONFIG_BACKLIGHT_CLASS_DEVICE */
-> > +#endif /* CONFIG_DRM_I915_BACKLIGHT */
-> >  
-> >  /*
-> >   * CNP: PWM clock frequency is 19.2 MHz or 24 MHz.
-> > diff --git a/drivers/gpu/drm/i915/display/intel_panel.h b/drivers/gpu/drm/i915/display/intel_panel.h
-> > index cedeea443336..e6e81268b7ed 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_panel.h
-> > +++ b/drivers/gpu/drm/i915/display/intel_panel.h
-> > @@ -49,10 +49,10 @@ intel_panel_edid_fixed_mode(struct intel_connector *connector);
-> >  struct drm_display_mode *
-> >  intel_panel_vbt_fixed_mode(struct intel_connector *connector);
-> >  
-> > -#if IS_ENABLED(CONFIG_BACKLIGHT_CLASS_DEVICE)
-> > +#if IS_ENABLED(CONFIG_DRM_I915_BACKLIGHT)
-> >  int intel_backlight_device_register(struct intel_connector *connector);
-> >  void intel_backlight_device_unregister(struct intel_connector *connector);
-> > -#else /* CONFIG_BACKLIGHT_CLASS_DEVICE */
-> > +#else /* CONFIG_DRM_I915_BACKLIGHT */
-> >  static inline int intel_backlight_device_register(struct intel_connector *connector)
-> >  {
-> >  	return 0;
-> > @@ -60,6 +60,6 @@ static inline int intel_backlight_device_register(struct intel_connector *connec
-> >  static inline void intel_backlight_device_unregister(struct intel_connector *connector)
-> >  {
-> >  }
-> > -#endif /* CONFIG_BACKLIGHT_CLASS_DEVICE */
-> > +#endif /* CONFIG_DRM_I915_BACKLIGHT */
-> >  
-> >  #endif /* __INTEL_PANEL_H__ */
-> 
+Here you are force setting the task-specific _requests_ to match the
+system-wide _constraints_. This is not required and it's also
+conceptually wrong, since you mix two concepts: requests and
+constraints.
+
+System-default values must never be synchronized with task-specific
+values. This allows to always satisfy task _requests_ when not
+conflicting with system-wide (or task-group) _constraints_.
+
+For example, assuming we have a task with util_min=500 and we keep
+changing the system-wide constraints, we would like the following
+effective clamps to be enforced:
+
+   time | system-wide | task-specific | effective clamp
+   -----+-------------+---------------+-----------------
+     t0 |        1024 |           500 |             500
+     t1 |           0 |           500 |               0
+     t2 |         200 |           500 |             200
+     t3 |         600 |           500 |             500
+
+If the taks should then change it's requested util_min:
+
+   time | system-wide | task-specific | effective clamp
+   -----+-------------+---------------+----------------
+     t4 |         600 |          800  |             600
+     t6 |        1024 |          800  |             800
+
+If you force set the task-specific requests to match the system-wide
+constraints, you cannot get the above described behaviors since you
+keep overwriting the task _requests_ with system-wide _constraints_.
+
+Thus, requests and contraints must always float independently and
+used to compute the effective clamp at task wakeup time via:
+
+   enqueue_task(rq, p, flags)
+     uclamp_rq_inc(rq, p)
+       uclamp_rq_inc_id(rq, p, clamp_id)
+         uclamp_eff_get(p, clamp_id)
+           uclamp_tg_restrict(p, clamp_id)
+     p->sched_class->enqueue_task(rq, p, flags)
+
+where the task-specific request is restricted considering its task group
+effective value (the constraint).
+
+Do note that the root task group effective value (for cfs) tasks is kept
+in sync with the system default value and propagated down to the
+effective value of all subgroups.
+
+Do note also that the effective value is computed before calling into
+the scheduling class's enqueue_task(). Which means that we have the
+right value in place before we poke sugov.
+
+Thus, a proper implementation of what you need should just
+replicate/generalize what we already do for cfs tasks.
+
+>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_eff;
+> @@ -1116,12 +1141,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  				loff_t *ppos)
+>  {
+>  	bool update_root_tg = false;
+> -	int old_min, old_max;
+> +	int old_min, old_max, old_rt_min;
+>  	int result;
+>  
+>  	mutex_lock(&uclamp_mutex);
+>  	old_min = sysctl_sched_uclamp_util_min;
+>  	old_max = sysctl_sched_uclamp_util_max;
+> +	old_rt_min = sysctl_sched_rt_uclamp_util_min;
+>  
+>  	result = proc_dointvec(table, write, buffer, lenp, ppos);
+>  	if (result)
+> @@ -1129,12 +1155,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  	if (!write)
+>  		goto done;
+>  
+> +	/*
+> +	 * The new value will be applied to all RT tasks the next time they
+> +	 * wakeup, assuming the task is using the system default and not a user
+> +	 * specified value. In the latter we shall leave the value as the user
+> +	 * requested.
+> +	 */
+>  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+>  	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+>  		result = -EINVAL;
+>  		goto undo;
+>  	}
+>  
+> +	if (sysctl_sched_rt_uclamp_util_min > SCHED_CAPACITY_SCALE) {
+> +		result = -EINVAL;
+> +		goto undo;
+> +	}
+> +
+>  	if (old_min != sysctl_sched_uclamp_util_min) {
+>  		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+>  			      sysctl_sched_uclamp_util_min, false);
+> @@ -1160,6 +1197,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>  undo:
+>  	sysctl_sched_uclamp_util_min = old_min;
+>  	sysctl_sched_uclamp_util_max = old_max;
+> +	sysctl_sched_rt_uclamp_util_min = old_rt_min;
+>  done:
+>  	mutex_unlock(&uclamp_mutex);
+>  
+> @@ -1202,9 +1240,12 @@ static void __setscheduler_uclamp(struct task_struct *p,
+>  		if (uc_se->user_defined)
+>  			continue;
+>  
+> -		/* By default, RT tasks always get 100% boost */
+> +		/*
+> +		 * By default, RT tasks always get 100% boost, which the admins
+> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
+> +		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
+>  
+>  		uclamp_se_set(uc_se, clamp_value, false);
+>  	}
+> @@ -1236,9 +1277,12 @@ static void uclamp_fork(struct task_struct *p)
+>  	for_each_clamp_id(clamp_id) {
+>  		unsigned int clamp_value = uclamp_none(clamp_id);
+>  
+> -		/* By default, RT tasks always get 100% boost */
+> +		/*
+> +		 * By default, RT tasks always get 100% boost, which the admins
+> +		 * are allowed change via sysctl_sched_rt_uclamp_util_min knob.
+> +		 */
+>  		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> +			clamp_value = sysctl_sched_rt_uclamp_util_min;
+>  
+>  		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+>  	}
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index e591d40fd645..19572dfc175b 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
+>   */
+>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+>  {
+> +	/*
+> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
+> +	 * we apply any new value on the next wakeup, which is here.
+> +	 */
+> +	uclamp_rt_sync_default_util_min(p);
+> +
+>  	if (!task_running(rq, p) &&
+>  	    !test_tsk_need_resched(rq->curr) &&
+>  	    p->nr_cpus_allowed > 1 &&
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 280a3c735935..337bf17b1a9d 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+>  #endif /* CONFIG_CPU_FREQ */
+>  
+>  #ifdef CONFIG_UCLAMP_TASK
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
+> +
+>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+>  
+>  static __always_inline
+> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+>  	return uclamp_util_with(rq, util, NULL);
+>  }
+>  #else /* CONFIG_UCLAMP_TASK */
+> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
+> +
+>  static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+>  					    struct task_struct *p)
+>  {
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 70665934d53e..06183762daac 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= sysctl_sched_uclamp_handler,
+>  	},
+> +	{
+> +		.procname	= "sched_rt_util_clamp_min",
+> +		.data		= &sysctl_sched_rt_uclamp_util_min,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_sched_uclamp_handler,
+> +	},
+>  #endif
+>  #ifdef CONFIG_SCHED_AUTOGROUP
+>  	{
 > -- 
-> Jani Nikula, Intel Open Source Graphics Center
+> 2.17.1
+> 
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+#include <best/regards.h>
+
+Patrick Bellasi
