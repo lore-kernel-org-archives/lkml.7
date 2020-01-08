@@ -2,123 +2,91 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619FAC33CA6
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C49BC33CA7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37ADB20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AE220643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rjygro5R"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fQqtl4VO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgAHU0X (ORCPT
+        id S1727206AbgAHU0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:26:23 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53570 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgAHU0J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:26:09 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008KQ6xV005535;
-        Wed, 8 Jan 2020 14:26:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578515166;
-        bh=AtQN2XJEmrYkV3ctwtTT7i/s5/8bXhlXRSLZa3niB7U=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=rjygro5RJ5eBI7Q5bT1v8FCTMP/DrtkfTbFJsv2g3lI93MTk85nynpVJe5z99/DPf
-         7wva+O6xZUsiKg1Rucyistx+0l9G6rIfkV37l9C9Sib2tpjI5N7K6KzInVS0lMQSfG
-         1gpvUNA+Ehomhz5wWXMH7lDp9B8u3adLYzmzFMPQ=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008KQ5SM036028
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 14:26:05 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 14:26:04 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 14:26:05 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008KQ55N074448;
-        Wed, 8 Jan 2020 14:26:05 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sebastian.reichel@collabora.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 2/4] power_supply: Add additional health properties to the header
-Date:   Wed, 8 Jan 2020 14:23:12 -0600
-Message-ID: <20200108202314.11791-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200108202314.11791-1-dmurphy@ti.com>
-References: <20200108202314.11791-1-dmurphy@ti.com>
+        Wed, 8 Jan 2020 15:26:39 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgAHU0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:26:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tLPS07cRz9sPJ;
+        Thu,  9 Jan 2020 07:26:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578515196;
+        bh=qtqQsfsb2WUiSdrCNexZ5+okx6btpBO9RQhZm9Cq9hE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fQqtl4VOSZYzB9G7bj671U6OzCdh+xaLyfGUaoyMMYZyVHzbJKMrvSuJE+ybk+Zup
+         PLciHZtz89tc8SnOMqF+unOkE9DV3e9G2zBAmk6AkxTwZrKN4zZfT+euPC1QGMTfiK
+         FzB99j8zkKrrDg/GPH7iXl3uEjvjoQnDRmpBtExHYlwIjQ2BxeK9cHVf76Mve/7xqD
+         dGJONNNufsuVXJLrlIBixEdF+QI1Ld18YkqitE+wE5ozQ0/Llm/dWTCVSX7wvlNx9I
+         LtarZBr+V7S8MDmRDDEqFqIKwY4NG5B4Gv1ky6vroDLJhRpE+Df8YESuLFDWmvcxkc
+         LmfWWkGa5FKAg==
+Date:   Thu, 9 Jan 2020 07:26:20 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the v4l-dvb-fixes
+ tree
+Message-ID: <20200109072620.6df67c98@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/Fe0Ejl.HRUgqhHS/udTLhWC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+--Sig_/Fe0Ejl.HRUgqhHS/udTLhWC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+Hi all,
 
-v3 - updated the ABI documentation and the power supply health text array.
+Commit
 
- Documentation/ABI/testing/sysfs-class-power | 2 +-
- drivers/power/supply/power_supply_sysfs.c   | 2 +-
- include/linux/power_supply.h                | 3 +++
- 3 files changed, 5 insertions(+), 2 deletions(-)
+  21d116949e95 ("Revert "media: pulse8-cec: fix lost cec_transmit_attempt_d=
+one() call"")
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..9f3fd01a9373 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -190,7 +190,7 @@ Description:
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
- 			      "Watchdog timer expire", "Safety timer expire",
--			      "Over current"
-+			      "Over current", "Warm", "Cool", "Hot"
- 
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..d0d549611794 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
- static const char * const power_supply_health_text[] = {
- 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
- 	"Unspecified failure", "Cold", "Watchdog timer expire",
--	"Safety timer expire", "Over current"
-+	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
- };
- 
- static const char * const power_supply_technology_text[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 28413f737e7d..bd0d3225f245 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -61,6 +61,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
--- 
-2.23.0
+is missing a Signed-off-by from its author and committer.
 
+Reverts are commits too and, as such, should have reasonable commit
+messages and be signed off.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Fe0Ejl.HRUgqhHS/udTLhWC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WOuwACgkQAVBC80lX
+0GxoEgf/SFBTJRQPDWLB2Sjt8QltGnKLzWi3uRvPqcBoj9NWArXP0FDcj1VS0cWO
+yPCbijtuMnAjTLdKpNu+Y2KhvfanjBLG+uKfiZCVtGhv/tmhqHwRZIBSb/fYY31A
+gKgZbIURYUKbDkYhlF2NBZTKMw0cHeeYm8LUNAmDNgGwpay/zkvDeCHYtuahHXHi
+N+TiPv6p1+Rwya3CAVCwSTQT0QmB0tua2DNEraA1vgs2hP7EmoL1VSBMPN4tP64b
+lyG0ezXBsi6Rr0Gx40nQh4QzWc7+3MC73mFzaycFPI2Rus3nWoKIfhLPLdwQYuNp
+YCCVJsBX/L1YkfhG7Tjq/MbgVlQ/tg==
+=yrTV
+-----END PGP SIGNATURE-----
+
+--Sig_/Fe0Ejl.HRUgqhHS/udTLhWC--
