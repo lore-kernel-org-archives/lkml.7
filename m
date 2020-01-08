@@ -2,104 +2,60 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881B1C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5618FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E120206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98B4206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 23:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsV31oHu"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="yeEsI3+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgAHX4O (ORCPT
+        id S1727610AbgAHX5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 18:56:14 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:34670 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAHX4O (ORCPT
+        Wed, 8 Jan 2020 18:57:31 -0500
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:12173 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgAHX5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 18:56:14 -0500
-Received: by mail-pg1-f173.google.com with SMTP id r11so2319989pgf.1;
-        Wed, 08 Jan 2020 15:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHrL6v0Uw66YhBXxgwYhRKU+mM7wW3ICLAPhDHJZnZI=;
-        b=TsV31oHuYUrTWDADB0GeSf5Ja4Tx3vAEdFTZ8j+GUSukv2yUeP3xYSVmNbL5onBIZ+
-         EIQewAW2KgMjdB9iNQ5sfc4KqbA4Tk7I+jhdfxcaW42H/HIEYBeHTWFQBDdsZXAAyXSL
-         IDmGATtPwKHWhODhEtheqIvBz3XaHEAO/O32HNxSYcN8WU6YPOGpgftrx23vgmanYUAC
-         br9BuxyflB8m96uqOfy7ZMIKQlKRDL6r/FToT2AqhPrHtzPiHZiNOPJiMJ/vfH0Dup/1
-         WyOLSVtsIOCSoHi7m38s/pDvmwgwjep8bm1gm0rOPj26Bt6MMW9zPnar3bYm/POBvnOX
-         LTQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHrL6v0Uw66YhBXxgwYhRKU+mM7wW3ICLAPhDHJZnZI=;
-        b=idq5qY11bdXyyRzSDJMYPqJZ01589wS7c/53axVtSagDTAgdSRPrUbY7Hx8yMH0tgX
-         Sa09TKuObfvE/fY/F4tI/msFLSOtkqBW3JHuW2kNvONawu4YRAktjfEMXzP/Hj5T2DcM
-         Tn54oONaCF05Q2WUdM3bFV9I0R3RJ3oH8qlrUmH+M6FdZgBmQxD1Orlargwr3/CkgRB4
-         xux9i5wTrOAKbzR9tb4A4+fAm2UdH6zSbppros1jw2z/QuXSjsb/Qw5tr39XB6q3BHK6
-         I3cnIiwIbTqJvbTuMugL5tTN1lR6vCQpi12hVxu4aSzu9/QomS++IDXkvuZTQtQV5Y45
-         bpfA==
-X-Gm-Message-State: APjAAAW5mxL5lVFdfhKI4oetWrba1Ae9J34YnkhQmJu43mAiIUjDYM0w
-        6Mt1vhKRid56bzauhXXzuQo=
-X-Google-Smtp-Source: APXvYqyln/X9tK1/v1SDPoi3Eb0DxxrKu9hBOdTHuIzAqjt73KadruyPy2BLeoTIyq0V1/1+8PV8ng==
-X-Received: by 2002:aa7:946c:: with SMTP id t12mr8030393pfq.137.1578527773391;
-        Wed, 08 Jan 2020 15:56:13 -0800 (PST)
-Received: from localhost ([100.118.89.215])
-        by smtp.gmail.com with ESMTPSA id y6sm4810131pgc.10.2020.01.08.15.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 15:56:12 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] dt-bindings: display: panel: Add AUO B116XAK01 panel bindings
-Date:   Wed,  8 Jan 2020 15:53:55 -0800
-Message-Id: <20200108235356.918189-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 8 Jan 2020 18:57:31 -0500
+Date:   Wed, 08 Jan 2020 23:57:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1578527849;
+        bh=2mBjCMOXhAHMBa+Efon0uQ+ZprV5kdCnojIljFPFPYI=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=yeEsI3+STbLr69No0cgaGtbJVmE5shikY27cfUcPg4n4Qa01ztVyCpq/1jrUNLQIP
+         9vHVdtqK2SqGWA4KTBJT3hCyU73MRjsKDc6aV6Zgq2I+YDszGYtHqdwVueUV5VkC8y
+         +5vrI3z1OhIPHPIBXW+sOzeUj3Cp94zbJoTi20cc=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Subject: was: Fair Pay
+Message-ID: <3RGxEF0NjauO-ruarAMWXFkxgdP3YdWwitD7qxtSUtMlwMoJgglcVNM-jd6-dtFHx5UOdn0zt-lkwJjsmMtltUGhMKSE93gJRibZviWmws0=@protonmail.com>
+Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+I thought about these names with typical associations. Maybe one can just g=
+eneralize this all to I/T? An interesting thought about Information & Techn=
+ology is that this was ofcourse once what the christian religion so critizi=
+sed here was about.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+And correct information about such things can be sought online.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 090866260f4f..5f1d765447bc 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -33,6 +33,8 @@ properties:
-       - ampire,am-480272h3tmqw-t01h
-         # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
-       - ampire,am800480r3tmqwa1h
-+        # AUO B116XAK01 eDP TFT LCD panel
-+      - auo,b116xa01
- 
-   backlight: true
-   enable-gpios: true
--- 
-2.24.1
+I think I am just going to call this I/T sys, which potentianlly could upgr=
+ade=C2=A0 the whole christian idea of an economic model.
 
+Peace!
+Y.C.
+The Fair Pay Initiative.
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
