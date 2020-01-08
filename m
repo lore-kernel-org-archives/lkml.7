@@ -2,88 +2,122 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAE0C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F90C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B378920643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD71A2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKHkRs0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgAHKZ4 (ORCPT
+        id S1727730AbgAHK1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:25:56 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60665 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHKZ4 (ORCPT
+        Wed, 8 Jan 2020 05:27:25 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54604 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726252AbgAHK1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:25:56 -0500
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 008APecx043436;
-        Wed, 8 Jan 2020 19:25:40 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Wed, 08 Jan 2020 19:25:40 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 008APZVQ043386
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 8 Jan 2020 19:25:40 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: INFO: rcu detected stall in sys_kill
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <00000000000036decf0598c8762e@google.com>
- <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com>
- <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com>
- <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com>
- <87a787ekd0.fsf@dja-thinkpad.axtens.net>
- <87h81zax74.fsf@dja-thinkpad.axtens.net>
- <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp>
-Date:   Wed, 8 Jan 2020 19:25:33 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 8 Jan 2020 05:27:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578479243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YCdLRbEXo/mLO/KI232Elg94jM5uidenpM5TwMdi2Mk=;
+        b=JKHkRs0CQRgUhQTl6XznubxFFYDPsrIhgVZBSpE6vDaPg1Ec+hc8hGV6eo/tv5zH3/Odyo
+        ntZtW8P6qbMdi9zk3kGmlwybohFwB1AUI+cbi/SHI8CM3l3YXIUUXjXwbAKRyVcZgv0Ue+
+        x/6Pq7+XDhbkqzupfxxoregkVxnAoV0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-zZRF13R_P-iIHrj97TadmQ-1; Wed, 08 Jan 2020 05:27:20 -0500
+X-MC-Unique: zZRF13R_P-iIHrj97TadmQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D10F25B37B;
+        Wed,  8 Jan 2020 10:27:18 +0000 (UTC)
+Received: from krava (ovpn-205-199.brq.redhat.com [10.40.205.199])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FA107C82C;
+        Wed,  8 Jan 2020 10:27:15 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 11:27:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com, tmricht@linux.ibm.com
+Subject: Re: [PATCH] perf report: Fix no libunwind compiled warning break
+ s390 issue
+Message-ID: <20200108102708.GC360164@krava>
+References: <20200107191745.18415-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107191745.18415-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/01/08 15:20, Dmitry Vyukov wrote:
-> I temporarily re-enabled smack instance and it produced another 50
-> stalls all over the kernel, and now keeps spewing a dozen every hour.
-
-Since we can get stall reports rather easily, can we try modifying
-kernel command line (e.g. lsm=smack) and/or kernel config (e.g. no kasan) ?
-
+On Wed, Jan 08, 2020 at 03:17:45AM +0800, Jin Yao wrote:
+> Commit 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
+> breaks the s390 platform. S390 uses libdw-dwarf-unwind for call chain
+> unwinding and had no support for libunwind.
 > 
-> I've mailed 3 new samples, you can see them here:
-> https://syzkaller.appspot.com/bug?extid=de8d933e7d153aa0c1bb
+> So the warning "Please install libunwind development packages during the perf build."
+> caused the confusion even if the call-graph is displayed correctly.
 > 
-> The config is provided, command line args are here:
-> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-smack.cmdline
-> Some non-default sysctls that syzbot sets are here:
-> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream.sysctl
-> Image can be downloaded from here:
-> https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
-> syzbot uses GCE VMs with 2 CPUs and 7.5GB memory, but this does not
-> look to be virtualization-related (?) so probably should reproduce in
-> qemu too.
+> This patch adds checking for HAVE_DWARF_SUPPORT, which is set when
+> libdw-dwarf-unwind is compiled in.
+> 
+> Fixes: 800d3f561659 ("perf report: Add warning when libunwind not compiled in")
+> 
+> Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 
-Is it possible to add instance for linux-next.git that uses these configs?
-If yes, we could try adding some debug printk() under CONFIG_DEBUG_AID_FOR_SYZBOT=y .
+perfect, I have the same change prepared for sending, but it's
+together with making libdw default dwarf unwinder, which I'm still
+not sure we want to do, so it all got posponed ;-)
+
+would you guys be ok with that? with having libdw picked up as default dwarf unwinder..
+
+for the patch:
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/builtin-report.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index de988589d99b..66cd97cc8b92 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -412,10 +412,10 @@ static int report__setup_sample_type(struct report *rep)
+>  				PERF_SAMPLE_BRANCH_ANY))
+>  		rep->nonany_branch_mode = true;
+>  
+> -#ifndef HAVE_LIBUNWIND_SUPPORT
+> +#if !defined(HAVE_LIBUNWIND_SUPPORT) && !defined(HAVE_DWARF_SUPPORT)
+>  	if (dwarf_callchain_users) {
+> -		ui__warning("Please install libunwind development packages "
+> -			    "during the perf build.\n");
+> +		ui__warning("Please install libunwind or libdw "
+> +			    "development packages during the perf build.\n");
+>  	}
+>  #endif
+>  
+> -- 
+> 2.17.1
+> 
+
