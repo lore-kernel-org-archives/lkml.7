@@ -2,109 +2,119 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58280C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A489C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319A92053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F862075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="cKsmt6pt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgAHHky (ORCPT
+        id S1726837AbgAHHsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:40:54 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbgAHHkx (ORCPT
+        Wed, 8 Jan 2020 02:48:33 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:58109 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbgAHHsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:40:53 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0087bDQt027165
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Jan 2020 02:40:53 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xaq7yxgh2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 02:40:52 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <svens@linux.ibm.com>;
-        Wed, 8 Jan 2020 07:40:50 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Jan 2020 07:40:47 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0087ejGg32047290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jan 2020 07:40:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8EF45A4054;
-        Wed,  8 Jan 2020 07:40:45 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E000A405F;
-        Wed,  8 Jan 2020 07:40:45 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  8 Jan 2020 07:40:45 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-        id 3C548E0264; Wed,  8 Jan 2020 08:40:45 +0100 (CET)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v3] selftests/ftrace: fix glob selftest
-Date:   Wed,  8 Jan 2020 08:40:43 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20010807-0016-0000-0000-000002DB65CE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010807-0017-0000-0000-0000333DDF8D
-Message-Id: <20200108074043.21580-1-svens@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_01:2020-01-07,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001080065
+        Wed, 8 Jan 2020 02:48:33 -0500
+Received: from [192.168.2.10] ([62.249.185.68])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id p64iiZca3T6sRp64niGj5G; Wed, 08 Jan 2020 08:48:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578469711; bh=xtNwc5IfKrwfQUKrHwCTvQzYkoWCY+xfQHgdy/TuFfA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=cKsmt6ptKe8rmZ3M5DfNPORxnghlyTukfpvDVlr5xs958YNpwd8sawStoYR631BzY
+         3AN11LRYWIw7OSu4i/7ecVereC+lCfHOPm+8jFTZ/eSwMJQbdSmfUqhyiJ1f7B1zrt
+         W5uISl8yEH1JiPB/WeoI4dazTgE6jgSErj2gzBoFsA80Na4P8NHmRPYLYG/TW0vi36
+         l7eLp8EovbH9v2iXTuESbD/hGHwd887/rdX16KPP3aeQ/GOoHV9WywY9srl+RHCIoR
+         Z1AS7b8J8YU+uvSOJq7Oog6fVY2UGObK2BMVuqPwtId0KzOkUWAcbzscX9Ixs94GR9
+         zPQq+egnV5rbg==
+Subject: Re: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling
+ matrix
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
+        mchehab@kernel.org, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com
+Cc:     gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+References: <20191213160428.54303-1-jernej.skrabec@siol.net>
+ <20191213160428.54303-3-jernej.skrabec@siol.net>
+ <4ac91ed5-a220-6a04-b1da-de27a306f8f2@xs4all.nl>
+ <2627039.Y6S9NjorxK@jernej-laptop>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <96703589-15c1-0ce8-10dc-81996cac9875@xs4all.nl>
+Date:   Wed, 8 Jan 2020 08:48:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <2627039.Y6S9NjorxK@jernej-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCPPd8rbiZD36So4MR0BPIFX90J8IGWdlAbPEr1wlkVaRNcyZs7sjBwhi76joK6Pl2987dpiW7hadXr971MUho0RLuWfygrekxWuNkn08ZgadsBkn8vv
+ ewxVX3JNjBpQw4bfd05TUdeDHSnoGpB1QuifsgI6LR7yBjF7EEpfU02eajqtHNbrORtbOHOirWFJTcuddAxPgvetNBkzypDTbDSFC2uCLHvBsjpkP8p/KBaM
+ Q4Ya/CJOFmLiMgA7UKoF7lhNUQ1cX7WIETzySN9jIWjC2SfILbGI7uzDL9xyJB5vsOAj7Ri3x6orEJJ05gCU4yEonD/00RFi0yHNcoyLsZB/FpyPkU0n/onD
+ OMjeORGX3h8ao6vTzJsup0ka6s6XX23aWEVG33DMaMKzFUGY304H1WwTruoES2OOXUrc6+E8N2bb8oLYj7vKZ2mqsWJ8PCb07JHNzxQ6Hj2ZmfAZASCbxd0c
+ C4k3DLVDfB6wyjfCl4Q4hea6VElGPeMGlkuhWmyQYsXlbUm2WH3Cti8pVpY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-test.d/ftrace/func-filter-glob.tc is failing on s390 because it has
-ARCH_INLINE_SPIN_LOCK and friends set to 'y'. So the usual
-__raw_spin_lock symbol isn't in the ftrace function list. Change
-'*aw*lock' to '*spin*lock' which would hopefully match some of the
-locking functions on all platforms.
+On 1/7/20 6:10 PM, Jernej Škrabec wrote:
+> Hi!
+> 
+> Dne torek, 07. januar 2020 ob 16:01:16 CET je Hans Verkuil napisal(a):
+>> On 12/13/19 5:04 PM, Jernej Skrabec wrote:
+>>> HEVC frames may use scaling list feature. Add support for it.
+>>>
+>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>> ---
+>>>
+>>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
+>>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+>>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
+>>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
+>>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
+>>>  5 files changed, 81 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+>>> c6ddd46eff82..bf68bc6b20c8 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> @@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[]
+>>> = {> 
+>>>  		.codec		= CEDRUS_CODEC_H265,
+>>>  		.required	= true,
+>>>  	
+>>>  	},
+>>>
+>>> +	{
+>>> +		.cfg = {
+>>> +			.id	= 
+> V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
+>>> +		},
+>>> +		.codec		= CEDRUS_CODEC_H265,
+>>> +		.required	= true,
+>>
+>> Should this be true? This means that existing applications are now
+>> suddenly required to always pass the scaling matrix for every buffer.
+>>
+>> Especially since the commit log says: 'HEVC frames *may* use scaling list
+>> feature', indicating that this is an optional feature.
+> 
+> True. Can you fix this when applying if this is the only issue?
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
----
+I'll do that.
 
-Changes in v3:
-  change '*spin*lock' to '*pin*lock' to not match the beginning
+Regards,
 
-Changes in v2:
-  use '*spin*lock' instead of '*ktime*ns'
-
- .../testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-index 27a54a17da65..f4e92afab14b 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
-@@ -30,7 +30,7 @@ ftrace_filter_check '*schedule*' '^.*schedule.*$'
- ftrace_filter_check 'schedule*' '^schedule.*$'
- 
- # filter by *mid*end
--ftrace_filter_check '*aw*lock' '.*aw.*lock$'
-+ftrace_filter_check '*pin*lock' '.*pin.*lock$'
- 
- # filter by start*mid*
- ftrace_filter_check 'mutex*try*' '^mutex.*try.*'
--- 
-2.17.1
-
+	Hans
