@@ -2,201 +2,101 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31235C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CEC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA40C20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A5B20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTU5hPeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgAHVCX convert rfc822-to-8bit (ORCPT
+        id S1727366AbgAHVCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:02:23 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:37457 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAHVCX (ORCPT
+        Wed, 8 Jan 2020 16:02:41 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37923 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725446AbgAHVCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:02:23 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 6B43BCECFA;
-        Wed,  8 Jan 2020 22:11:37 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [Bluez PATCH v1] bluetooth: secure bluetooth stack from bluedump
- attack
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
-Date:   Wed, 8 Jan 2020 22:02:20 +0100
-Cc:     BlueZ devel list <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <CD07E771-6F40-4158-A0F9-03FC128CDCD3@holtmann.org>
-References: <20200106181425.Bluez.v1.1.I5ee1ea8e19d41c5bdffb4211aeb9cd9efa5e0a4a@changeid>
-To:     howardchung@google.com
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Wed, 8 Jan 2020 16:02:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578517359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nGgN9vS1pt4ksqqsIyVSootRX5TIRrFfQTFcrvkrQVM=;
+        b=HTU5hPeFgszoB+L2kGdW5/ygjKI8DCMhDCjcGi+NjArzuYFjRFmv5ZXFskE6wxRZfhwWWh
+        W2p2pSxjoAPYc3qVuRfKZieOp9uIpzLn8H+f0XmjMzOZL78+eQkXCvNX57QDiEewYMIr6y
+        4esMe+aobpnoCONbYN1ZyfBbOKUvuFo=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-FCZbMn3DNhGACsAyrb0bZw-1; Wed, 08 Jan 2020 16:02:36 -0500
+X-MC-Unique: FCZbMn3DNhGACsAyrb0bZw-1
+Received: by mail-qt1-f200.google.com with SMTP id l56so2843350qtk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 13:02:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nGgN9vS1pt4ksqqsIyVSootRX5TIRrFfQTFcrvkrQVM=;
+        b=araatGU+wMZl3yu4vBLMVSVu9AKr5BMBvMqtI+Qq7aKJIQ4ZMxZ69dASEbKlY80IRf
+         Ii82lcLR8QOSbm7gdxOqa7perVJM3nvjqPAU9qaAjmevrtEKyRGuaO2SHeM9mgWHBBdP
+         Z7igJuNX6pRb4uZzC3BtT3XmadejUc4yuThmMRuFpsQA0T1SfC+xdN6cu6HZW2I8j0K6
+         p4e+GUKEWJ+AIiY8KwF+JBW1p7zFsP3dklgetGz+KWZHuGYcy22BKLWqEPlvtOKZbOFZ
+         MqmsNmhok8CjIMvMbBtKExr8Z9lgVbbOM5xUn8n8kqqsT7xLy80gMBb4eBu0IlrnylEA
+         c0PQ==
+X-Gm-Message-State: APjAAAXMq9L9L/CJkG/S/DFv1h9QJ6PuO6JO6EnjgIpaVbcgEMeq+PSt
+        B7qcKyWdi1XaYER8bftYYr+7PTQ4S4BD2siypUb0oWaxqaTyI2zKXPFM3LtTmPw/ibbrf92A9Nl
+        oJ4JVYnTPB262UDcA5EdQErMq
+X-Received: by 2002:a05:620a:2010:: with SMTP id c16mr6009752qka.386.1578517355931;
+        Wed, 08 Jan 2020 13:02:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxYrsmBQhSUcSU8OxBGrkXOCI6I2eG4Uc4kbWRdqrSrtUE4hSkuhX6El/2K5pmjXdYiJ3dxqA==
+X-Received: by 2002:a05:620a:2010:: with SMTP id c16mr6009735qka.386.1578517355755;
+        Wed, 08 Jan 2020 13:02:35 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id u24sm1942858qkm.40.2020.01.08.13.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 13:02:34 -0800 (PST)
+Date:   Wed, 8 Jan 2020 16:02:33 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200108210233.GI7096@xz-x1>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-4-peterx@redhat.com>
+ <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
+ <20191223172737.GA81196@xz-x1>
+ <851bd9ed-3ff3-6aef-725c-b586d819211c@redhat.com>
+ <20191223201024.GB90172@xz-x1>
+ <e56d4157-1a0a-3f45-0e02-ac7c10fccf96@redhat.com>
+ <20200108191512.GF7096@xz-x1>
+ <649c77ba-94a7-d0bf-69e7-fa0276f536d1@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <649c77ba-94a7-d0bf-69e7-fa0276f536d1@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Howard,
+On Wed, Jan 08, 2020 at 08:44:09PM +0100, Paolo Bonzini wrote:
+> Yeah, it should be okay assuming you test with lockdep.
 
-> Attack scenario:
-> 1. A Chromebook (let's call this device A) is paired to a legitimate
->   Bluetooth classic device (e.g. a speaker) (let's call this device
->   B).
-> 2. A malicious device (let's call this device C) pretends to be the
->   Bluetooth speaker by using the same BT address.
-> 3. If device A is not currently connected to device B, device A will
->   be ready to accept connection from device B in the background
->   (technically, doing Page Scan).
-> 4. Therefore, device C can initiate connection to device A
->   (because device A is doing Page Scan) and device A will accept the
->   connection because device A trusts device C's address which is the
->   same as device B's address.
-> 5. Device C won't be able to communicate at any high level Bluetooth
->   profile with device A because device A enforces that device C is
->   encrypted with their common Link Key, which device C doesn't have.
->   But device C can initiate pairing with device A with just-works
->   model without requiring user interaction (there is only pairing
->   notification). After pairing, device A now trusts device C with a
->   new different link key, common between device A and C.
-> 6. From now on, device A trusts device C, so device C can at anytime
->   connect to device A to do any kind of high-level hijacking, e.g.
->   speaker hijack or mouse/keyboard hijack.
-> 
-> To fix this, reject the pairing if all the conditions below are met.
-> - the pairing is initialized by peer
-> - the authorization method is just-work
-> - host already had the link key to the peer
-> 
-> Also create a debugfs option to permit the pairing even the
-> conditions above are met.
-> 
-> Signed-off-by: howardchung <howardchung@google.com>
+I didn't turn it on for this work, but I'll make sure to be with it
+starting from now.  Thanks,
 
-we prefer full name signed-off-by signatures.
-
-> ---
-> 
-> include/net/bluetooth/hci.h |  1 +
-> net/bluetooth/hci_core.c    | 47 +++++++++++++++++++++++++++++++++++++
-> net/bluetooth/hci_event.c   | 12 ++++++++++
-> 3 files changed, 60 insertions(+)
-> 
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 07b6ecedc6ce..4918b79baa41 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -283,6 +283,7 @@ enum {
-> 	HCI_FORCE_STATIC_ADDR,
-> 	HCI_LL_RPA_RESOLUTION,
-> 	HCI_CMD_PENDING,
-> +	HCI_PERMIT_JUST_WORK_REPAIR,
-> 
-> 	__HCI_NUM_FLAGS,
-> };
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 9e19d5a3aac8..9014aa567e7b 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -172,10 +172,57 @@ static const struct file_operations vendor_diag_fops = {
-> 	.llseek		= default_llseek,
-> };
-> 
-> +static ssize_t permit_just_work_repair_read(struct file *file,
-> +					    char __user *user_buf,
-> +					    size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[3];
-> +
-> +	buf[0] = hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) ? 'Y'
-> +								      : 'N';
-> +	buf[1] = '\n';
-> +	buf[2] = '\0';
-> +	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-> +}
-> +
-> +static ssize_t permit_just_work_repair_write(struct file *file,
-> +					     const char __user *user_buf,
-> +					     size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[32];
-> +	size_t buf_size = min(count, (sizeof(buf) - 1));
-> +	bool enable;
-> +
-> +	if (copy_from_user(buf, user_buf, buf_size))
-> +		return -EFAULT;
-> +
-> +	buf[buf_size] = '\0';
-> +	if (strtobool(buf, &enable))
-> +		return -EINVAL;
-> +
-> +	if (enable)
-> +		hci_dev_set_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-> +	else
-> +		hci_dev_clear_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR);
-> +
-> +	return count;
-> +}
-> +
-> +static const struct file_operations permit_just_work_repair_fops = {
-> +	.open		= simple_open,
-> +	.read		= permit_just_work_repair_read,
-> +	.write		= permit_just_work_repair_write,
-> +	.llseek		= default_llseek,
-> +};
-> +
-> static void hci_debugfs_create_basic(struct hci_dev *hdev)
-> {
-> 	debugfs_create_file("dut_mode", 0644, hdev->debugfs, hdev,
-> 			    &dut_mode_fops);
-> +	debugfs_create_file("permit_just_work_repair", 0644, hdev->debugfs,
-> +			    hdev, &permit_just_work_repair_fops);
-> 
-> 	if (hdev->set_diag)
-> 		debugfs_create_file("vendor_diag", 0644, hdev->debugfs, hdev,
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 6ddc4a74a5e4..898e347e19e0 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -4539,6 +4539,18 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
-> 		goto unlock;
-> 	}
-> 
-> +	/* If there already exists link key in local host, terminate the
-> +	 * connection by default since the remote device could be malicious.
-> +	 * Permit the connection if permit_just_work_repair is enabled.
-> +	 */
-> +	if (!hci_dev_test_flag(hdev, HCI_PERMIT_JUST_WORK_REPAIR) &&
-> +	    hci_find_link_key(hdev, &ev->bdaddr)) {
-> +		BT_DBG("Rejecting request: local host already have link key");
-
-Can we use bt_dev_warn() here.
-
-> +		hci_send_cmd(hdev, HCI_OP_USER_CONFIRM_NEG_REPLY,
-> +			     sizeof(ev->bdaddr), &ev->bdaddr);
-> +		goto unlock;
-> +	}
-> +
-> 	/* If no side requires MITM protection; auto-accept */
-> 	if ((!loc_mitm || conn->remote_cap == HCI_IO_NO_INPUT_OUTPUT) &&
-> 	    (!rem_mitm || conn->io_capability == HCI_IO_NO_INPUT_OUTPUT)) {
-
-What about the LE cases?
-
-In addition, I like to get a pair of second eyes from Johan and Luiz on this one.
-
-Regards
-
-Marcel
+-- 
+Peter Xu
 
