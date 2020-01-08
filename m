@@ -2,137 +2,131 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F2EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F1AC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1782067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477DB2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgAHRJV (ORCPT
+        id S1729662AbgAHRKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:09:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36501 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHRJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:09:21 -0500
-Received: from host.242.234.23.62.rev.coltfrance.com ([62.23.234.242] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ipEnM-00052V-PD; Wed, 08 Jan 2020 17:07:00 +0000
-Date:   Wed, 8 Jan 2020 18:07:04 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] introduce configfd as generalisation of fsconfig
-Message-ID: <20200108170703.zhcuohzdp22y5yma@wittgenstein>
-References: <20200104201432.27320-1-James.Bottomley@HansenPartnership.com>
- <20200105162311.sufgft6kthetsz7q@wittgenstein>
- <1578247328.3310.36.camel@HansenPartnership.com>
+        Wed, 8 Jan 2020 12:10:31 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2239 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729516AbgAHRKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:10:30 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 6CC01DF89CB9F314160A;
+        Wed,  8 Jan 2020 17:10:28 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 Jan 2020 17:10:27 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 8 Jan 2020
+ 17:10:27 +0000
+Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
+ device_links_purge()
+From:   John Garry <john.garry@huawei.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "saravanak@google.com" <saravanak@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
+ <20200108122658.GA2365903@kroah.com>
+ <73252c08-ac46-5d0d-23ec-16c209bd9b9a@huawei.com>
+ <1578498695.3260.5.camel@linux.ibm.com> <20200108155700.GA2459586@kroah.com>
+ <1578499287.3260.7.camel@linux.ibm.com>
+ <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
+Message-ID: <3826a83d-a220-2f7d-59f6-efe8a4b995d7@huawei.com>
+Date:   Wed, 8 Jan 2020 17:10:26 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1578247328.3310.36.camel@HansenPartnership.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[extending the Cc a bit]
-
-On Sun, Jan 05, 2020 at 10:02:08AM -0800, James Bottomley wrote:
-> On Sun, 2020-01-05 at 17:23 +0100, Christian Brauner wrote:
-> > On Sat, Jan 04, 2020 at 12:14:26PM -0800, James Bottomley wrote:
-> > > fsconfig is a very powerful configuration mechanism except that it
-> > > only works for filesystems with superblocks.  This patch series
-> > > generalises the useful concept of a multiple step configurational
-> > > mechanism carried by a file descriptor.  The object of this patch
-> > > series is to get bind mounts to be configurable in the same way
-> > > that superblock based ones are, but it should have utility beyond
-> > > the filesytem realm.  Patch 4 also reimplements fsconfig in terms
-> > > of configfd, but that's not a strictly necessary patch, it is
-> > > merely a useful demonstration that configfd is a superset of the
-> > > properties of fsconfig.
-> > 
-> > Thanks for the patch. I'm glad fsconfig() is picked back up; either
-> > by you or by David. We will need this for sure.
-> > But the configfd approach does not strike me as a great idea.
-> > Anonymous inode fds provide an abstraction mechanism for kernel
-> > objects which we built around fds such as timerfd, pidfd, mountfd and
-> > so on. When you stat an anonfd you get ANON_INODE_FS_MAGIC and you
-> > get the actual type by looking at fdinfo, or - more common - by
-> > parsing out /proc/<pid>/fd/<nr> and discovering "[fscontext]". So
-> > it's already a pretty massive abstraction layer we have. But configfd
-> > would be yet another fd abstraction based on anonfds.
-> > The idea has been that a new fd type based on anonfds comes with an
-> > api specific to that type of fd. That seems way nicer from an api
-> > design perspective than implementing new apis as part of yet another
-> > generic configfd layer.
+On 08/01/2020 16:08, John Garry wrote:
+> On 08/01/2020 16:01, James Bottomley wrote:
+>>>>>     cdev->dev = NULL;
+>>>>>             return device_add(&cdev->cdev);
+>>>>>         }
+>>>>>     }
+>>>>>     return -ENODEV;
+>>>>> }
+>>>> The design of the code is simply to remove the link to the inserted
+>>>> device which has been removed.
+>>>>
+>>>> I*think*  this means the calls to device_del and device_add are
+>>>> unnecessary and should go.  enclosure_remove_links and the put of
+>>>> the
+>>>> enclosed device should be sufficient.
+>>> That would make more sense than trying to "reuse" the device
+>>> structure
+>>> here by tearing it down and adding it back.
+>> OK, let's try that.  This should be the patch if someone can try it
+>> (I've compile tested it, but the enclosure system is under a heap of
+>> stuff in the garage).
 > 
-> Really, it's just a fd that gathers config information and can reserve
-> specific errors (and we should really work out the i18n implications of
-
-It's rather a complex multiplexer intended to go beyond the realm of
-filesystems/mount api and that's something we have been burned by before.
-
-> the latter).  Whether it's a new fd type or an anonfd with a specific
-> name doesn't seem to be that significant, so the name could be set by
-> the type.
+> I can test it now.
 > 
-> > Another problem is that these syscalls here would be massive
-> > multiplexing syscalls. If they are ever going to be used outside of
-> > filesystem use-cases (which is doubtful) they will quickly rival
-> > prctl(), seccomp(), and ptrace().
+
+Yeah, that looks to have worked ok. SES disk locate was also fine after 
+losing and rediscovering the disk.
+
+Thanks,
+John
+
+> But it is a bit suspicious that we had the device_del() and device_add() 
+> at all, especially since the code change makes it look a bit more like 
+> pre-43d8eb9cfd0 ("ses: add support for enclosure component hot removal")
 > 
-> Actually, that's partly the point.  We do have several systemcalls with
-
-Actually I think that's the problem. The keyctl api itself suffers
-from the problem that it already has a complex multiplexer. That could
-either point to bad api design (sorry, David :)) or it's just a very
-complex use-case like the mount api. The good thing is that it's
-restricted to a single domain: keys. And that's good. Plumbing both e.g.
-keys and (parts of) mounts on top of another generic api is what strikes
-me as a bad idea.
-
-> variable argument parsing that would benefit from an approach like
-> this.  keyctl springs immediately to mind.
+> John
 > 
-> >  That's not a great thing. Especially, since we recently (a few
-> > months ago with Linus chiming in too) had long discussions with the
-> > conclusion that multiplexing syscalls are discouraged, from a
-> > security and api design perspective. Especially when they are not
-> > tied to a specific API (e.g. seccomp() and bpf() are at least tied to
-> > a specific API). libcs such as glibc and musl had reservations in
-> > that regard as well.
-> > 
-> > This would also spread the mount api across even more fd types than
-> > it already does now which is cumbersome for userspace.
-> > 
-> > A generic API like that also makes it hard to do interception in
-> > userspace which is important for brokers such as e.g. used in Firefox
-> > or what we do in various container use-cases.
-> > 
-> > So I have strong reservations about configfd and would strongly favor
-> > the revival of the original fsconfig() patchset.
+>>
+>> James
+>>
+>> ---
+>>
+>> diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
+>> index 6d27ccfe0680..3c2d405bc79b 100644
+>> --- a/drivers/misc/enclosure.c
+>> +++ b/drivers/misc/enclosure.c
+>> @@ -406,10 +406,9 @@ int enclosure_remove_device(struct 
+>> enclosure_device *edev, struct device *dev)
+>>           cdev = &edev->component[i];
+>>           if (cdev->dev == dev) {
+>>               enclosure_remove_links(cdev);
+>> -            device_del(&cdev->cdev);
+>>               put_device(dev);
+>>               cdev->dev = NULL;
+>> -            return device_add(&cdev->cdev);
+>> +            return 0;
+>>           }
+>>       }
+>>       return -ENODEV;
 > 
-> Ah well, I did have plans for configfd to be self describing, so the
-> arguments accepted by each type would be typed and pre-registered and
-> thus parseable generically, so instead of being the usual anonymous
-> multiplex sink, it would at least be an introspectable multiplexed
-> sink.  The problem there was I can't make fsconfig fit into that
+> _______________________________________________
+> Linuxarm mailing list
+> Linuxarm@huawei.com
+> http://hulk.huawei.com/mailman/listinfo/linuxarm
+> .
 
-We already have fsconfig() to configure mounts so it seems odd to now
-spread the mount api onto configfd imho.
-
-Christian
