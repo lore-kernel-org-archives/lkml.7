@@ -2,121 +2,82 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46379C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D32C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1882920692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4747020692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgAHI6W (ORCPT
+        id S1727487AbgAHI77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:58:22 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2983 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727483AbgAHI6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:58:21 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id E73017C2A6CED79D2CF4;
-        Wed,  8 Jan 2020 16:58:19 +0800 (CST)
-Received: from dggeme710-chm.china.huawei.com (10.1.199.106) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 8 Jan 2020 16:58:19 +0800
-Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
- dggeme710-chm.china.huawei.com (10.1.199.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 8 Jan 2020 16:58:19 +0800
-Received: from dggeme759-chm.china.huawei.com ([10.7.64.73]) by
- dggeme759-chm.china.huawei.com ([10.7.64.73]) with mapi id 15.01.1713.004;
- Wed, 8 Jan 2020 16:58:19 +0800
-From:   "tiantao (H)" <tiantao6@hisilicon.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "xinliang.liu@linaro.org" <xinliang.liu@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Linuxarm <linuxarm@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGRybS9oaXNpbGljb246IGFkZCB0aGUgbW9kZV92?=
- =?utf-8?Q?alid_function?=
-Thread-Topic: [PATCH] drm/hisilicon: add the mode_valid function
-Thread-Index: AQHVxfxbpD+5L/GN/0KaWTRqEuV1/aff7sEAgACHSsA=
-Date:   Wed, 8 Jan 2020 08:58:19 +0000
-Message-ID: <53780a8769c44f5484a97882a0c8b642@hisilicon.com>
-References: <1578471540-43322-1-git-send-email-tiantao6@hisilicon.com>
- <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
-In-Reply-To: <ae14b728-d2dc-282d-2fed-19bf6db4df64@suse.de>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.57.60.129]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Wed, 8 Jan 2020 03:59:59 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:9530 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgAHI77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:59:59 -0500
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDleVXA0PuFc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id a09dafw088xje62
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 8 Jan 2020 09:59:45 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Subject: [BUG]: usb: dwc3: gadget: broken on OMAP5432
+Date:   Wed, 8 Jan 2020 09:59:44 +0100
+Message-Id: <703DD239-8E3B-405C-A531-FF7DEEED38DC@goldelico.com>
+Cc:     linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzIFppbW1lcm1hbm46DQoNCglJIHdpbGwgbW9kaWZ5IHRoaXMgcGF0Y2ggYW5kIHNl
-bmQgdjIgYXMgeW91IHN1Z2dlc3RlZC4NCglUaGFuayB5b3UgdmVyeSBtdWNoLg0KDQpCZXN0DQoN
-Ci0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogVGhvbWFzIFppbW1lcm1hbm4gW21h
-aWx0bzp0emltbWVybWFubkBzdXNlLmRlXSANCuWPkemAgeaXtumXtDogMjAyMOW5tDHmnIg45pel
-IDE2OjQ5DQrmlLbku7bkuro6IHRpYW50YW8gKEgpIDx0aWFudGFvNkBoaXNpbGljb24uY29tPjsg
-Q2hlbmZlbmcgKHB1Y2spIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT47IGFpcmxpZWRAbGludXgu
-aWU7IGRhbmllbEBmZndsbC5jaDsga3JheGVsQHJlZGhhdC5jb207IGFsZXhhbmRlci5kZXVjaGVy
-QGFtZC5jb207IHRnbHhAbGludXRyb25peC5kZTsgZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZzsgeGlubGlhbmcubGl1QGxpbmFyby5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCuaKhOmAgTogTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+DQrkuLvpopg6IFJlOiBb
-UEFUQ0hdIGRybS9oaXNpbGljb246IGFkZCB0aGUgbW9kZV92YWxpZCBmdW5jdGlvbg0KDQpIaSwN
-Cg0KaGVyZSBhcmUgYSBmZXcgbW9yZSBuaXRzIHRvIGZpeC4NCg0KQW0gMDguMDEuMjAgdW0gMDk6
-MTkgc2NocmllYiBUaWFuIFRhbzoNCj4gYWRkIG1vZGVfdmFsaWQgZnVuY3Rpb24sIGFuZCB3ZSBj
-YW4gYWxzbyB1c2UgaXQgdG8gbWFrZSBzdXNlIHRoZSANCj4gcmVzb2x1dGlvbiBpcyB2YWxpZC4N
-Cg0KU3RhcnQgd2l0aCBjYXBpdGFsICdBZGQnIGFuZCBtYWtlIGl0IGEgc2ltcGxlIHNlbnRlbmNl
-LiBDaGFuZ2UgJ3N1c2UnIHRvICdzdXJlJw0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUaWFuIFRh
-byA8dGlhbnRhbzZAaGlzaWxpY29uLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR29uZyBqdW5qaWUg
-PGdvbmdqdW5qaWUyQGh1YXdlaS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL2hpc2ls
-aWNvbi9oaWJtYy9oaWJtY19kcm1fZGUuYyB8IDIwIA0KPiArKysrKysrKysrKysrKysrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpYm1jL2hpYm1jX2RybV9kZS5jIA0KPiBiL2RyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2RlLmMNCj4gaW5kZXggODQzZDc4
-NC4uNmNiN2E3OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJt
-Yy9oaWJtY19kcm1fZGUuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpYm1j
-L2hpYm1jX2RybV9kZS5jDQo+IEBAIC0yNDIsNiArMjQyLDI1IEBAIHN0YXRpYyB2b2lkIGhpYm1j
-X2NydGNfYXRvbWljX2Rpc2FibGUoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAgCWhpYm1jX3Nl
-dF9jdXJyZW50X2dhdGUocHJpdiwgcmVnKTsNCj4gIH0NCj4gIA0KPiArZW51bSBkcm1fbW9kZV9z
-dGF0dXMgaGlibWNfY3J0Y19tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywNCj4gKwkJ
-CQkJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpDQoNClBsZWFzZSBkZWNsYXJl
-IHRoaXMgZnVuY3Rpb24gYXMgc3RhdGljLg0KDQo+ICt7DQo+ICsJaW50IGkgPSAwOw0KPiArCWlu
-dCB2cmVmcmVzaCA9IGRybV9tb2RlX3ZyZWZyZXNoKG1vZGUpOw0KPiArDQo+ICsJaWYgKHZyZWZy
-ZXNoIDwgNTkgfHwgdnJlZnJlc2ggPiA2MSkNCj4gKwkJcmV0dXJuIE1PREVfTk9NT0RFOw0KDQpJ
-J2QgcmV0dXJuIE1PREVfTk9DTE9DSyBvciBNT0RFX0NMT0NLX1JBTkdFLg0KDQo+ICsNCj4gKwlm
-b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShoaWJtY19wbGxfdGFibGUpOyBpKyspIHsNCj4gKwkJ
-aWYgKGhpYm1jX3BsbF90YWJsZVtpXS5oZGlzcGxheSA9PSBtb2RlLT5oZGlzcGxheSAmJg0KPiAr
-CQkJaGlibWNfcGxsX3RhYmxlW2ldLnZkaXNwbGF5ID09IG1vZGUtPnZkaXNwbGF5KQ0KPiArCQkJ
-cmV0dXJuIE1PREVfT0s7DQo+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIE1PREVfTk9NT0RFOw0KDQpN
-YXliZSByZXR1cm4gTU9ERV9CQUQuIE1PREVfTk9NT0RFIGFwcGFyZW50bHkgcmVmZXJzIHRvIGEg
-ZGVzY3JpcHRpdmUgc3RyaW5nIGZvciB0aGUgbW9kZS4NCg0KPiArfQ0KPiArDQo+ICsNCg0KT25l
-IG9uZSBlbXB0eSBsaW5lIHBsZWFzZS4NCg0KV2l0aCB0aGVzZSBmaXhlcyBhcHBsaWVkLCB5b3Ug
-Y2FuIGFkZCBteQ0KDQpSZXZpZXdlZC1ieTogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5u
-QHN1c2UuZGU+DQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFzDQoNCg0KPiAgc3RhdGljIHVuc2lnbmVk
-IGludCBmb3JtYXRfcGxsX3JlZyh2b2lkKSAgew0KPiAgCXVuc2lnbmVkIGludCBwbGxyZWcgPSAw
-Ow0KPiBAQCAtNTEwLDYgKzUyOSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfaGVs
-cGVyX2Z1bmNzIGhpYm1jX2NydGNfaGVscGVyX2Z1bmNzID0gew0KPiAgCS5hdG9taWNfZmx1c2gJ
-PSBoaWJtY19jcnRjX2F0b21pY19mbHVzaCwNCj4gIAkuYXRvbWljX2VuYWJsZQk9IGhpYm1jX2Ny
-dGNfYXRvbWljX2VuYWJsZSwNCj4gIAkuYXRvbWljX2Rpc2FibGUJPSBoaWJtY19jcnRjX2F0b21p
-Y19kaXNhYmxlLA0KPiArCS5tb2RlX3ZhbGlkID0gaGlibWNfY3J0Y19tb2RlX3ZhbGlkLA0KPiAg
-fTsNCj4gIA0KPiAgaW50IGhpYm1jX2RlX2luaXQoc3RydWN0IGhpYm1jX2RybV9wcml2YXRlICpw
-cml2KQ0KPiANCg0KLS0NClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxv
-cGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUs
-IDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2Vz
-Y2jDpGZ0c2bDvGhyZXI6IEZlbGl4IEltZW5kw7ZyZmZlcg0KDQo=
+Hi,
+I noticed that the usb ethernet gadget driver is broken since v5.5-rc2
+and 5.4.4, but only for our OMAP5 board. Our OMAP3 boards work with
+the same tree, kernel binary and user-space (Debian Stretch).
+
+The symptom is that I can see the interface on the host PC being
+enumerated and IP addresses etc. are set up. But a ping in either
+direction fails/times out.
+
+After inspecting diffs I found some changes in dwc3:gadget
+and indeed omap3/twl4030 uses musb and omap5 uses dwc3.
+
+Reverting
+
+a7f7e61270f1 ("usb: dwc3: gadget: Fix logical condition");
+
+on v5.5-rc makes it work again.
+
+BTW: v4.19.90 works although it includes this logical condition fix.
+So the real difference between v4.19 and v5.5 may be elsewhere in
+newer kernels and only be revealed by the patch.
+
+If important: my setup is running with USB2 cable and speed
+only.
+
+So please check this and other recent dwc3 patches for introducing
+a stall of communication.
+
+BR and thanks,
+Nikolaus Schaller
+
+
