@@ -1,204 +1,455 @@
-Return-Path: <SRS0=facv=24=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A33C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EAEC33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A78B20715
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Jan 2020 23:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB150207E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zIoxdjzd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U8GuJADL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgAGXv7 (ORCPT
+        id S1726916AbgAHACj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:51:59 -0500
-Received: from mail-eopbgr770052.outbound.protection.outlook.com ([40.107.77.52]:36554
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726470AbgAGXv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:51:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kQkWy7ObzW1h5Msix0YKUAnFNr9NRLINrcnGhUSHdVkBa9VIU867YSgMm604FkGCfwAEz8vz7heStz57BfXbmDf1IQz0C0pMjobXs+3XIrnA47QaKl2X2gm4+n2Ox5yA3ILQ8662CPPmf9euAGbUiGabYC2H13wKHLNO5+lWkLTtbM9pH5UQ67SVlAZAEKVDYU9T6t7+JNxq8cG8yNvw8StscwSS7ngyRyUtKcesE1fK7ypt4yP1dO6XYZZ6CLCi2K6ZlP4dy1NkF142LvXaTa9pVoBQMWF2mDHCHrr3YV1N6g6KEWcygAAqEgVNwWJpd+m19d9eKYu0PByTKd1wsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ZKls98hm1UE9oZ8b89NtgPH1XcPYTckd1e56qM6Zkk=;
- b=h53q+hAkLBpTORPLDAfseTzH5FxaWbesWOx2g4aXg09yW6lO9CayNhN+aAhiQ2Gc6Il8GbCRr7MuQHxhO6EDLgHNRN2HQQYA+y3s38m3zwoTnsQ5g54rxPHEvtAmb6TL0faX7O1CSPbBygVvDVSAZ7XvxBAz2zuKYipNwOSUKxmoGBRhm1xzKIWeE5+awxVW/iQrQ9ziwB1mlippHzzzPQ0+65jzaUhxk8uoUaFQDogQCML7ntM8idXqqUHH7Ayr500zwx5DJL3cmL8orLjQ/UtmrZL0F8OIWMX9fAIWTmNejfDWn5opSwdFeUpkvsPzsBRacl0/6KHSBBMS7ngVNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1ZKls98hm1UE9oZ8b89NtgPH1XcPYTckd1e56qM6Zkk=;
- b=zIoxdjzd+alhGUfOzmOZevQqcnme3aStk+eA+IQS9vbIjz92qzQpunDWZKFMWdK/5LUJ809tEQm9uj0RNYrbsQCgqaDp++/Nz7z4NXE0DTTyOLCEMosLqBhsQ/xAV4BurZJYx4cbu0ZVT+10ZZ/NJtAntMDAkAGXz/ST0nyXA/I=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB2617.namprd12.prod.outlook.com (20.176.116.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Tue, 7 Jan 2020 23:51:54 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2602.016; Tue, 7 Jan 2020
- 23:51:53 +0000
-Subject: Re: [PATCH v2] KVM: SVM: Override default MMIO mask if memory
- encryption is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-References: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
- <20200106224931.GB12879@linux.intel.com>
- <f5c2e60c-536f-e0cd-98b9-86e6da82e48f@amd.com>
- <20200106233846.GC12879@linux.intel.com>
- <a4fb7657-59b6-2a3f-1765-037a9a9cd03a@amd.com>
- <20200107222813.GB16987@linux.intel.com>
- <298352c6-7670-2929-9621-1124775bfaed@amd.com>
- <20200107233102.GC16987@linux.intel.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <c60d15f2-ca10-678c-30aa-5369cf3864c7@amd.com>
-Date:   Tue, 7 Jan 2020 17:51:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20200107233102.GC16987@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN2PR01CA0026.prod.exchangelabs.com (2603:10b6:804:2::36)
- To DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+        Tue, 7 Jan 2020 19:02:39 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9136 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgAHACi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 19:02:38 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e151c090000>; Tue, 07 Jan 2020 16:02:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 16:02:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 Jan 2020 16:02:35 -0800
+Received: from [10.2.175.47] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 00:02:34 +0000
+Subject: Re: [PATCH v6 00/19] Move PMC clocks into Tegra PMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+ <4f52bc6e-3e97-f5fb-ce20-be7b55e688ee@gmail.com>
+ <d0447620-48bb-ab2a-1f5f-f8a62aa736f7@nvidia.com>
+ <1e603a95-fb6b-1b8a-a0c2-9b47666da79a@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <d70a2735-ee51-be91-b930-27fa0d3b5475@nvidia.com>
+Date:   Tue, 7 Jan 2020 16:02:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Received: from [10.236.30.74] (165.204.77.1) by SN2PR01CA0026.prod.exchangelabs.com (2603:10b6:804:2::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Tue, 7 Jan 2020 23:51:53 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0354fead-4dca-4b81-33d3-08d793cc9286
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2617:|DM6PR12MB2617:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2617A621D9AC744432FFB3EFEC3F0@DM6PR12MB2617.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 027578BB13
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39860400002)(376002)(136003)(189003)(199004)(52116002)(2616005)(66946007)(54906003)(316002)(16576012)(66556008)(66476007)(4326008)(8936002)(956004)(6916009)(16526019)(81156014)(31686004)(81166006)(8676002)(2906002)(478600001)(31696002)(86362001)(6486002)(26005)(5660300002)(36756003)(53546011)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2617;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /rdUnbVHFvPHR9IWoIr7F5nstpT7xCBu1YlShjcl8e45rTTFKzt3geoAhmqbPd14hPUzobC8JXtG5UkwTNDVdOJLZL/SwSD/3SiXOAOB9wZIHk7sVuzUpfms9agmO3FZcKRi2X6KIjSJL0Wks/GvacQZ4VgycxuU4HXwWGB7/rnf28ZevQHuNptDAdZfyXR8gRbjOb4l1RPKWaj+nA3rVjIQ6cAptDce2U0SFIZBQvzimgIgSo5vnd96B7go0ECNXeMIODntDAas77xpvff/j7HYAJw2p/xNGggJacQZhlYbkZt0dP0bdIYin5AvJ7T/Dv20oJ5psQ80riSdGSQ9QKI8qZe5U1MFod+JiChzp1W/l+I6lbIxnxHIWOeR34Rrxk3FLtvT9Npjy0oCqvg8yWZr+K/Wg0yHztVbxtFLdhh2UUGt0NZQBjdA30Udo2I/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0354fead-4dca-4b81-33d3-08d793cc9286
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 23:51:53.9353
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GLXijPROjDTjcICvdP9Ua2ZZGDMs5MVAQDvcYFeyi8S/hIUZjIXahy0yoQNwqLPOmesIefdzf/YENUlIhDvx6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2617
+In-Reply-To: <1e603a95-fb6b-1b8a-a0c2-9b47666da79a@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578441738; bh=a3kYPywr7Ja6bjEMsdkRdmbdRNkWoBL9z8a1eJt7xHA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=U8GuJADL1MvsclqrG+AvDjWCmvrdJb9Vzo8mgmqQvY61LxhwWZQ/2YyIfQNNVFqyv
+         exCyAXrfDlgUPfscuEVK2VwU2irFgps5jiE5o8B897B1isZwjl2DJRn6EIzGdA1Rcn
+         H/684TiyMoxNgJiwR/V4BPtXwrYCCettRlWoaKk9PRPi+Q93TQUmnzeO3CV3wt0X/X
+         USM7fceCB2/vkT50qhzh6iFUHIODU2KAeptyFn6MIfY1Gn5mV5kCPQcmUPA6Y1aKxz
+         kFokMvHoRqjrr9gWBbdWnZLhLWfdCT4Oyr3GJZemeuaTChEUL8NS9S70HJWeiiCSPc
+         pgmuvak/oA+Ew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 5:31 PM, Sean Christopherson wrote:
-> On Tue, Jan 07, 2020 at 04:54:34PM -0600, Tom Lendacky wrote:
->> On 1/7/20 4:28 PM, Sean Christopherson wrote:
->>> On Tue, Jan 07, 2020 at 02:16:37PM -0600, Tom Lendacky wrote:
->>>> On 1/6/20 5:38 PM, Sean Christopherson wrote:
->>>>> On Mon, Jan 06, 2020 at 05:14:04PM -0600, Tom Lendacky wrote:
->>>>>> On 1/6/20 4:49 PM, Sean Christopherson wrote:
->>>>>>> This doesn't handle the case where x86_phys_bits _isn't_ reduced by SME/SEV
->>>>>>> on a future processor, i.e. x86_phys_bits==52.
->>>>>>
->>>>>> Not sure I follow. If MSR_K8_SYSCFG_MEM_ENCRYPT is set then there will
->>>>>> always be a reduction in physical addressing (so I'm told).
->>>>>
->>>>> Hmm, I'm going off APM Vol 2, which states, or at least strongly implies,
->>>>> that reducing the PA space is optional.  Section 7.10.2 is especially
->>>>> clear on this:
->>>>>
->>>>>   In implementations where the physical address size of the processor is
->>>>>   reduced when memory encryption features are enabled, software must
->>>>>   ensure it is executing from addresses where these upper physical address
->>>>>   bits are 0 prior to setting SYSCFG[MemEncryptionModEn].
->>>>
->>>> It's probably not likely, but given what is stated, I can modify my patch
->>>> to check for a x86_phys_bits == 52 and skip the call to set the mask, eg:
->>>>
->>>> 	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT &&
->>>> 	    boot_cpu_data.x86_phys_bits < 52) {
->>>>
->>>>>
->>>>> But, hopefully the other approach I have in mind actually works, as it's
->>>>> significantly less special-case code and would naturally handle either
->>>>> case, i.e. make this a moot point.
->>>>
->>>> I'll hold off on the above and wait for your patch.
+
+On 1/7/20 3:28 PM, Dmitry Osipenko wrote:
+> 08.01.2020 02:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 1/7/20 3:01 PM, Dmitry Osipenko wrote:
+>>> Hello Sowjanya,
 >>>
->>> Sorry for the delay, this is a bigger mess than originally thought.  Or
->>> I'm completely misunderstanding the issue, which is also a distinct
->>> possibility :-)
+>>> 07.01.2020 07:13, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch series moves Tegra PMC clocks from clock driver to pmc driv=
+er
+>>>> along with the device trees changes and audio driver which uses one of
+>>>> the pmc clock for audio mclk.
+>>>>
+>>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>>>> are currently registered by Tegra clock driver using clk_regiser_mux a=
+nd
+>>>> clk_register_gate which performs direct Tegra PMC register access.
+>>>>
+>>>> When Tegra PMC is in secure mode, any access from non-secure world wil=
+l
+>>>> not go through.
+>>>>
+>>>> This patch series adds these Tegra PMC clocks and blink controls to
+>>>> Tegra
+>>>> PMC driver with PMC as clock provider and removes them from Tegra cloc=
+k
+>>>> driver.
+>>>>
+>>>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru
+>>>> Tegra210
+>>>> and clock driver does inital parent configuration for it and enables
+>>>> them.
+>>>> But this clock should be taken care by audio driver as there is no nee=
+d
+>>>> to have this clock pre enabled.
+>>>>
+>>>> So, this series also includes patch that updates ASoC driver to take
+>>>> care of parent configuration for mclk if device tree don't specify
+>>>> initial parent configuration using assigned-clock-parents and controls
+>>>> audio mclk enable/disable during ASoC machine startup and shutdown.
+>>>>
+>>>> DTs are also updated to use clk_out_1 as audio mclk rather than extern=
+1.
+>>>>
+>>>> This series also includes a patch for mclk fallback to extern1 when
+>>>> retrieving mclk fails to have this backward compatible of new DT with
+>>>> old kernels.
+>>>>
+>>>> [v6]:=C2=A0=C2=A0=C2=A0 Changes between v5 and v6 are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- v5 feedback
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Added ASoC machine startup and shutdown cal=
+lbacks to control audio
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mclk enable/disable and removed defaul=
+t mclk enable from clock
+>>>> driver.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Updated tegra_asoc_utils_set_rate to disabl=
+e mclk only during PLLA
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rate change and removed disabling PLLA=
+ as its already taken
+>>>> care by
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pll clock driver.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Removed tegra_asoc_utils_set_rate call from=
+ utils_init as set_rate
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is set during machine hw_params and du=
+ring utils_init mclk is
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 already in disabled state and this cau=
+ses warning during mclk
+>>>> disable
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in utils_set_rate.
+>>>>
+>>>> [v5]:=C2=A0=C2=A0=C2=A0 Changes between v4 and v5 are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- v4 feedback
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- updated dt-binding pmc YAML schema with mor=
+e description on power
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate nodes and pad configuration state=
+ nodes.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- update tegra_asoc_utils_set_rate to disable=
+ audio mclk only if
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 its in enable state.
+>>>>
+>>>> [v4]:=C2=A0=C2=A0=C2=A0 Changes between v3 and v4 are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- v3 Feedback
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Updated clocks clk_m_div2 and clk_m_div4 as=
+ osc_div2 and osc_div4.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Tegra don't have clk_m_div2, clk_m_div=
+4 and they should actually
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 be osc_div2 and osc_div4 clocks from o=
+sc pads.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Fixed PMC clock parents to use osc, osc_div=
+2, osc_div4.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Register each PMC clock as single clock rat=
+her than separate
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mux and gate clocks.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Update ASoC utils to use resource managed A=
+PIs rather than
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 using clk_get and clk_put.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Updated device tree and ASoC driver to use =
+clk_out_1 instead of
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_out_1_mux as PMC clocks are regist=
+ered as single clock.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Update clock driver init_table to not enabl=
+e audio related clocks
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 as ASoC utils will do audio clock enab=
+les.
+>>>>
+>>>> [v3]:=C2=A0=C2=A0=C2=A0 Changes between v2 and v3 are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Removes set parent of clk_out_1_mux to exte=
+rn1 and enabling
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 extern1 from the clock driver.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Doesn't enable clk_out_1 and blink by defau=
+lt in pmc driver
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Updates ASoC driver to take care of audio m=
+clk parent
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 configuration incase if device tree do=
+n't specify assigned
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock parent properties and enables mc=
+lk using both clk_out_1
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and extern1.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- updates all device trees using extern1 as m=
+clk in sound node
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to use clk_out_1 from pmc.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- patch for YAML format pmc dt-binding
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Includes v2 feedback
+>>>>
+>>>> [v2]:=C2=A0=C2=A0=C2=A0 Changes between v1 and v2 are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- v2 includes patches for adding clk_out_1, c=
+lk_out_2, clk_out_3,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 blink controls to Tegra PMC driver and=
+ removing clk-tegra-pmc.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- feedback related to pmc clocks in Tegra PMC=
+ driver from v1
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Removed patches for WB0 PLLM overrides and =
+PLLE IDDQ PMC
+>>>> programming
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 by the clock driver using helper funct=
+ions from Tegra PMC.
+>>>>
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Note:
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 To use helper functions from PMC drive=
+r, PMC early init need to
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 happen prior to using helper functions=
+ and these helper
+>>>> functions are
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for PLLM Override and PLLE IDDQ progra=
+mming in PMC during
+>>>> PLLM/PLLE
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock registration which happen in clo=
+ck_init prior to Tegra PMC
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 probe.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Moving PLLM/PLLE clocks registration t=
+o happen after Tegra PMC
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 impacts other clocks EMC, MC and corre=
+sponding tegra_emc_init and
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_mc_init.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This implementation of configuring PMC=
+ registers thru helper
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 functions in clock driver needs proper=
+ changes across PMC, Clock,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EMC and MC inits to have it work acros=
+s all Tegra platforms.
+>>>>
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Currently PLLM Override is not enabled=
+ in the bootloader so proper
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 patches for this fix will be taken car=
+e separately.
+>>>>
+>>>> [v1]:=C2=A0=C2=A0=C2=A0 v1 includes patches for below fixes.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- adding clk_out_1, clk_out_2, clk_out_3, bli=
+nk controls to Tegra
+>>>> PMC
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 driver and removing clk-tegra-pmc.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- updated clock provider from tegra_car to pm=
+c in the device tree
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210-smaug.dts that uses clk_out_2=
+.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0- Added helper functions in PMC driver for WB=
+0 PLLM overrides and
+>>>> PLLE
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IDDQ programming to use by clock drive=
+r and updated clock
+>>>> driver to
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 use these helper functions and removed=
+ direct PMC access from
+>>>> clock
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 driver and all pmc base address refere=
+nces in clock driver.
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> Sowjanya Komatineni (19):
+>>>>  =C2=A0=C2=A0 dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV c=
+locks
+>>>>  =C2=A0=C2=A0 clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
+>>>>  =C2=A0=C2=A0 clk: tegra: Fix Tegra PMC clock out parents
+>>>>  =C2=A0=C2=A0 dt-bindings: tegra: Convert Tegra PMC bindings to YAML
+>>>>  =C2=A0=C2=A0 dt-bindings: soc: tegra-pmc: Add Tegra PMC clock binding=
+s
+>>>>  =C2=A0=C2=A0 soc: tegra: Add Tegra PMC clocks registration into PMC d=
+river
+>>>>  =C2=A0=C2=A0 dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz =
+blink clock
+>>>>  =C2=A0=C2=A0 soc: tegra: Add support for 32KHz blink clock
+>>>>  =C2=A0=C2=A0 clk: tegra: Remove tegra_pmc_clk_init along with clk ids
+>>>>  =C2=A0=C2=A0 dt-bindings: clock: tegra: Remove pmc clock ids from clo=
+ck
+>>>> dt-bindings
+>>>>  =C2=A0=C2=A0 ASoC: tegra: Use device managed resource APIs to get the=
+ clock
+>>>>  =C2=A0=C2=A0 ASoC: tegra: Add audio mclk configuration
+>>>>  =C2=A0=C2=A0 ASoC: tegra: Add fallback implementation for audio mclk
+>>>>  =C2=A0=C2=A0 clk: tegra: Remove audio related clock enables from init=
+_table
+>>>>  =C2=A0=C2=A0 ARM: dts: tegra: Add clock-cells property to pmc
+>>>>  =C2=A0=C2=A0 arm64: tegra: Add clock-cells property to Tegra PMC node
+>>>>  =C2=A0=C2=A0 ARM: tegra: Update sound node clocks in device tree
+>>>>  =C2=A0=C2=A0 arm64: tegra: smaug: Change clk_out_2 provider to pmc
+>>>>  =C2=A0=C2=A0 ASoC: nau8825: change Tegra clk_out_2 provider from tegr=
+a_car to pmc
+>>>>
+>>>>  =C2=A0 .../bindings/arm/tegra/nvidia,tegra20-pmc.txt=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 300
+>>>> -----------------
+>>>>  =C2=A0 .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 354
+>>>> +++++++++++++++++++++
+>>>>  =C2=A0 .../devicetree/bindings/sound/nau8825.txt=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra114-dalmore.dts=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra114.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124-apalis.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124-jetson-tk1.dts=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124-nyan.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124-venice2.dts=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra124.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra20.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30-apalis.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30-beaver.dts=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30-cardhu.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30-colibri.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 arch/arm/boot/dts/tegra30.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+>>>>  =C2=A0 arch/arm64/boot/dts/nvidia/tegra132.dtsi=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+>>>>  =C2=A0 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+>>>>  =C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +-
+>>>>  =C2=A0 drivers/clk/tegra/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 -
+>>>>  =C2=A0 drivers/clk/tegra/clk-id.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 11 +-
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra-fixed.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 32 =
++-
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra-pmc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 122 -------
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra114.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 41 +--
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra124.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 46 +--
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra20.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0=C2=A0 9 +-
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra210.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 30 +-
+>>>>  =C2=A0 drivers/clk/tegra/clk-tegra30.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 31 +-
+>>>>  =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 -
+>>>>  =C2=A0 drivers/soc/tegra/pmc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 352
+>>>> ++++++++++++++++++++
+>>>>  =C2=A0 include/dt-bindings/clock/tegra114-car.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +-
+>>>>  =C2=A0 include/dt-bindings/clock/tegra124-car-common.h=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 18 +-
+>>>>  =C2=A0 include/dt-bindings/clock/tegra20-car.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+>>>>  =C2=A0 include/dt-bindings/clock/tegra210-car.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +-
+>>>>  =C2=A0 include/dt-bindings/clock/tegra30-car.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +-
+>>>>  =C2=A0 include/dt-bindings/soc/tegra-pmc.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 16 =
++
+>>>>  =C2=A0 sound/soc/tegra/tegra_alc5632.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 28 +-
+>>>>  =C2=A0 sound/soc/tegra/tegra_asoc_utils.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 125=
+ ++++----
+>>>>  =C2=A0 sound/soc/tegra/tegra_asoc_utils.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0=C2=A0 3 +-
+>>>>  =C2=A0 sound/soc/tegra/tegra_max98090.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 43 ++-
+>>>>  =C2=A0 sound/soc/tegra/tegra_rt5640.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 43 ++-
+>>>>  =C2=A0 sound/soc/tegra/tegra_rt5677.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 28 +-
+>>>>  =C2=A0 sound/soc/tegra/tegra_sgtl5000.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 28 +-
+>>>>  =C2=A0 sound/soc/tegra/tegra_wm8753.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 43 ++-
+>>>>  =C2=A0 sound/soc/tegra/tegra_wm8903.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 43 ++-
+>>>>  =C2=A0 sound/soc/tegra/tegra_wm9712.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+>>>>  =C2=A0 sound/soc/tegra/trimslice.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 39 ++-
+>>>>  =C2=A0 49 files changed, 1192 insertions(+), 777 deletions(-)
+>>>>  =C2=A0 delete mode 100644
+>>>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>>>>  =C2=A0 create mode 100644
+>>>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
+>>>>  =C2=A0 delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
+>>>>  =C2=A0 create mode 100644 include/dt-bindings/soc/tegra-pmc.h
+>>>>
+>>> I briefly looked through the patches and tested them in all possible
+>>> configurations. For now everything looks and works well.
 >>>
->>> Due to KVM activating its L1TF mitigation irrespective of whether the CPU
->>> is whitelisted as not being vulnerable to L1TF, simply using 86_phys_bits
->>> to avoid colliding with the C-bit isn't sufficient as the L1TF mitigation
->>> uses those first five reserved PA bits to store the MMIO GFN.  Setting
->>> BIT(x86_phys_bits) for all MMIO sptes would cause it to be interpreted as
->>> a GFN bit when the L1TF mitigation is active and lead to bogus MMIO.
->>
->> The L1TF mitigation only gets applied when:
->>   boot_cpu_data.x86_cache_bits < 52 - shadow_nonpresent_or_rsvd_mask_len
->>
->>   and with shadow_nonpresent_or_rsvd_mask_len = 5, that means that means
->>   boot_cpu_data.x86_cache_bits < 47.
->>
->> On AMD processors that support memory encryption, the x86_cache_bits value
->> is not adjusted, just the x86_phys_bits. So for AMD processors that have
->> memory encryption support, this value will be at least 48 and therefore
->> not activate the L1TF mitigation.
-> 
-> Ah.  Hrm.  I'd prefer to clean that code up to make the interactions more
-> explicit, but may be we can separate that out.
-> 
->>> The only sane approach I can think of is to activate the L1TF mitigation
->>> based on whether the CPU is vulnerable to L1TF, as opposed to activating> the mitigation purely based on the max PA of the CPU.  Since all CPUs that
->>> support SME/SEV are whitelisted as NO_L1TF, the L1TF mitigation and C-bit
->>> should never be active at the same time.
->>
->> There is still the issue of setting a single bit that can conflict with
->> the C-bit. As it is today, if the C-bit were to be defined as bit 51, then
->> KVM would not take a nested page fault and MMIO would be broken.
-> 
-> Wouldn't Paolo's patch to use the raw "cpuid_eax(0x80000008) & 0xff" for
-> shadow_phys_bits fix that particular collision by causing
-> kvm_set_mmio_spte_mask() to clear the present bit?  Or am I misundertanding
-> how the PA reduction interacts with the C-Bit?
-> 
-> AIUI, using phys_bits=48, then the standard scenario is Cbit=47 and some
-> additional bits 46:M are reserved.  Applying that logic to phys_bits=52,
-> then Cbit=51 and bits 50:M are reserved, so there's a collision but it's
+>>> You could add this to all patches:
+>>>
+>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Thanks Dmitry
+> Actually, it will be more accurate if you will add my t-b only to the
+> T20/30 patches. I only looked through the T114+ patches without testing
+> them, thanks.
 
-There's no requirement that the C-bit correspond to phys_bits. So, for
-example, you can have C-bit=51 and phys_bits=48 and so 47:M are reserved.
+Most of patches has changes to t20 through t210.
 
-Thanks,
-Tom
+Just to be clear, do you meant to add Tested-by to patches 6, 8, 11, 12,=20
+13 and Reviewed-by tag to all patches?
 
-> mostly benign because shadow_phys_bits==52, which triggers this:
-> 
-> 	if (IS_ENABLED(CONFIG_X86_64) && shadow_phys_bits == 52)
-> 		mask &= ~1ull;
-> 
-> In other words, Paolo's patch fixes the fatal bug, but unnecessarily
-> disables optimized MMIO page faults.  To remedy that, your idea is to rely
-> on the (undocumented?) behavior that there are always additional reserved
-> bits between Cbit and the reduced x86_phys_bits.
-> 
