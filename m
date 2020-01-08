@@ -2,78 +2,107 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1A2C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA42C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA8C20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4016820705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7bDlf64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgAHJ5S (ORCPT
+        id S1727428AbgAHJ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:57:18 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42965 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727533AbgAHJ5P (ORCPT
+        Wed, 8 Jan 2020 04:58:26 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43455 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726199AbgAHJ60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:57:15 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip85L-0003Ip-1U; Wed, 08 Jan 2020 10:57:07 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip85K-000676-2l; Wed, 08 Jan 2020 10:57:06 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, linux@roeck-us.net,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Date:   Wed,  8 Jan 2020 10:57:02 +0100
-Message-Id: <20200108095704.23233-2-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200108095704.23233-1-m.felsch@pengutronix.de>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+        Wed, 8 Jan 2020 04:58:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578477504;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9sycsqZJGVnQw+EqUeY+kh0XYMo8ue/f6Kld1hcvxz8=;
+        b=d7bDlf641fthW2KYfWr2bq1BONQGNJNoc9gJ3j6jAMT2VZEhUzvXlkfHwvB1Y3CjGxKBzw
+        lc51ch227gYJeOf6iT+/oxuYUL0XXbLr+LSg5coWHRZmiJCQS4i5vDZbUN4HjJuWdaM8G7
+        8p1nQ+9lejzQWrq6ALvJ0Vq3qed7CnY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-Hy-c3osQPSqa5RsUENJZtg-1; Wed, 08 Jan 2020 04:58:23 -0500
+X-MC-Unique: Hy-c3osQPSqa5RsUENJZtg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15834800D54;
+        Wed,  8 Jan 2020 09:58:22 +0000 (UTC)
+Received: from [10.43.2.30] (unknown [10.43.2.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D59E5C241;
+        Wed,  8 Jan 2020 09:58:17 +0000 (UTC)
+Subject: Re: discuss about pvpanic
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        zhenwei pi <pizhenwei@bytedance.com>
+Cc:     "yelu@bytedance.com" <yelu@bytedance.com>,
+        Greg KH <gregkh@linuxfoundation.org>, qemu-devel@nongnu.org,
+        linux-kernel@vger.kernel.org,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>
+References: <2feff896-21fe-2bbe-6f68-9edfb476a110@bytedance.com>
+ <dd8e46c4-eac4-046a-82ec-7ae17df75035@redhat.com>
+From:   Michal Privoznik <mprivozn@redhat.com>
+Message-ID: <d0c57f84-a25c-9984-560b-2419807444e1@redhat.com>
+Date:   Wed, 8 Jan 2020 10:58:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <dd8e46c4-eac4-046a-82ec-7ae17df75035@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The watchdog driver compatible is "dlg,da9062-watchdog" and not
-"dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-fwnode. As result the watchdog driver can't parse the devicetree.
+On 1/8/20 10:36 AM, Paolo Bonzini wrote:
+> On 08/01/20 09:25, zhenwei pi wrote:
+>> Hey, Paolo
+>>
+>> Currently, pvpapic only supports bit 0(PVPANIC_PANICKED).
+>> We usually expect that guest writes ioport (typical 0x505) in panic_notifier_list callback
+>> during handling panic, then we can handle pvpapic event PVPANIC_PANICKED in QEMU.
+>>
+>> On the other hand, guest wants to handle the crash by kdump-tools, and reboots without any
+>> panic_notifier_list callback. So QEMU only knows that guest has rebooted (because guest
+>> write 0xcf9 ioport for RCR request), but QEMU can't identify why guest resets.
+>>
+>> In production environment, we hit about 100+ guest reboot event everyday, sadly we
+>> can't separate the abnormal reboot from normal operation.
+>>
+>> We want to add a new bit for pvpanic event(maybe PVPANIC_CRASHLOADED) to represent the guest has crashed,
+>> and the panic is handled by the guest kernel. (here is the previous patch https://lkml.org/lkml/2019/12/14/265)
+>>
+>> What do you think about this solution? Or do you have any other suggestions?
+> 
+> Hi Zhenwei,
+> 
+> the kernel-side patch certainly makes sense.  I assume that you want the
+> event to propagate up from QEMU to Libvirt and so on?  The QEMU patch
+> would need to declare a new event (qapi/misc.json) and send it in
+> handle_event (hw/misc/pvpanic.c).  For Libvirt I'm not familiar, so I'm
+> adding the respective list.
 
-Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/mfd/da9062-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Adding an event is fairly easy, if everything you want libvirt to do is 
+report the event to upper layers. I volunteer to do it. Question is, how 
+qemu is going to report this, whether some attributes to GUEST_PANICKED 
+event or some new event. But more important is to merge the change into 
+kernel.
 
-diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-index e69626867c26..9143de7b77b8 100644
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] = {
- 		.name		= "da9062-watchdog",
- 		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
- 		.resources	= da9062_wdt_resources,
--		.of_compatible  = "dlg,da9062-wdt",
-+		.of_compatible  = "dlg,da9062-watchdog",
- 	},
- 	{
- 		.name		= "da9062-thermal",
--- 
-2.20.1
+Michal
 
