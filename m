@@ -2,112 +2,237 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F01EC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4485C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A012067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GO+udYkI"
+	by mail.kernel.org (Postfix) with ESMTP id A046420720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578490343;
+	bh=VcONW9GbuCF27LwlMLUJpVLQ8pUaOf/yKfcR06idb6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f2LR+idn4k4JKD8ALb8eExAvTjZRQG3ECAWlXsXBfaUreMQvN9QW2BmR+Njrl9W50
+	 +IMgbs080dq46dzy+BtKyVJq6xdPO3SmhWspbJP5BDaXBy0Cut85uQEeQKWSFS+W0b
+	 LiwRIzkfC8mcP7rFhYm7L+KFEBozvt7bwwFRT9Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgAHN1K (ORCPT
+        id S1728033AbgAHNcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:27:10 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58546 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726401AbgAHN1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:27:08 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008DNhH1005860;
-        Wed, 8 Jan 2020 14:26:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=NL+VeEb69RBcerxfUh8eo8NOs/tscCAqUJujkcbwU3E=;
- b=GO+udYkIlFSENB1IbBDcbqIY8P+cYAIpaKvBWgKv8Xo/hG2FK+w8Afh5ZTBfS3n+doIb
- IswQDpXOgBMeIjQmhIpsqrQfoCmsx9xgarVQPgeZvQZTKXkAgL2+kJFYMwpzUMTxkDY7
- p5wmWbCW6FOOuM/sbS3i5o7NFoS2JhxS9FrOQDjuEadzqZPlWgrRMXAc5y9Obgt2OS17
- 6S7HKAaNqJzfPkZJWasuK3i0S6X4J71LYf01/11spTxJFpW6laqxJ/Hg/oNcK9OIIuQg
- uirXDFqrg57vSRaIlMnQHHtkJumAy9OaP9E4zTZ2n5CqN3q+20BUYyzxScDeWK1pS0uW Gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakm5m37v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 14:26:57 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 959F910002A;
-        Wed,  8 Jan 2020 14:26:51 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 89FAC2B772B;
-        Wed,  8 Jan 2020 14:26:51 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 8 Jan 2020 14:26:51
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
-Date:   Wed, 8 Jan 2020 14:26:47 +0100
-Message-ID: <20200108132647.26131-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200108132647.26131-1-benjamin.gaignard@st.com>
-References: <20200108132647.26131-1-benjamin.gaignard@st.com>
+        Wed, 8 Jan 2020 08:32:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgAHNcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:32:22 -0500
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41CB12075D;
+        Wed,  8 Jan 2020 13:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578490341;
+        bh=VcONW9GbuCF27LwlMLUJpVLQ8pUaOf/yKfcR06idb6s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cMUCzkHH8l69mwaD/nGw6sTeAPM/t7+SZ0DWD9HEhadZWciK8PWrPMnOBJ/YG07rM
+         4Qi5s3ehGDQ5g0pmvTff+LLB7gzxmnWMfgl2/HAFc0Fu8EZCjWDb0IT+PY0ISi1PUl
+         dH7Be++a9SXd9KyBbptOcqVjAmZuu/9QpsYKVtns=
+Received: by mail-qk1-f172.google.com with SMTP id x129so2564556qke.8;
+        Wed, 08 Jan 2020 05:32:21 -0800 (PST)
+X-Gm-Message-State: APjAAAVlvECZlEMHStffgvcUr3u2FcPXXyANvnINck2O5eFcT9emw5Qf
+        MwHUVnYjJ4lQq4YGTKx/2SfgcaFZSXzODPwZUA==
+X-Google-Smtp-Source: APXvYqz/X1U8NMj3Iv076A9wnrKOXCNBeZWJV5pvd1/KUv6bNiJ2ND6vyZmndtFtfAcLrrZTlGQcEo1+jY2bafbAvCs=
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr4263840qke.393.1578490340276;
+ Wed, 08 Jan 2020 05:32:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_03:2020-01-08,2020-01-08 signatures=0
+References: <1578302992-5723-1-git-send-email-Anson.Huang@nxp.com>
+ <20200106221246.GA17055@bogus> <DB3PR0402MB39161890A510346EBA8EF881F53F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39161890A510346EBA8EF881F53F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 8 Jan 2020 07:32:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLn8F2aoYgnTpd+k0JEbpC_Aq-AVpj=niM4w591qjRhfg@mail.gmail.com>
+Message-ID: <CAL_JsqLn8F2aoYgnTpd+k0JEbpC_Aq-AVpj=niM4w591qjRhfg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a fixed regulator and use it as power supply for DSI panel.
+On Tue, Jan 7, 2020 at 12:01 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Rob
+>
+> > Subject: Re: [PATCH V3 1/3] dt-bindings: imx: Add pinctrl binding doc for
+> > i.MX8MP
+> >
+> > On Mon, Jan 06, 2020 at 05:29:50PM +0800, Anson Huang wrote:
+> > > Add binding doc for i.MX8MP pinctrl driver.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> > > ---
+> > > Changes since V2:
+> > >     - use DT schema instead of txt for binding doc.
+> > > ---
+> > >  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |  65 ++
+> > >  arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h     | 931
+> > +++++++++++++++++++++
+> > >  2 files changed, 996 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+> > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+> > > b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+> > > new file mode 100644
+> > > index 0000000..cdb6c21
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yam
+> > > +++ l
+> > > @@ -0,0 +1,65 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-or-later %YAML 1.2
+> > > +---
+> > > +$id:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > > +cetree.org%2Fschemas%2Fpinctrl%2Ffsl%2Cimx8mp-
+> > pinctrl.yaml%23&amp;dat
+> > >
+> > +a=02%7C01%7Canson.huang%40nxp.com%7Cfacd4426e6e54bc5416b08d79
+> > 2f59319%
+> > >
+> > +7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63713945576195750
+> > 5&amp;s
+> > >
+> > +data=0O3w1U6vs9xVq6B%2BhyT4Nz5HdKuk6XDymPUg7wQy0lM%3D&amp;
+> > reserved=0
+> > > +$schema:
+> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > > +cetree.org%2Fmeta-
+> > schemas%2Fcore.yaml%23&amp;data=02%7C01%7Canson.hua
+> > >
+> > +ng%40nxp.com%7Cfacd4426e6e54bc5416b08d792f59319%7C686ea1d3bc2b
+> > 4c6fa92
+> > >
+> > +cd99c5c301635%7C0%7C0%7C637139455761957505&amp;sdata=XUN%2BG
+> > zMOqpVNRj
+> > > +UM1CO6CXPOMT72DtdefLs%2Bs%2BGPaGI%3D&amp;reserved=0
+> > > +
+> > > +title: Freescale IMX8MP IOMUX Controller
+> > > +
+> > > +maintainers:
+> > > +  - Anson Huang <Anson.Huang@nxp.com>
+> > > +
+> > > +description:
+> > > +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in
+> > > +this directory
+> > > +  for common binding part and usage.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: fsl,imx8mp-iomuxc
+> > > +
+> > > +# Client device subnode's properties
+> > > +patternProperties:
+> > > +  '-grp$':
+> > > +    type: object
+> > > +    description:
+> > > +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> > > +      Client device subnodes use below standard properties.
+> > > +
+> > > +    properties:
+> > > +      fsl,pins:
+> > > +        $ref: /schemas/types.yaml#/definitions/string
+> >
+> > string or...
+> >
+> > > +        description:
+> > > +          each entry consists of 6 integers and represents the mux
+> > > + and config
+> >
+> > integers?
+>
+> I think it should be uint32-array
+>
+> >
+> > > +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+> > > +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which
+> > can
+> > > +          be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>.
+> > The last
+> > > +          integer CONFIG is the pad setting value like pull-up on this pin.
+> > Please
+> > > +          refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
+> > > +
+> > > +    required:
+> > > +      - fsl,pins
+> > > +
+> > > +    additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  # Pinmux controller node
+> > > +  - |
+> > > +    iomuxc: pinctrl@30330000 {
+> > > +        compatible = "fsl,imx8mp-iomuxc";
+> > > +        reg = <0x30330000 0x10000>;
+> > > +
+> > > +        pinctrl_uart2: uart2grp {
+> > > +            fsl,pins = <
+> > > +                MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX       0x49
+> > > +                MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX       0x49
+> >
+> > Run 'make dt_binding_check'. Doesn't build:
+> >
+> > Error: Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-
+> > pinctrl.example.dts:23.21-22 syntax error FATAL ERROR: Unable to parse
+> > input tree
+>
+> I fix it by NOT using Macro Definition as below, but still have some build error which looks like
+> my environment issue, please help review V4, thanks.
+>
+>              fsl,pins = <
+>                  0x228 0x488 0x5F0 0x0 0x6       0x49
+>                  0x228 0x488 0x000 0x0 0x0       0x49
+>              >;
+>
+>
+>   CHKDT   Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   DTC     Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.example.dt.yaml
+> FATAL ERROR: Unknown output format "yaml"
 
-Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
+You need dtc built with yaml enabled. Make sure you have libyaml,
+libyaml-dev and pkg-config.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index f3ce477b7bae..4801565e19d7 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -76,6 +76,13 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	vdd_dsi: vdd-dsi {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_dsi";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	soc {
- 		dma-ranges = <0xc0000000 0x0 0x10000000>;
- 	};
-@@ -155,6 +162,7 @@
- 		compatible = "orisetech,otm8009a";
- 		reg = <0>; /* dsi virtual channel (0..3) */
- 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
-+		power-supply = <&vdd_dsi>;
- 		status = "okay";
- 
- 		port {
--- 
-2.15.0
-
+Rob
