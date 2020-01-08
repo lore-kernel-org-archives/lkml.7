@@ -2,225 +2,111 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E862C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF9EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCAF20838
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE202070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u+Pu69gI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mwJJ5uC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgAHFdL (ORCPT
+        id S1726556AbgAHFem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:33:11 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47308 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgAHFdL (ORCPT
+        Wed, 8 Jan 2020 00:34:42 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44314 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgAHFem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:33:11 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0085WxXx099545;
-        Tue, 7 Jan 2020 23:32:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578461579;
-        bh=keL4LWQIupCJg61mpAvGVJuErN5R0nhMOq3fzzLzC4o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=u+Pu69gIiJ/hwHWNHI8SeHHO4V5yf0FMv088Qty0DiZSjYNMpsRctPy97zPPOfWj+
-         mUrnvS5OJUA3r/5RfIqlX7118w+Pia5L97WwCxypojX27DFKWdnefVfFIpBdNKCHaa
-         gMDjwq1b7UOA6SP9u9jl96tf31a6L477cS2dTTbE=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0085WxKt000705
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 23:32:59 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 23:32:59 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 23:32:59 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0085Wtx9127819;
-        Tue, 7 Jan 2020 23:32:56 -0600
-Subject: Re: [PATCH v2 01/14] dt-bindings: PCI: cadence: Add PCIe RC/EP DT
- schema for Cadence PCIe
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200106102058.19183-1-kishon@ti.com>
- <20200106102058.19183-2-kishon@ti.com> <20200108034314.GA5412@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <3e2bfa1b-ff9e-93a0-a6b9-7985e0a76bf0@ti.com>
-Date:   Wed, 8 Jan 2020 11:05:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 8 Jan 2020 00:34:42 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0085TZAE073063;
+        Wed, 8 Jan 2020 05:34:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=Y0nRxvFnlwm/w8fldZ84iPvdgUL+DTApQsSuDHD8AsM=;
+ b=mwJJ5uC2acnj6s3YSsWWpSCE0E/pwqD7nT7W7vlTBTU4bbJy4sQT5jxgAiQBiAy5HRF8
+ h16OlD44RutT0UJEc9TkA5MRY+Nc8kQWGBFZBgnSDbF8u3AdzSuvdtS3cD4pDQOhbsh1
+ yU/YcKhFaERv5vsEROy3/058cY7dtqxzsCa8tBqmSARM9C2t8hvsgoiykhNTkI9Ab0d9
+ h9hVDYffOdmIvotqBQqNz6S4vax8RQA1X49q0B/RWpc2XQ2sn+SLW1EQ9JudMEnlnbQt
+ eaWcu3ATtTsaOIirb9z5r6LfhoZnZ8p44lwCZfBxR7xMOI5K1GK51TmMzyvGMLWGbnr/ nw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xajnq1mud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 05:34:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0085YA2c014405;
+        Wed, 8 Jan 2020 05:34:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xcjvesuxb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 05:34:31 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0085YTN6010818;
+        Wed, 8 Jan 2020 05:34:29 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Jan 2020 21:34:29 -0800
+Date:   Wed, 8 Jan 2020 08:34:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Andy Gross <agross@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] power: avs: qcom-cpr: Fix error code in
+ cpr_fuse_corner_init()
+Message-ID: <20200108053418.tjc62uppube6q4q3@kili.mountain>
 MIME-Version: 1.0
-In-Reply-To: <20200108034314.GA5412@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001080048
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9493 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001080048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+We're returning the wrong variable.  "ret" isn't initialized.
 
-On 08/01/20 9:13 AM, Rob Herring wrote:
-> On Mon, Jan 06, 2020 at 03:50:45PM +0530, Kishon Vijay Abraham I wrote:
->> Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
->> PCIe core library. Platforms using Cadence PCIe core can include the
->> schemas added here in the platform specific schemas.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 20 ++++++++++++
->>  .../bindings/pci/cdns-pcie-host.yaml          | 30 +++++++++++++++++
->>  .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 +++++++++++++++++++
->>  3 files changed, 82 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> 
-> Need to remove the old files.
-> 
-> Note that I posted a conversion of Cadence host[1]. Yours goes further, 
-> but please compare and add anything mine has that yours doesn't.
-> 
-> [1] https://lore.kernel.org/linux-pci/20191231193903.15929-2-robh@kernel.org/
+Fixes: bf6910abf548 ("power: avs: Add support for CPR (Core Power Reduction)")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/power/avs/qcom-cpr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure, I'll look at this.
+diff --git a/drivers/power/avs/qcom-cpr.c b/drivers/power/avs/qcom-cpr.c
+index 9247f53550b3..0321729431a5 100644
+--- a/drivers/power/avs/qcom-cpr.c
++++ b/drivers/power/avs/qcom-cpr.c
+@@ -922,7 +922,7 @@ static int cpr_fuse_corner_init(struct cpr_drv *drv)
+ 		uV = cpr_read_fuse_uV(desc, fdata, fuses->init_voltage,
+ 				      step_volt, drv);
+ 		if (uV < 0)
+-			return ret;
++			return uV;
+ 
+ 		fuse->min_uV = fdata->min_uV;
+ 		fuse->max_uV = fdata->max_uV;
+-- 
+2.11.0
 
-Recently we converted Cadence driver to a library since the same Cadence
-core can be used by multiple vendors. Here I'm trying to add the
-bindings for Cadence core which can be included in the platform specific
-schema.
-
-So the existing cdns,cdns-pcie-host.yaml which is a Cadence platform
-using Cadence core should include cdns-pcie-host.yaml.
-
-"[PATCH v2 10/14] dt-bindings: PCI: Add host mode dt-bindings for TI's
-J721E SoC" in this series includes "cdns-pcie-host.yaml" for TI platform
-using Cadence core.
-
-That's why in the schema added here you don't see the compatible since
-that will be added in platform specific schema.
-> 
->>
->> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->> new file mode 100644
->> index 000000000000..36aaae5931c3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->> @@ -0,0 +1,20 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +--
->> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence PCIe Endpoint
->> +
->> +maintainers:
->> +  - Tom Joseph <tjoseph@cadence.com>
->> +
->> +allOf:
->> +  - $ref: "cdns-pcie.yaml#"
->> +
->> +properties:
->> +  max-functions:
->> +    description: Maximum number of functions that can be configured (default 1)
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint8
->> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->> new file mode 100644
->> index 000000000000..78261bc4f0c5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->> @@ -0,0 +1,30 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence PCIe Host
->> +
->> +maintainers:
->> +  - Tom Joseph <tjoseph@cadence.com>
->> +
->> +allOf:
->> +  - $ref: "/schemas/pci/pci-bus.yaml#"
->> +  - $ref: "cdns-pcie.yaml#"
->> +
->> +properties:
->> +  vendor-id:
->> +    description: The PCI vendor ID (16 bits, default is design dependent)
->> +
->> +  device-id:
->> +    description: The PCI device ID (16 bits, default is design dependent)
-> 
-> While these got defined here as 16-bits, these should be fixed to 32-bit 
-> because they are established properties for a long time.
-> 
->> +
->> +  cdns,no-bar-match-nbits:
->> +    description: Set into the no BAR match register to configure the number
->> +      of least significant bits kept during inbound (PCIe -> AXI) address
->> +      translations (default 32)
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> What about compatible?
-> 
->> +
->> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
->> new file mode 100644
->> index 000000000000..497d3dc2e6f2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
->> @@ -0,0 +1,32 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence PCIe Core
->> +
->> +maintainers:
->> +  - Tom Joseph <tjoseph@cadence.com>
->> +
->> +properties:
->> +  max-link-speed:
->> +    minimum: 1
->> +    maximum: 3
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 2
-> 
-> Needs a type.
-> 
-> The Cadence IP can't support x4, x8, or x16?
-
-I'll fix this. I assume these can be overwritten in platform specific
-schema files?
-
-Thanks
-Kishon
