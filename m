@@ -2,155 +2,164 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60ADC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC698C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5216206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0519206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Moxa.onmicrosoft.com header.i=@Moxa.onmicrosoft.com header.b="D6ieEGkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgAHHNu (ORCPT
+        id S1726742AbgAHHPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:13:50 -0500
-Received: from mail.parknet.co.jp ([210.171.160.6]:47184 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgAHHNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:13:50 -0500
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 07A9A129664;
-        Wed,  8 Jan 2020 16:13:49 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 0087Dlir011620
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Wed, 8 Jan 2020 16:13:48 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 0087Dlmq047299
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Wed, 8 Jan 2020 16:13:47 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 0087DeXR047296;
-        Wed, 8 Jan 2020 16:13:40 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, linux-cifs@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Sterba <dsterba@suse.com>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Jan Kara <jack@suse.com>, Eric Sandeen <sandeen@redhat.com>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: Unification of filesystem encoding options
-References: <20200102211855.gg62r7jshp742d6i@pali>
-        <20200107133233.GC25547@quack2.suse.cz>
-        <20200107173842.ciskn4ahuhiklycm@pali> <20200107200301.GE3619@mit.edu>
-        <20200107203732.ab4jnfgsjobtt5xa@pali>
-Date:   Wed, 08 Jan 2020 16:13:40 +0900
-In-Reply-To: <20200107203732.ab4jnfgsjobtt5xa@pali> ("Pali
- =?iso-8859-1?Q?Roh=E1r=22's?= message of
-        "Tue, 7 Jan 2020 21:37:32 +0100")
-Message-ID: <87tv56ifob.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 8 Jan 2020 02:15:55 -0500
+Received: from mail-eopbgr1300059.outbound.protection.outlook.com ([40.107.130.59]:37152
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725944AbgAHHPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 02:15:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R7/t1YLWd1KoQ6Qm3hg7nBj72w5eyghmuIAW5a9oeC9xUWB/v/C2Wgu7/5aL2yaWMb40umqnqfnXrieCR9fT1rm1Hb4r7b/uWrGEOGzeh6yO+eRYa0+8geGZAl9hdfrGnHg8n28YL78sBLq83Tq1zNtPHaJrVEIxGVLYBfL7iHgOSfLFprBx8aMr/Ry9fo+/YOs94xwQX1fI+eNV7R+oHZGEC90LeX5Wju1RKXr4u3Sk+fTjT6K6NE4oe7l602wTJZTBB2NJWG5zzAJVY17tbZuI56ZA/1hHcHD3mchgNEkFSf4jrSpWVA3PRj+tOPX8vvETZMihBvm6K3268ZIcIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JHNXtWTMrmFzpTp1CSsClQKuNIjKBlsj0XVonTfrhhI=;
+ b=UvKQxEfe3kn3bgnL1QdNtELkbTg25I+gwNP9x61HUjMbhqdXdAZbtIZysNDe+n906bzBrcBRkBWRpK0CbyCQhJIPTL2sfX53zhy1eb9JA+tveVrpWP/gnu6oOMth2miGjpQ0hNgln/Jq7Ihx5l/8gFV2k8Sx6p2MIaOjmv/n5EgHBYsrozMTMFnupFIVoW4PPiyvImSGpLoF3nlkXGsLpSkuGbnhD9U1qrqNLkShtvD1AHZWb9Hj12AZ8oDBgkIWRs+qUJKoS1eboVYa22IigPS2Djm7ZuhjIUF9fBbX8XlQfDChjqN/o3Qu6Tcfcl7cfk3FzxOek/KPNA+DGG0Qvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Moxa.onmicrosoft.com;
+ s=selector2-Moxa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JHNXtWTMrmFzpTp1CSsClQKuNIjKBlsj0XVonTfrhhI=;
+ b=D6ieEGkwD2/8RYtUZX7QM2oSFiWT9Gd4Ipxr/SwkSm0FcQpiE/g4em3Dn3DDdBGlMQu73v775qMXtp/fU6rQOd4AocRaHJpbYquZUE+VjrieyLoj7GP0TFS+AldjU2mS10iNBQCUGGiqBuVhf03nJGDAmP1kN7OQc9O5miFoVnk=
+Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com (52.132.237.22) by
+ HK0PR01MB3490.apcprd01.prod.exchangelabs.com (10.255.253.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Wed, 8 Jan 2020 07:15:49 +0000
+Received: from HK0PR01MB3521.apcprd01.prod.exchangelabs.com
+ ([fe80::3433:35cd:2be4:d042]) by HK0PR01MB3521.apcprd01.prod.exchangelabs.com
+ ([fe80::3433:35cd:2be4:d042%6]) with mapi id 15.20.2602.016; Wed, 8 Jan 2020
+ 07:15:49 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zero19850401@gmail.com" <zero19850401@gmail.com>
+Subject: RE: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
+Thread-Topic: [PATCH] gianfar: Solve ethernet TX/RX problems for ls1021a
+Thread-Index: AdXFRAcg+ooT8TPrTsG92JEuKMTbqwALfpoAACBDpFA=
+Date:   Wed, 8 Jan 2020 07:15:49 +0000
+Message-ID: <HK0PR01MB35219F5DF16CE54D088ACE2CFA3E0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+References: <HK0PR01MB3521C806FE109E04FA72858CFA3F0@HK0PR01MB3521.apcprd01.prod.exchangelabs.com>
+ <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com>
+In-Reply-To: <CA+h21hpERd-yko+X9G-D9eFwu3LVq625qDUYvNGtEA8Ere_vYw@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=JohnsonCH.Chen@moxa.com; 
+x-originating-ip: [122.146.92.136]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 274c2fed-c2f8-4360-5046-08d7940a96db
+x-ms-traffictypediagnostic: HK0PR01MB3490:
+x-microsoft-antispam-prvs: <HK0PR01MB34902C8485102CA4007B7CEBFA3E0@HK0PR01MB3490.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39850400004)(366004)(136003)(189003)(199004)(85182001)(6916009)(4326008)(316002)(33656002)(478600001)(186003)(8936002)(966005)(81156014)(86362001)(54906003)(81166006)(2906002)(55016002)(66476007)(7696005)(5660300002)(66946007)(66446008)(76116006)(64756008)(71200400001)(26005)(8676002)(6506007)(52536014)(9686003)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR01MB3490;H:HK0PR01MB3521.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: moxa.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nIfHQdvFB2KP7pZ9uSnIUBGIlCEU5WvXB0DEvhKlT67POeZKLc13iUNhH2HwWQ1KIKPRk9UmpCIcpvXZzkeTxj8o9j2xzBP3b+0mePrmTNG2cppfW3pY1bZwGkYz2BglpKU/FfhrkMXUTYXHkCfWF+utBHMJHnA75rRjVbSbrs9zKZX5qPqM458koQ6I1zcl0Goko170yDJjfBCTZ/UHApF8jXTf21kNDI+LOomrlCXeoVj/KXSTacgguftc5wYdkJ8QPG/37GBzyBrse7X3lXpi8QqHoEqBZZALGT872DezUQUgzypleDekmVuvZLLF+lvbjXC/I6d7FCue6olT2Qir7TKyhSJXP3xiWgswOGVjN9h85fNaWz109Q/j6QaZeCM0IcDOC/T6Xn/bJZzx0TeFnrUxBhpa1U5IZ9Ld9qFHdsbnABuAWjvOYOCXxkeGKTQFDr3nP6Y2fDWSzvIbJCnw7Yd4oM9bTJxxm0GXH64Ws5t8f++rkq+5TS6MtyyzmrFWvequsB0J8ezQV7h34w==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 274c2fed-c2f8-4360-5046-08d7940a96db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 07:15:49.6154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: swOmOjtnmhRAOgbe5mRQiYJ6kL9Anpb8G0s0/0gOna/KzD0N5Ebo51fOoJhNKIpRLUhQPdEEC7q3YG3+1Jk13w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR01MB3490
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali.rohar@gmail.com> writes:
-
-> On Tuesday 07 January 2020 15:03:01 Theodore Y. Ts'o wrote:
->> On Tue, Jan 07, 2020 at 06:38:42PM +0100, Pali Rohár wrote:
->
->> In contrast the fs/unicode functions
->> have support for full Unicode case folding and normalization, and
->> currently has the latest Unicode 12.1 tables (released May 2019).
->
-> That is great!
->
-> But for example even this is not enough for exfat. exfat has stored
-> upcase table directly in on-disk FS, so ensure that every implementation
-> of exfat driver would have same rules how to convert character (code
-> point) to upper case or lower case (case folding). Upcase table is
-> stored to FS itself when formatting. And in MS decided that for exfat
-> would not be used any Unicode normalization. So this whole fs/unicode
-> code is not usable for exfat.
->
->> What I'd suggest is to create a new API, enhancing the functions in
->> fs/unicode, to support those file systems that need to deal with
->> UTF-16 and UTF-32 for their on-disk directory format, and that we
->> assume that for the most part, userspace *will* be using a UTF-8
->> encoding for the user<->kernel interface.
->
-> I do not see a use-case for such a new API. Kernel has already API
-> functions:
->
->     int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
->     int utf32_to_utf8(unicode_t u, u8 *s, int maxlen);
->     int utf8s_to_utf16s(const u8 *s, int len, enum utf16_endian endian, wchar_t *pwcs, int maxlen);
->     int utf16s_to_utf8s(const wchar_t *pwcs, int len, enum utf16_endian endian, u8 *s, int maxlen);
->
-> which are basically enough for all mentioned filesystems. Maybe in for
-> some cases would be useful function utf16 to utf32 (and vice-versa), but
-> that is all. fs/unicode does not bring a new value or simplification.
->
-> Mentioned filesystems are in most cases either case-sensitive (UDF),
-> having own case-folding (exfat), using own special normalization
-> incompatible with anything (hfsplus) or do not enforce any normalization
-> (cifs, vfat, ntfs, isofs+joliet). So result is that simple UTF-8 to
-> UTF-16LE/BE conversion function is enough and then filesystem module
-> implements own specific rules (special upcase table, incompatible
-> normalization).
->
-> And I do not thing that it make sense to extending fs/unicode for every
-> one stupid functionality which those filesystems have and needs to
-> handle. I see this as a unique filesystem specific code.
->
->> We can keep the existing
->> NLS interface and mount options for legacy support, but in my opinion
->> it's not worth the effort to try to do anything else.
->
-> NLS interface is crucial part of VFAT. Reason is that in VFAT can be
-> filenames stored either as UTF-16LE or as 8bit in some CP encoding.
-> Linux kernel stores new non-7-bit-ASCII filenames as UTF-16LE, but it
-> has to able to read 8-bit filenames which were not stored as UTF-16LE,
-> but rather as 8bit in CP encoding. And therefore mount option codepage=
-> which specify it is required needs to be implemented. It says how
-> vfat.ko should handle on-disk structure, not which encoding is exported
-> to userspace (those are two different things).
->
-> And current vfat implementation uses NLS API for it. Via CONFIG_* is
-> specified default codepage= mount option (CP473 or what it is -- if you
-> do not specify one explicitly at mount time). And because FAT is
-> required part of UEFI, Linux kernel would have to support this stuff
-> forever (or at least until it support UEFI). I think this cannot be
-> marked as "legacy". It is pity, but truth.
-
-FWIW, what I imagined and but never try to implement in past is, iconv
-(or such if you know better api). To support complete codepages, IIRC,
-it has difference by OSes (e.g. mac, old windows, current windows,
-unicode standard).
-
-So the table is loaded from userspace like firmware data. (several codes
-in kernel for special conversion cases are required though, table may be
-able to share with glibc)
-
-But this would be big work.
-
-Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+SGkgVmxhZGltaXIsDQoNClZsYWRpbWlyIE9sdGVhbiA8b2x0ZWFudkBnbWFpbC5jb20+IOaWvCAy
+MDIw5bm0MeaciDfml6Ug6YCx5LqMIOS4i+WNiDExOjQ55a+r6YGT77yaDQo+DQo+IEhpIENoZW4s
+DQo+DQo+IE9uIFR1ZSwgNyBKYW4gMjAyMCBhdCAxMjozNywgSm9obnNvbiBDSCBDaGVuICjpmbPm
+mK3li7MpDQo+IDxKb2huc29uQ0guQ2hlbkBtb3hhLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBBZGQg
+ZG1hX2VuZGlhbl9sZSB0byBzb2x2ZSBldGhlcm5ldCBUWC9SWCBwcm9ibGVtcyBmb3IgZnJlZXNj
+YWxlIA0KPiA+IGxzMTAyMWEuIFdpdGhvdXQgdGhpcywgaXQgd2lsbCByZXN1bHQgaW4gcngtYnVz
+eS1lcnJvcnMgYnkgZXRodG9vbCwgYW5kIHRyYW5zbWl0IHF1ZXVlIHRpbWVvdXQgaW4gbHMxMDIx
+YSdzIHBsYXRmb3Jtcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvaG5zb24gQ2hlbiA8am9o
+bnNvbmNoLmNoZW5AbW94YS5jb20+DQo+ID4gLS0tDQo+DQo+IFRoaXMgcGF0Y2ggaXMgbm90IHZh
+bGlkLiBUaGUgZW5kaWFubmVzcyBjb25maWd1cmF0aW9uIGluIA0KPiBlVFNFQ3hfRE1BQ1RSTCBp
+cyByZXNlcnZlZCBhbmQgbm90IGFwcGxpY2FibGUuDQo+IFdoYXQgaXMgdGhlIHZhbHVlIG9mIFND
+RkdfRVRTRUNETUFNQ1IgYml0cyBFVFNFQ19CRCBhbmQgRVRTRUNfRlJfREFUQSANCj4gb24geW91
+ciBib2FyZD8gVHlwaWNhbGx5IHRoaXMgaXMgY29uZmlndXJlZCBieSB0aGUgYm9vdGxvYWRlci4N
+Cj4NCg0KVGhhbmtzIHlvdXIgc3VnZ2VzdGlvbi4gSSB1c2UgbGludXgtZnNsLXNkay12MS43LCBh
+bmQgZmluZCAiZG1hLWVuZGlhbi1sZSIgaXMgdXNlZCBpbiBsczEwMjFhLmR0c2kgYW5kIGdpYW5m
+YXIuYy8uaC4gRm9yIGJvb3Rsb2FkZXIsIHZlcnNpb24gaXMgVS1Cb290IHZlcnNpb24gaXMgMjAx
+NS4wMS1kaXJ0eSBhbmQgaXQgc2VlbXMgb2xkIGFuZCBub3QgaW5jbHVkZXMgIlNDRkdfRVRTRUNE
+TUFNQ1IgYml0cyIuDQoNCkl0IHNlZW1zIHNvbHV0aW9uIGlzIGluY2x1ZGVkIGluIGJvb3Rsb2Fk
+ZXIsIG5vdCBpbiBkZXZpY2UgdHJlZSBmb3INCmZyZWVzY2FsZS9OWFA6IGh0dHBzOi8vbHhyLm1p
+c3NpbmdsaW5rZWxlY3Ryb25pY3MuY29tL3Vib290L2JvYXJkL2ZyZWVzY2FsZS9sczEwMjFhaW90
+L2xzMTAyMWFpb3QuYw0KDQpJdCBtZWFucyBib290bG9hZGVyIHByb3ZpZGVzIGZ1bmN0aW9ucyBh
+cmUgdGhlIHNhbWUgYXMgZGV2aWNlIHRyZWUncy4NClNvIHdoYXQncyBiZW5lZml0IGZvciB0aGlz
+IGRlc2dpbj8gSXQgc2VlbXMgd2UgbmVlZCB0byB1cGdyYWRlIGtlcm5lbCBhbmQgYm9vdGxvYWRl
+ciB0byBzYXRpc2Z5IG91ciBuZWVkLCBub3QganVzdCB1cGdyYWRlIGtlcm5lbCBvbmx5LiBTbyBt
+YW55IHRoYW5rcyENCg0KPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZh
+ci5jIHwgMyArKysgIA0KPiA+IGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFy
+LmggfCA0ICsrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZhci5j
+IA0KPiA+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2dpYW5mYXIuYw0KPiA+IGlu
+ZGV4IDcyODY4YTI4YjYyMS4uYWI0ZTQ1MTk5ZGY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+bmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFyLmMNCj4gPiArKysgYi9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZhci5jDQo+ID4gQEAgLTgzMyw2ICs4MzMsNyBAQCBzdGF0
+aWMgaW50IGdmYXJfb2ZfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlIA0KPiA+ICpvZmRldiwg
+c3RydWN0IG5ldF9kZXZpY2UgKipwZGV2KQ0KPiA+DQo+ID4gICAgICAgICAvKiBGaW5kIHRoZSBU
+QkkgUEhZLiAgSWYgaXQncyBub3QgdGhlcmUsIHdlIGRvbid0IHN1cHBvcnQgU0dNSUkgKi8NCj4g
+PiAgICAgICAgIHByaXYtPnRiaV9ub2RlID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgInRiaS1oYW5k
+bGUiLCAwKTsNCj4gPiArICAgICAgIHByaXYtPmRtYV9lbmRpYW5fbGUgPSBvZl9wcm9wZXJ0eV9y
+ZWFkX2Jvb2wobnAsIA0KPiA+ICsgImZzbCxkbWEtZW5kaWFuLWxlIik7DQo+ID4NCj4gPiAgICAg
+ICAgIHJldHVybiAwOw0KPiA+DQo+ID4gQEAgLTEyMDksNiArMTIxMCw4IEBAIHN0YXRpYyB2b2lk
+IGdmYXJfc3RhcnQoc3RydWN0IGdmYXJfcHJpdmF0ZSAqcHJpdikNCj4gPiAgICAgICAgIC8qIElu
+aXRpYWxpemUgRE1BQ1RSTCB0byBoYXZlIFdXUiBhbmQgV09QICovDQo+ID4gICAgICAgICB0ZW1w
+dmFsID0gZ2Zhcl9yZWFkKCZyZWdzLT5kbWFjdHJsKTsNCj4gPiAgICAgICAgIHRlbXB2YWwgfD0g
+RE1BQ1RSTF9JTklUX1NFVFRJTkdTOw0KPiA+ICsgICAgICAgaWYgKHByaXYtPmRtYV9lbmRpYW5f
+bGUpDQo+ID4gKyAgICAgICAgICAgICAgIHRlbXB2YWwgfD0gRE1BQ1RSTF9MRTsNCj4gPiAgICAg
+ICAgIGdmYXJfd3JpdGUoJnJlZ3MtPmRtYWN0cmwsIHRlbXB2YWwpOw0KPiA+DQo+ID4gICAgICAg
+ICAvKiBNYWtlIHN1cmUgd2UgYXJlbid0IHN0b3BwZWQgKi8gZGlmZiAtLWdpdCANCj4gPiBhL2Ry
+aXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFyLmggDQo+ID4gYi9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9mcmVlc2NhbGUvZ2lhbmZhci5oDQo+ID4gaW5kZXggNDMyYzZhODE4YWU1Li5h
+YWUwN2RiNTIwNmIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNj
+YWxlL2dpYW5mYXIuaA0KPiA+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9n
+aWFuZmFyLmgNCj4gPiBAQCAtMjE1LDYgKzIxNSw3IEBAIGV4dGVybiBjb25zdCBjaGFyIGdmYXJf
+ZHJpdmVyX3ZlcnNpb25bXTsNCj4gPiAgI2RlZmluZSBETUFDVFJMX0lOSVRfU0VUVElOR1MgICAw
+eDAwMDAwMGMzDQo+ID4gICNkZWZpbmUgRE1BQ1RSTF9HUlMgICAgICAgICAgICAgMHgwMDAwMDAx
+MA0KPiA+ICAjZGVmaW5lIERNQUNUUkxfR1RTICAgICAgICAgICAgIDB4MDAwMDAwMDgNCj4gPiAr
+I2RlZmluZSBETUFDVFJMX0xFICAgICAgICAgICAgIDB4MDAwMDgwMDANCj4gPg0KPiA+ICAjZGVm
+aW5lIFRTVEFUX0NMRUFSX1RIQUxUX0FMTCAgMHhGRjAwMDAwMA0KPiA+ICAjZGVmaW5lIFRTVEFU
+X0NMRUFSX1RIQUxUICAgICAgMHg4MDAwMDAwMA0KPiA+IEBAIC0xMTQwLDYgKzExNDEsOSBAQCBz
+dHJ1Y3QgZ2Zhcl9wcml2YXRlIHsNCj4gPiAgICAgICAgICAgICAgICAgdHhfcGF1c2VfZW46MSwN
+Cj4gPiAgICAgICAgICAgICAgICAgcnhfcGF1c2VfZW46MTsNCj4gPg0KPiA+ICsgICAgICAgLyog
+bGl0dGxlIGVuZGlhbiBkbWEgYnVmZmVyIGFuZCBkZXNjcmlwdG9yIGhvc3QgaW50ZXJmYWNlICov
+DQo+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgZG1hX2VuZGlhbl9sZTsNCj4gPiArDQo+ID4gICAg
+ICAgICAvKiBUaGUgdG90YWwgdHggYW5kIHJ4IHJpbmcgc2l6ZSBmb3IgdGhlIGVuYWJsZWQgcXVl
+dWVzICovDQo+ID4gICAgICAgICB1bnNpZ25lZCBpbnQgdG90YWxfdHhfcmluZ19zaXplOw0KPiA+
+ICAgICAgICAgdW5zaWduZWQgaW50IHRvdGFsX3J4X3Jpbmdfc2l6ZTsNCj4gPiAtLQ0KPiA+IDIu
+MTEuMA0KPiA+DQo+ID4gQmVzdCByZWdhcmRzLA0KPiA+IEpvaG5zb24NCj4NCj4gUmVnYXJkcywN
+Cj4gLVZsYWRpbWlyDQoNCkJlc3QgcmVnYXJkcywNCkpvaG5zb24NCg==
