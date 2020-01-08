@@ -2,111 +2,63 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A9BC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB19DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DFB20720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578499161;
-	bh=gMOy+Oltt/GxXPEnlhPKTvJlLxac0h9AFCskhilHGS8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=I9XLN8hLIt96dw9Olu3FooHEsuUHRJft/SLP4b/4/thWUc3CqI7GiuNMJlr21A1Dh
-	 T7JZJ1KuEMd24+F8iRZuOiY5hZLTbhYSHhTCOryRPK4enKifvvoqmS3462MkCellPF
-	 +qYseRZMzeJTtFtg4CKnrnl2jOc689p5ntX5FIro=
+	by mail.kernel.org (Postfix) with ESMTP id 97A852467D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgAHP7U (ORCPT
+        id S1729307AbgAHP7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:59:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:46734 "EHLO foss.arm.com"
+        Wed, 8 Jan 2020 10:59:24 -0500
+Received: from mga11.intel.com ([192.55.52.93]:64327 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729270AbgAHP7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:59:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B10731B;
-        Wed,  8 Jan 2020 07:59:17 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA70A3F534;
-        Wed,  8 Jan 2020 07:59:16 -0800 (PST)
-Date:   Wed, 08 Jan 2020 15:59:15 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Chris Brandt <chris.brandt@renesas.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>
-Subject: Applied "spi: rspi: Use dev_warn_once() instead of open-coding" to the spi tree
-In-Reply-To: <20200102133822.29346-4-geert+renesas@glider.be>
-Message-Id: <applied-20200102133822.29346-4-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
+        id S1729289AbgAHP7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:59:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:59:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="395782691"
+Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
+  by orsmga005.jf.intel.com with ESMTP; 08 Jan 2020 07:59:19 -0800
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        xiaochen.shen@intel.com
+Subject: [PATCH 0/4] Fix use-after-free and deadlock issues
+Date:   Thu,  9 Jan 2020 00:28:02 +0800
+Message-Id: <1578500886-21771-1-git-send-email-xiaochen.shen@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Fix several use-after-free and deadlock issues:
+(1) Fix use-after-free when deleting resource groups.
+(2) Fix use-after-free due to inaccurate refcount of rdtgroup.
+(3) Fix a deadlock due to inaccurate active reference of kernfs node.
+(4) Follow-up cleanup for the change in previous patch.
 
-   spi: rspi: Use dev_warn_once() instead of open-coding
+Xiaochen Shen (4):
+  x86/resctrl: Fix use-after-free when deleting resource groups
+  x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
+  x86/resctrl: Fix a deadlock due to inaccurate active reference of
+    kernfs node
+  x86/resctrl: Clean up unused function parameter in mkdir path
 
-has been applied to the spi tree at
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 48 ++++++++++++++++++----------------
+ 1 file changed, 25 insertions(+), 23 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1bec84ddd85ae7a2b1df5fef3a5c7e5c44cbe36e Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 2 Jan 2020 14:38:19 +0100
-Subject: [PATCH] spi: rspi: Use dev_warn_once() instead of open-coding
-
-Use the helper introduced by commit e135303bd5bebcd2 ("device: Add
-dev_<level>_once variants") instead of open-coding the same operation.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200102133822.29346-4-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-rspi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 74a12f4dee84..e54a25f848ea 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -620,9 +620,8 @@ static int rspi_dma_transfer(struct rspi_data *rspi, struct sg_table *tx,
- 		dmaengine_terminate_all(rspi->ctlr->dma_rx);
- no_dma_rx:
- 	if (ret == -EAGAIN) {
--		pr_warn_once("%s %s: DMA not available, falling back to PIO\n",
--			     dev_driver_string(&rspi->ctlr->dev),
--			     dev_name(&rspi->ctlr->dev));
-+		dev_warn_once(&rspi->ctlr->dev,
-+			      "DMA not available, falling back to PIO\n");
- 	}
- 	return ret;
- }
 -- 
-2.20.1
+1.8.3.1
 
