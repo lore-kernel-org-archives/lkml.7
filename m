@@ -2,146 +2,242 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F067C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B4C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0505E20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1542082E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JZIPctlb";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="l2u7BomT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ho2bOVVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgAHH5a (ORCPT
+        id S1726990AbgAHH6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:57:30 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:53288 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgAHH53 (ORCPT
+        Wed, 8 Jan 2020 02:58:04 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48712 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726346AbgAHH6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:57:29 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 8 Jan 2020 02:58:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578470282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp:autocrypt:autocrypt;
+        bh=3dmWQU4K3AqhLAU0j1T/evADH+vQEyjC60UvFGd/1KI=;
+        b=ho2bOVVGnVH9uBS93BWTTus5ZabvwYPDXV96V9ULpCahshbxC3Y91rGy2a0ahfu/BHWmxf
+        hRLRVKqw4IpbZsf1ya/NbeQyXK6xY9HIwvhekCyJJOwtDIx5zC2uSlRyJ5+d6NxlGqndiK
+        ivDg8WAKkD6LmvGFOjYGt8vgXypfSDU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-I1C0wdd1NqS3LgNf2H9Tsg-1; Wed, 08 Jan 2020 02:58:01 -0500
+X-MC-Unique: I1C0wdd1NqS3LgNf2H9Tsg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 542AAC0094;
-        Wed,  8 Jan 2020 07:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578470248; bh=rdpIj5Q2mFtZNLegJ/FDpcIDbFpk68d55dEhY77CYRM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=JZIPctlb66fWQuKarJu8FruyW+4S8FQguLcZIhhWUfDaYjRjFuFZvyczZfkiH1zSE
-         vZZMb+Ww4+YbTXij3dFqCUiMtEuUTP3dywYu3+VY/S00ZtJ9LJUbGzg7LgYJOt1kSw
-         xRd+ppyInVpsr6zTOrmUSaDJgZ8lREnIxH/vibvYaGMZ+SNRThWNOECc6hOfDGNg9v
-         qxMW0+zo2CD62rXSmXPOEwbciSxdM3pWIvR9rVaw+XGDVBU3HSobS3wNxlKtUorx4c
-         eBgTJSpZ2QaetSAZafLDpYPGWMBzgCLmCszc3c9t9ZKj8T/eTuKMPLhhPZ7IifDYyS
-         ItKY9/vDX4k+g==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 7EF6BA006A;
-        Wed,  8 Jan 2020 07:57:16 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 7 Jan 2020 23:57:16 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 7 Jan 2020 23:57:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MylaaYMTP+a5nhKjLgtz7R1aFArliv6QzGHXmObDnK+HgOXhCQhIXIAQfPe6eCbN2YjEkqsx7lDFs5jGyddnib323Bgh4AN5HhrG0Wdgh7EHsmHTgheuWmuy6FagEGYMgqy8aqnUvtAHh/SSdBvJcbhg8ZQSAahy3DPVOo/m84d++hJIJWJXKJkU/VZoHwG5nAXxu1+2QE5C4MLJiCqA9be/cfxHQNbFAsKYacZCnN3BN+e+BsNUQoY76tGBXBTUekgELXSjYu6b2JubFqSu72O46yrmjlCkYwen/0KV5wbbmgnyam556fm5LOUlyFj7NlWHZEtff+dNv39r/LwnMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIDMBg8T2OMnD/g6/Yf+dezWLytWG+B/8mdWKeSV0q8=;
- b=nk//l+HwIfAix5RqZovyPO8Biwx7g8ynH/eKkZYzYOUyrCR7PIJdymqOg6eon5V5XOS/TGiql32kCpvlwwfqBInXMxqyuvP+giHD/IvfNhS2x5xnbTdVjnKWpGEcILUttRWoVgWu8Pd1ao/4E3g8SULsf4wS8P17/RY85bS1gNHlI148lK2Y/JuLGzOdcotMPMVGmpvSWB3KeGDzWgEapYDAtsEDNXShbZqGTNsYx+fZFTSIJ9vKoWk5Z1nBcBUsKxQvgExCUtH+Zg5UFF6APmChcLR5pkpalKPi4OR4gjPWZpUUB7N0HiXR8C8m2lQilQd7PT4GDeDc5AyTkM3rzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIDMBg8T2OMnD/g6/Yf+dezWLytWG+B/8mdWKeSV0q8=;
- b=l2u7BomT9rHK28TjeIzbg4XcEjU4rR/32PckXAFkId+aUk6sIHzlZe8AOCkBzXEaTewOk6B5/e6XbEloc99b0IvSUikO/6hDvn+6mmVl6lxbyEBzfZ0a7hGDfiIYVTbJAbZogxQW1AkC+fiu6bPv/CcpxWinfs8FWGLesF+KRnE=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB2866.namprd12.prod.outlook.com (20.179.66.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 8 Jan 2020 07:57:14 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
- 07:57:14 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "weifeng.voon@intel.com" <weifeng.voon@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] net: stmmac: remove useless code of phy_mask
-Thread-Topic: [PATCH v2 0/2] net: stmmac: remove useless code of phy_mask
-Thread-Index: AQHVxfUGgqwdWhtbcEaMF7LHLdtnx6fgZjWA
-Date:   Wed, 8 Jan 2020 07:57:14 +0000
-Message-ID: <BN8PR12MB326627D0E1F17AE7515B78E4D33E0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <20200108072550.28613-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200108072550.28613-1-zhengdejin5@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f546a490-8c27-4d16-47bb-08d794105fec
-x-ms-traffictypediagnostic: BN8PR12MB2866:
-x-microsoft-antispam-prvs: <BN8PR12MB2866F218CE08712B56B2C9C0D33E0@BN8PR12MB2866.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1388;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(39860400002)(136003)(189003)(199004)(2906002)(316002)(110136005)(54906003)(55016002)(9686003)(81156014)(33656002)(81166006)(8936002)(7416002)(8676002)(71200400001)(76116006)(558084003)(478600001)(66556008)(66446008)(7696005)(64756008)(66476007)(86362001)(26005)(52536014)(5660300002)(4326008)(186003)(6506007)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2866;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LSScbBxyL3s4+nLoLBKcxxQsftu2GCb6KORsekJBNoq2r3r7wxU9lQesh+aMlJ4ERxIEaHQ+BiYb+dCG0vz6RJuzrM6ocBTi9lBOdGwD/O8Rhvsv69iPTy4HGvPaiKWqYhtyh8Y9U7YC+7RWZyS6RrRV5Ezs/VMi1P2nXoPHRpfYe4vBRYDYKuNWnWhCodvCEW/VKY32iAJloS9DvxRYcT2kLAgn0tABXtxgctMkqGYO8AAz28hdNlttYJQeQTzpqm1XjSH5aRccejQhvTO8RfQGUOZodr6+alI9lB8y8musFmtiH4gQrWApJ7epAHFc5+np5xXzsE6I4KxCpTV7vcplLvlFM3JtzoWbDXm/L1pNMsigKjkSKGYt8eG/XOg6dn7ZAutTiJUADzQqv3pscvW4g8UqrBAGC9EHMPMhkUplo87f45bsqXM81uhp9P+mV8BJRzUb3Viz8DSygyjbZv0tZHftXFzPBdBSUtzfEEYHbWpEMU27WYJ4pVSEA+l2
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E814107ACC5;
+        Wed,  8 Jan 2020 07:57:58 +0000 (UTC)
+Received: from [10.40.204.26] (ovpn-204-26.brq.redhat.com [10.40.204.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CC22E5C241;
+        Wed,  8 Jan 2020 07:57:35 +0000 (UTC)
+Subject: Re: [PATCH v16 0/9] mm / virtio: Provide support for free page
+ reporting
+To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com, osalvador@suse.de
+References: <20200103210509.29237.18426.stgit@localhost.localdomain>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
+ z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
+ uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
+ n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
+ jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
+ lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
+ C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
+ RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
+ DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
+ BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
+ YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
+ CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
+ SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
+ 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
+ EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
+ MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
+ r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
+ ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
+ NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
+ ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
+ Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
+ pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
+ Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
+ KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
+ XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
+ dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
+ tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
+ 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
+ 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
+ KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
+ UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
+ BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
+ 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
+ d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
+ vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
+ FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
+ x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
+ SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
+ 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
+ HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
+ NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <aebf72d6-3383-fcc5-7cea-efb930e4e245@redhat.com>
+Date:   Wed, 8 Jan 2020 02:57:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f546a490-8c27-4d16-47bb-08d794105fec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 07:57:14.3423
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NynmEP2QEd1CN6tyWpka2b0xiaMHE7k+yS5frUVK2JxzwGSqX83PRHP3T7bF4zNptNYlE+N9kBqp4j8pZipksw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2866
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20200103210509.29237.18426.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
-Date: Jan/08/2020, 07:25:48 (UTC+00:00)
 
-> Changes since v1:
-> 	1, add a new commit for remove the useless member phy_mask.
+On 1/3/20 4:16 PM, Alexander Duyck wrote:
+> This series provides an asynchronous means of reporting free guest page=
+s
+> to a hypervisor so that the memory associated with those pages can be
+> dropped and reused by other processes and/or guests on the host. Using
+> this it is possible to avoid unnecessary I/O to disk and greatly improv=
+e
+> performance in the case of memory overcommit on the host.
+>
+> When enabled we will be performing a scan of free memory every 2 second=
+s
+> while pages of sufficiently high order are being freed. In each pass at=
 
-No, this is not useless. It's an API for developers that need only=20
-certain PHYs to be detected. Please do not remove this.
+> least one sixteenth of each free list will be reported. By doing this w=
+e
+> avoid racing against other threads that may be causing a high amount of=
 
----
-Thanks,
-Jose Miguel Abreu
+> memory churn.
+>
+> The lowest page order currently scanned when reporting pages is
+> pageblock_order so that this feature will not interfere with the use of=
+
+> Transparent Huge Pages in the case of virtualization.
+>
+> Currently this is only in use by virtio-balloon however there is the ho=
+pe
+> that at some point in the future other hypervisors might be able to mak=
+e
+> use of it. In the virtio-balloon/QEMU implementation the hypervisor is
+> currently using MADV_DONTNEED to indicate to the host kernel that the p=
+age
+> is currently free. It will be zeroed and faulted back into the guest th=
+e
+> next time the page is accessed.
+>
+> To track if a page is reported or not the Uptodate flag was repurposed =
+and
+> used as a Reported flag for Buddy pages. We walk though the free list
+> isolating pages and adding them to the scatterlist until we either
+> encounter the end of the list, processed as many pages as were listed i=
+n
+> nr_free prior to us starting, or have filled the scatterlist with pages=
+ to
+> be reported. If we fill the scatterlist before we reach the end of the
+> list we rotate the list so that the first unreported page we encounter =
+is
+> moved to the head of the list as that is where we will resume after we
+> have freed the reported pages back into the tail of the list.
+>
+> Below are the results from various benchmarks. I primarily focused on t=
+wo
+> tests. The first is the will-it-scale/page_fault2 test, and the other i=
+s
+> a modified version of will-it-scale/page_fault1 that was enabled to use=
+
+> THP. I did this as it allows for better visibility into different parts=
+
+> of the memory subsystem. The guest is running with 32G for RAM on one
+> node of a E5-2630 v3. The host has had some features such as CPU turbo
+> disabled in the BIOS.
+>
+> Test                   page_fault1 (THP)    page_fault2
+> Name            tasks  Process Iter  STDEV  Process Iter  STDEV
+> Baseline            1    1012402.50  0.14%     361855.25  0.81%
+>                    16    8827457.25  0.09%    3282347.00  0.34%
+>
+> Patches Applied     1    1007897.00  0.23%     361887.00  0.26%
+>                    16    8784741.75  0.39%    3240669.25  0.48%
+>
+> Patches Enabled     1    1010227.50  0.39%     359749.25  0.56%
+>                    16    8756219.00  0.24%    3226608.75  0.97%
+>
+> Patches Enabled     1    1050982.00  4.26%     357966.25  0.14%
+>  page shuffle      16    8672601.25  0.49%    3223177.75  0.40%
+>
+> Patches Enabled     1    1003238.00  0.22%     360211.00  0.22%
+>  shuffle w/ RFC    16    8767010.50  0.32%    3199874.00  0.71%
+
+Just to be sure that I understand your test setup correctly:
+- You have a 32GB guest with a single node affined to a single node of yo=
+ur host
+(E5-2630).
+- You have THP in both host and the guest enabled and set to 'madvise'.
+- On top of the default x86_64 config and other virtio config options you=
+ have
+CONFIG_SLAB_FREELIST_RANDOM and CONFIG_SHUFFLE_PAGE_ALLOCATOR enabled for=
+ the
+third observation (Patches Enabled page shuffle).
+did I miss anything?
+
+Can you also remind me of the reason you have skipped recording the numbe=
+r of
+threads count reported as part of page_fault tests? Was it because you we=
+re
+observing different values with every fresh boot?
+
+
+> The results above are for a baseline with a linux-next-20191219 kernel,=
+
+> that kernel with this patch set applied but page reporting disabled in
+> virtio-balloon, the patches applied and page reporting fully enabled, t=
+he
+> patches enabled with page shuffling enabled, and the patches applied wi=
+th
+> page shuffling enabled and an RFC patch that makes used of MADV_FREE in=
+
+> QEMU. These results include the deviation seen between the average valu=
+e
+> reported here versus the high and/or low value. I observed that during =
+the
+> test memory usage for the first three tests never dropped whereas with =
+the
+> patches fully enabled the VM would drop to using only a few GB of the
+> host's memory when switching from memhog to page fault tests.
+
+Do you mean that in the later case you run the page fault tests after mem=
+hog?
+If so how much memory do you pass to memhog?
+
+--=20
+Nitesh
+
