@@ -2,215 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493A4C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3803BC33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BF8205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D68E2081E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H333vNfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgAHF4D (ORCPT
+        id S1726313AbgAHF6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:56:03 -0500
-Received: from mga11.intel.com ([192.55.52.93]:20091 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgAHF4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:56:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 21:56:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
-   d="scan'208";a="246243065"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Jan 2020 21:56:02 -0800
-Received: from [10.226.38.20] (unknown [10.226.38.20])
-        by linux.intel.com (Postfix) with ESMTP id 59B1E58033E;
-        Tue,  7 Jan 2020 21:56:00 -0800 (PST)
-Subject: Re: [PATCH v6 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191230074102.50982-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <ac26ecfe-d45c-db70-df8f-91da32c9925a@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <42773e8e-3c5e-c034-a1cb-864ed63b6937@linux.intel.com>
-Date:   Wed, 8 Jan 2020 13:55:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 8 Jan 2020 00:58:21 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40064 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgAHF6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 00:58:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q8so1047556pfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 21:58:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
+        b=H333vNfZtn+CPBYRjGbjwSoCT6UolP+k7JjY/9asLzrEum+Btp3wL1m7q67xG9iGPf
+         XquHXjAFfeRx0GVmDLB1X3jGI7QpLZrAVE1WxWF+1/+XvPmzqdhDqG60iBECVosP1Ip5
+         2inpz0OIyrJMg2sn2YyodCPiRHsixi650TJQvcT6nBIrFOk1uTWvfaoC5kOpAP2Wc4lC
+         0JdKgrBhgH1MlnFTLbFyn0Dg4xmUXSDGN0GJdHEQUw3Ge+TLu6WDjrNoh1WUpHTNjE8w
+         8DQdXrVP6SracHU7feuKSJY2KrzxKgb+LHgS9cxd8vway5DAW42eoQIYfByid70zpkRS
+         96Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
+        b=e5UsSn14JSJ1kYktrRjvsHR1jUjWloATS7Wtrz285wAClYeUpNf9crpO3JirBLvQJj
+         vKEkcyNfWuQUGkEZEUqpcSV6tNOpn6j048gY/VKb1dfh3fQa9n87qyQKp9nyYRbvoDeY
+         S46JNNR4cOck+LQh6w1us/UXlb6sG9eMDt5yktNAadsmHMjtlU7vadN58xyDl/U18SrU
+         YIWwX+BrQCXklxUiBPhFC0GhNTD2yhejFzakn4o76kUWqw5rRWWohfgjS2KTO7VXKa+h
+         +loXXwsbn3zRFhAFs0mKCgLUruef+AgBG3XRiQ7CA5IhT5/bVX0t8CXTCdXP4A9GeFrP
+         thoQ==
+X-Gm-Message-State: APjAAAX3XqnexbhCWbEww3XEoPxf50xAxv7fYdT8Fv28Vv+w/sL8TsHa
+        qnS1h8AwHHgK354RPKvYpB1RRw==
+X-Google-Smtp-Source: APXvYqw5E7G1glzJF9cSgW+HhcYIsPSmF8DMa0JFZyZ0P4dKjH3ejvmGwwAQ4C12DLkT42EFOq/tnw==
+X-Received: by 2002:aa7:824d:: with SMTP id e13mr3266032pfn.247.1578463100112;
+        Tue, 07 Jan 2020 21:58:20 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b12sm1577546pfi.157.2020.01.07.21.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 21:58:19 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: db410c: Update firmware-name for wcnss and mpss
+Date:   Tue,  7 Jan 2020 21:57:35 -0800
+Message-Id: <20200108055735.660475-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <ac26ecfe-d45c-db70-df8f-91da32c9925a@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Enable the mpss remoteproc node and specify the firmware-name for this
+and the wcnss remoteproc on the Dragonboard 410c.
 
-Thank you for the review  comments and your time.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 6 ++++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi     | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-On 8/1/2020 1:25 PM, Vignesh Raghavendra wrote:
-> Hi,
-> [...]
-> On 30/12/19 1:11 pm, Ramuthevar,Vadivel MuruganX wrote:
->> +static int cqspi_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct struct_cqspi *cqspi;
->> +	struct spi_master *master;
->> +	struct reset_control *rstc, *rstc_ocp;
->> +	const struct cqspi_driver_platdata *ddata;
->> +	struct cqspi_platform_data *pdata = NULL;
->> +	struct resource *res = NULL;
->> +	int ret;
->> +
->> +	master = spi_alloc_master(&pdev->dev, sizeof(*cqspi));
->> +	if (!master) {
->> +		dev_err(&pdev->dev, "spi_alloc_master failed\n");
->> +		return -ENOMEM;
->> +	}
->> +	master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL |
->> +				SPI_RX_OCTAL;
->> +	master->setup = cqspi_setup;
->> +	master->mem_ops = &cqspi_mem_ops;
->> +	master->dev.of_node = pdev->dev.of_node;
->> +	cqspi = spi_master_get_devdata(master);
->> +	cqspi->pdev = pdev;
->> +
->> +	pdata = devm_kmalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> devm_kzalloc()?
-Noted, will fix it.
->> +	if (!pdata)
->> +		return -ENOMEM;
->> +
->> +	pdev->dev.platform_data = pdata;
->> +
->> +	/* Obtain QSPI clock. */
->> +	cqspi->clk = devm_clk_get(&pdev->dev, "qspi");
-> clock-name of "qspi" is not mandatory as per DT binding and current DT
-> files don't have clock-names property. This therefore cause probe to
-> fail. This should remain:
->
-> 	cqspi->clk = devm_clk_get(&pdev->dev, "NULL");
-sure , I will add NULL instead of "qspi"
->> +	if (IS_ERR(cqspi->clk)) {
->> +		dev_err(&pdev->dev, "cannot get qspi clk\n");
->> +		return PTR_ERR(cqspi->clk);
->> +	}
->> +	pdata->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->> +
->> +	ret = clk_prepare_enable(cqspi->clk);
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "failed to enable qspi clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Obtain configuration from OF. */
->> +	ret = cqspi_of_get_pdata(pdev);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Get platform data failed.\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	cqspi->res = res;
->> +	/* Obtain and remap controller address. */
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	cqspi->iobase = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(cqspi->iobase)) {
->> +		dev_err(dev, "Cannot remap controller address.\n");
->> +		return PTR_ERR(cqspi->iobase);
->> +	}
->> +
->> +	/* Obtain and remap AHB address. */
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +	cqspi->qspi_ahb_virt = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(cqspi->qspi_ahb_virt)) {
->> +		dev_err(dev, "Cannot remap AHB address.\n");
->> +		return PTR_ERR(cqspi->qspi_ahb_virt);
->> +	}
->> +	cqspi->ahbbase = res;
->> +	cqspi->ahb_size = resource_size(res);
->> +
->> +	/* Obtain QSPI reset control */
->> +	rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
->> +	if (IS_ERR(rstc)) {
->> +		dev_err(dev, "Cannot get QSPI reset.\n");
->> +		return PTR_ERR(rstc);
->> +	}
->> +
->> +	rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
->> +	if (IS_ERR(rstc_ocp)) {
->> +		dev_err(dev, "Cannot get QSPI OCP reset.\n");
->> +		return PTR_ERR(rstc_ocp);
->> +	}
->> +
->> +	reset_control_assert(rstc);
->> +	reset_control_deassert(rstc);
->> +
->> +	reset_control_assert(rstc_ocp);
->> +	reset_control_deassert(rstc_ocp);
->> +
->> +	ddata  = of_device_get_match_data(dev);
->> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
->> +		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
->> +						   pdata->master_ref_clk_hz);
->> +
->> +	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
->> +		cqspi->use_dac_mode = false;
->> +
->> +	init_completion(&cqspi->transfer_complete);
->> +
->> +	/* Obtain IRQ line. */
->> +	cqspi->irq = platform_get_irq(pdev, 0);
->> +	if (cqspi->irq < 0) {
->> +		dev_err(dev, "platform_get_irq failed.\n");
->> +		ret = -ENXIO;
->> +	}
->> +	ret = devm_request_irq(dev, cqspi->irq, cqspi_irq_handler, 0,
->> +			       pdev->name, cqspi);
->> +	if (ret) {
->> +		dev_err(dev, "request_irq failed.\n");
->> +		goto out_clk_disable;
->> +	}
->> +
->> +	master->bus_num = pdata->bus_num;
->> +	master->num_chipselect = pdata->num_chipselect;
-> Where is pdata->bus_num and pdata->num_chipselect initialized? This
-> causes devm_spi_register_master() to fail randomly as num_chipselect may
-> be 0.
-Agreed!, I also observed the issue after sending the patches , will fix 
-it in the next patch-set.
-Regards
-Vadivel
->> +	mutex_init(&cqspi->lock);
->> +	platform_set_drvdata(pdev, master);
->> +	cqspi_controller_init(cqspi);
->> +	cqspi->current_cs = -1;
->> +
->> +	ret = devm_spi_register_master(dev, master);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "devm_spi_register_master failed.\n");
->> +		goto err_of;
->> +	}
->> +
->> +	return 0;
->> +
->> +out_clk_disable:
->> +	clk_disable_unprepare(cqspi->clk);
->> +err_of:
->> +	spi_master_put(master);
->> +	dev_err(&pdev->dev, "Cadence QSPI controller probe failed\n");
->> +	return ret;
->> +}
->> +
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 037e26b3f8d5..298684c62cc1 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -494,6 +494,7 @@
+ 
+ 		wcnss@a21b000 {
+ 			status = "okay";
++			firmware-name = "qcom/msm8916/wcnss.mdt";
+ 		};
+ 	};
+ 
+@@ -538,6 +539,11 @@
+ 	};
+ };
+ 
++&mpss {
++	status = "okay";
++	firmware-name = "qcom/msm8916/mba.mbn", "qcom/msm8916/modem.mdt";
++};
++
+ &spmi_bus {
+ 	pm8916_0: pm8916@0 {
+ 		pon@800 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 9c4d89319e7c..1ced09a61531 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1054,7 +1054,7 @@
+ 		};
+ 
+ 
+-		hexagon@4080000 {
++		mpss: remoteproc@4080000 {
+ 			compatible = "qcom,q6v5-pil";
+ 			reg = <0x04080000 0x100>,
+ 			      <0x04020000 0x040>;
+-- 
+2.24.0
+
