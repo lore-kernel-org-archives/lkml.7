@@ -2,154 +2,189 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086A9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2975C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD86207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SV6txlwm"
+	by mail.kernel.org (Postfix) with ESMTP id A311C206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgAHBE5 (ORCPT
+        id S1726333AbgAHBIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:04:57 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50253 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgAHBE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:04:56 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47srcz5RJnz9sRl;
-        Wed,  8 Jan 2020 12:04:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578445494;
-        bh=K98i5nHFZAE1tD4rWgYo8VA8Ctitbjp2S9UCU59KOyo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SV6txlwm0NUDfX9rOvIyhyU/NGgJWtowdWGofd2s5FToaXhBqkNoj5cP5WDgFOiVE
-         OxKPR1DbLy16devM9/mv7JSNir4l57rS5PCz0773/uJW5gmsuHiKXpU+Meoq8DzULG
-         9NAehWmL3FVtxxM6SMPSY3AhcFteGUeC9xZkFh8ab2LukNq0QSsS69Fnh09L2aOuvD
-         /wLMmSnFSH3RzD9QPg08SMQTHoVfWk73v2PbcYctFBdEE0FUMOLTwlld63VDSE4D/C
-         gIv2wCZSiDWAGu1DG4mNSOsSF4I2OikOFT1Z6Re7kMTSUpfJJmZvAOS2ur7z4IKgoK
-         +NQUScVmBCt/Q==
-Date:   Wed, 8 Jan 2020 12:04:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
- tree
-Message-ID: <20200108120450.33ec0fdd@canb.auug.org.au>
+        Tue, 7 Jan 2020 20:08:55 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9121 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725601AbgAHBIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 20:08:55 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 10948CCB81128B92F9C4;
+        Wed,  8 Jan 2020 09:08:53 +0800 (CST)
+Received: from [127.0.0.1] (10.67.101.242) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 Jan 2020
+ 09:08:42 +0800
+Subject: Re: [PATCH] crypto: hisilicon/sec2 - Use atomics instead of __sync
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Longfang Liu <liulongfang@huawei.com>
+References: <20200107200926.3659010-1-arnd@arndb.de>
+CC:     Dan Carpenter <dan.carpenter@oracle.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Xu Zaibo <xuzaibo@huawei.com>
+Message-ID: <b89ff368-31ae-473b-c2c9-3f7b99714781@huawei.com>
+Date:   Wed, 8 Jan 2020 09:08:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DiL.+_mnf3=aA6Zinzamh2K";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200107200926.3659010-1-arnd@arndb.de>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.242]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DiL.+_mnf3=aA6Zinzamh2K
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+I will send out a patch set soon, which fixes this problem. Thanks.
 
-Today's linux-next merge of the drm tree got a conflict in:
+cheers,
 
-  drivers/gpu/drm/i915/gt/intel_ring_submission.c
+Zaibo
 
-between commit:
+.
 
-  103309977589 ("drm/i915/gt: Do not restore invalid RS state")
 
-from the drm-intel-fixes tree and commit:
+On 2020/1/8 4:08, Arnd Bergmann wrote:
+> The use of __sync functions for atomic memory access is not
+> supported in the kernel, and can result in a link error depending
+> on configuration:
+>
+> ERROR: "__tsan_atomic32_compare_exchange_strong" [drivers/crypto/hisilicon/sec2/hisi_sec2.ko] undefined!
+> ERROR: "__tsan_atomic64_fetch_add" [drivers/crypto/hisilicon/sec2/hisi_sec2.ko] undefined!
+>
+> Use the kernel's own atomic interfaces instead. This way the
+> debugfs interface actually reads the counter atomically.
+>
+> Fixes: 416d82204df4 ("crypto: hisilicon - add HiSilicon SEC V2 driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/crypto/hisilicon/sec2/sec.h        |  6 +++---
+>   drivers/crypto/hisilicon/sec2/sec_crypto.c | 12 ++++++------
+>   drivers/crypto/hisilicon/sec2/sec_main.c   | 14 ++++++++++++--
+>   3 files changed, 21 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/crypto/hisilicon/sec2/sec.h b/drivers/crypto/hisilicon/sec2/sec.h
+> index 26754d0570ba..b846d73d9a85 100644
+> --- a/drivers/crypto/hisilicon/sec2/sec.h
+> +++ b/drivers/crypto/hisilicon/sec2/sec.h
+> @@ -40,7 +40,7 @@ struct sec_req {
+>   	int req_id;
+>   
+>   	/* Status of the SEC request */
+> -	int fake_busy;
+> +	atomic_t fake_busy;
+>   };
+>   
+>   /**
+> @@ -132,8 +132,8 @@ struct sec_debug_file {
+>   };
+>   
+>   struct sec_dfx {
+> -	u64 send_cnt;
+> -	u64 recv_cnt;
+> +	atomic64_t send_cnt;
+> +	atomic64_t recv_cnt;
+>   };
+>   
+>   struct sec_debug {
+> diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> index 62b04e19067c..0a5391fff485 100644
+> --- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> +++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+> @@ -120,7 +120,7 @@ static void sec_req_cb(struct hisi_qp *qp, void *resp)
+>   		return;
+>   	}
+>   
+> -	__sync_add_and_fetch(&req->ctx->sec->debug.dfx.recv_cnt, 1);
+> +	atomic64_inc(&req->ctx->sec->debug.dfx.recv_cnt);
+>   
+>   	req->ctx->req_op->buf_unmap(req->ctx, req);
+>   
+> @@ -135,13 +135,13 @@ static int sec_bd_send(struct sec_ctx *ctx, struct sec_req *req)
+>   	mutex_lock(&qp_ctx->req_lock);
+>   	ret = hisi_qp_send(qp_ctx->qp, &req->sec_sqe);
+>   	mutex_unlock(&qp_ctx->req_lock);
+> -	__sync_add_and_fetch(&ctx->sec->debug.dfx.send_cnt, 1);
+> +	atomic64_inc(&ctx->sec->debug.dfx.send_cnt);
+>   
+>   	if (ret == -EBUSY)
+>   		return -ENOBUFS;
+>   
+>   	if (!ret) {
+> -		if (req->fake_busy)
+> +		if (atomic_read(&req->fake_busy))
+>   			ret = -EBUSY;
+>   		else
+>   			ret = -EINPROGRESS;
+> @@ -641,7 +641,7 @@ static void sec_skcipher_callback(struct sec_ctx *ctx, struct sec_req *req)
+>   	if (ctx->c_ctx.c_mode == SEC_CMODE_CBC && req->c_req.encrypt)
+>   		sec_update_iv(req);
+>   
+> -	if (__sync_bool_compare_and_swap(&req->fake_busy, 1, 0))
+> +	if (atomic_cmpxchg(&req->fake_busy, 1, 0) != 1)
+>   		sk_req->base.complete(&sk_req->base, -EINPROGRESS);
+>   
+>   	sk_req->base.complete(&sk_req->base, req->err_type);
+> @@ -672,9 +672,9 @@ static int sec_request_init(struct sec_ctx *ctx, struct sec_req *req)
+>   	}
+>   
+>   	if (ctx->fake_req_limit <= atomic_inc_return(&qp_ctx->pending_reqs))
+> -		req->fake_busy = 1;
+> +		atomic_set(&req->fake_busy, 1);
+>   	else
+> -		req->fake_busy = 0;
+> +		atomic_set(&req->fake_busy, 0);
+>   
+>   	ret = ctx->req_op->get_res(ctx, req);
+>   	if (ret) {
+> diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+> index 74f0654028c9..ab742dfbab99 100644
+> --- a/drivers/crypto/hisilicon/sec2/sec_main.c
+> +++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+> @@ -608,6 +608,14 @@ static const struct file_operations sec_dbg_fops = {
+>   	.write = sec_debug_write,
+>   };
+>   
+> +static int debugfs_atomic64_t_get(void *data, u64 *val)
+> +{
+> +        *val = atomic64_read((atomic64_t *)data);
+> +        return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_atomic64_t_ro, debugfs_atomic64_t_get, NULL,
+> +                        "%lld\n");
+> +
+>   static int sec_core_debug_init(struct sec_dev *sec)
+>   {
+>   	struct hisi_qm *qm = &sec->qm;
+> @@ -628,9 +636,11 @@ static int sec_core_debug_init(struct sec_dev *sec)
+>   
+>   	debugfs_create_regset32("regs", 0444, tmp_d, regset);
+>   
+> -	debugfs_create_u64("send_cnt", 0444, tmp_d, &dfx->send_cnt);
+> +	debugfs_create_file("send_cnt", 0444, tmp_d, &dfx->send_cnt,
+> +			    &fops_atomic64_t_ro);
+>   
+> -	debugfs_create_u64("recv_cnt", 0444, tmp_d, &dfx->recv_cnt);
+> +	debugfs_create_file("recv_cnt", 0444, tmp_d, &dfx->recv_cnt,
+> +			    &fops_atomic64_t_ro);
+>   
+>   	return 0;
+>   }
 
-  3cd6e8860ecd ("drm/i915/gen7: Re-enable full-ppgtt for ivb & hsw")
-  f997056d5b17 ("drm/i915/gt: Push the flush_pd before the set-context")
-  f70de8d2ca6b ("drm/i915/gt: Track the context validity explicitly")
-  902eb748e5c3 ("drm/i915/gt: Tidy up full-ppgtt on Ivybridge")
 
-from the drm tree.
-
-I fixed it up (I think - see below) and can carry the fix as necessary.
-This is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/i915/gt/intel_ring_submission.c
-index 93026217c121,81f872f9ef03..000000000000
---- a/drivers/gpu/drm/i915/gt/intel_ring_submission.c
-+++ b/drivers/gpu/drm/i915/gt/intel_ring_submission.c
-@@@ -1574,28 -1602,20 +1594,26 @@@ static int switch_context(struct i915_r
- =20
-  	GEM_BUG_ON(HAS_EXECLISTS(rq->i915));
- =20
-- 	if (vm) {
-- 		ret =3D load_pd_dir(rq, i915_vm_to_ppgtt(vm));
-- 		if (ret)
-- 			return ret;
-- 	}
-+ 	ret =3D switch_mm(rq, vm_alias(ce));
-+ 	if (ret)
-+ 		return ret;
- =20
-  	if (ce->state) {
- -		u32 hw_flags;
- +		u32 flags;
- =20
-  		GEM_BUG_ON(rq->engine->id !=3D RCS0);
- =20
- -		hw_flags =3D 0;
- +		/* For resource streamer on HSW+ and power context elsewhere */
- +		BUILD_BUG_ON(HSW_MI_RS_SAVE_STATE_EN !=3D MI_SAVE_EXT_STATE_EN);
- +		BUILD_BUG_ON(HSW_MI_RS_RESTORE_STATE_EN !=3D MI_RESTORE_EXT_STATE_EN);
- +
- +		flags =3D MI_SAVE_EXT_STATE_EN | MI_MM_SPACE_GTT;
-- 		if (!i915_gem_context_is_kernel(rq->gem_context))
-+ 		if (!test_bit(CONTEXT_VALID_BIT, &ce->flags))
- -			hw_flags =3D MI_RESTORE_INHIBIT;
- +			flags |=3D MI_RESTORE_EXT_STATE_EN;
- +		else
- +			flags |=3D MI_RESTORE_INHIBIT;
- =20
- -		ret =3D mi_set_context(rq, hw_flags);
- +		ret =3D mi_set_context(rq, flags);
-  		if (ret)
-  			return ret;
-  	}
-
---Sig_/DiL.+_mnf3=aA6Zinzamh2K
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VKrIACgkQAVBC80lX
-0GxXTwgAjrn/2Opi2eDUpAbcg3YhI7Pq0iGOP2GOzUknv3xhkNvNQnDZCC5pJotT
-Zx4VEPz0ttNJvzGJ6n7AGXzTYv8XrWk1ToPHSB178e/mYd+POPwvw7RF4+q12NeK
-wH4BVuEtT7vKYtVZ86M+7kZNaWG3VvDmaMvXBSGi9txbuuJb0/Hu4/BMaQRlKpc/
-oyhcO3+nbF2TMF8Q5PKX2D+HXaOQsNPe/jIgrAob1f//mKXstyr+pJW5OHT3KZdu
-4DZkTvNxI3WV7kXi886JoO02oyawO3p+Opg+fRnB2Z6xBWKOc7zC05Ugn7GYv0EB
-H9/m5a9on0A0FUayHoBImgHGw+Vx1w==
-=afzz
------END PGP SIGNATURE-----
-
---Sig_/DiL.+_mnf3=aA6Zinzamh2K--
