@@ -2,90 +2,83 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D3C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B75C20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C3A1CdlX"
+	by mail.kernel.org (Postfix) with ESMTP id B3EF820692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgAHRqh (ORCPT
+        id S1728713AbgAHRrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:46:37 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55201 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727237AbgAHRqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:46:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578505595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JuFYytAGPZml7H3W4B01Bht6vOFHY4NDQEHoWMOGjN8=;
-        b=C3A1CdlXdSBhZTqtlewywvMcEgW/NReBWrYxHXJCiV9inrJSwjkuA+YqqPKtCefWDRRiDg
-        p60KkTqzbocgqUyO2VuabnI4G0aitEU2hdRF3ISAWia04rL8bDvJv26/VGBhhyo8RPinfh
-        DyzUYkqemQhg1hFavCU6inCN8r4OLEs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-SX-515DmPDWNZ1mAa3kBDQ-1; Wed, 08 Jan 2020 12:46:34 -0500
-X-MC-Unique: SX-515DmPDWNZ1mAa3kBDQ-1
-Received: by mail-wr1-f71.google.com with SMTP id b13so1705490wrx.22
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:46:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JuFYytAGPZml7H3W4B01Bht6vOFHY4NDQEHoWMOGjN8=;
-        b=PdjEy+olD3Fhtq3yTWRlqWH86PRsqerTRYwLQQlG92WJYc6v5MA3n7bHMzCjRNZJmf
-         WdVcqVPEIBmdnotaYMs02ol7npfo83HnM/hDxg9lIZHN5eDJBF7hg6FuBHVZkbxLBqHv
-         r1RGXaCg133oZNTsl/FTgmsxU/UCta97DV+kIkp7QUAwhdiPcDfjryIxmtV7Br3dc/Qh
-         E+MU/Rjr5RU/7FMRxKlBCO9Zt6CED0VxWMKHN3Oe81ldsnamoMNmuT3Vp2x4BhAzTz7r
-         NN/Mo2vL3d7ng7St0bWDjmecpSlSG1ByvV9DTU76vyXa/2WD/OAHgSiPwTuE4sL2suoF
-         2OXQ==
-X-Gm-Message-State: APjAAAUFujn4gjrJtWJ0r3CF7VZwg6/r6q/gUvf6IHb9nemdmpVF571j
-        +ucEKaRWGlgLXVC0JbABXkk/4WtoLunn5PU7MBmLR9A/i+SmNYmtK3tZRfSdtnN1gTZBm9clhjf
-        n7D8W1PF+bA9PyyRz2RP1D0Hx
-X-Received: by 2002:a5d:608e:: with SMTP id w14mr6193608wrt.256.1578505593077;
-        Wed, 08 Jan 2020 09:46:33 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwEH0d86Wh6sBFvfpn3VoGN+xLAb2tLS/aUw364TALemF5JBmboHvINPJs8R4Ab1RlmC0wE9w==
-X-Received: by 2002:a5d:608e:: with SMTP id w14mr6193582wrt.256.1578505592874;
-        Wed, 08 Jan 2020 09:46:32 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c6d:4079:b74c:e329? ([2001:b07:6468:f312:c6d:4079:b74c:e329])
-        by smtp.gmail.com with ESMTPSA id g2sm4899030wrw.76.2020.01.08.09.46.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 09:46:32 -0800 (PST)
-Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-4-peterx@redhat.com>
- <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
- <20191223172737.GA81196@xz-x1>
- <851bd9ed-3ff3-6aef-725c-b586d819211c@redhat.com>
- <20191223201024.GB90172@xz-x1>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e56d4157-1a0a-3f45-0e02-ac7c10fccf96@redhat.com>
-Date:   Wed, 8 Jan 2020 18:46:30 +0100
+        Wed, 8 Jan 2020 12:47:21 -0500
+Received: from mga07.intel.com ([134.134.136.100]:15312 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726556AbgAHRrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:47:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:47:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="303619448"
+Received: from tstruk-mobl1.jf.intel.com (HELO [10.7.196.67]) ([10.7.196.67])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 09:47:19 -0800
+Subject: Re: [PATCH] tpm: handle negative priv->response_len in
+ tpm_common_read
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
+        labbott@redhat.com
+References: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
+ <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
+ <b469b7e8454a69402529cc8e25244860e136308e.camel@linux.intel.com>
+ <80272f0259d967fe61dacd1036cbbd9f555b8402.camel@linux.intel.com>
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+Autocrypt: addr=tadeusz.struk@intel.com; keydata=
+ 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
+Message-ID: <d1ee03ce-c8bd-75ab-e348-8a05fb6be69d@intel.com>
+Date:   Wed, 8 Jan 2020 09:47:31 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191223201024.GB90172@xz-x1>
+In-Reply-To: <80272f0259d967fe61dacd1036cbbd9f555b8402.camel@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -94,17 +87,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/12/19 21:10, Peter Xu wrote:
->> Yes, kvm->slots_lock is taken by x86_set_memory_region.  We need to move
->> that to the callers, of which several are already taking the lock (all
->> except vmx_set_tss_addr and kvm_arch_destroy_vm).
-> OK, will do.  I'll directly replace the x86_set_memory_region() calls
-> in kvm_arch_destroy_vm() to be __x86_set_memory_region() since IIUC
-> the slots_lock is helpless when destroying the vm... then drop the
-> x86_set_memory_region() helper in the next version.  Thanks,
+On 1/8/20 8:04 AM, Jarkko Sakkinen wrote:
+> Applied but had to fix bunch of typos, missing punctaction and
+> missing parentheses in the commit message. Even checkpatch.pl
+> was complaining :-/
 
-Be careful because it may cause issues with lockdep.  Better just take
-the lock.
+Forgot about the checkpatch.pl thing. Sorry.
 
-Paolo
-
+-- 
+Tadeusz
