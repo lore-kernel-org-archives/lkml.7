@@ -2,85 +2,77 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0766DC33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7752C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAA020880
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578456116;
-	bh=blXanwhUKF/O2mPP2xvjP8uzPc5gl9VfnG9EBi9qDXQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BGml7a4CBRzoVGzNo5ezdEmsuC78n0llto7CIJZ94B/I/RrcrA/0OkpdFg2VHNwo4
-	 0GKA296OEQKIZanwtWRsgCuTk89l8A//JnDWHheWdGm8HA0yYMcXv7jy1oyr7TEq8Q
-	 ousczelY+0euxBdCT2CgnQ+sYofTtnGq68iZbNL4=
+	by mail.kernel.org (Postfix) with ESMTP id 9BFA220880
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 04:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgAHEBv (ORCPT
+        id S1726694AbgAHEEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:01:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgAHEBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 23:01:51 -0500
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 477EA21744
-        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 04:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578456110;
-        bh=blXanwhUKF/O2mPP2xvjP8uzPc5gl9VfnG9EBi9qDXQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dcHDEN8veVYHLRYJi2IBrEvwMLkxTqRWqWz6sGwXBCeFcgud09yLVa7PXYezDejho
-         mLSZ+x16Mo53nyCz5TfVBieWyZNPB0NEVu7g41Z1q+U8gJtxrV5e/qnCd3fEskKHUs
-         Hrsss6X++WY8JopgzjIQ5xROrGWPBcTnnIBuAx8E=
-Received: by mail-qt1-f180.google.com with SMTP id e6so1712933qtq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 20:01:50 -0800 (PST)
-X-Gm-Message-State: APjAAAWC6lL/i1CJbrUJ/Yy1GpUwXtgl2oYYEPGUuMqcwSbla1RAuwLy
-        DZ/I+oH8wLyuImEHjwC71cxrOMLzWQntxW/M6g==
-X-Google-Smtp-Source: APXvYqwFJb8dLgGhcgHBSB4r4ovkIRZEnEUzKfJVSxsskY0an7OzKIiPwZU0NjgU+N9o+MZWSlzKwX9Ic9GmEnhELRI=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr1942901qtj.300.1578456109415;
- Tue, 07 Jan 2020 20:01:49 -0800 (PST)
+        Tue, 7 Jan 2020 23:04:11 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35840 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725908AbgAHEEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 23:04:11 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EF6DA3285E508FE6DC2B;
+        Wed,  8 Jan 2020 12:04:08 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 8 Jan 2020 12:03:58 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Ravulapati Vishnu vardhan rao" <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next]  ASoC: amd: acp3x: Fix return value check in acp3x_dai_probe()
+Date:   Wed, 8 Jan 2020 03:59:54 +0000
+Message-ID: <20200108035954.51317-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1576845281-32675-1-git-send-email-qiangqing.zhang@nxp.com> <1576845281-32675-2-git-send-email-qiangqing.zhang@nxp.com>
-In-Reply-To: <1576845281-32675-2-git-send-email-qiangqing.zhang@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 22:01:38 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+ZJ0asAxaPFgiuHKC2o6UP_5Mht=EascFVpJ6AUoKPvA@mail.gmail.com>
-Message-ID: <CAL_Jsq+ZJ0asAxaPFgiuHKC2o6UP_5Mht=EascFVpJ6AUoKPvA@mail.gmail.com>
-Subject: Re: [PATCH V4 1/2] dt-bindings/irq: add binding for NXP INTMUX
- interrupt multiplexer
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 6:38 AM Joakim Zhang <qiangqing.zhang@nxp.com> wrote:
->
-> This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
-> for i.MX8 family SoCs.
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-4 versions in 2 days? Don't do that. Give reviewers some time.
+Fixes: c9fe7db6e884 ("ASoC: amd: Refactoring of DAI from DMA driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ sound/soc/amd/raven/acp3x-i2s.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Convert this to DT schema please. And make sure to send to DT list if
-you want it reviewed. You only sent v1 to the list.
+diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
+index d9b287b8396c..bf51cadf8682 100644
+--- a/sound/soc/amd/raven/acp3x-i2s.c
++++ b/sound/soc/amd/raven/acp3x-i2s.c
+@@ -321,8 +321,8 @@ static int acp3x_dai_probe(struct platform_device *pdev)
+ 	}
+ 	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
+ 						resource_size(res));
+-	if (IS_ERR(adata->acp3x_base))
+-		return PTR_ERR(adata->acp3x_base);
++	if (!adata->acp3x_base)
++		return -ENOMEM;
+ 
+ 	adata->i2s_irq = res->start;
+ 	dev_set_drvdata(&pdev->dev, adata);
 
-Rob
+
+
