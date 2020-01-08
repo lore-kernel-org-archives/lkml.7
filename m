@@ -2,180 +2,154 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A7FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6F1C33C9B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5AB206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE816206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kRZyLZAY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lYRkCjgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgAHBNo (ORCPT
+        id S1726634AbgAHBPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:13:44 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2018 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgAHBNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:13:44 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e152cb50000>; Tue, 07 Jan 2020 17:13:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 17:13:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 17:13:43 -0800
-Received: from [10.2.175.47] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 01:13:42 +0000
-Subject: Re: [PATCH v6 06/19] soc: tegra: Add Tegra PMC clocks registration
- into PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
- <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
- <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5b11d228-1894-e052-f740-3a050bb35b6f@nvidia.com>
-Date:   Tue, 7 Jan 2020 17:13:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Jan 2020 20:15:33 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60867 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgAHBPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 20:15:32 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47srsD5Jtzz9sRl;
+        Wed,  8 Jan 2020 12:15:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578446129;
+        bh=WLW9s4Q6bkfwP6wWJS5exAJsayPk4KKaWV7JLajorGA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lYRkCjgnuv1rq7lOgF5SDeVPUH+redG/CrYRA9hDhpQPjLkryYyzbB/v3CxUlmsx+
+         AqjMl5Haap3euKwXkBEwnG3PYt537VXayBH+mE3LnYjI9v6m/e7tzIwx7a9gALT+xy
+         3135NW0/GCQ4ekUVUUL5L1Cfo3FePkN7Evhi2XpEI10mAUL/YlzvM7BpybP4J4mvVQ
+         aQ4uv9MxBAoqiMKyJKTGMQZnzqNXN0zPMkfUWWqkDYoMY8qZiATklgLtomPogy2cg7
+         SygUd6ZTD3NO76wCDeeRYKjzUpukZSO13oOMFGlA02knynBZXJEKsmU00UVyEBv5CO
+         vxqHHLPFvwcLg==
+Date:   Wed, 8 Jan 2020 12:15:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: linux-next: manual merge of the drm tree with the drm-intel-fixes
+ tree
+Message-ID: <20200108121528.5a800a65@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578446005; bh=czqak03I8wVN+sOkdYFnWRgHfGjKJTCcV+nbIBWcpRw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kRZyLZAYHd4buYr0Ek+AywBSLcYhyZLkiTM2318NEwV8CxAj6LE8sBsdszQCRMedH
-         0QwCQirl+VNREOgGlFi6/zeDIJcK6+9/N2PaKxBsnjlZ05mseQ1KB1PYr5/EUTpOOM
-         bxenoSDeTWStCgKoeJUECDmKEo+OsxhBUXKvKu3l5dTz6QH86/y+tHxq1pxnbhHTJ5
-         vWkepxdghSUIAfpHxUrZSZPq1HtbAmuTsOM2Abmtg50YU9sUQqmvu1X2d3IjXynRJE
-         5z06kP5iiz6bjMtwj4Thn2A6/yY0FgPorai48tAVln20Fie3efFk61P8MpH3kRyxKY
-         wH16naeZ8XD2g==
+Content-Type: multipart/signed; boundary="Sig_/0S8l_O_FFF2_z+jPteUKeci";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/0S8l_O_FFF2_z+jPteUKeci
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 1/7/20 5:00 PM, Dmitry Osipenko wrote:
-> 07.01.2020 07:14, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
->> these PMC clocks are registered by Tegra clock driver with each clock as
->> separate mux and gate clocks using clk_register_mux and clk_register_gat=
-e
->> by passing PMC base address and register offsets and PMC programming for
->> these clocks happens through direct PMC access by the clock driver.
->>
->> With this, when PMC is in secure mode any direct PMC access from the
->> non-secure world does not go through and these clocks will not be
->> functional.
->>
->> This patch adds these PMC clocks registration to pmc driver with PMC as
->> a clock provider and registers each clock as single clock.
->>
->> clk_ops callback implementations for these clocks uses tegra_pmc_readl a=
-nd
->> tegra_pmc_writel which supports PMC programming in both secure mode and
->> non-secure mode.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 242 ++++++++++++++++++++++++++++++++++++++++=
-++++++++
->>   1 file changed, 242 insertions(+)
->>
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index 1699dda6b393..2b1a709c3cb7 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -13,9 +13,13 @@
->>  =20
->>   #include <linux/arm-smccc.h>
->>   #include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/clk/clk-conf.h>
->>   #include <linux/clk/tegra.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/delay.h>
->> +#include <linux/device.h>
->>   #include <linux/err.h>
->>   #include <linux/export.h>
->>   #include <linux/init.h>
->> @@ -48,6 +52,7 @@
->>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>   #include <dt-bindings/gpio/tegra186-gpio.h>
->>   #include <dt-bindings/gpio/tegra194-gpio.h>
->> +#include <dt-bindings/soc/tegra-pmc.h>
->>  =20
->>   #define PMC_CNTRL			0x0
->>   #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
->> @@ -100,6 +105,8 @@
->>   #define PMC_WAKE2_STATUS		0x168
->>   #define PMC_SW_WAKE2_STATUS		0x16c
->>  =20
->> +#define PMC_CLK_OUT_CNTRL		0x1a8
->> +#define  PMC_CLK_OUT_MUX_MASK		GENMASK(1, 0)
->>   #define PMC_SENSOR_CTRL			0x1b0
->>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
->> @@ -155,6 +162,63 @@
->>   #define  TEGRA_SMC_PMC_READ	0xaa
->>   #define  TEGRA_SMC_PMC_WRITE	0xbb
->>  =20
->> +struct pmc_clk {
->> +	struct clk_hw	hw;
->> +	unsigned long	offs;
->> +	u32		mux_shift;
->> +	u32		force_en_shift;
->> +};
->> +
->> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
->> +
->> +struct pmc_clk_init_data {
->> +	char *name;
->> +	const char *const *parents;
->> +	int num_parents;
->> +	int clk_id;
->> +	u8 mux_shift;
->> +	u8 force_en_shift;
->> +};
->> +
->> +static const char * const clk_out1_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern1",
->> +};
->> +
->> +static const char * const clk_out2_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern2",
->> +};
->> +
->> +static const char * const clk_out3_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern3",
->> +};
-> There is no way to specify "osc" as a parent clock in a device-tree
-> because there is no DT ID assigned to the OSC in the CaR driver, should
-> this be fixed?
-Yes, we need DT ID for OSC. Will add.
+Hi all,
+
+Today's linux-next merge of the drm tree got a conflict in:
+
+  drivers/gpu/drm/i915/display/intel_display.c
+
+between commit:
+
+  2b2c4a83d69d ("drm/i915/dp: Disable Port sync mode correctly on teardown")
+
+from the drm-intel-fixes tree and commit:
+
+  773b4b54351c ("drm/i915: Move stuff from haswell_crtc_disable() into enco=
+der .post_disable()")
+
+from the drm tree.
+
+I fixed it up (I applied the change to icl_disable_transcoder_port_sync()
+from the former commit in its new location - see patch below) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 8 Jan 2020 12:12:45 +1100
+Subject: [PATCH] drm/i915: fixup for "drm/i915/dp: Disable Port sync mode
+ correctly on teardown"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/i915/display/intel_ddi.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i91=
+5/display/intel_ddi.c
+index c9ba7d7f3787..e535a3b85575 100644
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -3860,8 +3860,6 @@ static void icl_disable_transcoder_port_sync(const st=
+ruct intel_crtc_state *old_
+ {
+ 	struct intel_crtc *crtc =3D to_intel_crtc(old_crtc_state->uapi.crtc);
+ 	struct drm_i915_private *dev_priv =3D to_i915(crtc->base.dev);
+-	i915_reg_t reg;
+-	u32 trans_ddi_func_ctl2_val;
+=20
+ 	if (old_crtc_state->master_transcoder =3D=3D INVALID_TRANSCODER)
+ 		return;
+@@ -3869,10 +3867,7 @@ static void icl_disable_transcoder_port_sync(const s=
+truct intel_crtc_state *old_
+ 	DRM_DEBUG_KMS("Disabling Transcoder Port Sync on Slave Transcoder %s\n",
+ 		      transcoder_name(old_crtc_state->cpu_transcoder));
+=20
+-	reg =3D TRANS_DDI_FUNC_CTL2(old_crtc_state->cpu_transcoder);
+-	trans_ddi_func_ctl2_val =3D ~(PORT_SYNC_MODE_ENABLE |
+-				    PORT_SYNC_MODE_MASTER_SELECT_MASK);
+-	I915_WRITE(reg, trans_ddi_func_ctl2_val);
++	I915_WRITE(TRANS_DDI_FUNC_CTL2(old_crtc_state->cpu_transcoder), 0);
+ }
+=20
+ static void intel_ddi_post_disable(struct intel_encoder *encoder,
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0S8l_O_FFF2_z+jPteUKeci
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VLTAACgkQAVBC80lX
+0GxQ0Af+JWKZelrEALDfQfGtW3uISstZ63INkQ42kft7UNa2Kjv/0IV5oZlwuq0u
+w9g23iZGl4xdwu9mAGA8EoomH2haNoMLKlhWHOnPspKwy9DW2vDg0hqijPMla6OC
+vC/F0wzRn9BerGsjow6wErxfjV2KEiqJTqoykr+t083tqsf94JsqFclXgh8EoxvG
+BScp8pePlvWk8FpBYEfcP8JpKkYZa+NPgVEHjzN2knBzBe/YNzApdth6fnD27VZl
+lBzvND0LbdQ02OgDkH9uhCRXMBOsKMSklGQ5EvpumG0CkG2NwRe8qv7UtFbXqQyX
+WBzAlymRoDMvQZP0AEUvsPkRhoWygg==
+=5PNq
+-----END PGP SIGNATURE-----
+
+--Sig_/0S8l_O_FFF2_z+jPteUKeci--
