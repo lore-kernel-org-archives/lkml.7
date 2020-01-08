@@ -2,99 +2,99 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B49C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC3AC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D6D2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5252073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:10:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BDi5gRFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgAHKKJ (ORCPT
+        id S1727726AbgAHKKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:10:09 -0500
-Received: from mga09.intel.com ([134.134.136.24]:52442 "EHLO mga09.intel.com"
+        Wed, 8 Jan 2020 05:10:36 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44511 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgAHKKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:10:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 02:10:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="395696582"
-Received: from jochenh-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.51.76])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jan 2020 02:10:06 -0800
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id B38A021EDA; Wed,  8 Jan 2020 12:10:04 +0200 (EET)
-Date:   Wed, 8 Jan 2020 12:10:04 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+54fd8cca4b7226c94b8e@syzkaller.appspotmail.com,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: v4l2-core: only zero-out ioctl-read buffers
-Message-ID: <20200108101004.GC4383@kekkonen.localdomain>
-References: <20200108100013.284108-1-arnd@arndb.de>
+        id S1726368AbgAHKKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:10:36 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47t4kd1JBdz9sRh;
+        Wed,  8 Jan 2020 21:10:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578478233;
+        bh=GoeUl6jdFt0zbRK3QhJAcx6XrW9/e/Rs6BFNwoM1vD4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BDi5gRFk71OW72kGHtdac/YUpr5iqWXf6OaYt2id8LRlOu84Xyz9rnBmiL95g+hr6
+         WCwv7SNWpxrxNlzKtDNorKkCOUz9ua/bgCwvBf34z2K5SPV2EExWCYwibL83uyWwSB
+         vwc0Ld2u+GYP2S//MRKsOg/9XUtoJTLVg5vO3Cj3C9AHOo5uYK4AhksQUFAdt8Wjva
+         ED4QH+B0/V6lswT3S8YnFjO5OC2bDLLM6oV7yf9cBf7nuKb3xRpN8s/dq9pD4WBqIU
+         AV6rwh7FoFCqcroD9+hmtP5LY0cpF491UYVfYcvAk8sy5zTLZfmPW1lN/Ir6IfzJc0
+         a2uNiWQTmspKA==
+Date:   Wed, 8 Jan 2020 21:10:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiping Ma <jiping.ma2@windriver.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20200108211030.7a888ca7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108100013.284108-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/0Ck8cTm=3oTzyxStfTnUbSb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 11:00:00AM +0100, Arnd Bergmann wrote:
-> The memset() got moved out of the check for _IOC_NONE, so passing a
-> made-up command number with a size but no direction would allow clearing
-> data on user-provided pointers.
-> 
-> Move video_get_user() back into the _IOC_NONE check where it belongs.
-> 
-> Reported-by: syzbot+54fd8cca4b7226c94b8e@syzkaller.appspotmail.com
-> Fixes: 6c625c01c7a6 ("media: v4l2-core: split out data copy from video_usercopy")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--Sig_/0Ck8cTm=3oTzyxStfTnUbSb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the fix, Arnd!
+Hi all,
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+In commit
 
-> ---
->  drivers/media/v4l2-core/v4l2-ioctl.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index b0d670715c27..0f11fc6b5447 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -3208,12 +3208,12 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
->  			parg = mbuf;
->  		}
->  
-> +		err = video_get_user((void __user *)arg, parg, orig_cmd,
-> +				     &always_copy);
-> +		if (err)
-> +			goto out;
->  	}
->  
-> -	err = video_get_user((void __user *)arg, parg, orig_cmd, &always_copy);
-> -	if (err)
-> -		goto out;
-> -
->  	err = check_array_args(cmd, parg, &array_size, &user_ptr, &kernel_ptr);
->  	if (err < 0)
->  		goto out;
+  481a7d154cbb ("stmmac: debugfs entry name is not be changed when udev ren=
+ame device name.")
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Fixes tag
+
+  Fixes: b6601323ef9e ("net: stmmac: debugfs entry name is not be changed w=
+hen udev rename")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Also, please keep all the commit message tags together at the end of
+the commit message.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0Ck8cTm=3oTzyxStfTnUbSb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VqpYACgkQAVBC80lX
+0GxMvQgAhPOYt2i9gXKK2PB2UZxf5sFrNXQIpAGrHl6R8OhLUdTaDtbpp8dpgSk9
+9KO/ktPPg+q4Air5x6DpZnDUtnWs6Iy34zErE45oXPUeqqheRX0pOLdw1FWTqULR
+ABwJdX16yZgYJl9fV0kwCsSD1iT+75iSaT4BNmHdROxZ87P6E/BfteDsORIOInx1
+E4Pn/c+H+T368uLlyj7654OQXgmHGgIuYXk4dO6Q6H9L1nCLdLWfm883mdNeNDPH
+DoAMaXUdecSaYJE9b+a9uzViFhPvDfjvT3kADZGxhPbgtKGXGvKNr2M6HS6CLeot
+UcnEzOinmFj5RbFo7txGRMS3gCSSxQ==
+=aMmy
+-----END PGP SIGNATURE-----
+
+--Sig_/0Ck8cTm=3oTzyxStfTnUbSb--
