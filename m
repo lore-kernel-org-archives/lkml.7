@@ -2,142 +2,94 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A4CC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E44EC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF50120720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CCF20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoGThj/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgAHPoT (ORCPT
+        id S1728451AbgAHPoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:44:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:46226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgAHPoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:44:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D0B331B;
-        Wed,  8 Jan 2020 07:44:18 -0800 (PST)
-Received: from [10.37.12.137] (unknown [10.37.12.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CFEE3F703;
-        Wed,  8 Jan 2020 07:44:15 -0800 (PST)
-Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leonard.crestez@nxp.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, jcrouse@codeaurora.org, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-References: <20200107090519.3231-1-cw00.choi@samsung.com>
- <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
- <20200107090519.3231-3-cw00.choi@samsung.com> <20200107214834.GB738324@yoga>
- <c1e6f324-b0c2-41ff-a015-7ba0b29ad42c@gmail.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <ddbc54d1-c657-747c-265d-3c7bd5924e59@arm.com>
-Date:   Wed, 8 Jan 2020 15:44:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Jan 2020 10:44:22 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33286 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgAHPoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:44:20 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so1785090pgk.0;
+        Wed, 08 Jan 2020 07:44:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GJIUFZ+IRbGLtnqTgbLaM/lLGOdp/TzPHfM+NWXgIB4=;
+        b=PoGThj/M8e0D220466gOL8uaJLCWsDgZJ4z9NWUS+hmVG5RRFBYVv+Z/ZW346/VDcs
+         6yUrGeVV+9tJfjs8I9PaDyzZF8HQ25P/GsjWA1r84AR831HQ9vpX+kY2iCM1oByGT54P
+         zChMcaS04GgcsccTQt6h67APhPlGJjJI9j9q5OydmTLFhHmWmgZIGHpVpJHCEj4TTS7G
+         v+747D8JP6u+QVyiTKANpMxVzRl4lpNlM8n3mH8W39W7c9Bt3eHgPxYLdp7jZ/tzGbbE
+         Eifq/oNkan21Gn71XyZcdpJfMQlUia0aQFuScm36ktwQeWatJ/omrCZgx0qKmh/agDfn
+         VqMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GJIUFZ+IRbGLtnqTgbLaM/lLGOdp/TzPHfM+NWXgIB4=;
+        b=Rn7nMFHbiiL0zCQ3YEQM9khSPaR7z73nJJa0GEFd8o/nm/DkB+OkDZopzKUMX53JE2
+         MCIXJDqHK1JxOBVDgZu8pYMkC987k10skmobEH6kGH4X1fxza+xg0zsIqw97n2jy9h+S
+         yHwhWTSiuuEfyq02AnYa1azDXuRtvaZbyWapIZiDUMRu6W2zk2DbfKrHgzOxIG0HxPx5
+         s58Y5BRjlax6vD0PhXzQk2wiyu4NhNQw3rJLQeikDDBX3GRvtlCboP9Wmi5OpA3FcVcy
+         7OcQ6s5a7RoB+m1rPx8o8/TSYiEFQ1LS8UgN1phuVclQ5VEzWKCjFvzkanwF/xUz7UNw
+         Pnhw==
+X-Gm-Message-State: APjAAAX2W/NeHwzpEqzmffsLQ1FRMpXnvpNu/UFsBTheomV+EQuYXDHS
+        cuhL9/IERWWHtHhN1X+OCtcVXWY6
+X-Google-Smtp-Source: APXvYqyBe5QZczPDXdFMiiD33WOGJgqlWk9R9U7xRWHCoEeIxPMhmdiV/0SFlc1QfXy2vFscjT0EVw==
+X-Received: by 2002:aa7:9af1:: with SMTP id y17mr5670137pfp.21.1578498260196;
+        Wed, 08 Jan 2020 07:44:20 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 200sm4165387pfz.121.2020.01.08.07.44.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 07:44:19 -0800 (PST)
+Date:   Wed, 8 Jan 2020 07:44:18 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/191] 5.4.9-stable review
+Message-ID: <20200108154418.GC28993@roeck-us.net>
+References: <20200107205332.984228665@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <c1e6f324-b0c2-41ff-a015-7ba0b29ad42c@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107205332.984228665@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 1/8/20 2:20 PM, Dmitry Osipenko wrote:
-> 08.01.2020 00:48, Bjorn Andersson пишет:
->> On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
->>
->>> Add new devfreq_transitions debugfs file to track the frequency transitions
->>> of all devfreq devices for the simple profiling as following:
->>> - /sys/kernel/debug/devfreq/devfreq_transitions
->>>
->>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
->>> in Kconfig in order to save the transition history.
->>>
->>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
->>> - time_ms	: Change time of frequency transition. (unit: millisecond)
->>> - dev_name	: Device name of h/w.
->>> - dev		: Device name made by devfreq core.
->>> - parent_dev	: If devfreq device uses the passive governor,
->>> 		  show parent devfreq device name.
->>> - load_%	: If devfreq device uses the simple_ondemand governor,
->>> 		  load is used by governor whene deciding the new frequency.
->>> 		  (unit: percentage)
->>> - old_freq_hz	: Frequency before changing. (unit: hz)
->>> - new_freq_hz	: Frequency after changed. (unit: hz)
->>>
->>> [For example on Exynos5422-based Odroid-XU3 board]
->>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
->>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
->>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
->>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
->>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
->>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
->>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
->>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
->>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
->>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
->>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
->>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
->>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
->>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
->>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
->>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
->>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
->>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
->>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
->>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
->>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
->>> [snip]
->>>
->>
->> Wouldn't it make more sense to expose this through the tracing
->> framework - like many other subsystems does?
+On Tue, Jan 07, 2020 at 09:52:00PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.9 release.
+> There are 191 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I think devfreq core already has some tracing support and indeed it
-> should be better to extend it rather than duplicate.
+> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> Anything received after that time might be too late.
 > 
 
-In my opinion this debugfs interface should be considered as a helpful
-validation entry point. We had some issues with wrong bootloader
-configurations in clock tree, where some frequencies could not be set
-in the kernel. Similar useful description can be find in clock subsystem
-where there is clock tree summary file.
+For v5.4.8-191-gdd269ce619cb:
 
-It is much cheaper to poke a few files in debug dir by some automated
-test than starting tracing, provoking desired code flow in the
-devfreq for every device, paring the results... A simple boot test
-which reads only these new files can be enough to rise the flag.
-Secondly the tracing is not always compiled.
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 385 pass: 385 fail: 0
 
-It could capture old/wrong bootloaders which pinned devices
-improperly to PLLs or wrong DT values in OPP table.
-(a workaround for Odroid xu4 patchset:
-https://lkml.org/lkml/2019/7/15/276
-)
-
-Chanwoo what do think about some sanity check summary?
-It could be presented in a 3rd file: 'devfreq_sanity', which
-could report if the devices could set their registered OPPs
-and got the same values, i.e. set 166MHz --> set to 150MHz
-in reality. If a config option i.e. DEVFREQ_SANITY is set
-then during the registration of a new device it checks OPPs
-if they are possible to set. It could be done before assigning
-the governor for the device and results present in of of your files.
-
-Regards,
-Lukasz
-
-
+Guenter
