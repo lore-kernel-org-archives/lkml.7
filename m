@@ -2,86 +2,132 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94839C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3877EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BA020705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X7Rm0hzJ"
+	by mail.kernel.org (Postfix) with ESMTP id 18D3E20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgAHTPX (ORCPT
+        id S1730323AbgAHTQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:15:23 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59240 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbgAHTPX (ORCPT
+        Wed, 8 Jan 2020 14:16:16 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38638 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgAHTQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:15:23 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008JFIpF022294;
-        Wed, 8 Jan 2020 13:15:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578510918;
-        bh=GADxs8iuDDp1e7HSjq06LFbU5gQ44F5odDANmb4L5n4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=X7Rm0hzJ4cnLhLHnLadpg1GpH6CYa/NMaIJVfiahZDSiTNo58MAzVdz1MRiYvrYj4
-         6u5ORmpcFkHl9e2+Xh88CdmLraeKmyjrvGQXDo4xqyvqrlr76e6njQlMt9qQQ6xSU1
-         YEwWexAJA4McPuBC2TntNxjFcLRYTTzxq+jdI+ng=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008JFIec097542
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 13:15:18 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 13:15:18 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 13:15:17 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008JFHYa028176;
-        Wed, 8 Jan 2020 13:15:17 -0600
-Subject: Re: [PATCH v17 00/19] Multicolor Framework
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191114133023.32185-1-dmurphy@ti.com>
- <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
- <63fd7446-d051-5ef2-3901-dbc290b158e0@ti.com>
- <ad01049a-e166-9740-13ae-1ee91079c2fd@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5e249d4a-cfe6-3b21-ad86-e5a32fc6cd64@ti.com>
-Date:   Wed, 8 Jan 2020 13:12:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 14:16:16 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so85112wmc.3;
+        Wed, 08 Jan 2020 11:16:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=36jJmMym6/gPFXjbjo3iUPDmu6L1c+Uay/qLqZ4J7aI=;
+        b=VqvjqT88YP/n0P0cWitEb1wYeu/CvOIF/x0ijYIZ3lP+nCbD1Jt2L06g1TpmCxqu63
+         TTm9TZyy0RckESXGxxtDcax6S5Is373nZ+V1tnLZE5SXkraDrN0BfUhdMF1wgSaudzgc
+         DJ9gqT7jYwo7JnYISeloO1Mau/Q5nibySjOUH+txLTKiqn034I9TDxdRmimaJhnF68qx
+         K0K7SplYQoDh1rCLNmSFyfPsg0Ebn0AuJTTnHCTSt03kiirTgTCfQAYUIp1eD8NJm6X9
+         2SyMDT4hd1b7AjTEqCwe8OqvOTgrGYfZZUMy0+Do/ZGG+hJ/RseyfvRmP++fMlP2lmaZ
+         zJWA==
+X-Gm-Message-State: APjAAAXCy/UMCRdWANheiMRoDiI/WCatBdNnTaAl8hVIT46gmtwk5dVm
+        k0rHDW4ZVFlhFoVxfVAxvho=
+X-Google-Smtp-Source: APXvYqwmLbKd65cVkoq7X93kB6uk6sHQvjfaqHg81VOZcOBcr63wxm8Do7eYnkrZ+uCCVrMRSIaUHQ==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr177182wmj.4.1578510973649;
+        Wed, 08 Jan 2020 11:16:13 -0800 (PST)
+Received: from darkstar ([2a04:ee41:4:500b:c62:197d:80dc:1629])
+        by smtp.gmail.com with ESMTPSA id g21sm5577384wrb.48.2020.01.08.11.16.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 11:16:12 -0800 (PST)
+Date:   Wed, 8 Jan 2020 20:16:00 +0100
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200108191600.GC9635@darkstar>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200107134234.GA158998@google.com>
+ <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
+ <20200108095108.GA153171@google.com>
 MIME-Version: 1.0
-In-Reply-To: <ad01049a-e166-9740-13ae-1ee91079c2fd@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108095108.GA153171@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On 08-Jan 09:51, Quentin Perret wrote:
+> On Tuesday 07 Jan 2020 at 20:30:36 (+0100), Dietmar Eggemann wrote:
+> > On 07/01/2020 14:42, Quentin Perret wrote:
+> > > Hi Qais,
+> > > 
+> > > On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
+> > 
+> > [...]
+> > 
+> > >> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> > >> index e591d40fd645..19572dfc175b 100644
+> > >> --- a/kernel/sched/rt.c
+> > >> +++ b/kernel/sched/rt.c
+> > >> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
+> > >>   */
+> > >>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+> > >>  {
+> > >> +	/*
+> > >> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
+> > >> +	 * we apply any new value on the next wakeup, which is here.
+> > >> +	 */
+> > >> +	uclamp_rt_sync_default_util_min(p);
+> > > 
+> > > The task has already been enqueued and sugov has been called by then I
+> > > think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
 
-On 1/8/20 1:09 PM, Jacek Anaszewski wrote:
-> On 1/8/20 2:48 PM, Dan Murphy wrote:
->> Hello
->>
->> Do you have a time frame in applying this patch set?
-> I am afraid we're not waiting just for applying but for Pavel's
-> opinion on the most crucial parts of this patch set...
+No, the above sync should neven be done.
 
-OK.  The patchset is aging rapidly as it is almost 2 months old.
+For CFS tasks is currenly working by computing the effective clamp
+from core.c::enqueue_task() before calling into the scheduling class
+callback.
 
-Dan
+We should use a similar approach for RT tasks thus avoiding rt.c
+specific code and ensuring correct effective values are _aggregated_
+out of task's _requests_ and system-wide's _constraints_ before
+calling sugov.
 
+> > That's probably better.
+> > Just to be sure ...we want this feature (an existing rt task gets its
+> > UCLAMP_MIN value set when the sysctl changes)
+
+No, that's not a feature. That's an hack I would avoid.
+
+> > because there could be rt tasks running before the sysctl is set?
+> 
+> Yeah, I was wondering the same thing, but I'd expect sysadmin to want
+> this. We could change the min clamp of existing RT tasks in userspace
+> instead, but given how simple Qais' lazy update code is, the in-kernel
+> looks reasonable to me. No strong opinion, though.
+> 
+> Thanks,
+> Quentin
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
