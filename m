@@ -2,341 +2,136 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B30C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52125C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D9A206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289F420692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h1hY+k92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgAHKvL (ORCPT
+        id S1727958AbgAHKv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:51:11 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16432 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726295AbgAHKvK (ORCPT
+        Wed, 8 Jan 2020 05:51:28 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35100 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgAHKv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:51:10 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008AlHDI055314
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Jan 2020 05:51:10 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb92p8nc2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 05:51:09 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zaslonko@linux.ibm.com>;
-        Wed, 8 Jan 2020 10:51:07 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Jan 2020 10:51:05 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 008Ap3qv12714138
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jan 2020 10:51:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D43364204D;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DD0D42049;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware compression
-Date:   Wed,  8 Jan 2020 11:51:03 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107143058.GU3929@twin.jikos.cz>
-References: <20200107143058.GU3929@twin.jikos.cz>
-X-TM-AS-GCONF: 00
-x-cbid: 20010810-0008-0000-0000-000003478DA1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010810-0009-0000-0000-00004A67D14D
-Message-Id: <20200108105103.29028-1-zaslonko@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_03:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001080092
+        Wed, 8 Jan 2020 05:51:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UqJ+/pT3izXu8kjYbbiezAa/YocSHtlN1XVLHEFRKJs=; b=h1hY+k92RryrIdTBhr5FexAw8
+        O11fOafKK2pe28cad9xN3w5YC34MHOc8hOWB8aSF5ZjC4dagLW4Ma/0kLVb7woD8LikhFaOmCggkJ
+        tGj6ZF/m8LSvTqTKZyMP0PiFTtEWolCan0If+IvY/U+RhWEd59XTazjWez3mvFGUqz2I2uaQnIthm
+        xWGbmTwjpUTQg2ojRszkMLE7I3h5arSfW5f/vsqoPHTlTF8hBF73JlvH3LaJ8cmVuHmk/ZkvZDPlJ
+        6rlLIighU6yX4hf5dztz9In1qHEMM4u/Z2M90C6vdcHgH9EOOe687bUXiPyWnDC+dNrkWrcOJJgAm
+        fc6jza4hg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ip8uo-00019z-P9; Wed, 08 Jan 2020 10:50:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE995300693;
+        Wed,  8 Jan 2020 11:48:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AF2B320B79C98; Wed,  8 Jan 2020 11:50:11 +0100 (CET)
+Date:   Wed, 8 Jan 2020 11:50:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Anchal Agarwal <anchalag@amazon.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
+        sstabellini@kernel.org, konrad.wilk@oracle.co,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com,
+        dwmw@amazon.co.uk, fllinden@amaozn.com
+Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
+ hibernation
+Message-ID: <20200108105011.GY2827@hirez.programming.kicks-ass.net>
+References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to benefit from s390 zlib hardware compression support,
-increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
-s390 zlib hardware support is enabled on the machine). This brings up
-to 60% better performance in hardware on s390 compared to the PAGE_SIZE
-buffer and much more compared to the software zlib processing in btrfs.
-In case of memory pressure, fall back to a single page buffer during
-workspace allocation.
-The data compressed with larger input buffers will still conform to zlib
-standard and thus can be decompressed also on a systems that uses only
-PAGE_SIZE buffer for btrfs zlib.
+On Tue, Jan 07, 2020 at 11:45:26PM +0000, Anchal Agarwal wrote:
+> From: Eduardo Valentin <eduval@amazon.com>
+> 
+> System instability are seen during resume from hibernation when system
+> is under heavy CPU load. This is due to the lack of update of sched
+> clock data, and the scheduler would then think that heavy CPU hog
+> tasks need more time in CPU, causing the system to freeze
+> during the unfreezing of tasks. For example, threaded irqs,
+> and kernel processes servicing network interface may be delayed
+> for several tens of seconds, causing the system to be unreachable.
 
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
----
- fs/btrfs/compression.c |   2 +-
- fs/btrfs/zlib.c        | 135 ++++++++++++++++++++++++++++++-----------
- 2 files changed, 101 insertions(+), 36 deletions(-)
+> The fix for this situation is to mark the sched clock as unstable
+> as early as possible in the resume path, leaving it unstable
+> for the duration of the resume process. This will force the
+> scheduler to attempt to align the sched clock across CPUs using
+> the delta with time of day, updating sched clock data. In a post
+> hibernation event, we can then mark the sched clock as stable
+> again, avoiding unnecessary syncs with time of day on systems
+> in which TSC is reliable.
 
-diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-index ee834ef7beb4..6bd0e75a822c 100644
---- a/fs/btrfs/compression.c
-+++ b/fs/btrfs/compression.c
-@@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
- 	/* copy bytes from the working buffer into the pages */
- 	while (working_bytes > 0) {
- 		bytes = min_t(unsigned long, bvec.bv_len,
--				PAGE_SIZE - buf_offset);
-+				PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, working_bytes);
- 
- 		kaddr = kmap_atomic(bvec.bv_page);
-diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
-index a6c90a003c12..05615a1099db 100644
---- a/fs/btrfs/zlib.c
-+++ b/fs/btrfs/zlib.c
-@@ -20,9 +20,13 @@
- #include <linux/refcount.h>
- #include "compression.h"
- 
-+/* workspace buffer size for s390 zlib hardware support */
-+#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
-+
- struct workspace {
- 	z_stream strm;
- 	char *buf;
-+	unsigned int buf_size;
- 	struct list_head list;
- 	int level;
- };
-@@ -61,7 +65,21 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
- 			zlib_inflate_workspacesize());
- 	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
- 	workspace->level = level;
--	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	workspace->buf = NULL;
-+	/*
-+	 * In case of s390 zlib hardware support, allocate lager workspace
-+	 * buffer. If allocator fails, fall back to a single page buffer.
-+	 */
-+	if (zlib_deflate_dfltcc_enabled()) {
-+		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
-+					 __GFP_NOMEMALLOC | __GFP_NORETRY |
-+					 __GFP_NOWARN | GFP_NOIO);
-+		workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
-+	}
-+	if (!workspace->buf) {
-+		workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+		workspace->buf_size = PAGE_SIZE;
-+	}
- 	if (!workspace->strm.workspace || !workspace->buf)
- 		goto fail;
- 
-@@ -85,6 +103,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	struct page *in_page = NULL;
- 	struct page *out_page = NULL;
- 	unsigned long bytes_left;
-+	unsigned int in_buf_pages;
- 	unsigned long len = *total_out;
- 	unsigned long nr_dest_pages = *out_pages;
- 	const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
-@@ -102,9 +121,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	workspace->strm.total_in = 0;
- 	workspace->strm.total_out = 0;
- 
--	in_page = find_get_page(mapping, start >> PAGE_SHIFT);
--	data_in = kmap(in_page);
--
- 	out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
- 	if (out_page == NULL) {
- 		ret = -ENOMEM;
-@@ -114,12 +130,51 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	pages[0] = out_page;
- 	nr_pages = 1;
- 
--	workspace->strm.next_in = data_in;
-+	workspace->strm.next_in = workspace->buf;
-+	workspace->strm.avail_in = 0;
- 	workspace->strm.next_out = cpage_out;
- 	workspace->strm.avail_out = PAGE_SIZE;
--	workspace->strm.avail_in = min(len, PAGE_SIZE);
- 
- 	while (workspace->strm.total_in < len) {
-+		/*
-+		 * Get next input pages and copy the contents to
-+		 * the workspace buffer if required.
-+		 */
-+		if (workspace->strm.avail_in == 0) {
-+			bytes_left = len - workspace->strm.total_in;
-+			in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
-+					   workspace->buf_size / PAGE_SIZE);
-+			if (in_buf_pages > 1) {
-+				int i;
-+
-+				for (i = 0; i < in_buf_pages; i++) {
-+					if (in_page) {
-+						kunmap(in_page);
-+						put_page(in_page);
-+					}
-+					in_page = find_get_page(mapping,
-+								start >> PAGE_SHIFT);
-+					data_in = kmap(in_page);
-+					memcpy(workspace->buf + i * PAGE_SIZE,
-+					       data_in, PAGE_SIZE);
-+					start += PAGE_SIZE;
-+				}
-+				workspace->strm.next_in = workspace->buf;
-+			} else {
-+				if (in_page) {
-+					kunmap(in_page);
-+					put_page(in_page);
-+				}
-+				in_page = find_get_page(mapping,
-+							start >> PAGE_SHIFT);
-+				data_in = kmap(in_page);
-+				start += PAGE_SIZE;
-+				workspace->strm.next_in = data_in;
-+			}
-+			workspace->strm.avail_in = min(bytes_left,
-+						       (unsigned long) workspace->buf_size);
-+		}
-+
- 		ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
- 		if (ret != Z_OK) {
- 			pr_debug("BTRFS: deflate in loop returned %d\n",
-@@ -161,33 +216,43 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 		/* we're all done */
- 		if (workspace->strm.total_in >= len)
- 			break;
--
--		/* we've read in a full page, get a new one */
--		if (workspace->strm.avail_in == 0) {
--			if (workspace->strm.total_out > max_out)
--				break;
--
--			bytes_left = len - workspace->strm.total_in;
--			kunmap(in_page);
--			put_page(in_page);
--
--			start += PAGE_SIZE;
--			in_page = find_get_page(mapping,
--						start >> PAGE_SHIFT);
--			data_in = kmap(in_page);
--			workspace->strm.avail_in = min(bytes_left,
--							   PAGE_SIZE);
--			workspace->strm.next_in = data_in;
--		}
-+		if (workspace->strm.total_out > max_out)
-+			break;
- 	}
- 	workspace->strm.avail_in = 0;
--	ret = zlib_deflate(&workspace->strm, Z_FINISH);
--	zlib_deflateEnd(&workspace->strm);
--
--	if (ret != Z_STREAM_END) {
--		ret = -EIO;
--		goto out;
-+	/*
-+	 * Call deflate with Z_FINISH flush parameter providing more output
-+	 * space but no more input data, until it returns with Z_STREAM_END.
-+	 */
-+	while (ret != Z_STREAM_END) {
-+		ret = zlib_deflate(&workspace->strm, Z_FINISH);
-+		if (ret == Z_STREAM_END)
-+			break;
-+		if (ret != Z_OK && ret != Z_BUF_ERROR) {
-+			zlib_deflateEnd(&workspace->strm);
-+			ret = -EIO;
-+			goto out;
-+		} else if (workspace->strm.avail_out == 0) {
-+			/* get another page for the stream end */
-+			kunmap(out_page);
-+			if (nr_pages == nr_dest_pages) {
-+				out_page = NULL;
-+				ret = -E2BIG;
-+				goto out;
-+			}
-+			out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
-+			if (out_page == NULL) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			cpage_out = kmap(out_page);
-+			pages[nr_pages] = out_page;
-+			nr_pages++;
-+			workspace->strm.avail_out = PAGE_SIZE;
-+			workspace->strm.next_out = cpage_out;
-+		}
- 	}
-+	zlib_deflateEnd(&workspace->strm);
- 
- 	if (workspace->strm.total_out >= workspace->strm.total_in) {
- 		ret = -E2BIG;
-@@ -231,7 +296,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 
- 	workspace->strm.total_out = 0;
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -270,7 +335,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 		}
- 
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 
- 		if (workspace->strm.avail_in == 0) {
- 			unsigned long tmp;
-@@ -320,7 +385,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 	workspace->strm.total_in = 0;
- 
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 	workspace->strm.total_out = 0;
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -364,7 +429,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 			buf_offset = 0;
- 
- 		bytes = min(PAGE_SIZE - pg_offset,
--			    PAGE_SIZE - buf_offset);
-+			    PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, bytes_left);
- 
- 		kaddr = kmap_atomic(dest_page);
-@@ -375,7 +440,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 		bytes_left -= bytes;
- next:
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 	}
- 
- 	if (ret != Z_STREAM_END && bytes_left != 0)
--- 
-2.17.1
+This makes no frigging sense what so bloody ever. If the clock is
+stable, we don't care about sched_clock_data. When it is stable you get
+a linear function of the TSC without complicated bits on.
 
+When it is unstable, only then do we care about the sched_clock_data.
+
+> Reviewed-by: Erik Quanstrom <quanstro@amazon.com>
+> Reviewed-by: Frank van der Linden <fllinden@amazon.com>
+> Reviewed-by: Balbir Singh <sblbir@amazon.com>
+> Reviewed-by: Munehisa Kamata <kamatam@amazon.com>
+> Tested-by: Anchal Agarwal <anchalag@amazon.com>
+> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+> ---
+
+NAK, the code very much relies on never getting marked stable again
+after it gets set to unstable.
+
+> diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
+> index 1152259a4ca0..374d40e5b1a2 100644
+> --- a/kernel/sched/clock.c
+> +++ b/kernel/sched/clock.c
+> @@ -116,7 +116,7 @@ static void __scd_stamp(struct sched_clock_data *scd)
+>  	scd->tick_raw = sched_clock();
+>  }
+>  
+> -static void __set_sched_clock_stable(void)
+> +void set_sched_clock_stable(void)
+>  {
+>  	struct sched_clock_data *scd;
+>  
+> @@ -236,7 +236,7 @@ static int __init sched_clock_init_late(void)
+>  	smp_mb(); /* matches {set,clear}_sched_clock_stable() */
+>  
+>  	if (__sched_clock_stable_early)
+> -		__set_sched_clock_stable();
+> +		set_sched_clock_stable();
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.15.3.AMZN
+> 
