@@ -2,486 +2,460 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B69C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740CF20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A568206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5bjT4WV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q70q4UbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgAHLNV (ORCPT
+        id S1728036AbgAHLPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:13:21 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33851 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbgAHLNV (ORCPT
+        Wed, 8 Jan 2020 06:15:34 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:61060 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgAHLPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:13:21 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l8so2256548edw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 03:13:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GwQ/EhB8Yaij6F3qTqHcbP2uItwrZRa5C3SmBfi3lV0=;
-        b=R5bjT4WV3HWG+LKfuGeUsTCNHtVUeM7YJOezndvn8TqRV//IWbGPT/NaQ2O5XT3/E5
-         ApZCjO3NV0XgzBEyPlp55P84n4DE05XCnOO5/bwYw6LBLHatSL2RYpB5irqWPW3yF7im
-         3XOUH9BEBJA31t+OWdtIJ/O/ix+peU/kD7hEg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GwQ/EhB8Yaij6F3qTqHcbP2uItwrZRa5C3SmBfi3lV0=;
-        b=ZYBXCS0HfmYrjlEas2uZ+QSdn+ybCSkDQlXzaSNzMC2TdlFL61shncUfJD/jM+d+Xm
-         DvU0VnppWv4jt/gvwvgEfy9Fl5w8c+MIfZZfb8xxQgP5F/IvknQNvSckmBwMbHwbhQLK
-         WL0D5v2IKBmxUm1M3zyDmqYNHd+vaKFjnuSmo4qxOWtOAh00sqj2jH9RcGoxw05UKszP
-         0kkOHVzVHSd0T4CKPMSvfjmeTQh8TpfD+DqXds5zg/prH4sK1RtqKM3J0mt9BY7WncIi
-         WhR/vovt5GPyH0RCgPp/6VQwI9t/jveAMw5+D7f6i71eJ1NfsNaUBXURs05gTP35Tbb7
-         tl3A==
-X-Gm-Message-State: APjAAAWoXavTXxOVxWyHO0FuMRRat6HiD/dtXgDrw292U4R34tgfD6a9
-        Jtb8nqLqR1yHwzX9oKz3rChxE8q/3CoAr3acRAeGRA==
-X-Google-Smtp-Source: APXvYqzAEc0JXPQ5sjR14wxLROK5wf/I0+xc79jJvi6lHKZ1buznur8rj+FfBA1p+Uyhg22yrkCBQIp2ZecPP7f2988=
-X-Received: by 2002:a17:906:2894:: with SMTP id o20mr4275497ejd.199.1578481997542;
- Wed, 08 Jan 2020 03:13:17 -0800 (PST)
+        Wed, 8 Jan 2020 06:15:33 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200108111530epoutp04a0d3311f82fd87be7d7ebe4c8ac34387~n5SJb_Job0668806688epoutp041
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 11:15:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200108111530epoutp04a0d3311f82fd87be7d7ebe4c8ac34387~n5SJb_Job0668806688epoutp041
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578482130;
+        bh=IRrDxZuVyLnMElo+SajHPDtrFOhMpkvaPH1Ae9eOmMU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Q70q4UbT0IphrHWBG2t+LQ9OUVY7oqLT3My1rDlMgJcJqC3eRgTFkB69BuneYDbtu
+         u8bIsOs0gJkuMwC0N1PkXBLDHlOTlG0uymRvmA+r8sfz7ZLT0+W4mEIxNkKV8u8sQM
+         ZNB8L7B9soFkd53zB8//inxIJ2TIxcmGRLDGdtkg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200108111529epcas1p4c73819317411b23573d635bed5faaec2~n5SIlhI7C2026320263epcas1p4A;
+        Wed,  8 Jan 2020 11:15:29 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47t69V5zw3zMqYlm; Wed,  8 Jan
+        2020 11:15:26 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        66.F6.51241.EC9B51E5; Wed,  8 Jan 2020 20:15:26 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200108111526epcas1p2c02627b3e57ff38f758029a4298f2655~n5SF9Elgn1138911389epcas1p2O;
+        Wed,  8 Jan 2020 11:15:26 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200108111526epsmtrp2ce6766a347423d5e684ed9351788e60b~n5SF8PTkU1469614696epsmtrp2d;
+        Wed,  8 Jan 2020 11:15:26 +0000 (GMT)
+X-AuditID: b6c32a39-14bff7000001c829-08-5e15b9ce3fa8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        55.A5.10238.EC9B51E5; Wed,  8 Jan 2020 20:15:26 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200108111526epsmtip12aec44ea8c28b464a623523bb9ab8afb~n5SFpj8x91201812018epsmtip1_;
+        Wed,  8 Jan 2020 11:15:26 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+To:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9cfbdb8a-1326-e7e3-3a65-c3f8c45eaf19@samsung.com>
+Date:   Wed, 8 Jan 2020 20:22:33 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-4-roger.lu@mediatek.com>
-In-Reply-To: <20200107070154.1574-4-roger.lu@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Wed, 8 Jan 2020 19:12:41 +0800
-Message-ID: <CANdKZ0e+OtVsHps0GPKd7+1DQ=jdavcg4K7vRoW_tOTKD2Smug@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PM / AVS: SVS: Introduce SVS engine
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>,
-        YT Lee <yt.lee@mediatek.com>,
-        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
-        Charles Yang <Charles.Yang@mediatek.com>,
-        Angus Lin <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b64bf3d4-5b46-243b-495a-e1060af7a266@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0xTZxjOd87h9ICrflaQdywbeDRLYAI9lOphAeImMSdRE5Il/jAqHtoT
+        2tDbegpeZhZ0eKERHBFv9YbTJQy7OBhDSsRq12haphvilgbtZAGTBU2JwpZ6YVnb4zL+Pe/z
+        Pe/3Ps93YUjNOJ3DmG0uyWkTLSydQfX/mK8tvOvL2qZ9eJLjH53bj/hhf4zi2yP3Kf7yswnE
+        ex8EEB//LkzyPZ31/J19T1V8V/RZGj86eIbmZ1qDiL+wr1nFfxuMqvgHe7voNQsF7zkvEkbb
+        WglhIHoJCT5PVCX0drfQwsPfrtFCT2yAEOY8fkpo6+tGwkzve9UZm+vLTZJolJx5ks1gN5pt
+        dRXs+k9q1tboV2m5Qq6MX83m2USrVMFWbaguXGe2JBKweY2ipSFBVYuyzBZXljvtDS4pz2SX
+        XRWs5DBaHGWOIlm0yg22uiKD3fohp9WW6BPC7fUm3x9+2nHDsHMschM1oaMb3YhhAJfChYjd
+        jTIYDR5AEPSFaaV4juB03Ecpxd8IvF99n+ZG6amO6+EuUlkYQjA+8gQpxTSC/cf7yaRqCV4P
+        592XqCTOxNsh+PofIikicQcBZ4dbUyIaF4D/zwidxIvwMvg1PoGSptS4EgKXHUmawitgqmku
+        tU8W3gSh/maUxGq8GEKnJlN8Oq6A4StjKXckzoaxyfOEgnPhix9Op5wCDqtgrv8xqUSogpe3
+        fqYVvASmbvepFJwDM7GhN/xn8E0oSCvNhxD0+X95k18H/q+PEkmjJM6HK4PFCr0MfK/OImXw
+        Qoj9dThNOWA1HDqgUSTLYXQ8Sij4bbh4sIX+ErGeeXE88yJ45kXw/D+sE1HdaKnkkK11ksw5
+        9PNvuxelXndB2QC6dXdDAGEGsW+p4xczt2nSxEZ5lzWAgCHZTHXBygSlNoq7dktOe42zwSLJ
+        AaRPnHY7mZNlsCf+is1Vw+lLdDodX8qt0nMcm61m4iNbNbhOdEn1kuSQnP/1EUx6ThMyzro7
+        vHOh6atjn58kdXLT7S17ft9z5MXx6Rsl1i2Td4raZ01siznQVlucu/PTTP+Kd0If53d6Kps/
+        Ogb2wdWd2Yahe4/oiQXsRO/Sx7FTO2adfZtL7z8NTx02177bERna+sGZRvW9aZ31fao7l7i6
+        rtZ6LXyzI71n5ETV8gXlezf+xFKySeQKSKcs/gu2sM5U8wMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWy7bCSnO65naJxBv/mCFjcn9fKaHF6/zsW
+        i4k3rrBYrP74mNFize1DjBY/Npxitti4INvibNMbdosVdz+yWlzeNYfN4nPvEUaLhU0t7BZr
+        j9xlt7jduILNgc9jzbw1jB6X+3qZPHbcXcLosXPWXXaPTas62TzuXNvD5rHx3Q4mj7+z9rN4
+        9G1ZxejxeZNcAFcUl01Kak5mWWqRvl0CV8bOh/vZCg4kV9y6cZCxgXGybxcjJ4eEgInEvlMr
+        mLsYuTiEBHYzStw42MYMkZCUmHbxKJDNAWQLSxw+XAxR85ZRYu6KuWA1wgLeEvO7lrCA2CIC
+        CRJ//39kBCliFpjCJDGn9xYjRMcHRom/jzrAOtgEtCT2v7jBBmLzCyhKXP3xmBFkA6+AncSh
+        1QUgYRYBFYlXDX/BhooKhEnsXPKYCcTmFRCUODnzCVicU8BW4vT6W6wgNrOAusSfeZeYIWxx
+        iVtP5jNB2PISzVtnM09gFJ6FpH0WkpZZSFpmIWlZwMiyilEytaA4Nz232LDAMC+1XK84Mbe4
+        NC9dLzk/dxMjOIq1NHcwXl4Sf4hRgINRiYf3x2KROCHWxLLiytxDjBIczEoivFo6QCHelMTK
+        qtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoYhSq0Hny57zRnt11g
+        HVOmvHBMz/yGj/b/ggTW96y8+v9zeE2TdLGBhv3bHtUq+RKTRItXq9QmPqhfUmN1l3NRg9e7
+        Csmn853jHvYfC5u8nG/N5Wuffng+1Vbw3CQrtCf68LGKn0EXzrVazTLR37nLOK5ZfKujjfDh
+        NOV3y7JzDfbGHV1QoJSlxFKckWioxVxUnAgAs9GJFt4CAAA=
+X-CMS-MailID: 20200108111526epcas1p2c02627b3e57ff38f758029a4298f2655
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com>
+        <b64bf3d4-5b46-243b-495a-e1060af7a266@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roger,
+On 1/8/20 6:56 AM, Dmitry Osipenko wrote:
+> 07.01.2020 12:05, Chanwoo Choi пишет:
+>> Add new devfreq_transitions debugfs file to track the frequency transitions
+>> of all devfreq devices for the simple profiling as following:
+>> - /sys/kernel/debug/devfreq/devfreq_transitions
+>>
+>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+>> in Kconfig in order to save the transition history.
+>>
+>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+>> - time_ms	: Change time of frequency transition. (unit: millisecond)
+>> - dev_name	: Device name of h/w.
+>> - dev		: Device name made by devfreq core.
+>> - parent_dev	: If devfreq device uses the passive governor,
+>> 		  show parent devfreq device name.
+>> - load_%	: If devfreq device uses the simple_ondemand governor,
+>> 		  load is used by governor whene deciding the new frequency.
+>> 		  (unit: percentage)
+>> - old_freq_hz	: Frequency before changing. (unit: hz)
+>> - new_freq_hz	: Frequency after changed. (unit: hz)
+>>
+>> [For example on Exynos5422-based Odroid-XU3 board]
+>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+>> [snip]
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/Kconfig            |  13 +++
+>>  drivers/devfreq/devfreq.c          | 126 +++++++++++++++++++++++++++++
+>>  drivers/devfreq/governor.h         |   3 +
+>>  drivers/devfreq/governor_passive.c |   2 +
+>>  include/linux/devfreq.h            |   1 +
+>>  5 files changed, 145 insertions(+)
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index 0b1df12e0f21..84936eec0ef9 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -74,6 +74,19 @@ config DEVFREQ_GOV_PASSIVE
+>>  	  through sysfs entries. The passive governor recommends that
+>>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>>  
+>> +comment "DEVFREQ Debugging"
+>> +
+>> +config NR_DEVFREQ_TRANSITIONS
+>> +	int "Maximum storage size to save DEVFREQ Transitions (10-1000)"
+>> +	depends on DEBUG_FS
+>> +	range 10 1000
+>> +	default "100"
+>> +	help
+>> +	  Show the frequency transitions of all devfreq devices via
+>> +	  '/sys/kernel/debug/devfreq/devfreq_transitions' for the simple
+>> +	  profiling. It needs to decide the storage size to save transition
+>> +	  history of all devfreq devices.
+>> +
+>>  comment "DEVFREQ Drivers"
+>>  
+>>  config ARM_EXYNOS_BUS_DEVFREQ
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index c7f5e4e06420..7abaae06fa65 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -268,6 +268,57 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>>  }
+>>  EXPORT_SYMBOL(devfreq_update_status);
+>>  
+>> +/**
+>> + * devfreq_update_transitions() - Update frequency transitions for debugfs file
+>> + * @devfreq:	the devfreq instance
+>> + * @old_freq:	the previous frequency before changing the frequency
+>> + * @new_freq:	the new frequency after frequency is changed
+>> + */
+>> +struct devfreq_transitions {
+>> +	struct devfreq *devfreq;
+>> +	struct devfreq_freqs freqs;
+>> +	unsigned long load;
+>> +} debugfs_transitions[CONFIG_NR_DEVFREQ_TRANSITIONS];
+>> +
+>> +static spinlock_t devfreq_debugfs_lock;
+>> +static int debugfs_transitions_index;
+>> +
+>> +void devfreq_update_transitions(struct devfreq *devfreq,
+>> +			unsigned long old_freq, unsigned long new_freq,
+>> +			unsigned long busy_time, unsigned long total_time)
+>> +{
+>> +	unsigned long load;
+>> +	int i;
+>> +
+>> +	if (!devfreq_debugfs || !devfreq || (old_freq == new_freq))
+>> +		return;
+>> +
+>> +	spin_lock_nested(&devfreq_debugfs_lock, SINGLE_DEPTH_NESTING);
+>> +
+>> +	i = debugfs_transitions_index;
+>> +
+>> +	/*
+>> +	 * Calculate the load and if load is larger than 100,
+>> +	 * initialize to 100 because the unit of load is percentage.
+>> +	 */
+>> +	load = (total_time == 0 ? 0 : (100 * busy_time) / total_time);
+>> +	if (load > 100)
+>> +		load = 100;
+>> +
+>> +	debugfs_transitions[i].devfreq = devfreq;
+>> +	debugfs_transitions[i].freqs.time = ktime_to_ms(ktime_get());
+>> +	debugfs_transitions[i].freqs.old = old_freq;
+>> +	debugfs_transitions[i].freqs.new = new_freq;
+>> +	debugfs_transitions[i].load = load;
+>> +
+>> +	if (++i == CONFIG_NR_DEVFREQ_TRANSITIONS)
+>> +		i = 0;
+>> +	debugfs_transitions_index = i;
+>> +
+>> +	spin_unlock(&devfreq_debugfs_lock);
+>> +}
+>> +EXPORT_SYMBOL(devfreq_update_transitions);
+>> +
+>>  /**
+>>   * find_devfreq_governor() - Find devfreq governor from name
+>>   * @name:	name of the governor
+>> @@ -401,6 +452,10 @@ static int set_target(struct devfreq *devfreq,
+>>  		return err;
+>>  	}
+>>  
+>> +	devfreq_update_transitions(devfreq, cur_freq, new_freq,
+>> +					devfreq->last_status.busy_time,
+>> +					devfreq->last_status.total_time);
+>> +
+>>  	freqs.new = new_freq;
+>>  	notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>  
+>> @@ -1787,6 +1842,72 @@ static int devfreq_summary_show(struct seq_file *s, void *data)
+>>  }
+>>  DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
+>>  
+>> +/**
+>> + * devfreq_transitions_show() - Show the frequency transitions of the registered
+>> + *			devfreq devices via 'devfreq_transitions' debugfs file.
+>> + */
+>> +static int devfreq_transitions_show(struct seq_file *s, void *data)
+>> +{
+>> +	struct devfreq *devfreq = NULL;
+>> +	struct devfreq *p_devfreq = NULL;
+>> +	struct devfreq_freqs *freqs = NULL;
+>> +	unsigned long load;
+>> +	int i = debugfs_transitions_index;
+>> +	int count;
+>> +
+>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>> +			"time_ms",
+>> +			"dev_name",
+>> +			"dev",
+>> +			"parent_dev",
+>> +			"load_%",
+>> +			"old_freq_hz",
+>> +			"new_freq_hz");
+>> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+>> +			"----------",
+>> +			"------------------------------",
+>> +			"----------",
+>> +			"----------",
+>> +			"----------",
+>> +			"------------",
+>> +			"------------");
+> 
+> Isn't this needed here?
+> 
+> mutex_lock(&devfreq_list_lock);
 
-On Tue, Jan 7, 2020 at 3:02 PM Roger Lu <roger.lu@mediatek.com> wrote:
->
-> The SVS (Smart Voltage Scaling) engine is a piece
-> of hardware which is used to calculate optimized
-> voltage values of several power domains,
-> e.g. CPU/GPU/CCI, according to chip process corner,
-> temperatures, and other factors. Then DVFS driver
-> could apply those optimized voltage values to reduce
-> power consumption.
->
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> ---
->  drivers/power/avs/Kconfig     |   10 +
->  drivers/power/avs/Makefile    |    1 +
->  drivers/power/avs/mtk_svs.c   | 2075 +++++++++++++++++++++++++++++++++
->  include/linux/power/mtk_svs.h |   23 +
->  4 files changed, 2109 insertions(+)
->  create mode 100644 drivers/power/avs/mtk_svs.c
->  create mode 100644 include/linux/power/mtk_svs.h
-> [...]
-> new file mode 100644
-> index 000000000000..c46211a15fcd
-> --- /dev/null
-> +++ b/drivers/power/avs/mtk_svs.c
-> [...]
-> +
-> +static bool svs_mt8183_efuse_parsing(struct mtk_svs *svs)
-> +{
-> +       const struct svs_platform *svsp = svs->platform;
-> +       struct thermal_parameter tp;
-> +       struct svs_bank *svsb;
-> +       bool mon_mode_support = true;
-> +       int format[6], x_roomt[6], tb_roomt = 0;
-> +       u32 idx, i, ft_pgm, mts, temp0, temp1, temp2;
-> +
-> +       if (svsp->fake_efuse) {
-> +               pr_notice("fake efuse\n");
-> +               svs->efuse[0] = 0x00310080;
-> +               svs->efuse[1] = 0xabfbf757;
-> +               svs->efuse[2] = 0x47c747c7;
-> +               svs->efuse[3] = 0xabfbf757;
-> +               svs->efuse[4] = 0xe7fca0ec;
-> +               svs->efuse[5] = 0x47bf4b88;
-> +               svs->efuse[6] = 0xabfb8fa5;
-> +               svs->efuse[7] = 0xabfb217b;
-> +               svs->efuse[8] = 0x4bf34be1;
-> +               svs->efuse[9] = 0xabfb670d;
-> +               svs->efuse[16] = 0xabfbc653;
-> +               svs->efuse[17] = 0x47f347e1;
-> +               svs->efuse[18] = 0xabfbd848;
-> +
-> +               svs->thermal_efuse[0] = 0x02873f69;
-> +               svs->thermal_efuse[1] = 0xa11d9142;
-> +               svs->thermal_efuse[2] = 0xa2526900;
-> +       }
-> +
-> +       for (i = 0; i < svsp->efuse_num; i++) {
-> +               if (svs->efuse[i])
-> +                       pr_notice("M_HW_RES%d: 0x%08x\n", i, svs->efuse[i]);
-> +       }
-> +
-> +       /* svs efuse parsing */
-> +       ft_pgm = (svs->efuse[0] >> 4) & 0xf;
-> +
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +               if (ft_pgm <= 1)
-> +                       svsb->init01_volt_flag = SVSB_INIT01_VOLT_IGNORE;
-> +
-> +               switch (svsb->sw_id) {
-> +               case SVS_CPU_LITTLE:
-> +                       svsb->bdes = svs->efuse[16] & GENMASK(7, 0);
-> +                       svsb->mdes = (svs->efuse[16] >> 8) & GENMASK(7, 0);
-> +                       svsb->dcbdet = (svs->efuse[16] >> 16) & GENMASK(7, 0);
-> +                       svsb->dcmdet = (svs->efuse[16] >> 24) & GENMASK(7, 0);
-> +                       svsb->mtdes  = (svs->efuse[17] >> 16) & GENMASK(7, 0);
-> +
-> +                       if (ft_pgm <= 3)
-> +                               svsb->volt_offset += 10;
-> +                       else
-> +                               svsb->volt_offset += 2;
-> +                       break;
-> +               case SVS_CPU_BIG:
-> +                       svsb->bdes = svs->efuse[18] & GENMASK(7, 0);
-> +                       svsb->mdes = (svs->efuse[18] >> 8) & GENMASK(7, 0);
-> +                       svsb->dcbdet = (svs->efuse[18] >> 16) & GENMASK(7, 0);
-> +                       svsb->dcmdet = (svs->efuse[18] >> 24) & GENMASK(7, 0);
-> +                       svsb->mtdes  = svs->efuse[17] & GENMASK(7, 0);
-> +
-> +                       if (ft_pgm <= 3)
-> +                               svsb->volt_offset += 15;
-> +                       else
-> +                               svsb->volt_offset += 12;
-> +                       break;
-> +               case SVS_CCI:
-> +                       svsb->bdes = svs->efuse[4] & GENMASK(7, 0);
-> +                       svsb->mdes = (svs->efuse[4] >> 8) & GENMASK(7, 0);
-> +                       svsb->dcbdet = (svs->efuse[4] >> 16) & GENMASK(7, 0);
-> +                       svsb->dcmdet = (svs->efuse[4] >> 24) & GENMASK(7, 0);
-> +                       svsb->mtdes  = (svs->efuse[5] >> 16) & GENMASK(7, 0);
-> +
-> +                       if (ft_pgm <= 3)
-> +                               svsb->volt_offset += 10;
-> +                       else
-> +                               svsb->volt_offset += 2;
-> +                       break;
-> +               case SVS_GPU:
-> +                       svsb->bdes = svs->efuse[6] & GENMASK(7, 0);
-> +                       svsb->mdes = (svs->efuse[6] >> 8) & GENMASK(7, 0);
-> +                       svsb->dcbdet = (svs->efuse[6] >> 16) & GENMASK(7, 0);
-> +                       svsb->dcmdet = (svs->efuse[6] >> 24) & GENMASK(7, 0);
-> +                       svsb->mtdes  = svs->efuse[5] & GENMASK(7, 0);
-> +
-> +                       if (ft_pgm >= 2) {
-> +                               svsb->freq_base = 800000000; /* 800MHz */
-> +                               svsb->dvt_fixed = 2;
-> +                       }
-> +                       break;
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +
-> +       /* Thermal efuse parsing */
-> +       if (!svs->thermal_efuse)
-> +               return true;
-> +
-> +       tp.adc_ge_t = (svs->thermal_efuse[1] >> 22) & GENMASK(9, 0);
-> +       tp.adc_oe_t = (svs->thermal_efuse[1] >> 12) & GENMASK(9, 0);
-> +
-> +       tp.o_vtsmcu1 = (svs->thermal_efuse[0] >> 17) & GENMASK(8, 0);
-> +       tp.o_vtsmcu2 = (svs->thermal_efuse[0] >> 8) & GENMASK(8, 0);
-> +       tp.o_vtsmcu3 = svs->thermal_efuse[1] & GENMASK(8, 0);
-> +       tp.o_vtsmcu4 = (svs->thermal_efuse[2] >> 23) & GENMASK(8, 0);
-> +       tp.o_vtsmcu5 = (svs->thermal_efuse[2] >> 5) & GENMASK(8, 0);
-> +       tp.o_vtsabb = (svs->thermal_efuse[2] >> 14) & GENMASK(8, 0);
-> +
-> +       tp.degc_cali = (svs->thermal_efuse[0] >> 1) & GENMASK(5, 0);
-> +       tp.adc_cali_en_t = svs->thermal_efuse[0] & BIT(0);
-> +       tp.o_slope_sign = (svs->thermal_efuse[0] >> 7) & BIT(0);
-> +
-> +       tp.ts_id = (svs->thermal_efuse[1] >> 9) & BIT(0);
-> +       tp.o_slope = (svs->thermal_efuse[0] >> 26) & GENMASK(5, 0);
-> +
-> +       if (tp.adc_cali_en_t == 1) {
-> +               if (tp.ts_id == 0)
-> +                       tp.o_slope = 0;
-> +
-> +               if ((tp.adc_ge_t < 265 || tp.adc_ge_t > 758) ||
-> +                   (tp.adc_oe_t < 265 || tp.adc_oe_t > 758) ||
-> +                   (tp.o_vtsmcu1 < -8 || tp.o_vtsmcu1 > 484) ||
-> +                   (tp.o_vtsmcu2 < -8 || tp.o_vtsmcu2 > 484) ||
-> +                   (tp.o_vtsmcu3 < -8 || tp.o_vtsmcu3 > 484) ||
-> +                   (tp.o_vtsmcu4 < -8 || tp.o_vtsmcu4 > 484) ||
-> +                   (tp.o_vtsmcu5 < -8 || tp.o_vtsmcu5 > 484) ||
-> +                   (tp.o_vtsabb < -8 || tp.o_vtsabb > 484) ||
-> +                   (tp.degc_cali < 1 || tp.degc_cali > 63)) {
-> +                       pr_err("bad thermal efuse data. disable mon mode\n");
-> +                       mon_mode_support = false;
-> +               }
-> +       } else {
-> +               pr_err("no thermal efuse data. disable mon mode\n");
-> +               mon_mode_support = false;
-> +       }
-> +
-> +       if (!mon_mode_support) {
-> +               for (idx = 0; idx < svsp->bank_num; idx++) {
-> +                       svsb = &svsp->banks[idx];
-> +                       svsb->mode_support &= ~SVSB_MODE_MON;
-> +               }
-> +
-> +               return true;
-> +       }
-> +
-> +       tp.ge = ((tp.adc_ge_t - 512) * 10000) / 4096;
-> +       tp.oe = (tp.adc_oe_t - 512);
-> +       tp.gain = (10000 + tp.ge);
-> +
-> +       format[0] = (tp.o_vtsmcu1 + 3350 - tp.oe);
-> +       format[1] = (tp.o_vtsmcu2 + 3350 - tp.oe);
-> +       format[2] = (tp.o_vtsmcu3 + 3350 - tp.oe);
-> +       format[3] = (tp.o_vtsmcu4 + 3350 - tp.oe);
-> +       format[4] = (tp.o_vtsmcu5 + 3350 - tp.oe);
-> +       format[5] = (tp.o_vtsabb + 3350 - tp.oe);
-> +
-> +       for (i = 0; i < 6; i++)
-> +               x_roomt[i] = (((format[i] * 10000) / 4096) * 10000) / tp.gain;
-> +
-> +       temp0 = (10000 * 100000 / tp.gain) * 15 / 18;
-> +
-> +       if (tp.o_slope_sign == 0)
-> +               mts = (temp0 * 10) / (1534 + tp.o_slope * 10);
-> +       else
-> +               mts = (temp0 * 10) / (1534 - tp.o_slope * 10);
-> +
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +               svsb->mts = mts;
-> +
-> +               switch (svsb->sw_id) {
-> +               case SVS_CPU_LITTLE:
-> +                       tb_roomt = x_roomt[3];
-> +                       break;
-> +               case SVS_CPU_BIG:
-> +                       tb_roomt = x_roomt[4];
-> +                       break;
-> +               case SVS_CCI:
-> +                       tb_roomt = x_roomt[3];
-> +                       break;
-> +               case SVS_GPU:
-> +                       tb_roomt = x_roomt[1];
-> +                       break;
-> +               default:
-> +                       break;
+It doesn't touch the devfreq instance of devfreq_list.
+So, it is not necessary locked of devfreq_list_lock.
 
-There was a "return -EINVAL;" here in v5, should this be a "return
-false"? This function currently always return true.
+> 
+>> +	spin_lock(&devfreq_debugfs_lock);
+>> +	for (count = 0; count < CONFIG_NR_DEVFREQ_TRANSITIONS; count++) {
+>> +		devfreq = debugfs_transitions[i].devfreq;
+>> +		freqs = &debugfs_transitions[i].freqs;
+>> +		load = debugfs_transitions[i].load;
+>> +
+>> +		i = (CONFIG_NR_DEVFREQ_TRANSITIONS == ++i) ? 0 : i;
+>> +		if (!devfreq)
+>> +			continue;
+> 
+> I suppose debugfs_transitions[i].devfreq should be set to NULL when
+> devfreq device is removed, but I don't see it happening anywhere in this
+> patch.
 
-> +               }
-> +
-> +               temp0 = (tp.degc_cali * 10 / 2);
-> +               temp1 = ((10000 * 100000 / 4096 / tp.gain) *
-> +                        tp.oe + tb_roomt * 10) * 15 / 18;
-> +
-> +               if (tp.o_slope_sign == 0)
-> +                       temp2 = temp1 * 100 / (1534 + tp.o_slope * 10);
-> +               else
-> +                       temp2 = temp1 * 100 / (1534 - tp.o_slope * 10);
-> +
-> +               svsb->bts = (temp0 + temp2 - 250) * 4 / 10;
-> +       }
-> +
-> +       return true;
-> +}
-> [...]
-> +
-> +static int svs_resource_setup(struct mtk_svs *svs)
-> +{
-> +       const struct svs_platform *svsp = svs->platform;
-> +       struct svs_bank *svsb;
-> +       struct platform_device *pdev;
-> +       struct device_node *np = NULL;
-> +       struct dev_pm_opp *opp;
-> +       unsigned long freq;
-> +       int count, ret;
-> +       u32 idx, i;
-> +
-> +       for (idx = 0; idx < svsp->bank_num; idx++) {
-> +               svsb = &svsp->banks[idx];
-> +
-> +               switch (svsb->sw_id) {
-> +               case SVS_CPU_LITTLE:
-> +                       svsb->name = "SVS_CPU_LITTLE";
-> +                       break;
-> +               case SVS_CPU_BIG:
-> +                       svsb->name = "SVS_CPU_BIG";
-> +                       break;
-> +               case SVS_CCI:
-> +                       svsb->name = "SVS_CCI";
-> +                       break;
-> +               case SVS_GPU:
-> +                       svsb->name = "SVS_GPU";
-> +                       break;
-> +               default:
-> +                       WARN_ON(1);
-> +                       return -EINVAL;
-> +               }
-> +
-> +               /* Add svs bank device for opp-table/mtcmos/buck control */
-> +               pdev = platform_device_alloc(svsb->name, 0);
-> +               if (!pdev) {
-> +                       pr_err("%s: fail to alloc pdev for svs_bank\n",
-> +                              svsb->name);
-> +                       return -ENOMEM;
-> +               }
-> +
-> +               for_each_child_of_node(svs->dev->of_node, np) {
-> +                       if (of_device_is_compatible(np, svsb->of_compatible)) {
-> +                               pdev->dev.of_node = np;
-> +                               break;
-> +                       }
-> +               }
-> +
-> +               ret = platform_device_add(pdev);
-> +               if (ret) {
-> +                       pr_err("%s: fail to add svs_bank device: %d\n",
-> +                              svsb->name, ret);
-> +                       return ret;
-> +               }
-> +
-> +               svsb->dev = &pdev->dev;
-> +               dev_set_drvdata(svsb->dev, svs);
-> +               ret = dev_pm_opp_of_add_table(svsb->dev);
-> +               if (ret) {
-> +                       pr_err("%s: fail to add opp table: %d\n",
-> +                              svsb->name, ret);
-> +                       return ret;
-> +               }
-> +
-> +               mutex_init(&svsb->lock);
-> +
-> +               svsb->buck = devm_regulator_get_optional(svsb->dev,
-> +                                                        svsb->buck_name);
-> +               if (IS_ERR(svsb->buck)) {
-> +                       pr_err("%s: cannot get regulator \"%s-supply\"\n",
-> +                              svsb->name, svsb->buck_name);
-> +                       return PTR_ERR(svsb->buck);
-> +               }
-> +
-> +               count = dev_pm_opp_get_opp_count(svsb->dev);
-> +               if (svsb->opp_count != count) {
-> +                       pr_err("%s: opp_count not \"%u\" but get \"%d\"?\n",
-> +                              svsb->name, svsb->opp_count, count);
-> +                       return count;
-> +               }
-> +
-> +               for (i = 0, freq = (u32)-1; i < svsb->opp_count; i++, freq--) {
+When debugfs_transitions[] array is not fully filled out
+by devfreq_update_transitions(), debugfs_transitions[i].devfreq is NULL.
+In this case, if user execute 'cat /sys/kernel/debug/devfreq/devfreq_transitions',
+devfreq_transitions_show() need to check the debugfs_transitions[i].devfreq
+is NULL or not.
 
-Can use U32_MAX instead of (u32)-1.
+After filled out the debugfs_transitions[] array,
+actually, 'if(!devfreq)' is not necessary. Maybe, this style is inefficient
+It need to rework. I'll think again.
 
-> +                       opp = dev_pm_opp_find_freq_floor(svsb->dev, &freq);
-> +                       if (IS_ERR(opp)) {
-> +                               pr_err("%s: error opp entry!!, err = %ld\n",
-> +                                      svsb->name, PTR_ERR(opp));
-> +                               return PTR_ERR(opp);
-> +                       }
-> +
-> +                       svsb->opp_freqs[i] = freq;
-> +                       svsb->opp_volts[i] = dev_pm_opp_get_voltage(opp);
-> +                       svsb->freqs_pct[i] = percent(svsb->opp_freqs[i],
-> +                                                    svsb->freq_base);
-> +                       dev_pm_opp_put(opp);
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> [...]
-> +
-> +static ssize_t svs_debug_proc_write(struct file *file,
-> +                                   const char __user *buffer,
-> +                                   size_t count, loff_t *pos)
-> +{
-> +       struct svs_bank *svsb = (struct svs_bank *)PDE_DATA(file_inode(file));
-> +       struct mtk_svs *svs = dev_get_drvdata(svsb->dev);
-> +       char *buf = (char *)__get_free_page(GFP_USER);
-> +       unsigned long flags;
-> +       int enabled, ret;
-> +
-> +       if (svsb->phase == SVSB_PHASE_ERROR)
-> +               return count;
-> +
-> +       if (!buf)
-> +               return -ENOMEM;
-> +
-> +       if (count >= PAGE_SIZE) {
-> +               free_page((unsigned long)buf);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (copy_from_user(buf, buffer, count)) {
-> +               free_page((unsigned long)buf);
-> +               return -EFAULT;
-> +       }
-> +
-> +       buf[count] = '\0';
+> 
+>> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+>> +		if (!strncmp(devfreq->governor_name,
+>> +				DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
+> 
+> This could be:
+> 
+> if (IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE) &&
+>     !strncmp(devfreq->governor_name,
+> 		  DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
 
-Can use memdup_user_nul to allocate the buf and copy from user buffer
-for the above operations (and for other _write() functions).
+Good. It is more clear. I'll edit it according to your comment.
 
-> +
-> +       ret = kstrtoint(buf, 10, &enabled);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (!enabled) {
-> +               flags = claim_mtk_svs_lock();
-> +               svs->bank = svsb;
-> +               svsb->mode_support = SVSB_MODE_ALL_DISABLE;
-> +               svs_switch_bank(svs);
-> +               svs_writel(svs, SVSEN_OFF, SVSEN);
-> +               svs_writel(svs, INTSTS_CLEAN, INTSTS);
-> +               release_mtk_svs_lock(flags);
-> +       }
-> +
-> +       svsb->phase = SVSB_PHASE_ERROR;
-> +       svsb_set_volts(svsb, true);
+> 
+>> +			struct devfreq_passive_data *data = devfreq->data;
+>> +
+>> +			if (data)
+>> +				p_devfreq = data->parent;
+> 
+> const char *devname = "";
+> 
+> ...
+> 
+> 	if (data)
+> 		devname = dev_name(data->parent);
+> 
 
-Missing free_page() (or kfree() if changing to memdup_user_nul) here
-(and in other _write() functions).
+'devname' word is too general. It is difficult to know
+this name is for parent devfreq device. So, I prefer
+to keep the origin style.
 
-> +
-> +       return count;
-> +}
-> +
-> +proc_fops_rw(svs_debug);
-> +
-> [...]
+>> +		} else {
+>> +			p_devfreq = NULL;
+>> +		}
+>> +#endif
+>> +		seq_printf(s, "%-10lld %-30s %-10s %-10s %-6ld %-12ld %-12ld\n",
+>> +			freqs->time,
+>> +			dev_name(devfreq->dev.parent),
+>> +			dev_name(&devfreq->dev),
+>> +			p_devfreq ? dev_name(&p_devfreq->dev) : "",
+>> +			load,
+>> +			freqs->old,
+>> +			freqs->new);
+>> +	}
+>> +	spin_unlock(&devfreq_debugfs_lock);
+>> +
+>> +	return 0;
+>> +}
+>> +DEFINE_SHOW_ATTRIBUTE(devfreq_transitions);
+>> +
+>>  static int __init devfreq_init(void)
+>>  {
+>>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
+>> @@ -1808,9 +1929,14 @@ static int __init devfreq_init(void)
+>>  		devfreq_debugfs = NULL;
+>>  		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
+>>  	} else {
+>> +		spin_lock_init(&devfreq_debugfs_lock);
+>> +
+>>  		debugfs_create_file("devfreq_summary", 0444,
+>>  				devfreq_debugfs, NULL,
+>>  				&devfreq_summary_fops);
+>> +		debugfs_create_file("devfreq_transitions", 0444,
+>> +				devfreq_debugfs, NULL,
+>> +				&devfreq_transitions_fops);
+>>  	}
+>>  
+>>  	return 0;
+>> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+>> index dc7533ccc3db..01eecfdaf2d6 100644
+>> --- a/drivers/devfreq/governor.h
+>> +++ b/drivers/devfreq/governor.h
+>> @@ -68,6 +68,9 @@ extern int devfreq_add_governor(struct devfreq_governor *governor);
+>>  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+>>  
+>>  extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+>> +extern void devfreq_update_transitions(struct devfreq *devfreq,
+>> +			unsigned long old_freq, unsigned long new_freq,
+>> +			unsigned long busy_time, unsigned long total_time);
+>>  
+>>  static inline int devfreq_update_stats(struct devfreq *df)
+>>  {
+>> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+>> index be6eeab9c814..05fa654239f5 100644
+>> --- a/drivers/devfreq/governor_passive.c
+>> +++ b/drivers/devfreq/governor_passive.c
+>> @@ -109,6 +109,8 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>>  	if (ret < 0)
+>>  		goto out;
+>>  
+>> +	devfreq_update_transitions(devfreq, devfreq->previous_freq, freq, 0, 0);
+>> +
+>>  	if (devfreq->profile->freq_table
+>>  		&& (devfreq_update_status(devfreq, freq)))
+>>  		dev_err(&devfreq->dev,
+>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+>> index 49cdb2378030..933692e5d867 100644
+>> --- a/include/linux/devfreq.h
+>> +++ b/include/linux/devfreq.h
+>> @@ -196,6 +196,7 @@ struct devfreq {
+>>  };
+>>  
+>>  struct devfreq_freqs {
+>> +	s64 time;
+>>  	unsigned long old;
+>>  	unsigned long new;
+>>  };
+>>
+> 
+> 
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
