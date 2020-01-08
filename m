@@ -2,143 +2,104 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C56C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11290C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C9A20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578470374;
-	bh=O4Amm0qb2RUINtvaLuluBzRmt873weGN6kdJZSo05ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ikE3u5zLQrQX6Io97vUbMZ8VLoyyszUPRL67fsZjr+TSQms36Egqf6xn9jTXAI3Uq
-	 oQgdUFMjjEgSd0cT7txy+QIs3SudRqV1bInw97BRISLrD/xpfUv3MN5miKF/+qFOvc
-	 jUWqXwRj1y+jfZJHp+e6HF6WBzKQt2YSul0OseVY=
+	by mail.kernel.org (Postfix) with ESMTP id D15DC20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgAHH7e (ORCPT
+        id S1727088AbgAHH7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:59:34 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45690 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHH7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:59:33 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so1759909edw.12;
-        Tue, 07 Jan 2020 23:59:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cMtj+4fElMhagL+EzReN9239oHGv4iNUyK/a8PqjjnQ=;
-        b=KRjfhBH8Wc/RMzHhToQAuXOzWc3MF4+h308/OcV8JMfPTg4hy1iYM9Pqba4BkN5Yei
-         64LuyHhOPmgfZYi/TN1WmRPhL1khGd5JYU0MZ44yQk2PjSsnvXMI7D7XsBfWLM4GY/ym
-         D8+zLqJFKhMG+I8LBBI8C69k4Vzo3Te+/matx6IiCeBVf8Di/ohkl5me3V9f0o7o76R7
-         WhY6229nSyJOsTMzWRmw+PWFkotLkWtHcEuXQiiftOT9h/Q7RFs7gvLXb1fpa6Z2siLS
-         M88TaEzgAS8V87YuaMJv4l1spnZifYn3mYdiuhal+PSYv2olNH+ajG/Xn1tcORT6Sigj
-         0prw==
-X-Gm-Message-State: APjAAAUNZeoRdsfGnw0nCNQqrdTh9Y3UN1e9AjXQojpzi4kjF+LFJPQF
-        Up6qKXgHdkP1a8eA0FYqh8c=
-X-Google-Smtp-Source: APXvYqx1oeIDihha1MbvAq15cZlBUGgIhGRDf0dk1K6ypd+mZhyiUjjB1ZsQjTlzbZgvEOTKZctg/A==
-X-Received: by 2002:a17:906:1d50:: with SMTP id o16mr3510203ejh.111.1578470371251;
-        Tue, 07 Jan 2020 23:59:31 -0800 (PST)
-Received: from pi3 ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id bm18sm58278edb.97.2020.01.07.23.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 23:59:30 -0800 (PST)
-Date:   Wed, 8 Jan 2020 08:59:28 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: tiny4412: add proper panel node
-Message-ID: <20200108075928.GA9911@pi3>
-References: <20200106191003.21584-1-tiny.windzz@gmail.com>
- <20200106191003.21584-2-tiny.windzz@gmail.com>
- <20200107090449.GA32007@pi3>
- <CAEExFWvJx82h1c1QBrQ+DpT4kgEZ0o3q_O7JLbk-1L-iuMGPEw@mail.gmail.com>
+        Wed, 8 Jan 2020 02:59:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9123 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726199AbgAHH7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 02:59:38 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 529256531BB77D6DCB2F;
+        Wed,  8 Jan 2020 15:59:34 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 8 Jan 2020
+ 15:59:28 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add a way to turn off ipu bio cache
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200107020709.73568-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <afddac87-b7c5-f68c-4e55-3705be311cf6@huawei.com>
+Date:   Wed, 8 Jan 2020 15:59:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAEExFWvJx82h1c1QBrQ+DpT4kgEZ0o3q_O7JLbk-1L-iuMGPEw@mail.gmail.com>
+In-Reply-To: <20200107020709.73568-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 03:07:25AM +0800, Frank Lee wrote:
-> On Tue, Jan 7, 2020 at 5:04 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, Jan 06, 2020 at 07:10:03PM +0000, Yangtao Li wrote:
-> > > This patch add at070tn92 panel for tiny4412 board.
-> >
-> > Please fix description as in patch 1.
-> >
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  arch/arm/boot/dts/exynos4412-tiny4412.dts | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > > index 2b62cb27420c..57f9d09233ad 100644
-> > > --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > > +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-> > > @@ -66,6 +66,16 @@
-> > >                       clock-frequency = <24000000>;
-> > >               };
-> > >       };
-> > > +
-> > > +     panel {
-> > > +             compatible = "innolux,at070tn92";
-> > > +
-> > > +             port {
-> > > +                     panel_input: endpoint {
-> > > +                             remote-endpoint = <&lcdc_output>;
-> > > +                     };
-> > > +             };
-> > > +     };
-> > >  };
-> > >
-> > >  &fimd {
-> > > @@ -74,6 +84,12 @@
-> > >       #address-cells = <1>;
-> > >       #size-cells = <0>;
-> > >       status = "okay";
-> >
-> > One empty space here.
-> >
-> > > +     port@3 {
-> > > +             reg = <3>;
-> >
-> > Why starting from "3"? Why this is port@3, not just "port"?
+On 2020/1/7 10:07, Jaegeuk Kim wrote:
+> Setting 0x40 in /sys/fs/f2fs/dev/ipu_policy gives a way to turn off
+> bio cache, which is useufl to check whether block layer using hardware
+> encryption engine merges IOs correctly.
 > 
-> From samsung-fimd.txt:
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > ---
-> The device node can contain 'port' child nodes according to the bindings defined
-> in [2]. The following are properties specific to those nodes:
-> - reg: (required) port index, can be:
->                 0 - for CAMIF0 input,
->                 1 - for CAMIF1 input,
->                 2 - for CAMIF2 input,
->                 3 - for parallel output,
->                 4 - for write-back interface
-> ---
+>  Documentation/filesystems/f2fs.txt | 1 +
+>  fs/f2fs/segment.c                  | 2 +-
+>  fs/f2fs/segment.h                  | 1 +
+>  3 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> I guess it is influenced here.
-> https://elixir.bootlin.com/linux/v5.5-rc5/source/drivers/gpu/drm/exynos/exynos_drm_dpi.c#L170
-> Without it, lcd is completely black.
+> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+> index 41b5aa94b30f..cd93bcc34726 100644
+> --- a/Documentation/filesystems/f2fs.txt
+> +++ b/Documentation/filesystems/f2fs.txt
+> @@ -335,6 +335,7 @@ Files in /sys/fs/f2fs/<devname>
+>                                 0x01: F2FS_IPU_FORCE, 0x02: F2FS_IPU_SSR,
+>                                 0x04: F2FS_IPU_UTIL,  0x08: F2FS_IPU_SSR_UTIL,
+>                                 0x10: F2FS_IPU_FSYNC.
 
-Thanks for explanation.
+. -> ,
 
-Best regards,
-Krzysztof
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
+Thanks,
+
+> +			       0x40: F2FS_IPU_NOCACHE disables bio caches.
+>  
+>   min_ipu_util                 This parameter controls the threshold to trigger
+>                                in-place-updates. The number indicates percentage
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index a9519532c029..311fe4937f6a 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3289,7 +3289,7 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+>  
+>  	stat_inc_inplace_blocks(fio->sbi);
+>  
+> -	if (fio->bio)
+> +	if (fio->bio && !(SM_I(sbi)->ipu_policy & (1 << F2FS_IPU_NOCACHE)))
+>  		err = f2fs_merge_page_bio(fio);
+>  	else
+>  		err = f2fs_submit_page_bio(fio);
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index a1b3951367cd..02e620470eef 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -623,6 +623,7 @@ enum {
+>  	F2FS_IPU_SSR_UTIL,
+>  	F2FS_IPU_FSYNC,
+>  	F2FS_IPU_ASYNC,
+> +	F2FS_IPU_NOCACHE,
+>  };
+>  
+>  static inline unsigned int curseg_segno(struct f2fs_sb_info *sbi,
+> 
