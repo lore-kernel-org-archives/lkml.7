@@ -2,98 +2,187 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1775C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39114C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B63220705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEakNOEJ"
+	by mail.kernel.org (Postfix) with ESMTP id 15B7420705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgAHTSr (ORCPT
+        id S1729922AbgAHTUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:18:47 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42536 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbgAHTSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:18:47 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y19so3285475lfl.9;
-        Wed, 08 Jan 2020 11:18:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1e7F2RlUVhu0SkYfFPi2wHOfMcdKUgYhl2MgWfpXux4=;
-        b=SEakNOEJDdeLyVkM6QJhA4x6bxL7RSJ4D+5ekOaBcMjikxNXfmz+GMoxp5xbWVAtCg
-         ubU0TeYJqRjpF7BbtGOrmvvho3xYvPcK3UeyhHKBhe93R0rXTTTaY7bqKW06RpiirjJ9
-         NX/FJPlGjRqSQuTCJB/DHeoyCnQ2eT6BTGCKAw4ORRTCvJKLowgaTbl4M+h5tR9Txgdq
-         3OiBu5WHXVOHH/3b34uogUMmDYotX+uztmnsvDt2OPm7xvY/B5pg6wPJ/dufGcOQATwr
-         7BW81hA0wSsVzgLy6ib0T74RtePNINVQJHDEWNj/ztf1yJ1h+fm7bXTGsbKlMnZ24IqQ
-         e+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1e7F2RlUVhu0SkYfFPi2wHOfMcdKUgYhl2MgWfpXux4=;
-        b=g237KjemkLxYOR+dfIYI3RfhdWF8k+Vp+xw0SlDRE+OrxxfGfhntdeQgGIstAeYip+
-         7hvEHJyMf7fJ/JlGJkmqmb/G7xStWUgEnHLz+8VyX2BLjUXS68nqcxa2Ic6i8NIFo2C7
-         5R8jWKgVEfYes6Frx6vzSE0YvL5nALGIfOvg97155q3Om/KHJpweHbpJxJT34OCR12Ru
-         wFVbEQJQ2335QDLQzVOOctfG/LTkgLJmiPjxkjb+FQsP3bc2Hi4a6r9RId6fXrSM1XeW
-         oXkiiHSSKeBf88BQZE7ynSA1nhnZLWqMMj9mZ4fg8JSSfBCTN+/qhAUygQLRghYznPSQ
-         sTgA==
-X-Gm-Message-State: APjAAAX2y/sP2DbWCbr5ON6TKWa6XnHkxTJxqBE4kGS9v+84arJlP4dW
-        AAYjuEy92i9CpN4YuFy7Hf9X07IJ
-X-Google-Smtp-Source: APXvYqw2ei9FuTxbPbBjLQtWFNYu3JU2iQCVFhh/zqhLw8S1Ud5Jwwg65rx67FVvo1a9XqQZA8cpIA==
-X-Received: by 2002:a19:a408:: with SMTP id q8mr3648129lfc.174.1578511124483;
-        Wed, 08 Jan 2020 11:18:44 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 138sm1911112lfa.76.2020.01.08.11.18.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 11:18:43 -0800 (PST)
-Subject: Re: [PATCH v7 04/21] clk: tegra: Add Tegra OSC to clock lookup
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <1578457515-3477-5-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ac25ee8d-497c-e102-2ad9-382be03f3333@gmail.com>
-Date:   Wed, 8 Jan 2020 22:18:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 8 Jan 2020 14:20:00 -0500
+Received: from mga04.intel.com ([192.55.52.120]:45729 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727191AbgAHTUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 14:20:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 11:19:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
+   d="scan'208";a="254329013"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jan 2020 11:19:58 -0800
+Date:   Wed, 8 Jan 2020 11:19:58 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v3] KVM: SVM: Override default MMIO mask if memory
+ encryption is enabled
+Message-ID: <20200108191958.GA31899@linux.intel.com>
+References: <6d2b7e37ca4dca92fadd1f3df93803fd17aa70ad.1578508816.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <1578457515-3477-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d2b7e37ca4dca92fadd1f3df93803fd17aa70ad.1578508816.git.thomas.lendacky@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.01.2020 07:24, Sowjanya Komatineni пишет:
-> OSC is one of the parent for Tegra clocks clk_out_1, clk_out_2,
-> and clk_out_3.
+On Wed, Jan 08, 2020 at 12:40:16PM -0600, Tom Lendacky wrote:
+> The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
+> faults when a guest performs MMIO. The AMD memory encryption support uses
+> a CPUID function to define the encryption bit position. Given this, it is
+> possible that these bits can conflict.
 > 
-> So, this patch adds Tegra OSC to clock lookup.
+> Use svm_hardware_setup() to override the MMIO mask if memory encryption
+> support is enabled. Various checks are performed to ensure that the mask
+> is properly defined and rsvd_bits() is used to generate the new mask (as
+> was done prior to the change that necessitated this patch).
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
+> Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+A few nits below, other than that:
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> 
+> ---
+> 
+> Changes in v3:
+> - Add additional checks to ensure there are no conflicts between the
+>   encryption bit position and physical address setting.
+> - Use rsvd_bits() generated mask (as was previously used) instead of
+>   setting a single bit.
+> 
+> Changes in v2:
+> - Use of svm_hardware_setup() to override MMIO mask rather than adding an
+>   override callback routine.
+> ---
+>  arch/x86/kvm/svm.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 122d4ce3b1ab..9d6bd3fc12c8 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -1307,6 +1307,55 @@ static void shrink_ple_window(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> +/*
+> + * The default MMIO mask is a single bit (excluding the present bit),
+> + * which could conflict with the memory encryption bit. Check for
+> + * memory encryption support and override the default MMIO masks if
+> + * it is enabled.
+> + */
+> +static __init void svm_adjust_mmio_mask(void)
+> +{
+> +	unsigned int enc_bit, mask_bit;
+> +	u64 msr, mask;
+> +
+> +	/* If there is no memory encryption support, use existing mask */
+> +	if (cpuid_eax(0x80000000) < 0x8000001f)
+> +		return;
+> +
+> +	/* If memory encryption is not enabled, use existing mask */
+> +	rdmsrl(MSR_K8_SYSCFG, msr);
+> +	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
+> +		return;
+> +
+> +	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
+> +	mask_bit = boot_cpu_data.x86_phys_bits;
+> +
+> +	/* Increment the mask bit if it is the same as the encryption bit */
+> +	if (enc_bit == mask_bit)
+> +		mask_bit++;
+
+Nice!
+
+> +
+> +	if (mask_bit > 51) {
+> +		/*
+> +		 * The mask bit is above 51, so use bit 51 without the present
+> +		 * bit.
+> +		 */
+> +		mask = BIT_ULL(51);
+
+I don't think setting bit 51 is necessary.  Setting a reserved PA bit is
+purely to trigger the #PF, the MMIO spte itself is confirmed by the presence
+of SPTE_MMIO_MASK.
+
+AFAICT, clearing only the present bit in kvm_set_mmio_spte_mask() is an
+odd implementation quirk, i.e. it can, and arguably should, simply clear
+the mask.  It's something I'd like to clean up (in mmu.c) and would prefer
+to not propagate here.
+
+> +	} else {
+> +		/*
+> +		 * Some bits above the physical addressing limit will always
+> +		 * be reserved, so use the rsvd_bits() function to generate
+> +		 * the mask. This mask, along with the present bit, will be
+> +		 * used to generate a page fault with PFER.RSV = 1.
+> +		 */
+> +		mask = rsvd_bits(mask_bit, 51);
+> +		mask |= BIT_ULL(0);
+
+My personal preference would be to use PT_PRESENT_MASK (more crud in mmu.c
+that should be fixed).  And the brackets can be dropped if mask is set in
+a single line, e.g.:
+
+	/*
+	 * Here be a comment.
+	 */
+	if (mask_bit > 51)
+		mask = 0;
+	else
+		mask = rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK;
+
+> +	}
+> +
+> +	kvm_mmu_set_mmio_spte_mask(mask, mask,
+> +				   PT_WRITABLE_MASK |
+> +				   PT_USER_MASK);
+> +}
+> +
+>  static __init int svm_hardware_setup(void)
+>  {
+>  	int cpu;
+> @@ -1361,6 +1410,8 @@ static __init int svm_hardware_setup(void)
+>  		}
+>  	}
+>  
+> +	svm_adjust_mmio_mask();
+> +
+>  	for_each_possible_cpu(cpu) {
+>  		r = svm_cpu_init(cpu);
+>  		if (r)
+> -- 
+> 2.17.1
+> 
