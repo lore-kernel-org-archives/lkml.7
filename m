@@ -2,35 +2,34 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABC6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B07C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD0C2082E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0862077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgAHLoB (ORCPT
+        id S1728203AbgAHLoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:44:01 -0500
-Received: from mga11.intel.com ([192.55.52.93]:44631 "EHLO mga11.intel.com"
+        Wed, 8 Jan 2020 06:44:00 -0500
+Received: from mga09.intel.com ([134.134.136.24]:62291 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbgAHLmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727476AbgAHLmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 06:42:15 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:15 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="218046606"
+   d="scan'208";a="233576439"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 03:42:11 -0800
+  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2020 03:42:09 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id A3FA3513; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id 745824BC; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -47,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 17/36] platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
-Date:   Wed,  8 Jan 2020 14:41:42 +0300
-Message-Id: <20200108114201.27908-18-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 13/36] platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
+Date:   Wed,  8 Jan 2020 14:41:38 +0300
+Message-Id: <20200108114201.27908-14-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -60,86 +59,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the IPC util to use the new SCU IPC API where the SCU IPC
-instance is passed to the functions.
+Format kernel-doc comments of the exported functions to follow the
+typical format that does not have tab indentation. Also capitalize
+parameter descriptions and add a missing period.
+
+No functional changes intended.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipcutil.c | 43 +++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 112 +++++++++++++--------------
+ 1 file changed, 55 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-index 8afe6fa06d7b..b7c10c15a3d6 100644
---- a/drivers/platform/x86/intel_scu_ipcutil.c
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -22,6 +22,9 @@
- 
- static int major;
- 
-+struct intel_scu_ipc_dev *scu;
-+static DEFINE_MUTEX(scu_lock);
-+
- /* IOCTL commands */
- #define	INTE_SCU_IPC_REGISTER_READ	0
- #define INTE_SCU_IPC_REGISTER_WRITE	1
-@@ -52,12 +55,12 @@ static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
- 
- 	switch (cmd) {
- 	case INTE_SCU_IPC_REGISTER_READ:
--		return intel_scu_ipc_readv(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_readv(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_WRITE:
--		return intel_scu_ipc_writev(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_writev(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_UPDATE:
--		return intel_scu_ipc_update_register(data->addr[0],
--						    data->data[0], data->mask);
-+		return intel_scu_ipc_dev_update(scu, data->addr[0], data->data[0],
-+						data->mask);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -91,8 +94,40 @@ static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
- 	return 0;
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index e3f658f1b40a..b1ac381bb7dd 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -219,14 +219,14 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
  }
  
-+static int scu_ipc_open(struct inode *inode, struct file *file)
-+{
-+	int ret = 0;
-+
-+	/* Only single open at the time */
-+	mutex_lock(&scu_lock);
-+	if (scu) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	scu = intel_scu_ipc_dev_get();
-+	if (!scu)
-+		ret = -ENODEV;
-+
-+unlock:
-+	mutex_unlock(&scu_lock);
-+	return ret;
-+}
-+
-+static int scu_ipc_release(struct inode *inode, struct file *file)
-+{
-+	mutex_lock(&scu_lock);
-+	intel_scu_ipc_dev_put(scu);
-+	scu = NULL;
-+	mutex_unlock(&scu_lock);
-+
-+	return 0;
-+}
-+
- static const struct file_operations scu_ipc_fops = {
- 	.unlocked_ioctl = scu_ipc_ioctl,
-+	.open = scu_ipc_open,
-+	.release = scu_ipc_release,
- };
+ /**
+- *	intel_scu_ipc_ioread8		-	read a word via the SCU
+- *	@addr: register on SCU
+- *	@data: return pointer for read byte
++ * intel_scu_ipc_ioread8		-	read a word via the SCU
++ * @addr: Register on SCU
++ * @data: Return pointer for read byte
+  *
+- *	Read a single register. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
++ * Read a single register. Returns %0 on success or an error code. All
++ * locking between SCU accesses is handled for the caller.
+  *
+- *	This function may sleep.
++ * This function may sleep.
+  */
+ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
+ {
+@@ -235,14 +235,14 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
+ EXPORT_SYMBOL(intel_scu_ipc_ioread8);
  
- static int __init ipc_module_init(void)
+ /**
+- *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
+- *	@addr: register on SCU
+- *	@data: byte to write
++ * intel_scu_ipc_iowrite8		-	write a byte via the SCU
++ * @addr: Register on SCU
++ * @data: Byte to write
+  *
+- *	Write a single register. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
++ * Write a single register. Returns %0 on success or an error code. All
++ * locking between SCU accesses is handled for the caller.
+  *
+- *	This function may sleep.
++ * This function may sleep.
+  */
+ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
+ {
+@@ -251,17 +251,17 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
+ EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
+ 
+ /**
+- *	intel_scu_ipc_readvv		-	read a set of registers
+- *	@addr: register list
+- *	@data: bytes to return
+- *	@len: length of array
++ * intel_scu_ipc_readvv		-	read a set of registers
++ * @addr: Register list
++ * @data: Bytes to return
++ * @len: Length of array
+  *
+- *	Read registers. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
++ * Read registers. Returns %0 on success or an error code. All locking
++ * between SCU accesses is handled for the caller.
+  *
+- *	The largest array length permitted by the hardware is 5 items.
++ * The largest array length permitted by the hardware is 5 items.
+  *
+- *	This function may sleep.
++ * This function may sleep.
+  */
+ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
+ {
+@@ -270,18 +270,17 @@ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
+ EXPORT_SYMBOL(intel_scu_ipc_readv);
+ 
+ /**
+- *	intel_scu_ipc_writev		-	write a set of registers
+- *	@addr: register list
+- *	@data: bytes to write
+- *	@len: length of array
++ * intel_scu_ipc_writev		-	write a set of registers
++ * @addr: Register list
++ * @data: Bytes to write
++ * @len: Length of array
+  *
+- *	Write registers. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
++ * Write registers. Returns %0 on success or an error code. All locking
++ * between SCU accesses is handled for the caller.
+  *
+- *	The largest array length permitted by the hardware is 5 items.
+- *
+- *	This function may sleep.
++ * The largest array length permitted by the hardware is 5 items.
+  *
++ * This function may sleep.
+  */
+ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
+ {
+@@ -290,19 +289,18 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
+ EXPORT_SYMBOL(intel_scu_ipc_writev);
+ 
+ /**
+- *	intel_scu_ipc_update_register	-	r/m/w a register
+- *	@addr: register address
+- *	@bits: bits to update
+- *	@mask: mask of bits to update
++ * intel_scu_ipc_update_register	-	r/m/w a register
++ * @addr: Register address
++ * @bits: Bits to update
++ * @mask: Mask of bits to update
+  *
+- *	Read-modify-write power control unit register. The first data argument
+- *	must be register value and second is mask value
+- *	mask is a bitmap that indicates which bits to update.
+- *	0 = masked. Don't modify this bit, 1 = modify this bit.
+- *	returns 0 on success or an error code.
++ * Read-modify-write power control unit register. The first data argument
++ * must be register value and second is mask value mask is a bitmap that
++ * indicates which bits to update. %0 = masked. Don't modify this bit, %1 =
++ * modify this bit. returns %0 on success or an error code.
+  *
+- *	This function may sleep. Locking between SCU accesses is handled
+- *	for the caller.
++ * This function may sleep. Locking between SCU accesses is handled
++ * for the caller.
+  */
+ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
+ {
+@@ -312,16 +310,16 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
+ EXPORT_SYMBOL(intel_scu_ipc_update_register);
+ 
+ /**
+- *	intel_scu_ipc_simple_command	-	send a simple command
+- *	@cmd: command
+- *	@sub: sub type
++ * intel_scu_ipc_simple_command	-	send a simple command
++ * @cmd: Command
++ * @sub: Sub type
+  *
+- *	Issue a simple command to the SCU. Do not use this interface if
+- *	you must then access data as any data values may be overwritten
+- *	by another SCU access by the time this function returns.
++ * Issue a simple command to the SCU. Do not use this interface if you must
++ * then access data as any data values may be overwritten by another SCU
++ * access by the time this function returns.
+  *
+- *	This function may sleep. Locking for SCU accesses is handled for
+- *	the caller.
++ * This function may sleep. Locking for SCU accesses is handled for the
++ * caller.
+  */
+ int intel_scu_ipc_simple_command(int cmd, int sub)
+ {
+@@ -341,16 +339,16 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
+ EXPORT_SYMBOL(intel_scu_ipc_simple_command);
+ 
+ /**
+- *	intel_scu_ipc_command	-	command with data
+- *	@cmd: command
+- *	@sub: sub type
+- *	@in: input data
+- *	@inlen: input length in dwords
+- *	@out: output data
+- *	@outlein: output length in dwords
++ * intel_scu_ipc_command	-	command with data
++ * @cmd: Command
++ * @sub: Sub type
++ * @in: Input data
++ * @inlen: Input length in dwords
++ * @out: Output data
++ * @outlen: Output length in dwords
+  *
+- *	Issue a command to the SCU which involves data transfers. Do the
+- *	data copies under the lock but leave it for the caller to interpret
++ * Issue a command to the SCU which involves data transfers. Do the
++ * data copies under the lock but leave it for the caller to interpret.
+  */
+ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 			  u32 *out, int outlen)
 -- 
 2.24.1
 
