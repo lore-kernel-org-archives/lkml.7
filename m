@@ -2,106 +2,123 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66289C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FDC00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380292070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0E12075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 03:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="csH6h22W"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="coiwODIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgAHD1a (ORCPT
+        id S1726439AbgAHDgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 22:27:30 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36094 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgAHD12 (ORCPT
+        Tue, 7 Jan 2020 22:36:53 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43972 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgAHDgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 22:27:28 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 19so2244840otz.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 19:27:28 -0800 (PST)
+        Tue, 7 Jan 2020 22:36:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so1786073wre.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 19:36:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xceLEnO3BCgE8gw6ehmf7oIvMEjYUFeqhS/nKgWDqFI=;
-        b=csH6h22WfZnD1xkdgwOCne3Jv32LmlbUzVEaLBevEMe50H5rAy4ECEVfBiovZy8xDu
-         b6pHK8e06WX+imuJ6fHw26HY714lCwLnbniIGh5DWXQQ+ipOUvm0uHPExjCoeL58F4te
-         MCDUDMy2u+PUNUzChxap4ixBAdfsjM/rm0ovA=
+        bh=ySbkX+4r5a6zzWgSuzqB+vjv/GamaAVWkn0vznIPTa4=;
+        b=coiwODIRqSIDkJCbI5ezwrW7yd5BZTJJju0W/SVfgKIapZG5FEoUrpHuV89f9c8UVL
+         vzjVJCnAa4hhXxBnHmvVUsgyk9NxiTdBpuJykKNSNawkAa1WbF9a7XlUSziREksjZnDv
+         PHcnwBktmROK/gtIkV8Rw9FgkNXn6GnwwJ3b3M+4HHlOS/5ZZI0tZK1eCXLD0TSWt2vX
+         7xSnBO1VuPi+pQz9peXHYrkcndjxykktnFdkFecKIY9DUjSj6mn7GIbYY7uCnG0yz+xW
+         E3q8chVkBY1R5CXRreYWmMMkJKhx+xPtmHOxvarMxHaSus/OS8uqgct3RFkGgrFkp+ox
+         n0Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xceLEnO3BCgE8gw6ehmf7oIvMEjYUFeqhS/nKgWDqFI=;
-        b=BFYUIegXNhHTIj2USu/ZwChztIId7SoLuPePL3m0S4K9HPwoBtjg92elTdooNHcjRw
-         TGvTSKuwlMGqU8mGzOHe887Pv9iRYe5flv0H2RZfCF26KhHYrg+uZAyMGuvgK2GBQkB9
-         ODhXOseCUZckgowig5fl6Ysy7i7cIqXfoyVgA8xtwnUIqdBd6zj+OY6/M1sQ264g7cRY
-         pfjQA+mM04U77FPlFyCTi4PaILNWNAY0XGQqWCWmuAGhO6YZ6WjLVsrWISLYfx5dybm1
-         qb/XPZDS5M8+6MjrMH2cp6PXt9+i7okrCkRZHwo1aYgC2eHe/BlfeaXzpY+mcq+dbCqE
-         1UyQ==
-X-Gm-Message-State: APjAAAXNyW1LWgS4I7ES+PtE/6kZUbFwpQ2fnUiyNxDmzAL5ptjW7+p8
-        0kog8RCNBQrNSe/9f8v3EA3MAfeKioFu7w==
-X-Google-Smtp-Source: APXvYqztMCEXw0EsdEtMEBoxo4mt9FEs5B86lMJYbCQkli9yV21LrvpJk9yWe3rfAnj1wrcX52GJcQ==
-X-Received: by 2002:a9d:6e98:: with SMTP id a24mr2514726otr.109.1578454047860;
-        Tue, 07 Jan 2020 19:27:27 -0800 (PST)
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com. [209.85.167.176])
-        by smtp.gmail.com with ESMTPSA id l1sm669381oic.22.2020.01.07.19.27.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 19:27:27 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id i1so1447164oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 19:27:26 -0800 (PST)
-X-Received: by 2002:aca:d0b:: with SMTP id 11mr1457408oin.71.1578454046328;
- Tue, 07 Jan 2020 19:27:26 -0800 (PST)
+        bh=ySbkX+4r5a6zzWgSuzqB+vjv/GamaAVWkn0vznIPTa4=;
+        b=e+MZKxv4/y3PnbtLJ2EGPH5SiuE9JuNKxmyxr5WBDOXasCXfbrH0gEUGBMJKcF8Pjy
+         Vp5llkqBMO3aJs/Z8gqGfjrygLCzs13chsA8pZC6Nu5iUfoM34whG6Uq7fT+4y+rDqF3
+         Q5uDbwg8mhMrGxvF0RPuBVuf7uHOw9qtE/mAEmQc54DFrX1yxTxQLSK1qaeYGQcNTWH8
+         dmSu3DPv9fRvgETcWcnGfTtaHedbGjYco+N9XMo89WzerQQMeFcoGeQmEVAYSE/MEpVV
+         9k55w4qgAKVHBuLg2Jg8dxND9TJCpLjEQZDMZsrd5GqVv6hrfs5IJ8eUZ7jV1bMD+M+5
+         rkKg==
+X-Gm-Message-State: APjAAAW520I9AXPBGc2A7+RrHkHOLbrL9L15i/pU9HAKoWaBtM59XHoR
+        A/DPuU5guxt0sBIYfTHtWQTWj3r9jnH+Qrww0Nft0Q==
+X-Google-Smtp-Source: APXvYqyMYPh12V0kzjDt4WN4m4Lgpd4h24RikS83ZEMRJAjaizKqsZyTpaR8f8EHKyh5AmcWRtjPh47xhNpKbRhBxy8=
+X-Received: by 2002:adf:d850:: with SMTP id k16mr1938797wrl.96.1578454610421;
+ Tue, 07 Jan 2020 19:36:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107143402.122455-1-acourbot@chromium.org> <3aef91ea-30c1-530f-0c18-ea52b92347f9@linaro.org>
-In-Reply-To: <3aef91ea-30c1-530f-0c18-ea52b92347f9@linaro.org>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Wed, 8 Jan 2020 12:27:15 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MWY6OEc2EbPW=k8vFU32POamNs0FHJus8fg1u5A2uxrzg@mail.gmail.com>
-Message-ID: <CAPBb6MWY6OEc2EbPW=k8vFU32POamNs0FHJus8fg1u5A2uxrzg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: add Venus firmware node on Cheza
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200108024035.17524-1-greentime.hu@sifive.com>
+In-Reply-To: <20200108024035.17524-1-greentime.hu@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 8 Jan 2020 09:06:38 +0530
+Message-ID: <CAAhSdy1LBo4QOCGBbCG8HxaK9Q8MWtx-istBn_5btkhaQPi3FA@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: to make sure the cores in .Lsecondary_park
+To:     Greentime Hu <greentime.hu@sifive.com>
+Cc:     Greentime Hu <green.hu@gmail.com>, greentime@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:50 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
+On Wed, Jan 8, 2020 at 8:10 AM Greentime Hu <greentime.hu@sifive.com> wrote:
 >
-> Hi Alex,
+> The code in secondary_park is currently placed in the .init section.  The
+> kernel reclaims and clears this code when it finishes booting.  That
+> causes the cores parked in it to go to somewhere unpredictable, so we
+> move this function out of init to make sure the cores stay looping there.
 >
-> On 1/7/20 4:34 PM, Alexandre Courbot wrote:
-> > Cheza boards require this node to probe, so add it.
-> >
-> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 6 ++++++
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > index 9a4ff57fc877..35ba65cd9822 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > @@ -1279,3 +1279,9 @@ config {
-> >               };
-> >       };
-> >  };
-> > +
-> > +&venus_codec {
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  arch/riscv/kernel/head.S | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 >
-> We have similar patch for sc7180 and call it just "venus". Do you think
-> we should shorten it here too?
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index f8f996916c5b..276b98f9d0bd 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -217,11 +217,6 @@ relocate:
+>         tail smp_callin
+>  #endif
+>
+> -.align 2
+> -.Lsecondary_park:
+> -       /* We lack SMP support or have too many harts, so park this hart */
+> -       wfi
+> -       j .Lsecondary_park
+>  END(_start)
+>
+>  #ifdef CONFIG_RISCV_M_MODE
+> @@ -303,6 +298,13 @@ ENTRY(reset_regs)
+>  END(reset_regs)
+>  #endif /* CONFIG_RISCV_M_MODE */
+>
+> +.section ".text", "ax",@progbits
+> +.align 2
+> +.Lsecondary_park:
+> +       /* We lack SMP support or have too many harts, so park this hart */
+> +       wfi
+> +       j .Lsecondary_park
+> +
+>  __PAGE_ALIGNED_BSS
+>         /* Empty zero page */
+>         .balign PAGE_SIZE
+> --
+> 2.17.1
+>
 
-Sure - sent a v2 with that change.
+LGTM.
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
