@@ -2,68 +2,110 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D48C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA45C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4419720720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B1120720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgAHP6q (ORCPT
+        id S1729175AbgAHP6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:58:46 -0500
-Received: from mga06.intel.com ([134.134.136.31]:24326 "EHLO mga06.intel.com"
+        Wed, 8 Jan 2020 10:58:50 -0500
+Received: from mga12.intel.com ([192.55.52.136]:43702 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbgAHP6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:58:45 -0500
+        id S1727746AbgAHP6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:58:49 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:58:45 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:58:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="217546290"
-Received: from dkurtaev-mobl.ccr.corp.intel.com ([10.252.22.167])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Jan 2020 07:58:42 -0800
-Message-ID: <b469b7e8454a69402529cc8e25244860e136308e.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: handle negative priv->response_len in
- tpm_common_read
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tadeusz Struk <tadeusz.struk@intel.com>
-Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, linux-integrity@vger.kernel.org,
-        labbott@redhat.com
-Date:   Wed, 08 Jan 2020 17:58:41 +0200
-In-Reply-To: <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
-References: <b85fa669-d3aa-f6c9-9631-988ae47e392c@redhat.com>
-         <157843468820.24718.10808226634364669421.stgit@tstruk-mobl1>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+   d="scan'208";a="303590872"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 07:58:46 -0800
+Subject: Re: [PATCH v5 0/4] usb: xhci: Add support for Renesas USB controllers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>
+References: <20191106083843.1718437-1-vkoul@kernel.org>
+ <CANcMJZDqX6-+naGEbBiyM+1cZS6jfMoP9bm5Uk4ZuP_mw5aNWw@mail.gmail.com>
+ <20200108040707.GU2818@vkoul-mobl> <20200108062436.GA2276347@kroah.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <b0dc038b-cc25-1d37-9339-689bb5b61ff7@linux.intel.com>
+Date:   Wed, 8 Jan 2020 18:00:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200108062436.GA2276347@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-07 at 14:04 -0800, Tadeusz Struk wrote:
-> The priv->responce_length can hold the size of an response or
-> an negative error code, and the tpm_common_read() needs to handle
-> both cases correctly. Changed the type of responce_length to
-> signed and accounted for negative value in tpm_common_read()
+On 8.1.2020 8.24, Greg Kroah-Hartman wrote:
+> On Wed, Jan 08, 2020 at 09:37:07AM +0530, Vinod Koul wrote:
+>> Hi John,
+>>
+>> On 07-01-20, 11:51, John Stultz wrote:
+>>> On Wed, Nov 6, 2019 at 12:40 AM Vinod Koul <vkoul@kernel.org> wrote:
+>>>>
+>>>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
+>>>> These require firmware to be loaded and in case devices have ROM those can
+>>>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+>>>>
+>>>> This includes two patches from Christian which supported these controllers
+>>>> w/o ROM and later my patches for ROM support and multiple firmware versions.
+>>>>
+>>>
+>>> Hey Vinod!
+>>>     In pushing this series to one of the Android trees for the db845c,
+>>> there was some concern raised that this series is adding a lot of
+>>> renesas specific logic to the more generic xhci-pci driver. There was
+>>> some question if instead that logic should be added to its own
+>>> file/module? Do you have any thoughts on this?
+>>
+>> TBH I have not thought about that and in previous post neither Greg or
+>> Mathias gave a feedback that this was not acceptable...
+>>
+>> We can think about splitting but apart from firmware load there is not
+>> much extra functionality that we need to add, the controller behaviour
+>> as a standard xhci-pci. So i am not sure if we gain much by splitting.
+>>
+>>> Also, It seems there hasn't been much feedback on this for a few
+>>> months now. Is there a newer version of the patchset I should sync
+>>> with? Do you have plans to resubmit soon?
+>>
+>> Well am still waiting for feedback :( I dont have any update on top of
+>> this, I can repost but I dont think that really serves a purpose.
+>>
+>> I would really like to hear from Greg if this series is acceptable and
+>> if not what would he like to see changed.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: d23d12484307 ("tpm: fix invalid locking in NONBLOCKING mode")
-> Reported-by: Laura Abbott <labbott@redhat.com>
-> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+> Greg is not the xhci maintainer :)
+> 
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewing this always got bumped down on my todo list as other urgent issues
+came up.
 
-Adding to the next PR.
-
-/Jarkko
-
+I think the concern about adding this amount of renesas specific code to
+xhci-pci.c is valid. This series adds over 900 lines of Renesas FW loading
+code to a 600 line xhci-pci.c
+  
+-Mathias
