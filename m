@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B67C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B83C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659C020720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94A620720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAHTsb (ORCPT
+        id S1729318AbgAHTsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:48:31 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43680 "EHLO
+        Wed, 8 Jan 2020 14:48:39 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43652 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730454AbgAHTqE (ORCPT
+        by vger.kernel.org with ESMTP id S1730447AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006od-JW; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006oa-M0; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-007dpB-FB; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-007dpM-Gs; Wed, 08 Jan 2020 19:45:59 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Xiaolong Huang" <butterflyhuangxx@gmail.com>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>
-Date:   Wed, 08 Jan 2020 19:43:57 +0000
-Message-ID: <lsq.1578512578.326403645@decadent.org.uk>
+        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Cathy Luo" <cluo@marvell.com>,
+        "Amitkumar Karwar" <akarwar@marvell.com>
+Date:   Wed, 08 Jan 2020 19:43:59 +0000
+Message-ID: <lsq.1578512578.576724707@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 59/63] can: kvaser_usb: kvaser_usb_leaf: Fix some
- info-leaks to USB devices
+Subject: [PATCH 3.16 61/63] mwifiex: don't follow AP if country code
+ received from EEPROM
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +57,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xiaolong Huang <butterflyhuangxx@gmail.com>
+From: Amitkumar Karwar <akarwar@marvell.com>
 
-commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
+commit 947d315257f9b25b0e24f5706f8184b3b00774d4 upstream.
 
-Uninitialized Kernel memory can leak to USB devices.
+If device has already received country information from
+EEPROM, we won't parse AP's country IE and download it to
+firmware. We will also set regulatory flags to disable beacon
+hints and ignore country IE.
 
-Fix this by using kzalloc() instead of kmalloc().
-
-Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-[bwh: Backported to 3.16: adjust filename, context]
+Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+Signed-off-by: Cathy Luo <cluo@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filenames, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/can/usb/kvaser_usb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mwifiex/cfg80211.c  | 4 ++++
+ drivers/net/wireless/mwifiex/sta_ioctl.c | 3 ++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/usb/kvaser_usb.c
-+++ b/drivers/net/can/usb/kvaser_usb.c
-@@ -586,7 +586,7 @@ static int kvaser_usb_simple_msg_async(s
- 		return -ENOMEM;
- 	}
+--- a/drivers/net/wireless/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/mwifiex/cfg80211.c
+@@ -2917,6 +2917,10 @@ int mwifiex_register_cfg80211(struct mwi
+ 	wiphy->cipher_suites = mwifiex_cipher_suites;
+ 	wiphy->n_cipher_suites = ARRAY_SIZE(mwifiex_cipher_suites);
  
--	buf = kmalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
-+	buf = kzalloc(sizeof(struct kvaser_msg), GFP_ATOMIC);
- 	if (!buf) {
- 		usb_free_urb(urb);
- 		return -ENOMEM;
-@@ -1109,7 +1109,7 @@ static int kvaser_usb_set_opt_mode(const
- 	struct kvaser_msg *msg;
- 	int rc;
++	if (adapter->region_code)
++		wiphy->regulatory_flags |= REGULATORY_DISABLE_BEACON_HINTS |
++					   REGULATORY_COUNTRY_IE_IGNORE;
++
+ 	memcpy(wiphy->perm_addr, priv->curr_addr, ETH_ALEN);
+ 	wiphy->signal_type = CFG80211_SIGNAL_TYPE_MBM;
+ 	wiphy->flags |= WIPHY_FLAG_HAVE_AP_SME |
+--- a/drivers/net/wireless/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/mwifiex/sta_ioctl.c
+@@ -266,7 +266,8 @@ int mwifiex_bss_start(struct mwifiex_pri
+ 	priv->scan_block = false;
  
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
+ 	if (bss) {
+-		mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00)
++			mwifiex_process_country_ie(priv, bss);
  
-@@ -1240,7 +1240,7 @@ static int kvaser_usb_flush_queue(struct
- 	struct kvaser_msg *msg;
- 	int rc;
- 
--	msg = kmalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
- 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
 
