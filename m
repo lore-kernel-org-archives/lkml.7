@@ -2,94 +2,70 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7D7C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CF5C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05EA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191A52067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KC0CRv4T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IxLb/Hbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgAHPnm (ORCPT
+        id S1728227AbgAHPoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:43:42 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34625 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHPnm (ORCPT
+        Wed, 8 Jan 2020 10:44:08 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:32772 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHPoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:43:42 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i6so1830975pfc.1;
-        Wed, 08 Jan 2020 07:43:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W7qeVqod83yxvrlZNG1/MPrpMYe26C58G5HTKvxquhw=;
-        b=KC0CRv4TAOdaHy1PWbvbAvXavu3LX9X1xBOEmYAw1rvRBQw1Dhjvw+c/3IdNKbRCi3
-         0zhz5Z48w8v9GfCPtwM5UN3QWUjDNJVFc/9zpzrJnxNihSqsbHl43GsRFWU5Gzbip5GJ
-         a7Huk2pvm0GUnZKfLMIsM/eWuyri6yy8JA/zTqoNyNS2thcntsaAZOXay3dYQKAhUxLS
-         CvbqqwlUhmo1k3cacTQTXFWrkK7PnszIa1LvSMloRTG0TfVwdoZRW1daaTwRNltqlOfI
-         4tMfqkc7BnaAJj/EWzZkyxl/nQ1+E2CGBpxb8+rq2U2sB6gjJuQdUIWokoVzNounr9Wk
-         Ekdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W7qeVqod83yxvrlZNG1/MPrpMYe26C58G5HTKvxquhw=;
-        b=KqyYgg74DyiEWYS8M2bMM209gZcDWEX0tnLp6fkYgB6H9PPdv0a78lhsEl9pY8iGF7
-         QqV4qyjxVCT0wLFGKZaYG37KksCnM7/pMhCIM03jRMOSctnoOzgtjZNP9leyjLjDtfzw
-         ouvA+TaI6O6iQtiw9TAcO5CVvsp8+3uZCeVGUBxEMeEF8BavZYXAXok6BmAc90KKUEZh
-         4y0GZefanvh23YikfV+cIincQdbt6DXymF2/OTjG05B17ErECXvuuL8IrtaNz3wx6iGf
-         DEoCn5Df2CYxrmRfhQ79cPLPfimna4V2F6PZs81HfVJC1LMk0xa2Rjy2L2bJIb43DCZm
-         j2vQ==
-X-Gm-Message-State: APjAAAVvuAjTCf+V7EtcQAlfZqNwACp0qaPq+mblASYaErog2vWnEpnb
-        ZjQs/RSMQInAlxP0xmv8BZQ=
-X-Google-Smtp-Source: APXvYqzLpFFkeMJ+MyAdZEaA4qzLQvWXWUIcidWk6gLqXroJDvLFYiRXjtfBLP/9Vb2BdTwQmEN3UQ==
-X-Received: by 2002:a65:66c4:: with SMTP id c4mr5900324pgw.429.1578498221692;
-        Wed, 08 Jan 2020 07:43:41 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x22sm4309517pgc.2.2020.01.08.07.43.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 07:43:41 -0800 (PST)
-Date:   Wed, 8 Jan 2020 07:43:40 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/115] 4.19.94-stable review
-Message-ID: <20200108154340.GB28993@roeck-us.net>
-References: <20200107205240.283674026@linuxfoundation.org>
+        Wed, 8 Jan 2020 10:44:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RYC0L/1SMwgYk6wXk0aDr7brdNKcxmstrJntjhD4+po=; b=IxLb/HbkOja5rnvJTVbrCpF65
+        UgSiv47EmvwEQ9whZz+A/GU/irB5t84FnikD/saJaoUABMWOm6LyT313C2OWECNWPNF7FSIlgwNTi
+        PsgG0+APuZ7t8P3fP3tevBbGcoTW+aMtXOwjZY9f9AlmmXDaQ0Zz/P+m8Urx6jFGcNIUZ4Jn+qrnn
+        sYPp7Qj1WGvqrgLmU7NgkO6zW3WmyJ1ApH6v63mdwbIUljLsln1+EkZuQ4xIWU1sX5yLe+2z3nkNU
+        rhAcefyk8A7zRNq1SjLaVxGXG7+UFpftPRpX4yFxV/gC8fkMuU0JXQPw3KfFN/5fWBiUBndfLp9Nf
+        JyE+kOekw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipDV8-0006SP-Ol; Wed, 08 Jan 2020 15:44:06 +0000
+Date:   Wed, 8 Jan 2020 07:44:06 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        Fumiya Shigemitsu <shfy1014@gmail.com>,
+        Yongxin Liu <yongxin.liu@windriver.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] kbuild: allow modules to link *.a archives
+Message-ID: <20200108154406.GA21695@infradead.org>
+References: <20200106032324.3147-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107205240.283674026@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200106032324.3147-1-masahiroy@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:53:30PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.94 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jan 06, 2020 at 12:23:24PM +0900, Masahiro Yamada wrote:
+> Since commit 69ea912fda74 ("kbuild: remove unneeded link_multi_deps"),
+> modules cannot link *.a archives.
 > 
-> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
-> Anything received after that time might be too late.
-> 
+> I do not see such a usecase in the upstream code, but multiple people
+> reported this issue, so it seems to be a desired feature for external
+> modules.
 
-For v4.19.93-114-g53089eea25ff:
-
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 381 pass: 381 fail: 0
-
-Guenter
+Kernel policy is to not keep around infrastructure not used upstream.
+And linking archives in the kernel doesn't really make any sense, so
+this shouldn't go in in any form.
