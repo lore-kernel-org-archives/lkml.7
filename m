@@ -2,97 +2,103 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75BC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAED8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E70420705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B718A2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i3TvIquN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgAHN70 (ORCPT
+        id S1728075AbgAHOAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:59:26 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9135 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726699AbgAHN70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:59:26 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CDE15511EA4AE1C5E960;
-        Wed,  8 Jan 2020 21:59:23 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 8 Jan 2020
- 21:59:19 +0800
-Subject: Re: [PATCH next] drm/i915/gtt: add missing include file asm/smp.h
-To:     Jani Nikula <jani.nikula@linux.intel.com>, <airlied@linux.ie>,
-        <chris@chris-wilson.co.uk>
-References: <20200108133610.92714-1-chenzhou10@huawei.com>
- <877e22qczw.fsf@intel.com>
-CC:     <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <6081a507-c11a-749e-df6a-c59649ee5d65@huawei.com>
-Date:   Wed, 8 Jan 2020 21:59:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 8 Jan 2020 09:00:08 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47290 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726699AbgAHOAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 09:00:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578492007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LhAq3h7VQwMWx8ihMD40ZfIUUirmqsJ+eD0EacS+0NE=;
+        b=i3TvIquN1rV4CZ+Z5sPbo3z49AHeU7kPhM4a4Jpyx7L5xbYt3NiSeSkfb9bzAiEBeLWxYN
+        rKiIyKqDseuT1onpmN8Fpu61vboNMu7z6x1eSfOoGv1AZzi4oCTofX4TQJjCGSfVvhRPKZ
+        FAkZWlT90ys1KDDFm8OOGdZhaWmFkwQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-ztw0LAM0O3qaF-sYDtfooQ-1; Wed, 08 Jan 2020 09:00:06 -0500
+X-MC-Unique: ztw0LAM0O3qaF-sYDtfooQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5C6F100550E;
+        Wed,  8 Jan 2020 14:00:04 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7222D5D9E5;
+        Wed,  8 Jan 2020 14:00:00 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 14:59:57 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v3 5/8] KVM: selftests: Pass args to vCPU instead of
+ using globals
+Message-ID: <20200108135957.4milt3brij7lvfd3@kamzik.brq.redhat.com>
+References: <20191216213901.106941-1-bgardon@google.com>
+ <20191216213901.106941-6-bgardon@google.com>
+ <20200107152341.rtfmciob5ly6nnjj@kamzik.brq.redhat.com>
+ <CANgfPd9aCcN8BJDkkDuC2=3Po3f6BQ6q7JkQfL7n+giDCySu7A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <877e22qczw.fsf@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANgfPd9aCcN8BJDkkDuC2=3Po3f6BQ6q7JkQfL7n+giDCySu7A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/8 21:44, Jani Nikula wrote:
-> On Wed, 08 Jan 2020, Chen Zhou <chenzhou10@huawei.com> wrote:
->> Fix build error:
->> lib/crypto/chacha.c: In function chacha_permute:
->> lib/crypto/chacha.c:65:1: warning: the frame size of 3384 bytes is larger than 2048 bytes [-Wframe-larger-than=]
->>  }
->>   ^
+On Tue, Jan 07, 2020 at 10:26:10AM -0800, Ben Gardon wrote:
+> On Tue, Jan 7, 2020 at 7:23 AM Andrew Jones <drjones@redhat.com> wrote:
+> >
+> > On Mon, Dec 16, 2019 at 01:38:58PM -0800, Ben Gardon wrote:
+> > > In preparation for supporting multiple vCPUs in the demand paging test,
+> > > pass arguments to the vCPU instead of syncing globals to it.
+> >
+> > This will only work if we don't spill parameters onto the stack and all
+> > data we want to pass fit in registers.
 > 
-> IMO this needs a better explanation of why not having the include leads
-> to the above failure.
-> 
-> BR,
-> Jani.
-> 
+> That's a great point. I'll see about using globals and deriving the
+> cpu ID to look up args. In your pseudocode below I see you use
+> arch_get_cpu_id, but I don't believe this function exists in selftests
+> and I don't have the knowledge off the top of my head to implement it
+> for s390 and aarch64. Do you have any pointers for implementing such a
+> function?
 
-Sorry, i made a mistake. The error is as follows:
+Yeah, I never posted the patches that I used this approach on. For aarch64
+my "arch_get_cpu_id", which was actually just open-coded in guest_code,
+was something similar to this
 
-drivers/gpu/drm/i915/gt/intel_ggtt.c: In function ggtt_restore_mappings:
-drivers/gpu/drm/i915/gt/intel_ggtt.c:1239:3: error: implicit declaration of function wbinvd_on_all_cpus; did you mean wrmsr_on_cpus? [-Werror=implicit-function-declaration]
-   wbinvd_on_all_cpus();
-   ^~~~~~~~~~~~~~~~~~
-   wrmsr_on_cpus
-
+ /* We only look at the first two affinity levels for now. */
+ int arch_get_cpu_id(void)
+ {
+     uint64_t mpidr_el1, aff1, aff0;
+     asm volatile("mrs %0, mpidr_el1" : "=r" (mpidr_el1));
+     aff0 = mpidr_el1 & 0xf;
+     aff1 = (mpidr_el1 >> 8) & 0xff;
+     return aff1 * 16 + aff0;
+ }
 
 Thanks,
-Chen Zhou
-
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  drivers/gpu/drm/i915/gt/intel_ggtt.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpu/drm/i915/gt/intel_ggtt.c b/drivers/gpu/drm/i915/gt/intel_ggtt.c
->> index 1a2b5dc..9ef8ed8 100644
->> --- a/drivers/gpu/drm/i915/gt/intel_ggtt.c
->> +++ b/drivers/gpu/drm/i915/gt/intel_ggtt.c
->> @@ -6,6 +6,7 @@
->>  #include <linux/stop_machine.h>
->>  
->>  #include <asm/set_memory.h>
->> +#include <asm/smp.h>
->>  
->>  #include "intel_gt.h"
->>  #include "i915_drv.h"
-> 
+drew
 
