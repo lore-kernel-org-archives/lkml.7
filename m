@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C403C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B586C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2E92075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A75F2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgAHTqV (ORCPT
+        id S1730612AbgAHTqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:21 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43694 "EHLO
+        Wed, 8 Jan 2020 14:46:19 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43660 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730456AbgAHTqE (ORCPT
+        by vger.kernel.org with ESMTP id S1730450AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006p7-In; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006oo-Bx; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007dnu-Nr; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007dnA-Cb; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johannes Berg" <johannes.berg@intel.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 19:43:41 +0000
-Message-ID: <lsq.1578512578.874297448@decadent.org.uk>
+        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Catalin Marinas" <catalin.marinas@arm.com>
+Date:   Wed, 08 Jan 2020 19:43:32 +0000
+Message-ID: <lsq.1578512578.835847224@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 43/63] cfg80211: size various nl80211 messages correctly
+Subject: [PATCH 3.16 34/63] arm64/kernel: fix incorrect EL0 check in
+ inv_entry macro
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,106 +57,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 4ef8c1c93f848e360754f10eb2e7134c872b6597 upstream.
+commit b660950c60a7278f9d8deb7c32a162031207c758 upstream.
 
-Ilan reported that sometimes nl80211 messages weren't working if
-the frames being transported got very large, which was really a
-problem for userspace-to-kernel messages, but prompted me to look
-at the code.
+The implementation of macro inv_entry refers to its 'el' argument without
+the required leading backslash, which results in an undefined symbol
+'el' to be passed into the kernel_entry macro rather than the index of
+the exception level as intended.
 
-Upon review, I found various places where variable-length data is
-transported in an nl80211 message but the message isn't allocated
-taking that into account. This shouldn't cause any problems since
-the frames aren't really that long, apart in one place where two
-(possibly very long frames) might not fit.
+This undefined symbol strangely enough does not result in build failures,
+although it is visible in vmlinux:
 
-Fix all the places (that I found) that get variable length data
-from the driver and put it into a message to take the length of
-the variable data into account. The 100 there is just a safe
-constant for the remaining message overhead (it's usually around
-50 for most messages.)
+     $ nm -n vmlinux |head
+                      U el
+     0000000000000000 A _kernel_flags_le_hi32
+     0000000000000000 A _kernel_offset_le_hi32
+     0000000000000000 A _kernel_size_le_hi32
+     000000000000000a A _kernel_flags_le_lo32
+     .....
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+However, it does result in incorrect code being generated for invalid
+exceptions taken from EL0, since the argument check in kernel_entry
+assumes EL1 if its argument does not equal '0'.
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/wireless/nl80211.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/kernel/entry.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -10463,7 +10463,7 @@ static void nl80211_send_mlme_event(stru
- 	struct sk_buff *msg;
- 	void *hdr;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + len, gfp);
- 	if (!msg)
- 		return;
- 
-@@ -10602,7 +10602,7 @@ void nl80211_send_connect_result(struct
- 	struct sk_buff *msg;
- 	void *hdr;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
- 	if (!msg)
- 		return;
- 
-@@ -10642,7 +10642,7 @@ void nl80211_send_roamed(struct cfg80211
- 	struct sk_buff *msg;
- 	void *hdr;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
- 	if (!msg)
- 		return;
- 
-@@ -10680,7 +10680,7 @@ void nl80211_send_disconnected(struct cf
- 	struct sk_buff *msg;
- 	void *hdr;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	msg = nlmsg_new(100 + ie_len, GFP_KERNEL);
- 	if (!msg)
- 		return;
- 
-@@ -10757,7 +10757,7 @@ void cfg80211_notify_new_peer_candidate(
- 
- 	trace_cfg80211_notify_new_peer_candidate(dev, addr);
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + ie_len, gfp);
- 	if (!msg)
- 		return;
- 
-@@ -11133,7 +11133,7 @@ int nl80211_send_mgmt(struct cfg80211_re
- 	struct sk_buff *msg;
- 	void *hdr;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + len, gfp);
- 	if (!msg)
- 		return -ENOMEM;
- 
-@@ -11176,7 +11176,7 @@ void cfg80211_mgmt_tx_status(struct wire
- 
- 	trace_cfg80211_mgmt_tx_status(wdev, cookie, ack);
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
-+	msg = nlmsg_new(100 + len, gfp);
- 	if (!msg)
- 		return;
- 
-@@ -11886,7 +11886,7 @@ void cfg80211_ft_event(struct net_device
- 	if (!ft_event->target_ap)
- 		return;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	msg = nlmsg_new(100 + ft_event->ric_ies_len, GFP_KERNEL);
- 	if (!msg)
- 		return;
- 
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -187,7 +187,7 @@ END(vectors)
+  * Invalid mode handlers
+  */
+ 	.macro	inv_entry, el, reason, regsize = 64
+-	kernel_entry el, \regsize
++	kernel_entry \el, \regsize
+ 	mov	x0, sp
+ 	mov	x1, #\reason
+ 	mrs	x2, esr_el1
 
