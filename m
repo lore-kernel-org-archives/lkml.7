@@ -2,97 +2,136 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BBDC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D084FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A203620692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD99F2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgAHU0z (ORCPT
+        id S1727257AbgAHU1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:26:55 -0500
-Received: from mga14.intel.com ([192.55.52.115]:41770 "EHLO mga14.intel.com"
+        Wed, 8 Jan 2020 15:27:05 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57134 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgAHU0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:26:55 -0500
-X-Amp-Result: UNSCANNABLE
+        id S1725446AbgAHU1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:27:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:26:55 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:27:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="223651674"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 12:26:53 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipHuo-0007Zo-5R; Wed, 08 Jan 2020 22:26:54 +0200
-Date:   Wed, 8 Jan 2020 22:26:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org,
+   d="scan'208";a="211658348"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 12:27:04 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1 1/2] lib/test_bitmap: Correct test data offsets for
- 32-bit
-Message-ID: <20200108202654.GJ32742@smile.fi.intel.com>
-References: <20200108184611.7065-1-andriy.shevchenko@linux.intel.com>
- <20200108192437.GA13872@yury-thinkpad>
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Barret Rhoden <brho@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Zeng <jason.zeng@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: [PATCH 00/14] KVM: x86/mmu: Huge page fixes, cleanup, and DAX
+Date:   Wed,  8 Jan 2020 12:24:34 -0800
+Message-Id: <20200108202448.9669-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108192437.GA13872@yury-thinkpad>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 11:24:37AM -0800, Yury Norov wrote:
-> On Wed, Jan 08, 2020 at 08:46:10PM +0200, Andy Shevchenko wrote:
-> > On 32-bit platform the size of long is only 32 bits which makes wrong offset
-> > in the array of 64 bit size.
-> > 
-> > Calculate offset based on BITS_PER_LONG.
-> > 
-> > Fixes: 30544ed5de43 ("lib/bitmap: introduce bitmap_replace() helper")
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This series is a mix of bug fixes, cleanup and new support in KVM's
+handling of huge pages.  The series initially stemmed from a syzkaller
+bug report[1], which is fixed by patch 02, "mm: thp: KVM: Explicitly
+check for THP when populating secondary MMU".
 
-> >  	unsigned int nbits = 64;
-> > +	unsigned int step = DIV_ROUND_UP(nbits, BITS_PER_LONG);
-> 
-> Step is already defined in this file:
->         #define step (sizeof(u64) / sizeof(unsigned long))
+While investigating options for fixing the syzkaller bug, I realized KVM
+could reuse the approach from Barret's series to enable huge pages for DAX
+mappings in KVM[2] for all types of huge mappings, i.e. walk the host page
+tables instead of querying metadata (patches 05 - 09).
 
-...and later undefined.
+Walking the host page tables sidesteps the issues with refcounting and
+identifying THP mappings (in theory), and using a common method for
+identifying huge mappings should improve (haven't actually measured) KVM's
+overall page fault latency by eliminating the vma lookup that is currently
+used to identify HugeTLB mappings.  Eliminating the HugeTLB specific code
+also allows for additional cleanup (patches 10 - 13).
 
-> to avoid the same problem in other test cases. Introducing another variant of 
-> it looks messy.
+Testing the page walk approach revealed several pre-existing bugs that
+are included here (patches 01, 03 and 04) because the changes interact
+with the rest of the series, e.g. without the read-only memslots fix,
+walking the host page tables without explicitly filtering out HugeTLB
+mappings would pick up read-only memslots and introduce a completely
+unintended functional change.
 
-I don't see any problem.
+Lastly, with the page walk infrastructure in place, supporting DAX-based
+huge mappings becomes a trivial change (patch 14).
 
-> 
-> >  	DECLARE_BITMAP(bmap, 1024);
-> >  
-> >  	bitmap_zero(bmap, 1024);
-> > -	bitmap_replace(bmap, &exp2[0], &exp2[1], exp2_to_exp3_mask, nbits);
-> > +	bitmap_replace(bmap, &exp2[0 * step], &exp2[1 * step], exp2_to_exp3_mask, nbits);
-> >  	expect_eq_bitmap(bmap, exp3_0_1, nbits);
-> 
-> If nbits is always 64, why don't you pass 64 directly?
+Based on kvm/queue, commit e41a90be9659 ("KVM: x86/mmu: WARN if root_hpa
+is invalid when handling a page fault")
 
-We may use any setting. For now it's 64, but nothing prevents us to extend to,
-let's say, 75.
+Paolo, assuming I understand your workflow, patch 01 can be squashed with
+the buggy commit as it's still sitting in kvm/queue.
+
+[1] https://lkml.kernel.org/r/0000000000003cffc30599d3d1a0@google.com
+[2] https://lkml.kernel.org/r/20191212182238.46535-1-brho@google.com
+
+Sean Christopherson (14):
+  KVM: x86/mmu: Enforce max_level on HugeTLB mappings
+  mm: thp: KVM: Explicitly check for THP when populating secondary MMU
+  KVM: Use vcpu-specific gva->hva translation when querying host page
+    size
+  KVM: Play nice with read-only memslots when querying host page size
+  x86/mm: Introduce lookup_address_in_mm()
+  KVM: x86/mmu: Refactor THP adjust to prep for changing query
+  KVM: x86/mmu: Walk host page tables to find THP mappings
+  KVM: x86/mmu: Drop level optimization from fast_page_fault()
+  KVM: x86/mmu: Rely on host page tables to find HugeTLB mappings
+  KVM: x86/mmu: Remove obsolete gfn restoration in FNAME(fetch)
+  KVM: x86/mmu: Zap any compound page when collapsing sptes
+  KVM: x86/mmu: Fold max_mapping_level() into kvm_mmu_hugepage_adjust()
+  KVM: x86/mmu: Remove lpage_is_disallowed() check from set_spte()
+  KVM: x86/mmu: Use huge pages for DAX-backed files
+
+ arch/powerpc/kvm/book3s_xive_native.c |   2 +-
+ arch/x86/include/asm/pgtable_types.h  |   4 +
+ arch/x86/kvm/mmu/mmu.c                | 208 ++++++++++----------------
+ arch/x86/kvm/mmu/paging_tmpl.h        |  29 +---
+ arch/x86/mm/pageattr.c                |  11 ++
+ include/linux/huge_mm.h               |   6 +
+ include/linux/kvm_host.h              |   3 +-
+ mm/huge_memory.c                      |  11 ++
+ virt/kvm/arm/mmu.c                    |   8 +-
+ virt/kvm/kvm_main.c                   |  24 ++-
+ 10 files changed, 145 insertions(+), 161 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.24.1
 
