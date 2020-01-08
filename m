@@ -2,115 +2,107 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6DEC33C99
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C63C33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DC32075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3n6Gk5M"
+	by mail.kernel.org (Postfix) with ESMTP id 8E7A22075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgAHC4b (ORCPT
+        id S1726411AbgAHC6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 21:56:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40870 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgAHC4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 21:56:30 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k25so814503pgt.7;
-        Tue, 07 Jan 2020 18:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QyroB5LXjxb8iNcU2ElAPCjALtlsDRJIi4SawaB0E7c=;
-        b=E3n6Gk5MirvuWn2qz2nIHVm+5Hxjz4Nq4wAdMyekVm9lA2tuXwuqxrIjy+bHKC6aRy
-         29YP9weDLGP7P9gpfg+rJTz8bKsZdziuhhe78aqk5P0FQYw1x1Cxt19eIwU3FiJ6Y/k7
-         NwXUcOVepPCx6qcmZeR+tgGPaRqDgKb8TnZr5eOO6Qw/aIROygskXs0fAuif0zs0puaX
-         h/4PakQlPNNXEue27pSySzbAqBiXhfLYjmtKEBgQj+uimEl4Q+aHoJ78jWSQW04VJ+Z7
-         glvcWowQ6cbxVX7rUq4/7W7IeFANAJQqoleuAoftLI05xvciZ6epm3pCB+V5Xm/OFS0B
-         6TWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QyroB5LXjxb8iNcU2ElAPCjALtlsDRJIi4SawaB0E7c=;
-        b=Tsys2dIjoPGjgqC9hm8y7YPb1jfid5PTLacHU/Oifn0puzzfXN4PLKIF5oMh1xYMlO
-         Lhi2qt31xkQ7Br3iGsoXhO6pYLwdNxy251rs+sv1o4gvvwWqOXse7nt4cco/VOddEF1O
-         0Ct8TYbyI10HlbOVQoofw3oQgtYq4KGzBrhw4Ayh6pO6+VGj3Ns56F6lPOfEKOrGV+Ys
-         aS2Gp95ihj0WrIE1zCWMi1hFgZCTrYe9SqTBPP60dpWUcbEzn2eqXNvlI0jL9QvTSF+i
-         Ol2kSZZPJgx3GOt8LoQrGrzFgzKH8pPNDrAAyQuw1gSXKen/KFtG0LVb3rXlmWm9OcpU
-         VrvA==
-X-Gm-Message-State: APjAAAV0R3f2WNqg/FHCJp0mirMiCRKtqhikw7lHwLaagWa11yXWliID
-        n01K80aEqatADyWVtRfU+OA=
-X-Google-Smtp-Source: APXvYqx2B0gxIFJca1dgjrpJf7auzNgufbWz8vdqEcAFaSebP15mW1okQWAH7ySFcWH1sK9e1o+WwA==
-X-Received: by 2002:a65:538b:: with SMTP id x11mr2823226pgq.395.1578452189886;
-        Tue, 07 Jan 2020 18:56:29 -0800 (PST)
-Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
-        by smtp.gmail.com with ESMTPSA id 144sm1021480pfc.124.2020.01.07.18.56.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 18:56:29 -0800 (PST)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net,
-        mcoquelin.stm32@gmail.com
-Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH] net: stmmac: pci: remove the duplicate code of phy_mask
-Date:   Wed,  8 Jan 2020 10:56:24 +0800
-Message-Id: <20200108025624.13968-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jan 2020 21:58:15 -0500
+Received: from mga02.intel.com ([134.134.136.20]:28679 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbgAHC6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 21:58:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 18:58:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
+   d="scan'208";a="271711507"
+Received: from njagann1-mobl.amr.corp.intel.com (HELO adixit-arch.intel.com) ([10.254.67.66])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 Jan 2020 18:58:14 -0800
+Date:   Tue, 07 Jan 2020 18:58:13 -0800
+Message-ID: <87zheyu01m.wl-ashutosh.dixit@intel.com>
+From:   "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To:     Xu Wang <vulab@iscas.ac.cn>
+CC:     <sudeep.dutt@intel.com>, <gregkh@linuxfoundation.org>,
+        <arnd@arndb.de>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mic: Remove unneeded NULL check
+In-Reply-To: <1578391235-603-1-git-send-email-vulab@iscas.ac.cn>
+References: <1578391235-603-1-git-send-email-vulab@iscas.ac.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of phy_mask will be passed to phy_mask of struct mii_bus
-before register mdiobus, the mii_bus was obtained by mdiobus_alloc()
-and set mii_bus->phy_mask as zero by default. so It doesn't need to
-set phy_mask as zero again in this driver.
+Reviewed-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 8237dbc3e991..40f171d310d7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -65,7 +65,6 @@ static void common_default_data(struct plat_stmmacenet_data *plat)
- 	plat->force_sf_dma_mode = 1;
- 
- 	plat->mdio_bus_data->needs_reset = true;
--	plat->mdio_bus_data->phy_mask = 0;
- 
- 	/* Set default value for multicast hash bins */
- 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-@@ -154,8 +153,6 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
- 	plat->tx_queues_cfg[6].weight = 0x0F;
- 	plat->tx_queues_cfg[7].weight = 0x10;
- 
--	plat->mdio_bus_data->phy_mask = 0;
--
- 	plat->dma_cfg->pbl = 32;
- 	plat->dma_cfg->pblx8 = true;
- 	plat->dma_cfg->fixed_burst = 0;
-@@ -386,8 +383,6 @@ static int snps_gmac5_default_data(struct pci_dev *pdev,
- 	plat->tso_en = 1;
- 	plat->pmt = 1;
- 
--	plat->mdio_bus_data->phy_mask = 0;
--
- 	/* Set default value for multicast hash bins */
- 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
- 
--- 
-2.17.1
-
+On Tue, 07 Jan 2020 02:00:35 -0800, Xu Wang wrote:
+>
+> debugfs_remove_recursive will do NULL check, so remove
+> the redundant null check.
+>
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  drivers/misc/mic/card/mic_debugfs.c  | 3 ---
+>  drivers/misc/mic/cosm/cosm_debugfs.c | 3 ---
+>  drivers/misc/mic/host/mic_debugfs.c  | 3 ---
+>  3 files changed, 9 deletions(-)
+>
+> diff --git a/drivers/misc/mic/card/mic_debugfs.c b/drivers/misc/mic/card/mic_debugfs.c
+> index 3ee3d24..b586088 100644
+> --- a/drivers/misc/mic/card/mic_debugfs.c
+> +++ b/drivers/misc/mic/card/mic_debugfs.c
+> @@ -65,9 +65,6 @@ void __init mic_create_card_debug_dir(struct mic_driver *mdrv)
+>   */
+>  void mic_delete_card_debug_dir(struct mic_driver *mdrv)
+>  {
+> -	if (!mdrv->dbg_dir)
+> -		return;
+> -
+>	debugfs_remove_recursive(mdrv->dbg_dir);
+>  }
+>
+> diff --git a/drivers/misc/mic/cosm/cosm_debugfs.c b/drivers/misc/mic/cosm/cosm_debugfs.c
+> index 2fc9f4b..68a731f 100644
+> --- a/drivers/misc/mic/cosm/cosm_debugfs.c
+> +++ b/drivers/misc/mic/cosm/cosm_debugfs.c
+> @@ -102,9 +102,6 @@ void cosm_create_debug_dir(struct cosm_device *cdev)
+>
+>  void cosm_delete_debug_dir(struct cosm_device *cdev)
+>  {
+> -	if (!cdev->dbg_dir)
+> -		return;
+> -
+>	debugfs_remove_recursive(cdev->dbg_dir);
+>  }
+>
+> diff --git a/drivers/misc/mic/host/mic_debugfs.c b/drivers/misc/mic/host/mic_debugfs.c
+> index 8a8e416..ab0db7a 100644
+> --- a/drivers/misc/mic/host/mic_debugfs.c
+> +++ b/drivers/misc/mic/host/mic_debugfs.c
+> @@ -129,9 +129,6 @@ void mic_create_debug_dir(struct mic_device *mdev)
+>   */
+>  void mic_delete_debug_dir(struct mic_device *mdev)
+>  {
+> -	if (!mdev->dbg_dir)
+> -		return;
+> -
+>	debugfs_remove_recursive(mdev->dbg_dir);
+>  }
+>
+> --
+> 2.7.4
+>
