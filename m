@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29282C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053FD24684
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B8E20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgAHLmT (ORCPT
+        id S1727792AbgAHLmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:42:19 -0500
-Received: from mga17.intel.com ([192.55.52.151]:51039 "EHLO mga17.intel.com"
+        Wed, 8 Jan 2020 06:42:23 -0500
+Received: from mga17.intel.com ([192.55.52.151]:51036 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgAHLmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727614AbgAHLmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 06:42:17 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="215927349"
+   d="scan'208";a="223521065"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
+  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id DC1BB5C2; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id 2B1ED61D; Wed,  8 Jan 2020 13:42:03 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 22/36] platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
-Date:   Wed,  8 Jan 2020 14:41:47 +0300
-Message-Id: <20200108114201.27908-23-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 28/36] mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
+Date:   Wed,  8 Jan 2020 14:41:53 +0300
+Message-Id: <20200108114201.27908-29-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,29 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is not used anywhere so drop it completely.
+This converts the Intel Merrifield PMIC driver over the new SCU IPC API
+where the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 677ed470e14e..83b106f66fa6 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -184,11 +184,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
- 	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
- }
- 
--static inline u8 __maybe_unused ipc_data_readb(u32 offset)
--{
--	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
--}
--
- static inline u32 ipc_data_readl(u32 offset)
+diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
+index 26a1551c5faf..bd94c989d232 100644
+--- a/drivers/mfd/intel_soc_pmic_mrfld.c
++++ b/drivers/mfd/intel_soc_pmic_mrfld.c
+@@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
+ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ 				    unsigned int *val)
  {
- 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_out;
+ 	int ret;
+ 
+-	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
++	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
+ 				     unsigned int val)
+ {
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_in = val;
+ 	int ret;
+ 
+-	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
++	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
+ 	if (!pmic)
+ 		return -ENOMEM;
+ 
++	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
++	if (!pmic->scu)
++		return -ENOMEM;
++
+ 	platform_set_drvdata(pdev, pmic);
+ 	pmic->dev = &pdev->dev;
+ 
 -- 
 2.24.1
 
