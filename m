@@ -2,199 +2,149 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC92C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A93DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8106920705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578460629;
-	bh=6DqBJAl2kjOCf1oC9VXFfY+JG1WsolzIxUrqFyuWY1M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AWKUJQ9Ud9veDNrp4e3oNuA7UU4GNlt2S16DiKBEZOjNvXGSnzSlC2g9b2ie35V4N
-	 DknoyMQl1Fage47uXpsO+DUJBceI5rHcBCxZpZkXFft2XLYqet3vxdhXwCVqA2vAAr
-	 sOMKxLlLo8ywZ+bw+xTRpUPgOAH7tTm/eDQL38hI=
+	by mail.kernel.org (Postfix) with ESMTP id 4B8242070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 05:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UaDMeZnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgAHFRI (ORCPT
+        id S1726107AbgAHFX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:17:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgAHFRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 00:17:08 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59507205F4;
-        Wed,  8 Jan 2020 05:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578460627;
-        bh=6DqBJAl2kjOCf1oC9VXFfY+JG1WsolzIxUrqFyuWY1M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GyMFAwTaHPKZxt3iskasGOLh42Jb2+KmmkdAcVWrXZWSmOkoo+MC/POnzZq3E0gaE
-         FD415/RWJnSfygsVWSalEB2vd+zDtB3G+Vm4kU1RLYduQ22dMQFRivgap/24WUWJ0b
-         iX/n2ETr5rKK/L2rNuXtRhrXgie64J8qNCwZOm3Q=
-Date:   Wed, 8 Jan 2020 14:17:00 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 01/22] bootconfig: Add Extra Boot Config support
-Message-Id: <20200108141700.425599efe7ab0ac7c4329661@kernel.org>
-In-Reply-To: <20200107205945.63e5d35a@rorschach.local.home>
-References: <157736902773.11126.2531161235817081873.stgit@devnote2>
-        <157736904075.11126.16068256892686522924.stgit@devnote2>
-        <20200107205945.63e5d35a@rorschach.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Jan 2020 00:23:56 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34428 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgAHFX4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 00:23:56 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so1028780pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 21:23:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s1KUxpvNC0nSY4c57vW0grBhdHj/br9DS0Gj7LsMqAg=;
+        b=UaDMeZnQsg7RWbE0j39tduViiq5tWgb5xwFNLW6CAsuaqrJDAaez2MGnV4PY7kH539
+         aj30Ild0XBzKI5+QFVnZnuU/x9R/7QklbyAMShyxgCH4sxK7XMPCA8P3gzkn56vBNgnS
+         fkoYP8jneVMWqlDMbIWdMfifnxnN8gAT8lJCU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s1KUxpvNC0nSY4c57vW0grBhdHj/br9DS0Gj7LsMqAg=;
+        b=aUaVdynh5owD+QPkF0/S9QJplfPR0LQok7bnne9ikINjx4qWs4Lpg85gvbH06+umYb
+         6J8fU5MYWp7t+9psevvpbFqdD0Fr7c21AKpUD9g9XUUfyzhMkSY+4VKjaMnEz2EdIzB3
+         /P9hSaIucZLRmnGlbVaPtYqsPN4QrQHOwfnB95ccHUpdTeESsKvUwThKlhcxhD6mtxVn
+         uZHVZIFcMo18dXo+hfFsFtxTKrKxUDak/LKgTcURfwgj6ohyR4hJl1pL7qCzjL++LpJA
+         Sn30r0Q7adAvgArxKRf2/MvZ/DtDpWnhYTr+eZrejgRiEZeOc/SQNNHRaqj11JhtMy01
+         qnYg==
+X-Gm-Message-State: APjAAAXA3oDz5Nr7LoikvULLKHjOimUsTGWY1aNbv4zU8ocJjPDOfPTv
+        XCEAPUXi1RGX0Pyo/WPcjQ/6Kw==
+X-Google-Smtp-Source: APXvYqxmaLR0+XdqtcLLRTMFj3xPry0wUm49NXvxttElsA1fauDaDpoKgiJkJbYJCbg0zpgZCOqf+g==
+X-Received: by 2002:a62:446:: with SMTP id 67mr3056799pfe.109.1578461035208;
+        Tue, 07 Jan 2020 21:23:55 -0800 (PST)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 21:23:54 -0800 (PST)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
+Subject: [PATCH v2 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+Date:   Wed,  8 Jan 2020 13:23:30 +0800
+Message-Id: <20200108052337.65916-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Hi!
 
-On Tue, 7 Jan 2020 20:59:45 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Sorry for the long delay since https://patchwork.kernel.org/patch/11132381/,
+finally got around to give this a real try.
 
-> On Thu, 26 Dec 2019 23:04:00 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> 
-> > +/**
-> > + * xbc_node_is_value() - Test the node is a value node
-> > + * @node: An XBC node.
-> > + *
-> > + * Test the @node is a value node and return true if a value node, false if not.
-> > + */
-> > +static inline __init bool xbc_node_is_value(struct xbc_node *node)
-> > +{
-> > +	return !!(node->data & XBC_VALUE);
-> 
-> The "!!" is not needed, as this is a static inline bool function. The
-> compiler will make this a 1 or 0 without it.
-> 
-> 	return node->data & XBC_VALUE;
-> 
-> is sufficient.
+The main purpose of this series is to upstream the dts change and the binding
+document, but I wanted to see how far I could probe the GPU, to check that the
+binding is indeed correct. The rest of the patches are RFC/work-in-progress, but
+I think some of them could already be picked up.
 
-OK.
+So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+backports to get the latest panfrost driver (I should probably try on
+linux-next at some point but this was the path of least resistance).
 
-> 
-> > +}
-> > +
-> > +/**
-> > + * xbc_node_is_key() - Test the node is a key node
-> > + * @node: An XBC node.
-> > + *
-> > + * Test the @node is a key node and return true if a key node, false if not.
-> > + */
-> > +static inline __init bool xbc_node_is_key(struct xbc_node *node)
-> > +{
-> > +	return !(node->data & XBC_VALUE);
-> > +}
-> > +
+I tested it as a module as it's more challenging (originally probing would
+work built-in, on boot, but not as a module, as I didn't have the power
+domain changes, and all power domains are on by default during boot).
 
-Maybe this is better use xbc_node_is_value()
+Probing logs looks like this, currently:
+[  221.867726] panfrost 13040000.gpu: clock rate = 511999970
+[  221.867929] panfrost 13040000.gpu: Linked as a consumer to regulator.14
+[  221.868600] panfrost 13040000.gpu: Linked as a consumer to regulator.31
+[  221.870586] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
+[  221.871492] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
+[  221.871866] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
+[  221.872427] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
+[  221.872439] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
+[  221.872445] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+[  221.872449] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+[  221.873526] panfrost 13040000.gpu: error powering up gpu stack
+[  221.878088] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
+[  221.940817] panfrost 13040000.gpu: error powering up gpu stack
+[  222.018233] panfrost 13040000.gpu: error powering up gpu stack
+(repeated)
 
-	return !xbc_node_is_value();
+So the GPU is probed, but there's an issue when powering up the STACK, not
+quite sure why, I'll try to have a deeper look, at some point.
 
-Right?
+Thanks!
 
-> > +
-> > +/*
-> > + * Return delimiter or error, no node added. As same as lib/cmdline.c,
-> > + * you can use " around spaces, but can't escape " for value.
-> > + */
-> > +static int __init __xbc_parse_value(char **__v, char **__n)
-> > +{
-> > +	char *p, *v = *__v;
-> > +	int c, quotes = 0;
-> > +
-> > +	v = skip_spaces(v);
-> > +	while (*v == '#') {
-> > +		v = skip_comment(v);
-> > +		v = skip_spaces(v);
-> > +	}
-> > +	if (*v == '"' || *v == '\'') {
-> > +		quotes = *v;
-> > +		v++;
-> > +	}
-> > +	p = v - 1;
-> > +	while ((c = *++p)) {
-> > +		if (!isprint(c) && !isspace(c))
-> > +			return xbc_parse_error("Non printable value", p);
-> > +		if (quotes) {
-> > +			if (c != quotes)
-> > +				continue;
-> > +			quotes = 0;
-> > +			*p++ = '\0';
-> > +			p = skip_spaces(p);
-> 
-> Hmm, if p here == "    \0" then skip_spaces() will make p == "\0"
-> 
-> > +			c = *p;
-> > +			if (c && !strchr(",;\n#}", c))
-> > +				return xbc_parse_error("No value delimiter", p);
-> > +			p++;
-> 
-> Now p == one passed "\0" which is in unknown territory.
+Nicolas
 
-Ah, right!
+v2:
+ - Use sram instead of mali_sram as SRAM supply name.
+ - Rename mali@ to gpu@.
+ - Add dt-bindings changes
+ - Stacking patches after the device tree change that allow basic
+   probing (still incomplete and broken).
 
-> 
-> > +			break;
-> > +		}
-> > +		if (strchr(",;\n#}", c)) {
-> 
-> Also, why are we looking at '\n'? as wouldn't that get skipped by
-> skip_spaces() too?
+Nicolas Boichat (7):
+  dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+  arm64: dts: mt8183: Add node for the Mali GPU
+  drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+  drm/panfrost: Add support for a second regulator for the GPU
+  drm/panfrost: Add support for multiple power domain support
+  RFC: drm/panfrost: Add bifrost compatible string
+  RFC: drm/panfrost: devfreq: Add support for 2 regulators
 
-I forgot that '\n' is also isspace() true...
-
-Thank you!
-
-> 
-> -- Steve
-> 
-> > +			v = strim(v);
-> > +			*p++ = '\0';
-> > +			break;
-> > +		}
-> > +	}
-> > +	if (quotes)
-> > +		return xbc_parse_error("No closing quotes", p);
-> > +	if (c == '#') {
-> > +		p = skip_comment(p);
-> > +		c = *p;
-> > +	}
-> > +	*__n = p;
-> > +	*__v = v;
-> > +
-> > +	return c;
-> > +}
-> > +
-
+ .../bindings/gpu/arm,mali-bifrost.yaml        |  20 ++++
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 ++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  18 +++
+ drivers/gpu/drm/panfrost/panfrost_device.c    | 108 ++++++++++++++++--
+ drivers/gpu/drm/panfrost/panfrost_device.h    |   7 ++
+ drivers/gpu/drm/panfrost/panfrost_drv.c       |   1 +
+ drivers/gpu/drm/panfrost/panfrost_gpu.c       |  15 ++-
+ 8 files changed, 267 insertions(+), 13 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.24.1.735.g03f4e72817-goog
+
