@@ -7,139 +7,127 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13712C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8305BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4C206DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53600206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OJVRLUnM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CwCADtJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgAHVYk (ORCPT
+        id S1727451AbgAHVZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:24:40 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:37467 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgAHVYj (ORCPT
+        Wed, 8 Jan 2020 16:25:35 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39742 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgAHVZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:24:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578518679; x=1610054679;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OYjFFo0DrFCWzOOz/gny+i2vR66GYQHB2pkG1xclaIo=;
-  b=OJVRLUnMY4FBNgKCTu4ANWl63mxgUTWlPxTcoT8D+rnGkNhiTfNzUrtO
-   T2mhu9CkXSd5lIRlUpOdSqKpC5Cul6w7MGnG0pL0zPjAeqML3OzsfKEGW
-   C6Q6NY9QVkLBoU1nekIVIVzw+v4o7qifaJzq6eqAfV9Faq1pXesRy1kau
-   I=;
-IronPort-SDR: pEvaeQmguSuyTaI/dz/YeUORvZXYn05WOkURz0oliguYx//z58wUrptZSkzkMPSfNKtLeXWNlj
- Vptfrbuz+gvw==
-X-IronPort-AV: E=Sophos;i="5.69,411,1571702400"; 
-   d="scan'208";a="11513237"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 08 Jan 2020 21:24:35 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 95D21C5B6F;
-        Wed,  8 Jan 2020 21:24:33 +0000 (UTC)
-Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 8 Jan 2020 21:24:18 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 8 Jan 2020 21:24:17 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Wed, 8 Jan 2020 21:24:17 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id DE4FD40E78; Wed,  8 Jan 2020 21:24:17 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 21:24:17 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <boris.ostrovsky@oracle.com>, <jgross@suse.com>,
-        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kamatam@amazon.com>, <sstabellini@kernel.org>,
-        <konrad.wilk@oracle.co>, <roger.pau@citrix.com>, <axboe@kernel.dk>,
-        <davem@davemloft.net>, <rjw@rjwysocki.net>, <len.brown@intel.com>,
-        <pavel@ucw.cz>, <peterz@infradead.org>, <eduval@amazon.com>,
-        <sblbir@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <fllinden@amazon.com>, <anchalag@amazon.com>
-Subject: Re: [RFC PATCH V2 09/11] xen: Clear IRQD_IRQ_STARTED flag during
- shutdown PIRQs
-Message-ID: <20200108212417.GA22381@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <20200107234420.GA18738@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <877e22ezv6.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Jan 2020 16:25:34 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 008LI7Ef104982;
+        Wed, 8 Jan 2020 21:24:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=p+VKUmFTYouUcdSlYAoM9Pr3W2UblwpfU8rrZp0oNbE=;
+ b=CwCADtJTMEKq6lcc8O6ASV2uqvwRQzEC4ADL5xIgzmCExGamfmNc0reAl1octn6ouiGY
+ hw9JkzGCjacVhZ8ieSCRgkUoAvRF8tXAi8E4F0VIDmI1Z0EOGFKpoukC9IbX2k60zKC9
+ +06h9V7bbcQUFux6TOuMDtOEnmUxRuJdmb3JM+BgVvDsFp+CuME5SaRp2Cr5D+KY4NNX
+ iMpP1k4VYb+C8objoHUHgAjA2b/gYN/Eaxqjrv77lUXg0lfRHGO3BZ25fALUZHDEQn44
+ /23BKnwijKtX7Gwow4D7AS+5ZGpp+ynmMN3iHXmUSAQdpJ8OloVgIVZ+LB60OyGRkIQ2 IQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xaj4u6s71-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 21:24:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 008LJW5U078547;
+        Wed, 8 Jan 2020 21:24:59 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xcpctgwug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Jan 2020 21:24:58 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 008LOuTG001519;
+        Wed, 8 Jan 2020 21:24:56 GMT
+Received: from [10.132.95.199] (/10.132.95.199)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jan 2020 13:24:56 -0800
+Subject: Re: [RESEND RFC PATCH 1/1] Selectively allow CAP_SYS_NICE capability
+ inside user namespaces
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+References: <1574096478-11520-1-git-send-email-prakash.sangappa@oracle.com>
+ <1574096478-11520-2-git-send-email-prakash.sangappa@oracle.com>
+ <87wobszzqi.fsf@x220.int.ebiederm.org>
+ <0d7fb84d-e7e8-c442-37a3-23b036fdf12c@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        tglx@linutronix.de, peterz@infradead.org, serge@hallyn.com
+From:   "prakash.sangappa" <prakash.sangappa@oracle.com>
+Message-ID: <b231b9b4-c37d-1d9f-7054-1b4be41302b4@oracle.com>
+Date:   Wed, 8 Jan 2020 13:23:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <877e22ezv6.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <0d7fb84d-e7e8-c442-37a3-23b036fdf12c@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001080167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001080167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:23:25PM +0100, Thomas Gleixner wrote:
-> Anchal Agarwal <anchalag@amazon.com> writes:
-> 
-> > shutdown_pirq is invoked during hibernation path and hence
-> > PIRQs should be restarted during resume.
-> > Before this commit'020db9d3c1dc0a' xen/events: Fix interrupt lost
-> > during irq_disable and irq_enable startup_pirq was automatically
-> > called during irq_enable however, after this commit pirq's did not
-> > get explicitly started once resumed from hibernation.
-> >
-> > chip->irq_startup is called only if IRQD_IRQ_STARTED is unset during
-> > irq_startup on resume. This flag gets cleared by free_irq->irq_shutdown
-> > during suspend. free_irq() never gets explicitly called for ioapic-edge
-> > and ioapic-level interrupts as respective drivers do nothing during
-> > suspend/resume. So we shut them down explicitly in the first place in
-> > syscore_suspend path to clear IRQ<>event channel mapping. shutdown_pirq
-> > being called explicitly during suspend does not clear this flags, hence
-> > .irq_enable is called in irq_startup during resume instead and pirq's
-> > never start up.
-> 
-> What? 
-> 
-> > +void irq_state_clr_started(struct irq_desc *desc)
-> >  {
-> >  	irqd_clear(&desc->irq_data, IRQD_IRQ_STARTED);
-> >  }
-> > +EXPORT_SYMBOL_GPL(irq_state_clr_started);
-> 
-> This is core internal state and not supposed to be fiddled with by
-> drivers.
-> 
-> irq_chip has irq_suspend/resume/pm_shutdown callbacks for a reason.
+
+
+On 11/21/2019 05:45 PM, Prakash Sangappa wrote:
 >
-I agree, as its mentioned in the previous patch {[RFC PATCH V2 08/11]} this is 
-one way of explicitly shutting down legacy devices without introducing too much 
-code for each of the legacy devices. . for eg. in case of floppy there 
-is no suspend/freeze handler which should have done the needful.
-.
-Either we implement them for all the legacy devices that have them missing or
-explicitly shutdown pirqs. I have choosen later for simplicity. I understand
-that ideally we should enable/disable devices interrupts in suspend/resume 
-devices but that requires adding code for doing that to few drivers[and I may
-not know all of them either]
+>
+> On 11/21/19 1:27 PM, ebiederm@xmission.com wrote:
+>> Prakash Sangappa <prakash.sangappa@oracle.com> writes:
+<..>
+>> 2) If I read the other thread correctly there was talk about setting the
+>>     nice levels of processes in other containers.  Ouch!
+>
+> No not in other containers. Only on processes within the container 
+> which has this capability. The use case is to use it in a container 
+> with user namespace and pid namespace. So no processes from other 
+> containers should be visible. Necessary checks should be added?.
+>
+>
+>>
+>>     The only thing I can think that makes any sense at all is to allow
+>>     setting the nice levels of the processes in your own container.
+>
+> Yes that is the intended use.
+>
+>>
+>>     I can totally see having a test to see if a processes credentials 
+>> are
+>>     in the caller's user namespace or a child of caller's user namespace
+>>     and allowing admin level access if the caller has the appropriate
+>>     caps in their user namespace.
+>
+> Ok
+>
+>>     But in this case I don't see anything preventing the admin in a
+>>     container from using the ordinary nice levels on a task. You are
+>>     unlocking the nice levels reserved for the system administrator
+>>     for special occassions.   I don't see how that makes any sense
+>>     to do from inside a container.
+>
+> But this is what seems to be lacking. A container could have some 
+> critical processes running which need to run at a higher priority.
 
-Now I discovered during the flow in hibernation_platform_enter under resume 
-devices that for such devices irq_startup is called which checks for 
-IRQD_IRQ_STARTED flag and based on that it calls irq_enable or irq_startup.
-They are only restarted if the flag is not set which is cleared during shutdown. 
-shutdown_pirq does not do that. Only masking/unmasking of evtchn does not work 
-as pirq needs to be restarted.
-xen-pirq.enable_irq is called rather than stratup_pirq. On resume if these pirqs
-are not restarted in this case ACPI SCI interrupts, I do not see receiving 
-any interrupts under cat /proc/interrupts even though host keeps generating 
-S4 ACPI events. 
-Does that makes sense?
+Any comments about this? What would be the recommendation for dealing 
+with such a requirement?
 
-Thanks,
-Anchal
-> Thanks,
-> 
->        tglx
+
