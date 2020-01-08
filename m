@@ -2,169 +2,155 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFEDC33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60ADC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B010206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FN4Rpd6Y"
+	by mail.kernel.org (Postfix) with ESMTP id B5216206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgAHHMv (ORCPT
+        id S1726697AbgAHHNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:12:51 -0500
-Received: from mail-eopbgr60051.outbound.protection.outlook.com ([40.107.6.51]:37427
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725944AbgAHHMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:12:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V7Key2wQeMcXhoY2/w9eSXufu1AmhYNUFxRQF/Vj1ofieWSWPxqv5XbRgLiTI+GpMDKe0zc3aQvSudVQ+KlOu+HqPbIzzwk0AFiJC15g3pHbs9aSCoovBEMvIrAsMGokzNaCwnWDHYMiZJTTCYtUm+DhXIWAebn/txaj7yUVMduC30QzTNimWHZNZ8GmV0BJJpA6FB9KrHwVlfoT1QoPX46JdlMPSluevGd2QzAsdS8fdVaP2SjVNw48MNTfRk05h/unLChpJPCRDbLv1omFk4noIdTHQl+VaghadPDMc+q6YMmx+Qf3AK5q1p/50a1xsYcuja+f0TKiesCDEizJKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JHBc7bhKL1JTAicntMKpuXc3mIEe4ThyvkYFvoOguPs=;
- b=TnK8bBNHnr4S/qtQbIBZcwcO/XYc9SwQY57JM6QMPMpAeYFwLjxftWni2s1aheDFriXezyOhfwnx4YWLcl63Fz+PW39uNiH101RIiHzAGmI3vcHOxUIzaSPbf//AbjtgJw2PV1vfR1IyKN5ewjS+nNyaeStQbzV5Q6cMIfFDXXEoloLgwDym1MA/5/tCFIU+fektwH5Z5EG9TU2uTkQXCtzXLgImXgPtVJUUXvWo9SShVOK7+hK8Rr7RcYTfJvOxW4sL0xGX0sEl84czay9UitdcRhcGhvGbjidh8WDJN7XxF+qqty7ycOVUcRdaLrP+0e2+Pkn16sZD9b1D+AvmGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JHBc7bhKL1JTAicntMKpuXc3mIEe4ThyvkYFvoOguPs=;
- b=FN4Rpd6YpnlCg7UomGyAkDAWMwTjC04C5lHhF6tLQ9xoG64/4fI5XuNk1EXKN4sgAU4qJGUJmSnnbiYxTeQRvjXzhZYS3/LD6Qz4XLCdNSH0Q0B6u8ziukJfdQIU+EVlYZmSkCPpddlMUHUV3uTBDf2is4dlsieLdEqY/sF67gc=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5185.eurprd04.prod.outlook.com (20.176.214.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.10; Wed, 8 Jan 2020 07:12:46 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::c58c:e631:a110:ba58]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::c58c:e631:a110:ba58%6]) with mapi id 15.20.2602.015; Wed, 8 Jan 2020
- 07:12:46 +0000
-Received: from localhost.localdomain (119.31.174.67) by HK2PR0401CA0022.apcprd04.prod.outlook.com (2603:1096:202:2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.12 via Frontend Transport; Wed, 8 Jan 2020 07:12:43 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] pinctrl: mvebu: armada-37xx: use use platform api
-Thread-Topic: [PATCH V2] pinctrl: mvebu: armada-37xx: use use platform api
-Thread-Index: AQHVxfMHPnlAs5oA3UGqZu84LtJVaw==
-Date:   Wed, 8 Jan 2020 07:12:46 +0000
-Message-ID: <1578467325-4189-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0401CA0022.apcprd04.prod.outlook.com
- (2603:1096:202:2::32) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e9d67365-11ed-4a95-90e1-08d7940a2969
-x-ms-traffictypediagnostic: AM0PR04MB5185:|AM0PR04MB5185:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5185E74729D79A510FC91CC0883E0@AM0PR04MB5185.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(39860400002)(346002)(376002)(189003)(199004)(316002)(6486002)(69590400006)(2906002)(478600001)(36756003)(4326008)(71200400001)(5660300002)(186003)(16526019)(6506007)(7416002)(26005)(44832011)(86362001)(66946007)(6512007)(66446008)(64756008)(66556008)(66476007)(8676002)(956004)(110136005)(54906003)(52116002)(81166006)(81156014)(8936002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5185;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZbhHmMYnl6jeezWBbuQBi+gVNrrhbZqLE2j1n31ebC47yImLz4AMgwRm961P99cdzN5h+39vY9NjSZU29mtk9TtqwUAg0LlVJtv2WZ8N0MbvxHhTHKW4k5DlWbtnlVR57Of0RWYeaUj72RgcdkKPMA6KY7ZfuEYPW/p7njmLWputqV8xx49eizKIjcA/AWg310ck00X+ke/QbMvm4TOFu5q97pQiYvHPLXd0pqTGzoP4mKMaB0asRQ7vyCUgjEEmQSULw8nw3QeGaSSyMZ3kqHIk/ODiCRXSnWVb/Lo6bi2Za9y1Y8uzyawoivObosWe0wQFUb+frxqT7PcNRNai8ZEe4aIIjvojphYNeqpWIYJK8xj5j+7hqtACH3FtEGQcLDWoetnTktxlfM4YzKcdguFXunXvErBxjf/bQUqpXgc8u5fs1Ikx5cBSRFwlCBjnbssOdWFrYfriyWxqOEi9QxkFY7D//+Gzon+glPu7bjiRB8PLc3rI7ELJPDOzGrTh
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jan 2020 02:13:50 -0500
+Received: from mail.parknet.co.jp ([210.171.160.6]:47184 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgAHHNu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 02:13:50 -0500
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 07A9A129664;
+        Wed,  8 Jan 2020 16:13:49 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 0087Dlir011620
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Wed, 8 Jan 2020 16:13:48 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 0087Dlmq047299
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Wed, 8 Jan 2020 16:13:47 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 0087DeXR047296;
+        Wed, 8 Jan 2020 16:13:40 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, linux-cifs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Sterba <dsterba@suse.com>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Jan Kara <jack@suse.com>, Eric Sandeen <sandeen@redhat.com>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: Unification of filesystem encoding options
+References: <20200102211855.gg62r7jshp742d6i@pali>
+        <20200107133233.GC25547@quack2.suse.cz>
+        <20200107173842.ciskn4ahuhiklycm@pali> <20200107200301.GE3619@mit.edu>
+        <20200107203732.ab4jnfgsjobtt5xa@pali>
+Date:   Wed, 08 Jan 2020 16:13:40 +0900
+In-Reply-To: <20200107203732.ab4jnfgsjobtt5xa@pali> ("Pali
+ =?iso-8859-1?Q?Roh=E1r=22's?= message of
+        "Tue, 7 Jan 2020 21:37:32 +0100")
+Message-ID: <87tv56ifob.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9d67365-11ed-4a95-90e1-08d7940a2969
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 07:12:46.3201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wzxEHbzaUNg5JlAz6hQT8xn1mT8xeSFpIRPqqY/vMsIIahw3PHyjcuySgtAJw5G2aS3ZBoiuO5A3ostqIBv0Tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5185
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Pali Rohár <pali.rohar@gmail.com> writes:
 
-platform_irq_count() and platform_get_irq() is the more generic
-way (independent of device trees) to determine the count of available
-interrupts. So use this instead.
+> On Tuesday 07 January 2020 15:03:01 Theodore Y. Ts'o wrote:
+>> On Tue, Jan 07, 2020 at 06:38:42PM +0100, Pali Rohár wrote:
+>
+>> In contrast the fs/unicode functions
+>> have support for full Unicode case folding and normalization, and
+>> currently has the latest Unicode 12.1 tables (released May 2019).
+>
+> That is great!
+>
+> But for example even this is not enough for exfat. exfat has stored
+> upcase table directly in on-disk FS, so ensure that every implementation
+> of exfat driver would have same rules how to convert character (code
+> point) to upper case or lower case (case folding). Upcase table is
+> stored to FS itself when formatting. And in MS decided that for exfat
+> would not be used any Unicode normalization. So this whole fs/unicode
+> code is not usable for exfat.
+>
+>> What I'd suggest is to create a new API, enhancing the functions in
+>> fs/unicode, to support those file systems that need to deal with
+>> UTF-16 and UTF-32 for their on-disk directory format, and that we
+>> assume that for the most part, userspace *will* be using a UTF-8
+>> encoding for the user<->kernel interface.
+>
+> I do not see a use-case for such a new API. Kernel has already API
+> functions:
+>
+>     int utf8_to_utf32(const u8 *s, int len, unicode_t *pu);
+>     int utf32_to_utf8(unicode_t u, u8 *s, int maxlen);
+>     int utf8s_to_utf16s(const u8 *s, int len, enum utf16_endian endian, wchar_t *pwcs, int maxlen);
+>     int utf16s_to_utf8s(const wchar_t *pwcs, int len, enum utf16_endian endian, u8 *s, int maxlen);
+>
+> which are basically enough for all mentioned filesystems. Maybe in for
+> some cases would be useful function utf16 to utf32 (and vice-versa), but
+> that is all. fs/unicode does not bring a new value or simplification.
+>
+> Mentioned filesystems are in most cases either case-sensitive (UDF),
+> having own case-folding (exfat), using own special normalization
+> incompatible with anything (hfsplus) or do not enforce any normalization
+> (cifs, vfat, ntfs, isofs+joliet). So result is that simple UTF-8 to
+> UTF-16LE/BE conversion function is enough and then filesystem module
+> implements own specific rules (special upcase table, incompatible
+> normalization).
+>
+> And I do not thing that it make sense to extending fs/unicode for every
+> one stupid functionality which those filesystems have and needs to
+> handle. I see this as a unique filesystem specific code.
+>
+>> We can keep the existing
+>> NLS interface and mount options for legacy support, but in my opinion
+>> it's not worth the effort to try to do anything else.
+>
+> NLS interface is crucial part of VFAT. Reason is that in VFAT can be
+> filenames stored either as UTF-16LE or as 8bit in some CP encoding.
+> Linux kernel stores new non-7-bit-ASCII filenames as UTF-16LE, but it
+> has to able to read 8-bit filenames which were not stored as UTF-16LE,
+> but rather as 8bit in CP encoding. And therefore mount option codepage=
+> which specify it is required needs to be implemented. It says how
+> vfat.ko should handle on-disk structure, not which encoding is exported
+> to userspace (those are two different things).
+>
+> And current vfat implementation uses NLS API for it. Via CONFIG_* is
+> specified default codepage= mount option (CP473 or what it is -- if you
+> do not specify one explicitly at mount time). And because FAT is
+> required part of UEFI, Linux kernel would have to support this stuff
+> forever (or at least until it support UEFI). I think this cannot be
+> marked as "legacy". It is pity, but truth.
 
-As platform_irq_count() might return an error code (which
-of_irq_count doesn't) some additional handling is necessary.
+FWIW, what I imagined and but never try to implement in past is, iconv
+(or such if you know better api). To support complete codepages, IIRC,
+it has difference by OSes (e.g. mac, old windows, current windows,
+unicode standard).
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+So the table is loaded from userspace like firmware data. (several codes
+in kernel for special conversion cases are required though, table may be
+able to share with glibc)
 
-V2:
- replace %pe with %d for err msg.
+But this would be big work.
 
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/=
-mvebu/pinctrl-armada-37xx.c
-index aa9dcde0f069..bede168917ba 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -15,7 +15,6 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -739,7 +738,14 @@ static int armada_37xx_irqchip_register(struct platfor=
-m_device *pdev,
- 		return ret;
- 	}
-=20
--	nr_irq_parent =3D of_irq_count(np);
-+	nr_irq_parent =3D platform_irq_count(pdev);
-+	if (nr_irq_parent < 0) {
-+		if (nr_irq_parent !=3D -EPROBE_DEFER)
-+			dev_err(dev, "Couldn't determine irq count: %d\n",
-+				nr_irq_parent);
-+		return nr_irq_parent;
-+	}
-+
- 	spin_lock_init(&info->irq_lock);
-=20
- 	if (!nr_irq_parent) {
-@@ -776,7 +782,7 @@ static int armada_37xx_irqchip_register(struct platform=
-_device *pdev,
- 	if (!girq->parents)
- 		return -ENOMEM;
- 	for (i =3D 0; i < nr_irq_parent; i++) {
--		int irq =3D irq_of_parse_and_map(np, i);
-+		int irq =3D platform_get_irq(pdev, i);
-=20
- 		if (irq < 0)
- 			continue;
---=20
-2.16.4
-
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
