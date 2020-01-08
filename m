@@ -2,81 +2,231 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A74BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288CE2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578475014;
-	bh=+IAbT80Thjb7cm6WAP8wRkhDBitTa05E7byZ57Le5ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A9zFJAycCuhQpi0IE0x6GsZj/EoLiml8kf95yLSLp0hulxolXTK8wJoATd9YCfJqR
-	 Z9PpJTxcPkVBCv8CDyku1f6AhvY4nN6WjcL1Z77GMNMMur8OKDlWJduUN3TKzDGwzQ
-	 zJQaYI28ZItf/9zzv4Ev6gLUCE3f5v8fnfAn5E58=
+	by mail.kernel.org (Postfix) with ESMTP id 88CB92072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IWkISoJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbgAHJQx (ORCPT
+        id S1727522AbgAHJTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:16:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727205AbgAHJQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:16:53 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C672C20705;
-        Wed,  8 Jan 2020 09:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578475012;
-        bh=+IAbT80Thjb7cm6WAP8wRkhDBitTa05E7byZ57Le5ag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ie6mnSQIZ0/Cmh6ez45IJInqQwaokWY9MDyBZqRTZNt5uTgXRFmVAd2hNSM9uN3ID
-         y/12CJS7TUfkeqVSwEDmyPF/a5pSrE4SVd4XYt+znN6uP71KT5adACbICf8qRxpEXp
-         AQXOt9SNrLgS1q631MX+fnpE/s46nKozLm/TcjSk=
-Date:   Wed, 8 Jan 2020 09:16:42 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Patrick Daly <pdaly@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, treding@nvidia.com
-Subject: Re: [PATCH 0/3] iommu/arm-smmu: Qualcomm bootsplash/efifb
-Message-ID: <20200108091641.GA15147@willie-the-truck>
-References: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
+        Wed, 8 Jan 2020 04:19:08 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33064 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbgAHJTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 04:19:08 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0089IvJN082699;
+        Wed, 8 Jan 2020 03:18:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578475137;
+        bh=0v/0GKYMhTFfSAd0G2N5wdNhwt5MxxLP4iA8zez90n4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IWkISoJrS1dVWl6DWs8Av4X40yFyhG4mDJCXpIjP7z61UYMZCvQ6WjYJfnH9mf+Xi
+         Rd7Dl4JpwTzCmgRx3Tx5ta/EW3gGr5gfvjYgtJZ2PBjZT6AiHugQao3THL0fJ1KS9D
+         AA/PV3amgpXXLc0jy8EirZbDafXfm4N1iFJJ/vj4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0089Ivh8091876
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 03:18:57 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 03:18:57 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 03:18:57 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0089IrBV046357;
+        Wed, 8 Jan 2020 03:18:54 -0600
+Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
+ devices
+To:     Baolin Wang <baolin.wang7@gmail.com>
+CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
+References: <20200106110133.13791-1-faiz_abbas@ti.com>
+ <20200106110133.13791-4-faiz_abbas@ti.com>
+ <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
+Date:   Wed, 8 Jan 2020 14:50:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 02:17:06PM -0800, Bjorn Andersson wrote:
-> These patches implements the stream mapping inheritance that's necessary in
-> order to not hit a security violation as the display hardware looses its stream
-> mapping during initialization of arm-smmu in various Qualcomm platforms.
-> 
-> This was previously posted as an RFC [1], changes since then involves the
-> rebase and migration of the read-back code to the Qualcomm specific
-> implementation, the mapping is maintained indefinitely - to handle probe
-> deferring clients - and rewritten commit messages.
+Hi Baolin,
 
-I don't think we should solve this in a Qualcomm-specific manner. Please can
-you take a look at the proposal from Thierry [1] and see whether or not it
-works for you?
+On 08/01/20 6:58 am, Baolin Wang wrote:
+> Hi Faiz,
+> 
+> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>
+>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>>
+>> Some standard SD host controllers can support both external dma
+>> controllers as well as ADMA/SDMA in which the SD host controller
+>> acts as DMA master. TI's omap controller is the case as an example.
+>>
+>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+>> the host controller but does not have any support for external DMA
+>> controllers implemented using dmaengine, meaning that custom code is
+>> needed for any systems that use an external DMA controller with SDHCI.
+>>
+>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+>> 1. Map scatterlists before dmaengine_prep_slave_sg()
+>> 2. Use dma_async() functions inside of the send_command() path and call
+>> terminate_sync() in non-atomic context in case of an error.
+>>
+>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  drivers/mmc/host/Kconfig |   3 +
+>>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
+>>  drivers/mmc/host/sdhci.h |   8 ++
+>>  3 files changed, 237 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>> index d06b2dfe3c95..adef971582a1 100644
+>> --- a/drivers/mmc/host/Kconfig
+>> +++ b/drivers/mmc/host/Kconfig
+>> @@ -1040,3 +1040,6 @@ config MMC_OWL
+>>         help
+>>           This selects support for the SD/MMC Host Controller on
+>>           Actions Semi Owl SoCs.
+>> +
+>> +config MMC_SDHCI_EXTERNAL_DMA
+>> +       bool
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index f6999054abcf..8cc78c76bc3d 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -10,6 +10,7 @@
+>>   */
+>>
+>>  #include <linux/delay.h>
+>> +#include <linux/dmaengine.h>
+>>  #include <linux/ktime.h>
+>>  #include <linux/highmem.h>
+>>  #include <linux/io.h>
+>> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>>         sdhci_set_block_info(host, data);
+>>  }
+>>
+>> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
+>> +
+>> +static int sdhci_external_dma_init(struct sdhci_host *host)
+>> +{
+>> +       int ret = 0;
+>> +       struct mmc_host *mmc = host->mmc;
+>> +
+>> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
+>> +       if (IS_ERR(host->tx_chan)) {
+>> +               ret = PTR_ERR(host->tx_chan);
+>> +               if (ret != -EPROBE_DEFER)
+>> +                       pr_warn("Failed to request TX DMA channel.\n");
+>> +               host->tx_chan = NULL;
+>> +               return ret;
+>> +       }
+>> +
+>> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
+>> +       if (IS_ERR(host->rx_chan)) {
+>> +               if (host->tx_chan) {
+>> +                       dma_release_channel(host->tx_chan);
+>> +                       host->tx_chan = NULL;
+>> +               }
+>> +
+>> +               ret = PTR_ERR(host->rx_chan);
+>> +               if (ret != -EPROBE_DEFER)
+>> +                       pr_warn("Failed to request RX DMA channel.\n");
+>> +               host->rx_chan = NULL;
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
+>> +                                                  struct mmc_data *data)
+>> +{
+>> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
+>> +}
+>> +
+>> +static int sdhci_external_dma_setup(struct sdhci_host *host,
+>> +                                   struct mmc_command *cmd)
+>> +{
+>> +       int ret, i;
+>> +       struct dma_async_tx_descriptor *desc;
+>> +       struct mmc_data *data = cmd->data;
+>> +       struct dma_chan *chan;
+>> +       struct dma_slave_config cfg;
+>> +       dma_cookie_t cookie;
+>> +       int sg_cnt;
+>> +
+>> +       if (!host->mapbase)
+>> +               return -EINVAL;
+>> +
+>> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+>> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+>> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +       cfg.src_maxburst = data->blksz / 4;
+>> +       cfg.dst_maxburst = data->blksz / 4;
+>> +
+>> +       /* Sanity check: all the SG entries must be aligned by block size. */
+>> +       for (i = 0; i < data->sg_len; i++) {
+>> +               if ((data->sg + i)->length % data->blksz)
+>> +                       return -EINVAL;
+>> +       }
+>> +
+>> +       chan = sdhci_external_dma_channel(host, data);
+>> +
+>> +       ret = dmaengine_slave_config(chan, &cfg);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
+>> +       if (sg_cnt <= 0)
+>> +               return -EINVAL;
+>> +
+>> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+>> +                                      mmc_get_dma_dir(data),
+>> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>> +       if (!desc)
+>> +               return -EINVAL;
+>> +
+>> +       desc->callback = NULL;
+>> +       desc->callback_param = NULL;
+>> +
+>> +       cookie = dmaengine_submit(desc);
+>> +       if (cookie < 0)
+> 
+> We usually use the DMA engine standard API: dma_submit_error() to
+> validate the cookie.
+> 
+
+The if condition is doing the same thing as the API. Do we really
+require it?
 
 Thanks,
-
-Will
-
-[1] https://lore.kernel.org/lkml/20191209150748.2471814-1-thierry.reding@gmail.com
+Faiz
