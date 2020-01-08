@@ -2,194 +2,110 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C728CC33CA3
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98316C33CA4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8D720720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9732077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKe3OjAe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aQyETl1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgAHQWh (ORCPT
+        id S1729470AbgAHQWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:22:37 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51430 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbgAHQWV (ORCPT
+        Wed, 8 Jan 2020 11:22:44 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9997 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbgAHQWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 11:22:21 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so3141482wmd.1;
-        Wed, 08 Jan 2020 08:22:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WfL24R1jbieE92Zr2OINAr/LHQLYTr+DjNdDMkvlSSs=;
-        b=DKe3OjAewdlKxi5A5DrjA+hPYhuiuqf9P55p1QfwL4dmlyOlHsnzOlt6c9lseJVRE4
-         zEIqVq+DIGf36Bgq5/j9f+EU5tJSYhLgfOaN9SUjoaLWOY47U3EX7HzPeCdtYV3qdQ6t
-         o2MzVfFzk8FCEq7kXe3hM8GURb+vgGnWezs8jZrpjNnOIHqlD+eh/CvbGaaIxLoOmHGQ
-         jpy8wKysYn8oDbXcp3isBt0aTQg3fCu2Fn6i/9FMuGa5BLhZNPSMA6XPwdjvnb2CA5QM
-         oLEzlf5+JsRPGjrC9fRC1kgtDo9W3hzalsKDBPfDzrJmmDT5f+31alcASf4c6WPzhZKj
-         XZFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WfL24R1jbieE92Zr2OINAr/LHQLYTr+DjNdDMkvlSSs=;
-        b=TIwpBzkKiH3lST+O4DPnNPorkzWxAWN3u2lHvgCnEehgx3ZCyZDdn4LcYXlcrd6Iyt
-         GCe7gpxQR694mhLs0xgBYkWbqbOROQjx1rldqgDPyiyzkK4fEGFx8LABIec2fGHG/yM8
-         Oyry91RH0pjSvdH8nT/v2ZOq2NygopnG9mBhAD/p8GYYcoiG7Zle74WnMFsd51To1n+p
-         ei3o5wnvmd2Z3qJ706JMRo+Y+m8+w9NPmAwoqDAf5Onn09kruVUkFUhofpWQtdC8H2JT
-         CQ1ozQxjBbfUbA46TiJ18cptHSUUIQ2pSpHb5Fh0JELAL/M8VjkCOhoAFmt6YW4if5er
-         GdfQ==
-X-Gm-Message-State: APjAAAX/1AtqpMMECSpH9mQl3i7ljogzJi03omV8K0plnypG3x9pUEUZ
-        paSGL0t2okX/IiG1GutBcJg=
-X-Google-Smtp-Source: APXvYqz6e4O8N1oBV+D3PFV4CPHG2KoFc+aqTo2lzVIxRuRIAafTkSuZLrV9KTPvkqw0PeJAkz8PIw==
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4981393wmk.68.1578500538653;
-        Wed, 08 Jan 2020 08:22:18 -0800 (PST)
-Received: from prasmi.home ([2a00:23c6:d18:6d00:2811:8b65:294e:fa09])
-        by smtp.gmail.com with ESMTPSA id q3sm5112180wrn.33.2020.01.08.08.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:22:18 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint controller
-Date:   Wed,  8 Jan 2020 16:22:09 +0000
-Message-Id: <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 8 Jan 2020 11:22:42 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1601bf0002>; Wed, 08 Jan 2020 08:22:23 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Jan 2020 08:22:41 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Jan 2020 08:22:41 -0800
+Received: from [10.26.11.166] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 16:22:39 +0000
+Subject: Re: [PATCH 4.14 00/74] 4.14.163-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200107205135.369001641@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1dd88418-510b-ee47-4358-ebe3c54df0b1@nvidia.com>
+Date:   Wed, 8 Jan 2020 16:22:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107205135.369001641@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578500543; bh=Fw/dCvbW8epbzb0nikJruAg605AT6QrBFgpG3lrVsDw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=aQyETl1VjnqV/uW4vezdaOpiS9FUeeQ07qgramWlyjnf2IufPkt6uwkPFe2FLtq6N
+         Be8Wv80kzMxu/MI22jzq6bDeKXaTCvhqwrkp91vK1RiPooXVqrEUpvNEGm3sTme5uT
+         pJ2+kPs4e8FgWtKrKGOGuhwDQLBxjN8UjC1g4jjRAxq+1oT4x6Ry+NqLKeRiE3MGRn
+         TlcCOIJlVpNlBCziMyZyqajRF6VfIeIGSoHgBi6L5QbXsETPSjCmVBliptjLx2TzTu
+         kZuOyjgJBDrRCZl0o0yhtClZ+Xl/BhqSAWIJlCwE3E7vPgEXtnaYl4grfe/Rvd3lGX
+         SfR9/GWumK7Dg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the bindings for the R-Car PCIe endpoint driver.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+On 07/01/2020 20:54, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.163 release.
+> There are 74 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 09 Jan 2020 20:44:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.163-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-new file mode 100644
-index 000000000000..99c2a1174463
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car PCIe Endpoint
-+
-+maintainers:
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: renesas,r8a774c0-pcie-ep
-+      - const: renesas,rcar-gen3-pcie-ep
-+
-+  reg:
-+    maxItems: 5
-+
-+  reg-names:
-+    items:
-+      - const: apb-base
-+      - const: memory0
-+      - const: memory1
-+      - const: memory2
-+      - const: memory3
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: pcie
-+
-+  max-functions:
-+    minimum: 1
-+    maximum: 6
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - resets
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - max-functions
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a774c0-sysc.h>
-+
-+     pcie0_ep: pcie-ep@fe000000 {
-+            compatible = "renesas,r8a774c0-pcie-ep",
-+                         "renesas,rcar-gen3-pcie-ep";
-+            reg = <0 0xfe000000 0 0x80000>,
-+                  <0x0 0xfe100000 0 0x100000>,
-+                  <0x0 0xfe200000 0 0x200000>,
-+                  <0x0 0x30000000 0 0x8000000>,
-+                  <0x0 0x38000000 0 0x8000000>;
-+            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-+            resets = <&cpg 319>;
-+            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+            clocks = <&cpg CPG_MOD 319>;
-+            clock-names = "pcie";
-+            max-functions = /bits/ 8 <1>;
-+    };
+All tests for Tegra are passing ...
+
+Test results for stable-v4.14:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
+
+Linux version:	4.14.163-rc2-ga95271edf2c8
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.20.1
-
+nvpublic
