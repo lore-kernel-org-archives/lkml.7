@@ -2,136 +2,103 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52125C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0659FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289F420692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0FD220692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h1hY+k92"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jG8/vhWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgAHKv2 (ORCPT
+        id S1727981AbgAHKxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:51:28 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35100 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgAHKv2 (ORCPT
+        Wed, 8 Jan 2020 05:53:55 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58560 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbgAHKxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:51:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UqJ+/pT3izXu8kjYbbiezAa/YocSHtlN1XVLHEFRKJs=; b=h1hY+k92RryrIdTBhr5FexAw8
-        O11fOafKK2pe28cad9xN3w5YC34MHOc8hOWB8aSF5ZjC4dagLW4Ma/0kLVb7woD8LikhFaOmCggkJ
-        tGj6ZF/m8LSvTqTKZyMP0PiFTtEWolCan0If+IvY/U+RhWEd59XTazjWez3mvFGUqz2I2uaQnIthm
-        xWGbmTwjpUTQg2ojRszkMLE7I3h5arSfW5f/vsqoPHTlTF8hBF73JlvH3LaJ8cmVuHmk/ZkvZDPlJ
-        6rlLIighU6yX4hf5dztz9In1qHEMM4u/Z2M90C6vdcHgH9EOOe687bUXiPyWnDC+dNrkWrcOJJgAm
-        fc6jza4hg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ip8uo-00019z-P9; Wed, 08 Jan 2020 10:50:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE995300693;
-        Wed,  8 Jan 2020 11:48:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AF2B320B79C98; Wed,  8 Jan 2020 11:50:11 +0100 (CET)
-Date:   Wed, 8 Jan 2020 11:50:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Anchal Agarwal <anchalag@amazon.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
-        sstabellini@kernel.org, konrad.wilk@oracle.co,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com,
-        dwmw@amazon.co.uk, fllinden@amaozn.com
-Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
- hibernation
-Message-ID: <20200108105011.GY2827@hirez.programming.kicks-ass.net>
-References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+        Wed, 8 Jan 2020 05:53:54 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008AprGZ021882;
+        Wed, 8 Jan 2020 11:53:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=kQyAI2kGrjAzX+brnj8/2WmK945o0OHDaqbW0tiyk38=;
+ b=jG8/vhWu3vI0zQ2/6ljT7lMhTFQRzNNPYHZwHdGzs2Eo5g5lMGGov6ZwJLOfIyariESU
+ hORNi1P+EC95M145rQh2UHaCPIW1iML0ztzP/eRKwOfKkQcPFMF3iAmm/sYqpbStnBX5
+ JTpBv3ah3Ev23TSN0/BN4mu6MtU5Z2E4xiQyj5Hb7YDoJByEqsx2/bRhCxV6cVnt3kGq
+ jU3R9MWJ5k0qEPhPhLFmHAl6xDJ/s8Lv+wuqSgNmjlN3nwh9BxptLWYUotCw2kvfunL/
+ UWuuUjEJvEW2qyQ1UKuwKedwt2QO8K/FBEQYCgeVk3ozvCXiWpHXIXqPpJ4pM2QFGXGP DA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakm5keud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jan 2020 11:53:32 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 32C4E100039;
+        Wed,  8 Jan 2020 11:53:28 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F5312AC7B9;
+        Wed,  8 Jan 2020 11:53:28 +0100 (CET)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 11:53:27 +0100
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Wed, 8 Jan 2020 11:53:27 +0100
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 0/2] ARM: dts: stih410-b2260: Fix ethernet PHY DT node
+Thread-Topic: [PATCH 0/2] ARM: dts: stih410-b2260: Fix ethernet PHY DT node
+Thread-Index: AQHVxVdeIJqDyaWz6EKL4LSB10p6hafgiEOA
+Date:   Wed, 8 Jan 2020 10:53:27 +0000
+Message-ID: <ac361e0a-e5c8-ba7c-0d31-1f47a6ba4fab@st.com>
+References: <20200107123828.6586-1-patrice.chotard@st.com>
+In-Reply-To: <20200107123828.6586-1-patrice.chotard@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8FA654F671C57D4EA886F312BBD6A0E0@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_03:2020-01-08,2020-01-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:45:26PM +0000, Anchal Agarwal wrote:
-> From: Eduardo Valentin <eduval@amazon.com>
-> 
-> System instability are seen during resume from hibernation when system
-> is under heavy CPU load. This is due to the lack of update of sched
-> clock data, and the scheduler would then think that heavy CPU hog
-> tasks need more time in CPU, causing the system to freeze
-> during the unfreezing of tasks. For example, threaded irqs,
-> and kernel processes servicing network interface may be delayed
-> for several tens of seconds, causing the system to be unreachable.
-
-> The fix for this situation is to mark the sched clock as unstable
-> as early as possible in the resume path, leaving it unstable
-> for the duration of the resume process. This will force the
-> scheduler to attempt to align the sched clock across CPUs using
-> the delta with time of day, updating sched clock data. In a post
-> hibernation event, we can then mark the sched clock as stable
-> again, avoiding unnecessary syncs with time of day on systems
-> in which TSC is reliable.
-
-This makes no frigging sense what so bloody ever. If the clock is
-stable, we don't care about sched_clock_data. When it is stable you get
-a linear function of the TSC without complicated bits on.
-
-When it is unstable, only then do we care about the sched_clock_data.
-
-> Reviewed-by: Erik Quanstrom <quanstro@amazon.com>
-> Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-> Reviewed-by: Balbir Singh <sblbir@amazon.com>
-> Reviewed-by: Munehisa Kamata <kamatam@amazon.com>
-> Tested-by: Anchal Agarwal <anchalag@amazon.com>
-> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-> ---
-
-NAK, the code very much relies on never getting marked stable again
-after it gets set to unstable.
-
-> diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
-> index 1152259a4ca0..374d40e5b1a2 100644
-> --- a/kernel/sched/clock.c
-> +++ b/kernel/sched/clock.c
-> @@ -116,7 +116,7 @@ static void __scd_stamp(struct sched_clock_data *scd)
->  	scd->tick_raw = sched_clock();
->  }
->  
-> -static void __set_sched_clock_stable(void)
-> +void set_sched_clock_stable(void)
->  {
->  	struct sched_clock_data *scd;
->  
-> @@ -236,7 +236,7 @@ static int __init sched_clock_init_late(void)
->  	smp_mb(); /* matches {set,clear}_sched_clock_stable() */
->  
->  	if (__sched_clock_stable_early)
-> -		__set_sched_clock_stable();
-> +		set_sched_clock_stable();
->  
->  	return 0;
->  }
-> -- 
-> 2.15.3.AMZN
-> 
+SGkNCg0KVGhpcyBzZXJpZXMgaXMgYWJhbmRvbm5lZDoNCg0KwqDCoCAtIFBhdGNoIDEgaXMgbm8g
+bW9yZSBuZWVkZWQgZHVlIHRvIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9s
+aW51eC1hcm0ta2VybmVsL2xpc3QvP3Nlcmllcz0yMjQ2MzcNCg0KwqDCoCAtIFBhdGNoIDIgd2ls
+bCBiZSByZXNlbmQgYWxvbmUNCg0KVGhhbmtzDQoNClBhdHJpY2UNCg0KDQpPbiAxLzcvMjAgMToz
+OCBQTSwgcGF0cmljZS5jaG90YXJkQHN0LmNvbSB3cm90ZToNCj4gRnJvbTogUGF0cmljZSBDaG90
+YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0KPg0KPiBUaGlzIHNlcmllcyBpcyBmaXhpbmcg
+YSBrZXJuZWwgT29wcyBhbmQgaXMgcmVtb3ZpbmcgZGVwcmVjYXRlZCBQSFkgcHJvcGVydGllczog
+DQo+DQo+ICAtIFNpbmNlIGNvbW1pdCAnZDNlMDE0ZWM3ZDVlICgibmV0OiBzdG1tYWM6IHBsYXRm
+b3JtOiBGaXggTURJTyBpbml0IGZvciANCj4gICAgcGxhdGZvcm1zIHdpdGhvdXQgUEhZIiknLCBh
+IGtlcm5lbCBPb3BzIG9jY3VycyBhbmQgZXRoZXJuZXQgaXMgbm8gbW9yZQ0KPiAgICBmdW5jdGlv
+bmFsLg0KPg0KPiAgLSBTb21lIGRlcHJlY2F0ZWQgU3lub3BzeXMgcGh5IHByb3BlcnRpZXMgd2Fz
+IGFsd2F5cyBwcmVzZW50IGluIERULCANCj4gICAgcmVtb3ZlIHRoZW0uDQo+DQo+IFBhdHJpY2Ug
+Q2hvdGFyZCAoMik6DQo+ICAgQVJNOiBkdHM6IHN0aWg0MTAtYjIyNjA6IEZpeCBldGhlcm5ldCBw
+aHkgRFQgbm9kZQ0KPiAgIEFSTTogZHRzOiBzdGloNDEwLWIyMjYwOiBSZW1vdmUgZGVwcmVjYXRl
+ZCBzbnBzIFBIWSBwcm9wZXJ0aWVzDQo+DQo+ICBhcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIy
+MjYwLmR0cyB8IDEzICsrKysrKysrKystLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRp
+b25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPg==
