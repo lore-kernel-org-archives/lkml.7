@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53810C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB39C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36AF12187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096A22070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgAHTsu (ORCPT
+        id S1729500AbgAHTtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:48:50 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43626 "EHLO
+        Wed, 8 Jan 2020 14:49:05 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43602 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730441AbgAHTqD (ORCPT
+        by vger.kernel.org with ESMTP id S1730437AbgAHTqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:03 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-0006pB-LS; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHD-0006p2-FO; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHC-007do5-RL; Wed, 08 Jan 2020 19:45:58 +0000
+        id 1ipHHC-007dnZ-Hy; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Bhadram Varka" <vbhadram@nvidia.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 19:43:43 +0000
-Message-ID: <lsq.1578512578.478323157@decadent.org.uk>
+        "Amit Pundir" <amit.pundir@linaro.org>,
+        "Arnd Bergmann" <arnd@arndb.de>, "Xerox Lin" <xerox_lin@htc.com>,
+        "Rajkumar Raghupathy" <raghup@codeaurora.org>,
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>
+Date:   Wed, 08 Jan 2020 19:43:37 +0000
+Message-ID: <lsq.1578512578.927773857@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 45/63] stmmac: copy unicast mac address to MAC registers
+Subject: [PATCH 3.16 39/63] usb: gadget: rndis: free response queue during
+ REMOTE_NDIS_RESET_MSG
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,55 +58,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bhadram Varka <vbhadram@nvidia.com>
+From: Xerox Lin <xerox_lin@htc.com>
 
-commit a830405ee452ddc4101c3c9334e6fedd42c6b357 upstream.
+commit 207707d8fd48ebc977fb2b2794004a020e1ee08e upstream.
 
-Currently stmmac driver not copying the valid ethernet
-MAC address to MAC registers. This patch takes care
-of updating the MAC register with MAC address.
+When rndis data transfer is in progress, some Windows7 Host PC is not
+sending the GET_ENCAPSULATED_RESPONSE command for receiving the response
+for the previous SEND_ENCAPSULATED_COMMAND processed.
 
-Signed-off-by: Bhadram Varka <vbhadram@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The rndis function driver appends each response for the
+SEND_ENCAPSULATED_COMMAND in a queue. As the above process got corrupted,
+the Host sends a REMOTE_NDIS_RESET_MSG command to do a soft-reset.
+As the rndis response queue is not freed, the previous response is sent
+as a part of this REMOTE_NDIS_RESET_MSG's reset response and the Host
+block any more Rndis transfers.
+
+Hence free the rndis response queue as a part of this soft-reset so that
+the correct response for REMOTE_NDIS_RESET_MSG is sent properly during the
+response command.
+
+Signed-off-by: Rajkumar Raghupathy <raghup@codeaurora.org>
+Signed-off-by: Xerox Lin <xerox_lin@htc.com>
+[AmitP: Cherry-picked this patch and folded other relevant
+        fixes from Android common kernel android-4.4]
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 [bwh: Backported to 3.16:
- - Pass priv->ioaddr as first argument to set_umac_addr operation
- - Adjust context]
+ - Pass configNr instead of params as first argument to
+   rndis_{get_next,free}_response()
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/rndis.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2388,6 +2388,20 @@ static int stmmac_ioctl(struct net_devic
- 	return ret;
- }
+--- a/drivers/usb/gadget/rndis.c
++++ b/drivers/usb/gadget/rndis.c
+@@ -686,6 +686,12 @@ static int rndis_reset_response(int conf
+ 	rndis_reset_cmplt_type *resp;
+ 	rndis_resp_t *r;
+ 	struct rndis_params *params = rndis_per_dev_params + configNr;
++	u8 *xbuf;
++	u32 length;
++
++	/* drain the response queue */
++	while ((xbuf = rndis_get_next_response(configNr, &length)))
++		rndis_free_response(configNr, xbuf);
  
-+static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int ret = 0;
-+
-+	ret = eth_mac_addr(ndev, addr);
-+	if (ret)
-+		return ret;
-+
-+	priv->hw->mac->set_umac_addr(priv->ioaddr, ndev->dev_addr, 0);
-+
-+	return ret;
-+}
-+
- #ifdef CONFIG_STMMAC_DEBUG_FS
- static struct dentry *stmmac_fs_dir;
- static struct dentry *stmmac_rings_status;
-@@ -2587,7 +2601,7 @@ static const struct net_device_ops stmma
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller = stmmac_poll_controller,
- #endif
--	.ndo_set_mac_address = eth_mac_addr,
-+	.ndo_set_mac_address = stmmac_set_mac_address,
- };
- 
- /**
+ 	r = rndis_add_response(configNr, sizeof(rndis_reset_cmplt_type));
+ 	if (!r)
 
