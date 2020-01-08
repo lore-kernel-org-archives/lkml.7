@@ -2,117 +2,123 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFADC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE79C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BADF206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D10A2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EYsjZsFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgAHHw5 (ORCPT
+        id S1726967AbgAHHx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:52:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38135 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgAHHw5 (ORCPT
+        Wed, 8 Jan 2020 02:53:27 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46404 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgAHHx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:52:57 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ip696-0006TA-I9; Wed, 08 Jan 2020 08:52:52 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ip691-0007Fs-TD; Wed, 08 Jan 2020 08:52:47 +0100
-Date:   Wed, 8 Jan 2020 08:52:47 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Peng Fan <peng.fan@nxp.com>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
-Message-ID: <20200108075247.y5ex44flp6lvqeoc@pengutronix.de>
-References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
- <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
- <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com>
- <20191218145955.GE26938@lunn.ch>
- <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
+        Wed, 8 Jan 2020 02:53:27 -0500
+Received: by mail-oi1-f195.google.com with SMTP id p67so1816267oib.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 23:53:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=camziUii29p0luivFHpHfiIofvd34K0/ntq20cnWejQ=;
+        b=EYsjZsFAsUzuW2XCUGVOeJWRTDpsijA5eG5WJTpjNPOKwMOlWw6m74WmBpygMw4Wal
+         CHfd15+K/BxFl/GhaT6DN+6B6+5nGqFEgtbS87PFoKKF44WyOu59XGPLdRtdKjUOyCV6
+         d4aWD2Xh3x5tCfggne33yy9ezgsieutkI6AXqPXkYIZI8vMDMsimzfC5yfaslwdYKx0T
+         KINyphhUgkHEd8YOel3atJFy5i4FBC9bCRSI7pQxWUVe7+S2BkNzWsohuJ1BDQzbpb2G
+         0tQY7yXDvwPrQMH6R+Cz4bfge1cUOvyUnR/n4ZfuAseGuET2OvABs6s2SHmxbtHAcQ7w
+         Uf+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=camziUii29p0luivFHpHfiIofvd34K0/ntq20cnWejQ=;
+        b=f30AW8M64XI41VHBFCmCvAQFWAW5jA2MhhwVIUbYWtgSUHbjoAS52OfalyOR9075DC
+         3e7o2nkuFLtRnUdPNcF9uQHyYf4qzKzoS/rt27mcyLBCUxBQzBZ+oA4EHlLdq8H94HzN
+         GWUilQoiAvPYkFuwl29tehOTJ0SIQo+tCCtb4CZIEcp1ok3bYupPzcgiROXumEEyF+ZJ
+         9eQskrlfffPL2xs3RkL6O/6f5kHRZs9npf/Hh4URDcYe6sGrXfor/2hhGwXshxjUDoIS
+         L3xNT5UHt1Gwjq12l8J9r9MrE7E12iKq0p26Rhv+8tBDjhQN/rbbGOKjqey6mSPnZjn4
+         3c7A==
+X-Gm-Message-State: APjAAAUpBe0PjdLwSoTEdlc7U2C0pfzfvQda+hViQwqnto3KoTv5Jomw
+        c7/e6OysH/xNXRLNi+g7X9GYeJ9cQli+PUx/6ZVVwcI/kklXZg==
+X-Google-Smtp-Source: APXvYqxsAtXexafEFaXtmUeIIS4EH/aSV390STPoMyxFSIwMe1yBuRA3WSSQE9MEkVKLcLWGmgrgMHKiWL6UBoFX72g=
+X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr2101890oij.149.1578470006357;
+ Tue, 07 Jan 2020 23:53:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200107143601.105321-1-colin.king@canonical.com> <747f9c93-7465-99aa-0b91-a05fd64c7d1f@amd.com>
+In-Reply-To: <747f9c93-7465-99aa-0b91-a05fd64c7d1f@amd.com>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Wed, 8 Jan 2020 08:53:15 +0100
+Message-ID: <CAHUa44E7H0wPWQFNQrmAuDtOw=514mxx6fHVAcTpH05HKPvtzA@mail.gmail.com>
+Subject: Re: [PATCH][next] tee: fix memory allocation failure checks on
+ drv_data and amdtee
+To:     "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Gary R Hook <gary.hook@amd.com>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Fabio,
-
-On Wed, Dec 18, 2019 at 12:09:42PM -0300, Fabio Estevam wrote:
-> On Wed, Dec 18, 2019 at 12:00 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > Hi Fabio
+On Wed, Jan 8, 2020 at 8:03 AM Thomas, Rijo-john
+<Rijo-john.Thomas@amd.com> wrote:
+>
+> +linux-crypto
+>
+> On 07/01/20 8:06 pm, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
 > >
-> > Look closer. This is not about returning an error, it is about
-> > printing an error.
+> > Currently the memory allocation failure checks on drv_data and
+> > amdtee are using IS_ERR rather than checking for a null pointer.
+> > Fix these checks to use the conventional null pointer check.
 > >
-> > I think the API could better. A %ie formatter would make a lot of
-> > sense, so avoiding the ERR_PTR().
-> 
-> Yes, I think that returning the error like:
-> 
-> dev_err(dev, "Couldn't determine irq count: %d\n", nr_irq_parent);
-> 
-> would make the code cleaner.
+> > Addresses-Coverity: ("Dereference null return")
+> > Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>
+> Reviewed-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
 
-Are you aware of the semantic difference between
+Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
 
-	dev_err(..., "Couldn't determine irq count: %d\n", nr_irq_parent);
+Thanks,
+Jens
 
-and
-
-	dev_err(..., "Couldn't determine irq count: %pe\n", ERR_PTR(nr_irq_parent));
-
-? The first yields:
-
-	Couldn't determine irq count: -5
-
-while the latter yields
-
-	Couldn't determine irq count: -EIO
-
-which is more expressive.
-
-I agree that having a format for printing an integer error code would be
-useful. I have this on my todo-list but having some %pe with ERR_PTR
-conversion would help me arguing my case.
-
-So I would like the patch to go in with ERR_PTR even though v2 was sent
-using %d today.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+> > ---
+> >  drivers/tee/amdtee/core.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
+> > index 9d0cee1c837f..5fda810c79dc 100644
+> > --- a/drivers/tee/amdtee/core.c
+> > +++ b/drivers/tee/amdtee/core.c
+> > @@ -444,11 +444,11 @@ static int __init amdtee_driver_init(void)
+> >               goto err_fail;
+> >
+> >       drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
+> > -     if (IS_ERR(drv_data))
+> > +     if (!drv_data)
+> >               return -ENOMEM;
+> >
+> >       amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
+> > -     if (IS_ERR(amdtee)) {
+> > +     if (!amdtee) {
+> >               rc = -ENOMEM;
+> >               goto err_kfree_drv_data;
+> >       }
+> >
