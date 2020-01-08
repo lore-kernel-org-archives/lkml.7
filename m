@@ -2,239 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEB4C33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7094C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5664D20692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF7B20692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPa4Qa1u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GTNCpgnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgAHRjW (ORCPT
+        id S1729839AbgAHRja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:39:22 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39475 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgAHRjW (ORCPT
+        Wed, 8 Jan 2020 12:39:30 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36357 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgAHRja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:39:22 -0500
-Received: by mail-il1-f195.google.com with SMTP id x5so3345876ila.6;
-        Wed, 08 Jan 2020 09:39:21 -0800 (PST)
+        Wed, 8 Jan 2020 12:39:30 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x184so1981561pfb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 09:39:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P+v8AezFlGdBI4UBOo3gWVVo1rHFZPhrTFBZe8wNUus=;
-        b=qPa4Qa1uYRuf96EMzDrn7JNukRAyeQwC/VNjUR0la/iUuG/QLLyRtxAHvTWi4tsTbM
-         O7S7za2abCqvwBoOPfIOwFNFUVhOxxrKSriPCCc8oqtSHXY/7wn+tJQ1aWDS7CRQzSIV
-         5Ubik6F/HSUt1ZJTwTk30b2xlPbdttuefDsH5xj4JOJQYwfA6WHQrD2086/nGn3+7NWP
-         Zd736YrN+EmNLKtWECiF0ypATSdmYQ2bSjsjymH1IXhGE9uy4L0e7kczKVuFWisgPEpi
-         tO9Aw45Ej9d5BMj6BeiiYm7kS/GAh32XC2gjd+FsVZRlgTHt45NRcK5Cj8Lb4mUMo4Xk
-         cbhQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=bKjvwLoHlC29TnvYqxLfJzXQCusKrCOIAaFwwH7cSJ0=;
+        b=GTNCpgnTvYnInEtO3QFpRZVybeL6CBYzJJx27ePUFw0/SafUvNxEYcOYQfvASQ6xqX
+         6j+5vDN0aFTy3n2vQk6NkoWpkjjM2jUwkxQaSbL/wj3TBgA2VXvX2hZcLRoUwLWwSopL
+         JoZOKKbVLSYcz5PbBGPmd9fCF6ZxmqIR6YilM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P+v8AezFlGdBI4UBOo3gWVVo1rHFZPhrTFBZe8wNUus=;
-        b=il1bP+qiQIwT5Mg707jHr2U6/Z8tGrdq4jsw3LBSRGtwgIK7NvwTnvQXs2mkmah+QK
-         iui7Kfs9F/RK1u4pY8lbivxFHxhrJJqKe1WUrYHnjZ6CRxKelJdmpyXvtTuBgtL9GMdA
-         upKTnEYFVsKQ9FTD6+4Gyl8LLUPZEhkhiQwyOWzvTpuvOiNmN2RgrdzrjGyQSir57nm6
-         ho7L7RUhUL3G2Nz7IB/sif5RkKzQ4mcBWTsCzOzyX1JFQN+fodcJttESw5w+1kxAWKoC
-         TjNccc/v/8FdavcuLEBI9RXcOy8LhYTEPIh29SRuV4LgYikxHRfj3jiOkv/DSPV7C6dq
-         pqrA==
-X-Gm-Message-State: APjAAAXY5Zb2OeEYcDOl0daE0TcB+/xQoxeaplvS+WrvwM2gbJ4MfZ34
-        iAX0SNoJQ4Ui/lTWr6IMvabA3EN92BSh5Dc8JEY=
-X-Google-Smtp-Source: APXvYqwKGw0/OzUfb9T6q4NZ/Xb/CGDJvDes5D41RPL1TvFbw180YF0dbqEP33yDHdQy26bLVJ2NfglsNxhLh744NS4=
-X-Received: by 2002:a92:48c2:: with SMTP id j63mr4725684ilg.153.1578505161303;
- Wed, 08 Jan 2020 09:39:21 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=bKjvwLoHlC29TnvYqxLfJzXQCusKrCOIAaFwwH7cSJ0=;
+        b=AEfx0rnZMAh5yn2I4OQbuoLOBGbeb0OF43XlDv+ftuc9ta17ilI5VeuToGQTFRNeF7
+         N1c0BQCWRcLoQup9VqIw4j2FXp1ClUts4q0a6U4sqS2+YZ+jo7aru6MjiffO32sc+xFf
+         nOTco6fp+m/s7JXnCuQGF/zoV9AL5Wi992Cna+lA9fqXHsCOpO0wEEQGEUzZoX8LEWK3
+         8FPg0l9z7YxkxxOJR2fnSVy0RX9C2JifVooN2EiOKPiiUG2VuynP74gh29BvNMflR7e2
+         7azx7qFoLjPcliet4tQwMwWbPnJGvQqzUuN0hqz9I9GGJejJhT5bmuubdQ50l3yycd7Q
+         RSIg==
+X-Gm-Message-State: APjAAAWuHEHv9tx2wNPQrEdNoLkZpzLURmFxWbkl2P54nwHb9JaZpkt/
+        0fezphkSWW7kJAFK2A8qclfbRQ==
+X-Google-Smtp-Source: APXvYqxdgwKREsz1YZeH4VDxSzla/QubcfkdDOAeGwicuj/jBB+4Si/iUY0qR/AhKo7jBTllsOCHfg==
+X-Received: by 2002:a65:63ce:: with SMTP id n14mr6602246pgv.282.1578505169677;
+        Wed, 08 Jan 2020 09:39:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l8sm3901278pjy.24.2020.01.08.09.39.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 09:39:28 -0800 (PST)
+Date:   Wed, 8 Jan 2020 09:39:27 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Tianlin Li <tli@digitalocean.com>,
+        kernel-hardening@lists.openwall.com,
+        Alex Deucher <alexander.deucher@amd.com>, David1.Zhou@amd.com,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/2] drm/radeon: have the callers of set_memory_*() check
+ the return value
+Message-ID: <202001080936.A36005F1@keescook>
+References: <20200107192555.20606-1-tli@digitalocean.com>
+ <b5984995-7276-97d3-a604-ddacfb89bd89@amd.com>
 MIME-Version: 1.0
-References: <20200104225149.27342-1-deepa.kernel@gmail.com> <20200106143832.GA108920@google.com>
-In-Reply-To: <20200106143832.GA108920@google.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 8 Jan 2020 09:39:09 -0800
-Message-ID: <CABeXuvp4+GGsUvBwcTmR7949cFhw6pY_LMBRCr1_eh18gBvWnA@mail.gmail.com>
-Subject: Re: [PATCH] drivers: pci: Clear ACS state at kexec
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mika.westerberg@linux.intel.com, alex.williamson@redhat.com,
-        logang@deltatee.com, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b5984995-7276-97d3-a604-ddacfb89bd89@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 6:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sat, Jan 04, 2020 at 02:51:49PM -0800, Deepa Dinamani wrote:
-> > ACS bits remain sticky through kexec reset. This is not really a
-> > problem for Linux because turning IOMMU on assumes ACS on. But,
-> > this becomes a problem if we kexec into something other than
-> > Linux and that does not turn ACS on always.
->
-> "Sticky" in the PCIe spec specifically describes bits that are
-> unaffected by hot reset or FLR (see PCIe r5.0, sec 7.4), but the
-> PCI_ACS_CTRL register contains no RWS bits, so I don't think that's
-> what you mean here.
->
-> I suspect you mean something like "kexec doesn't reset the device, so
-> the new kernel inherits the PCI_ACS_CTRL settings from Linux"?
+On Wed, Jan 08, 2020 at 01:56:47PM +0100, Christian König wrote:
+> Am 07.01.20 um 20:25 schrieb Tianlin Li:
+> > Right now several architectures allow their set_memory_*() family of
+> > functions to fail, but callers may not be checking the return values.
+> > If set_memory_*() returns with an error, call-site assumptions may be
+> > infact wrong to assume that it would either succeed or not succeed at
+> > all. Ideally, the failure of set_memory_*() should be passed up the
+> > call stack, and callers should examine the failure and deal with it.
+> > 
+> > Need to fix the callers and add the __must_check attribute. They also
+> > may not provide any level of atomicity, in the sense that the memory
+> > protections may be left incomplete on failure. This issue likely has a
+> > few steps on effects architectures:
+> > 1)Have all callers of set_memory_*() helpers check the return value.
+> > 2)Add __must_check to all set_memory_*() helpers so that new uses do
+> > not ignore the return value.
+> > 3)Add atomicity to the calls so that the memory protections aren't left
+> > in a partial state.
+> > 
+> > This series is part of step 1. Make drm/radeon check the return value of
+> > set_memory_*().
+> 
+> I'm a little hesitate merge that. This hardware is >15 years old and nobody
+> of the developers have any system left to test this change on.
 
-Yes, I was using "sticky through kexec reset" as a phrase. I will make
-this more clear to read that the PCI_ACS_CTRL settings are not cleared
-during kexec.
+If that's true it should be removed from the tree. We need to be able to
+correctly make these kinds of changes in the kernel.
 
-> So it looks like you're unconditionally disabling ACS during kexec.
-> The comment in pci_enable_acs() suggests that ACS may have been
-> enabled by platform firmware.  Maybe we should *restore* the original
-> ACS settings from before Linux enabled ACS rather than clearing them?
+> Would it be to much of a problem to just add something like: r =
+> set_memory_*(); (void)r; /* Intentionally ignored */.
 
-I thought about this. I considered following scenarios:
+This seems like a bad idea -- we shouldn't be papering over failures
+like this when there is logic available to deal with it.
 
-1. Old Linux Kernel (IOMMU on) - > New Linux Kernel (IOMMU on)  - ACS
-bits that the kernel touches are unaffected whether or not firmware
-has enabled these.
-2. Old Linux Kernel (IOMMU on) - > New Linux Kernel (IOMMU off)  - ACS
-bits that the kernel touches are cleared even if the firmware has
-enabled these. But, we already do pci_disable_acs_redir() when we boot
-with IOMMU off. So this is similar. Also, if the IOMMU is off, I do
-not see how ACS is useful unless we kexec a second time and turn the
-IOMMU on again. And, if we are kexec-ing into Linux again, we know
-that this is a no-op for ACS as in [1].
-3. Old Linux Kernel(IOMMU on) -> New Kernel(not Linux) (IOMMU on/ off)
-- This just matters if the new kernel even does a read/modify/write.
-We really can define no policy here unless we can invent a signalling
-mechanism from BIOS.
+> Apart from that certainly a good idea to add __must_check to the functions.
 
-> > Reset the ACS bits to default before kexec or device remove.
-> >
-> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> > ---
-> >  drivers/pci/pci-driver.c |  4 ++++
-> >  drivers/pci/pci.c        | 39 +++++++++++++++++++++++++++------------
-> >  drivers/pci/pci.h        |  1 +
-> >  3 files changed, 32 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 0454ca0e4e3f..bd8d08e50b97 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -453,6 +453,8 @@ static int pci_device_remove(struct device *dev)
-> >
-> >       /* Undo the runtime PM settings in local_pci_probe() */
-> >       pm_runtime_put_sync(dev);
-> > +     /* Undo the PCI ACS settings in pci_init_capabilities() */
-> > +     pci_disable_acs(pci_dev);
->
-> Can this be a separate patch?  It doesn't seem to have anything to do
-> with kexec, so a different patch with (presumably) a different
-> rationale would be good.
+Agreed!
 
-We call device_shutdown() during kexec. If the devices are removed,
-then the pci_device_shutdown() is not called on such devices. Hence,
-the ACS settings we set during the probe() are still active. This is
-trying to clear that state. This should be part of the same patch for
-completeness, I think. Although this should be moved up as the first
-thing this function does. And, a check for the power state you
-suggested below.
+-Kees
 
-Also I noticed another thing(when testing) that is ommited in the
-patch is that this is not sufficient for bridge devices(without a
-driver). I'm thinking pci_remove_bus_device() is a good place for such
-devices. Let me know if you have a better recommendation.
-
-> >       /*
-> >        * If the device is still on, set the power state as "unknown",
-> > @@ -493,6 +495,8 @@ static void pci_device_shutdown(struct device *dev)
-> >        */
-> >       if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> >               pci_clear_master(pci_dev);
-> > +     if (kexec_in_progress)
-> > +             pci_disable_acs(pci_dev);
->
-> Shouldn't this be in the same "if" block as pci_clear_master()?  If
-> the device is in D3cold, it's not going to work to disable ACS because
-> config space isn't accessible.
-
-Thanks. This is something I had missed. I will add this in v2.
-
-> >  }
-> >
-> >  #ifdef CONFIG_PM
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index da2e59daad6f..8254617cff03 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3261,15 +3261,23 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
-> >       pci_info(dev, "disabled ACS redirect\n");
-> >  }
-> >
-> > +
-> > +/* Standard PCI ACS capailities
-> > + * Source Validation | P2P Request Redirect | P2P Completion Redirect | Upstream Forwarding
->
-> Please make this comment fit in 80 columns.
-
-Will do.
-
-> > + */
-> > +#define PCI_STD_ACS_CAP (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
-> > +
-> >  /**
-> > - * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-> > + * pci_std_enable_disable_acs - enable/disable ACS on devices using standard
-> > + * ACS capabilities
-> >   * @dev: the PCI device
-> >   */
-> > -static void pci_std_enable_acs(struct pci_dev *dev)
-> > +static void pci_std_enable_disable_acs(struct pci_dev *dev, int enable)
->
-> Maybe you could split this refactoring into its own patch that doesn't
-> actually change any behavior?  Then the kexec patch would be a
-> one-liner and the device remove patch would be another one-liner, so
-> it's obvious where the important changes are.
-
-Sure, I can do it that way.
-
-> >  {
-> >       int pos;
-> >       u16 cap;
-> >       u16 ctrl;
-> > +     u16 val = 0;
-> >
-> >       pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
-> >       if (!pos)
-> > @@ -3278,19 +3286,26 @@ static void pci_std_enable_acs(struct pci_dev *dev)
-> >       pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
-> >       pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
-> >
-> > -     /* Source Validation */
-> > -     ctrl |= (cap & PCI_ACS_SV);
-> > +     val = (cap & PCI_STD_ACS_CAP);
-> >
-> > -     /* P2P Request Redirect */
-> > -     ctrl |= (cap & PCI_ACS_RR);
-> > +     if (enable)
-> > +             ctrl |= val;
-> > +     else
-> > +             ctrl &= ~val;
-> >
-> > -     /* P2P Completion Redirect */
-> > -     ctrl |= (cap & PCI_ACS_CR);
-> > +     pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-> > +}
-> >
-> > -     /* Upstream Forwarding */
-> > -     ctrl |= (cap & PCI_ACS_UF);
-> > +/**
-> > + * pci_disable_acs - enable ACS if hardware support it
->
-> s/enable/disable/ (in comment)
-> s/support/supports/
-
-OK.
+-- 
+Kees Cook
