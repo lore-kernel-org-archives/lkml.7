@@ -2,137 +2,187 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990EFC33CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2EEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F4E20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C822073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578513949;
+	bh=7+a0M4QeXOG9b8lMwdfVaJAPohBMh++kbzQxdvukK48=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=vLfQlf/BWPbrIeToBTr+FjnWYXPuXatSigagfYQO0y+YCiB/wEOAQKzQMlG7zpV/F
+	 V5G/q1qNZVc+Nof7+tBDlDdHs6HJKC8gA4wx7814QsuckiaIrGUz6MqnIHvqyD5JF2
+	 zHJdbohBqHqO7ugp2W0roEUPE7oDAOdqosKXQz6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgAHUDL (ORCPT
+        id S1726508AbgAHUFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:03:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:50400 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgAHUDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:03:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id z12so2901750ilh.17
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 12:03:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=QQ9jOivQ5dWlzW4Uw5qGquEM4NzrI4svewZeUOhhorU=;
-        b=SwwkEbI0J85tIZIzLiPiud2RQTZTw4TQDW+FRVG3ImBFmmPODtCuBjpGkBRp0nmIOB
-         nTsIOhgyneH7LmIbrL5dhvw0hLYDYlEg9419gU7O1vFOwFe/bAdsxDhX8WKI700Bmys8
-         vdVNop7SWFtroGuJZlqGuaLNYfgqlNUDsxROT9NMBs8VbrE/qOWnualaiMKuJVCLOQ2t
-         QqXe+d18PIkybhXxKoi/drm+BwpQk1UCfvnFbKoTwz3ROGmjDX0dzZYyDlRYV+YUzIkW
-         I2ysFfr09k59OX34jfA7FNp+7z8Zq4ms1L6UNzGK142BCiN5DmveN9vMSxv+ZaaAs7i8
-         HkSg==
-X-Gm-Message-State: APjAAAVxkZlkIDWUT7Nu9rfKbXf6gnGxttDKiSIPGhHMCnX6YXuHhzi6
-        34WFR/l3zfkyHAGnuG7p4Sv9BbsWSmSre4sVMmOGrdTDuz3i
-X-Google-Smtp-Source: APXvYqz0BI05gYGVmIHHEvl+gsQDHnvqHHzmwZlsd320DiZ+LMJUChh+kqDODJf2mW1P003T7f2zAqVujnPBE/0HiLWSqTd4jZ3W
-MIME-Version: 1.0
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr4600874ioh.254.1578513789740;
- Wed, 08 Jan 2020 12:03:09 -0800 (PST)
-Date:   Wed, 08 Jan 2020 12:03:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b5eb9e059ba66172@google.com>
-Subject: WARNING in cleanup_srcu_struct
-From:   syzbot <syzbot+1b1043fa771618e68377@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 8 Jan 2020 15:05:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgAHUFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:05:47 -0500
+Received: from localhost.localdomain (unknown [83.218.167.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D70120705;
+        Wed,  8 Jan 2020 20:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578513946;
+        bh=7+a0M4QeXOG9b8lMwdfVaJAPohBMh++kbzQxdvukK48=;
+        h=From:To:Subject:Date:From;
+        b=evYOx5KdUdG0Jr/Vc38MOswPxNnF7vRlb4Tb199FZpqwnzGTIvL+ezoR/DMzbuceA
+         kFY/nO2cZ4Rz6kmSrTr6FWXXDO9kMP2CReYBBlel+BAJjwJUXV7GF+gCcHoo1B+vS3
+         sn9Be5nqVhaTYIYYOT8RQp0qbzzYGBxIewpxHquo=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jiri Slaby <jirislaby@gmail.com>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v2 0/9] iomap: Constify ioreadX() iomem argument
+Date:   Wed,  8 Jan 2020 21:05:19 +0100
+Message-Id: <20200108200528.4614-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    3a562aee Merge tag 'for-5.5-rc4-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13672869e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2f3ef188b7e16cf
-dashboard link: https://syzkaller.appspot.com/bug?extid=1b1043fa771618e68377
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1b1043fa771618e68377@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 18326 at kernel/rcu/srcutree.c:376  
-cleanup_srcu_struct+0x248/0x2d0 kernel/rcu/srcutree.c:395
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 18326 Comm: syz-executor.1 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:cleanup_srcu_struct+0x248/0x2d0 kernel/rcu/srcutree.c:376
-Code: 84 24 48 04 00 00 00 00 00 00 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f  
-5d c3 0f 0b 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b e9 3c ff  
-ff ff 48 8b 7d c0 e8 48 4c 51 00 e9 bd fe ff ff 48
-RSP: 0018:ffffc900019a7b60 EFLAGS: 00010202
-RAX: 0000000000000001 RBX: 0000000000000004 RCX: ffffc90004ed9000
-RDX: 000000000000b393 RSI: ffffffff839b22b7 RDI: 0000000000000006
-RBP: ffffc900019a7bb0 R08: ffff8880a6bdc580 R09: 0000000000000040
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90001ee9c48
-R13: 0000000000000000 R14: ffffc90001ee19f0 R15: dffffc0000000000
-  kvm_page_track_cleanup+0x19/0x20 arch/x86/kvm/mmu/page_track.c:167
-  kvm_arch_destroy_vm+0x4aa/0x5f0 arch/x86/kvm/x86.c:9667
-  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:758 [inline]
-  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3519  
-[inline]
-  kvm_dev_ioctl+0x11af/0x17d0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3571
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45af49
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe9be746c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
-RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe9be7476d4
-R13: 00000000004c44c7 R14: 00000000004da970 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Hi,
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes since v1
+================
+https://lore.kernel.org/lkml/1578415992-24054-1-git-send-email-krzk@kernel.org/
+1. Constify also ioreadX_rep() and mmio_insX(),
+2. Squash lib+alpha+powerpc+parisc+sh into one patch for bisectability,
+3. Add Geert's review,
+4. Re-order patches so all optional driver changes are at the end.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+Description
+===========
+The ioread8/16/32() and others have inconsistent interface among the
+architectures: some taking address as const, some not.
+
+It seems there is nothing really stopping all of them to take
+pointer to const.
+
+Patchset was not really tested on all affected architectures.
+Build testing is in progress - I hope auto-builders will point any issues.
+
+
+volatile
+========
+There is still interface inconsistency between architectures around
+"volatile" qualifier:
+ - include/asm-generic/io.h:static inline u32 ioread32(const volatile void __iomem *addr)
+ - include/asm-generic/iomap.h:extern unsigned int ioread32(const void __iomem *);
+
+This is still discussed and out of scope of this patchset.
+
+
+Merging
+=======
+Multiple architectures are affected in first patch so acks are welcomed.
+
+Patches 2-4 depend on first patch.
+The rest is optional cleanup, without actual impact.
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (9):
+  iomap: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  net: wireless: rtl818x: Constify ioreadX() iomem argument (as in
+    generic implementation)
+  ntb: intel: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  virtio: pci: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  arc: Constify ioreadX() iomem argument (as in generic implementation)
+  drm/mgag200: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  drm/nouveau: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  media: fsl-viu: Constify ioreadX() iomem argument (as in generic
+    implementation)
+  net: wireless: ath5k: Constify ioreadX() iomem argument (as in generic
+    implementation)
+
+ arch/alpha/include/asm/core_apecs.h           |  6 +-
+ arch/alpha/include/asm/core_cia.h             |  6 +-
+ arch/alpha/include/asm/core_lca.h             |  6 +-
+ arch/alpha/include/asm/core_marvel.h          |  4 +-
+ arch/alpha/include/asm/core_mcpcia.h          |  6 +-
+ arch/alpha/include/asm/core_t2.h              |  2 +-
+ arch/alpha/include/asm/io.h                   | 12 ++--
+ arch/alpha/include/asm/io_trivial.h           | 16 ++---
+ arch/alpha/include/asm/jensen.h               |  2 +-
+ arch/alpha/include/asm/machvec.h              |  6 +-
+ arch/alpha/kernel/core_marvel.c               |  2 +-
+ arch/alpha/kernel/io.c                        | 12 ++--
+ arch/arc/plat-axs10x/axs10x.c                 |  4 +-
+ arch/parisc/include/asm/io.h                  |  4 +-
+ arch/parisc/lib/iomap.c                       | 72 +++++++++----------
+ arch/powerpc/kernel/iomap.c                   | 28 ++++----
+ arch/sh/kernel/iomap.c                        | 22 +++---
+ drivers/gpu/drm/mgag200/mgag200_drv.h         |  4 +-
+ drivers/gpu/drm/nouveau/nouveau_bo.c          |  2 +-
+ drivers/media/platform/fsl-viu.c              |  2 +-
+ drivers/net/wireless/ath/ath5k/ahb.c          | 10 +--
+ .../realtek/rtl818x/rtl8180/rtl8180.h         |  6 +-
+ drivers/ntb/hw/intel/ntb_hw_gen1.c            |  2 +-
+ drivers/ntb/hw/intel/ntb_hw_gen3.h            |  2 +-
+ drivers/ntb/hw/intel/ntb_hw_intel.h           |  2 +-
+ drivers/virtio/virtio_pci_modern.c            |  6 +-
+ include/asm-generic/iomap.h                   | 28 ++++----
+ include/linux/io-64-nonatomic-hi-lo.h         |  4 +-
+ include/linux/io-64-nonatomic-lo-hi.h         |  4 +-
+ lib/iomap.c                                   | 30 ++++----
+ 30 files changed, 156 insertions(+), 156 deletions(-)
+
+-- 
+2.17.1
+
