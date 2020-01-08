@@ -2,49 +2,51 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63D5C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20319C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCAD20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA68C2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kbZqzA5V"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oxh2MeGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgAHJLe (ORCPT
+        id S1727569AbgAHJLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:11:34 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:65224 "EHLO
+        Wed, 8 Jan 2020 04:11:37 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40385 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727386AbgAHJLd (ORCPT
+        by vger.kernel.org with ESMTP id S1727406AbgAHJLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:11:33 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00897hBs009968;
-        Wed, 8 Jan 2020 10:11:25 +0100
+        Wed, 8 Jan 2020 04:11:35 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00899bT1017836;
+        Wed, 8 Jan 2020 10:11:28 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=2cU/4JR4XYcXyOTK9ys4Wvfgw0cmENpuoxKs1hQNqko=;
- b=kbZqzA5V7hRgjfMNEVlKj9K5O6xYEBfL7WOK7lWlc8BBDJ9GZABE3zV+YgS2HQFYTG7f
- oBd6hQMS+oFfwi+TYpo59m1KjaNzRS1dErCh4vVsTtwHdPWNbp01OwJvYCc5Q85dvwar
- mNF4YNrt9JZSlO1uWgTt5y0eOXH477wOGaXr/TLvHiO118b5coNqvXU66fOwZbJPOOaE
- TStsmSRwu6960CGXDok/Z8nuLSiDfoUdwH+/FJaOYhVBHvbYAC0ebX6UEsmeiNpajoGc
- 57NTjKvTGPTYgB4BPZaLdNSXnfCL3I142AcOJcfp28h3mLe5bDS2SzaV30dXAIn94XCh gw== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Qt6i6KPRHtgRJQut9X3TPALLv7har3yUeiDYGj7lcIU=;
+ b=oxh2MeGoGeJHjL8Eqgvvt/mvaB2QNcH3ufXaqXXiAYiu9LcWZcqCuKxpY4yAlndNN4jY
+ TpjGO3qa9ramyykbcfJJ9JZGqei9UPBIVudqHGFUbmyDs5FO3kQdpzJx6tiETLXxYk/7
+ lggtZR6GqklcOnwi5zWuKI+9q0d+otkBUpWuWh5iNzRGVut+hItz4+4JswVuSkW2JJI4
+ w6xzNF59EPS8oc9j4A4Qg8bnjXNySy1GVDAArK+wqwePhJm9q5+mfqvOOB/+iHQBDIUB
+ HsK39Og1QedQ0Rv6JoWYQVIgucIysOGUcZ5TqSlnfMIVYoCyzUHWtWfvDN1iYmcqruiz YA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakm5jxkc-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xakuqtwbk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 10:11:25 +0100
+        Wed, 08 Jan 2020 10:11:28 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E81FF100039;
-        Wed,  8 Jan 2020 10:11:20 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3E584100034;
+        Wed,  8 Jan 2020 10:11:23 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B727622088E;
-        Wed,  8 Jan 2020 10:11:20 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 8 Jan 2020 10:11:20
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 33CA422088E;
+        Wed,  8 Jan 2020 10:11:23 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 8 Jan 2020 10:11:22
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
@@ -52,14 +54,16 @@ To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
 CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <yannick.fertre@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 0/2] Convert touchscreen bindings to json-schema
-Date:   Wed, 8 Jan 2020 10:11:16 +0100
-Message-ID: <20200108091118.5130-1-benjamin.gaignard@st.com>
+Subject: [PATCH v2 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen to json-schema
+Date:   Wed, 8 Jan 2020 10:11:18 +0100
+Message-ID: <20200108091118.5130-3-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200108091118.5130-1-benjamin.gaignard@st.com>
+References: <20200108091118.5130-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-08_01:2020-01-08,2020-01-08 signatures=0
@@ -68,31 +72,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series convert Goodix touchscreen used on STM32 boards to json-schema.
-Before converting goodix bindings itself it add a schema for common
-touchscreen properties.
+Convert the Goodix binding to DT schema format using json-schema
 
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
 version 2:
-- remove old definition in touchscreen.txt
-- add type for all properties
-- add dependencies between properties 
 - enumerate goodix's I2C adresses
 - add description for irq-gpio property
 - reference the common properties used by goodix
 
-Benjamin Gaignard (2):
-  dt-bindings: touchscreen: Add touchscreen schema
-  dt-bindings: touchscreen: Convert Goodix touchscreen to json-schema
-
- .../bindings/input/touchscreen/goodix.txt          | 50 -------------
- .../bindings/input/touchscreen/goodix.yaml         | 78 ++++++++++++++++++++
- .../bindings/input/touchscreen/touchscreen.txt     | 40 +----------
- .../bindings/input/touchscreen/touchscreen.yaml    | 83 ++++++++++++++++++++++
- 4 files changed, 162 insertions(+), 89 deletions(-)
+ .../bindings/input/touchscreen/goodix.txt          | 50 --------------
+ .../bindings/input/touchscreen/goodix.yaml         | 78 ++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 50 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+deleted file mode 100644
+index fc03ea4cf5ab..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Device tree bindings for Goodix GT9xx series touchscreen controller
+-
+-Required properties:
+-
+- - compatible		: Should be "goodix,gt1151"
+-				 or "goodix,gt5663"
+-				 or "goodix,gt5688"
+-				 or "goodix,gt911"
+-				 or "goodix,gt9110"
+-				 or "goodix,gt912"
+-				 or "goodix,gt927"
+-				 or "goodix,gt9271"
+-				 or "goodix,gt928"
+-				 or "goodix,gt967"
+- - reg			: I2C address of the chip. Should be 0x5d or 0x14
+- - interrupts		: Interrupt to which the chip is connected
+-
+-Optional properties:
+-
+- - irq-gpios		: GPIO pin used for IRQ. The driver uses the
+-			  interrupt gpio pin as output to reset the device.
+- - reset-gpios		: GPIO pin used for reset
+- - AVDD28-supply	: Analog power supply regulator on AVDD28 pin
+- - VDDIO-supply		: GPIO power supply regulator on VDDIO pin
+- - touchscreen-inverted-x
+- - touchscreen-inverted-y
+- - touchscreen-size-x
+- - touchscreen-size-y
+- - touchscreen-swapped-x-y
+-
+-The touchscreen-* properties are documented in touchscreen.txt in this
+-directory.
+-
+-Example:
+-
+-	i2c@00000000 {
+-		/* ... */
+-
+-		gt928@5d {
+-			compatible = "goodix,gt928";
+-			reg = <0x5d>;
+-			interrupt-parent = <&gpio>;
+-			interrupts = <0 0>;
+-
+-			irq-gpios = <&gpio1 0 0>;
+-			reset-gpios = <&gpio1 1 0>;
+-		};
+-
+-		/* ... */
+-	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+new file mode 100644
+index 000000000000..d7c3262b2494
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/goodix.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Goodix GT9xx series touchscreen controller Bindings
++
++maintainers:
++  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
++
++allOf:
++  - $ref: touchscreen.yaml#
++
++properties:
++  compatible:
++    enum:
++      - goodix,gt1151
++      - goodix,gt5663
++      - goodix,gt5688
++      - goodix,gt911
++      - goodix,gt9110
++      - goodix,gt912
++      - goodix,gt927
++      - goodix,gt9271
++      - goodix,gt928
++      - goodix,gt967
++
++  reg:
++    enum: [ 0x5d, 0x14 ]
++
++  interrupts:
++    maxItems: 1
++
++  irq-gpios:
++    description: GPIO pin used for IRQ.
++                 The driver uses the interrupt gpio pin as
++                 output to reset the device.
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  AVDD28-supply:
++    description: Analog power supply regulator on AVDD28 pin
++
++  VDDIO-supply:
++    description: GPIO power supply regulator on VDDIO pin
++
++  touchscreen-inverted-x: true
++  touchscreen-inverted-y: true
++  touchscreen-size-x: true
++  touchscreen-size-y: true
++  touchscreen-swapped-x-y: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++- |
++    i2c@00000000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      gt928@5d {
++        compatible = "goodix,gt928";
++        reg = <0x5d>;
++        interrupt-parent = <&gpio>;
++        interrupts = <0 0>;
++        irq-gpios = <&gpio1 0 0>;
++        reset-gpios = <&gpio1 1 0>;
++      };
++    };
++
++...
 -- 
 2.15.0
 
