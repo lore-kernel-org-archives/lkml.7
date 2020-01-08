@@ -2,165 +2,106 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8A9C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF20FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6772073A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55762073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578478990;
+	bh=HBYcND0O4F0mOlf8KYE+tblLbrHUEjoYsw3oZGnSYLA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uPVd3nF0jqbuVZ7wl5SyAMjAkMZoZcu6rxCBjr2yOp6silo3dCtYJVTF5If6eXnHV
+	 qb8trDEEIElAPUiP5pSZMjOV/h6L9Za/S+Lep8inmDVxMI39vmL6cO8e1MSGNjkXlJ
+	 OEpJ8u7AfuoUsP+FEZl1CuK4a+0lYctbtMkgIAiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgAHKWg (ORCPT
+        id S1727594AbgAHKXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:22:36 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52041 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbgAHKWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:22:34 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CC9E024000E;
-        Wed,  8 Jan 2020 10:22:30 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        jason@lakedaemon.net, andrew@lunn.ch,
-        sebastian.hesselbarth@gmail.com,
-        Joshua Scott <joshua.scott@alliedtelesis.co.nz>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH] ARM: mvebu: Enable MBUS error propagation
-In-Reply-To: <20191124093529.32399-1-chris.packham@alliedtelesis.co.nz>
-References: <20191124093529.32399-1-chris.packham@alliedtelesis.co.nz>
-Date:   Wed, 08 Jan 2020 11:22:30 +0100
-Message-ID: <8736cqb63d.fsf@FE-laptop>
+        Wed, 8 Jan 2020 05:23:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgAHKXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:23:10 -0500
+Received: from localhost.localdomain (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E4320673;
+        Wed,  8 Jan 2020 10:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578478989;
+        bh=HBYcND0O4F0mOlf8KYE+tblLbrHUEjoYsw3oZGnSYLA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xWIWiYVtdyv7IQUpsL5XsTkdH4ccda5pg5nuNCXr7LunYXfxmiDz3zSjCXeb7vtlq
+         g2+XzosY723SVuVnsPyLrEM6pKGsPxKG4D9PR6zVm40sK8wAiP/gjb0IZSE3eq8Apd
+         CPxHtalasx4v+b6n/dlG4S7dOJYObe8QNshsoJiA=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org
+Cc:     x86@kernel.org, luto@kernel.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: [RFC PATCH 0/3] x86/boot: get rid of GOT entries and associated fixup code
+Date:   Wed,  8 Jan 2020 11:23:01 +0100
+Message-Id: <20200108102304.25800-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Chris,
+Building position independent code using GCC by default results in references
+to symbols with external linkage to be resolved via GOT entries, which
+carry the absolute addresses of the symbols, and thus need to be corrected
+if the load time address of the executable != the link time address.
 
-> U-boot disables MBUS error propagation for Armada-385. The effect of
-> this on the kernel is that any access to a mapped but inaccessible
-> address causes the system to hang.
->
-> By enabling MBUS error propagation the kernel can raise a Bus Error and
-> panic to restart the system.
+For fully linked binaries, such GOT indirected references are completely
+useless, and actually make the startup code more complicated than necessary,
+since these corrections may need to be applied more than once. In fact, we
+have been very careful to avoid such references in the EFI stub code, since
+it would require yet another [earlier] pass of GOT fixups which we currently
+don't implement.
 
-Unless I miss it, it seems that nobody comment this patch: sorry for the
-delay.
+Older GCCs were quirky when it came to overriding this behavior using symbol
+visibility, but now that we have increased the minimum GCC version to 4.6,
+we can actually start setting the symbol visibility to 'hidden' globally for
+all symbol references in the decompressor, getting rid of the GOT entirely.
+This means we can get rid of the GOT fixup code right away, and we can start
+using ordinary external symbol references in the EFI stub without running the
+risk of boot regressions.
 
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     We've encountered an issue where rogue accesses to PCI-e space cause an
->     Armada-385 system to lockup. We've found that enabling MBUS error
->     propagation lets us get a bus error which at least gives us a panic to
->     help identify what was accessed.
->     
->     U-boot clears the IO Err Prop Enable Bit[1] but so far no-one seems to
->     know why.
->     
->     I wasn't sure where to put this code. There is similar code for kirwood
->     in the equivalent dt_init function. On Armada-XP the register is part of
->     the Core Coherency Fabric block (for A385 it's documented as part of the
->     CCF block).
+CC'ing Linus and Maarten, who were involved in diagnosing an issue related
+to GOT entries emitted from the EFI stub ~5 years ago. [0] [1]
 
-What about adding a new set of register to the mvebu mbus driver?
+Many thanks to Arvind for the suggestions and the help in testing these
+changes. Tested on GCC 4.6 + binutils 2.24 (Ubuntu 14.04), and GCC 8 +
+binutils 2.31 (Debian Buster)
 
-In this case it will be called even earlier allowing to see bus error
-earlier.
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
 
-In any case, you should separate the device tree change from the code
-change and at least provide 2 patches.
+[0] https://lore.kernel.org/lkml/5405E186.2080406@canonical.com/
+[1] https://lore.kernel.org/lkml/CA+55aFxW9PmtjOf9nUQwpU8swsFqJOz8whZXcONo+XFmkSwezg@mail.gmail.com/
 
-Gregory
+Ard Biesheuvel (3):
+  x86/boot/compressed: move .got.plt entries out of the .got section
+  x86/boot/compressed: force hidden visibility for all symbol references
+  x86/boot/compressed: get rid of GOT fixup code
 
->     
->     --
->     [1] - https://gitlab.denx.de/u-boot/u-boot/blob/master/arch/arm/mach-mvebu/cpu.c#L489
->
->  arch/arm/boot/dts/armada-38x.dtsi |  5 +++++
->  arch/arm/mach-mvebu/board-v7.c    | 27 +++++++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 3f4bb44d85f0..3214c67433eb 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -386,6 +386,11 @@
->  				      <0x20250 0x8>;
->  			};
->  
-> +			ioerrc: io-err-control@20200 {
-> +				compatible = "marvell,io-err-control";
-> +				reg = <0x20200 0x4>;
-> +			};
-> +
->  			mpic: interrupt-controller@20a00 {
->  				compatible = "marvell,mpic";
->  				reg = <0x20a00 0x2d0>, <0x21070 0x58>;
-> diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-> index d2df5ef9382b..fb7718386ef9 100644
-> --- a/arch/arm/mach-mvebu/board-v7.c
-> +++ b/arch/arm/mach-mvebu/board-v7.c
-> @@ -138,10 +138,36 @@ static void __init i2c_quirk(void)
->  	}
->  }
->  
-> +#define MBUS_ERR_PROP_EN BIT(8)
-> +
-> +/*
-> + * U-boot disables MBUS error propagation. Re-enable it so we
-> + * can handle them as Bus Errors.
-> + */
-> +static void __init enable_mbus_error_propagation(void)
-> +{
-> +	struct device_node *np =
-> +		of_find_compatible_node(NULL, NULL, "marvell,io-err-control");
-> +
-> +	if (np) {
-> +		void __iomem *reg;
-> +
-> +		reg = of_iomap(np, 0);
-> +		if (reg) {
-> +			u32 val;
-> +
-> +			val = readl_relaxed(reg);
-> +			writel_relaxed(val | MBUS_ERR_PROP_EN, reg);
-> +		}
-> +		of_node_put(np);
-> +	}
-> +}
-> +
->  static void __init mvebu_dt_init(void)
->  {
->  	if (of_machine_is_compatible("marvell,armadaxp"))
->  		i2c_quirk();
-> +	enable_mbus_error_propagation();
->  }
->  
->  static void __init armada_370_xp_dt_fixup(void)
-> @@ -191,6 +217,7 @@ DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
->  	.l2c_aux_val	= 0,
->  	.l2c_aux_mask	= ~0,
->  	.init_irq       = mvebu_init_irq,
-> +	.init_machine	= mvebu_dt_init,
->  	.restart	= mvebu_restart,
->  	.dt_compat	= armada_38x_dt_compat,
->  MACHINE_END
-> -- 
-> 2.24.0
->
+ arch/x86/boot/compressed/Makefile      |  1 +
+ arch/x86/boot/compressed/head_32.S     | 22 ++------
+ arch/x86/boot/compressed/head_64.S     | 57 --------------------
+ arch/x86/boot/compressed/hidden.h      | 19 +++++++
+ arch/x86/boot/compressed/vmlinux.lds.S | 16 ++++--
+ 5 files changed, 36 insertions(+), 79 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/hidden.h
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.20.1
