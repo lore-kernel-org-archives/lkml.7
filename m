@@ -4,113 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B6C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910E4206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BB8206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 22:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgAHWCj (ORCPT
+        id S1727170AbgAHWFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 17:02:39 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44967 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgAHWCi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 17:02:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so4075337oia.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 14:02:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O9YsXaP1lcVI3YB10D/1yLJh0lm8KzUFBjhvxrtn8yA=;
-        b=L6dk+778guOePV7/2zJ4RGGUa5S9nkAHUKCY/COdaOLyPGGuGUoiD/pxMSaBLf79/M
-         CEPgbE67bIeRoratpgXukcAafJyXoY6CSi+BOZzAS9Y11kY9q4Mi+DbOmEwcpI0SOn7Q
-         F256WN8/3OeIuNNy3mNuhXOY4JLHNX1ecP43sioQxgdWKMG9AAyjz3qMu2yyr4oLBKia
-         X1zRNFPLwsD+Pc0dumQ/1tOv4vYBpfGbQGSJue86r+0N9HYb+wNXlMliFc1Lddn6Hr6R
-         D2nNacuWwZofehOaYbyqQFZ5N0nfjw6AG5/AYmWioHDEILYNmRGpgdQIaq4vrA8rxiPx
-         W4AQ==
-X-Gm-Message-State: APjAAAUZ/w/YaJdM9ywcdbYjPsnkBq6Tb8CHeh3su2+E/5688vTMPZkq
-        x4ul7mFMWdB/yHLvAofZHR1q7mHx
-X-Google-Smtp-Source: APXvYqz00Was+5QajFWaCMxi6DX4FhH5y61k8E69UlFx0gC1QaobyTz/EemvRd6d1bYmgbYkNK+vPQ==
-X-Received: by 2002:aca:f305:: with SMTP id r5mr672553oih.174.1578520956985;
-        Wed, 08 Jan 2020 14:02:36 -0800 (PST)
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
-        by smtp.gmail.com with ESMTPSA id l17sm1629420ota.27.2020.01.08.14.02.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 14:02:36 -0800 (PST)
-Received: by mail-oi1-f172.google.com with SMTP id d62so4075286oia.11
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 14:02:36 -0800 (PST)
-X-Received: by 2002:aca:d887:: with SMTP id p129mr615231oig.51.1578520956285;
- Wed, 08 Jan 2020 14:02:36 -0800 (PST)
+        Wed, 8 Jan 2020 17:05:25 -0500
+Received: from muru.com ([72.249.23.125]:50508 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgAHWFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 17:05:25 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B46DC80C5;
+        Wed,  8 Jan 2020 22:06:04 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 14:05:20 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: ti: omap-dma: don't allow a null
+ od->plat pointer to be dereferenced
+Message-ID: <20200108220520.GJ5885@atomide.com>
+References: <20200106122325.39121-1-colin.king@canonical.com>
+ <b7200998-c8e7-0841-ce91-ad3834c63cae@ti.com>
+ <f6b24302-a90e-7aa5-b2e8-3c459e6d0598@ti.com>
 MIME-Version: 1.0
-References: <20200108130926.45808-1-yuehaibing@huawei.com>
-In-Reply-To: <20200108130926.45808-1-yuehaibing@huawei.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 8 Jan 2020 16:02:25 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQp7KxENbr+nZ8AAZkuBW-=6sjeXd8LU2LJJZqjCvY==g@mail.gmail.com>
-Message-ID: <CADRPPNQp7KxENbr+nZ8AAZkuBW-=6sjeXd8LU2LJJZqjCvY==g@mail.gmail.com>
-Subject: Re: [PATCH -next] soc: fsl: qe: remove set but not used variable 'mm_gc'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Zhao Qiang <qiang.zhao@nxp.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6b24302-a90e-7aa5-b2e8-3c459e6d0598@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 7:12 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> drivers/soc/fsl/qe/gpio.c: In function qe_pin_request:
-> drivers/soc/fsl/qe/gpio.c:163:26: warning: variable mm_gc set but not used [-Wunused-but-set-variable]
->
-> commit 1e714e54b5ca ("powerpc: qe_lib-gpio: use gpiochip data pointer")
-> left behind this unused variable.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [200108 07:20]:
+> Colin, Tony,
+> 
+> On 07/01/2020 13.59, Peter Ujfalusi wrote:
+> > Colin,
+> > 
+> > On 06/01/2020 14.23, Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> Currently when the call to dev_get_platdata returns null the driver issues
+> >> a warning and then later dereferences the null pointer.  Avoid this issue
+> >> by returning -EPROBE_DEFER errror rather when the platform data is null.
+> > 
+> > Thank you for noticing it!
+> > 
+> > Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > 
+> >> Addresses-Coverity: ("Dereference after null check")
+> >> Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  drivers/dma/ti/omap-dma.c | 4 +++-
+> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> >> index fc8f7b2fc7b3..335c3fa7a3b1 100644
+> >> --- a/drivers/dma/ti/omap-dma.c
+> >> +++ b/drivers/dma/ti/omap-dma.c
+> >> @@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+> >>  	if (conf) {
+> >>  		od->cfg = conf;
+> >>  		od->plat = dev_get_platdata(&pdev->dev);
+> >> -		if (!od->plat)
+> >> +		if (!od->plat) {
+> >>  			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
+> >> +			return -EPROBE_DEFER;
+> 
+> I think we should make the print as dev_err("&pdev->dev,
+> "omap_system_dma_plat_info is missing") and return with -ENODEV. The
+> omap_system_dma_plat_info is _needed_ and if we have booted with device
+> tree it is not going to appear later.
+> 
+> Tony, what do you think?
 
-Applied for next.  Thanks.
-
-Btw, I find another patch from Chen Zhou fixing the same problem sent
-earlier.  I will add his signed-off-by to the commit for credit too.
+Yes makes sense, the auxdata is needed for the quirks for now.
+Eventually the quirks can be set directly in the dmaengine driver
+based on compatible and soc_device_match().
 
 Regards,
-Leo
 
-> ---
->  drivers/soc/fsl/qe/gpio.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-> index 12bdfd9..ed75198 100644
-> --- a/drivers/soc/fsl/qe/gpio.c
-> +++ b/drivers/soc/fsl/qe/gpio.c
-> @@ -160,7 +160,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
->  {
->         struct qe_pin *qe_pin;
->         struct gpio_chip *gc;
-> -       struct of_mm_gpio_chip *mm_gc;
->         struct qe_gpio_chip *qe_gc;
->         int err;
->         unsigned long flags;
-> @@ -186,7 +185,6 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
->                 goto err0;
->         }
->
-> -       mm_gc = to_of_mm_gpio_chip(gc);
->         qe_gc = gpiochip_get_data(gc);
->
->         spin_lock_irqsave(&qe_gc->lock, flags);
-> --
-> 2.7.4
->
->
+Tony
