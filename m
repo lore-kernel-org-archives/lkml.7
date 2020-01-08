@@ -2,149 +2,61 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0070EC33CA5
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6B3C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78F12067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331C42067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgAHSqV (ORCPT
+        id S1729635AbgAHSq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:46:21 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59822 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgAHSqT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:46:19 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 7E79C2912ED
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-rockchip@lists.infradead.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        joacim.zetterling@gmail.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org,
-        Jacob Chen <jacob2.chen@rock-chips.com>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v13 07/11] media: staging: rkisp1: add document for rkisp1 meta buffer format
-Date:   Wed,  8 Jan 2020 15:44:50 -0300
-Message-Id: <20200108184454.825725-8-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200108184454.825725-1-helen.koike@collabora.com>
-References: <20200108184454.825725-1-helen.koike@collabora.com>
+        Wed, 8 Jan 2020 13:46:26 -0500
+Received: from verein.lst.de ([213.95.11.211]:50726 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729226AbgAHSqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:46:20 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8420B68CEC; Wed,  8 Jan 2020 19:46:16 +0100 (CET)
+Date:   Wed, 8 Jan 2020 19:46:16 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+Subject: Re: [v8 08/13] exfat: add exfat cache
+Message-ID: <20200108184616.GA15429@lst.de>
+References: <CAKYAXd8Ed18OYYrEgwpDZooNdmsKwFqakGhTyLUgjgfQK39NpQ@mail.gmail.com> <f253ed6a-3aae-b8df-04cf-7d5c0b3039f2@web.de> <20200108180819.3gt6ihm4w2haustn@pali>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200108180819.3gt6ihm4w2haustn@pali>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+On Wed, Jan 08, 2020 at 07:08:19PM +0100, Pali Rohár wrote:
+> On Thursday 02 January 2020 11:19:26 Markus Elfring wrote:
+> > > I am planning to change to share stuff included cache with fat after
+> > > exfat upstream.
+> > 
+> > Can unwanted code duplication be avoided before?
+> 
+> +1 Could it be possible?
 
-This commit add document for rkisp1 meta buffer format
-
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
----
-
-Changes in v13: None
-Changes in v12:
-- Change Jacob's email to original jacob2.chen@rock-chips.com
-
-Changes in v11: None
-Changes in v10:
-- unsquash
-
-Changes in v9:
-- squash
-- migrate to staging
-- remove meta-formats.rst update
-
-Changes in v8:
-- Add SPDX in the header
-- Remove emacs configs
-- Fix doc style
-
-Changes in v7:
-- s/correspond/corresponding
-- s/use/uses
-- s/docuemnt/document
-
- .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
- .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
- 2 files changed, 45 insertions(+)
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-new file mode 100644
-index 000000000000..32034e481357
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-@@ -0,0 +1,23 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+.. _v4l2-meta-fmt-rkisp1-params:
-+
-+============================
-+V4L2_META_FMT_RK_ISP1_PARAMS
-+============================
-+
-+Rockchip ISP1 Parameters Data
-+
-+Description
-+===========
-+
-+This format describes input parameters for the Rockchip ISP1.
-+
-+It uses c-struct :c:type:`rkisp1_params_cfg`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
-+
-+The parameters consist of multiple modules.
-+The module won't be updated if the corresponding bit was not set in module_*_update.
-+
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_params_cfg
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-new file mode 100644
-index 000000000000..4ad303f96421
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-@@ -0,0 +1,22 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+.. _v4l2-meta-fmt-rkisp1-stat:
-+
-+=============================
-+V4L2_META_FMT_RK_ISP1_STAT_3A
-+=============================
-+
-+
-+Rockchip ISP1 Statistics Data
-+
-+Description
-+===========
-+
-+This format describes image color statistics information generated by the Rockchip
-+ISP1.
-+
-+It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
-+
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_stat_buffer
--- 
-2.24.0
-
+Let's defer that until we have the code upstream.  Getting rid
+of the staging version and having proper upstream exfat support
+should be a priority for now, especially as sharing will involve
+coordination with multiple maintainers.  If it works out nicely
+I'm all for it, though!
