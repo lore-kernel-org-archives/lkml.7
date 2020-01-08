@@ -2,250 +2,117 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB40C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B2C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BDC2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2DD20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578499181;
+	bh=Y/5yh0fNKsHZcEskW1SKZ3Yed3TsS25tP9/+oLiTZMQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=2jaTKBCIwfbvM5NSCwP05L/hrtDX766fYmz016Ge4ba4JyKwLlNS2QFWE6arCybVb
+	 xtdR6OzOIB5ud9XBScB0wKKX+lMedvNr7SOzV+G/D12csd0iXdiBJMapFycJYyw5cf
+	 2/JM8/FOl6JSX6UedbLYPJp0rumldWxyibqjq2K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgAHP72 (ORCPT
+        id S1728669AbgAHP71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:59:28 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64327 "EHLO mga11.intel.com"
+        Wed, 8 Jan 2020 10:59:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:46770 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgAHP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729302AbgAHP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 10:59:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 07:59:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
-   d="scan'208";a="395782702"
-Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
-  by orsmga005.jf.intel.com with ESMTP; 08 Jan 2020 07:59:21 -0800
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        xiaochen.shen@intel.com
-Subject: [PATCH 1/4] x86/resctrl: Fix use-after-free when deleting resource groups
-Date:   Thu,  9 Jan 2020 00:28:03 +0800
-Message-Id: <1578500886-21771-2-git-send-email-xiaochen.shen@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1578500886-21771-1-git-send-email-xiaochen.shen@intel.com>
-References: <1578500886-21771-1-git-send-email-xiaochen.shen@intel.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 274B831B;
+        Wed,  8 Jan 2020 07:59:24 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A669A3F534;
+        Wed,  8 Jan 2020 07:59:23 -0800 (PST)
+Date:   Wed, 08 Jan 2020 15:59:22 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: bcm-qspi: Use platform_get_irq_byname_optional() to avoid error message" to the spi tree
+In-Reply-To: <20200107040912.16426-1-rayagonda.kokatanur@broadcom.com>
+Message-Id: <applied-20200107040912.16426-1-rayagonda.kokatanur@broadcom.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A resource group (rdtgrp) contains a reference count (rdtgrp->waitcount)
-that indicates how many waiters expect this rdtgrp to exist. Waiters
-could be waiting on rdtgroup_mutex or some work sitting on a task's
-workqueue for when the task returns from kernel mode or exits. The
-deletion of a rdtgrp is intended to have two phases: (1) while holding
-rdtgroup_mutex the necessary cleanup is done and rdtgrp->flags is set to
-RDT_DELETED, (2) after releasing the rdtgroup_mutex the rdtgrp structure
-is freed only if there are no waiters and it's flag is set to
-RDT_DELETED. Upon gaining access to rdtgroup_mutex or rdtgrp a waiter is
-required to check for the RDT_DELETED flag.
+The patch
 
-When unmounting resctrl file system or deleting ctrl_mon groups, all of
-the subdirectories are removed and the data structure of rdtgrp is
-forcibly freed without checking rdtgrp->waitcount. If at this point
-there was a waiter on rdtgrp then a use-after-free issue occurs when the
-waiter starts running accessing the rdtgrp structure it was waiting on.
+   spi: bcm-qspi: Use platform_get_irq_byname_optional() to avoid error message
 
-See kfree() calls in [1], [2] and [3] in these two call paths in
-following scenarios:
-(1) rdt_kill_sb() -> rmdir_all_sub() -> free_all_child_rdtgrp()
-(2) rdtgroup_rmdir() -> rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
+has been applied to the spi tree at
 
-There are several scenarios that result in use-after-free issue in
-following:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
 
-Scenario 1:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdt_kill_sb() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdt_kill_sb)
--------------------------------        ----------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       mutex_lock
-                                       rmdir_all_sub
-                                         /*
-                                          * sentry and rdtgrp are freed
-                                          * without checking refcount
-                                          */
-                                         free_all_child_rdtgrp
-                                           kfree(sentry)*[1]
-                                         kfree(rdtgrp)*[2]
-                                       mutex_unlock
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1] or [2].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Scenario 2:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdtgroup_rmdir() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdtgroup_rmdir)
--------------------------------        -------------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       rdtgroup_kn_lock_live
-                                         atomic_inc(&rdtgrp->waitcount)
-                                         mutex_lock
-                                       rdtgroup_rmdir_ctrl
-                                         free_all_child_rdtgrp
-                                           /*
-                                            * sentry is freed without
-                                            * checking refcount
-                                            */
-                                           kfree(sentry)*[3]
-                                         rdtgroup_ctrl_remove
-                                           rdtgrp->flags = RDT_DELETED
-                                       rdtgroup_kn_unlock
-                                         mutex_unlock
-                                         atomic_dec_and_test(
-                                                     &rdtgrp->waitcount)
-                                         && (flags & RDT_DELETED)
-                                           kfree(rdtgrp)
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [3].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-If CONFIG_DEBUG_SLAB=y, Slab corruption on kmalloc-2k can be observed
-like following. Note that "0x6b" is POISON_FREE after kfree(). The
-corrupted bits "0x6a", "0x64" at offset 0x424 correspond to
-waitcount member of struct rdtgroup which was freed:
+Thanks,
+Mark
 
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c5b0d000, len=2048
-  420: 6b 6b 6b 6b 6a 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkjkkkkkkkkkkk
-  Single bit error detected. Probably bad RAM.
-  Run memtest86+ or a similar memory test tool.
-  Next obj: start=ffff9504c5b0d800, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+From e9aa3b851428282d5e5151a49d4bf0bfdcd72bfe Mon Sep 17 00:00:00 2001
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date: Tue, 7 Jan 2020 09:39:12 +0530
+Subject: [PATCH] spi: bcm-qspi: Use platform_get_irq_byname_optional() to
+ avoid error message
 
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c58ab800, len=2048
-  420: 6b 6b 6b 6b 64 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkdkkkkkkkkkkk
-  Prev obj: start=ffff9504c58ab000, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
+Use platform_get_irq_byname_optional() instead of platform_get_irq_byname()
+to avoid below error message during probe:
 
-Fix this by taking reference count (waitcount) of rdtgrp into account in
-the two call paths that currently do not do so. Instead of always
-freeing the resource group it will only be freed if there are no waiters
-on it, if there are waiters the resource group will have its flags set
-to RDT_DELETED. It will be left to the waiter to free the resource group
-when it starts running and finding that it was the last waiter and the
-resource group has been removed (rdtgrp->flags & RDT_DELETED) since.
-(1) rdt_kill_sb() -> rmdir_all_sub() -> free_all_child_rdtgrp()
-(2) rdtgroup_rmdir() -> rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
+[3.265115] bcm_iproc 68c70200.spi: IRQ spi_lr_fullness_reached not found
+[3.272121] bcm_iproc 68c70200.spi: IRQ spi_lr_session_aborted not found
+[3.284965] bcm_iproc 68c70200.spi: IRQ spi_lr_impatient not found
+[3.291344] bcm_iproc 68c70200.spi: IRQ spi_lr_session_done not found
+[3.297992] bcm_iproc 68c70200.spi: IRQ mspi_done not found
+[3.303742] bcm_iproc 68c70200.spi: IRQ mspi_halted not found
 
-Cc: stable@vger.kernel.org
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Fixes: 60cf5e101fd4 ("x86/intel_rdt: Add mkdir to resctrl file system")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Link: https://lore.kernel.org/r/20200107040912.16426-1-rayagonda.kokatanur@broadcom.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/spi/spi-bcm-qspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 205925d802d8..e1df86da48cf 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2209,7 +2209,11 @@ static void free_all_child_rdtgrp(struct rdtgroup *rdtgrp)
- 	list_for_each_entry_safe(sentry, stmp, head, mon.crdtgrp_list) {
- 		free_rmid(sentry->mon.rmid);
- 		list_del(&sentry->mon.crdtgrp_list);
--		kfree(sentry);
-+
-+		if (atomic_read(&sentry->waitcount) != 0)
-+			sentry->flags = RDT_DELETED;
-+		else
-+			kfree(sentry);
- 	}
- }
- 
-@@ -2247,7 +2251,11 @@ static void rmdir_all_sub(void)
- 
- 		kernfs_remove(rdtgrp->kn);
- 		list_del(&rdtgrp->rdtgroup_list);
--		kfree(rdtgrp);
-+
-+		if (atomic_read(&rdtgrp->waitcount) != 0)
-+			rdtgrp->flags = RDT_DELETED;
-+		else
-+			kfree(rdtgrp);
- 	}
- 	/* Notify online CPUs to update per cpu storage and PQR_ASSOC MSR */
- 	update_closid_rmid(cpu_online_mask, &rdtgroup_default);
+diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+index 85bad70f59e3..23d295f36c80 100644
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -1293,7 +1293,7 @@ int bcm_qspi_probe(struct platform_device *pdev,
+ 		name = qspi_irq_tab[val].irq_name;
+ 		if (qspi_irq_tab[val].irq_source == SINGLE_L2) {
+ 			/* get the l2 interrupts */
+-			irq = platform_get_irq_byname(pdev, name);
++			irq = platform_get_irq_byname_optional(pdev, name);
+ 		} else if (!num_ints && soc_intc) {
+ 			/* all mspi, bspi intrs muxed to one L1 intr */
+ 			irq = platform_get_irq(pdev, 0);
 -- 
-1.8.3.1
+2.20.1
 
