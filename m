@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8D2C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1797C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6092070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44F12072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgAHTte (ORCPT
+        id S1729563AbgAHTtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:49:34 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43458 "EHLO
+        Wed, 8 Jan 2020 14:49:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43468 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730406AbgAHTqB (ORCPT
+        by vger.kernel.org with ESMTP id S1730416AbgAHTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:46:01 -0500
+        Wed, 8 Jan 2020 14:46:02 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-0006np-O0; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHC-0006oP-F7; Wed, 08 Jan 2020 19:45:58 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dl4-6r; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dmD-PQ; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Ravindra Lokhande" <rlokhande@nvidia.com>,
-        "Vinod Koul" <vinod.koul@intel.com>,
+        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>,
         "Arnd Bergmann" <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 19:43:06 +0000
-Message-ID: <lsq.1578512578.869982560@decadent.org.uk>
+Date:   Wed, 08 Jan 2020 19:43:20 +0000
+Message-ID: <lsq.1578512578.416279625@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 08/63] ALSA: compress: add support for 32bit calls in
- a 64bit kernel
+Subject: [PATCH 3.16 22/63] usb: renesas_usbhs: gadget: fix
+ unused-but-set-variable warning
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,57 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ravindra Lokhande <rlokhande@nvidia.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit c10368897e104c008c610915a218f0fe5fa4ec96 upstream.
+commit b7d44c36a6f6d956e1539e0dd42f98b26e5a4684 upstream.
 
-Compress offload does not support ioctl calls from a 32bit userspace
-in a 64 bit kernel. This patch adds support for ioctls from a 32bit
-userspace in a 64bit kernel
+The commit b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps
+when the driver stops") causes the unused-but-set-variable warning.
+But, if the usbhsg_ep_disable() will return non-zero value, udc/core.c
+doesn't clear the ep->enabled flag. So, this driver should not return
+non-zero value, if the pipe is zero because this means the pipe is
+already disabled. Otherwise, the ep->enabled flag is never cleared
+when the usbhsg_ep_disable() is called by the renesas_usbhs driver first.
 
-Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps when the driver stops")
+Fixes: 11432050f070 ("usb: renesas_usbhs: gadget: fix NULL pointer dereference in ep_disable()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/compress_offload.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/usb/renesas_usbhs/mod_gadget.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -38,6 +38,7 @@
- #include <linux/uio.h>
- #include <linux/uaccess.h>
- #include <linux/module.h>
-+#include <linux/compat.h>
- #include <sound/core.h>
- #include <sound/initval.h>
- #include <sound/compress_params.h>
-@@ -864,6 +865,15 @@ static long snd_compr_ioctl(struct file
- 	return retval;
- }
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -611,14 +611,11 @@ static int usbhsg_ep_disable(struct usb_
+ 	struct usbhsg_uep *uep = usbhsg_ep_to_uep(ep);
+ 	struct usbhs_pipe *pipe;
+ 	unsigned long flags;
+-	int ret = 0;
  
-+/* support of 32bit userspace on 64bit platforms */
-+#ifdef CONFIG_COMPAT
-+static long snd_compr_ioctl_compat(struct file *file, unsigned int cmd,
-+						unsigned long arg)
-+{
-+	return snd_compr_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- static const struct file_operations snd_compr_file_ops = {
- 		.owner =	THIS_MODULE,
- 		.open =		snd_compr_open,
-@@ -871,6 +881,9 @@ static const struct file_operations snd_
- 		.write =	snd_compr_write,
- 		.read =		snd_compr_read,
- 		.unlocked_ioctl = snd_compr_ioctl,
-+#ifdef CONFIG_COMPAT
-+		.compat_ioctl = snd_compr_ioctl_compat,
-+#endif
- 		.mmap =		snd_compr_mmap,
- 		.poll =		snd_compr_poll,
- };
+ 	spin_lock_irqsave(&uep->lock, flags);
+ 	pipe = usbhsg_uep_to_pipe(uep);
+-	if (!pipe) {
+-		ret = -EINVAL;
++	if (!pipe)
+ 		goto out;
+-	}
+ 
+ 	usbhsg_pipe_disable(uep);
+ 	usbhs_pipe_free(pipe);
 
