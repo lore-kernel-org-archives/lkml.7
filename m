@@ -2,219 +2,327 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172B3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFAC33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C0A206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90329206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 00:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DS0//9CY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liz5nlX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgAHAbz (ORCPT
+        id S1726803AbgAHAdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 19:31:55 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:30394 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726180AbgAHAbz (ORCPT
+        Tue, 7 Jan 2020 19:33:14 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35160 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgAHAdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 19:31:55 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578443514; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Z7BlDSHpENI8oTNIekEC/fQs16wNbuD2eY0egRw6Q1M=; b=DS0//9CYZzneSl1gL0Ru+/VXD/1K26CIgiTMsgBTp55b5Jj3Eg7MNsXOXE46A32SKvGgeQyI
- bCpCOAmlb7/i1cRRGkoofVXfr5Obtu6EycqL3NxmCql4Dm6Nof7FPKRXQhlHpioUJN+0L6Kg
- 1Ibg7zIo5u1+No69TvFR0pPoZnU=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1522f9.7ff4c7091f48-smtp-out-n01;
- Wed, 08 Jan 2020 00:31:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BD03C447A1; Wed,  8 Jan 2020 00:31:51 +0000 (UTC)
-Received: from [10.226.59.103] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rkumbako)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84400C43383;
-        Wed,  8 Jan 2020 00:31:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84400C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rkumbako@codeaurora.org
-Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, swboyd@chromium.org, j-keerthy@ti.com,
-        thara.gopinath@linaro.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org
-References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
- <962d48d2-87fd-1236-0623-148352a98de6@linaro.org>
-From:   Ram Chandrasekar <rkumbako@codeaurora.org>
-Message-ID: <4f75a862-4525-fe11-ed03-f53a13926c15@codeaurora.org>
-Date:   Tue, 7 Jan 2020 17:31:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 7 Jan 2020 19:33:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j1so1513463lja.2;
+        Tue, 07 Jan 2020 16:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Psvm9LJ7IluzH0skOPU3QbG029tkF0t15sChZCq5Co=;
+        b=liz5nlX/0WhjXeVkxHfg2p5/bPmAyZtTYgLd1Ue5kc1Khtd4kFwydm0LJmLxyP/ga2
+         BC//476fvHjd3rW7zMWjfWXHk9JDrjMvJY2uULaDwkpSA9ouD2191wsPM5ybIxKPy9vd
+         hmq+qK9MSikKS322F/di6+Tq7ECTo2ljtM8sTJu3NJ4WdSmQ2cLQldqfP/+40JEnILG0
+         XWqxhNHiZR23AytiNO//Aaw4P0nYOqKoDPfzQB7qtbF5+1nrhFHz+S8qzkIRPe6D8J/a
+         fyE8nYc/0lQjvi+rfLrPRAP5g0kyvuxOpE49dE3NNYxb/dRzCZJ9qaSVSOjNsEI6wI5s
+         hKcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Psvm9LJ7IluzH0skOPU3QbG029tkF0t15sChZCq5Co=;
+        b=nXs4fPWtwF1QffXcGsxjHXWxnX2zoH3pXf4raPguNoTdBN4oq9v1wLAvHWGH0POMcI
+         eT/lhxCr8BW9TSYsQN2WBasGHfQIlslTkIJlA2rQ8eMSFd97A2idwFJrB31ZHqzb7TPG
+         NQ7it/ho7U70GCMKRft9EVXiDDelf2ZmZmkOHVDlqsdHGkmVqjjKXuDoOBnLYjNRGi+9
+         26nXlxDyJ/AkIdcJRS3VQ+egBs10ZNXz4dzZcUiwGcvk9DrQFkeYlK3Y802pIcBtRvoB
+         gYkdgiGz9nRZypJmOFvkLKnU8c6oQ1QxKdmRbArzNmVy9SA3FsPnTjfgrApjFXcXUXQa
+         BcgQ==
+X-Gm-Message-State: APjAAAV5YW+fOdy/knhRTG/aEI4zytklh5YUkMwlr5jLFpRIfaywvLGf
+        ulcwtv4+JlEOZ3QcYIhjK+ymtV6nj0VQ7cEplO0=
+X-Google-Smtp-Source: APXvYqxDmVIVb2/2b9j3QpddNsdJNbyxqujhgTR1axhpW6MEh40gig3MFCHC7uRGEccswHf7qfPP5XRj5FDprHcPv3g=
+X-Received: by 2002:a2e:93d5:: with SMTP id p21mr1325892ljh.50.1578443589704;
+ Tue, 07 Jan 2020 16:33:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <962d48d2-87fd-1236-0623-148352a98de6@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191211223344.165549-1-brianvv@google.com> <20191211223344.165549-7-brianvv@google.com>
+ <a33dab7b-0f46-c29f-0db1-a5539c433b3d@fb.com> <CABCgpaVC-gCf58VmCx2XwwHoZ2FXHmtBfqzqJoPeeg2Q=DvRzg@mail.gmail.com>
+ <8ba54068-0a0f-479e-e4d7-42bfb7f8ed55@fb.com>
+In-Reply-To: <8ba54068-0a0f-479e-e4d7-42bfb7f8ed55@fb.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Tue, 7 Jan 2020 18:32:58 -0600
+Message-ID: <CABCgpaV-7x1aBjd+NguOD5tqAaZigHjvSsirTFu_oT+7o8WtLQ@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 06/11] bpf: add batch ops to all htab bpf map
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 7, 2020 at 12:18 PM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 1/6/20 11:02 PM, Brian Vazquez wrote:
+> > On Fri, Dec 13, 2019 at 12:58 PM Yonghong Song <yhs@fb.com> wrote:
+> >>
+> >>
+> >>
+> >> On 12/11/19 2:33 PM, Brian Vazquez wrote:
+> >>> From: Yonghong Song <yhs@fb.com>
+> >>>
+> >>> htab can't use generic batch support due some problematic behaviours
+> >>> inherent to the data structre, i.e. while iterating the bpf map  a
+> >>> concurrent program might delete the next entry that batch was about to
+> >>> use, in that case there's no easy solution to retrieve the next entry,
+> >>> the issue has been discussed multiple times (see [1] and [2]).
+> >>>
+> >>> The only way hmap can be traversed without the problem previously
+> >>> exposed is by making sure that the map is traversing entire buckets.
+> >>> This commit implements those strict requirements for hmap, the
+> >>> implementation follows the same interaction that generic support with
+> >>> some exceptions:
+> >>>
+> >>>    - If keys/values buffer are not big enough to traverse a bucket,
+> >>>      ENOSPC will be returned.
+> >>>    - out_batch contains the value of the next bucket in the iteration, not
+> >>>      the next key, but this is transparent for the user since the user
+> >>>      should never use out_batch for other than bpf batch syscalls.
+> >>>
+> >>> Note that only lookup and lookup_and_delete batch ops require the hmap
+> >>> specific implementation, update/delete batch ops can be the generic
+> >>> ones.
+> >>>
+> >>> [1] https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+> >>> [2] https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+> >>>
+> >>> Signed-off-by: Yonghong Song <yhs@fb.com>
+> >>> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> >>> ---
+> >>>    kernel/bpf/hashtab.c | 242 +++++++++++++++++++++++++++++++++++++++++++
+> >>>    1 file changed, 242 insertions(+)
+> >>>
+> >>> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+> >>> index 22066a62c8c97..fac107bdaf9ec 100644
+> >>> --- a/kernel/bpf/hashtab.c
+> >>> +++ b/kernel/bpf/hashtab.c
+> >>> @@ -17,6 +17,17 @@
+> >>>        (BPF_F_NO_PREALLOC | BPF_F_NO_COMMON_LRU | BPF_F_NUMA_NODE |    \
+> >>>         BPF_F_ACCESS_MASK | BPF_F_ZERO_SEED)
+> >>>
+> >>> +#define BATCH_OPS(_name)                     \
+> >>> +     .map_lookup_batch =                     \
+> >>> +     _name##_map_lookup_batch,               \
+> >>> +     .map_lookup_and_delete_batch =          \
+> >>> +     _name##_map_lookup_and_delete_batch,    \
+> >>> +     .map_update_batch =                     \
+> >>> +     generic_map_update_batch,               \
+> >>> +     .map_delete_batch =                     \
+> >>> +     generic_map_delete_batch
+> >>> +
+> >>> +
+> >>>    struct bucket {
+> >>>        struct hlist_nulls_head head;
+> >>>        raw_spinlock_t lock;
+> >>> @@ -1232,6 +1243,233 @@ static void htab_map_seq_show_elem(struct bpf_map *map, void *key,
+> >>>        rcu_read_unlock();
+> >>>    }
+> >>>
+> >>> +static int
+> >>> +__htab_map_lookup_and_delete_batch(struct bpf_map *map,
+> >>> +                                const union bpf_attr *attr,
+> >>> +                                union bpf_attr __user *uattr,
+> >>> +                                bool do_delete, bool is_lru_map,
+> >>> +                                bool is_percpu)
+> >>> +{
+> >>> +     struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+> >>> +     u32 bucket_cnt, total, key_size, value_size, roundup_key_size;
+> >>> +     void *keys = NULL, *values = NULL, *value, *dst_key, *dst_val;
+> >>> +     void __user *uvalues = u64_to_user_ptr(attr->batch.values);
+> >>> +     void __user *ukeys = u64_to_user_ptr(attr->batch.keys);
+> >>> +     void *ubatch = u64_to_user_ptr(attr->batch.in_batch);
+> >>> +     u64 elem_map_flags, map_flags;
+> >>> +     struct hlist_nulls_head *head;
+> >>> +     u32 batch, max_count, size;
+> >>> +     struct hlist_nulls_node *n;
+> >>> +     unsigned long flags;
+> >>> +     struct htab_elem *l;
+> >>> +     struct bucket *b;
+> >>> +     int ret = 0;
+> >>> +
+> >>> +     max_count = attr->batch.count;
+> >>> +     if (!max_count)
+> >>> +             return 0;
+> >>> +
+> >>> +     elem_map_flags = attr->batch.elem_flags;
+> >>> +     if ((elem_map_flags & ~BPF_F_LOCK) ||
+> >>> +         ((elem_map_flags & BPF_F_LOCK) && !map_value_has_spin_lock(map)))
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     map_flags = attr->batch.flags;
+> >>> +     if (map_flags)
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     batch = 0;
+> >>> +     if (ubatch && copy_from_user(&batch, ubatch, sizeof(batch)))
+> >>> +             return -EFAULT;
+> >>> +
+> >>> +     if (batch >= htab->n_buckets)
+> >>> +             return -ENOENT;
+> >>> +
+> >>> +     /* We cannot do copy_from_user or copy_to_user inside
+> >>> +      * the rcu_read_lock. Allocate enough space here.
+> >>> +      */
+> >>> +     key_size = htab->map.key_size;
+> >>> +     roundup_key_size = round_up(htab->map.key_size, 8);
+> >>> +     value_size = htab->map.value_size;
+> >>> +     size = round_up(value_size, 8);
+> >>> +     if (is_percpu)
+> >>> +             value_size = size * num_possible_cpus();
+> >>> +     keys = kvmalloc(key_size, GFP_USER | __GFP_NOWARN);
+> >>> +     values = kvmalloc(value_size, GFP_USER | __GFP_NOWARN);
+> >>> +     if (!keys || !values) {
+> >>> +             ret = -ENOMEM;
+> >>> +             goto out;
+> >>> +     }
+> >>> +
+> >>> +     dst_key = keys;
+> >>> +     dst_val = values;
+> >>> +     total = 0;
+> >>> +
+> >>> +     preempt_disable();
+> >>> +     this_cpu_inc(bpf_prog_active);
+> >>> +     rcu_read_lock();
+> >>> +
+> >>> +again:
+> >>> +     b = &htab->buckets[batch];
+> >>> +     head = &b->head;
+> >>> +     raw_spin_lock_irqsave(&b->lock, flags);
+> >>> +
+> >>> +     bucket_cnt = 0;
+> >>> +     hlist_nulls_for_each_entry_rcu(l, n, head, hash_node)
+> >>> +             bucket_cnt++;
+> >>> +
+> >>> +     if (bucket_cnt > (max_count - total)) {
+> >>> +             if (total == 0)
+> >>> +                     ret = -ENOSPC;
+> >>> +             goto after_loop;
+> >>> +     }
+> >>> +
+> >>> +     hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+> >>> +             memcpy(dst_key, l->key, key_size);
+> >>> +
+> >>> +             if (is_percpu) {
+> >>> +                     int off = 0, cpu;
+> >>> +                     void __percpu *pptr;
+> >>> +
+> >>> +                     pptr = htab_elem_get_ptr(l, map->key_size);
+> >>> +                     for_each_possible_cpu(cpu) {
+> >>> +                             bpf_long_memcpy(dst_val + off,
+> >>> +                                             per_cpu_ptr(pptr, cpu), size);
+> >>> +                             off += size;
+> >>> +                     }
+> >>> +             } else {
+> >>> +                     value = l->key + roundup_key_size;
+> >>> +                     if (elem_map_flags & BPF_F_LOCK)
+> >>> +                             copy_map_value_locked(map, dst_val, value,
+> >>> +                                                   true);
+> >>> +                     else
+> >>> +                             copy_map_value(map, dst_val, value);
+> >>> +                     check_and_init_map_lock(map, dst_val);
+> >>> +             }
+> >>> +             if (do_delete) {
+> >>> +                     hlist_nulls_del_rcu(&l->hash_node);
+> >>> +                     if (is_lru_map)
+> >>> +                             bpf_lru_push_free(&htab->lru, &l->lru_node);
+> >>> +                     else
+> >>> +                             free_htab_elem(htab, l);
+> >>> +             }
+> >>> +             if (copy_to_user(ukeys + total * key_size, keys, key_size) ||
+> >>> +                copy_to_user(uvalues + total * value_size, values,
+> >>> +                value_size)) {
+> >>
+> >> We cannot do copy_to_user inside atomic region where irq is disabled
+> >> with raw_spin_lock_irqsave(). We could do the following:
+> >>      . we kalloc memory before preempt_disable() with the current count
+> >>        of bucket size.
+> >>      . inside the raw_spin_lock_irqsave() region, we can do copy to kernel
+> >>        memory.
+> >>      . inside the raw_spin_lock_irqsave() region, if the bucket size
+> >>        changes, we can have a few retries to increase allocation size
+> >>        before giving up.
+> >> Do you think this may work?
+> >
+> > Yes, it does.
+> >
+> > What should be the initial value for the allocated memory
+> > max_entries/2? Do you see any issue if we just kalloc the entire
+> > buffer?
+>
+> Allocating max_entries/2 or entire buffer risks allocating too much
+> memory from the system, which may not be a good thing in a production
+> system. That is why I proposed to allocate memory at bucket level.
+> For a reasonable balanced hash table, this should not cause large
+> memory pressure on the host. What do you think?
 
-
-On 12/11/2019 6:35 AM, Daniel Lezcano wrote:
-> On 21/11/2019 06:50, Amit Kucheria wrote:
->> From: Ram Chandrasekar <rkumbako@codeaurora.org>
->>
->> Currently, step wise governor increases the mitigation when the
->> temperature goes above a threshold and decreases the mitigation when the
->> temperature goes below the threshold.
->>
->> If there is a case where the
->> temperature is wavering around the threshold, the mitigation will be
->> applied and removed every iteration, which is not very efficient.
->>
->> The use of hysteresis temperature could avoid this ping-pong of
->> mitigation by relaxing the mitigation to happen only when the
->> temperature goes below this lower hysteresis value.
-> 
-> What I'm worried about is how the hysteresis is used in the current
-> code, where the destination of this data is to set the value in the
-> sensor hardware if it is supported.
-> 
-> Using the hysteresis in the governor seems like abusing the initial
-> purpose of this information.
-> 
-> Moreover, the hysteresis creates a gray area where the above algorithm
-> (DROPPING && !throttle) => state-- or (RAISING && throttle) => state++
-> may drop the performances because we will continue mitigating even below
-> the threshold.
-> 
-> As the governor is an open-loop controller, I'm not sure if we can do
-> something except adding some kind of low pass filter to prevent
-> mitigation bounces.
-> 
-
-We have two different use cases for the step wise algorithm, and the 
-hysteresis makes sense only in one.
-
-For example, say we are controlling CPU junction temperature at 95C. 
-When using step wise, mitigation is applied iteratively and there is a 
-possibility that temperature can shoot up before the algorithm can reach 
-an optimal mitigation level to keep the temperature near threshold.
-
-In order to help this state machine, we use a second back stop rule in 
-the same thermal zone at a higher temperature (say 105C) with a 
-hysteresis of 10C to mitigate CPU to a fixed value, by specifying 
-upper/lower limit to be the same. The idea is that the second rule will 
-place a hard hammer to bring the temperature down close to 95C and then 
-it will remove the mitigation. Once mitigation is removed, the junction 
-temperature rule state machine will re-adjust from that point to an 
-optimal mitigation level. The junction temperature rule doesn’t use 
-hysteresis.
-
-Another example is skin temperature mitigation for mobile devices, where 
-the step wise algorithm with hysteresis just reduces the operating max 
-frequency to a fixed value, when the threshold is reached. And the 
-junction temperature rule starts mitigating from this operating max.
-
-That is the reason we have not generalized or mandated the hysteresis 
-usage in this patch. The idea is to use it selectively based on use case.
-
-
->> Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> [Rebased patch from downstream]
->> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->> ---
->>   drivers/thermal/step_wise.c | 35 ++++++++++++++++++++++++-----------
->>   1 file changed, 24 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
->> index 6e051cbd824ff..2c8a34a7cf959 100644
->> --- a/drivers/thermal/step_wise.c
->> +++ b/drivers/thermal/step_wise.c
->> @@ -24,7 +24,7 @@
->>    *       for this trip point
->>    *    d. if the trend is THERMAL_TREND_DROP_FULL, use lower limit
->>    *       for this trip point
->> - * If the temperature is lower than a trip point,
->> + * If the temperature is lower than a hysteresis temperature,
->>    *    a. if the trend is THERMAL_TREND_RAISING, do nothing
->>    *    b. if the trend is THERMAL_TREND_DROPPING, use lower cooling
->>    *       state for this trip point, if the cooling state already
->> @@ -115,30 +115,31 @@ static void update_passive_instance(struct thermal_zone_device *tz,
->>   
->>   static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->>   {
->> -	int trip_temp;
->> +	int trip_temp, hyst_temp;
->>   	enum thermal_trip_type trip_type;
->>   	enum thermal_trend trend;
->>   	struct thermal_instance *instance;
->> -	bool throttle = false;
->> +	bool throttle;
->>   	int old_target;
->>   
->>   	if (trip == THERMAL_TRIPS_NONE) {
->> -		trip_temp = tz->forced_passive;
->> +		hyst_temp = trip_temp = tz->forced_passive;
->>   		trip_type = THERMAL_TRIPS_NONE;
->>   	} else {
->>   		tz->ops->get_trip_temp(tz, trip, &trip_temp);
->> +		hyst_temp = trip_temp;
->> +		if (tz->ops->get_trip_hyst) {
->> +			tz->ops->get_trip_hyst(tz, trip, &hyst_temp);
->> +			hyst_temp = trip_temp - hyst_temp;
->> +		}
->>   		tz->ops->get_trip_type(tz, trip, &trip_type);
->>   	}
->>   
->>   	trend = get_tz_trend(tz, trip);
->>   
->> -	if (tz->temperature >= trip_temp) {
->> -		throttle = true;
->> -		trace_thermal_zone_trip(tz, trip, trip_type);
->> -	}
->> -
->> -	dev_dbg(&tz->device, "Trip%d[type=%d,temp=%d]:trend=%d,throttle=%d\n",
->> -				trip, trip_type, trip_temp, trend, throttle);
->> +	dev_dbg(&tz->device,
->> +		"Trip%d[type=%d,temp=%d,hyst=%d]:trend=%d,throttle=%d\n",
->> +		trip, trip_type, trip_temp, hyst_temp, trend, throttle);
->>   
->>   	mutex_lock(&tz->lock);
->>   
->> @@ -147,6 +148,18 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->>   			continue;
->>   
->>   		old_target = instance->target;
->> +		throttle = false;
->> +		/*
->> +		 * Lower the mitigation only if the temperature
->> +		 * goes below the hysteresis temperature.
->> +		 */
->> +		if (tz->temperature >= trip_temp ||
->> +		    (tz->temperature >= hyst_temp &&
->> +		     old_target != THERMAL_NO_TARGET)) {
->> +			throttle = true;
->> +			trace_thermal_zone_trip(tz, trip, trip_type);
->> +		}
->> +
->>   		instance->target = get_target_state(instance, trend, throttle);
->>   		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
->>   					old_target, (int)instance->target);
->>
-> 
-> 
+Sounds reasonable, I'll do that! Thanks for the feedback!
+>
+> >
+> >>
+> >>> +                     ret = -EFAULT;
+> >>> +                     goto after_loop;
+> >>> +             }
+> >>> +             total++;
+> >>> +     }
+> >>> +
+> >>> +     batch++;
+> >>> +     if (batch >= htab->n_buckets) {
+> >>> +             ret = -ENOENT;
+> >>> +             goto after_loop;
+> >>> +     }
+> >>> +
+> >>> +     raw_spin_unlock_irqrestore(&b->lock, flags);
+> >>> +     goto again;
+> >>> +
+> >>> +after_loop:
+> >>> +     raw_spin_unlock_irqrestore(&b->lock, flags);
+> >>> +
+> >>> +     rcu_read_unlock();
+> >>> +     this_cpu_dec(bpf_prog_active);
+> >>> +     preempt_enable();
+> >>> +
+> >>> +     if (ret && ret != -ENOENT)
+> >>> +             goto out;
+> >>> +
+> >>> +     /* copy data back to user */
+> >>> +     ubatch = u64_to_user_ptr(attr->batch.out_batch);
+> >>> +     if (copy_to_user(ubatch, &batch, sizeof(batch)) ||
+> >>> +         put_user(total, &uattr->batch.count))
+> >>> +             ret = -EFAULT;
+> >>> +
+> >>> +out:
+> >>> +     kvfree(keys);
+> >>> +     kvfree(values);
+> >>> +     return ret;
+> >>> +}
+> >>> +
+> >> [...]
