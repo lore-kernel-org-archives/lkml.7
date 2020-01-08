@@ -2,244 +2,91 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31DC00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7654C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4605420692
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:54:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pD4gS/zf"
+	by mail.kernel.org (Postfix) with ESMTP id 91AD420692
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgAHIyr (ORCPT
+        id S1727488AbgAHIzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:54:47 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:63884 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgAHIyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:54:46 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47t3376c2Jz9v3Hg;
-        Wed,  8 Jan 2020 09:54:43 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pD4gS/zf; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uXjsK8Zt3R7Y; Wed,  8 Jan 2020 09:54:43 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47t3375ZDlz9v3HF;
-        Wed,  8 Jan 2020 09:54:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578473683; bh=DLdRw4GnHSw/FgiQqeHNOAw5n+PO0kbNodql59+K1Gg=;
-        h=From:Subject:To:Cc:Date:From;
-        b=pD4gS/zfC9Sh+IGF7GudvxYt/4cMrV71xLSGaOmJn8u3lmfZFL3YGM/OaerNVaEuK
-         XGIKHSaEfi7bKGLoF9IRcjK4FHOHanHKUyJqfFOqB8lZL7UwZiVOoojTzZzWi6MCdv
-         8oyDuXI5uJ8pzHffk3OPGE1Cs3/7tNZR4UJpEDRs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D0C478B7ED;
-        Wed,  8 Jan 2020 09:54:44 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id rwUfyZvP24pk; Wed,  8 Jan 2020 09:54:44 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A26A48B7EC;
-        Wed,  8 Jan 2020 09:54:44 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 7A8AF637C9; Wed,  8 Jan 2020 08:54:44 +0000 (UTC)
-Message-Id: <1e04eb7d137eab44fdb025b22727e15bb843da53.1578473656.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32: refactor pmd_offset(pud_offset(pgd_offset...
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  8 Jan 2020 08:54:44 +0000 (UTC)
+        Wed, 8 Jan 2020 03:55:47 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48877 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgAHIzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:55:46 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1ip77k-0001qD-45; Wed, 08 Jan 2020 09:55:32 +0100
+Date:   Wed, 8 Jan 2020 09:55:32 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+f2ca20d4aa1408b0385a@syzkaller.appspotmail.com>,
+        alexander.deucher@amd.com, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, nicholas.kazlauskas@amd.com,
+        Rik van Riel <riel@surriel.com>, sunpeng.li@amd.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>, zhan.liu@amd.com
+Subject: Re: WARNING in switch_fpu_return
+Message-ID: <20200108085532.37ycr24gryqhkkto@linutronix.de>
+References: <000000000000f04e43059b1ee697@google.com>
+ <20200107205302.45yb2rkekz3nat6v@linutronix.de>
+ <CACT4Y+ax6URhDKBREy6XLx=nKFLGSmt87Z-oU3E1D8SAJwBcrg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ax6URhDKBREy6XLx=nKFLGSmt87Z-oU3E1D8SAJwBcrg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At several places pmd pointer is retrieved through the same action:
+Hi Dmitry,
 
-	pmd = pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr);
+On 2020-01-08 05:28:31 [+0100], Dmitry Vyukov wrote:
+> > > userspace arch: i386
+> >
+> > So I tried to reproduce this. syz-prog2c made .c out of the above link.
+> > It starts with:
+> > |int main(void)
+> > | {
+> > |   syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 3ul, 0x32ul, -1, 0);
+> 
+> Hi Sebastian,
+> 
+> If you want to generate a C repro for 386 arch, you need to add
+> -arch=386 flag to syz-prog2c (then it hopefully should use mmap2).
 
-or
+Ah okay. I've been looking at
+	https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
 
-	pmd = pmd_offset(pud_offset(pgd_offset_k(addr), addr), addr);
+and it says
+|Note: if the report contains userspace arch: i386, then the program
+|needs to be built with -m32 flag.
 
-Refactor this by implementing two helpers pmd_ptr() and pmd_ptr_k()
+and with the argument you mentioned it the compiled C code uses mmap2.
+Thanks.
+Now the 32bit testcase reboots, too :)
 
-This will help when adding the p4d level.
+> But FWIW syzbot wasn't able to reproduce it with a C program,
+> otherwise it would have been provided it. But that may be for various
+> reasons.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v2: fixed missing arg in mm/mem.c in call to pte_offset_kernel()
----
- arch/powerpc/include/asm/pgtable.h    | 12 ++++++++++++
- arch/powerpc/mm/book3s32/mmu.c        |  2 +-
- arch/powerpc/mm/book3s32/tlb.c        |  4 ++--
- arch/powerpc/mm/kasan/kasan_init_32.c |  8 ++++----
- arch/powerpc/mm/mem.c                 |  3 +--
- arch/powerpc/mm/nohash/40x.c          |  4 ++--
- arch/powerpc/mm/pgtable_32.c          |  2 +-
- 7 files changed, 23 insertions(+), 12 deletions(-)
+Yeah, my memory was also that a C-testcase is provided. But there was this
+	https://syzkaller.appspot.com/x/repro.syz?x=10cc8971e00000
 
-diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-index 0e4ec8cc37b7..b5e358c0ea7e 100644
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -41,6 +41,18 @@ struct mm_struct;
- 
- #ifndef __ASSEMBLY__
- 
-+#ifdef CONFIG_PPC32
-+static inline pmd_t *pmd_ptr(struct mm_struct *mm, unsigned long va)
-+{
-+	return pmd_offset(pud_offset(pgd_offset(mm, va), va), va);
-+}
-+
-+static inline pmd_t *pmd_ptr_k(unsigned long va)
-+{
-+	return pmd_offset(pud_offset(pgd_offset_k(va), va), va);
-+}
-+#endif
-+
- #include <asm/tlbflush.h>
- 
- /* Keep these as a macros to avoid include dependency mess */
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index 69b2419accef..91553e1ff4b9 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -312,7 +312,7 @@ void hash_preload(struct mm_struct *mm, unsigned long ea)
- 
- 	if (!Hash)
- 		return;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, ea), ea), ea);
-+	pmd = pmd_ptr(mm, ea);
- 	if (!pmd_none(*pmd))
- 		add_hash_page(mm->context.id, ea, pmd_val(*pmd));
- }
-diff --git a/arch/powerpc/mm/book3s32/tlb.c b/arch/powerpc/mm/book3s32/tlb.c
-index 2fcd321040ff..b08f0ec7f409 100644
---- a/arch/powerpc/mm/book3s32/tlb.c
-+++ b/arch/powerpc/mm/book3s32/tlb.c
-@@ -87,7 +87,7 @@ static void flush_range(struct mm_struct *mm, unsigned long start,
- 	if (start >= end)
- 		return;
- 	end = (end - 1) | ~PAGE_MASK;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, start), start), start);
-+	pmd = pmd_ptr(mm, start);
- 	for (;;) {
- 		pmd_end = ((start + PGDIR_SIZE) & PGDIR_MASK) - 1;
- 		if (pmd_end > end)
-@@ -145,7 +145,7 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long vmaddr)
- 		return;
- 	}
- 	mm = (vmaddr < TASK_SIZE)? vma->vm_mm: &init_mm;
--	pmd = pmd_offset(pud_offset(pgd_offset(mm, vmaddr), vmaddr), vmaddr);
-+	pmd = pmd_ptr(mm, vmaddr);
- 	if (!pmd_none(*pmd))
- 		flush_hash_pages(mm->context.id, vmaddr, pmd_val(*pmd), 1);
- }
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 0e6ed4413eea..4b505ff0ff44 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -36,7 +36,7 @@ static int __ref kasan_init_shadow_page_tables(unsigned long k_start, unsigned l
- 	unsigned long k_cur, k_next;
- 	pgprot_t prot = slab_is_available() ? kasan_prot_ro() : PAGE_KERNEL;
- 
--	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
-+	pmd = pmd_ptr_k(k_start);
- 
- 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
- 		pte_t *new;
-@@ -94,7 +94,7 @@ static int __ref kasan_init_region(void *start, size_t size)
- 		block = memblock_alloc(k_end - k_start, PAGE_SIZE);
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
--		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		void *va = block ? block + k_cur - k_start : kasan_get_one_page();
- 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
- 
-@@ -118,7 +118,7 @@ static void __init kasan_remap_early_shadow_ro(void)
- 	kasan_populate_pte(kasan_early_shadow_pte, prot);
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
--		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-+		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
- 
- 		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-@@ -205,7 +205,7 @@ void __init kasan_early_init(void)
- 	unsigned long addr = KASAN_SHADOW_START;
- 	unsigned long end = KASAN_SHADOW_END;
- 	unsigned long next;
--	pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(addr), addr), addr);
-+	pmd_t *pmd = pmd_ptr_k(addr);
- 
- 	BUILD_BUG_ON(KASAN_SHADOW_START & ~PGDIR_MASK);
- 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index f5535eae637f..942d41b88aa6 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -68,8 +68,7 @@ EXPORT_SYMBOL(kmap_prot);
- 
- static inline pte_t *virt_to_kpte(unsigned long vaddr)
- {
--	return pte_offset_kernel(pmd_offset(pud_offset(pgd_offset_k(vaddr),
--			vaddr), vaddr), vaddr);
-+	return pte_offset_kernel(pmd_ptr_k(vaddr), vaddr);
- }
- #endif
- 
-diff --git a/arch/powerpc/mm/nohash/40x.c b/arch/powerpc/mm/nohash/40x.c
-index f348104eb461..82862723ab42 100644
---- a/arch/powerpc/mm/nohash/40x.c
-+++ b/arch/powerpc/mm/nohash/40x.c
-@@ -104,7 +104,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		pmd_t *pmdp;
- 		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_HWWRITE;
- 
--		pmdp = pmd_offset(pud_offset(pgd_offset_k(v), v), v);
-+		pmdp = pmd_ptr_k(v);
- 		*pmdp++ = __pmd(val);
- 		*pmdp++ = __pmd(val);
- 		*pmdp++ = __pmd(val);
-@@ -119,7 +119,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 		pmd_t *pmdp;
- 		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_HWWRITE;
- 
--		pmdp = pmd_offset(pud_offset(pgd_offset_k(v), v), v);
-+		pmdp = pmd_ptr_k(v);
- 		*pmdp = __pmd(val);
- 
- 		v += LARGE_PAGE_SIZE_4M;
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 73b84166d06a..7d50cc01bbea 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -63,7 +63,7 @@ int __ref map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot)
- 	int err = -ENOMEM;
- 
- 	/* Use upper 10 bits of VA to index the first level map */
--	pd = pmd_offset(pud_offset(pgd_offset_k(va), va), va);
-+	pd = pmd_ptr_k(va);
- 	/* Use middle 10 bits of VA to index the second-level map */
- 	if (likely(slab_is_available()))
- 		pg = pte_alloc_kernel(pd, va);
--- 
-2.13.3
+link so I assumed I should use it myself and I missed the update that
+something changed.
+So what should I do with the file above? Feed it to `syz-execprog' or is
+it a rough idea what the test case should have done?
 
+Sebastian
