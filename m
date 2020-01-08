@@ -2,103 +2,81 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A044C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A74BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725262087F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/jE8RWo"
+	by mail.kernel.org (Postfix) with ESMTP id 288CE2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578475014;
+	bh=+IAbT80Thjb7cm6WAP8wRkhDBitTa05E7byZ57Le5ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A9zFJAycCuhQpi0IE0x6GsZj/EoLiml8kf95yLSLp0hulxolXTK8wJoATd9YCfJqR
+	 Z9PpJTxcPkVBCv8CDyku1f6AhvY4nN6WjcL1Z77GMNMMur8OKDlWJduUN3TKzDGwzQ
+	 zJQaYI28ZItf/9zzv4Ev6gLUCE3f5v8fnfAn5E58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgAHJOp (ORCPT
+        id S1727512AbgAHJQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:14:45 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:34048 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgAHJOj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:14:39 -0500
-Received: by mail-qv1-f66.google.com with SMTP id o18so1107982qvf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
-        b=K/jE8RWozDdRYmSsW9itFfvjGkVpL/zCzGu39X34ur7j0Be+cWMBI2auPmoluvn4c1
-         /S/feNX81zbnksyn4ZVjM/8vfVA6T/7g7v52oVDY/X+5X9Y9F/hAbdyl8xKfHD3iR7ln
-         3kR5KrCmE2zxPQDibCfArttMxzqMRbVfVXuiM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
-        b=iFRYgbio6mh26w7UnJl9Ier7+PqwrBHdSUkiB7wblVvRajYEO6lc9+jfD9DcAsBtrF
-         3BI7GHh4RWi8z9jBV0axZZCW/gVLm4ZHzylLI7J7GZgWH3V7lILN4nhwNE/CoLnxzjEz
-         U5toX+GVAZ7GO3TRgVEm6lOVxH2did++CNnvGOf64sXuqHIiPNAiQAr8LQEVbSiHda+f
-         JjfmpHhIqNRq+tOnYQQmR/Bm7r/pPkdMfrzF4zyOaYr7EFvZTbIXtj/yPx/SH3eM+w/m
-         zh2JXCB6xVR/EJyzoWJqmLhjLvrzBhuudMxY1ke1dFEXt8ZHT9IFnxcOfnUgPr1D3YGH
-         RAZg==
-X-Gm-Message-State: APjAAAUg2ZeoKBwXvN+B5wBUKn0S1s6VYb7YL9Iqb57xMLzU1f1TpnOO
-        FWEA7YanInACTIE3aFDqAhfTyv8oo2CPMWe1Q62RGw==
-X-Google-Smtp-Source: APXvYqxf/pnt/xOzQY9MksejO/BRE5fT3xBR6Oezhn4Kzl/SblH+zp9r0nnNwuErhStHc9QFh2BYf2nQYASas+C1/yI=
-X-Received: by 2002:a0c:f703:: with SMTP id w3mr3236524qvn.6.1578474878009;
- Wed, 08 Jan 2020 01:14:38 -0800 (PST)
+        Wed, 8 Jan 2020 04:16:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727205AbgAHJQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 04:16:53 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C672C20705;
+        Wed,  8 Jan 2020 09:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578475012;
+        bh=+IAbT80Thjb7cm6WAP8wRkhDBitTa05E7byZ57Le5ag=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ie6mnSQIZ0/Cmh6ez45IJInqQwaokWY9MDyBZqRTZNt5uTgXRFmVAd2hNSM9uN3ID
+         y/12CJS7TUfkeqVSwEDmyPF/a5pSrE4SVd4XYt+znN6uP71KT5adACbICf8qRxpEXp
+         AQXOt9SNrLgS1q631MX+fnpE/s46nKozLm/TcjSk=
+Date:   Wed, 8 Jan 2020 09:16:42 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Patrick Daly <pdaly@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>, treding@nvidia.com
+Subject: Re: [PATCH 0/3] iommu/arm-smmu: Qualcomm bootsplash/efifb
+Message-ID: <20200108091641.GA15147@willie-the-truck>
+References: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <20191227141405.3396-1-yong.liang@mediatek.com>
- <20191227141405.3396-2-yong.liang@mediatek.com> <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-In-Reply-To: <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 Jan 2020 17:14:27 +0800
-Message-ID: <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
-To:     Yong Liang <yong.liang@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
-        linux@roeck-us.net, linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 4:56 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> minor nit, s/amr64/arm64/ in the commit title.
->
-> On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
-> >
-> > From: "yong.liang" <yong.liang@mediatek.com>
-> >
-> > 1. Include mt8183-reset.h and add reset-cells in infracfg
-> > in dtsi file
+On Thu, Dec 26, 2019 at 02:17:06PM -0800, Bjorn Andersson wrote:
+> These patches implements the stream mapping inheritance that's necessary in
+> order to not hit a security violation as the display hardware looses its stream
+> mapping during initialization of arm-smmu in various Qualcomm platforms.
+> 
+> This was previously posted as an RFC [1], changes since then involves the
+> rebase and migration of the read-back code to the Qualcomm specific
+> implementation, the mapping is maintained indefinitely - to handle probe
+> deferring clients - and rewritten commit messages.
 
-Err, wait, doesn't this depend on
-http://lists.infradead.org/pipermail/linux-mediatek/2020-January/026170.html
-?
+I don't think we should solve this in a Qualcomm-specific manner. Please can
+you take a look at the proposal from Thierry [1] and see whether or not it
+works for you?
 
-> > 2. Add watchdog device node
+Thanks,
 
-Can we have a patch with just this change instead, since you're
-sending the binding with it.
+Will
 
-> >
-> > Signed-off-by: yong.liang <yong.liang@mediatek.com>
->
-> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > [snip]
+[1] https://lore.kernel.org/lkml/20191209150748.2471814-1-thierry.reding@gmail.com
