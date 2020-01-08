@@ -2,81 +2,81 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB9C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1395BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C49206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3ED206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgAHNoW (ORCPT
+        id S1728362AbgAHNo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:44:22 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726556AbgAHNoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:44:22 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DAEC7D65DF3EF50D2D83;
-        Wed,  8 Jan 2020 21:44:15 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 8 Jan 2020 21:44:09 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>
-CC:     <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH next] igc: make non-global functions static
-Date:   Wed, 8 Jan 2020 21:39:59 +0800
-Message-ID: <20200108133959.93035-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 8 Jan 2020 08:44:27 -0500
+Received: from mga06.intel.com ([134.134.136.31]:14326 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726556AbgAHNoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:44:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 05:44:24 -0800
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="222934967"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 05:44:22 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Chen Zhou <chenzhou10@huawei.com>, airlied@linux.ie,
+        chris@chris-wilson.co.uk
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, chenzhou10@huawei.com
+Subject: Re: [PATCH next] drm/i915/gtt: add missing include file asm/smp.h
+In-Reply-To: <20200108133610.92714-1-chenzhou10@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200108133610.92714-1-chenzhou10@huawei.com>
+Date:   Wed, 08 Jan 2020 15:44:19 +0200
+Message-ID: <877e22qczw.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
-drivers/net/ethernet/intel/igc/igc_ptp.c:512:6:
-	warning: symbol 'igc_ptp_tx_work' was not declared. Should it be static?
-drivers/net/ethernet/intel/igc/igc_ptp.c:644:6:
-	warning: symbol 'igc_ptp_suspend' was not declared. Should it be static?
+On Wed, 08 Jan 2020, Chen Zhou <chenzhou10@huawei.com> wrote:
+> Fix build error:
+> lib/crypto/chacha.c: In function chacha_permute:
+> lib/crypto/chacha.c:65:1: warning: the frame size of 3384 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+>  }
+>   ^
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/ethernet/intel/igc/igc_ptp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+IMO this needs a better explanation of why not having the include leads
+to the above failure.
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-index 6935065..389a969 100644
---- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-@@ -509,7 +509,7 @@ static void igc_ptp_tx_hwtstamp(struct igc_adapter *adapter)
-  * This work function polls the TSYNCTXCTL valid bit to determine when a
-  * timestamp has been taken for the current stored skb.
-  */
--void igc_ptp_tx_work(struct work_struct *work)
-+static void igc_ptp_tx_work(struct work_struct *work)
- {
- 	struct igc_adapter *adapter = container_of(work, struct igc_adapter,
- 						   ptp_tx_work);
-@@ -641,7 +641,7 @@ void igc_ptp_init(struct igc_adapter *adapter)
-  * This function stops the overflow check work and PTP Tx timestamp work, and
-  * will prepare the device for OS suspend.
-  */
--void igc_ptp_suspend(struct igc_adapter *adapter)
-+static void igc_ptp_suspend(struct igc_adapter *adapter)
- {
- 	if (!(adapter->ptp_flags & IGC_PTP_ENABLED))
- 		return;
+BR,
+Jani.
+
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/gpu/drm/i915/gt/intel_ggtt.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpu/drm/i915/gt/intel_ggtt.c b/drivers/gpu/drm/i915/gt/intel_ggtt.c
+> index 1a2b5dc..9ef8ed8 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_ggtt.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_ggtt.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/stop_machine.h>
+>  
+>  #include <asm/set_memory.h>
+> +#include <asm/smp.h>
+>  
+>  #include "intel_gt.h"
+>  #include "i915_drv.h"
+
 -- 
-2.7.4
-
+Jani Nikula, Intel Open Source Graphics Center
