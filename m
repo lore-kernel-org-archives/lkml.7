@@ -2,150 +2,103 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C40C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A044C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7A62070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725262087F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/jE8RWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgAHJOj (ORCPT
+        id S1727605AbgAHJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:14:39 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:46460 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgAHJON (ORCPT
+        Wed, 8 Jan 2020 04:14:45 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:34048 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgAHJOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 04:14:13 -0500
-Received: by mail-il1-f198.google.com with SMTP id a2so1636903ill.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:14:12 -0800 (PST)
+        Wed, 8 Jan 2020 04:14:39 -0500
+Received: by mail-qv1-f66.google.com with SMTP id o18so1107982qvf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 01:14:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
+        b=K/jE8RWozDdRYmSsW9itFfvjGkVpL/zCzGu39X34ur7j0Be+cWMBI2auPmoluvn4c1
+         /S/feNX81zbnksyn4ZVjM/8vfVA6T/7g7v52oVDY/X+5X9Y9F/hAbdyl8xKfHD3iR7ln
+         3kR5KrCmE2zxPQDibCfArttMxzqMRbVfVXuiM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FT33tEfkvMIpM8nwKiXW4vOEy6gcoBd6uE3ed+Lj2r8=;
-        b=n18V/mNxzKq8Ncm0IBC51JT7Tzu0FLEGd9t2jH04gjQ7jt548xjmblF8imMN6+eh+h
-         dAebLOxiXVNn1ouz5jnZpMtU38iIj0cukKgcM/IBvlzcij5xIEQUIeiYuCMAZHzUlY5p
-         6tNCSEMwZRMsn1B47hjE1tT+W07UIAVRj5tyRwn2rl7tviuRsgJg6Pq58By8xV5Dec04
-         8iKsw2QB0cNEN2JnI1VJ7mCTe8kBwmGtLjGmPqT+qabJmW7OT/WYm2qU/STDKNE0JKX/
-         899lDd110NigT2EbUYOD3qMFzWWPOswN4d5kBOrfEuOV7Q7p38rnPBmN1XYYqoclXSFO
-         ZvMQ==
-X-Gm-Message-State: APjAAAVlqsETtCo0FWeWEbLbSJs5b3KjI2PVZwq/dDeZxF6IiBv8QqhO
-        TQcKspcwZ4upxHDNVEguCpUeczhMkhV90otQU04ENDFv/xRA
-X-Google-Smtp-Source: APXvYqxbMIKjRvFuosKghfGoy3BjVGmmXy4mMhp+xL43bQLhsiTEfyIcmZlRjEy4TItFtlDewE06NUgjqXH1S69+SJt2YSZtSI69
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
+        b=iFRYgbio6mh26w7UnJl9Ier7+PqwrBHdSUkiB7wblVvRajYEO6lc9+jfD9DcAsBtrF
+         3BI7GHh4RWi8z9jBV0axZZCW/gVLm4ZHzylLI7J7GZgWH3V7lILN4nhwNE/CoLnxzjEz
+         U5toX+GVAZ7GO3TRgVEm6lOVxH2did++CNnvGOf64sXuqHIiPNAiQAr8LQEVbSiHda+f
+         JjfmpHhIqNRq+tOnYQQmR/Bm7r/pPkdMfrzF4zyOaYr7EFvZTbIXtj/yPx/SH3eM+w/m
+         zh2JXCB6xVR/EJyzoWJqmLhjLvrzBhuudMxY1ke1dFEXt8ZHT9IFnxcOfnUgPr1D3YGH
+         RAZg==
+X-Gm-Message-State: APjAAAUg2ZeoKBwXvN+B5wBUKn0S1s6VYb7YL9Iqb57xMLzU1f1TpnOO
+        FWEA7YanInACTIE3aFDqAhfTyv8oo2CPMWe1Q62RGw==
+X-Google-Smtp-Source: APXvYqxf/pnt/xOzQY9MksejO/BRE5fT3xBR6Oezhn4Kzl/SblH+zp9r0nnNwuErhStHc9QFh2BYf2nQYASas+C1/yI=
+X-Received: by 2002:a0c:f703:: with SMTP id w3mr3236524qvn.6.1578474878009;
+ Wed, 08 Jan 2020 01:14:38 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f404:: with SMTP id i4mr2576079iog.175.1578474852194;
- Wed, 08 Jan 2020 01:14:12 -0800 (PST)
-Date:   Wed, 08 Jan 2020 01:14:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da2154059b9d5055@google.com>
-Subject: general protection fault in hash_ip6_uadt
-From:   syzbot <syzbot+7f87c1e8811ab0c1ca1f@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        gregkh@linuxfoundation.org, info@metux.net, jeremy@azazel.net,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191227141405.3396-1-yong.liang@mediatek.com>
+ <20191227141405.3396-2-yong.liang@mediatek.com> <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
+In-Reply-To: <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 Jan 2020 17:14:27 +0800
+Message-ID: <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
+To:     Yong Liang <yong.liang@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jan 8, 2020 at 4:56 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> minor nit, s/amr64/arm64/ in the commit title.
+>
+> On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
+> >
+> > From: "yong.liang" <yong.liang@mediatek.com>
+> >
+> > 1. Include mt8183-reset.h and add reset-cells in infracfg
+> > in dtsi file
 
-syzbot found the following crash on:
+Err, wait, doesn't this depend on
+http://lists.infradead.org/pipermail/linux-mediatek/2020-January/026170.html
+?
 
-HEAD commit:    ae608821 Merge tag 'trace-v5.5-rc5' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10fe1469e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
-dashboard link: https://syzkaller.appspot.com/bug?extid=7f87c1e8811ab0c1ca1f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1483fec6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10fd2325e00000
+> > 2. Add watchdog device node
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7f87c1e8811ab0c1ca1f@syzkaller.appspotmail.com
+Can we have a patch with just this change instead, since you're
+sending the binding with it.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9593 Comm: syz-executor705 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:hash_ip6_uadt+0x1f2/0x670 net/netfilter/ipset/ip_set_hash_ip.c:242
-Code: 11 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85 c2 03 00 00 4c  
-89 f2 8b 48 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 f0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 80
-RSP: 0018:ffffc90001dd71b0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 1ffff920003bae3a RCX: 0000000002000000
-RDX: 0000000000000000 RSI: ffffffff8679051b RDI: ffff8880a24000e0
-RBP: ffffc90001dd72b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffffc90001dd7320
-R13: ffff8880a6731200 R14: 0000000000000000 R15: ffffc90001dd7200
-FS:  0000000001d64880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000058 CR3: 00000000a85bc000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
-  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4403a9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcb1400f28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004403a9
-RDX: 0000000020000000 RSI: 0000000020000180 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401c30
-R13: 0000000000401cc0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 2613125a52c78203 ]---
-RIP: 0010:hash_ip6_uadt+0x1f2/0x670 net/netfilter/ipset/ip_set_hash_ip.c:242
-Code: 11 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85 c2 03 00 00 4c  
-89 f2 8b 48 04 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 4c  
-89 f0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 80
-RSP: 0018:ffffc90001dd71b0 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 1ffff920003bae3a RCX: 0000000002000000
-RDX: 0000000000000000 RSI: ffffffff8679051b RDI: ffff8880a24000e0
-RBP: ffffc90001dd72b8 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffffc90001dd7320
-R13: ffff8880a6731200 R14: 0000000000000000 R15: ffffc90001dd7200
-FS:  0000000001d64880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000058 CR3: 00000000a85bc000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> >
+> > Signed-off-by: yong.liang <yong.liang@mediatek.com>
+>
+> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > [snip]
