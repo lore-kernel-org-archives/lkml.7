@@ -2,86 +2,134 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B6C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49C2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="BzfJ5Rmg"
+	by mail.kernel.org (Postfix) with ESMTP id B3C39206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 10:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgAHKiy (ORCPT
+        id S1727857AbgAHKjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:38:54 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:46995 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbgAHKix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 05:38:53 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47t5MG57W2z5H;
-        Wed,  8 Jan 2020 11:38:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578479931; bh=QoNiPdOMNz1NFnX43eMEW8/ONkyRF7mIHP81PHqLvTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BzfJ5Rmgd93TMFgIBoqjEY6gvywxv8e8m5dww9YaNKtaE78t1Zee06ZQ2HU8Oa5jL
-         vIXujjX83gOvliQ7IfmZasBaROrwBfoMysFkMOP72MMy3GF5qqSQSyC7y92HrUer1J
-         7z3nVlJwIOvbKDme8uB5CkHDl/+M2LndrMZmUmj+msmZ57i7q0vWBmpJj9qJ6xqoua
-         lZHXpn2jfewhwyNprETRAU9NH0RvgSwoyqGaGu1GuX3aQ/UoImL/YbaYNEbja4AUCv
-         HKuyvt9SOS0cet72eqpWWNuLQ/eIsMNvS0sQ/4Qd2NGN5SqrtEkXLmg4bY4887/KpE
-         WovR8TQjk3YBg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Wed, 8 Jan 2020 11:38:46 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] opp: fix of_node leak for unsupported entries
-Message-ID: <20200108103846.GA6894@qmqm.qmqm.pl>
-References: <a8060fe5b23929e2e5c9bf5735e63b302124f66c.1578077228.git.mirq-linux@rere.qmqm.pl>
- <20200107063616.a3qpepc46viejxhw@vireshk-i7>
- <20200107140449.GB20159@qmqm.qmqm.pl>
- <20200108073338.4z6gktglduigfo5p@vireshk-i7>
+        Wed, 8 Jan 2020 05:39:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54866 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbgAHKjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 05:39:03 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id AFB7F2920FA
+Subject: Re: [PATCH] platform/chrome: wilco_ec: Fix keyboard backlight probing
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Benson Leung <bleung@chromium.org>
+References: <20200107112400.1.Iedcdbae5a7ed79291b557882130e967f72168a9f@changeid>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <ab377eeb-f1bc-13c2-8bbc-ccc53ecb7c4d@collabora.com>
+Date:   Wed, 8 Jan 2020 11:38:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200108073338.4z6gktglduigfo5p@vireshk-i7>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200107112400.1.Iedcdbae5a7ed79291b557882130e967f72168a9f@changeid>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:03:38PM +0530, Viresh Kumar wrote:
-> On 07-01-20, 15:04, Micha³ Miros³aw wrote:
-> > On Tue, Jan 07, 2020 at 12:06:16PM +0530, Viresh Kumar wrote:
-> > > Discard my earlier reply, it wasn't accurate/correct.
-> > > 
-> > > On 03-01-20, 20:36, Micha³ Miros³aw wrote:
-> > > > When parsing OPP v2 table, unsupported entries return NULL from
-> > > > _opp_add_static_v2().
-> > > 
-> > > Right, as we don't want parsing to fail here.
-> > > 
-> > > > In this case node reference is leaked.
-> > > 
-> > > Why do you think so ?
-> > 
-> > for_each_available_child_of_node() returns nodes with refcount
-> > increased
+Hi Daniel,
+
+Many thanks for sending the patch upstream.
+
+On 7/1/20 19:24, Daniel Campello wrote:
+> The EC on the Wilco platform responds with 0xFF to commands related to
+> the keyboard backlight on the absence of a keyboard backlight module.
+> This change allows the EC driver to continue loading even if the
+> backlight module is not present.
 > 
-> I believe it also drops the refcount of the previous node everytime the loop
-> goes to the next element. Else we would be required do that from within that
-> loop itself, isn't it ?
 
-Indeed it is! This means that _opp_add_static_v2() is storing a pointer
-to a node without taking a reference to it. Is there something else that
-guarantees the node won't disappear later?
+Could you explain a bit more which is the problem you're trying to solve? I am
+not sure I understand it, isn't the kbbl_exist call for that purpose? (in
+absence of the keyboard backligh module just don't init the device?)
 
-Best Regards,
-Micha³ Miros³aw
+Thanks,
+ Enric
+
+
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
+> 
+>  .../platform/chrome/wilco_ec/keyboard_leds.c  | 28 +++++++++++++------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/keyboard_leds.c b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
+> index bb0edf51dfda..5731d1b60e28 100644
+> --- a/drivers/platform/chrome/wilco_ec/keyboard_leds.c
+> +++ b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
+> @@ -73,13 +73,6 @@ static int send_kbbl_msg(struct wilco_ec_device *ec,
+>  		return ret;
+>  	}
+> 
+> -	if (response->status) {
+> -		dev_err(ec->dev,
+> -			"EC reported failure sending keyboard LEDs command: %d",
+> -			response->status);
+> -		return -EIO;
+> -	}
+> -
+>  	return 0;
+>  }
+> 
+> @@ -87,6 +80,7 @@ static int set_kbbl(struct wilco_ec_device *ec, enum led_brightness brightness)
+>  {
+>  	struct wilco_keyboard_leds_msg request;
+>  	struct wilco_keyboard_leds_msg response;
+> +	int ret;
+> 
+>  	memset(&request, 0, sizeof(request));
+>  	request.command = WILCO_EC_COMMAND_KBBL;
+> @@ -94,7 +88,18 @@ static int set_kbbl(struct wilco_ec_device *ec, enum led_brightness brightness)
+>  	request.mode    = WILCO_KBBL_MODE_FLAG_PWM;
+>  	request.percent = brightness;
+> 
+> -	return send_kbbl_msg(ec, &request, &response);
+> +	ret = send_kbbl_msg(ec, &request, &response);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (response.status) {
+> +		dev_err(ec->dev,
+> +			"EC reported failure sending keyboard LEDs command: %d",
+> +			response.status);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+>  }
+> 
+>  static int kbbl_exist(struct wilco_ec_device *ec, bool *exists)
+> @@ -140,6 +145,13 @@ static int kbbl_init(struct wilco_ec_device *ec)
+>  	if (ret < 0)
+>  		return ret;
+> 
+> +	if (response.status) {
+> +		dev_err(ec->dev,
+> +			"EC reported failure sending keyboard LEDs command: %d",
+> +			response.status);
+> +		return -EIO;
+> +	}
+> +
+>  	if (response.mode & WILCO_KBBL_MODE_FLAG_PWM)
+>  		return response.percent;
+> 
+> --
+> 2.24.1.735.g03f4e72817-goog
+> 
