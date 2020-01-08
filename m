@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA2DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB71C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C22520720
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCAC20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgAHTrm (ORCPT
+        id S1728192AbgAHTrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:47:42 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43806 "EHLO
+        Wed, 8 Jan 2020 14:47:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43780 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730473AbgAHTqE (ORCPT
+        by vger.kernel.org with ESMTP id S1730470AbgAHTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:04 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHE-0006ot-Bz; Wed, 08 Jan 2020 19:46:00 +0000
+        id 1ipHHE-0006os-90; Wed, 08 Jan 2020 19:46:00 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-007doT-2i; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHC-007doJ-W9; Wed, 08 Jan 2020 19:45:59 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,19 +36,16 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Ingo Molnar" <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Andrey Ryabinin" <aryabinin@virtuozzo.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Dmitry Vyukov" <dvyukov@google.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
-Date:   Wed, 08 Jan 2020 19:43:48 +0000
-Message-ID: <lsq.1578512578.228195979@decadent.org.uk>
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Jari Ruusu" <jari.ruusu@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
+Date:   Wed, 08 Jan 2020 19:43:46 +0000
+Message-ID: <lsq.1578512578.569553261@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 50/63] locking/x86: Remove the unused atomic_inc_short()
- methd
+Subject: [PATCH 3.16 48/63] x86/atomic: Fix smp_mb__{before,after}_atomic()
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,65 +59,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dmitry Vyukov <dvyukov@google.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 31b35f6b4d5285a311e10753f4eb17304326b211 upstream.
+commit 69d927bba39517d0980462efc051875b7f4db185 upstream.
 
-It is completely unused and implemented only on x86.
-Remove it.
+Recent probing at the Linux Kernel Memory Model uncovered a
+'surprise'. Strongly ordered architectures where the atomic RmW
+primitive implies full memory ordering and
+smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+fail for:
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+	*x = 1;
+	atomic_inc(u);
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Because, while the atomic_inc() implies memory order, it
+(surprisingly) does not provide a compiler barrier. This then allows
+the compiler to re-order like so:
+
+	atomic_inc(u);
+	*x = 1;
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Which the CPU is then allowed to re-order (under TSO rules) like:
+
+	atomic_inc(u);
+	r0 = *y;
+	*x = 1;
+
+And this very much was not intended. Therefore strengthen the atomic
+RmW ops to include a compiler barrier.
+
+NOTE: atomic_{or,and,xor} and the bitops already had the compiler
+barrier.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20170526172900.91058-1-dvyukov@google.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16 because this function is broken after
- "x86/atomic: Fix smp_mb__{before,after}_atomic()":
- - Adjust context]
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/tile/lib/atomic_asm_32.S |  3 +--
- arch/x86/include/asm/atomic.h | 13 -------------
- 2 files changed, 1 insertion(+), 15 deletions(-)
+ arch/x86/include/asm/atomic.h      | 8 ++++----
+ arch/x86/include/asm/atomic64_64.h | 8 ++++----
+ arch/x86/include/asm/barrier.h     | 4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
---- a/arch/tile/lib/atomic_asm_32.S
-+++ b/arch/tile/lib/atomic_asm_32.S
-@@ -24,8 +24,7 @@
-  * has an opportunity to return -EFAULT to the user if needed.
-  * The 64-bit routines just return a "long long" with the value,
-  * since they are only used from kernel space and don't expect to fault.
-- * Support for 16-bit ops is included in the framework but we don't provide
-- * any (x86_64 has an atomic_inc_short(), so we might want to some day).
-+ * Support for 16-bit ops is included in the framework but we don't provide any.
-  *
-  * Note that the caller is advised to issue a suitable L1 or L2
-  * prefetch on the address being manipulated to avoid extra stalls.
 --- a/arch/x86/include/asm/atomic.h
 +++ b/arch/x86/include/asm/atomic.h
-@@ -205,19 +205,6 @@ static inline int __atomic_add_unless(at
- 	return c;
+@@ -49,7 +49,7 @@ static inline void atomic_add(int i, ato
+ {
+ 	asm volatile(LOCK_PREFIX "addl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
  }
  
--/**
-- * atomic_inc_short - increment of a short integer
-- * @v: pointer to type int
-- *
-- * Atomically adds 1 to @v
-- * Returns the new value of @u
-- */
--static inline short int atomic_inc_short(short int *v)
--{
--	asm(LOCK_PREFIX "addw $1, %0" : "+m" (*v));
--	return *v;
--}
--
- /* These are x86-specific, used by some header files */
- #define atomic_clear_mask(mask, addr)				\
- 	asm volatile(LOCK_PREFIX "andl %0,%1"			\
+ /**
+@@ -63,7 +63,7 @@ static inline void atomic_sub(int i, ato
+ {
+ 	asm volatile(LOCK_PREFIX "subl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
+ 
+ /**
+@@ -89,7 +89,7 @@ static inline int atomic_sub_and_test(in
+ static inline void atomic_inc(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ 
+ /**
+@@ -101,7 +101,7 @@ static inline void atomic_inc(atomic_t *
+ static inline void atomic_dec(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ 
+ /**
+--- a/arch/x86/include/asm/atomic64_64.h
++++ b/arch/x86/include/asm/atomic64_64.h
+@@ -44,7 +44,7 @@ static inline void atomic64_add(long i,
+ {
+ 	asm volatile(LOCK_PREFIX "addq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -58,7 +58,7 @@ static inline void atomic64_sub(long i,
+ {
+ 	asm volatile(LOCK_PREFIX "subq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -85,7 +85,7 @@ static inline void atomic64_inc(atomic64
+ {
+ 	asm volatile(LOCK_PREFIX "incq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -98,7 +98,7 @@ static inline void atomic64_dec(atomic64
+ {
+ 	asm volatile(LOCK_PREFIX "decq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ 
+ /**
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -167,8 +167,8 @@ do {									\
+ #endif
+ 
+ /* Atomic operations are already serializing on x86 */
+-#define smp_mb__before_atomic()	barrier()
+-#define smp_mb__after_atomic()	barrier()
++#define smp_mb__before_atomic()	do { } while (0)
++#define smp_mb__after_atomic()	do { } while (0)
+ 
+ /*
+  * Stop RDTSC speculation. This is needed when you need to use RDTSC
 
