@@ -2,95 +2,104 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14B9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D51C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B1920678
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBFD20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 18:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgAHSSz (ORCPT
+        id S1730190AbgAHSWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:18:55 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:49288 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727225AbgAHSSz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 13:18:55 -0500
-Received: (qmail 5455 invoked by uid 2102); 8 Jan 2020 13:18:54 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 8 Jan 2020 13:18:54 -0500
-Date:   Wed, 8 Jan 2020 13:18:54 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+10e5f68920f13587ab12@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <ingrassia@epigenesys.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (2)
-In-Reply-To: <000000000000b962af059b9429bd@google.com>
-Message-ID: <Pine.LNX.4.44L0.2001081314471.1468-100000@iolanthe.rowland.org>
+        Wed, 8 Jan 2020 13:22:33 -0500
+Received: from namei.org ([65.99.196.166]:56096 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbgAHSWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:22:33 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 008ILnMB026782;
+        Wed, 8 Jan 2020 18:21:49 GMT
+Date:   Thu, 9 Jan 2020 05:21:49 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     KP Singh <kpsingh@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v1 10/13] bpf: lsm: Handle attachment of the
+ same program
+In-Reply-To: <20191220154208.15895-11-kpsingh@chromium.org>
+Message-ID: <alpine.LRH.2.21.2001090521340.9683@namei.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-11-kpsingh@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020, syzbot wrote:
+On Fri, 20 Dec 2019, KP Singh wrote:
 
-> Hello,
+> From: KP Singh <kpsingh@google.com>
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> WARNING in usbhid_raw_request/usb_submit_urb
+> Allow userspace to attach a newer version of a program without having
+> duplicates of the same program.
+> 
+> If BPF_F_ALLOW_OVERRIDE is passed, the attachment logic compares the
+> name of the new program to the names of existing attached programs. The
+> names are only compared till a "__" (or '\0', if there is no "__"). If
+> a successful match is found, the existing program is replaced with the
+> newer attachment.
+> 
+> ./loader Attaches "env_dumper__v1" followed by "env_dumper__v2"
+> to the bprm_check_security hook..
+> 
+> ./loader
+> ./loader
+> 
+> Before:
+> 
+>   cat /sys/kernel/security/bpf/process_execution
+>   env_dumper__v1
+>   env_dumper__v2
+> 
+> After:
+> 
+>   cat /sys/kernel/security/bpf/process_execution
+>   env_dumper__v2
+> 
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-Given this result, let's try again the slightly larger patch.  The
-difference between the patch just tested and this one is very small
-indeed, although it's hard to predict how that difference will affect
-the object code.
 
-Alan Stern
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-#syz test: https://github.com/google/kasan.git ecdf2214
 
-Index: usb-devel/drivers/usb/core/urb.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/urb.c
-+++ usb-devel/drivers/usb/core/urb.c
-@@ -205,7 +205,7 @@ int usb_urb_ep_type_check(const struct u
- 
- 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
- 	if (!ep)
--		return -EINVAL;
-+		return -EBADF;
- 	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
- 		return -EINVAL;
- 	return 0;
-@@ -356,6 +356,7 @@ int usb_submit_urb(struct urb *urb, gfp_
- 	struct usb_host_endpoint	*ep;
- 	int				is_out;
- 	unsigned int			allowed;
-+	int				c;
- 
- 	if (!urb || !urb->complete)
- 		return -EINVAL;
-@@ -474,9 +475,10 @@ int usb_submit_urb(struct urb *urb, gfp_
- 	 */
- 
- 	/* Check that the pipe's type matches the endpoint's type */
--	if (usb_urb_ep_type_check(urb))
--		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
--			usb_pipetype(urb->pipe), pipetypes[xfertype]);
-+	c = usb_urb_ep_type_check(urb);
-+	if (c)
-+		dev_WARN(&dev->dev, "BOGUS urb xfer %d, pipe %x != type %x\n",
-+			c, usb_pipetype(urb->pipe), pipetypes[xfertype]);
- 
- 	/* Check against a simple/standard policy */
- 	allowed = (URB_NO_TRANSFER_DMA_MAP | URB_NO_INTERRUPT | URB_DIR_MASK |
+-- 
+James Morris
+<jmorris@namei.org>
 
