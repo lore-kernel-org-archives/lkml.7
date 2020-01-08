@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485C7C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09865C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A57C2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC542073A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 21:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dAcpmKP7"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ExtEv7m/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgAHVIK (ORCPT
+        id S1727498AbgAHVIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:08:10 -0500
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:35289 "EHLO
+        Wed, 8 Jan 2020 16:08:04 -0500
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:31007 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgAHVHv (ORCPT
+        with ESMTP id S1727336AbgAHVHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 16:07:51 -0500
+        Wed, 8 Jan 2020 16:07:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
         h=from:subject:in-reply-to:references:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=x3d4O9Awmply7Gb2seTh415j0YsnxIYTmKDTHVNNT2c=;
-        b=dAcpmKP7UgPlLeMck1G5y8sTRPP4wEPF7bFoQBH/J07rMy0E94zT4hjLtF41IbCiUgPX
-        BgEY2nwdlRYQNuLbrmcrxy1xTIXqbyttzdFpp0NOrLVqpb+Yd2kGX6KvS43Jm33ungyQn8
-        Osllpm2FE9dZEUTg6G2jTTyYx4xQS7jJg=
-Received: by filterdrecv-p3mdw1-56c97568b5-2vkp8 with SMTP id filterdrecv-p3mdw1-56c97568b5-2vkp8-20-5E1644A6-62
-        2020-01-08 21:07:50.961205325 +0000 UTC m=+1974284.203795984
+        s=001; bh=rEkBwwf1QWNXjn8vIYFhzi7wIguJy4lc2BpbKmg9n80=;
+        b=ExtEv7m/RAJq48j005pEANu6aNs1Gq7zxmk5UqQ6DrLoHO7wasJoaaImLxrYyUvi8nHA
+        Qxx5vK0kJJQ0+qk/iRz94ypFdYZbpeZdfWm/jfhHz5ZYX3IJweaiM/FMJxTR5ymBa52mW7
+        vW17b+kOPBOsyERsPwJjpBKHwK3mSMao8=
+Received: by filterdrecv-p3mdw1-56c97568b5-fkvrs with SMTP id filterdrecv-p3mdw1-56c97568b5-fkvrs-20-5E1644A8-11
+        2020-01-08 21:07:52.195374981 +0000 UTC m=+1974283.569941188
 Received: from bionic.localdomain (unknown [98.128.173.80])
-        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP id QWVTuMAqSKqZc5uIdTCBpw
-        Wed, 08 Jan 2020 21:07:50.764 +0000 (UTC)
+        by ismtpd0005p1lon1.sendgrid.net (SG) with ESMTP id 3JS0NgZZRJK82Mp4YUQcKA
+        Wed, 08 Jan 2020 21:07:51.991 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 09/14] arm64: dts: rockchip: increase vop clock rate on
- rk3328
-Date:   Wed, 08 Jan 2020 21:07:51 +0000 (UTC)
-Message-Id: <20200108210740.28769-10-jonas@kwiboo.se>
+Subject: [PATCH v2 12/14] drm/rockchip: dw-hdmi: limit tmds to 340mhz on
+ rk3228/rk3328
+Date:   Wed, 08 Jan 2020 21:07:52 +0000 (UTC)
+Message-Id: <20200108210740.28769-13-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200108210740.28769-1-jonas@kwiboo.se>
 References: <20200108210740.28769-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hwYU02QfFsqeFLpfX?=
- =?us-ascii?Q?zC=2FPIsIIlZOhCQWMaWStdn4Sgg70tNAgTTH9RVO?=
- =?us-ascii?Q?HaqqultxCHltJE+1pIIzRgEALOD6ueRbUpLsUq0?=
- =?us-ascii?Q?IYYNm+GfobzDKAHuKbzOoBJlxsomm6GPqR3e3Bv?=
- =?us-ascii?Q?QB+ISN73HNluZljqCB=2FHNs=2FTLFlRQJfrnwXVGuK?=
- =?us-ascii?Q?5dh5QEvG2NSLjh7Lw8Y4g=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h3yBhIbMTagqfT2zR?=
+ =?us-ascii?Q?8DIjW=2Fj=2FX3Egb+8hajJVedi0tMDpE8GNB2sMY0q?=
+ =?us-ascii?Q?enYQZ0se4WGjtVgc7msZY8iqJ7ZbMq6r5A3RuSc?=
+ =?us-ascii?Q?d6Lyyvl0HKI1n9urcJkbolT7ci2MuOJL193jOeJ?=
+ =?us-ascii?Q?0GuTjykpcpjd6bvwLDwwPWtVL8MZ4RjTiENSyyI?=
+ =?us-ascii?Q?lTmbckgBTEuzFr9aiz6SQ=3D=3D?=
 To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -64,29 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VOP on RK3328 needs to run at higher rate in order to
-produce a proper 3840x2160 signal.
+RK3228/RK3328 does not provide a stable hdmi signal at TMDS rates
+above 371.25MHz (340MHz pixel clock).
+
+Limit the pixel clock rate to 340MHz to provide a stable signal.
+Also limit the pixel clock to the display reported max tmds clock.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 22 +++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index c9ff1188bd7b..fee896338cc1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -803,8 +803,8 @@
- 			<0>, <24000000>,
- 			<24000000>, <24000000>,
- 			<15000000>, <15000000>,
--			<100000000>, <100000000>,
--			<100000000>, <100000000>,
-+			<300000000>, <100000000>,
-+			<400000000>, <100000000>,
- 			<50000000>, <100000000>,
- 			<100000000>, <100000000>,
- 			<50000000>, <50000000>,
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 45fcdce3f27f..66c14df4a680 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -237,6 +237,24 @@ dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
+ 	return (valid) ? MODE_OK : MODE_BAD;
+ }
+ 
++static enum drm_mode_status
++dw_hdmi_rk3228_mode_valid(struct drm_connector *connector,
++			  const struct drm_display_mode *mode)
++{
++	struct drm_display_info *info = &connector->display_info;
++	int max_tmds_clock = max(info->max_tmds_clock, 165000);
++	int clock = mode->clock;
++
++	if (connector->ycbcr_420_allowed && drm_mode_is_420(info, mode) &&
++	    (info->color_formats & DRM_COLOR_FORMAT_YCRCB420))
++		clock /= 2;
++
++	if (clock > max_tmds_clock || clock > 340000)
++		return MODE_CLOCK_HIGH;
++
++	return MODE_OK;
++}
++
+ static const struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
+ 	.destroy = drm_encoder_cleanup,
+ };
+@@ -424,7 +442,7 @@ static struct rockchip_hdmi_chip_data rk3228_chip_data = {
+ };
+ 
+ static const struct dw_hdmi_plat_data rk3228_hdmi_drv_data = {
+-	.mode_valid = dw_hdmi_rockchip_mode_valid,
++	.mode_valid = dw_hdmi_rk3228_mode_valid,
+ 	.mpll_cfg = rockchip_mpll_cfg,
+ 	.cur_ctr = rockchip_cur_ctr,
+ 	.phy_config = rockchip_phy_config,
+@@ -461,7 +479,7 @@ static struct rockchip_hdmi_chip_data rk3328_chip_data = {
+ };
+ 
+ static const struct dw_hdmi_plat_data rk3328_hdmi_drv_data = {
+-	.mode_valid = dw_hdmi_rockchip_mode_valid,
++	.mode_valid = dw_hdmi_rk3228_mode_valid,
+ 	.mpll_cfg = rockchip_mpll_cfg,
+ 	.cur_ctr = rockchip_cur_ctr,
+ 	.phy_config = rockchip_phy_config,
 -- 
 2.17.1
 
