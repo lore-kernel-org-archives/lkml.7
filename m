@@ -2,90 +2,146 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E12C33C9B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F067C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8096E206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0505E20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 07:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JZIPctlb";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="l2u7BomT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgAHHyx (ORCPT
+        id S1726794AbgAHH5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:54:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38087 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgAHHyx (ORCPT
+        Wed, 8 Jan 2020 02:57:30 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:53288 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbgAHH53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 02:54:53 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ip6Aw-0006cj-M5; Wed, 08 Jan 2020 08:54:46 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ip6Av-0007Hn-Rj; Wed, 08 Jan 2020 08:54:45 +0100
-Date:   Wed, 8 Jan 2020 08:54:45 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        Wed, 8 Jan 2020 02:57:29 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 542AAC0094;
+        Wed,  8 Jan 2020 07:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578470248; bh=rdpIj5Q2mFtZNLegJ/FDpcIDbFpk68d55dEhY77CYRM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=JZIPctlb66fWQuKarJu8FruyW+4S8FQguLcZIhhWUfDaYjRjFuFZvyczZfkiH1zSE
+         vZZMb+Ww4+YbTXij3dFqCUiMtEuUTP3dywYu3+VY/S00ZtJ9LJUbGzg7LgYJOt1kSw
+         xRd+ppyInVpsr6zTOrmUSaDJgZ8lREnIxH/vibvYaGMZ+SNRThWNOECc6hOfDGNg9v
+         qxMW0+zo2CD62rXSmXPOEwbciSxdM3pWIvR9rVaw+XGDVBU3HSobS3wNxlKtUorx4c
+         eBgTJSpZ2QaetSAZafLDpYPGWMBzgCLmCszc3c9t9ZKj8T/eTuKMPLhhPZ7IifDYyS
+         ItKY9/vDX4k+g==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7EF6BA006A;
+        Wed,  8 Jan 2020 07:57:16 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 7 Jan 2020 23:57:16 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 7 Jan 2020 23:57:16 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MylaaYMTP+a5nhKjLgtz7R1aFArliv6QzGHXmObDnK+HgOXhCQhIXIAQfPe6eCbN2YjEkqsx7lDFs5jGyddnib323Bgh4AN5HhrG0Wdgh7EHsmHTgheuWmuy6FagEGYMgqy8aqnUvtAHh/SSdBvJcbhg8ZQSAahy3DPVOo/m84d++hJIJWJXKJkU/VZoHwG5nAXxu1+2QE5C4MLJiCqA9be/cfxHQNbFAsKYacZCnN3BN+e+BsNUQoY76tGBXBTUekgELXSjYu6b2JubFqSu72O46yrmjlCkYwen/0KV5wbbmgnyam556fm5LOUlyFj7NlWHZEtff+dNv39r/LwnMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mIDMBg8T2OMnD/g6/Yf+dezWLytWG+B/8mdWKeSV0q8=;
+ b=nk//l+HwIfAix5RqZovyPO8Biwx7g8ynH/eKkZYzYOUyrCR7PIJdymqOg6eon5V5XOS/TGiql32kCpvlwwfqBInXMxqyuvP+giHD/IvfNhS2x5xnbTdVjnKWpGEcILUttRWoVgWu8Pd1ao/4E3g8SULsf4wS8P17/RY85bS1gNHlI148lK2Y/JuLGzOdcotMPMVGmpvSWB3KeGDzWgEapYDAtsEDNXShbZqGTNsYx+fZFTSIJ9vKoWk5Z1nBcBUsKxQvgExCUtH+Zg5UFF6APmChcLR5pkpalKPi4OR4gjPWZpUUB7N0HiXR8C8m2lQilQd7PT4GDeDc5AyTkM3rzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mIDMBg8T2OMnD/g6/Yf+dezWLytWG+B/8mdWKeSV0q8=;
+ b=l2u7BomT9rHK28TjeIzbg4XcEjU4rR/32PckXAFkId+aUk6sIHzlZe8AOCkBzXEaTewOk6B5/e6XbEloc99b0IvSUikO/6hDvn+6mmVl6lxbyEBzfZ0a7hGDfiIYVTbJAbZogxQW1AkC+fiu6bPv/CcpxWinfs8FWGLesF+KRnE=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB2866.namprd12.prod.outlook.com (20.179.66.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Wed, 8 Jan 2020 07:57:14 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
+ 07:57:14 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "treding@nvidia.com" <treding@nvidia.com>,
         "andrew@lunn.ch" <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "weifeng.voon@intel.com" <weifeng.voon@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH V2] pinctrl: mvebu: armada-37xx: use use platform api
-Message-ID: <20200108075445.xoilokyywyacwoma@pengutronix.de>
-References: <1578467325-4189-1-git-send-email-peng.fan@nxp.com>
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/2] net: stmmac: remove useless code of phy_mask
+Thread-Topic: [PATCH v2 0/2] net: stmmac: remove useless code of phy_mask
+Thread-Index: AQHVxfUGgqwdWhtbcEaMF7LHLdtnx6fgZjWA
+Date:   Wed, 8 Jan 2020 07:57:14 +0000
+Message-ID: <BN8PR12MB326627D0E1F17AE7515B78E4D33E0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200108072550.28613-1-zhengdejin5@gmail.com>
+In-Reply-To: <20200108072550.28613-1-zhengdejin5@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f546a490-8c27-4d16-47bb-08d794105fec
+x-ms-traffictypediagnostic: BN8PR12MB2866:
+x-microsoft-antispam-prvs: <BN8PR12MB2866F218CE08712B56B2C9C0D33E0@BN8PR12MB2866.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(39860400002)(136003)(189003)(199004)(2906002)(316002)(110136005)(54906003)(55016002)(9686003)(81156014)(33656002)(81166006)(8936002)(7416002)(8676002)(71200400001)(76116006)(558084003)(478600001)(66556008)(66446008)(7696005)(64756008)(66476007)(86362001)(26005)(52536014)(5660300002)(4326008)(186003)(6506007)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2866;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LSScbBxyL3s4+nLoLBKcxxQsftu2GCb6KORsekJBNoq2r3r7wxU9lQesh+aMlJ4ERxIEaHQ+BiYb+dCG0vz6RJuzrM6ocBTi9lBOdGwD/O8Rhvsv69iPTy4HGvPaiKWqYhtyh8Y9U7YC+7RWZyS6RrRV5Ezs/VMi1P2nXoPHRpfYe4vBRYDYKuNWnWhCodvCEW/VKY32iAJloS9DvxRYcT2kLAgn0tABXtxgctMkqGYO8AAz28hdNlttYJQeQTzpqm1XjSH5aRccejQhvTO8RfQGUOZodr6+alI9lB8y8musFmtiH4gQrWApJ7epAHFc5+np5xXzsE6I4KxCpTV7vcplLvlFM3JtzoWbDXm/L1pNMsigKjkSKGYt8eG/XOg6dn7ZAutTiJUADzQqv3pscvW4g8UqrBAGC9EHMPMhkUplo87f45bsqXM81uhp9P+mV8BJRzUb3Viz8DSygyjbZv0tZHftXFzPBdBSUtzfEEYHbWpEMU27WYJ4pVSEA+l2
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1578467325-4189-1-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Exchange-CrossTenant-Network-Message-Id: f546a490-8c27-4d16-47bb-08d794105fec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 07:57:14.3423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NynmEP2QEd1CN6tyWpka2b0xiaMHE7k+yS5frUVK2JxzwGSqX83PRHP3T7bF4zNptNYlE+N9kBqp4j8pZipksw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2866
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Dejin Zheng <zhengdejin5@gmail.com>
+Date: Jan/08/2020, 07:25:48 (UTC+00:00)
 
-On Wed, Jan 08, 2020 at 07:12:46AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> platform_irq_count() and platform_get_irq() is the more generic
-> way (independent of device trees) to determine the count of available
-> interrupts. So use this instead.
-> 
-> As platform_irq_count() might return an error code (which
-> of_irq_count doesn't) some additional handling is necessary.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V2:
->  replace %pe with %d for err msg.
+> Changes since v1:
+> 	1, add a new commit for remove the useless member phy_mask.
 
-FTR: I really like having %pe for its better expressiveness and started
-arguing in the v1 thread. So please wait a bit before applying this
-patch.
+No, this is not useless. It's an API for developers that need only=20
+certain PHYs to be detected. Please do not remove this.
 
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+---
+Thanks,
+Jose Miguel Abreu
