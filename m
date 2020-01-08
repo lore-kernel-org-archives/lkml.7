@@ -2,131 +2,166 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C37C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38619C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E1220643
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578484197;
-	bh=v7NpeMdXeC10MVaQ3W3VIorUfyExr5UW985+cQ9Zo18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bX+j9Of60ruaLWH1Qwgnc1hq3dg5JX+SEj4yJwlTnjnjf+97K5MUBvAVRjQ355FCY
-	 1iaN+N7fAWwoq+5nJbDcke8TaErZu4mMVQX1M4Oi2dM0dw8gs9M1hUILiGJDBEAYpF
-	 Qo2YTBImczcwnx6ySYcK7OgeQT/MO2dp9mfwjDtI=
+	by mail.kernel.org (Postfix) with ESMTP id F344820643
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:50:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BAGd9+Gp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgAHLt4 (ORCPT
+        id S1727444AbgAHLua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:49:56 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46951 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHLt4 (ORCPT
+        Wed, 8 Jan 2020 06:50:30 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60931 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHLu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:49:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so2980627wrl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 03:49:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ds/FcZo5DP8P9uihgmT1DwfKR7s47NWH9iNXqs1JE9k=;
-        b=ovGPeBnwssX/aSjEWv/nluc95pVVOC65T45qvqqpwAi6u/jWzVX9M37Z7JNBE9JKWr
-         XLtj77kcdPtU5NGayHQe308U/u510ucyNbjAzTESWwCAHQCb+h4bXamxkApTk0eFtaK1
-         xcsbZIWgyK0IPi38AdY10wEGk/XyW1UyARjy81YsmATt3ZwO60zWaDE/wcHXJDlWadAP
-         u+1FyIF6fkaCIWZQhwNKgX5fZak5M+H+eTCxzZVjcMtJWeVBSGuohxKvTbPr+ZfzhnTu
-         NkMi/KmYCxC6G+4/MbFSs2Rfj9jsTZhOEP2+ixVbHRtGPzuoTClLp4BuKBakP2zD6o/d
-         Yn9g==
-X-Gm-Message-State: APjAAAVdaXbjL+RKZtBWsAGiHJo0QWB5M4G/XjFhTOb81lB/Uwk1ETGf
-        uqs5qdLREPpS1WcDIMcPXVnWGeRr
-X-Google-Smtp-Source: APXvYqxIORZkbQTA0rB/gO3SCB/Gq3vx3RsK0kqHMhjtIM4AmW6X4ezpsD+PY0gBZbcYeZRa98OGCA==
-X-Received: by 2002:a5d:4e90:: with SMTP id e16mr4273987wru.318.1578484194590;
-        Wed, 08 Jan 2020 03:49:54 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id g25sm35916629wmh.3.2020.01.08.03.49.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 03:49:52 -0800 (PST)
-Date:   Wed, 8 Jan 2020 12:49:52 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>
-Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
-Message-ID: <20200108114952.GR32178@dhcp22.suse.cz>
-References: <20191226220205.128664-1-semenzato@google.com>
- <20191226220205.128664-2-semenzato@google.com>
- <20200106125352.GB9198@dhcp22.suse.cz>
- <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 8 Jan 2020 06:50:29 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200108115027euoutp013e152c4c6155a8b636d486c0932c1eeb~n5wrKEqWm0444104441euoutp019
+        for <linux-kernel@vger.kernel.org>; Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200108115027euoutp013e152c4c6155a8b636d486c0932c1eeb~n5wrKEqWm0444104441euoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578484227;
+        bh=3OyRPuFqCIRdzwH2FYDtdhnfPsBECJGMdvkxFH7m2yU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=BAGd9+GpbtxPozyM4oukg80FyFdXjt5mYG6eW4cftmjYb2L/0Xw4m15L2bNdqjZnu
+         //3gnXgfcuDsC1iX+DUBuDDG4xf3DuokfQ5DP6fZP6cIlFl7BbdQEss0dl2vpLmaDH
+         ijRa5fPOe/voAuA9UPYvZiQeKI2Ghqx1jK6MzR/w=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200108115027eucas1p2d11eb4dc1d466e7dbd0b1b36075e8d9e~n5wq0UHpk3212532125eucas1p2k;
+        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C6.03.60698.302C51E5; Wed,  8
+        Jan 2020 11:50:27 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3~n5wqaRcR22915229152eucas1p2G;
+        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200108115027eusmtrp28c6e206ae88bd77a88adeee8520cd1e0~n5wqZmVEb1831018310eusmtrp2Z;
+        Wed,  8 Jan 2020 11:50:27 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-23-5e15c2035f05
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5E.A4.07950.302C51E5; Wed,  8
+        Jan 2020 11:50:27 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200108115026eusmtip16de4a492f67213a17e0ad1e60bd5ff50~n5wp4ZlIZ1983219832eusmtip1U;
+        Wed,  8 Jan 2020 11:50:26 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 1/2] ASoC: max98090: fix incorrect helper in
+ max98090_dapm_put_enum_double()
+Date:   Wed,  8 Jan 2020 12:50:06 +0100
+Message-Id: <20200108115007.31095-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZduznOV3mQ6JxBrfXKVpcuXiIyWLjjPWs
+        FlMfPmGzOHG4kdmifWYHo8X58xvYLS7vmsNmMeP8PiaLtUfuslscftPOarHn4it2B26PDZ+b
+        2DwWbCr12LSqk82jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mrrab7EX/BWsmPWhmamB8Sh/
+        FyMnh4SAicTjB7vZuxi5OIQEVjBKLPjbxwjhfGGU6H83ByrzmVHiYvtGNpiWE3c3MUEkljNK
+        /DgwgxEkAday8q4KiM0mYCjR9bYLrEFEIEni/ILbzCANzAKXmSRWN/YzgySEBeIk7u9+ANbM
+        IqAqcar9H1icV8BW4trXjUwQ2+QlVm84ANYsIfCZTeL09qdQZ7hIbD2zggXCFpZ4dXwLO4Qt
+        I/F/53wmiIZmRomH59ayQzg9jBKXmyBulRCwlrhz7hfQJA6gmzQl1u/Shwg7Siy4vAssLCHA
+        J3HjrSBImBnInLRtOjNEmFeio00IolpNYtbxdXBrD164xAxhe0jseb6NBRIosRIzz75gncAo
+        Nwth1wJGxlWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBSeP0v+NfdzDu+5N0iFGAg1GJ
+        h/fHYpE4IdbEsuLK3EOMEhzMSiK8WjpAId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmk
+        J5akZqemFqQWwWSZODilGhhr1/0Qdt/nnxaxRP6Z9Kfzh0r/5DgrvUo4orD6aedmjm/q95LV
+        252uMJtHdK6q0jywrJCr6WLt9tIF3av2iH2bc3RK1sR9HyLX8Ha2zxJPFfATNnz5377+4ZoX
+        f1nE9Pk2uEr8ZmS4+DXhw3Q2tqVfFxn9KHnpf+2Zr3NpxrwzTnIv7nIHFm1RYinOSDTUYi4q
+        TgQAZc1IfBYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsVy+t/xu7rMh0TjDK70slhcuXiIyWLjjPWs
+        FlMfPmGzOHG4kdmifWYHo8X58xvYLS7vmsNmMeP8PiaLtUfuslscftPOarHn4it2B26PDZ+b
+        2DwWbCr12LSqk82jb8sqRo/Pm+QCWKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1j
+        rYxMlfTtbFJSczLLUov07RL0Mrrab7EX/BWsmPWhmamB8Sh/FyMnh4SAicSJu5uYQGwhgaWM
+        EneeG0DEZSROTmtghbCFJf5c62LrYuQCqvnEKLH8cycjSIJNwFCi6y1IgpNDRCBF4ueMdYwg
+        RcwCN5kkfixezgySEBaIkehe9gJsEouAqsSp9n9gcV4BW4lrXzcyQWyQl1i94QDzBEaeBYwM
+        qxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQJDdduxn1t2MHa9Cz7EKMDBqMTD+2OxSJwQa2JZ
+        cWXuIUYJDmYlEV4tHaAQb0piZVVqUX58UWlOavEhRlOg5ROZpUST84FxlFcSb2hqaG5haWhu
+        bG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgXFhsGfksr/i+Un/p7pMUr30jUk1uqv0
+        9G8Tt9T/3CVG6yPs7ebys6S05L1YrJqc2Zy26+KieG8JNk+Fjz+rMk7dyXEP7Hh4wufA78dm
+        z97fyvL/fUnZ8+ydB2ysN+bxq/UWTuHneT2xagP3g/4jT960Op1vZfl/5o+mS8j+puT5FwQ+
+        zfW1S1diKc5INNRiLipOBAD0phjzawIAAA==
+X-CMS-MailID: 20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3
+References: <CGME20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06-01-20 11:08:56, Luigi Semenzato wrote:
-> On Mon, Jan 6, 2020 at 4:53 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 26-12-19 14:02:04, Luigi Semenzato wrote:
-> > [...]
-> > > +Limitations of Hibernation
-> > > +==========================
-> > > +
-> > > +When entering hibernation, the kernel tries to allocate a chunk of memory large
-> > > +enough to contain a copy of all pages in use, to use it for the system
-> > > +snapshot.  If the allocation fails, the system cannot hibernate and the
-> > > +operation fails with ENOMEM.  This will happen, for instance, when the total
-> > > +amount of anonymous pages (process data) exceeds 1/2 of total RAM.
-> > > +
-> > > +One possible workaround (besides terminating enough processes) is to force
-> > > +excess anonymous pages out to swap before hibernating.  This can be achieved
-> > > +with memcgroups, by lowering memory usage limits with ``echo <new limit> >
-> > > +/dev/cgroup/memory/<group>/memory.mem.usage_in_bytes``.  However, the latter
-> > > +operation is not guaranteed to succeed.
-> >
-> > I am not familiar with the hibernation process much. But what prevents
-> > those allocations to reclaim memory and push out the anonymous memory to
-> > the swap on demand during the hibernation's allocations?
-> 
-> Good question, thanks.
-> 
-> The hibernation image is stored into a swap device (or partition), so
-> I suppose one could set up two swap devices, giving a lower priority
-> to the hibernation device, so that it remains unused while the kernel
-> reclaims pages for the hibernation image.
+Commit 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing
+sensitive registers") extended the code for handling "LTENL Mux", "LTENR
+Mux", "LBENL Mux" and "LBENR Mux" controls by adding a custom
+max98090_dapm_put_enum_double() function to them. However that function
+used incorrect helper to get its component object. Fix this by using the
+proper snd_soc_dapm_* helper.
 
-I do not think hibernation can choose which swap device to use. Having
-an additional swap device migh help though because there will be more
-space to swap out to.
+This fixes the following NULL pointer exception observed on
+Exynos4412-based Odroid U3 board:
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 000000b0
+pgd = (ptrval)
+[000000b0] *pgd=00000000
+Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+Modules linked in:
+CPU: 0 PID: 1104 Comm: alsactl Not tainted 5.5.0-rc5-next-20200107 #166
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+PC is at __mutex_lock+0x54/0xb18
+LR is at ___might_sleep+0x3c/0x2e0
+...
+Process alsactl (pid: 1104, stack limit = 0x(ptrval))
+...
+[<c0b49630>] (__mutex_lock) from [<c0b4a110>] (mutex_lock_nested+0x1c/0x24)
+[<c0b4a110>] (mutex_lock_nested) from [<c0839b3c>] (max98090_shdn_save+0x1c/0x28)
+[<c0839b3c>] (max98090_shdn_save) from [<c083a4f8>] (max98090_dapm_put_enum_double+0x20/0x40)
+[<c083a4f8>] (max98090_dapm_put_enum_double) from [<c080d0e8>] (snd_ctl_ioctl+0x190/0xbb8)
+[<c080d0e8>] (snd_ctl_ioctl) from [<c02cafec>] (ksys_ioctl+0x470/0xaf8)
+[<c02cafec>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+...
+---[ end trace 0e93f0580f4b9241 ]---
 
-> If that works, then it may be appropriate to describe this technique
-> in Documentation/power/swsusp.rst.  There's a brief mention of this
-> situation in the Q/A section, but maybe this deserves more visibility.
-> 
-> In my experience, the page allocator is prone to giving up in this
-> kind of situation.  But my experience is up to 4.X kernels.  Is this
-> guaranteed to work now?
+Fixes: 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing sensitive registers")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ sound/soc/codecs/max98090.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-OK, I can see it now. I forgot about the ugly hack in the page allocator
-that hibernation is using. If there is no way to make a forward progress
-for the allocation and we enter the allocator oom path (__alloc_pages_may_oom)
-pm_suspended_storage() bails out early and the allocator gives up.
-
-That being said allocator would swap out processes so it doesn't make
-much sense to do that pro-actively. It can still fail if the swap is
-depleted though and then the hibernation gives up. This makes some sense
-because you wouldn't like to have something killed by the oom killer
-while hibernating right? Graceful failure should be a preferable action
-and let you decide what to do IMHO.
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 4c7b16d557e2..c01ce4a3f86d 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -82,7 +82,7 @@ static int max98090_dapm_put_enum_double(struct snd_kcontrol *kcontrol,
+ 	struct snd_ctl_elem_value *ucontrol)
+ {
+ 	struct snd_soc_component *component =
+-		snd_soc_kcontrol_component(kcontrol);
++		snd_soc_dapm_kcontrol_component(kcontrol);
+ 	struct max98090_priv *max98090 =
+ 		snd_soc_component_get_drvdata(component);
+ 	int ret;
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
