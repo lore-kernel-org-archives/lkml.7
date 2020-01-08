@@ -2,143 +2,124 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D19C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B821C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFA3206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:24:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="TD4KfA1m"
+	by mail.kernel.org (Postfix) with ESMTP id 2BE20206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgAHIYa (ORCPT
+        id S1727145AbgAHIZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:24:30 -0500
-Received: from www413.your-server.de ([88.198.28.140]:43508 "EHLO
-        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHIY3 (ORCPT
+        Wed, 8 Jan 2020 03:25:32 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:35619 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgAHIZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:24:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=cyberus-technology.de; s=default1911; h=MIME-Version:Content-Type:
-        References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JBlWYGGSvBWACbm7HRiuPkVho02AyIMjSgIaZ7f4e1Q=; b=TD4KfA1mHsPk/otH1nsJhcfx2
-        6qMbUG8qh3Ag+InObwXGU1QjJ5b8J0+nvAXqzzzNrUd9Uarn2o3GB5AU+KsXEpmm37+MnJCBKZrPx
-        A3S6FfMg2BTQuxXDat1VNUmpEtlM08UgFaErOIV5VqS0QoaiBoMoegmfB7Mz37cmfKX8uTW6HB1j2
-        DVdc4kQ+GQ4GGKBgWTGwVUW/NnoYxlAFb2JWS3qaDdW/ItuzT72Bt20hWhpk9UjOOE8hW5vM4Jey1
-        tg8Qqsf9ZID9xNjchIdKF+1R0qAmL8sm+DEc7y8RmFI8bfs7iF8gQmv+BJAwOGEwJrtawIYa2w0pd
-        LuMtXVm1Q==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1ip6dd-00062z-4J; Wed, 08 Jan 2020 09:24:25 +0100
-Received: from [24.134.37.229] (helo=192-168-0-109.rdsnet.ro)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1ip6dc-0007FL-PG; Wed, 08 Jan 2020 09:24:24 +0100
-Message-ID: <ab56cd76c4a4c1266ca35df1645d05bfeae58e25.camel@cyberus-technology.de>
-Subject: Re: [PATCH 1/3] drm/i915/gvt: fix file paths in documentation
-From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, hang.yuan@intel.com,
-        dri-devel@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, zhiyuan.lv@intel.com
-Date:   Wed, 08 Jan 2020 10:24:22 +0200
-In-Reply-To: <20200107020637.GA5894@zhen-hp.sh.intel.com>
-References: <20200106140622.14393-1-julian.stecklina@cyberus-technology.de>
-         <20200107020637.GA5894@zhen-hp.sh.intel.com>
-Organization: Cyberus Technology GmbH
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-YmIID+xuIDInK9HOwQWr"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Wed, 8 Jan 2020 03:25:32 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M6DSo-1imtiz3GKO-006feL; Wed, 08 Jan 2020 09:25:29 +0100
+Received: by mail-qt1-f178.google.com with SMTP id k40so2110480qtk.8;
+        Wed, 08 Jan 2020 00:25:29 -0800 (PST)
+X-Gm-Message-State: APjAAAUVJcur91k6COxzGQDAVGvdKx2A/RkImD4jpAsweb0/3PApGTcf
+        0Q6E9KYQjbE8V50zljgfPlNO7tA3DVXajJud4fA=
+X-Google-Smtp-Source: APXvYqxo1JZhvOPCBQPM+a8aOATlvbZDJjTr/hwxzR+Dg/SgLXNsNMz44+CS7FY2RXBXTHIAAV0lb1p8dTXhOGbqEVI=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr2496507qtr.142.1578471928598;
+ Wed, 08 Jan 2020 00:25:28 -0800 (PST)
 MIME-Version: 1.0
-X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25687/Tue Jan  7 10:56:22 2020)
+References: <20200107220938.2412463-1-arnd@arndb.de> <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 09:25:12 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2b5Chu2Bjt1Rto+2rgoyX0hr-fa3YmeYkyNE-05YHheA@mail.gmail.com>
+Message-ID: <CAK8P3a2b5Chu2Bjt1Rto+2rgoyX0hr-fa3YmeYkyNE-05YHheA@mail.gmail.com>
+Subject: Re: [PATCH] of: add dummy of_platform_device_destroy
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, Jyri Sarha <jsarha@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ud5vZVq+DoTLU60wLe1FP6anNS3xDaBUZsRiYTw3oR4dQTckzXl
+ letZZFolOWU12mzxBMt5KcrK5VDqAGbY9HOa+I4gpFyoeFyhuQgfZ7aBgHjNoozrKChK6ON
+ qfjtiz+yGoN1/rgrWTh3kbyqiBx5q9Rilo4XYLV/f910lBEFPXX+jI9Wi8p1VXd0VZVdq8n
+ UU2Oa8rs6gvchVpQfhrGA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yK24Jz0MwPc=:Oudvt2ykSk6ZhyN5hlY59Y
+ y0DXEpMQuyqYIcJF+7MweSP12KcNBb4HzFR8g7IeIEzHxtxijEtiXXtC6xbg1q8b930RkIpxF
+ Cf1NvoS6V1EMZ97jiV1YMskeKZoMIyb6m8OSxNdFi52QsCIZgPn6Q+7UODhlgRRgYXofJZGQM
+ l/ZzEsKAjUJaOiImeeX1n4n5LOwydj3FPBfiPM3UQE2vft+iSM8aNLuiSlcUhZ8rLK/knJpnE
+ RJ/Vgy/yxVSd9cI15DA9sFVNdEHBd3VQcBhvxd/NS3d8uXxjujosx/63oG4bmxjgvdkKgcMqB
+ QWQ/oM10lRYX45CIA+3iZHqsQKbC0BM1bXS+wn5tA5Zz3Zsa8Bdt9caqYEsDhozGYGBoiTExv
+ jEpOZ5RhsaeNKaG/W36RJhn0lyFJ5kT0BsEf9G5z767QJdMNIJTpo9XPWrlqEE/FiNRCo4aVt
+ Td1e6ge3gjfj5o5yQLu/SCTxCku/HJOrZXyhJ3SbPPfOGBZgJTouPAsrNvLWXKRFpiKzGDSPy
+ ipJ0DU1b1CvICJhMpUL0/bLfEjSxrBiBrVe3+PLQbXIGU7F90bl+XDr66iNIxIIk2t0TymgMk
+ RIn4nSum9gr0whXsVe0hV4evdaJyACoM9skhkz704FcLfrif2GYJqx7XRaYKGHi7otZUmc8GQ
+ 3SfsGeSRRDU498J9qJsJIimXgw+VT78No2hFjRl/AQM0ykyLz4LPVM1VfMdu3p22U1dSfPBFU
+ MlB/L38kdAco6lkJVHSCx54V2LuxGI1tCA67t9ibenMkCUZWtcdGKNTee6qNYrr9VwXGjqUDA
+ xUs4ZkjUz00xbmJlpqLXsqFFm7QJqMg56tOadnD5wGbo07DMypnWf7wW7hlOwmumEvg9TjweI
+ csOuE4GW0AcBf1l6cx8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-YmIID+xuIDInK9HOwQWr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2020-01-07 at 10:06 +0800, Zhenyu Wang wrote:
-> On 2020.01.06 16:06:20 +0200, Julian Stecklina wrote:
-> > The documentation had some stale paths to i915 graphics virtualization
-> > code. Fix them to point to existing files.
-> >=20
-> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> > Cc: zhiyuan.lv@intel.com
-> > Cc: hang.yuan@intel.com
-> >=20
-> > Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de=
+On Wed, Jan 8, 2020 at 12:04 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
+> On Tue, Jan 7, 2020 at 4:09 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > The new phy-j721e-wiz driver causes a link failure without CONFIG_OF:
+> >
+> > drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
+> > phy-j721e-wiz.c:(.text+0x40): undefined reference to `of_platform_device_destroy'
+> >
+> > Add a dummy version of this function to avoid having to add Kconfig
+> > dependencies for the driver.
+> >
+> > Fixes: 42440de5438a ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > > ---
-> >  Documentation/gpu/i915.rst | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
-> > index e539c42a3e78..d644683c5249 100644
-> > --- a/Documentation/gpu/i915.rst
-> > +++ b/Documentation/gpu/i915.rst
-> > @@ -43,19 +43,19 @@ Interrupt Handling
-> >  Intel GVT-g Guest Support(vGPU)
-> >  -------------------------------
-> > =20
-> > -.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
-> > +.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
-> >     :doc: Intel GVT-g guest support
-> > =20
-> > -.. kernel-doc:: drivers/gpu/drm/i915/i915_vgpu.c
-> > +.. kernel-doc:: drivers/gpu/drm/i915/gvt/vgpu.c
-> >     :internal:
-> > =20
-> >  Intel GVT-g Host Support(vGPU device model)
-> >  -------------------------------------------
-> > =20
-> > -.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
-> > +.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
-> >     :doc: Intel GVT-g host support
-> > =20
-> > -.. kernel-doc:: drivers/gpu/drm/i915/intel_gvt.c
-> > +.. kernel-doc:: drivers/gpu/drm/i915/gvt/gvt.c
-> >     :internal:
-> >=20
->=20
-> The i915_vgpu.c and intel_gvt.c are still there for guest
-> and host part of i915 interface with gvt. We still need them
-> in doc. The files in gvt/ directory are gvt device model internals.=20
+> >  include/linux/of_platform.h | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+> > index 84a966623e78..2551c263e57d 100644
+> > --- a/include/linux/of_platform.h
+> > +++ b/include/linux/of_platform.h
+> > @@ -54,11 +54,16 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
+> >                                          struct device *parent);
+> >  #ifdef CONFIG_OF
+> >  extern struct platform_device *of_find_device_by_node(struct device_node *np);
+> > +extern int of_platform_device_destroy(struct device *dev, void *data);
+>
+> This is already declared, so don't you want to remove the existing one.
 
-Thanks for clarifying. I'll drop the patch.
+Yes, this is what I had intended. I'm surprised there are no warnings when
+the compiler sees both an 'extern' and a 'static inline' declaration, but both
+clang and gcc seem to accept this, as long as the 'static inline' declaration
+comes first.
 
-Julian
+> >  #else
+> >  static inline struct platform_device *of_find_device_by_node(struct device_node *np)
+> >  {
+> >         return NULL;
+> >  }
+> > +static inline int of_platform_device_destroy(struct device *dev, void *data)
+> > +{
+> > +       return 0;
+> > +}
+>
+> I'm curious why this is needed, but of_platform_device_create() is not?
 
---=-YmIID+xuIDInK9HOwQWr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+I think what happens in the driver is that this is called from the
+probe function
+after calling some other interfaces that always return an error without
+CONFIG_OF, so the compiler manages to optimize out that call.
 
------BEGIN PGP SIGNATURE-----
+I agree it makes sense to treat create the same as remove, I'll send a new
+version addressing both comments.
 
-iQEzBAABCAAdFiEEIO56Pp1G3IBsGtZJ7pdfAn5EfbIFAl4VkbcACgkQ7pdfAn5E
-fbK0dgf+NEF/F4ESZ27i+/L3luQ2NUKGLIdTQZDfA0Wajb8ljuRZuEpM5Uv8D+r3
-o1+hTYRp15yqp1m23KKgvlJm9jUke4rpzNB7dJ1W/dbShshdsxRr90pCC0Mvm7W7
-emIY80YjJLT0hq9Yhy4lEDhXju75Xrt5SHmnBm+XKYn6d+14BgZn9W+s4GzL1zUF
-GdO791wtZpOAN2KK0B3+10ikhIkdtmoVsQvrRNflDWrDlQSSOqsDKu82KQDz2xxo
-ykDmaB/zVvbC5WN5i5CNc/McC538Y1rkrHW3Re7cjEV8U3Pl2zmTXmNODv2fOR8D
-jld35ZwlafJktmjluDQ0nbJUw8OBbA==
-=t/Da
------END PGP SIGNATURE-----
-
---=-YmIID+xuIDInK9HOwQWr--
-
+     Arnd
