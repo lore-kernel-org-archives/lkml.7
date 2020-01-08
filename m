@@ -2,141 +2,324 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43467C33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC77C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5482053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578494756;
-	bh=+YPIVDK8gKVcneAy0zEyAq0LIP7PGGLTkUsSyo5PmXE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mzam2fNNvJfpMod5d3tFGHnWxmOPpeXc0MXvxh6lB28epFMJUI2ZjQAnMWBB6sGh2
-	 fCsspeMyD/SOEX2znjbPVGPM1UnDpsu33uFst+5d4z3Ui9d+nfvJzJum71K4sN+tSS
-	 oUB5crztsOmesFXfrCJhB5taqv5qHgVkyzuDpo7A=
+	by mail.kernel.org (Postfix) with ESMTP id 7799D2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 14:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mGMsL66Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgAHOpz (ORCPT
+        id S1728546AbgAHOq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:45:55 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36956 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgAHOpz (ORCPT
+        Wed, 8 Jan 2020 09:46:57 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59073 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726697AbgAHOq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:45:55 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o13so3597061ljg.4;
-        Wed, 08 Jan 2020 06:45:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c+kKmDJHi7cB9OTqpdYGSI2iBAodqU59kVDu+/v1OuE=;
-        b=M4oG7U0a0zA34RF/C9NACDrbR0FAJf7uhJPxClf1vM4kPCOyYOsuivuN2XrUBLShWE
-         PRF0gPseN5xNNY/8Wjp1uJERrW3Li+tuYWr1aWv0ZKY684Lxb3n+iz5GIm8M1werw3Xw
-         aA2jCSHlRMTMwYQ23mEMdbsNEpGvKCkr19oJzkuF8We0A4SIlntOpwlChooT9JRQZ6XF
-         l4yA+XTUKs1fw4rzoTFNpNaykGZBIgwB/M/2v6C2q1bMmW944sH4bhfxiRFvH0BXlg2g
-         5jiPxniJ8p2l4l41CY4sq/AnA1MXaLj9V2Y5vk+oL8RVtxrwzLbTtdd/CPTfDM0pwAT2
-         2KZQ==
-X-Gm-Message-State: APjAAAVhRqNCuFCsf5ckDQ0Uvb2HethSGWbEBoWqVvudSHg32rjnbXzW
-        ZnNF7dKNn5+DLzCk2F3K3t8=
-X-Google-Smtp-Source: APXvYqzXpGwW54vY+BpaKhSw0eGm8pnVpqeRJ6SGF2RtZLq/HhdbuIOEWZnf+LZDEm6wtClweyDFyg==
-X-Received: by 2002:a2e:880a:: with SMTP id x10mr3070313ljh.211.1578494752687;
-        Wed, 08 Jan 2020 06:45:52 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id y8sm1386428lji.56.2020.01.08.06.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 06:45:51 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ipCau-0001Hu-Sx; Wed, 08 Jan 2020 15:46:00 +0100
-Date:   Wed, 8 Jan 2020 15:46:00 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V2 7/7] USB: serial: f81232: Add gpiolib to GPIO device
-Message-ID: <20200108144600.GK30908@localhost>
-References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
- <20190923022449.10952-8-hpeter+linux_kernel@gmail.com>
- <20191023122208.GW24768@localhost>
- <ef91b42d-e81d-ecdd-c688-0cb3f0b94906@gmail.com>
+        Wed, 8 Jan 2020 09:46:57 -0500
+Received: from [IPv6:2001:420:44c1:2577:919a:30e7:f323:4bf1]
+ ([IPv6:2001:420:44c1:2577:919a:30e7:f323:4bf1])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id pCbiibkeHT6sRpCbliI6kY; Wed, 08 Jan 2020 15:46:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578494814; bh=AsR4xjN/awnmLfBnEaGevlZtxpg0jILGUFkca1kabWw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=mGMsL66YR3goe/PCP20bW/gn1Dt8R9x9Yu3i8Ao07aaB+1yyCS4qLaX2cywawjDYw
+         VFp1anSq+ltepYElqNpGp0sFE5Fz6T5bh+y+8OQJda6CSuhUSIO0ybAkGbwwWAVj6E
+         hIED2JuZ3fQhYqyZAO7MRg9obMjJUU0ESnWbN4MzQbuoOwluOt3i0NhSEnfT29+RRZ
+         2tl8s7Bk/TBcFogdAI7oygh/jw/XCKQvDam5RMISdk21U6lMWEGTBK9BIfp2I4UnWP
+         t8eAJEa0RPBIRHCX6S8WC7T82bYpAETFNZ6nhdAiLOSbHnEo710QQnyfsKUEhffZSO
+         9pQ0Yaa/lfJnw==
+Subject: Re: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling
+ matrix
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
+        mchehab@kernel.org, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com
+Cc:     gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+References: <20191213160428.54303-1-jernej.skrabec@siol.net>
+ <20191213160428.54303-3-jernej.skrabec@siol.net>
+ <4ac91ed5-a220-6a04-b1da-de27a306f8f2@xs4all.nl>
+ <2627039.Y6S9NjorxK@jernej-laptop>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <46364792-7eaf-0a51-b8f8-db376cc2dbe2@xs4all.nl>
+Date:   Wed, 8 Jan 2020 15:46:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <2627039.Y6S9NjorxK@jernej-laptop>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef91b42d-e81d-ecdd-c688-0cb3f0b94906@gmail.com>
+X-CMAE-Envelope: MS4wfKRC0OyPIqq609LUChtv5Wk1gFYQQNCtG6b78bPxuhkz3rv7y43BQx134IbARXUoQtrnXNn499dv9gNyPKmdOVTZKnoQdjaaBU0tiH5BCYigH3Iue9Ow
+ 7Lq+h4swuvzZzmR+3Eq/vaBTjs4FW4afxL3fkHM3p5tu8fGdk55n+PfaG2pgdcZBTRR6t3u58XTsFRv0yC6C3OUI1SYXkGZz96lwpSqxxSerjFdevI5T6Mvv
+ L3UGCx2Q/Im6DjSdOwOt9iwmgoz3GfvDnfMYpJKW88ZiBzBkFU+CQFAdrC3lPHksSF3nBb3MlEh8CXsGmIarf5DG3Y9mlzSpAuu133jSnuIXlTQ+pZcw72mL
+ ClQbvGV3xGsYACf9paqQ5RLH4sBK46ybrRGvrjLPmOxoUhYvWEAiK4FMHrAiY/Oa8ajlcgaVpX0PIQNANdHw2DBSBPIVaK9JOB9MSDUs3D9chrq8hEjIl4Nl
+ La2waBIg4PYn0NPOgpL7+mOzVVYVv+SFo32sW1arVt3UCeP1qGbC2o1prX0anqaAk56YOpryL/Z4WVJXKplpUYVToSKxReHxWvxF9zHJpsfXlLU0Jvncl9ro
+ qSPdn7CfQPKvQ/y/gPa1D73CA0vYuhRL9+G6uh9Vl63X1Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:00:12AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> Hi Johan,
+On 1/7/20 6:10 PM, Jernej Škrabec wrote:
+> Hi!
 > 
-> Johan Hovold 於 2019/10/23 下午 08:22 寫道:
-> > On Mon, Sep 23, 2019 at 10:24:49AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> >> The Fintek F81534A series contains 3 GPIOs per UART and The max GPIOs
-> >> is 12x3 = 36 GPIOs and this patch will implements GPIO device as a
-> >> gpiochip to control all GPIO pins even transforms to transceiver pins.
-> > 
-> > Depending to your answer to my question whether these pins are truly
-> > general purpose or not, this may not be the right interface.
+> Dne torek, 07. januar 2020 ob 16:01:16 CET je Hans Verkuil napisal(a):
+>> On 12/13/19 5:04 PM, Jernej Skrabec wrote:
+>>> HEVC frames may use scaling list feature. Add support for it.
+>>>
+>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>> ---
+>>>
+>>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
+>>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+>>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
+>>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
+>>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
+>>>  5 files changed, 81 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+>>> c6ddd46eff82..bf68bc6b20c8 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+>>> @@ -116,6 +116,13 @@ static const struct cedrus_control cedrus_controls[]
+>>> = {> 
+>>>  		.codec		= CEDRUS_CODEC_H265,
+>>>  		.required	= true,
+>>>  	
+>>>  	},
+>>>
+>>> +	{
+>>> +		.cfg = {
+>>> +			.id	= 
+> V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
+>>> +		},
+>>> +		.codec		= CEDRUS_CODEC_H265,
+>>> +		.required	= true,
+>>
+>> Should this be true? This means that existing applications are now
+>> suddenly required to always pass the scaling matrix for every buffer.
+>>
+>> Especially since the commit log says: 'HEVC frames *may* use scaling list
+>> feature', indicating that this is an optional feature.
 > 
-> Our F81534A series contains F81532A/534A/535/536. For the following link
-> of F81534A pin-out:
-> 	https://imgur.com/a/AZHqQ1N
+> True. Can you fix this when applying if this is the only issue?
+
+I realized that after changing this to false, you also need to document
+what happens if you do NOT set this control in the request.
+
+Does it fall back to default values? It looks like the HEVC spec defines
+some defaults (if I understand it correctly).
+
+Regards,
+
+	Hans
+
 > 
-> We had 2 type about GPIO pins, MODEx_y & GPIOxx. All MODEx_y & GPIOxx
-> are GPIOs and can be controlled by GPIO device, but they had some
-> difference about usage.
-> 	MODEx_y:
-> 		1. 3 pins(x: 0/1/2) can be access by UART port y.
-> 		2. Used to control UART's transceiver normally, but it
-> 		   also can be configure as GPIO when UART disabled by
-> 		   H/W (DTR strap to GND).
-> 	GPIOxx:
-> 		1. Access only by GPIO device.
+> Best regards,
+> Jernej
 > 
-> The series patch only support RS233 mode for all serial port, So we'll
-> direct set all MODEx_y to (0/0/1) for our demo board for default. If
-> user really want to use the pin, we had provide the gpiolib with GPIO
-> device, but we'll recommend user to use GPIOxy first.
-
-Do you mean that you'd need to register a separate gpio chip per port in
-order to expose an interface for changing the MODEx_y pins for an
-enabled UART? Or can you do that through the "global" gpio device?
-
-> Is any suggest about this ? Could I maintain this for this series patch?
-
-I understood from your other mail that the gpio device would not be able
-to control the pins of an enabled port. In either case, I think you need
-to refuse a request for a pin that's already in use by the corresponding
-port.
-
-Also is there a way to determine the number of available pins by
-detecting the chip/package type? I'm assuming not all 36 pins are always
-accessible?
-
-> >> +	status = devm_gpiochip_add_data(&intf->dev, &priv->chip, priv);
-> >> +	if (status) {
-> >> +		dev_err(&intf->dev, "failed to register gpiochip: %d\n",
-> >> +				status);
-> >> +		return status;
-> >> +	}
-> > 
-> > Have you tried disconnecting the device with gpios requested? This used
-> > to break gpiolib, but was fixed. Just want to make sure it hasn't
-> > regressed.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> +	},
+>>>
+>>>  	{
+>>>  	
+>>>  		.cfg = {
+>>>  		
+>>>  			.id	= 
+> V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
+>>>
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+>>> 96765555ab8a..d945f4f0ff2d 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+>>> @@ -73,6 +73,7 @@ struct cedrus_h265_run {
+>>>
+>>>  	const struct v4l2_ctrl_hevc_sps			*sps;
+>>>  	const struct v4l2_ctrl_hevc_pps			*pps;
+>>>  	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
+>>>
+>>> +	const struct v4l2_ctrl_hevc_scaling_matrix	
+> *scaling_matrix;
+>>>
+>>>  };
+>>>  
+>>>  struct cedrus_run {
+>>>
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+>>> 4a2fc33a1d79..327ed6c264dc 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+>>> @@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
+>>>
+>>>  			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
+>>>  		
+>>>  		run.h265.slice_params = cedrus_find_control_data(ctx,
+>>>  		
+>>>  			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
+>>>
+>>> +		run.h265.scaling_matrix = cedrus_find_control_data(ctx,
+>>> +			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
+>>>
+>>>  		break;
+>>>  	
+>>>  	default:
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
+>>> 6945dc74e1d7..888bfd5ca224 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+>>> @@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct
+>>> cedrus_dev *dev,> 
+>>>  	}
+>>>  
+>>>  }
+>>>
+>>> +static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
+>>> +					   struct cedrus_run 
+> *run)
+>>> +{
+>>> +	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
+>>> +	struct cedrus_dev *dev = ctx->dev;
+>>> +	u32 i, j, k, val;
+>>> +
+>>> +	scaling = run->h265.scaling_matrix;
+>>> +
+>>> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
+>>> +		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
+>>> +		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
+>>> +		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
+>>> +		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
+>>> +
+>>> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
+>>> +		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
+>>> +		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
+>>> +		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
+>>> +		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
+>>> +
+>>> +	cedrus_h265_sram_write_offset(dev,
+>>> VE_DEC_H265_SRAM_OFFSET_SCALING_LISTS); +
+>>> +	for (i = 0; i < 6; i++)
+>>> +		for (j = 0; j < 8; j++)
+>>> +			for (k = 0; k < 8; k += 4) {
+>>> +				val = ((u32)scaling-
+>> scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
+>>> +				      ((u32)scaling-
+>> scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
+>>> +				      ((u32)scaling-
+>> scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
+>>> +				      scaling-
+>> scaling_list_8x8[i][j + k * 8];
+>>> +				cedrus_write(dev, 
+> VE_DEC_H265_SRAM_DATA, val);
+>>> +			}
+>>> +
+>>> +	for (i = 0; i < 2; i++)
+>>> +		for (j = 0; j < 8; j++)
+>>> +			for (k = 0; k < 8; k += 4) {
+>>> +				val = ((u32)scaling-
+>> scaling_list_32x32[i][j + (k + 3) * 8] << 24) |
+>>> +				      ((u32)scaling-
+>> scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
+>>> +				      ((u32)scaling-
+>> scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
+>>> +				      scaling-
+>> scaling_list_32x32[i][j + k * 8];
+>>> +				cedrus_write(dev, 
+> VE_DEC_H265_SRAM_DATA, val);
+>>> +			}
+>>> +
+>>> +	for (i = 0; i < 6; i++)
+>>> +		for (j = 0; j < 8; j++)
+>>> +			for (k = 0; k < 8; k += 4) {
+>>> +				val = ((u32)scaling-
+>> scaling_list_16x16[i][j + (k + 3) * 8] << 24) |
+>>> +				      ((u32)scaling-
+>> scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
+>>> +				      ((u32)scaling-
+>> scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
+>>> +				      scaling-
+>> scaling_list_16x16[i][j + k * 8];
+>>> +				cedrus_write(dev, 
+> VE_DEC_H265_SRAM_DATA, val);
+>>> +			}
+>>> +
+>>> +	for (i = 0; i < 6; i++)
+>>> +		for (j = 0; j < 4; j++) {
+>>> +			val = ((u32)scaling->scaling_list_4x4[i][j + 
+> 12] << 24) |
+>>> +			      ((u32)scaling->scaling_list_4x4[i][j + 
+> 8] << 16) |
+>>> +			      ((u32)scaling->scaling_list_4x4[i][j + 
+> 4] << 8) |
+>>> +			      scaling->scaling_list_4x4[i][j];
+>>> +			cedrus_write(dev, VE_DEC_H265_SRAM_DATA, 
+> val);
+>>> +		}
+>>> +}
+>>> +
+>>>
+>>>  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+>>>  
+>>>  			      struct cedrus_run *run)
+>>>  
+>>>  {
+>>>
+>>> @@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+>>>
+>>>  	/* Scaling list. */
+>>>
+>>> -	reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+>>> +	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
+>>> +		cedrus_h265_write_scaling_list(ctx, run);
+>>> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
+>>> +	} else {
+>>> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+>>> +	}
+>>>
+>>>  	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
+>>>  	
+>>>  	/* Neightbor information address. */
+>>>
+>>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+>>> b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
+>>> 7beb03d3bb39..0d9449fe2b28 100644
+>>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+>>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+>>> @@ -492,6 +492,8 @@
+>>>
+>>>  #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 + 
+> 0x64)
+>>>  #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 + 
+> 0x68)
+>>>  #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 + 
+> 0x6c)
+>>>
+>>> +#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 + 
+> 0x78)
+>>> +#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 + 
+> 0x7c)
+>>>
+>>>  #define VE_DEC_H265_LOW_ADDR			(VE_ENGINE_DEC_H265 + 
+> 0x80)
 > 
-> I had try export GPIOs and detach the F81534A in kernel 5.0.0, it seems
-> no problem. Is any link about this issue for me to do more test ?
+> 
+> 
+> 
 
-Then it's hopefully fine. Thanks for verifying.
-
-Johan
