@@ -2,99 +2,78 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340BFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88196C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1402E20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596112077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e6SPGoWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgAHLnY (ORCPT
+        id S1727780AbgAHLn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:43:24 -0500
-Received: from mga17.intel.com ([192.55.52.151]:51036 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbgAHLmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:42:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="215927348"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E73A95C5; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 23/36] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
-Date:   Wed,  8 Jan 2020 14:41:48 +0300
-Message-Id: <20200108114201.27908-24-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+        Wed, 8 Jan 2020 06:43:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44652 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgAHLn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JF05G3rkot977g2qfc7sNbF8fG7HHlZ96SCciWcuNc8=; b=e6SPGoWALp7vt4ZaOXv/Hi75I
+        piaEDXez66PSnE0qWoEJoP792McVIpkPUFfUKmSTPnWE62zSh/j8WHk2twYQcGR4bjcvvXluFlWil
+        pRgSuXlI89AFQMwvul++d1zGuS09Rgmkd6CqspXvQwAZNBpj5OY6R21M9S7/SCe2CpwBStgjLSJEJ
+        6SBA4MHQPCLw2CKFgDv8bxYlyZgwBFWnj3fvEg6pX6IjFDhvQA0I5MWQMG0ZVMyOeNnHj7vTnnqgO
+        eIoaAQt7BBHld3lhErEyqKFCC2I7sBLqM6+yq9gY0DUSIbfZjLRUsrRYHL06t252sEGQrxIWq6LGN
+        fXQmu9pQg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ip9k0-0006GW-Vg; Wed, 08 Jan 2020 11:43:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 306AC305EDF;
+        Wed,  8 Jan 2020 12:41:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 268E329A60326; Wed,  8 Jan 2020 12:43:10 +0100 (CET)
+Date:   Wed, 8 Jan 2020 12:43:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair : Improve update_sd_pick_busiest for spare
+ capacity case
+Message-ID: <20200108114310.GD2844@hirez.programming.kicks-ass.net>
+References: <1576839893-26930-1-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576839893-26930-1-git-send-email-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point including headers that are not needed in the driver so
-drop them.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 83b106f66fa6..8527327d88c7 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -12,23 +12,13 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/atomic.h>
--#include <linux/bitops.h>
- #include <linux/delay.h>
--#include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/interrupt.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
--#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/notifier.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
--#include <linux/pm.h>
--#include <linux/pm_qos.h>
--#include <linux/sched.h>
--#include <linux/spinlock.h>
--#include <linux/suspend.h>
- 
- #include <asm/intel_pmc_ipc.h>
- 
--- 
-2.24.1
-
+On Fri, Dec 20, 2019 at 12:04:53PM +0100, Vincent Guittot wrote:
+> Similarly to calculate_imbalance() and find_busiest_group(), using the
+> number of idle CPUs when there is only 1 CPU in the group is not efficient
+> because we can't make a difference between a CPU running 1 task and a CPU
+> running dozens of small tasks competing for the same CPU but not enough
+> to overload it. More generally speaking, we should use the number of
+> running tasks when there is the same number of idle CPUs in a group instead
+> of blindly select the 1st one.
+> 
+> When the groups have spare capacity and the same number of idle CPUs, we
+> compare the number of running tasks to select the busiest group.
+> 
+Thanks!
