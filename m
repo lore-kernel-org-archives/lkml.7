@@ -2,142 +2,114 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03D4C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185C7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE60020705
+	by mail.kernel.org (Postfix) with ESMTP id EF7642070E
 	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgAHTxO (ORCPT
+        id S1726715AbgAHTxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:53:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:37299 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbgAHTxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:53:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 11:52:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="303651399"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jan 2020 11:52:13 -0800
-Received: from [10.251.6.5] (kliang2-mobl.ccr.corp.intel.com [10.251.6.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 9A0F85803E3;
-        Wed,  8 Jan 2020 11:52:12 -0800 (PST)
-Subject: Re: [RFC PATCH V3 2/7] perf: attach/detach PMU specific data
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        tglx@linutronix.de, bp@alien8.de, linux-kernel@vger.kernel.org,
-        eranian@google.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com
-References: <1578495789-95006-1-git-send-email-kan.liang@linux.intel.com>
- <1578495789-95006-2-git-send-email-kan.liang@linux.intel.com>
- <20200108165009.GQ15478@tassilo.jf.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <78364595-78f5-f9da-1b45-a94f49f81996@linux.intel.com>
-Date:   Wed, 8 Jan 2020 14:52:10 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 8 Jan 2020 14:53:38 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:34317 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgAHTxi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 14:53:38 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MowX2-1jTWZy1Ixq-00qV6s; Wed, 08 Jan 2020 20:53:36 +0100
+Received: by mail-qv1-f42.google.com with SMTP id o18so1968763qvf.1;
+        Wed, 08 Jan 2020 11:53:36 -0800 (PST)
+X-Gm-Message-State: APjAAAUZLPRLKxsGpRz/QG6xdozAa4DoKL3IPVWytmaMXZZIJjzMaMiV
+        j5mA/YdTcN2b41bgK7sIX1EO+cNAxKIssljLPO4=
+X-Google-Smtp-Source: APXvYqzz1FEb17HQw2MzP9KbuWTRpvX3DXpUClw6P4CBrHAMSrHr5EA6+oQLpF/hUblCQhUOBZ7UJ10/HWIJ7uNh/OU=
+X-Received: by 2002:a0c:bd20:: with SMTP id m32mr5713916qvg.197.1578513215022;
+ Wed, 08 Jan 2020 11:53:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200108165009.GQ15478@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20191119071406epcas1p285f075eac966cfdd6f79362ecc433d6b@epcas1p2.samsung.com>
+ <20191119071107.1947-1-namjae.jeon@samsung.com> <20191119071107.1947-10-namjae.jeon@samsung.com>
+In-Reply-To: <20191119071107.1947-10-namjae.jeon@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 8 Jan 2020 20:53:18 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2_-xkiV0EeemKDNgsU+Xv+fROmsTUa6j0hBaQSCPKMag@mail.gmail.com>
+Message-ID: <CAK8P3a2_-xkiV0EeemKDNgsU+Xv+fROmsTUa6j0hBaQSCPKMag@mail.gmail.com>
+Subject: Re: [PATCH v2 09/13] exfat: add misc operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, linkinjeon@gmail.com,
+        Markus.Elfring@web.de, sj1557.seo@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:jRwLuZZDM0g+KFqNC89Z06v7rG4UYhEHg+LwMdad9ssopYREh3s
+ VzybyV7HsdLjm7JB42xcCirw2KHBt+9RbX1/VkgeyvxHxyMxnwRf3xHTq+YICIYeraADjRr
+ 9H+M5TpdfPtyTfOGuSPb6UwubJQVbMfSlwoXiBJjNclty+wcq8jyp58EpjXXyw5OTEpaphO
+ XisG/OA3IozM7BiGS7/+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iYqflDIp2fY=:HguQYxkFQEPXp+GtBYr94O
+ YKql0y34sQIth81A4+xX3aSvoWQvWoERBfu8SHmWzbFGrmdh/xvM1xslro/ggzcEngRCP3ufC
+ XdUh5CNUCEjN+2bWbwPymkyWiN76Tfz9IPL2FPcbtrg84DjA8DkAtPn+dcBwBl/8vkqRH2A44
+ MdV4GBNey28NO3DAJz9LjojYIjM3y9dSfEXmMVOpLPY5MSLFkOizgh+51+EsKsrYEWXp3fK+8
+ usLqfDSOGyiTH3oMrkkozhVwpUhGLIYW/tqatZSrInrKAPupaeoH+UPDl5+kwRKWLlf1Nne95
+ OapS5YSz1B/o4st+d/dKoyqrKfnXBIk6P6lSw62SUcV+i3s3kXc4/DmoJ8hhi0wbm78qAT0hx
+ WYDh4887oT1Mnc/NrpT5xRVK3/bNA7tOZyb6V+HLxuaMZOfiFduDmt9KJuzlNL+5LcRmsLNk4
+ VhZaE+1SQaRFeY2AygqGMZTj2zh0XGrtUFfV+fKgcQL3RBNGIckvYXgDfPfim+WevKwJfGGEB
+ PTD8RR6GKf2TiAgE3TGfT2Zsivd/Ng0tp7MOMUHe1dMFI+LGDE89b/rHguWWLldbtTltXmTbc
+ f3EH42gcezVSqA611A4g9eqUgrGq+LBxI8yv61onOos2CDdxkMkvaLOu+/Bj7u/RM/iX5yoxw
+ Ki9y+Pgg/b3uuoH8pfHOfOb2QhCzptZPAy5zOKo46mT7uUKJi6p6y/LTtseCd4eXBFlitgVaz
+ acOKBZLvq8a9Ci2744yZfgnA/0ZX6mRpwyFXxMYJoKDmqkwfYB311YgRaAc7yzlXIryrAnrez
+ MX+NmhW/e/79Plla2dkftfF5+wcIzF5s0tGl4sJUGTiVvdijentI7UukN+2hroDWRSV0OFDXQ
+ 8Q/v4ybSwjJ6TpZytmjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 19, 2019 at 8:16 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
 
+> +/* <linux/time.h> externs sys_tz
+> + * extern struct timezone sys_tz;
+> + */
+> +#define UNIX_SECS_1980    315532800L
+> +
+> +#if BITS_PER_LONG == 64
+> +#define UNIX_SECS_2108    4354819200L
+> +#endif
+> +
+> +/* days between 1970/01/01 and 1980/01/01 (2 leap days) */
+> +#define DAYS_DELTA_DECADE    (365 * 10 + 2)
+> +/* 120 (2100 - 1980) isn't leap year */
+> +#define NO_LEAP_YEAR_2100    (120)
+> +#define IS_LEAP_YEAR(y)    (!((y) & 0x3) && (y) != NO_LEAP_YEAR_2100)
+> +
+> +#define SECS_PER_MIN    (60)
+> +#define SECS_PER_HOUR   (60 * SECS_PER_MIN)
+> +#define SECS_PER_DAY    (24 * SECS_PER_HOUR)
 
-On 1/8/2020 11:50 AM, Andi Kleen wrote:
->> +static int
->> +attach_system_wide_ctx_data(size_t ctx_size)
->> +{
->> +	int i, num_thread, pos, nr_failed_alloc;
->> +	unsigned long flags = GFP_ATOMIC;
->> +	struct perf_ctx_data *tsk_data;
->> +	struct perf_ctx_data **data;
->> +	struct task_struct *g, *p;
->> +	bool re_alloc = true;
->> +
->> +	/* Retrieve total number of threads */
->> +	num_thread = nr_threads;
->> +
->> +	data = kcalloc(num_thread, sizeof(*data), GFP_KERNEL);
-> 
-> This probably needs kvcalloc for reliability and avoiding stalls.
->
+None of this code should exist, just use time64_to_tm() and tm_to_time64()
 
-Yes, kvcalloc looks better.
+> +       if (!sbi->options.tz_utc)
+> +               ts->tv_sec += sys_tz.tz_minuteswest * SECS_PER_MIN;
 
->> +	if (!data) {
->> +		printk_once(KERN_DEBUG
->> +			    "Failed to allocate space for LBR callstack. "
->> +			    "The LBR callstack for all tasks may be cutoff.\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	atomic_inc(&nr_task_data_sys_wide_events);
->> +
->> +repeat:
->> +	/*
->> +	 * Allocate perf_ctx_data for all existing threads.
->> +	 * The perf_ctx_data for new threads will be allocated in
->> +	 * perf_event_fork().
->> +	 * Do a quick allocation in first round with GFP_ATOMIC.
->> +	 */
->> +	for (i = 0; i < num_thread; i++) {
->> +		if (alloc_perf_ctx_data(ctx_size, flags, &data[i]))
->> +			break;
->> +	}
->> +	num_thread = i;
->> +	nr_failed_alloc = 0;
->> +	pos = 0;
->> +
-> 
->> +	rcu_read_lock();
->> +	for_each_process_thread(g, p) {
->> +		raw_spin_lock(&p->perf_ctx_data_lock);
->> +		tsk_data = p->perf_ctx_data;
->> +		if (tsk_data) {
-> 
-> That will be a lot of locks even for tasks that don't use perf, but I guess we
-> really need it and it's bounded by the number of tasks.
+I would make tz_utc the default here. Not sure what windows uses or what
+the specification says, but sys_tz is a rather unreliable interface, and it's
+better to not use that at all if it can be avoided.
 
-Right. We don't know which tasks will be monitored later. So we have to 
-attach the perf_ctx_data for all of them. The per-task lock is required 
-to sync the writers of perf_ctx_data RCU pointer.
+It may be useful to have a mount option for the time zone offset instead.
 
+> +       ts->tv_nsec = 0;
+> +}
+> +
+> +/* Convert linear UNIX date to a FAT time/date pair. */
+> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64 *ts,
+> +               struct exfat_date_time *tp)
 
-Thanks,
-Kan
-> 
->> +		}
->> +
->> +		if (pos < num_thread) {
->> +			refcount_set(&data[pos]->refcount, TASK_DATA_SYS_WIDE);
->> +			rcu_assign_pointer(p->perf_ctx_data, data[pos++]);
->> +		} else {
->> +			/*
->> +			 * The quick allocation in first round may be failed.
->> +			 * Track the number in nr_failed_alloc.
->> +			 */
->> +			nr_failed_alloc++;
->> +		}
->> +		raw_spin_unlock(&p->perf_ctx_data_lock);
->> +	}
->> +	rcu_read_unlock();
-> 
-> 
-> -Andi
-> 
+This is basically time64_to_tm(), just be careful about to check whether
+months are counted from 1 or 0.
+
+       Arnd
