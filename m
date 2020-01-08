@@ -2,131 +2,153 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F1AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFB4C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477DB2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6DB20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 17:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgAHRKb (ORCPT
+        id S1729665AbgAHRMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:10:31 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2239 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729516AbgAHRKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:10:30 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 6CC01DF89CB9F314160A;
-        Wed,  8 Jan 2020 17:10:28 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 8 Jan 2020 17:10:27 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 8 Jan 2020
- 17:10:27 +0000
-Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
- device_links_purge()
-From:   John Garry <john.garry@huawei.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "saravanak@google.com" <saravanak@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
- <20200108122658.GA2365903@kroah.com>
- <73252c08-ac46-5d0d-23ec-16c209bd9b9a@huawei.com>
- <1578498695.3260.5.camel@linux.ibm.com> <20200108155700.GA2459586@kroah.com>
- <1578499287.3260.7.camel@linux.ibm.com>
- <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
-Message-ID: <3826a83d-a220-2f7d-59f6-efe8a4b995d7@huawei.com>
-Date:   Wed, 8 Jan 2020 17:10:26 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 8 Jan 2020 12:12:49 -0500
+Received: from mga17.intel.com ([192.55.52.151]:14599 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgAHRMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 12:12:49 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 09:12:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="216013815"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 08 Jan 2020 09:12:44 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipEsu-0005pI-6f; Wed, 08 Jan 2020 19:12:44 +0200
+Date:   Wed, 8 Jan 2020 19:12:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/36] platform/x86: intel_scu_ipc: Sleeping is fine
+ when polling
+Message-ID: <20200108171244.GT32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-8-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-8-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 16:08, John Garry wrote:
-> On 08/01/2020 16:01, James Bottomley wrote:
->>>>>     cdev->dev = NULL;
->>>>>             return device_add(&cdev->cdev);
->>>>>         }
->>>>>     }
->>>>>     return -ENODEV;
->>>>> }
->>>> The design of the code is simply to remove the link to the inserted
->>>> device which has been removed.
->>>>
->>>> I*think*  this means the calls to device_del and device_add are
->>>> unnecessary and should go.  enclosure_remove_links and the put of
->>>> the
->>>> enclosed device should be sufficient.
->>> That would make more sense than trying to "reuse" the device
->>> structure
->>> here by tearing it down and adding it back.
->> OK, let's try that.  This should be the patch if someone can try it
->> (I've compile tested it, but the enclosure system is under a heap of
->> stuff in the garage).
+On Wed, Jan 08, 2020 at 02:41:32PM +0300, Mika Westerberg wrote:
+> There is no reason why the driver would need to block other threads from
+> running the CPU while it is waiting for the SCU IPC to complete its
+> work. For this reason switch the driver to use usleep_range() instead
+> with a bit more relaxed polling loop.
+
+I agree on this and if somebody finds a race condition that had been hidden by
+the original code it will mean that somewhere else something is completely
+broken.
+
 > 
-> I can test it now.
+> Also add constant for the timeout and use the same value for both
+> polling and interrupt modes.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index 43eaf9400c67..8db0644900a3 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+>  #define IPC_WRITE_BUFFER	0x80
+>  #define IPC_READ_BUFFER		0x90
+>  
+> +/* Timeout in jiffies */
+> +#define IPC_TIMEOUT		(3 * HZ)
+> +
+>  static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+>  
+>  /*
+> @@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+>  /* Wait till scu status is busy */
+>  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+>  {
+> -	u32 status = ipc_read_status(scu);
+> -	u32 loop_count = 100000;
+> +	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
+>  
+> -	/* break if scu doesn't reset busy bit after huge retry */
+> -	while ((status & IPC_STATUS_BUSY) && --loop_count) {
+> -		udelay(1); /* scu processing time is in few u secods */
+> -		status = ipc_read_status(scu);
+> -	}
+> +	do {
+> +		u32 status;
+>  
+> -	if (status & IPC_STATUS_BUSY) {
+> -		dev_err(scu->dev, "IPC timed out");
+> -		return -ETIMEDOUT;
+> -	}
+> +		status = ipc_read_status(scu);
+> +		if (!(status & IPC_STATUS_BUSY))
+> +			return (status & IPC_STATUS_ERR) ? -EIO : 0;
+>  
+> -	if (status & IPC_STATUS_ERR)
+> -		return -EIO;
+> +		usleep_range(50, 100);
+> +	} while (time_before(jiffies, end));
+>  
+> -	return 0;
+> +	dev_err(scu->dev, "IPC timed out");
+> +	return -ETIMEDOUT;
+>  }
+>  
+>  /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
+> @@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+>  {
+>  	int status;
+>  
+> -	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
+> +	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+>  		dev_err(scu->dev, "IPC timed out\n");
+>  		return -ETIMEDOUT;
+>  	}
+> -- 
+> 2.24.1
 > 
 
-Yeah, that looks to have worked ok. SES disk locate was also fine after 
-losing and rediscovering the disk.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks,
-John
-
-> But it is a bit suspicious that we had the device_del() and device_add() 
-> at all, especially since the code change makes it look a bit more like 
-> pre-43d8eb9cfd0 ("ses: add support for enclosure component hot removal")
-> 
-> John
-> 
->>
->> James
->>
->> ---
->>
->> diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
->> index 6d27ccfe0680..3c2d405bc79b 100644
->> --- a/drivers/misc/enclosure.c
->> +++ b/drivers/misc/enclosure.c
->> @@ -406,10 +406,9 @@ int enclosure_remove_device(struct 
->> enclosure_device *edev, struct device *dev)
->>           cdev = &edev->component[i];
->>           if (cdev->dev == dev) {
->>               enclosure_remove_links(cdev);
->> -            device_del(&cdev->cdev);
->>               put_device(dev);
->>               cdev->dev = NULL;
->> -            return device_add(&cdev->cdev);
->> +            return 0;
->>           }
->>       }
->>       return -ENODEV;
-> 
-> _______________________________________________
-> Linuxarm mailing list
-> Linuxarm@huawei.com
-> http://hulk.huawei.com/mailman/listinfo/linuxarm
-> .
 
