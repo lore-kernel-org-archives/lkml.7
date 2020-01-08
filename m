@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A558FC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A9BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD5820880
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DFB20720
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578499156;
-	bh=e2h9n2OFQT5vk8U1eEWm9YSzLyfAP3ks7FVRDWAIFqo=;
+	s=default; t=1578499161;
+	bh=gMOy+Oltt/GxXPEnlhPKTvJlLxac0h9AFCskhilHGS8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fDRJfpdv+/HtzXqn7sDPmBhmt8mauQUeeCI1beCgFtKysUPRddt5eyOdrlp42piUj
-	 FFL9fPuavHuK0qwCJxeBmyCMAlHWv1ga8iD3Et+81AP+pJgYw54cQJxXPBtkC5E0Hy
-	 7giBgCpVQhhqF9K8+js6BoBjEaV1Yx3iM9dfAP2Q=
+	b=I9XLN8hLIt96dw9Olu3FooHEsuUHRJft/SLP4b/4/thWUc3CqI7GiuNMJlr21A1Dh
+	 T7JZJ1KuEMd24+F8iRZuOiY5hZLTbhYSHhTCOryRPK4enKifvvoqmS3462MkCellPF
+	 +qYseRZMzeJTtFtg4CKnrnl2jOc689p5ntX5FIro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgAHP7P (ORCPT
+        id S1729286AbgAHP7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:59:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:46712 "EHLO foss.arm.com"
+        Wed, 8 Jan 2020 10:59:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:46734 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbgAHP7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:59:13 -0500
+        id S1729270AbgAHP7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:59:17 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6A8FDA7;
-        Wed,  8 Jan 2020 07:59:12 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B10731B;
+        Wed,  8 Jan 2020 07:59:17 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 527823F534;
-        Wed,  8 Jan 2020 07:59:12 -0800 (PST)
-Date:   Wed, 08 Jan 2020 15:59:10 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA70A3F534;
+        Wed,  8 Jan 2020 07:59:16 -0800 (PST)
+Date:   Wed, 08 Jan 2020 15:59:15 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Chris Brandt <chris.brandt@renesas.com>,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
         =?UTF-8?q?Jan=20Kundr=C3=A1t?= <jan.kundrat@cesnet.cz>
-Subject: Applied "spi: rspi: Add support for multiple native chip selects" to the spi tree
-In-Reply-To: <20200102133822.29346-6-geert+renesas@glider.be>
-Message-Id: <applied-20200102133822.29346-6-geert+renesas@glider.be>
+Subject: Applied "spi: rspi: Use dev_warn_once() instead of open-coding" to the spi tree
+In-Reply-To: <20200102133822.29346-4-geert+renesas@glider.be>
+Message-Id: <applied-20200102133822.29346-4-geert+renesas@glider.be>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +51,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: rspi: Add support for multiple native chip selects
+   spi: rspi: Use dev_warn_once() instead of open-coding
 
 has been applied to the spi tree at
 
@@ -76,45 +76,37 @@ to this mail.
 Thanks,
 Mark
 
-From 9815ed8714d26560d09b41f906b96a97f9bc3e3f Mon Sep 17 00:00:00 2001
+From 1bec84ddd85ae7a2b1df5fef3a5c7e5c44cbe36e Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 2 Jan 2020 14:38:21 +0100
-Subject: [PATCH] spi: rspi: Add support for multiple native chip selects
+Date: Thu, 2 Jan 2020 14:38:19 +0100
+Subject: [PATCH] spi: rspi: Use dev_warn_once() instead of open-coding
 
-RSPI variants on some SuperH or R-Mobile SoCs support multiple native
-chip selects. Add support for this by configuring the SSL Assert Signal
-Setting.
+Use the helper introduced by commit e135303bd5bebcd2 ("device: Add
+dev_<level>_once variants") instead of open-coding the same operation.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200102133822.29346-6-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20200102133822.29346-4-geert+renesas@glider.be
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-rspi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/spi/spi-rspi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 9eabef3d6cc4..2f5a856a9319 100644
+index 74a12f4dee84..e54a25f848ea 100644
 --- a/drivers/spi/spi-rspi.c
 +++ b/drivers/spi/spi-rspi.c
-@@ -159,7 +159,7 @@
- #define SPCMD_SPIMOD_DUAL	SPCMD_SPIMOD0
- #define SPCMD_SPIMOD_QUAD	SPCMD_SPIMOD1
- #define SPCMD_SPRW		0x0010	/* SPI Read/Write Access (Dual/Quad) */
--#define SPCMD_SSLA_MASK		0x0030	/* SSL Assert Signal Setting (RSPI) */
-+#define SPCMD_SSLA(i)		((i) << 4)	/* SSL Assert Signal Setting */
- #define SPCMD_BRDV_MASK		0x000c	/* Bit Rate Division Setting */
- #define SPCMD_CPOL		0x0002	/* Clock Polarity Setting */
- #define SPCMD_CPHA		0x0001	/* Clock Phase Setting */
-@@ -933,6 +933,9 @@ static int rspi_prepare_message(struct spi_controller *ctlr,
- 	if (spi->mode & SPI_CPHA)
- 		rspi->spcmd |= SPCMD_CPHA;
- 
-+	/* Configure slave signal to assert */
-+	rspi->spcmd |= SPCMD_SSLA(spi->chip_select);
-+
- 	/* CMOS output mode and MOSI signal from previous transfer */
- 	rspi->sppcr = 0;
- 	if (spi->mode & SPI_LOOP)
+@@ -620,9 +620,8 @@ static int rspi_dma_transfer(struct rspi_data *rspi, struct sg_table *tx,
+ 		dmaengine_terminate_all(rspi->ctlr->dma_rx);
+ no_dma_rx:
+ 	if (ret == -EAGAIN) {
+-		pr_warn_once("%s %s: DMA not available, falling back to PIO\n",
+-			     dev_driver_string(&rspi->ctlr->dev),
+-			     dev_name(&rspi->ctlr->dev));
++		dev_warn_once(&rspi->ctlr->dev,
++			      "DMA not available, falling back to PIO\n");
+ 	}
+ 	return ret;
+ }
 -- 
 2.20.1
 
