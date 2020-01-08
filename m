@@ -2,222 +2,266 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2129C00523
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3553C00523
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AAC206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8072070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GXVeuS0F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHZPn0qF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgAHGPE (ORCPT
+        id S1726199AbgAHGRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:15:04 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42317 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgAHGPE (ORCPT
+        Wed, 8 Jan 2020 01:17:04 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40879 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgAHGRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 01:15:04 -0500
-Received: by mail-qt1-f196.google.com with SMTP id j5so1894218qtq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 22:15:03 -0800 (PST)
+        Wed, 8 Jan 2020 01:17:03 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c77so1696213oib.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 22:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wGOJqQeMJq/DxlCYqrK7ReZOsQlYHwFB6eFwuGtmMtQ=;
-        b=GXVeuS0FWILte17EaOT1oYg9Wff0NXjihObXAY3HJE1xd5Nwl6lj0h9R80sYmzlmJV
-         P4KndhIAekujQAzOzOTMSua749LBaUPe5M8G7VnxGdjrEWdD39RdnTIg8sSpuoy8Bx2C
-         0KLS9FTx5GWuhyrDJI0VxMREdq4WGRKpYRJJQbxX42YWCVKgJpKzEi18D2IfKszBqs6V
-         0ho7KkMDJ9z1AVZw/0ee1QZI5yiVqIMQQV9g9xJeTz1V2y0IDGahXsZ6iCllM1tBW0c2
-         eOoDWvikpVOt9VQckokYEr2OZSgJNGDKFKVUFlBi+U35mPGdJShd0xYcj/tkkPapWMUp
-         ZlGA==
+        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
+        b=eHZPn0qFgiwR3TqFdduhITPTiKflxh0LGckrcuBVonlJemqgmLHotGKYPwlHp1FJMi
+         xNnCmo6tTnLgl2axxjjps13sWddlfqJLjuY7gDwHJgGruJMUq6NdN2PVTMetx8SRM4So
+         +15FJC2MFVzhNDSkf3N433EGhGJBDxaDNMdrcbsPRbUB3kCnIlCCM4rQLlneQQI8gKsv
+         lIttIgNYq4KMNjKAHWH+QBINXldzaIjxFu6EEkdCq+MQmui8YHyvI1PxwXY9taRR3pt1
+         mjGO/QDtkelqlR9gjQuP7z6LR9nM/W+onOl3mqOcEmHmiYOvmiHX2A94xcqB8N4eWqTD
+         a+cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wGOJqQeMJq/DxlCYqrK7ReZOsQlYHwFB6eFwuGtmMtQ=;
-        b=WS7gJqy6lGl25znLHBRKJBMH/5ED56OjxgGvOiJCspXhSrfZDAIWZLo/fwgHTDXReM
-         4lObxvbRfWTmEpStJJPew7KNFJsbZe7HTvz5N1056Q/3MrfyzwTXtjdWTbgRhrQmpCv4
-         DcoYm5Bo22XsyMJ0St2XIX2tg9Xj0y+VUiuhtMosD0oL2wpCQh7rc4GHhTn8Y/lhkbBn
-         nE7zXmnss38It0rSHrxTotUdqfZKopWi1b0EXxhfAKTg4Zcc+r7yFuGiSzUGO1f2QxRe
-         l2N7quMpEh0gcN7zyREbDSRaWZZ4CqEn7wdy2b59c2m03eKzWZj0UirbvMSyDpFfNmWX
-         wPbw==
-X-Gm-Message-State: APjAAAXWzna/gA9vwH6q0oJKCagxg26ZftaDNvgS4cbS6cKRqTiy3mLp
-        eKsgqORDamw2/sDnwo3W1Qrgw40pbHQYvCgE/J3bcQ==
-X-Google-Smtp-Source: APXvYqwiyHo6s48LQlpBMJkfvcqVeEUjbzOu092dtYGHtcbwlDN94A+QA5tFxLvSPwIQkeUroemIfve5Qx3QqXl8UGI=
-X-Received: by 2002:ac8:71d7:: with SMTP id i23mr2282368qtp.50.1578464102827;
- Tue, 07 Jan 2020 22:15:02 -0800 (PST)
+        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
+        b=FANIjjzsYEew+jizQko1c3aSMiRrmnUjJhrMj6Uhsz2kx47neqm+R1m9HbgfiHFlWC
+         ZfvTDquNGHxKrR4+NUckP8VDr2BbMXszqNZFKqsps+JawjqhDlvWY/qKhhzlw3teLD3l
+         RUsvy+Htu3vqlJbfCLd98wjYujwe0d+URas/NZgWBsHq7lOaUAUZJEm1c9REZSy+LzGx
+         QRuRusCPJbK58UUj0hVg4qVTOsCaDjjQu5iY/G5mKwOTlWSSqO3PmwYOgedcCHewkbx3
+         uZFP+m5zpzf6VcHOQxo8hnPWwaeDZmbaJWZY6oIHVSccxxbzY6CLh3IuC7WmgGikQCB6
+         vffQ==
+X-Gm-Message-State: APjAAAWVf3iReHYZgT6GACbhPCMA1+egWtRdIp65ot6+lUwZfrHYp8rK
+        9zlDpCpFKAuGICdBlGVtuIlqLvMnXm1L3kPYPz/xJQ==
+X-Google-Smtp-Source: APXvYqwrxujGPx+8mslow3vxWpXeXFymV/tHcUenrLe4Wf7W57KW9I6GPXuC3PeiLqPMCiatJJf8YGVK7zVdiZMj9AA=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr1907823oig.172.1578464220518;
+ Tue, 07 Jan 2020 22:17:00 -0800 (PST)
 MIME-Version: 1.0
-References: <000000000000c3717f059b9aac45@google.com>
-In-Reply-To: <000000000000c3717f059b9aac45@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 8 Jan 2020 07:14:51 +0100
-Message-ID: <CACT4Y+YKuNHgpp3UgWKJ6vLDUEWRxrR3vGbmThUrV8u86gCfeQ@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_sendto (2)
-To:     syzbot <syzbot+607007c8d18f132ad6f4@syzkaller.appspotmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Drewry <wad@chromium.org>
+References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-3-saravanak@google.com>
+ <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
+In-Reply-To: <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 7 Jan 2020 22:16:24 -0800
+Message-ID: <CAGETcx9Or==EEL6jRMEh4bG4cmFmLqk_n1ReKT=cg-MEsL9w0w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 7:05 AM syzbot
-<syzbot+607007c8d18f132ad6f4@syzkaller.appspotmail.com> wrote:
+On Tue, Jan 7, 2020 at 11:28 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> Hello,
+> Hey Saravana,
 >
-> syzbot found the following crash on:
->
-> HEAD commit:    ae608821 Merge tag 'trace-v5.5-rc5' of git://git.kernel.or..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1581deb9e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=db5ff86cbb23b415
-> dashboard link: https://syzkaller.appspot.com/bug?extid=607007c8d18f132ad6f4
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+607007c8d18f132ad6f4@syzkaller.appspotmail.com
+> Spent some time testing this series while
+> trying out dcvs on SDM845/SC7180. Apart from
+> the few minor issues it works quite well!
 
-This is:
+Thanks a lot for testing Sibi. Can you give a tested-by? Glad to hear
+it works well.
 
-#syz dup: INFO: rcu detected stall in sys_kill
-
-For details see:
-https://groups.google.com/g/syzkaller-bugs/c/Vv3ARjLvagc/m/nZAubeo9AQAJ
-https://syzkaller.appspot.com/bug?extid=de8d933e7d153aa0c1bb
-
-I temporarily re-enabled smack instance and it produces another 50
-stalls all over the kernel. So smack + KASAN + VMAP stack combination
-is sitll problematic.
-
-
-> rcu: INFO: rcu_preempt self-detected stall on CPU
-> rcu:    0-...!: (10499 ticks this GP) idle=2de/1/0x4000000000000002
-> softirq=13619/13619 fqs=0
->         (t=10500 jiffies g=6765 q=74)
-> rcu: rcu_preempt kthread starved for 10500 jiffies! g6765 f0x0
-> RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
-> rcu: RCU grace-period kthread stack dump:
-> rcu_preempt     R  running task    28984    10      2 0x80004000
-> Call Trace:
->   context_switch kernel/sched/core.c:3385 [inline]
->   __schedule+0x9a0/0xcc0 kernel/sched/core.c:4081
->   schedule+0x181/0x210 kernel/sched/core.c:4155
->   schedule_timeout+0x14f/0x240 kernel/time/timer.c:1895
->   rcu_gp_fqs_loop kernel/rcu/tree.c:1661 [inline]
->   rcu_gp_kthread+0xed8/0x1770 kernel/rcu/tree.c:1821
->   kthread+0x332/0x350 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> NMI backtrace for cpu 0
-> CPU: 0 PID: 8526 Comm: syz-executor.4 Not tainted 5.5.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x1fb/0x318 lib/dump_stack.c:118
->   nmi_cpu_backtrace+0xaf/0x1a0 lib/nmi_backtrace.c:101
->   nmi_trigger_cpumask_backtrace+0x174/0x290 lib/nmi_backtrace.c:62
->   arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
->   trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
->   rcu_dump_cpu_stacks+0x15a/0x220 kernel/rcu/tree_stall.h:254
->   print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
->   check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
->   rcu_pending kernel/rcu/tree.c:2827 [inline]
->   rcu_sched_clock_irq+0xe25/0x1ad0 kernel/rcu/tree.c:2271
->   update_process_times+0x12d/0x180 kernel/time/timer.c:1726
->   tick_sched_handle kernel/time/tick-sched.c:167 [inline]
->   tick_sched_timer+0x263/0x420 kernel/time/tick-sched.c:1310
->   __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
->   __hrtimer_run_queues+0x403/0x840 kernel/time/hrtimer.c:1579
->   hrtimer_interrupt+0x38c/0xda0 kernel/time/hrtimer.c:1641
->   local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
->   smp_apic_timer_interrupt+0x109/0x280 arch/x86/kernel/apic/apic.c:1135
->   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->   </IRQ>
-> RIP: 0010:memcg_kmem_uncharge include/linux/memcontrol.h:1402 [inline]
-> RIP: 0010:free_thread_stack+0x124/0x590 kernel/fork.c:284
-> Code: ff 48 c1 e8 06 48 83 e0 c0 48 bf 00 00 00 00 00 ea ff ff 48 01 c7 be
-> 03 00 00 00 e8 86 91 61 00 e9 5d 04 00 00 e8 3c 2c 2e 00 <48> 89 df 31 f6
-> e8 02 8d 6f 00 43 80 3c 2e 00 74 08 4c 89 e7 e8 73
-> RSP: 0018:ffffc90002676da8 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-> RAX: ffffffff81489244 RBX: ffffea00026354c0 RCX: ffff888094f7c080
-> RDX: 0000000000000000 RSI: 00000000fffffffc RDI: ffffea00026354c0
-> RBP: ffffc90002676de0 R08: 000000000003a728 R09: ffffed10123e36a9
-> R10: ffffed10123e36a9 R11: 0000000000000000 R12: ffff88808e5db7a0
-> R13: dffffc0000000000 R14: 1ffff11011cbb6f4 R15: ffff888091f1b538
->   release_task_stack kernel/fork.c:440 [inline]
->   put_task_stack+0xa3/0x130 kernel/fork.c:451
->   finish_task_switch+0x3f1/0x550 kernel/sched/core.c:3256
->   context_switch kernel/sched/core.c:3388 [inline]
->   __schedule+0x9a8/0xcc0 kernel/sched/core.c:4081
->   preempt_schedule_common kernel/sched/core.c:4236 [inline]
->   preempt_schedule+0xdb/0x120 kernel/sched/core.c:4261
->   ___preempt_schedule+0x16/0x18 arch/x86/entry/thunk_64.S:50
->   vprintk_emit+0x36d/0x3a0 kernel/printk/printk.c:1997
->   dev_vprintk_emit+0x495/0x513 drivers/base/core.c:3603
->   dev_printk_emit+0x6a/0x8c drivers/base/core.c:3614
->   __netdev_printk+0x301/0x3e9 net/core/dev.c:10217
->   netdev_info+0xb9/0xe4 net/core/dev.c:10272
->   dev_change_name+0x8a5/0x9b0 net/core/dev.c:1242
->   do_setlink+0x8bf/0x3960 net/core/rtnetlink.c:2571
->   __rtnl_newlink net/core/rtnetlink.c:3238 [inline]
->   rtnl_newlink+0x14dd/0x1bd0 net/core/rtnetlink.c:3363
->   rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5424
->   netlink_rcv_skb+0x19e/0x3d0 net/netlink/af_netlink.c:2477
->   rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5442
->   netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
->   netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
->   netlink_sendmsg+0xa31/0xd50 net/netlink/af_netlink.c:1917
->   sock_sendmsg_nosec net/socket.c:639 [inline]
->   sock_sendmsg net/socket.c:659 [inline]
->   __sys_sendto+0x442/0x5e0 net/socket.c:1985
->   __do_sys_sendto net/socket.c:1997 [inline]
->   __se_sys_sendto net/socket.c:1993 [inline]
->   __x64_sys_sendto+0xe5/0x100 net/socket.c:1993
->   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x414c43
-> Code: ff 0f 83 b0 19 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-> 83 3d 2d 38 66 00 00 75 17 49 89 ca b8 2c 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 81 19 00 00 c3 48 83 ec 08 e8 87 fa ff ff
-> RSP: 002b:00007ffd9886f818 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-> RAX: ffffffffffffffda RBX: 0000000000a71da0 RCX: 0000000000414c43
-> RDX: 0000000000000030 RSI: 0000000000a71df0 RDI: 0000000000000005
-> RBP: 0000000000000000 R08: 00007ffd9886f820 R09: 000000000000000c
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000a71df0 R15: 0000000000000005
+> On 2019-12-07 05:54, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of
+> > frequency.
+> > Devices like interconnects quantify their performance points in terms
+> > of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP.
+> > So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/core.c | 15 +++++++++--
+> >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+> >  drivers/opp/opp.h  |  5 ++++
+> >  3 files changed, 62 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index be7a7d332332..c79bbfac7289 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -1282,11 +1282,21 @@ static bool
+> > _opp_supported_by_regulators(struct dev_pm_opp *opp,
+> >       return true;
+> >  }
+> >
+> > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> > +{
+> > +     if (opp1->rate != opp2->rate)
+> > +             return opp1->rate < opp2->rate ? -1 : 1;
+> > +     if (opp1->peak_bw != opp2->peak_bw)
+> > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+> > +     return 0;
+> > +}
+> > +
+> >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp
+> > *new_opp,
+> >                            struct opp_table *opp_table,
+> >                            struct list_head **head)
+> >  {
+> >       struct dev_pm_opp *opp;
+> > +     int opp_cmp;
+> >
+> >       /*
+> >        * Insert new OPP in order of increasing frequency and discard if
+> > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device
+> > *dev, struct dev_pm_opp *new_opp,
+> >        * loop.
+> >        */
+> >       list_for_each_entry(opp, &opp_table->opp_list, node) {
+> > -             if (new_opp->rate > opp->rate) {
+> > +             opp_cmp = opp_compare_key(new_opp, opp);
+> > +             if (opp_cmp > 0) {
+> >                       *head = &opp->node;
+> >                       continue;
+> >               }
+> >
+> > -             if (new_opp->rate < opp->rate)
+> > +             if (opp_cmp < 0)
+> >                       return 0;
+> >
+> >               /* Duplicate OPPs */
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index 1cbb58240b80..b565da5a2b1f 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device
+> > *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct
+> > device_node *np,
+> > +                      bool *rate_not_available)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate;
+> > +             goto out;
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > +     if (!ret) {
+> > +             new_opp->peak_bw = bw;
+> > +
+> > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> > +                     new_opp->avg_bw = bw;
+> > +     }
+> > +
+> > +out:
+> > +     *rate_not_available = !!ret;
+> > +     /*
+> > +      * If ret is 0 at this point, we have already found a key. If we
+> > +      * haven't found a key yet, then ret already has an error value. In
+> > +      * either case, we don't need to update ret.
+> > +      */
+> > +     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  /**
+> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT
+> > bindings)
+> >   * @opp_table:       OPP table
+> > @@ -558,26 +596,12 @@ static struct dev_pm_opp
+> > *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > -     if (ret < 0) {
+> > -             /* "opp-hz" is optional for devices like power domains. */
+> > -             if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > -                     goto free_opp;
+> > -             }
+> > -
+> > -             rate_not_available = true;
+> > -     } else {
+> > -             /*
+> > -              * Rate is defined as an unsigned long in clk API, and so
+> > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > -              * bit guaranteed in clk API.
+> > -              */
+> > -             new_opp->rate = (unsigned long)rate;
+> > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
+> > +     if (ret) {
 >
+> if (!opp_table->is_genpd) {
 >
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> _read_opp_key returns an error for genpd
+> opps so please check if it is a genpd
+> opp_table before erroring out here.
+
+Thanks. I'll fix it in the next version.
+
+> > +             dev_err(dev, "%s: opp key field not found\n", __func__);
+> > +             goto free_opp;
+> >       }
+> >
+> > -     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > -
+> >       /* Check if the OPP supports hardware's hierarchy of versions or not
+> > */
+> >       if (!_opp_is_supported(dev, opp_table, np)) {
+> >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> > @@ -616,7 +640,8 @@ static struct dev_pm_opp
+> > *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (of_property_read_bool(np, "opp-suspend")) {
+> >               if (opp_table->suspend_opp) {
+> >                       /* Pick the OPP with higher rate as suspend OPP */
+> > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
+> > +                     if (opp_compare_key(new_opp,
+> > +                                         opp_table->suspend_opp) > 1) {
 >
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000c3717f059b9aac45%40google.com.
+> shouldn't the condition be > 0?
+
+Duh. Thanks. I'll fix it in the next version.
+
+I'm guessing you tested with the fixes you pointed out?
+
+-Saravana
