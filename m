@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497BDC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEA9C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224AE2070E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21562077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgAHTra (ORCPT
+        id S1726142AbgAHTr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:47:30 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43832 "EHLO
+        Wed, 8 Jan 2020 14:47:28 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730483AbgAHTqF (ORCPT
+        by vger.kernel.org with ESMTP id S1730482AbgAHTqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:05 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHE-0006on-4A; Wed, 08 Jan 2020 19:46:00 +0000
+        id 1ipHHD-0006p6-IK; Wed, 08 Jan 2020 19:45:59 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHD-007dpa-JO; Wed, 08 Jan 2020 19:45:59 +0000
+        id 1ipHHC-007dnp-KY; Wed, 08 Jan 2020 19:45:58 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jason Yan" <yanaijie@huawei.com>,
-        "John Garry" <john.garry@huawei.com>,
-        "Gao Chuan" <gaochuan4@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Wed, 08 Jan 2020 19:44:01 +0000
-Message-ID: <lsq.1578512578.643033814@decadent.org.uk>
+        "Chaotian Jing" <chaotian.jing@mediatek.com>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Wed, 08 Jan 2020 19:43:40 +0000
+Message-ID: <lsq.1578512578.769610404@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 63/63] scsi: libsas: stop discovering if oob mode is
- disconnected
+Subject: [PATCH 3.16 42/63] mmc: mmc: fix switch timeout issue caused by
+ jiffies precision
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,141 +57,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-commit f70267f379b5e5e11bdc5d72a56bf17e5feed01f upstream.
+commit 987aa5f8059613bf85cbb6f64ffbd34f5cb7a9d1 upstream.
 
-The discovering of sas port is driven by workqueue in libsas. When libsas
-is processing port events or phy events in workqueue, new events may rise
-up and change the state of some structures such as asd_sas_phy.  This may
-cause some problems such as follows:
+with CONFIG_HZ=100, the precision of jiffies is 10ms, and the
+generic_cmd6_time of some card is also 10ms. then, may be current
+time is only 5ms, but already timed out caused by jiffies precision.
 
-==>thread 1                       ==>thread 2
-
-                                  ==>phy up
-                                  ==>phy_up_v3_hw()
-                                    ==>oob_mode = SATA_OOB_MODE;
-                                  ==>phy down quickly
-                                  ==>hisi_sas_phy_down()
-                                    ==>sas_ha->notify_phy_event()
-                                    ==>sas_phy_disconnected()
-                                      ==>oob_mode = OOB_NOT_CONNECTED
-==>workqueue wakeup
-==>sas_form_port()
-  ==>sas_discover_domain()
-    ==>sas_get_port_device()
-      ==>oob_mode is OOB_NOT_CONNECTED and device
-         is wrongly taken as expander
-
-This at last lead to the panic when libsas trying to issue a command to
-discover the device.
-
-[183047.614035] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000058
-[183047.622896] Mem abort info:
-[183047.625762]   ESR = 0x96000004
-[183047.628893]   Exception class = DABT (current EL), IL = 32 bits
-[183047.634888]   SET = 0, FnV = 0
-[183047.638015]   EA = 0, S1PTW = 0
-[183047.641232] Data abort info:
-[183047.644189]   ISV = 0, ISS = 0x00000004
-[183047.648100]   CM = 0, WnR = 0
-[183047.651145] user pgtable: 4k pages, 48-bit VAs, pgdp =
-00000000b7df67be
-[183047.657834] [0000000000000058] pgd=0000000000000000
-[183047.662789] Internal error: Oops: 96000004 [#1] SMP
-[183047.667740] Process kworker/u16:2 (pid: 31291, stack limit =
-0x00000000417c4974)
-[183047.675208] CPU: 0 PID: 3291 Comm: kworker/u16:2 Tainted: G
-W  OE 4.19.36-vhulk1907.1.0.h410.eulerosv2r8.aarch64 #1
-[183047.687015] Hardware name: N/A N/A/Kunpeng Desktop Board D920S10,
-BIOS 0.15 10/22/2019
-[183047.695007] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
-[183047.700999] pstate: 20c00009 (nzCv daif +PAN +UAO)
-[183047.705864] pc : prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.711510] lr : prep_ata_v3_hw+0xb0/0x230 [hisi_sas_v3_hw]
-[183047.717153] sp : ffff00000f28ba60
-[183047.720541] x29: ffff00000f28ba60 x28: ffff8026852d7228
-[183047.725925] x27: ffff8027dba3e0a8 x26: ffff8027c05fc200
-[183047.731310] x25: 0000000000000000 x24: ffff8026bafa8dc0
-[183047.736695] x23: ffff8027c05fc218 x22: ffff8026852d7228
-[183047.742079] x21: ffff80007c2f2940 x20: ffff8027c05fc200
-[183047.747464] x19: 0000000000f80800 x18: 0000000000000010
-[183047.752848] x17: 0000000000000000 x16: 0000000000000000
-[183047.758232] x15: ffff000089a5a4ff x14: 0000000000000005
-[183047.763617] x13: ffff000009a5a50e x12: ffff8026bafa1e20
-[183047.769001] x11: ffff0000087453b8 x10: ffff00000f28b870
-[183047.774385] x9 : 0000000000000000 x8 : ffff80007e58f9b0
-[183047.779770] x7 : 0000000000000000 x6 : 000000000000003f
-[183047.785154] x5 : 0000000000000040 x4 : ffffffffffffffe0
-[183047.790538] x3 : 00000000000000f8 x2 : 0000000002000007
-[183047.795922] x1 : 0000000000000008 x0 : 0000000000000000
-[183047.801307] Call trace:
-[183047.803827]  prep_ata_v3_hw+0xf8/0x230 [hisi_sas_v3_hw]
-[183047.809127]  hisi_sas_task_prep+0x750/0x888 [hisi_sas_main]
-[183047.814773]  hisi_sas_task_exec.isra.7+0x88/0x1f0 [hisi_sas_main]
-[183047.820939]  hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
-[183047.826757]  smp_execute_task_sg+0xec/0x218
-[183047.831013]  smp_execute_task+0x74/0xa0
-[183047.834921]  sas_discover_expander.part.7+0x9c/0x5f8
-[183047.839959]  sas_discover_root_expander+0x90/0x160
-[183047.844822]  sas_discover_domain+0x1b8/0x1e8
-[183047.849164]  process_one_work+0x1b4/0x3f8
-[183047.853246]  worker_thread+0x54/0x470
-[183047.856981]  kthread+0x134/0x138
-[183047.860283]  ret_from_fork+0x10/0x18
-[183047.863931] Code: f9407a80 528000e2 39409281 72a04002 (b9405800)
-[183047.870097] kernel fault(0x1) notification starting on CPU 0
-[183047.875828] kernel fault(0x1) notification finished on CPU 0
-[183047.881559] Modules linked in: unibsp(OE) hns3(OE) hclge(OE)
-hnae3(OE) mem_drv(OE) hisi_sas_v3_hw(OE) hisi_sas_main(OE)
-[183047.892418] ---[ end trace 4cc26083fc11b783  ]---
-[183047.897107] Kernel panic - not syncing: Fatal exception
-[183047.902403] kernel fault(0x5) notification starting on CPU 0
-[183047.908134] kernel fault(0x5) notification finished on CPU 0
-[183047.913865] SMP: stopping secondary CPUs
-[183047.917861] Kernel Offset: disabled
-[183047.921422] CPU features: 0x2,a2a00a38
-[183047.925243] Memory Limit: none
-[183047.928372] kernel reboot(0x2) notification starting on CPU 0
-[183047.934190] kernel reboot(0x2) notification finished on CPU 0
-[183047.940008] ---[ end Kernel panic - not syncing: Fatal exception
-]---
-
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Link: https://lore.kernel.org/r/20191206011118.46909-1-yanaijie@huawei.com
-Reported-by: Gao Chuan <gaochuan4@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/libsas/sas_discover.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/mmc/core/mmc_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -97,12 +97,21 @@ static int sas_get_port_device(struct as
- 		else
- 			dev->dev_type = SAS_SATA_DEV;
- 		dev->tproto = SAS_PROTOCOL_SATA;
--	} else {
-+	} else if (port->oob_mode == SAS_OOB_MODE) {
- 		struct sas_identify_frame *id =
- 			(struct sas_identify_frame *) dev->frame_rcvd;
- 		dev->dev_type = id->dev_type;
- 		dev->iproto = id->initiator_bits;
- 		dev->tproto = id->target_bits;
-+	} else {
-+		/* If the oob mode is OOB_NOT_CONNECTED, the port is
-+		 * disconnected due to race with PHY down. We cannot
-+		 * continue to discover this port
-+		 */
-+		sas_put_device(dev);
-+		pr_warn("Port %016llx is disconnected when discovering\n",
-+			SAS_ADDR(port->attached_sas_addr));
-+		return -ENODEV;
- 	}
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -470,7 +470,7 @@ int __mmc_switch(struct mmc_card *card,
+ 		timeout_ms = MMC_OPS_TIMEOUT_MS;
  
- 	sas_init_dev(dev);
+ 	/* Must check status to be sure of no errors. */
+-	timeout = jiffies + msecs_to_jiffies(timeout_ms);
++	timeout = jiffies + msecs_to_jiffies(timeout_ms) + 1;
+ 	do {
+ 		if (send_status) {
+ 			err = __mmc_send_status(card, &status, ignore_crc);
 
