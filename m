@@ -2,192 +2,120 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338A0C47409
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774D6C33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C0020673
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A67220673
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFJiDvvz"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YgTkFvh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgAHBjN (ORCPT
+        id S1726945AbgAHBjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:39:13 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35803 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgAHBjL (ORCPT
+        Tue, 7 Jan 2020 20:39:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38222 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgAHBjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 20:39:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i23so777310pfo.2;
-        Tue, 07 Jan 2020 17:39:11 -0800 (PST)
+        Tue, 7 Jan 2020 20:39:39 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d7so2028894otf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Jan 2020 17:39:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=THEg3QFZEQa/O6HzLLi2uHWnREbCmXjTJPDpWzYvpYE=;
-        b=bFJiDvvzRPYy9tdXQ0hkK/djyuBrFTMSlg2q0m8p/LFtm9htcOMfpSjWHqApL/PkM1
-         hjQIkMC5uFV8SbB/E1pKh54o/9vCh+9nmWdBu3HaR3xo4o6SpQHrIBL9bgxcIM7XM5n5
-         ligtnEa3e6CeS/jpbKV9flDmO4A/oM+A1c7e25lpjOkA+FpY+zHr/ot9xfxSlu60X6C8
-         S85g2bu68aqCM+Tpg2hGTVHvaNjPvHj6zCHJklt8o17So2Co3W96UWMIXT8C0pLGT1pg
-         qdNQMPfkQKuBTx8p1/poFS+aWKOBCPydbaELEEYgcN7FF4LNdOzP1VJBlt996eRPax/w
-         hMYQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/d9k45/z7659u+xtEjN+MYx3Q6GpIJRf/rpR3Gk/DdU=;
+        b=YgTkFvh6k7M6dHhTjbBTUDG+NIIUI6w5fWZZA+SRtfvALbUkv5kvWYonJKu3sSN8bN
+         b+37/Q5KLz31UR0SYudLvDmy3JK9UFCkDIiMhXQQj3dHQVUjo9J9ywjL/XUPmwYswP+/
+         xeZnbYsjQkynkvVrvx19nSACawRXUpVW3q/vIubfYBFV7v5sMRYWA0QCbBX53/Lh0Y7W
+         ilS3gDYmvch66jqOGL1GQp/MCtciI6dWOmQeI8tXQSnJmFLQE2FOeA4lxSiGMCYIgXRf
+         1q2zJd9/QHTXMPJFdyvYajbTtvIkBgU7ptveduecznGjcWJeA/35nNkhH+y9tInkFeK1
+         ra9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THEg3QFZEQa/O6HzLLi2uHWnREbCmXjTJPDpWzYvpYE=;
-        b=LlOafNyLwBOkPYr2zTQPriSoZsq1LAammv4vH+FYFjBcu2gXTRcUVSmBF96qN8DHXt
-         6gJ4xEhR/a8VsmcuaiVVqcj/jMS8az+zD2zan/5TyXxoYQ+47zUU48BX9AiFF7B89m3q
-         0KmuGnIURkNYPi1kEulSNhSwqySd2n+FPnKJ9iBR79dNLcMPEoiys0tfuEeXKDmsw6+S
-         oQkN34JFp0RMZIp5bKviKZ6McOdBj3Oc1+airqvrEthegXS3OUvU+fQZMrfUZukcVBj2
-         C9GPPp39qHu4EzKiT8izClNWVxdViF8iV+lNlZcnrBCng1dLpHD4SWAUKMM91b/g6EqX
-         qy4A==
-X-Gm-Message-State: APjAAAV+6ZIc1VPleR/+oA1NITjqVvTPnJmZ/hms4CKM3YXaCGRIT/9R
-        vzYBVtpWxw7Fi3VtHNJBHLU=
-X-Google-Smtp-Source: APXvYqyW+M9y0psHwU0NpMvkTavrh7MZTxAMiyVpc4pqn2yNLfg6OeaTa33ovYQ/omgdDo7LgmmXpQ==
-X-Received: by 2002:a62:1944:: with SMTP id 65mr2476029pfz.151.1578447550936;
-        Tue, 07 Jan 2020 17:39:10 -0800 (PST)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id a6sm994334pgg.25.2020.01.07.17.39.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 17:39:10 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] arm64: dts: sdm845: move gpu zap nodes to per-device dts
-Date:   Tue,  7 Jan 2020 17:38:44 -0800
-Message-Id: <20200108013847.899170-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108013847.899170-1-robdclark@gmail.com>
-References: <20200108013847.899170-1-robdclark@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/d9k45/z7659u+xtEjN+MYx3Q6GpIJRf/rpR3Gk/DdU=;
+        b=RD7LVQkFhBXBivF22wpZEpLVonmBKmVTq8G9D1+LykFBQrH1t7elrNMgO/BcX/TX2p
+         OFnM/GPsjD2w9/08fcJa3hHu/ZqNywSRjTQiltOwdB2XDpZgY1XZSM/Qd4mbDjSEL2HY
+         R1FOLxtG99LY4lKilhVNfZRwgrwXpCu4FvleIeYZrEmG0VWbeKK0tYgr1TXuepAu7j06
+         1aoLOXYoXv4Ok0aiD1bWFpIC8V3j6Q7BPlS81uWjCt4hjkmvzchCVylNwrdDO9uhBnWu
+         xPosyvxT2kkVBzzZbTJKJlz3lIL7yLh+rg7+ZuM0c57hKtC9J+8XuDBXEsarJkgIZ9sU
+         //JQ==
+X-Gm-Message-State: APjAAAV0EjsSp/ptEBLjLunkDEs821JJTCQKCaJIDfk9ouOwIC23pW7o
+        dV/MlB89Xh3nSuGLKn7fREem6kT0pukieQboX9/+Tw==
+X-Google-Smtp-Source: APXvYqxdf0Bo2pMJ9s40oQqu9673Krm3/AIHd7ihdu+tmuZao9+mHEVhrRD0TY+1uOwKKPxbusMCMUEGKxcHJtyvZxo=
+X-Received: by 2002:a9d:68cc:: with SMTP id i12mr2328311oto.207.1578447579439;
+ Tue, 07 Jan 2020 17:39:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191212182238.46535-1-brho@google.com> <20191212182238.46535-3-brho@google.com>
+ <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com> <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
+ <f8e948ff-6a2a-a6d6-9d8e-92b93003354a@google.com> <65FB6CC1-3AD2-4D6F-9481-500BD7037203@oracle.com>
+ <20191213171950.GA31552@linux.intel.com> <e012696f-f13e-5af1-2b14-084607d69bfa@google.com>
+ <20200107190522.GA16987@linux.intel.com> <08a36944-ad5a-ca49-99b3-d3908ce0658b@google.com>
+ <20200108012014.GF16987@linux.intel.com>
+In-Reply-To: <20200108012014.GF16987@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 Jan 2020 17:39:28 -0800
+Message-ID: <CAPcyv4jW3HTU7mmctL_d+zTS8yT_NLxa5cx_w8nbqVSwBMdSLQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Barret Rhoden <brho@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Zeng, Jason" <jason.zeng@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Jan 7, 2020 at 5:20 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Jan 07, 2020 at 02:19:06PM -0500, Barret Rhoden wrote:
+> > On 1/7/20 2:05 PM, Sean Christopherson wrote:
+> > >Hopefully you haven't put too much effort into the rework, because I want
+> > >to commandeer the proposed changes and use them as the basis for a more
+> > >aggressive overhaul of KVM's hugepage handling.  Ironically, there's a bug
+> > >in KVM's THP handling that I _think_ can be avoided by using the DAX
+> > >approach of walking the host PTEs.
+> > >
+> > >I'm in the process of testing, hopefully I'll get a series sent out later
+> > >today.  If not, I should at least be able to provide an update.
+> >
+> > Nice timing.  I was just about to get back to this, so I haven't put any
+> > time in yet.  =)
+> >
+> > Please CC me, and I'll try your patches out on my end.
+>
+> Will do.  Barring last minute hiccups, the code is ready, just need to
+> finish off a few changelogs.  Should get it out early tomorrow.
+>
+> One question that may help avoid some churn: are huge DAX pages not
+> tracked as compound pages?  The comment from your/this patch is pretty
+> unequivocal, but I wanted to double check that they will really return
+> false for PageCompound(), as opposed to only returning false for
+> PageTransCompoundMap().
 
-We want to specify per-device firmware-name, so move the zap node into
-the .dts file for individual boards/devices.  This lets us get rid of
-the /delete-node/ for cheza, which does not use zap.
+PageCompound() returns false.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 8 ++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
- 5 files changed, 23 insertions(+), 6 deletions(-)
+>
+>         /*
+>          * DAX pages do not use compound pages.  ...
+>          */
+>
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9a4ff57fc877..2db79c1ecdac 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -165,7 +165,6 @@ panel_in_edp: endpoint {
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
--/delete-node/ &zap_shader;
- /delete-node/ &gpu_mem;
- 
- /* Increase the size from 120 MB to 128 MB */
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index d100f46791a6..c472195e44fb 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -352,6 +352,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/db845c/a630_zap.mbn";
-+	};
-+};
-+
- &pm8998_gpio {
- 	vol_up_pin_a: vol-up-active {
- 		pins = "gpio6";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index c57548b7b250..876155fc0547 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -360,6 +360,14 @@ &gcc {
- 			   <GCC_LPASS_SWAY_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		// TODO presumably mtp can use same "test key" signed zap?
-+		firmware-name = "qcom/db845c/a630_zap.mbn";
-+	};
-+};
-+
- &i2c10 {
- 	status = "okay";
- 	clock-frequency = <400000>;
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ddb1f23c936f..601c57cc9b6d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
- 			};
- 		};
- 
--		gpu@5000000 {
-+		gpu: gpu@5000000 {
- 			compatible = "qcom,adreno-630.2", "qcom,adreno";
- 			#stream-id-cells = <16>;
- 
-@@ -2824,10 +2824,6 @@ gpu@5000000 {
- 
- 			qcom,gmu = <&gmu>;
- 
--			zap_shader: zap-shader {
--				memory-region = <&gpu_mem>;
--			};
--
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index 13dc619687f3..b255be3a4a0a 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -245,6 +245,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 	clock-frequency = <400000>;
--- 
-2.24.1
-
+None of the head / tail page infrastructure is set up for dax pages.
+They are just independent 'struct page' objects that are
+opportunistically mapped by different pte sizes in the dax core.
