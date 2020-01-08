@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C4EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C16C33CAB
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635A320705
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E478820705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 20:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgAHU1M (ORCPT
+        id S1727442AbgAHU1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:27:12 -0500
-Received: from mga06.intel.com ([134.134.136.31]:45241 "EHLO mga06.intel.com"
+        Wed, 8 Jan 2020 15:27:13 -0500
+Received: from mga06.intel.com ([134.134.136.31]:45246 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727315AbgAHU1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:27:08 -0500
+        id S1727388AbgAHU1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 15:27:11 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:27:06 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 12:27:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="211658380"
+   d="scan'208";a="211658401"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 12:27:06 -0800
+  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2020 12:27:07 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Paul Mackerras <paulus@ozlabs.org>,
@@ -56,9 +56,9 @@ Cc:     Paul Mackerras <paulus@ozlabs.org>,
         Dave Jiang <dave.jiang@intel.com>,
         Liran Alon <liran.alon@oracle.com>,
         linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: [PATCH 08/14] KVM: x86/mmu: Drop level optimization from fast_page_fault()
-Date:   Wed,  8 Jan 2020 12:24:42 -0800
-Message-Id: <20200108202448.9669-9-sean.j.christopherson@intel.com>
+Subject: [PATCH 14/14] KVM: x86/mmu: Use huge pages for DAX-backed files
+Date:   Wed,  8 Jan 2020 12:24:48 -0800
+Message-Id: <20200108202448.9669-15-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108202448.9669-1-sean.j.christopherson@intel.com>
 References: <20200108202448.9669-1-sean.j.christopherson@intel.com>
@@ -69,50 +69,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove fast_page_fault()'s optimization to stop the shadow walk if the
-iterator level drops below the intended map level.  The intended map
-level is only acccurate for HugeTLB mappings (THP mappings are detected
-after fast_page_fault()), i.e. it's not required for correctness, and
-a future patch will also move HugeTLB mapping detection to after
-fast_page_fault().
+Walk the host page tables to identify hugepage mappings for ZONE_DEVICE
+pfns, i.e. DAX pages.  Explicitly query kvm_is_zone_device_pfn() when
+deciding whether or not to bother walking the host page tables, as DAX
+pages do not set up the head/tail infrastructure, i.e. will return false
+for PageCompound() even when using huge pages.
 
+Zap ZONE_DEVICE sptes when disabling dirty logging, e.g. if live
+migration fails, to allow KVM to rebuild large pages for DAX-based
+mappings.  Presumably DAX favors large pages, and worst case scenario is
+a minor performance hit as KVM will need to re-fault all DAX-based
+pages.
+
+Suggested-by: Barret Rhoden <brho@google.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Jason Zeng <jason.zeng@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: linux-nvdimm <linux-nvdimm@lists.01.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4bd7f745b56d..7d78d1d996ed 100644
+index 1e4e0ac169a7..324e1919722f 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3593,7 +3593,7 @@ static bool is_access_allowed(u32 fault_err_code, u64 spte)
-  * - true: let the vcpu to access on the same address again.
-  * - false: let the real page fault path to fix it.
-  */
--static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, int level,
-+static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 			    u32 error_code)
- {
- 	struct kvm_shadow_walk_iterator iterator;
-@@ -3611,8 +3611,7 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, int level,
- 		u64 new_spte;
+@@ -3250,7 +3250,7 @@ static int host_pfn_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 		     PT_DIRECTORY_LEVEL != (int)PG_LEVEL_2M ||
+ 		     PT_PDPE_LEVEL != (int)PG_LEVEL_1G);
  
- 		for_each_shadow_entry_lockless(vcpu, cr2_or_gpa, iterator, spte)
--			if (!is_shadow_present_pte(spte) ||
--			    iterator.level < level)
-+			if (!is_shadow_present_pte(spte))
- 				break;
+-	if (!PageCompound(pfn_to_page(pfn)))
++	if (!PageCompound(pfn_to_page(pfn)) && !kvm_is_zone_device_pfn(pfn))
+ 		return PT_PAGE_TABLE_LEVEL;
  
- 		sp = page_header(__pa(iterator.sptep));
-@@ -4223,7 +4222,7 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 	if (level > PT_PAGE_TABLE_LEVEL)
- 		gfn &= ~(KVM_PAGES_PER_HPAGE(level) - 1);
+ 	/*
+@@ -3282,8 +3282,7 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 	if (unlikely(max_level == PT_PAGE_TABLE_LEVEL))
+ 		return PT_PAGE_TABLE_LEVEL;
  
--	if (fast_page_fault(vcpu, gpa, level, error_code))
-+	if (fast_page_fault(vcpu, gpa, error_code))
- 		return RET_PF_RETRY;
+-	if (is_error_noslot_pfn(pfn) || kvm_is_reserved_pfn(pfn) ||
+-	    kvm_is_zone_device_pfn(pfn))
++	if (is_error_noslot_pfn(pfn) || kvm_is_reserved_pfn(pfn))
+ 		return PT_PAGE_TABLE_LEVEL;
  
- 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+ 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+@@ -5910,8 +5909,8 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+ 		 * mapping if the indirect sp has level = 1.
+ 		 */
+ 		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+-		    !kvm_is_zone_device_pfn(pfn) &&
+-		    PageCompound(pfn_to_page(pfn))) {
++		    (kvm_is_zone_device_pfn(pfn) ||
++		     PageCompound(pfn_to_page(pfn)))) {
+ 			pte_list_remove(rmap_head, sptep);
+ 
+ 			if (kvm_available_flush_tlb_with_range())
 -- 
 2.24.1
 
