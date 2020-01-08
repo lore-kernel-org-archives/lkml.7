@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831AEC33CA2
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2A6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E31A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80E52077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 11:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgAHLmQ (ORCPT
+        id S1728029AbgAHLnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:42:16 -0500
-Received: from mga09.intel.com ([134.134.136.24]:62281 "EHLO mga09.intel.com"
+        Wed, 8 Jan 2020 06:43:10 -0500
+Received: from mga09.intel.com ([134.134.136.24]:62299 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgAHLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:42:11 -0500
+        id S1727613AbgAHLmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 06:42:16 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:11 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:42:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="422891905"
+   d="scan'208";a="233576456"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Jan 2020 03:42:07 -0800
+  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2020 03:42:12 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 4D1904AD; Wed,  8 Jan 2020 13:42:02 +0200 (EET)
+        id 15FD85DF; Wed,  8 Jan 2020 13:42:03 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/36] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_io[read|write][8|16]()
-Date:   Wed,  8 Jan 2020 14:41:35 +0300
-Message-Id: <20200108114201.27908-11-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 26/36] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+Date:   Wed,  8 Jan 2020 14:41:51 +0300
+Message-Id: <20200108114201.27908-27-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
@@ -59,129 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no users for these so we can remove them.
+Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+be using this field going forward to access the SCU IPC instance.
+
+While there add kernel-doc for the intel_soc_pmic structure.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h | 12 -----
- drivers/platform/x86/intel_scu_ipc.c | 68 ----------------------------
- 2 files changed, 80 deletions(-)
+ include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index b2dde96e0611..b59afa59a4cb 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -22,24 +22,12 @@
- /* Read single register */
- int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index bfecd6bd4990..bda22d750be6 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -13,6 +13,20 @@
  
--/* Read two sequential registers */
--int intel_scu_ipc_ioread16(u16 addr, u16 *data);
--
--/* Read four sequential registers */
--int intel_scu_ipc_ioread32(u16 addr, u32 *data);
--
- /* Read a vector */
- int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
+ #include <linux/regmap.h>
  
- /* Write single register */
- int intel_scu_ipc_iowrite8(u16 addr, u8 data);
++/**
++ * struct intel_soc_pmic - Intel SoC PMIC data
++ * @irq: Interrupt number
++ * @regmap: Pointer to the regmap structure
++ * @irq_chip_data: IRQ chip data for the PMIC itself
++ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
++ * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
++ * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
++ * @irq_chip_data_adc: Chained IRQ chip data for the ADC
++ * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
++ * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
++ * @dev: Pointer to the PMIC device
++ * @scu: SCU IPC pointer used for IPC operations
++ */
+ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+@@ -24,6 +38,7 @@ struct intel_soc_pmic {
+ 	struct regmap_irq_chip_data *irq_chip_data_chgr;
+ 	struct regmap_irq_chip_data *irq_chip_data_crit;
+ 	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
+ };
  
--/* Write two sequential registers */
--int intel_scu_ipc_iowrite16(u16 addr, u16 data);
--
--/* Write four sequential registers */
--int intel_scu_ipc_iowrite32(u16 addr, u32 data);
--
- /* Write a vector */
- int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
- 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 997fdac920c6..ba857e54800b 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -237,40 +237,6 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
- }
- EXPORT_SYMBOL(intel_scu_ipc_ioread8);
- 
--/**
-- *	intel_scu_ipc_ioread16		-	read a word via the SCU
-- *	@addr: register on SCU
-- *	@data: return pointer for read word
-- *
-- *	Read a register pair. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-- *
-- *	This function may sleep.
-- */
--int intel_scu_ipc_ioread16(u16 addr, u16 *data)
--{
--	u16 x[2] = {addr, addr + 1};
--	return pwr_reg_rdwr(x, (u8 *)data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
--}
--EXPORT_SYMBOL(intel_scu_ipc_ioread16);
--
--/**
-- *	intel_scu_ipc_ioread32		-	read a dword via the SCU
-- *	@addr: register on SCU
-- *	@data: return pointer for read dword
-- *
-- *	Read four registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-- *
-- *	This function may sleep.
-- */
--int intel_scu_ipc_ioread32(u16 addr, u32 *data)
--{
--	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
--	return pwr_reg_rdwr(x, (u8 *)data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
--}
--EXPORT_SYMBOL(intel_scu_ipc_ioread32);
--
- /**
-  *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
-  *	@addr: register on SCU
-@@ -287,40 +253,6 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
- }
- EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
- 
--/**
-- *	intel_scu_ipc_iowrite16		-	write a word via the SCU
-- *	@addr: register on SCU
-- *	@data: word to write
-- *
-- *	Write two registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-- *
-- *	This function may sleep.
-- */
--int intel_scu_ipc_iowrite16(u16 addr, u16 data)
--{
--	u16 x[2] = {addr, addr + 1};
--	return pwr_reg_rdwr(x, (u8 *)&data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
--}
--EXPORT_SYMBOL(intel_scu_ipc_iowrite16);
--
--/**
-- *	intel_scu_ipc_iowrite32		-	write a dword via the SCU
-- *	@addr: register on SCU
-- *	@data: dword to write
-- *
-- *	Write four registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-- *
-- *	This function may sleep.
-- */
--int intel_scu_ipc_iowrite32(u16 addr, u32 data)
--{
--	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
--	return pwr_reg_rdwr(x, (u8 *)&data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
--}
--EXPORT_SYMBOL(intel_scu_ipc_iowrite32);
--
- /**
-  *	intel_scu_ipc_readvv		-	read a set of registers
-  *	@addr: register list
+ int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 -- 
 2.24.1
 
