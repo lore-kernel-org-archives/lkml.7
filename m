@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F360C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80869C33CA2
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E84D205F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E08205F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 19:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgAHTqK (ORCPT
+        id S1730545AbgAHTqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 14:46:10 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43406 "EHLO
+        Wed, 8 Jan 2020 14:46:11 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43480 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730384AbgAHTqC (ORCPT
+        by vger.kernel.org with ESMTP id S1730424AbgAHTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Jan 2020 14:46:02 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-0006nr-R2; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-0006nn-Fi; Wed, 08 Jan 2020 19:45:57 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ipHHB-007dlE-9X; Wed, 08 Jan 2020 19:45:57 +0000
+        id 1ipHHB-007dku-2N; Wed, 08 Jan 2020 19:45:57 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>
-Date:   Wed, 08 Jan 2020 19:43:08 +0000
-Message-ID: <lsq.1578512578.448330130@decadent.org.uk>
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Andreas Ziegler" <andreas.ziegler@fau.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Ingo Molnar" <mingo@redhat.com>
+Date:   Wed, 08 Jan 2020 19:43:04 +0000
+Message-ID: <lsq.1578512578.490568620@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 10/63] mmc: sanitize 'bus width' in debug output
+Subject: [PATCH 3.16 06/63] tracing/uprobes: Fix output for multiple
+ string arguments
 In-Reply-To: <lsq.1578512578.117275639@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,44 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Andreas Ziegler <andreas.ziegler@fau.de>
 
-commit ed9feec72fc1fa194ebfdb79e14561b35decce63 upstream.
+commit 0722069a5374b904ec1a67f91249f90e1cfae259 upstream.
 
-The bus width is sometimes the actual bus width, and sometimes indices
-to different arrays encoding the bus width. In my debugging case "2"
-could mean 8-bit as well as 4-bit, which was extremly confusing. Let's
-use the human-readable actual bus width in all places.
+When printing multiple uprobe arguments as strings the output for the
+earlier arguments would also include all later string arguments.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
+This is best explained in an example:
+
+Consider adding a uprobe to a function receiving two strings as
+parameters which is at offset 0xa0 in strlib.so and we want to print
+both parameters when the uprobe is hit (on x86_64):
+
+$ echo 'p:func /lib/strlib.so:0xa0 +0(%di):string +0(%si):string' > \
+    /sys/kernel/debug/tracing/uprobe_events
+
+When the function is called as func("foo", "bar") and we hit the probe,
+the trace file shows a line like the following:
+
+  [...] func: (0x7f7e683706a0) arg1="foobar" arg2="bar"
+
+Note the extra "bar" printed as part of arg1. This behaviour stacks up
+for additional string arguments.
+
+The strings are stored in a dynamically growing part of the uprobe
+buffer by fetch_store_string() after copying them from userspace via
+strncpy_from_user(). The return value of strncpy_from_user() is then
+directly used as the required size for the string. However, this does
+not take the terminating null byte into account as the documentation
+for strncpy_from_user() cleary states that it "[...] returns the
+length of the string (not including the trailing NUL)" even though the
+null byte will be copied to the destination.
+
+Therefore, subsequent calls to fetch_store_string() will overwrite
+the terminating null byte of the most recently fetched string with
+the first character of the current string, leading to the
+"accumulation" of strings in earlier arguments in the output.
+
+Fix this by incrementing the return value of strncpy_from_user() by
+one if we did not hit the maximum buffer size.
+
+Link: http://lkml.kernel.org/r/20190116141629.5752-1-andreas.ziegler@fau.de
+
+Cc: Ingo Molnar <mingo@redhat.com>
+Fixes: 5baaa59ef09e ("tracing/probes: Implement 'memory' fetch method for uprobes")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Andreas Ziegler <andreas.ziegler@fau.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/mmc/core/core.c | 2 +-
- drivers/mmc/core/mmc.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_uprobe.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -973,7 +973,7 @@ static inline void mmc_set_ios(struct mm
- 		"width %u timing %u\n",
- 		 mmc_hostname(host), ios->clock, ios->bus_mode,
- 		 ios->power_mode, ios->chip_select, ios->vdd,
--		 ios->bus_width, ios->timing);
-+		 1 << ios->bus_width, ios->timing);
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -151,7 +151,14 @@ static void FETCH_FUNC_NAME(memory, stri
  
- 	if (ios->clock > 0)
- 		mmc_set_ungated(host);
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -935,7 +935,7 @@ static int mmc_select_bus_width(struct m
- 			break;
- 		} else {
- 			pr_warn("%s: switch to bus width %d failed\n",
--				mmc_hostname(host), ext_csd_bits[idx]);
-+				mmc_hostname(host), 1 << bus_width);
- 		}
- 	}
+ 	ret = strncpy_from_user(dst, src, maxlen);
+ 	if (ret == maxlen)
+-		dst[--ret] = '\0';
++		dst[ret - 1] = '\0';
++	else if (ret >= 0)
++		/*
++		 * Include the terminating null byte. In this case it
++		 * was copied by strncpy_from_user but not accounted
++		 * for in ret.
++		 */
++		ret++;
  
+ 	if (ret < 0) {	/* Failed to fetch string */
+ 		((u8 *)get_rloc_data(dest))[0] = '\0';
 
