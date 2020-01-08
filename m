@@ -2,109 +2,121 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A504C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB4FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C872067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1C220705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 13:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vt+5CT31"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZuGH2Wj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgAHNzr (ORCPT
+        id S1728500AbgAHN5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:55:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50538 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgAHNzq (ORCPT
+        Wed, 8 Jan 2020 08:57:17 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34179 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgAHN5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:55:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cUxWnFN2IySuWr46XuhL+3RFX50ZeyW0gT95pv2qmD4=; b=Vt+5CT3169Bv4qieYntJ8dZsR
-        5UXeRErGTFM9eLeYncmOh994nX7RFT/t5Fw8URkRiJVTPFxpvdIH3KmLAb2VYvNHKhIGgltVFCFVR
-        NpbWcFihWLa6xhMle3w37nbHLEuS0qXXweZSypIgZgxo2RFVt5Uoy4fDXD9IRhwKGMOBUdx+gYWgB
-        lFpPTm23YIENiD4dpcJr4xx5R8e15yEIjhLMzJc17QKNfruyhZBEqv7e3/OXVrvTyy4QA4jFxUrCB
-        1utFX6Jv+dEBQMBuhnBGqYyiZ+zcwfonpqP+b+tiwVG+mzhYuybla6N4ydbVnPRP0Qro7lFuGxYtL
-        SDjgOgwmg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipBo2-00041l-6V; Wed, 08 Jan 2020 13:55:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E37B3012C3;
-        Wed,  8 Jan 2020 14:53:53 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E7FD520B79C82; Wed,  8 Jan 2020 14:55:26 +0100 (CET)
-Date:   Wed, 8 Jan 2020 14:55:26 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wang Long <w@laoqinren.net>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, hannes@cmpxchg.org
-Subject: Re: [PATCH] sched/psi: create /proc/pressure and
- /proc/pressure/{io|memory|cpu} only when psi enabled
-Message-ID: <20200108135526.GH2844@hirez.programming.kicks-ass.net>
-References: <1576672698-32504-1-git-send-email-w@laoqinren.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576672698-32504-1-git-send-email-w@laoqinren.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 8 Jan 2020 08:57:16 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i6so1689429pfc.1;
+        Wed, 08 Jan 2020 05:57:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qW90h0u7OkzvuxRNBAEqi37oJNoUhGwMxLdMwSq1ERo=;
+        b=ZuGH2Wj7E14zCp5yindCZWoGHDv7ZOtdQkjnWFD/TfhMWtzS5Xjx+Ks05Fl2umCQxf
+         EwAYwY4mV93SL+T2LKRB2AKRlzgneyqlPV9+PBcc+kYeq0wtMtXTqZzh+iMfAGZykg5t
+         bsXvfP9i0+/OUWaiq8Yb/DbC56N6DhngQyjiL/KvhG0SBBWjGObMFVfuZpH/KoawWCEC
+         kZ++1T2HP0Zo17uKVoZgu5w2akM4e0txuiFbtd0x2Mp5QarS++fKapcAfnehZ0Y6DmGT
+         +jkspmJJdJmz24vJoFEOMTHp7MjLgC84FQk7mylrMVEbCBsKb73X2F0mFKvAE2/+TKAX
+         9OWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qW90h0u7OkzvuxRNBAEqi37oJNoUhGwMxLdMwSq1ERo=;
+        b=irkSqW3IJTr6h2/5AcK5yIbYJoTdJYoYLTvRRzDodhWkRhQEsacc/SUYuADmf17v/i
+         IdS/DzETX5nlteR8oemdEHDfh69iSXZiqaWWg8jD1FHdgxtoXceVexOWLfsyKthk7/6S
+         OzU3fq9fAlBrIHZNxDPBzfkO6RHoh1O7g6wqYm8iCel3VcJr/ZdFWd0azO55Jt1oIWYk
+         KVjnkLn1k8naGHbMwZQEZAQ583hAbD0dP8piaJWp1GNx4HLCNDObpJtevvbeBDoUiTmU
+         n97+fEa6lBJDsD8B122DsI2Qilgpa4jSRjkDKUpkvhzxwfcmadekL0m4X6WhEFEQYGkp
+         4LSg==
+X-Gm-Message-State: APjAAAXqZhLsSe8vvvLMK5PqyvDFlEgEJ5WE/Sbh8R2/tDxQvb1TZXGM
+        eO1mDRI1E2kDHjOsDH7C2Jc=
+X-Google-Smtp-Source: APXvYqzMlnEoYbJ22LLGcHWee0yQGtrOCZXdglioPZIVFM1/YGxuYCvFUALBewJvzxtmga1BAo495w==
+X-Received: by 2002:a65:56c9:: with SMTP id w9mr5145925pgs.296.1578491835938;
+        Wed, 08 Jan 2020 05:57:15 -0800 (PST)
+Received: from localhost (199.168.140.36.16clouds.com. [199.168.140.36])
+        by smtp.gmail.com with ESMTPSA id s185sm3984867pfc.35.2020.01.08.05.57.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 05:57:15 -0800 (PST)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v3] net: stmmac: pci: remove the duplicate code of set phy_mask
+Date:   Wed,  8 Jan 2020 21:56:49 +0800
+Message-Id: <20200108135649.6091-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 08:38:18PM +0800, Wang Long wrote:
-> when CONFIG_PSI_DEFAULT_DISABLED set to N or the command line set psi=0,
-> I think we should not create /proc/pressure and
-> /proc/pressure/{io|memory|cpu}.
-> 
-> In the future, user maybe determine whether the psi feature is enabled by
-> checking the existence of the /proc/pressure dir or
-> /proc/pressure/{io|memory|cpu} files.
+All members of mdio_bus_data are cleared to 0 when it was obtained
+by devm_kzalloc(). so It doesn't need to set phy_mask as 0 again.
 
-Works for me; Johannes?
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
 
-> Signed-off-by: Wang Long <w@laoqinren.net>
-> ---
->  kernel/sched/psi.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 517e371..f12ade2 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -1279,10 +1279,12 @@ static int psi_fop_release(struct inode *inode, struct file *file)
->  
->  static int __init psi_proc_init(void)
->  {
-> -	proc_mkdir("pressure", NULL);
-> -	proc_create("pressure/io", 0, NULL, &psi_io_fops);
-> -	proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
-> -	proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
-> +	if (psi_enable) {
-> +		proc_mkdir("pressure", NULL);
-> +		proc_create("pressure/io", 0, NULL, &psi_io_fops);
-> +		proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
-> +		proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
-> +	}
->  	return 0;
->  }
->  module_init(psi_proc_init);
-> -- 
-> 1.8.3.1
-> 
-> 
-> 
+Changes since v2:
+    Abandoned the other commits, now only this one commit is
+    in the patch set.
+
+Changes since v1:
+    adjust some commit comments.
+
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 8237dbc3e991..40f171d310d7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -65,7 +65,6 @@ static void common_default_data(struct plat_stmmacenet_data *plat)
+ 	plat->force_sf_dma_mode = 1;
+ 
+ 	plat->mdio_bus_data->needs_reset = true;
+-	plat->mdio_bus_data->phy_mask = 0;
+ 
+ 	/* Set default value for multicast hash bins */
+ 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
+@@ -154,8 +153,6 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
+ 	plat->tx_queues_cfg[6].weight = 0x0F;
+ 	plat->tx_queues_cfg[7].weight = 0x10;
+ 
+-	plat->mdio_bus_data->phy_mask = 0;
+-
+ 	plat->dma_cfg->pbl = 32;
+ 	plat->dma_cfg->pblx8 = true;
+ 	plat->dma_cfg->fixed_burst = 0;
+@@ -386,8 +383,6 @@ static int snps_gmac5_default_data(struct pci_dev *pdev,
+ 	plat->tso_en = 1;
+ 	plat->pmt = 1;
+ 
+-	plat->mdio_bus_data->phy_mask = 0;
+-
+ 	/* Set default value for multicast hash bins */
+ 	plat->multicast_filter_bins = HASH_TABLE_SIZE;
+ 
+-- 
+2.17.1
+
