@@ -2,106 +2,102 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC79BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1131C33C99
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9254A20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YH8jqhW4"
+	by mail.kernel.org (Postfix) with ESMTP id 8F6DE2070E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 02:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgAHC2S (ORCPT
+        id S1726439AbgAHCby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Jan 2020 21:28:18 -0500
-Received: from ozlabs.org ([203.11.71.1]:48603 "EHLO ozlabs.org"
+        Tue, 7 Jan 2020 21:31:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47674 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgAHC2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Jan 2020 21:28:17 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47stTB5bfQz9sPK;
-        Wed,  8 Jan 2020 13:28:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578450495;
-        bh=qIPTOKRKoZocSMYk/jePlbzyF7dkyjJs35dUjd+61F8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YH8jqhW41KHQOt4wqZod7LO09Ven0wXe+mlCighTRdYsdNp4T3oKPxE9uXMWo2tz/
-         f6EQYKx12FYL1kIMhriH59VVUVzKyvWnp1YsMmz51S2ep6YI9v3XJiQLpM5bPQLV6y
-         RUwSL72Cp9USyqbz4kOJCav+pGteyEelxb1b3zFjjR64Cz88qpsCUv7GCTZt+FWi4o
-         5ufxVfFLb0uhD3X2znzGQiEQWNS7V/S/wjQGdfCT8bjQkf7IJDtNJ5n1UcHN0By7PH
-         /gcsEAAMfePH4PeJTWfL1Mgy+e7g2pwgCFbs7eJSBq3RXeOi8xRbjOdY9wi4qNmFh8
-         P81PcXlGEIxYA==
-Date:   Wed, 8 Jan 2020 13:28:14 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: linux-next: manual merge of the drm tree with the
- drm-intel-fixes tree
-Message-ID: <20200108132814.2b170270@canb.auug.org.au>
-In-Reply-To: <20200108120450.33ec0fdd@canb.auug.org.au>
-References: <20200108120450.33ec0fdd@canb.auug.org.au>
+        id S1725812AbgAHCby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Jan 2020 21:31:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 18:31:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,408,1571727600"; 
+   d="scan'208";a="254073993"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jan 2020 18:31:52 -0800
+Subject: Re: [ext4] b1b4705d54: filebench.sum_bytes_mb/s -20.2% regression
+To:     Jan Kara <jack@suse.cz>, "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+References: <20191224005915.GW2760@shao2-debian>
+ <20200107134106.GD25547@quack2.suse.cz> <20200107165708.GA3619@mit.edu>
+ <20200107172824.GK25547@quack2.suse.cz>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <fde1ad11-c9b0-4393-a123-3f7625c819fa@intel.com>
+Date:   Wed, 8 Jan 2020 10:31:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U5JCEU3ui9U8iGqVoROUqCR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200107172824.GK25547@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/U5JCEU3ui9U8iGqVoROUqCR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Wed, 8 Jan 2020 12:04:50 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On 1/8/20 1:28 AM, Jan Kara wrote:
+> On Tue 07-01-20 11:57:08, Theodore Y. Ts'o wrote:
+>> On Tue, Jan 07, 2020 at 02:41:06PM +0100, Jan Kara wrote:
+>>> Hello,
+>>>
+>>> On Tue 24-12-19 08:59:15, kernel test robot wrote:
+>>>> FYI, we noticed a -20.2% regression of filebench.sum_bytes_mb/s due to commit:
+>>>>
+>>>>
+>>>> commit: b1b4705d54abedfd69dcdf42779c521aa1e0fbd3 ("ext4: introduce direct I/O read using iomap infrastructure")
+>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>>>
+>>>> in testcase: filebench
+>>>> on test machine: 8 threads Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz with 8G memory
+>>>> with following parameters:
+>>>>
+>>>> 	disk: 1HDD
+>>>> 	fs: ext4
+>>>> 	test: fivestreamreaddirect.f
+>>>> 	cpufreq_governor: performance
+>>>> 	ucode: 0x27
+>>> I was trying to reproduce this but I failed with my test VM. I had SATA SSD
+>>> as a backing store though so maybe that's what makes a difference. Maybe
+>>> the new code results in somewhat more seeks because the five threads which
+>>> compete in submitting sequential IO end up being more interleaved?
+>> A "-20.2% regression" should be read as a "20.2% performance
+>> improvement" is zero-day kernel speak.
+> Are you sure? I can see:
 >
->  -		hw_flags =3D 0;
->  +		/* For resource streamer on HSW+ and power context elsewhere */
->  +		BUILD_BUG_ON(HSW_MI_RS_SAVE_STATE_EN !=3D MI_SAVE_EXT_STATE_EN);
->  +		BUILD_BUG_ON(HSW_MI_RS_RESTORE_STATE_EN !=3D MI_RESTORE_EXT_STATE_EN);
->  +
->  +		flags =3D MI_SAVE_EXT_STATE_EN | MI_MM_SPACE_GTT;
-> - 		if (!i915_gem_context_is_kernel(rq->gem_context))
-> + 		if (!test_bit(CONTEXT_VALID_BIT, &ce->flags))
+>       58.30 ±  2%     -20.2%      46.53        filebench.sum_bytes_mb/s
+>
+> which implies to me previously the throughput was 58 MB/s and after the
+> commit it was 46 MB/s?
+>
+> Anyway, in my testing that commit made no difference in that benchmark
+> whasoever (getting around 97 MB/s for each thread before and after the
+> commit).
+>   
+> 								Honza
 
-I see from the drm-intel tree that this should have not have the '!'.
-I have fixed up my resolution for tomorrow (and it has been fixed for
-today's linux-next in the merge of the drm-intel tree.
+We're sorry for the misunderstanding, "-20.2%" means the change of 
+filebench.sum_bytes_mb/s,
+"regression" means the explanation of this change from LKP.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/U5JCEU3ui9U8iGqVoROUqCR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4VPj4ACgkQAVBC80lX
-0Gzn/Af/artJrwNGLOouRdytZN+URVKTBfaZRujVoEZSz0XEBUTpnEa/hFFeYfFI
-ZNxPFB58dCUDdTkuJcoouWjfz+4a+JrO0B1h7yMXPHzXrRtyVQKRpOEFn3yXlF8l
-R5Q5Pp95lhOBgzcbU2tQsBRGc4Df2wwdL4VNo+dFFJw5xyuv/4vlSCnxHqJhGl6a
-B6ZaFFEVqpEHAmAcG2zrM29jCaHQnxUmRWjQSb+OzoH2ol29IZmnb+S0Qel1ueoF
-qmDVvj56+aKp7pcjbd+egfzSbhtMI6ZV6BX6lrBRmW4Dh1lW3km0ohNzay8hVu0g
-WvlOJl/9TZoOk743px9IMC5NN240dg==
-=5BoX
------END PGP SIGNATURE-----
-
---Sig_/U5JCEU3ui9U8iGqVoROUqCR--
+Best Regards,
+Rong Chen
