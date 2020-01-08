@@ -2,137 +2,152 @@ Return-Path: <SRS0=XcGb=25=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A579FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26063C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A718206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F212220705
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Jan 2020 08:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkoOEJ8b"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="fxUelGuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgAHIed (ORCPT
+        id S1727316AbgAHIf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:34:33 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39026 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgAHIed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 03:34:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so2389303wrt.6;
-        Wed, 08 Jan 2020 00:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jX0Klzp5UaveyVN/+/3AvXAeXp0+CqqhMniHJ22g+l0=;
-        b=GkoOEJ8bEHGnPv0NL6Y/sFC5J5aWA9ICcbWhT/u2oQdKtCysCXfgA4ZLFed+V2nYBw
-         g5mVHahI2a4wlIf0qQjtjieTacqQ1y5oSOTZ3oX5wloVWg3fvCdKrdFtYfywIzUTqSv3
-         vsUu1nsBXQkOh3Fx/uhhfakNFbrmFQZgoyQN5h4gWv56tYTVpXfVEaDCK732R86DDvQQ
-         /SKUbNTVuGtLSFFYrerjBZqGCkT+Wsn0OesYNduyjuopL9MhspyUPo3Ees+pMpsT7N9Q
-         rLFEB0gAb1XBVIzOwvtN/Beo8ciLf0/o1YlnalthH/XKIRlxfbwsXG1I95fqvoR8FjNC
-         rG/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jX0Klzp5UaveyVN/+/3AvXAeXp0+CqqhMniHJ22g+l0=;
-        b=sVLhJnzkVqPpVc4v555F2iDGT/TlaxB19AJhayb+0zeMWx0bMYXcfOIcLSNFLwU20U
-         kq7GRaJAf2YDLVG2M2a/jPxNPTpODM8keUwBN215u9SnpYDBfQKJTNV4INILbE5R39fV
-         +rDVzJEmEScPNmcmTu6OjvrPXQHtIpe8DxgwP4gOU0KyI/7GwqN9kPAy8LXmaO/NeBey
-         s85mtpnuObH2udWc93KJk+wIvFmUfG9lwDvok1ysXWZRSBLPwhXgxfWUFdrI2tM5ymhY
-         a+dIkP6mm+ogADmSRJztR/D8jEe8VCfOTFWLepaHuTOJDCwqvHFKAgZoK7qvkRpyW63L
-         U9YQ==
-X-Gm-Message-State: APjAAAW844rG3GzLq+8dXzv1UeIGC3sUuDizIImtNYFADU5AVAIs94+K
-        /8Yd/6TuWTK6i+L1SqldmNHQr7foCwA2MLzYlxw=
-X-Google-Smtp-Source: APXvYqxmcnRfZZ9RiVnC0PwvEAlnT5+dkD7rgkP0AyD649GpBjET5MasrA7qwnY8xO6DJ2IRjkuiJPC5YTLBpU0tfqE=
-X-Received: by 2002:a5d:50ce:: with SMTP id f14mr3116204wrt.254.1578472470690;
- Wed, 08 Jan 2020 00:34:30 -0800 (PST)
+        Wed, 8 Jan 2020 03:35:58 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:54687 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbgAHIf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:35:57 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47t2dP2tfYz9v3gf;
+        Wed,  8 Jan 2020 09:35:53 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=fxUelGuu; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id I0TjIRBHFA-4; Wed,  8 Jan 2020 09:35:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47t2dP1Xwtz9v3gS;
+        Wed,  8 Jan 2020 09:35:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578472553; bh=pyCqgPPZ7kRofrDb80nScePrylWdxYR2l2/ULCClPrs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fxUelGuuZbXfGsWb57/3BxUjvtvdC/2QbyAEo6YqIvKJAL5rv4xC8YAPDeq7nhud3
+         dkB/UdAQUigd1rFWPHMhgX/6Fa4jCdXgPI62S3zygNDeTcqR1ZOBKH62ej2i0cflHq
+         zb2g6a/VdTBtVa3azjNLc7pwBVFpYUnXR94BgWzQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2FF4A8B7EC;
+        Wed,  8 Jan 2020 09:35:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id PkGUzhhRpTGx; Wed,  8 Jan 2020 09:35:54 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BE1C98B7EA;
+        Wed,  8 Jan 2020 09:35:53 +0100 (CET)
+Subject: Re: [RFT 00/13] iomap: Constify ioreadX() iomem argument
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rich Felker <dalias@libc.org>, Jiri Slaby <jirislaby@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Jason Wang <jasowang@redhat.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        virtualization@lists.linux-foundation.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        netdev <netdev@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Helge Deller <deller@gmx.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Ben Skeggs <bskeggs@redhat.com>, nouveau@lists.freedesktop.org,
+        Dave Airlie <airlied@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Allen Hubbe <allenbh@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Jon Mason <jdmason@kudzu.us>,
+        linux-ntb@googlegroups.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <1578415992-24054-1-git-send-email-krzk@kernel.org>
+ <CAMuHMdW4ek0OYQDrrbcpZjNUTTP04nSbwkmiZvBmKcU=PQM9qA@mail.gmail.com>
+ <CAMuHMdUBmYtJKtSYzS_5u67hVZOqcKSgFY1rDGme6gLNRBJ_gA@mail.gmail.com>
+ <CAJKOXPfq9vS4kSyx1jOPHBvi9_HjviRv0LU2A8ZwdmqgUuebHQ@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <2355489c-a207-1927-54cf-85c04b62f18f@c-s.fr>
+Date:   Wed, 8 Jan 2020 09:35:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com> <1578457515-3477-6-git-send-email-skomatineni@nvidia.com>
-In-Reply-To: <1578457515-3477-6-git-send-email-skomatineni@nvidia.com>
-From:   Nicolas Chauvet <kwizart@gmail.com>
-Date:   Wed, 8 Jan 2020 09:34:19 +0100
-Message-ID: <CABr+WT=qP1BJUfzgmr4AzN18Zp-trMEStF6SQ+AH7+aYBUuUww@mail.gmail.com>
-Subject: Re: [PATCH v7 05/21] clk: tegra: Fix Tegra PMC clock out parents
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        digetx@gmail.com, mperttunen@nvidia.com,
-        gregkh@linuxfoundation.org, sboyd@kernel.org,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJKOXPfq9vS4kSyx1jOPHBvi9_HjviRv0LU2A8ZwdmqgUuebHQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mer. 8 janv. 2020 =C3=A0 05:27, Sowjanya Komatineni
-<skomatineni@nvidia.com> a =C3=A9crit :
->
-> Tegra PMC clock out parents are osc, osc_div2, osc_div4 and extern
-> clock.
->
-> Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
-> for PMC clocks.
->
-> This patch fixes this.
->
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-te=
-gra-pmc.c
-> index bec3e008335f..5e044ba1ae36 100644
-> --- a/drivers/clk/tegra/clk-tegra-pmc.c
-> +++ b/drivers/clk/tegra/clk-tegra-pmc.c
-> @@ -49,16 +49,16 @@ struct pmc_clk_init_data {
->
->  static DEFINE_SPINLOCK(clk_out_lock);
->
-> -static const char *clk_out1_parents[] =3D { "clk_m", "clk_m_div2",
-> -       "clk_m_div4", "extern1",
-> +static const char *clk_out1_parents[] =3D { "osc", "osc_div2",
-> +       "osc_div4", "extern1",
->  };
->
-> -static const char *clk_out2_parents[] =3D { "clk_m", "clk_m_div2",
-> -       "clk_m_div4", "extern2",
-> +static const char *clk_out2_parents[] =3D { "osc", "osc_div2",
-> +       "osc_div4", "extern2",
->  };
->
-> -static const char *clk_out3_parents[] =3D { "clk_m", "clk_m_div2",
-> -       "clk_m_div4", "extern3",
-> +static const char *clk_out3_parents[] =3D { "osc", "osc_div2",
-> +       "osc_div4", "extern3",
->  };
->
->  static struct pmc_clk_init_data pmc_clks[] =3D {
-> --
-> 2.7.4
 
-Out of curiosity, this patch touch the clk-tegra-pmc.c file which is
-later removed (by patch 11).
-Is this change made for bugfix ? Is there a stable tag missing ?
 
---=20
--
+Le 08/01/2020 à 09:18, Krzysztof Kozlowski a écrit :
+> On Wed, 8 Jan 2020 at 09:13, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>
+>> Hi Krzysztof,
+>>
+>> On Wed, Jan 8, 2020 at 9:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>> On Tue, Jan 7, 2020 at 5:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>> The ioread8/16/32() and others have inconsistent interface among the
+>>>> architectures: some taking address as const, some not.
+>>>>
+>>>> It seems there is nothing really stopping all of them to take
+>>>> pointer to const.
+>>>
+>>> Shouldn't all of them take const volatile __iomem pointers?
+>>> It seems the "volatile" is missing from all but the implementations in
+>>> include/asm-generic/io.h.
+>>
+>> As my "volatile" comment applies to iowrite*(), too, probably that should be
+>> done in a separate patch.
+>>
+>> Hence with patches 1-5 squashed, and for patches 11-13:
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> I'll add to this one also changes to ioreadX_rep() and add another
+> patch for volatile for reads and writes. I guess your review will be
+> appreciated once more because of ioreadX_rep()
+> 
 
-Nicolas (kwizart)
+volatile should really only be used where deemed necessary:
+
+https://www.kernel.org/doc/html/latest/process/volatile-considered-harmful.html
+
+It is said: " ...  accessor functions might use volatile on 
+architectures where direct I/O memory access does work. Essentially, 
+each accessor call becomes a little critical section on its own and 
+ensures that the access happens as expected by the programmer."
+
+Christophe
