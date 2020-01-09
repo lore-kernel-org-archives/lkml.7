@@ -2,151 +2,111 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2966EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1378C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5172073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91302073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgAIXGs (ORCPT
+        id S1728989AbgAIXLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:06:48 -0500
-Received: from mga11.intel.com ([192.55.52.93]:54670 "EHLO mga11.intel.com"
+        Thu, 9 Jan 2020 18:11:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbgAIXGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:06:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 15:06:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="396242474"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2020 15:06:41 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@ACULAB.COM>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [PATCH v2 1/2] KVM: x86/mmu: Reorder the reserved bit check in prefetch_invalid_gpte()
-Date:   Thu,  9 Jan 2020 15:06:39 -0800
-Message-Id: <20200109230640.29927-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200109230640.29927-1-sean.j.christopherson@intel.com>
-References: <20200109230640.29927-1-sean.j.christopherson@intel.com>
+        id S1727876AbgAIXLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 18:11:00 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C447320656;
+        Thu,  9 Jan 2020 23:10:57 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 18:10:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 00/22] tracing: bootconfig: Boot-time tracing and
+ Extra boot config
+Message-ID: <20200109181055.1999b344@gandalf.local.home>
+In-Reply-To: <157736902773.11126.2531161235817081873.stgit@devnote2>
+References: <157736902773.11126.2531161235817081873.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the !PRESENT and !ACCESSED checks in FNAME(prefetch_invalid_gpte)
-above the call to is_rsvd_bits_set().  For a well behaved guest, the
-!PRESENT and !ACCESSED are far more likely to evaluate true than the
-reserved bit checks, and they do not require additional memory accesses.
+On Thu, 26 Dec 2019 23:03:48 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Before:
- Dump of assembler code for function paging32_prefetch_invalid_gpte:
-   0x0000000000044240 <+0>:     callq  0x44245 <paging32_prefetch_invalid_gpte+5>
-   0x0000000000044245 <+5>:     mov    %rcx,%rax
-   0x0000000000044248 <+8>:     shr    $0x7,%rax
-   0x000000000004424c <+12>:    and    $0x1,%eax
-   0x000000000004424f <+15>:    lea    0x0(,%rax,4),%r8
-   0x0000000000044257 <+23>:    add    %r8,%rax
-   0x000000000004425a <+26>:    mov    %rcx,%r8
-   0x000000000004425d <+29>:    and    0x120(%rsi,%rax,8),%r8
-   0x0000000000044265 <+37>:    mov    0x170(%rsi),%rax
-   0x000000000004426c <+44>:    shr    %cl,%rax
-   0x000000000004426f <+47>:    and    $0x1,%eax
-   0x0000000000044272 <+50>:    or     %rax,%r8
-   0x0000000000044275 <+53>:    jne    0x4427c <paging32_prefetch_invalid_gpte+60>
-   0x0000000000044277 <+55>:    test   $0x1,%cl
-   0x000000000004427a <+58>:    jne    0x4428a <paging32_prefetch_invalid_gpte+74>
-   0x000000000004427c <+60>:    mov    %rdx,%rsi
-   0x000000000004427f <+63>:    callq  0x44080 <drop_spte>
-   0x0000000000044284 <+68>:    mov    $0x1,%eax
-   0x0000000000044289 <+73>:    retq
-   0x000000000004428a <+74>:    xor    %eax,%eax
-   0x000000000004428c <+76>:    and    $0x20,%ecx
-   0x000000000004428f <+79>:    jne    0x44289 <paging32_prefetch_invalid_gpte+73>
-   0x0000000000044291 <+81>:    mov    %rdx,%rsi
-   0x0000000000044294 <+84>:    callq  0x44080 <drop_spte>
-   0x0000000000044299 <+89>:    mov    $0x1,%eax
-   0x000000000004429e <+94>:    jmp    0x44289 <paging32_prefetch_invalid_gpte+73>
- End of assembler dump.
+> Hello,
+> 
+> This is the 5th version of the series for the boot-time tracing.
+> 
+> Previous version is here.
+> 
+> https://lkml.kernel.org/r/157528159833.22451.14878731055438721716.stgit@devnote2
 
-After:
- Dump of assembler code for function paging32_prefetch_invalid_gpte:
-   0x0000000000044240 <+0>:     callq  0x44245 <paging32_prefetch_invalid_gpte+5>
-   0x0000000000044245 <+5>:     test   $0x1,%cl
-   0x0000000000044248 <+8>:     je     0x4424f <paging32_prefetch_invalid_gpte+15>
-   0x000000000004424a <+10>:    test   $0x20,%cl
-   0x000000000004424d <+13>:    jne    0x4425d <paging32_prefetch_invalid_gpte+29>
-   0x000000000004424f <+15>:    mov    %rdx,%rsi
-   0x0000000000044252 <+18>:    callq  0x44080 <drop_spte>
-   0x0000000000044257 <+23>:    mov    $0x1,%eax
-   0x000000000004425c <+28>:    retq
-   0x000000000004425d <+29>:    mov    %rcx,%rax
-   0x0000000000044260 <+32>:    mov    (%rsi),%rsi
-   0x0000000000044263 <+35>:    shr    $0x7,%rax
-   0x0000000000044267 <+39>:    and    $0x1,%eax
-   0x000000000004426a <+42>:    lea    0x0(,%rax,4),%r8
-   0x0000000000044272 <+50>:    add    %r8,%rax
-   0x0000000000044275 <+53>:    mov    %rcx,%r8
-   0x0000000000044278 <+56>:    and    0x120(%rsi,%rax,8),%r8
-   0x0000000000044280 <+64>:    mov    0x170(%rsi),%rax
-   0x0000000000044287 <+71>:    shr    %cl,%rax
-   0x000000000004428a <+74>:    and    $0x1,%eax
-   0x000000000004428d <+77>:    mov    %rax,%rcx
-   0x0000000000044290 <+80>:    xor    %eax,%eax
-   0x0000000000044292 <+82>:    or     %rcx,%r8
-   0x0000000000044295 <+85>:    je     0x4425c <paging32_prefetch_invalid_gpte+28>
-   0x0000000000044297 <+87>:    mov    %rdx,%rsi
-   0x000000000004429a <+90>:    callq  0x44080 <drop_spte>
-   0x000000000004429f <+95>:    mov    $0x1,%eax
-   0x00000000000442a4 <+100>:   jmp    0x4425c <paging32_prefetch_invalid_gpte+28>
- End of assembler dump.
+Hi Masami,
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/paging_tmpl.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I applied all your patches to a test branch and was playing with it a
+little. This seems fine to me and works well (and very easy to use).
+Probably could use some more examples, but that's just a nit.
 
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index b53bed3c901c..1fde6a1c506d 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -175,9 +175,6 @@ static bool FNAME(prefetch_invalid_gpte)(struct kvm_vcpu *vcpu,
- 				  struct kvm_mmu_page *sp, u64 *spte,
- 				  u64 gpte)
- {
--	if (is_rsvd_bits_set(vcpu->arch.mmu, gpte, PT_PAGE_TABLE_LEVEL))
--		goto no_present;
--
- 	if (!FNAME(is_present_gpte)(gpte))
- 		goto no_present;
- 
-@@ -186,6 +183,9 @@ static bool FNAME(prefetch_invalid_gpte)(struct kvm_vcpu *vcpu,
- 	    !(gpte & PT_GUEST_ACCESSED_MASK))
- 		goto no_present;
- 
-+	if (is_rsvd_bits_set(vcpu->arch.mmu, gpte, PT_PAGE_TABLE_LEVEL))
-+		goto no_present;
-+
- 	return false;
- 
- no_present:
--- 
-2.24.1
+If nobody has any issues with this code, I'll wait for v6 with the
+fixes to issues found in this series, and I'll happily apply them for
+linux-next.
 
+-- Steve
+
+
+> 
+> In this version, I removed RFC tag from the series.
+> Changes from the v4 are here, updating bootconfig things.
+> 
+>  - [1/22] Fix help comment and indent of Kconfig.
+>           Restrict available characters in values(*)
+>           Drop backslash escape from quoted value(**)
+>  - [3/22] Fix Makefile to compile tool correctly
+>           Remove unused pattern from Makefile
+>  - [4/22] Show test target bootconfig
+>           Add printable value testcases
+>           Add bad array testcase
+>  - [9/22] Fix TOC list
+>           Add notes about available characters.
+>           Fix to use correct quotes (``) for .rst.
+> 
+> (*) this is for preventing admin from shoot himself.
+> (**) this rule is from legacy command line.
+> 
+> Boot-time tracing features are not modified. I know Tom is working
+> on exporting synthetic event (and dynamic events) APIs for module.
+> If that APIs are merged first, I will update my series on top
+> of that.
+> 
+> This series can be applied on v5.5-rc3 or directly available at;
+> 
+> https://github.com/mhiramat/linux.git ftrace-boottrace-v5
+> 
+> 
