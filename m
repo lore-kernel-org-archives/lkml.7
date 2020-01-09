@@ -2,100 +2,159 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8ACC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BC7206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jcIaSPWV"
+	by mail.kernel.org (Postfix) with ESMTP id ADC36206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgAIB6R (ORCPT
+        id S1727858AbgAIB6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:58:17 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:16731 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726913AbgAIB6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:58:16 -0500
-X-UUID: 9e09695191a449c9bd47d1364bb50fe4-20200109
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=f8V/w28keayMesUZndCtYcFhLlpst9SQecLMZIoZ2Ow=;
-        b=jcIaSPWVnZTrfouW4dPUXFy601FrkzqHDA0qFmcRZI1Ll83ivQNN2ulQpOBUIApIHpKMICRTUByw0V48GLWfUg/PqWZoU9+a3sofFBQkl7peWEDNjs0evgk9zUFALobP3Gbtp4SfsZHU0E8OkI9k5VN74q6Tkr5S145s1/PPUw0=;
-X-UUID: 9e09695191a449c9bd47d1364bb50fe4-20200109
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.liang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1914033652; Thu, 09 Jan 2020 09:58:05 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
- 2020 09:56:53 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 9 Jan 2020 09:58:22 +0800
-Message-ID: <1578535081.20923.5.camel@mhfsdcap03>
-Subject: Re: [PATCH v10 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-From:   Yong Liang <yong.liang@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
-        <Jiaxin.Yu@mediatek.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
-        <Chang-An.Chen@mediatek.com>,
-        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
-        <Freddy.Hsin@mediatek.com>,
-        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
-        <Yingjoe.Chen@mediatek.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-Date:   Thu, 9 Jan 2020 09:58:01 +0800
-In-Reply-To: <20200106215721.GB31059@bogus>
-References: <1578280296-18946-1-git-send-email-jiaxin.yu@mediatek.com>
-         <1578280296-18946-2-git-send-email-jiaxin.yu@mediatek.com>
-         <20200106215721.GB31059@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 8 Jan 2020 20:58:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:1677 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgAIB6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:58:46 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:58:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
+   d="scan'208";a="233955535"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2020 17:58:44 -0800
+Date:   Thu, 9 Jan 2020 09:58:45 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/memory-failure.c: not necessary to recalculate
+ hpage
+Message-ID: <20200109015845.GA31041@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
+ <20191118082003.26240-2-richardw.yang@linux.intel.com>
+ <fdba31c8-d0c0-83a8-62d1-c04c1e894218@redhat.com>
+ <20191202222827.isaelnqmuyn7zrns@master>
+ <37eedde2-05ab-e42e-7bcd-09090b090366@redhat.com>
+ <20191206014825.GA3846@richard>
+ <fd9dc6a9-3fe8-2258-3fc3-0cbdd6b3ef98@redhat.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C4E159BAC36ECB497154526A379FBD41D7CD188C7E791C104A8D9215220B2C4D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd9dc6a9-3fe8-2258-3fc3-0cbdd6b3ef98@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAxLTA3IGF0IDA1OjU3ICswODAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gTW9uLCA2IEphbiAyMDIwIDExOjExOjM1ICswODAwLCBKaWF4aW4gWXUgd3JvdGU6DQo+ID4g
-QWRkICNyZXNldC1jZWxscyBwcm9wZXJ0eSBhbmQgdXBkYXRlIGV4YW1wbGUNCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiB5b25nLmxpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBKaWF4aW4gWXUgPGppYXhpbi55dUBtZWRpYXRlay5jb20+DQo+ID4gUmV2
-aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiBS
-ZXZpZXdlZC1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gPiAt
-LS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQgIHwg
-MTAgKysrKysrLS0tDQo+ID4gIC4uLi9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCAg
-ICAgICAgICB8IDIyICsrKysrKysrKysrKysrKysrKysNCj4gPiAgLi4uL3Jlc2V0LWNvbnRyb2xs
-ZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAgIHwgMTcgKysrKysrKysrKysrKysNCj4gPiAgMyBm
-aWxlcyBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210Mjcx
-Mi1yZXNldHMuaA0KPiA+IA0KPiANCj4gUGxlYXNlIGFkZCBBY2tlZC1ieS9SZXZpZXdlZC1ieSB0
-YWdzIHdoZW4gcG9zdGluZyBuZXcgdmVyc2lvbnMuIEhvd2V2ZXIsDQo+IHRoZXJlJ3Mgbm8gbmVl
-ZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUgdXBzdHJlYW0N
-Cj4gbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNp
-b24gdGhleSBhcHBseS4NCj4gDQo+IElmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwg
-cGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFuZ2VkLg0KDQogIFNvcnJ5IG5vdCBhZGQgeW91
-IGluIFJldmlld2VkLWJ5Og0KICBXZSB3aWxsIGFkZCB5b3UgaW4gUmV2aWV3ZWQtYnk6IGlmIGhh
-dmUgbmV4dCBwYXRjaC4NCg==
+On Wed, Jan 08, 2020 at 01:20:44PM +0100, David Hildenbrand wrote:
+>On 06.12.19 02:48, Wei Yang wrote:
+>> On Thu, Dec 05, 2019 at 04:06:20PM +0100, David Hildenbrand wrote:
+>>> On 02.12.19 23:28, Wei Yang wrote:
+>>>> On Wed, Nov 20, 2019 at 04:07:38PM +0100, David Hildenbrand wrote:
+>>>>> On 18.11.19 09:20, Wei Yang wrote:
+>>>>>> hpage is not changed.
+>>>>>>
+>>>>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>>>>> ---
+>>>>>>   mm/memory-failure.c | 1 -
+>>>>>>   1 file changed, 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>>>>>> index 392ac277b17d..9784f4339ae7 100644
+>>>>>> --- a/mm/memory-failure.c
+>>>>>> +++ b/mm/memory-failure.c
+>>>>>> @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
+>>>>>>   		}
+>>>>>>   		unlock_page(p);
+>>>>>>   		VM_BUG_ON_PAGE(!page_count(p), p);
+>>>>>> -		hpage = compound_head(p);
+>>>>>>   	}
+>>>>>>   	/*
+>>>>>>
+>>>>>
+>>>>> I am *absolutely* no transparent huge page expert (sorry :) ), but won't the
+>>>>> split_huge_page(p) eventually split the compound page, such that
+>>>>> compound_head(p) will return something else after that call?
+>>>>>
+>>>>
+>>>> Hi, David
+>>>>
+>>>> Took sometime to look into the code and re-think about it. Found maybe we can
+>>>> simplify this in another way.
+>>>>
+>>>> First, code touches here means split_huge_page() succeeds and "p" is now a PTE
+>>>> page. So compound_head(p) == p.
+>>>
+>>> While this would also be my intuition, I can't state that this is
+>>> guaranteed to be the case (IOW, I did not check the code/documentation) :)
+>>>
+>> 
+>> If my understanding is correct, split_huge_page() succeeds the THP would be
+>> tear down to normal page.
+>> 
+>>>>
+>>>> Then let's look at who will use hpage in the following function. There are two
+>>>> uses in current upstream:
+>>>>
+>>>>     * page_flags calculation
+>>>>     * hwpoison_user_mappings()
+>>>>
+>>>> The first one would be removed in next patch since PageHuge is handled at the
+>>>> beginning.
+>>>>
+>>>> And in the second place, comment says if split succeeds, hpage points to page
+>>>> "p".
+>>>>
+>>>> After all, we don't need to re-calculate hpage after split, and just replace
+>>>> hpage in hwpoison_user_mappings() with p is enough.
+>>>
+>>> That assumption would only be true in case all compound pages at this
+>>> point are transparent huge pages, no? AFAIK that is not necessarily
+>>> true. Or am I missing something?
+>>>
+>> 
+>> Function hwpoison_user_mappings() just handle user space mapping. If my
+>> understanding is correct, we just have three type of pages would be used in
+>> user space mapping:
+>> 
+>>     * normal page
+>>     * THP
+>>     * hugetlb
+>> 
+>> Since THP would be split or already returned and hugetlb is handled in another
+>> branch, this means for other pages hwpoison_user_mappings() would just return
+>> true.
+>> 
+>
+>Sorry for the late reply :)
+>
+>While I think you are correct, I am not sure if the change you are
+>suggesting is a) future proof and b) worth it. IOW, the recalculation
+>after the split makes it clear that something changed and that the
+>compound page does no longer exist. I might be wrong of course and this
+>cleanup makes perfect sense :)
+>
 
+Yep, you are welcome.
+
+I would think about the whole picture again.
+
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
+
+-- 
+Wei Yang
+Help you, Help me
