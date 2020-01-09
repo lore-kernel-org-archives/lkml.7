@@ -2,324 +2,465 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01605C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD29AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4A4206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7eE+Cfr"
+	by mail.kernel.org (Postfix) with ESMTP id 782F620721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578601552;
+	bh=KmmxjW/n0f5QkKq5zao0NaYxyvoPiSgtJ6eizMno8HM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=YfVN1zpSNHemM93/oGqWhDYFxLN8obDr0SvguA9CU9S/0bQq+2lTrLfOMC5FQVAPv
+	 Y22RUj9DBxIEnn4GXR3k2xfFuSZWv954m2GCKuxR+cGpsQu3MhBTq64TwyVHt8PSiP
+	 mX+U/PWzEJqETISdumUCxZiHi1HngTFRQV+3Nhjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgAIUTX (ORCPT
+        id S1729715AbgAIUZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:19:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32055 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729155AbgAIUTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:19:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578601160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xRmMUmkxFLwDnIC2NJrxvA86Eun+PiOxEnnGKDbXJ20=;
-        b=E7eE+CfrdmP4lUVtvonmtbeJ6lDi7vRsxWeuOnUz8dxARE9bVemF9g9LQsSh38tJItqP1k
-        40PpwKan3pNhdc5Z60tkrpZ+1p7LU5hXnV/OjkAtx0ikYWTbNzfhcD8QGlCHLjbkT0SOUn
-        ROpwVU9UOTG6T34bxBL9fFo+dtbwDqc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-uWnvHJCDMRWTSPKHceJWdw-1; Thu, 09 Jan 2020 15:19:19 -0500
-X-MC-Unique: uWnvHJCDMRWTSPKHceJWdw-1
-Received: by mail-qt1-f200.google.com with SMTP id e8so4970520qtg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:19:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xRmMUmkxFLwDnIC2NJrxvA86Eun+PiOxEnnGKDbXJ20=;
-        b=YJfhtFKxGIR9f2AUh04qSiUm/GgSGXBP72uopBSNaIRVeih6H6m6npOTFA3HZhfE+1
-         EmM5vVqYkuzgs91ONZ5XFucUtW5Bk+ocw9D0aWFvpQGlc4cHsDJn4LbPGlABO2C3xTwq
-         9AKuUjHauAgs6gk1owSkTvxrPftp/R64oXspaqusXxjw+E/FbhWOuCc7cc2+Efrb7HLF
-         ylOsVwaUTj8UzncTnUPv0Kz0WKOAl6v42e6aJNNTlckqBVSLb4TehSTXwQQ8WWZRXVRP
-         Z5rxD/Ni5HbWHR3+H5sA4zc/LvXnaxJBTZ1QKeNL7DAzqWP5LlIF81MAZ6dlTaG52FLl
-         NwSg==
-X-Gm-Message-State: APjAAAVYcWxfqinPHvhBoMnG9l5MD8nXRXAxK3CBsTbN2yrfXQF2s64L
-        cV0D+eUh2cAh/WfBgfwl33D1QFtGOhWSkOJkHj2gVj9YkIQv15EPodeBhDB3o6KPsH/1NhweDbl
-        7rI/ClZtmUQY9ce12+noSiq8z
-X-Received: by 2002:a05:620a:14bc:: with SMTP id x28mr11162819qkj.494.1578601158770;
-        Thu, 09 Jan 2020 12:19:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxEIqYHGQUVPi+klS+m/mjrcBgk86zbrs4bfr92JwFFD/0gW01rdhfCi1Q/7OATxPl0IP/REQ==
-X-Received: by 2002:a05:620a:14bc:: with SMTP id x28mr11162777qkj.494.1578601158313;
-        Thu, 09 Jan 2020 12:19:18 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id s1sm3517948qkm.84.2020.01.09.12.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 12:19:17 -0800 (PST)
-Date:   Thu, 9 Jan 2020 15:19:16 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200109201916.GH36997@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200109110110-mutt-send-email-mst@kernel.org>
- <20200109191514.GD36997@xz-x1>
- <20200109141634-mutt-send-email-mst@kernel.org>
+        Thu, 9 Jan 2020 15:25:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729667AbgAIUZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 15:25:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F085206ED;
+        Thu,  9 Jan 2020 20:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578601549;
+        bh=KmmxjW/n0f5QkKq5zao0NaYxyvoPiSgtJ6eizMno8HM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=O5TpSAa81ndCn5jCvuvLEMSiYB11hv2KwD7kofubtFIECgcleXXA5s/UNE5Db45KF
+         Hf2Ao83gIMGKcTPeUvNkBv1N/MbmnaAEIdPjoVUHUXLRuusTEeBkCbnaLbXy++AAjj
+         hCzcmFxqo5chDH1hAPlo4SOsdY/+rBaovnj5drH0=
+Date:   Thu, 9 Jan 2020 21:25:47 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.163
+Message-ID: <20200109202547.GA7640@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
 Content-Disposition: inline
-In-Reply-To: <20200109141634-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:35:46PM -0500, Michael S. Tsirkin wrote:
 
-[...]
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > I know index design is popular, but testing with virtio showed
-> > > that it's better to just have a flags field marking
-> > > an entry as valid. In particular this gets rid of the
-> > > running counters and power of two limitations.
-> > > It also removes the need for a separate index page, which is nice.
-> > 
-> > Firstly, note that the separate index page has already been dropped
-> > since V2, so we don't need to worry on that.
-> 
-> changelog would be nice.
+I'm announcing the release of the 4.14.163 kernel.
 
-Actually I mentioned it in V2:
+All users of the 4.14 kernel series must upgrade.
 
-https://lore.kernel.org/kvm/20191221014938.58831-1-peterx@redhat.com/
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-There's a section "Per-vm ring is dropped".  But it's indeed hiding
-behind the wall that the index page is bound to the per-vm ring...
-I'll try to be more clear in the cover letter in the future.
+thanks,
 
-> So now, how does userspace tell kvm it's done with the ring?
+greg k-h
 
-It should rarely tell unless the ring reaches soft-full, in that case
-the vcpu KVM_RUN will return with KVM_EXIT_DIRTY_RING_FULL.
+------------
 
-> 
-> > Regarding dropping the indices: I feel like it can be done, though we
-> > probably need two extra bits for each GFN entry, for example:
-> > 
-> >   - Bit 0 of the GFN address to show whether this is a valid publish
-> >     of dirty gfn
-> > 
-> >   - Bit 1 of the GFN address to show whether this is collected by the
-> >     user
-> 
-> 
-> I wonder whether you will end up reinventing virtio.
-> You are already pretty close with avail/used bits in flags.
-> 
-> 
-> 
-> > We can also use the padding field, but just want to show the idea
-> > first.
-> > 
-> > Then for each GFN we can go through state changes like this (things
-> > like "00b" stands for "bit1 bit0" values):
-> > 
-> >   00b (invalid GFN) ->
-> >     01b (valid gfn published by kernel, which is dirty) ->
-> >       10b (gfn dirty page collected by userspace) ->
-> >         00b (gfn reset by kernel, so goes back to invalid gfn)
-> > 
-> > And we should always guarantee that both the userspace and KVM walks
-> > the GFN array in a linear manner, for example, KVM must publish a new
-> > GFN with bit 1 set right after the previous publish of GFN.  Vice
-> > versa to the userspace when it collects the dirty GFN and mark bit 2.
-> > 
-> > Michael, do you mean something like this?
-> > 
-> > I think it should work logically, however IIUC it can expose more
-> > security risks, say, dirty ring is different from virtio in that
-> > userspace is not trusted,
-> 
-> In what sense?
+ Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt | =
+   2=20
+ Makefile                                                                | =
+   2=20
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts                     | =
+   4=20
+ arch/arm64/include/asm/pgtable-prot.h                                   | =
+   5=20
+ arch/arm64/include/asm/pgtable.h                                        | =
+  10=20
+ arch/arm64/mm/fault.c                                                   | =
+   2=20
+ arch/mips/include/asm/thread_info.h                                     | =
+  20 +
+ arch/powerpc/platforms/pseries/hvconsole.c                              | =
+   2=20
+ arch/s390/kernel/perf_cpum_sf.c                                         | =
+  22 +
+ arch/s390/kernel/smp.c                                                  | =
+  80 ++++---
+ arch/x86/events/intel/bts.c                                             | =
+  16 -
+ block/compat_ioctl.c                                                    | =
+  11=20
+ drivers/ata/ahci_brcm.c                                                 | =
+ 112 +++++++---
+ drivers/ata/libahci_platform.c                                          | =
+   6=20
+ drivers/block/xen-blkback/blkback.c                                     | =
+   2=20
+ drivers/block/xen-blkback/xenbus.c                                      | =
+  10=20
+ drivers/bluetooth/btusb.c                                               | =
+   3=20
+ drivers/devfreq/devfreq.c                                               | =
+   8=20
+ drivers/firewire/net.c                                                  | =
+   6=20
+ drivers/gpio/gpiolib.c                                                  | =
+   8=20
+ drivers/gpu/drm/drm_dp_mst_topology.c                                   | =
+   6=20
+ drivers/gpu/drm/drm_property.c                                          | =
+   2=20
+ drivers/gpu/drm/nouveau/nouveau_connector.h                             | =
+ 110 ++++-----
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c                                  | =
+   2=20
+ drivers/iio/adc/max9611.c                                               | =
+  16 -
+ drivers/infiniband/core/cma.c                                           | =
+   1=20
+ drivers/infiniband/hw/mlx4/main.c                                       | =
+   9=20
+ drivers/infiniband/sw/rxe/rxe_recv.c                                    | =
+   2=20
+ drivers/infiniband/sw/rxe/rxe_req.c                                     | =
+   6=20
+ drivers/infiniband/sw/rxe/rxe_resp.c                                    | =
+   7=20
+ drivers/md/raid1.c                                                      | =
+   2=20
+ drivers/media/cec/cec-adap.c                                            | =
+  20 +
+ drivers/media/usb/b2c2/flexcop-usb.c                                    | =
+   2=20
+ drivers/media/usb/dvb-usb/af9005.c                                      | =
+   5=20
+ drivers/media/usb/pulse8-cec/pulse8-cec.c                               | =
+  17 +
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c                           | =
+  23 +-
+ drivers/nvme/host/fc.c                                                  | =
+  14 +
+ drivers/nvme/target/fcloop.c                                            | =
+   1=20
+ drivers/platform/x86/pmc_atom.c                                         | =
+   8=20
+ drivers/regulator/ab8500.c                                              | =
+  17 -
+ drivers/scsi/libsas/sas_discover.c                                      | =
+  11=20
+ drivers/scsi/lpfc/lpfc_bsg.c                                            | =
+  15 -
+ drivers/scsi/lpfc/lpfc_nvme.c                                           | =
+   2=20
+ drivers/scsi/qedf/qedf_els.c                                            | =
+  16 -
+ drivers/scsi/qla2xxx/qla_isr.c                                          | =
+   4=20
+ drivers/scsi/qla2xxx/qla_nvme.c                                         | =
+   1=20
+ drivers/scsi/qla2xxx/qla_target.c                                       | =
+   1=20
+ drivers/scsi/qla4xxx/ql4_os.c                                           | =
+   1=20
+ drivers/tty/hvc/hvc_vio.c                                               | =
+  16 +
+ drivers/tty/serial/msm_serial.c                                         | =
+  13 -
+ drivers/usb/gadget/function/f_ecm.c                                     | =
+   6=20
+ drivers/usb/gadget/function/f_rndis.c                                   | =
+   1=20
+ drivers/xen/balloon.c                                                   | =
+   3=20
+ fs/compat_ioctl.c                                                       | =
+   3=20
+ fs/locks.c                                                              | =
+   2=20
+ fs/nfsd/nfs4state.c                                                     | =
+  15 -
+ fs/pstore/ram.c                                                         | =
+  11=20
+ fs/xfs/libxfs/xfs_bmap.c                                                | =
+   2=20
+ fs/xfs/xfs_log.c                                                        | =
+   2=20
+ include/linux/ahci_platform.h                                           | =
+   2=20
+ include/linux/dmaengine.h                                               | =
+   5=20
+ include/linux/nvme-fc-driver.h                                          | =
+   4=20
+ include/linux/regulator/ab8500.h                                        | =
+   1=20
+ include/net/neighbour.h                                                 | =
+   2=20
+ kernel/cred.c                                                           | =
+   6=20
+ kernel/exit.c                                                           | =
+  12 -
+ kernel/power/snapshot.c                                                 | =
+   9=20
+ kernel/taskstats.c                                                      | =
+  30 +-
+ kernel/trace/ftrace.c                                                   | =
+   6=20
+ kernel/trace/trace.c                                                    | =
+   8=20
+ kernel/trace/trace_events.c                                             | =
+   8=20
+ kernel/trace/tracing_map.c                                              | =
+   4=20
+ mm/mmap.c                                                               | =
+   6=20
+ mm/zsmalloc.c                                                           | =
+   5=20
+ net/bluetooth/hci_conn.c                                                | =
+   4=20
+ net/bluetooth/l2cap_core.c                                              | =
+   4=20
+ net/core/neighbour.c                                                    | =
+   4=20
+ net/ethernet/eth.c                                                      | =
+   7=20
+ net/rxrpc/peer_event.c                                                  | =
+   3=20
+ net/socket.c                                                            | =
+   4=20
+ sound/firewire/motu/motu-proc.c                                         | =
+   2=20
+ sound/isa/cs423x/cs4236.c                                               | =
+   3=20
+ sound/pci/ice1712/ice1724.c                                             | =
+   9=20
+ tools/testing/selftests/net/rtnetlink.sh                                | =
+  21 +
+ 84 files changed, 607 insertions(+), 288 deletions(-)
 
-In the sense of general syscalls?  Like, we shouldn't allow the kernel
-to break and go wild no matter what the userspace does?
+Al Viro (1):
+      fix compat handling of FICLONERANGE, FIDEDUPERANGE and FS_IOC_FIEMAP
 
-> 
-> > while for virtio, both sides (hypervisor,
-> > and the guest driver) are trusted.
-> 
-> What gave you the impression guest is trusted in virtio?
+Aleksandr Yashkin (1):
+      pstore/ram: Write new dumps to start of recycled zones
 
-Hmm... maybe when I know virtio can bypass vIOMMU as long as it
-doesn't provide IOMMU_PLATFORM flag? :)
+Alexander Shishkin (1):
+      perf/x86/intel/bts: Fix the use of page_private()
 
-I think it's logical to trust a virtio guest kernel driver, could you
-guide me on what I've missed?
+Amir Goldstein (1):
+      locks: print unsigned ino in /proc/locks
 
-> 
-> 
-> >  Above means we need to do these to
-> > change to the new design:
-> > 
-> >   - Allow the GFN array to be mapped as writable by userspace (so that
-> >     userspace can publish bit 2),
-> > 
-> >   - The userspace must be trusted to follow the design (just imagine
-> >     what if the userspace overwrites a GFN when it publishes bit 2
-> >     over a valid dirty gfn entry?  KVM could wrongly unprotect a page
-> >     for the guest...).
-> 
-> You mean protect, right?  So what?
+Anand Moon (1):
+      arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power fail=
+ed warning
 
-Yes, I mean with that, more things are uncertain from userspace.  It
-seems easier to me that we restrict the userspace with one index.
+Andy Whitcroft (1):
+      PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
 
-> 
-> > While if we use the indices, we restrict the userspace to only be able
-> > to write to one index only (which is the reset_index).  That's all it
-> > can do to mess things up (and it could never as long as we properly
-> > validate the reset_index when read, which only happens during
-> > KVM_RESET_DIRTY_RINGS and is very rare).  From that pov, it seems the
-> > indices solution still has its benefits.
-> 
-> So if you mess up index how is this different?
+Arnd Bergmann (2):
+      compat_ioctl: block: handle Persistent Reservations
+      compat_ioctl: block: handle BLKREPORTZONE/BLKRESETZONE
 
-We can't mess up much with that.  We simply check fetch_index (sorry I
-meant this when I said reset_index, anyway it's the only index that we
-expose to userspace) to make sure:
+Bo Wu (1):
+      scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
 
-  reset_index <= fetch_index <= dirty_index
+Brian Foster (1):
+      xfs: fix mount failure crash on invalid iclog memory access
 
-Otherwise we fail the ioctl.  With that, we're 100% safe.
+Catalin Marinas (1):
+      arm64: Revert support for execute-only user mappings
 
-> 
-> I agree RO page kind of feels safer generally though.
-> 
-> I will have to re-read how does the ring works though,
-> my comments were based on the old assumption of mmaped
-> page with indices.
+Chad Dupuis (1):
+      scsi: qedf: Do not retry ELS request if qedf_alloc_cmd fails
 
-Yes, sorry again for a bad cover letter.
+Chanho Min (1):
+      mm/zsmalloc.c: fix the migrated zspage statistics.
 
-It's basically the same as before, just that we only have per-vcpu
-ring now, and the indices are exposed from kvm_run so we don't need
-the extra page, but we still expose that via mmap.
+Christian Brauner (1):
+      taskstats: fix data-race
 
-> 
-> 
-> 
-> > > 
-> > > 
-> > > 
-> > > >  The larger the ring buffer, the less
-> > > > +likely the ring is full and the VM is forced to exit to userspace. The
-> > > > +optimal size depends on the workload, but it is recommended that it be
-> > > > +at least 64 KiB (4096 entries).
-> > > 
-> > > Where's this number coming from? Given you have indices as well,
-> > > 4K size rings is likely to cause cache contention.
-> > 
-> > I think we've had some similar discussion in previous versions on the
-> > size of ring.  Again imho it's really something that may not have a
-> > direct clue as long as it's big enough (4K should be).
-> > 
-> > Regarding to the cache contention: could you explain more?
-> 
-> 4K is a whole cache way. 64K 16 ways.  If there's anything else is a hot
-> path then you are pushing everything out of cache.  To re-read how do
-> indices work so see whether an index is on hot path or not. If yes your
-> structure won't fit in L1 cache which is not great.
+Chuhong Yuan (1):
+      RDMA/cma: add missed unregister_pernet_subsys in init failure
 
-I'm not sure whether I get the point correct, but logically we
-shouldn't read the whole ring buffer as a whole, but only partly (just
-like when we say the ring shouldn't even reach soft-full).  Even if we
-read the whole ring, I don't see a difference here comparing to when
-we read a huge array of data (e.g. "char buf[65536]") in any program
-that covers 64K range - I don't see a good way to fix this but read
-the whole chunk in.  It seems to be common in programs where we have
-big dataset.
+Colin Ian King (2):
+      ALSA: cs4236: fix error return comparison of an unsigned integer
+      media: flexcop-usb: ensure -EIO is returned on error condition
 
-[...]
+Dan Carpenter (2):
+      scsi: iscsi: qla4xxx: fix double free in probe
+      Bluetooth: delete a stray unlock
 
-> > > > +int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
-> > > > +{
-> > > > +	u32 cur_slot, next_slot;
-> > > > +	u64 cur_offset, next_offset;
-> > > > +	unsigned long mask;
-> > > > +	u32 fetch;
-> > > > +	int count = 0;
-> > > > +	struct kvm_dirty_gfn *entry;
-> > > > +	struct kvm_dirty_ring_indices *indices = ring->indices;
-> > > > +	bool first_round = true;
-> > > > +
-> > > > +	fetch = READ_ONCE(indices->fetch_index);
-> > > 
-> > > So this does not work if the data cache is virtually tagged.
-> > > Which to the best of my knowledge isn't the case on any
-> > > CPU kvm supports. However it might not stay being the
-> > > case forever. Worth at least commenting.
-> > 
-> > This is the read side.  IIUC even if with virtually tagged archs, we
-> > should do the flushing on the write side rather than the read side,
-> > and that should be enough?
-> 
-> No.
-> See e.g.  Documentation/core-api/cachetlb.rst
-> 
->   ``void flush_dcache_page(struct page *page)``
-> 
->         Any time the kernel writes to a page cache page, _OR_
->         the kernel is about to read from a page cache page and
->         user space shared/writable mappings of this page potentially
->         exist, this routine is called.
+Daniel Axtens (1):
+      powerpc/pseries/hvconsole: Fix stack overread via udbg
 
-But I don't understand why.  I feel like for such arch even the
-userspace must flush cache after publishing data onto shared memories,
-otherwise if the shared memory is between two userspace processes
-they'll get inconsistent state.  Then if with that, I'm confused on
-why the read side needs to flush it again.
+Daniel Vetter (1):
+      drm: limit to INT_MAX in create_blob ioctl
 
-> 
-> 
-> > Also, I believe this is the similar question that Jason has asked in
-> > V2.  Sorry I should mention this earlier, but I didn't address that in
-> > this series because if we need to do so we probably need to do it
-> > kvm-wise, rather than only in this series.
-> 
-> You need to document these things.
-> 
-> >  I feel like it's missing
-> > probably only because all existing KVM supported archs do not have
-> > virtual-tagged caches as you mentioned.
-> 
-> But is that a fact? ARM has such a variety of CPUs,
-> I can't really tell. Did you research this to make sure?
+David Howells (1):
+      rxrpc: Fix possible NULL pointer access in ICMP handling
 
-I didn't.  I only tried to find all callers of flush_dcache_page()
-through the whole Linux tree and I cannot see any kvm related code.
-To make this simple, let me address the dcache flushing issue in the
-next post.
+EJ Hsu (1):
+      usb: gadget: fix wrong endpoint desc
 
-Thanks,
+Eric Dumazet (1):
+      net: add annotations on hh->hh_len lockless accesses
 
--- 
-Peter Xu
+Florian Fainelli (3):
+      ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+      ata: ahci_brcm: Allow optional reset controller to be used
+      ata: ahci_brcm: Fix AHCI resources management
 
+Florian Westphal (1):
+      selftests: rtnetlink: add addresses with fixed life time
+
+Geert Uytterhoeven (2):
+      iio: adc: max9611: Fix too short conversion time delay
+      dt-bindings: clock: renesas: rcar-usb2-clock-sel: Fix typo in example
+
+Greg Kroah-Hartman (1):
+      Linux 4.14.163
+
+Hans Verkuil (3):
+      media: pulse8-cec: fix lost cec_transmit_attempt_done() call
+      media: cec: CEC 2.0-only bcast messages were ignored
+      media: cec: avoid decrementing transmit_queue_sz if it is 0
+
+Hans de Goede (1):
+      drm/nouveau: Move the declaration of struct nouveau_conn_atom up a bit
+
+Heiko Carstens (1):
+      s390/smp: fix physical to logical CPU map for SMT
+
+Imre Deak (1):
+      drm/mst: Fix MST sideband up-reply failure handling
+
+James Smart (1):
+      nvme_fc: add module to ops template to allow module references
+
+Jason Yan (1):
+      scsi: libsas: stop discovering if oob mode is disconnected
+
+Jens Axboe (1):
+      net: make socket read/write_iter() honor IOCB_NOWAIT
+
+Juergen Gross (1):
+      xen/balloon: fix ballooned page accounting without hotplug enabled
+
+Leo Yan (1):
+      tty: serial: msm_serial: Fix lockup for sysrq and oops
+
+Leonard Crestez (2):
+      PM / devfreq: Don't fail devfreq_dev_release if not in list
+      PM / devfreq: Check NULL governor in available_governors_show
+
+Lukas Wunner (1):
+      dmaengine: Fix access to uninitialized dma_slave_caps
+
+Masashi Honma (2):
+      ath9k_htc: Modify byte order for an error message
+      ath9k_htc: Discard undersized packets
+
+Michael Haener (1):
+      platform/x86: pmc_atom: Add Siemens CONNECT X300 to critclk_systems D=
+MI table
+
+Navid Emamdoost (2):
+      Bluetooth: Fix memory leak in hci_connect_le_scan
+      media: usb: fix memory leak in af9005_identify_state
+
+Oliver Neukum (1):
+      Bluetooth: btusb: fix PM leak in error case of setup
+
+Omar Sandoval (1):
+      xfs: don't check for AG deadlock for realtime files in bunmapi
+
+Parav Pandit (1):
+      IB/mlx4: Follow mirror sequence of device add during device removal
+
+Paul Burton (1):
+      MIPS: Avoid VDSO ABI breakage due to global register variable
+
+Paul Durrant (1):
+      xen-blkback: prevent premature module unload
+
+Prateek Sood (1):
+      tracing: Fix lock inversion in trace_event_enable_tgid_record()
+
+Roman Bolshakov (2):
+      scsi: qla2xxx: Don't call qlt_async_event twice
+      scsi: qla2xxx: Drop superfluous INIT_WORK of del_work
+
+Russell King (1):
+      gpiolib: fix up emulated open drain outputs
+
+Scott Mayhew (1):
+      nfsd4: fix up replay_matches_cache()
+
+SeongJae Park (1):
+      xen/blkback: Avoid unmapping unmapped grant pages
+
+Shakeel Butt (1):
+      memcg: account security cred as well to kmemcg
+
+Stefan Mavrodiev (1):
+      drm/sun4i: hdmi: Remove duplicate cleanup calls
+
+Stephan Gerhold (1):
+      regulator: ab8500: Remove AB8505 USB regulator
+
+Steve Wise (1):
+      rxe: correctly calculate iCRC for unaligned payloads
+
+Steven Rostedt (VMware) (1):
+      tracing: Have the histogram compare functions convert to u64 first
+
+Takashi Iwai (2):
+      ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
+      ALSA: firewire-motu: Correct a typo in the clock proc string
+
+Thomas Richter (2):
+      s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+      s390/cpum_sf: Avoid SBD overflow condition in irq handler
+
+Wen Yang (1):
+      ftrace: Avoid potential division by zero in function profiler
+
+Zhiqiang Liu (1):
+      md: raid1: check rdev before reference in raid1_sync_request func
+
+chenqiwu (1):
+      exit: panic before exit_mm() on global init exit
+
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl4XjEkACgkQONu9yGCS
+aT7VXA//c20DkFWf2tJPtR3Muv7AfupmPnzdwN6yeJKhJt+Uvewtom+66TrQARb1
+XyL7nmm2I8ex7A8xSceC+1bFaou6VJv4o6yg+h52UnvINnc13pmStro103YFUPkQ
+eTAM4U9GXgNX7FvoC8f84fflU4BEnoGBUuepV5BcW8HnvI9j/EC3KKjUjTMH15ES
+xyxzjGeLz5XNg4vxixcY9fS/KNRyAaisYBVIFH8vq9vpTa/bwKuKnEAH31VgyVds
+lmxip9Gn9bSwYHOzEPqwC8YQ4DuC3T77fuESQUJOsRpPjpEQVxTAz2Ne1nwE0TBp
+zQSKSCIM06u8zWYGyzS7VEPiynn4+Cfq7DIJzyrfKlPQ7f1u7vYCZLRVXLYog8Pa
+j+MKq6s2Gn2CDqs+Zs8gZ9f85Ov2pCcVlpFZkiYwA1h7TZbJKl88w5OI1VwYFXbk
+5k/mkFb4ZuMFFfketqvOMBHIlCFMqLI4m9VyeUFL0r/JM410OEddk5Pn3/z7Nf2x
+PuTWNFKzAcybwFIBDeLKCiHD4I6eu94397eMU7Og9T+xP9OgsSrJr5N9absaj3DW
+MB8jHzuD0lf2oMKlKpc/kUGUW3WXEhCmfiB6foTlQsFrcEK+DWW1co+rmu4akjD9
+9o0z0Im1P8ww4oSC/eZXDJp6qZGSwoQ1X0CbyOT5p/IbZJ7m5E0=
+=yAnj
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
