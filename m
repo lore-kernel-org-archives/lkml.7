@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A0CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67792C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F86206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DECC206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hT7sBRTd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJtpigQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbgAIQEB (ORCPT
+        id S1732864AbgAIQD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:04:01 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43424 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732819AbgAIQD5 (ORCPT
+        Thu, 9 Jan 2020 11:03:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36799 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731305AbgAIQD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 11:03:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,47 +29,47 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Qr2r3mp7rftEmxfhLDidcKbFbCYdpKuq3T+a5+/CCqE=;
-        b=hT7sBRTdSlAIybvu5DsW8+1W/zlH10hP4+sdVjFIkdhc8PNSzb4w5UqXKBnTsQiEzRXtZb
-        5PqIow9dum9yqQZEqDNNB6HofxNP9MPQgU9+ypAWHXbQmxv0hLmGsc1FaNjtYRiFIOpw6w
-        GFjlh1DCcXeP/bMt75lhG/v/V6l7v4M=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-h7Tf37yLM9COPN98nm6NLQ-1; Thu, 09 Jan 2020 11:03:55 -0500
-X-MC-Unique: h7Tf37yLM9COPN98nm6NLQ-1
-Received: by mail-wr1-f72.google.com with SMTP id v17so3034722wrm.17
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:03:55 -0800 (PST)
+        bh=+ZWC3NYwPtgLE6SG36C3VaKcOwxxIR92Oe8t166+ozo=;
+        b=jJtpigQdZafVzkg5PRk0P73Mitrt5qMXQivHzy9kfuAe724okC1Ax33+Gf9Qfe6t9lu33n
+        rGfo1H0VDU6aaRIpNQYjv0o1XIkVAG8PzNcJwebaoeu4WAKG1NxCEj7CXAvxg2F60HS6ka
+        YrtrOcA3h9cbeQusCVyFwLlAq8Rf72E=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-V_09Tj43P9yrdiM1zlWmtA-1; Thu, 09 Jan 2020 11:03:54 -0500
+X-MC-Unique: V_09Tj43P9yrdiM1zlWmtA-1
+Received: by mail-wm1-f70.google.com with SMTP id 7so614679wmf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:03:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Qr2r3mp7rftEmxfhLDidcKbFbCYdpKuq3T+a5+/CCqE=;
-        b=DJ0TABzGG7HjhgBNzbkkxcP4uCCLOgrg/8uj4aIjowlROrsfK35MriKMttjMGD0bWU
-         vZoYvWXIyAS4u4OHRR37MRiDJXrnA3FMPVQJP0A0NxndDFD87rJHtEf2rIyno4y//1jt
-         HxSeQ3LWuTgak2C177o09z7yMmXRq6tVAavzq8fUXMflyHvgYPZ0Jh//2K3qrU7IQeyp
-         wcLiH4Rxy4EekY5SMoFHm+E5jz2nIiD6Pz2TpruRZZqIuMPDDvXoZ6lopjZ9TKf9w28k
-         YzjvTeZqn8sgMX9du65HHD43rMt+EJn5yocJciDZ8X95rhVPWl6+nc1vDBEan/2FihNj
-         f/CQ==
-X-Gm-Message-State: APjAAAWTfawKe/hJi9cwp/ulkM7NMG4NJsiUffjg7W1B2iQcXyT0hB0h
-        /FOYLKhH497pSi11nmLcar5uSHLR5cCIg9KqQXxov2clYqyo2wF2RkAwBSRmrCoRoRJYZ6eE1EK
-        XMqWLwqvWJ6YXqL6OJuE4YNYN
-X-Received: by 2002:a7b:cb0a:: with SMTP id u10mr5598167wmj.165.1578585834090;
-        Thu, 09 Jan 2020 08:03:54 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxxPpfZ8umi6fB7ZYKrURHzWQS31pfkUOU6pTbSf04Fo9JFmyXHY0aoMxvY+j4DAs5z8sDE5A==
-X-Received: by 2002:a7b:cb0a:: with SMTP id u10mr5598133wmj.165.1578585833874;
-        Thu, 09 Jan 2020 08:03:53 -0800 (PST)
+        bh=+ZWC3NYwPtgLE6SG36C3VaKcOwxxIR92Oe8t166+ozo=;
+        b=Xrp66syEve9Hqlx0up6NHhi2WwdxIzLfiO8tiVUsfDW2UxW803lse3fshdk8W5hAXx
+         PJ3xbcRK9XynvKFLr1BhCHl0XdXU8avyI4TuNA87vrNjSE9Q/AoaI9koW77cKw/yqWLj
+         EgWshVabZ0pgO694eLH6qsVcG8HQRxZri8UmvXzzU/xUphXCThlcAxoP0pOZ4wTVyiFT
+         S14b2nElqh6RRyTXsQ2xd6n0JzS+T/XfyN0X6JqO/L6Vboin3JBhPDLivOyplKItXZBv
+         CWjDbrnX49lvABlxTzH7x6W+VXwcoEhW12pZyICa8++bs3PoPh/32ScHhc8U2uEPg8MD
+         +z/A==
+X-Gm-Message-State: APjAAAXHe1kM52Z42Mx1G0lfVZAkYwCW+wk6FirsY0RT9pUvzT7M9nE+
+        eACux4LOVULjfwQ8H4nHWDlKzukwz3qJL3vr60CP/xIG7PTFpt7i/+dEbfeOzPhNVVVjynrEmgX
+        Z4IxF3tiq/bVkJUW+tsQxEpCK
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr5714908wmh.35.1578585832572;
+        Thu, 09 Jan 2020 08:03:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz3K422AcRc43kA+7KXUEORNfUwnc+dzxIyEmAHwHDVmV1yK+mA2HEhXQ9YIN/yRwLx6UmfRA==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr5714878wmh.35.1578585832351;
+        Thu, 09 Jan 2020 08:03:52 -0800 (PST)
 Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id m126sm3321546wmf.7.2020.01.09.08.03.52
+        by smtp.gmail.com with ESMTPSA id m126sm3321546wmf.7.2020.01.09.08.03.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:03:53 -0800 (PST)
+        Thu, 09 Jan 2020 08:03:51 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         catalin.marinas@arm.com, will@kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 09/57] objtool: Move registers and control flow to arch-dependent code
-Date:   Thu,  9 Jan 2020 16:02:12 +0000
-Message-Id: <20200109160300.26150-10-jthierry@redhat.com>
+Subject: [RFC v5 08/57] objtool: Make ORC support optional
+Date:   Thu,  9 Jan 2020 16:02:11 +0000
+Message-Id: <20200109160300.26150-9-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
 References: <20200109160300.26150-1-jthierry@redhat.com>
@@ -80,117 +80,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+Currently, only x86 supports ORC. To simplify the addition of other
+supported architectures to objtool 'check' command, make the 'orc'
+objtool command optional to implement for a given architecture.
 
-The control flow information and register macro definitions were based on
-the x86_64 architecture but should be abstract so that each architecture
-can define the correct values for the registers, especially the registers
-related to the stack frame (Frame Pointer, Stack Pointer and possibly
-Return Address).
-
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-[J.T. : Added objtool arch specific include to build flags,
-        Use SPDX identifier for new header]
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/Makefile                        |  3 ++-
- tools/objtool/arch/x86/include/arch_special.h | 23 +++++++++++++++++++
- tools/objtool/{ => arch/x86/include}/cfi.h    |  0
- tools/objtool/check.h                         |  1 +
- tools/objtool/special.c                       | 19 +--------------
- 5 files changed, 27 insertions(+), 19 deletions(-)
- create mode 100644 tools/objtool/arch/x86/include/arch_special.h
- rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
+ tools/objtool/Build     |  2 +-
+ tools/objtool/Makefile  | 10 +++++++++-
+ tools/objtool/check.c   |  4 ++++
+ tools/objtool/objtool.c |  2 ++
+ tools/objtool/orc.h     | 33 +++++++++++++++++++++++++++++++--
+ 5 files changed, 47 insertions(+), 4 deletions(-)
 
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index d069d26d97fa..6e7163f9522a 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -1,6 +1,6 @@
+ objtool-y += arch/$(SRCARCH)/
+ objtool-y += builtin-check.o
+-objtool-y += builtin-orc.o
++objtool-$(OBJTOOL_ORC) += builtin-orc.o
+ objtool-y += check.o
+ objtool-y += elf.o
+ objtool-y += special.o
 diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 24d653e0b6ec..be735e4f27f5 100644
+index d2a19b0bc05a..24d653e0b6ec 100644
 --- a/tools/objtool/Makefile
 +++ b/tools/objtool/Makefile
-@@ -37,7 +37,8 @@ all: $(OBJTOOL)
+@@ -6,6 +6,10 @@ ifeq ($(ARCH),x86_64)
+ ARCH := x86
+ endif
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(ARCH)/include
-+	    -I$(srctree)/tools/arch/$(ARCH)/include \
-+	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
-diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-new file mode 100644
-index 000000000000..426178d504a8
---- /dev/null
-+++ b/tools/objtool/arch/x86/include/arch_special.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _X86_ARCH_SPECIAL_H
-+#define _X86_ARCH_SPECIAL_H
++ifeq ($(ARCH),x86)
++OBJTOOL_ORC := y
++endif
 +
-+#define EX_ENTRY_SIZE		12
-+#define EX_ORIG_OFFSET		0
-+#define EX_NEW_OFFSET		4
-+
-+#define JUMP_ENTRY_SIZE		16
-+#define JUMP_ORIG_OFFSET	0
-+#define JUMP_NEW_OFFSET		4
-+
-+#define ALT_ENTRY_SIZE		13
-+#define ALT_ORIG_OFFSET		0
-+#define ALT_NEW_OFFSET		4
-+#define ALT_FEATURE_OFFSET	8
-+#define ALT_ORIG_LEN_OFFSET	10
-+#define ALT_NEW_LEN_OFFSET	11
-+
-+#define X86_FEATURE_POPCNT (4 * 32 + 23)
-+#define X86_FEATURE_SMAP   (9 * 32 + 20)
-+
-+#endif /* _X86_ARCH_SPECIAL_H */
-diff --git a/tools/objtool/cfi.h b/tools/objtool/arch/x86/include/cfi.h
-similarity index 100%
-rename from tools/objtool/cfi.h
-rename to tools/objtool/arch/x86/include/cfi.h
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 6d875ca6fce0..af87b55db454 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -11,6 +11,7 @@
- #include "cfi.h"
- #include "arch.h"
- #include "orc.h"
-+#include "arch_special.h"
- #include <linux/hashtable.h>
+ # always use the host compiler
+ HOSTAR	?= ar
+ HOSTCC	?= gcc
+@@ -42,8 +46,12 @@ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+ elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
+ CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
  
- struct insn_state {
-diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index fdbaa611146d..b8ccee1b5382 100644
---- a/tools/objtool/special.c
-+++ b/tools/objtool/special.c
-@@ -14,24 +14,7 @@
- #include "builtin.h"
- #include "special.h"
- #include "warn.h"
--
--#define EX_ENTRY_SIZE		12
--#define EX_ORIG_OFFSET		0
--#define EX_NEW_OFFSET		4
--
--#define JUMP_ENTRY_SIZE		16
--#define JUMP_ORIG_OFFSET	0
--#define JUMP_NEW_OFFSET		4
--
--#define ALT_ENTRY_SIZE		13
--#define ALT_ORIG_OFFSET		0
--#define ALT_NEW_OFFSET		4
--#define ALT_FEATURE_OFFSET	8
--#define ALT_ORIG_LEN_OFFSET	10
--#define ALT_NEW_LEN_OFFSET	11
--
--#define X86_FEATURE_POPCNT (4*32+23)
--#define X86_FEATURE_SMAP   (9*32+20)
-+#include "arch_special.h"
++ifeq ($(OBJTOOL_ORC),y)
++CFLAGS	+= -DOBJTOOL_ORC
++endif
++
+ AWK = awk
+-export srctree OUTPUT CFLAGS SRCARCH AWK
++export srctree OUTPUT CFLAGS SRCARCH AWK OBJTOOL_ORC
+ include $(srctree)/tools/build/Makefile.include
  
- struct special_entry {
- 	const char *sec;
+ $(OBJTOOL_IN): fixdep FORCE
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 2c5ccf61510a..8f2ff030936d 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1317,6 +1317,7 @@ static bool has_valid_stack_frame(struct insn_state *state)
+ 	return false;
+ }
+ 
++#ifdef OBJTOOL_ORC
+ static int update_insn_state_regs(struct instruction *insn, struct insn_state *state)
+ {
+ 	struct cfi_reg *cfa = &state->cfa;
+@@ -1340,6 +1341,7 @@ static int update_insn_state_regs(struct instruction *insn, struct insn_state *s
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static void save_reg(struct insn_state *state, unsigned char reg, int base,
+ 		     int offset)
+@@ -1425,8 +1427,10 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
+ 		return 0;
+ 	}
+ 
++#ifdef OBJTOOL_ORC
+ 	if (state->type == ORC_TYPE_REGS || state->type == ORC_TYPE_REGS_IRET)
+ 		return update_insn_state_regs(insn, state);
++#endif
+ 
+ 	switch (op->dest.type) {
+ 
+diff --git a/tools/objtool/objtool.c b/tools/objtool/objtool.c
+index 0b3528f05053..8db7139b72cd 100644
+--- a/tools/objtool/objtool.c
++++ b/tools/objtool/objtool.c
+@@ -34,7 +34,9 @@ static const char objtool_usage_string[] =
+ 
+ static struct cmd_struct objtool_cmds[] = {
+ 	{"check",	cmd_check,	"Perform stack metadata validation on an object file" },
++#ifdef OBJTOOL_ORC
+ 	{"orc",		cmd_orc,	"Generate in-place ORC unwind tables for an object file" },
++#endif
+ };
+ 
+ bool help;
+diff --git a/tools/objtool/orc.h b/tools/objtool/orc.h
+index ffda072cf4ad..f5303b8264e3 100644
+--- a/tools/objtool/orc.h
++++ b/tools/objtool/orc.h
+@@ -6,14 +6,43 @@
+ #ifndef _ORC_H
+ #define _ORC_H
+ 
+-#include <asm/orc_types.h>
+-
+ struct objtool_file;
+ 
++#ifdef OBJTOOL_ORC
++
++#include <asm/orc_types.h>
++
+ int arch_orc_init(struct objtool_file *file);
+ int arch_orc_create_sections(struct objtool_file *file);
+ int arch_orc_read_unwind_hints(struct objtool_file *file);
+ 
+ int orc_dump(const char *objname);
+ 
++#else
++
++struct orc_entry {
++};
++
++static inline int arch_orc_init(struct objtool_file *file)
++{
++	return 0;
++}
++
++static inline int arch_orc_create_sections(struct objtool_file *file)
++{
++	return 0;
++}
++
++static inline int arch_orc_read_unwind_hints(struct objtool_file *file)
++{
++	return 0;
++}
++
++static inline int orc_dump(const char *objname)
++{
++	return 0;
++}
++
++#endif /* OBJTOOL_ORC */
++
+ #endif /* _ORC_H */
 -- 
 2.21.0
 
