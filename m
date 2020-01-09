@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09D0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8381FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CA32067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB712067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732586AbgAIPon (ORCPT
+        id S1732595AbgAIPos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:44:43 -0500
-Received: from mga02.intel.com ([134.134.136.20]:3757 "EHLO mga02.intel.com"
+        Thu, 9 Jan 2020 10:44:48 -0500
+Received: from mga11.intel.com ([192.55.52.93]:17759 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732548AbgAIPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:44:41 -0500
+        id S1732547AbgAIPoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:44:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:41 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:37 -0800
 X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="227826443"
+   d="scan'208";a="371333764"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:38 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:35 -0800
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 2F22220F4E;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 15C8B20B52;
         Thu,  9 Jan 2020 17:44:33 +0200 (EET)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1ipa01-00055H-HW; Thu, 09 Jan 2020 17:45:29 +0200
+        id 1ipa01-000558-Du; Thu, 09 Jan 2020 17:45:29 +0200
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
@@ -40,98 +40,100 @@ Cc:     Wolfram Sang <wsa@the-dreams.de>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v3 5/5] at24: Support probing while off
-Date:   Thu,  9 Jan 2020 17:45:29 +0200
-Message-Id: <20200109154529.19484-6-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 2/5] ACPI: Add a convenience function to tell a device is suspended in probe
+Date:   Thu,  9 Jan 2020 17:45:26 +0200
+Message-Id: <20200109154529.19484-3-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
 References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In certain use cases (where the chip is part of a camera module, and the
-camera module is wired together with a camera privacy LED), powering on
-the device during probe is undesirable. Add support for the at24 to
-execute probe while being powered off. For this to happen, a hint in form
-of a device property is required from the firmware.
+Add a convenience function to tell whether a device is suspended for probe
+or remove, for busses where the custom is that drivers don't need to
+resume devices in probe, or suspend them in their remove handlers.
 
+Returns false on non-ACPI systems.
+
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/misc/eeprom/at24.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+ drivers/acpi/device_pm.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |  5 +++++
+ 2 files changed, 40 insertions(+)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 0681d5fdd538a..41ac65d1e5d41 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -564,6 +564,7 @@ static int at24_probe(struct i2c_client *client)
- 	bool i2c_fn_i2c, i2c_fn_block;
- 	unsigned int i, num_addresses;
- 	struct at24_data *at24;
-+	bool low_power;
- 	struct regmap *regmap;
- 	bool writable;
- 	u8 test_byte;
-@@ -701,19 +702,24 @@ static int at24_probe(struct i2c_client *client)
- 
- 	i2c_set_clientdata(client, at24);
- 
--	/* enable runtime pm */
--	pm_runtime_set_active(dev);
-+	low_power = acpi_dev_low_power_state_probe(&client->dev);
-+	if (!low_power)
-+		pm_runtime_set_active(dev);
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 5e4a8860a9c0c..87393020276d8 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1348,4 +1348,39 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
 +
- 	pm_runtime_enable(dev);
- 
- 	/*
--	 * Perform a one-byte test read to verify that the
--	 * chip is functional.
-+	 * Perform a one-byte test read to verify that the chip is functional,
-+	 * unless powering on the device is to be avoided during probe (i.e.
-+	 * it's powered off right now).
- 	 */
--	err = at24_read(at24, 0, &test_byte, 1);
--	pm_runtime_idle(dev);
--	if (err) {
--		pm_runtime_disable(dev);
--		return -ENODEV;
-+	if (!low_power) {
-+		err = at24_read(at24, 0, &test_byte, 1);
-+		pm_runtime_idle(dev);
-+		if (err) {
-+			pm_runtime_disable(dev);
-+			return -ENODEV;
-+		}
- 	}
- 
- 	if (writable)
-@@ -728,8 +734,12 @@ static int at24_probe(struct i2c_client *client)
- 
- static int at24_remove(struct i2c_client *client)
++/**
++ * acpi_dev_low_power_state_probe - Tell if a device is in a low power state
++ *				    during probe
++ * @dev: The device
++ *
++ * Tell whether a given device is in a low power state during the driver's probe
++ * or remove operation.
++ *
++ * Drivers of devices on certain busses such as I²C can generally assume (on
++ * ACPI based systems) that the devices they control are powered on without
++ * driver having to do anything about it. Using struct
++ * device_driver.probe_low_power and "probe-low-power" property, this can be
++ * negated and the driver has full control of the device power management.
++ * Always returns false on non-ACPI based systems. True is returned on ACPI
++ * based systems iff the device is in a low power state during probe or remove.
++ */
++bool acpi_dev_low_power_state_probe(struct device *dev)
++{
++	int power_state;
++	int ret;
++
++	if (!is_acpi_device_node(dev_fwnode(dev)))
++		return false;
++
++	ret = acpi_device_get_power(ACPI_COMPANION(dev), &power_state);
++	if (ret) {
++		dev_warn(dev, "Cannot obtain power state (%d)\n", ret);
++		return false;
++	}
++
++	return power_state != ACPI_STATE_D0;
++}
++EXPORT_SYMBOL_GPL(acpi_dev_low_power_state_probe);
++
+ #endif /* CONFIG_PM */
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 0f37a7d5fa774..fd00853074e1a 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -926,6 +926,7 @@ int acpi_dev_resume(struct device *dev);
+ int acpi_subsys_runtime_suspend(struct device *dev);
+ int acpi_subsys_runtime_resume(struct device *dev);
+ int acpi_dev_pm_attach(struct device *dev, bool power_on);
++bool acpi_dev_low_power_state_probe(struct device *dev);
+ #else
+ static inline int acpi_dev_runtime_suspend(struct device *dev) { return 0; }
+ static inline int acpi_dev_runtime_resume(struct device *dev) { return 0; }
+@@ -935,6 +936,10 @@ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
  {
-+	bool low_power;
-+
- 	pm_runtime_disable(&client->dev);
--	pm_runtime_set_suspended(&client->dev);
-+	low_power = acpi_dev_low_power_state_probe(&client->dev);
-+	if (!low_power)
-+		pm_runtime_set_suspended(&client->dev);
- 
  	return 0;
  }
-@@ -743,6 +753,7 @@ static struct i2c_driver at24_driver = {
- 	.probe_new = at24_probe,
- 	.remove = at24_remove,
- 	.id_table = at24_ids,
-+	.probe_low_power = true,
- };
++static inline bool acpi_dev_low_power_state_probe(struct device *dev)
++{
++	return false;
++}
+ #endif
  
- static int __init at24_init(void)
+ #if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
 -- 
 2.20.1
 
