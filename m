@@ -2,120 +2,67 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C63C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB70C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ED720673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C732077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgAIObk (ORCPT
+        id S1731702AbgAIOdB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:31:40 -0500
-Received: from mga02.intel.com ([134.134.136.20]:62611 "EHLO mga02.intel.com"
+        Thu, 9 Jan 2020 09:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgAIObk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:31:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 06:31:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="254610972"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jan 2020 06:31:37 -0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com,
-        rientjes@google.com, Wei Yang <richardw.yang@linux.intel.com>
-Subject: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Date:   Thu,  9 Jan 2020 22:30:54 +0800
-Message-Id: <20200109143054.13203-1-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727854AbgAIOdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:33:00 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B8BF2072E;
+        Thu,  9 Jan 2020 14:32:59 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 09:32:57 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     yangliuxm34@gmail.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, liuyang34@xiaomi.com,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] trace: code optimization
+Message-ID: <20200109093257.681271c9@gandalf.local.home>
+In-Reply-To: <4f4bed1d-9dc0-0665-4b61-8afc9ebf8201@web.de>
+References: <27225bf0ec9b4e2f3d313456aee75e294361d550.1578561009.git.liuyang34@xiaomi.com>
+        <4f4bed1d-9dc0-0665-4b61-8afc9ebf8201@web.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As all the other places, we grab the lock before manipulate the defer list.
-Current implementation may face a race condition.
+On Thu, 9 Jan 2020 14:16:46 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-For example, the potential race would be:
+> > use scnprintf instead of snprinr and no need to check  
+> 
+> Will a typo be avoided in the final change description?
+> 
+> 
+> > Signed-off-by: liuyang34 …  
+> 
+> Will this information need also an adjustment for the desired specification
+> of a real name?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b07f636fca1c8fbba124b0082487c0b3890a0e0c#n458
+> 
 
-    CPU1                      CPU2
-    mem_cgroup_move_account   split_huge_page_to_list
-      !list_empty
-                                lock
-                                !list_empty
-                                list_del
-                                unlock
-      lock
-      # !list_empty might not hold anymore
-      list_del_init
-      unlock
+Correct. Please resend the patch with the typo fix and a real name for
+the Signed-off-by.
 
-When this sequence happens, the list_del_init() in
-mem_cgroup_move_account() would crash if CONFIG_DEBUG_LIST since the
-page is already been removed by list_del in split_huge_page_to_list().
+Thanks!
 
-Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: David Rientjes <rientjes@google.com>
-
----
-v2:
-  * move check on compound outside suggested by Alexander
-  * an example of the race condition, suggested by Michal
----
- mm/memcontrol.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index bc01423277c5..1492eefe4f3c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5368,10 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
- 	}
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && !list_empty(page_deferred_list(page))) {
-+	if (compound) {
- 		spin_lock(&from->deferred_split_queue.split_queue_lock);
--		list_del_init(page_deferred_list(page));
--		from->deferred_split_queue.split_queue_len--;
-+		if (!list_empty(page_deferred_list(page))) {
-+			list_del_init(page_deferred_list(page));
-+			from->deferred_split_queue.split_queue_len--;
-+		}
- 		spin_unlock(&from->deferred_split_queue.split_queue_lock);
- 	}
- #endif
-@@ -5385,11 +5387,13 @@ static int mem_cgroup_move_account(struct page *page,
- 	page->mem_cgroup = to;
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && list_empty(page_deferred_list(page))) {
-+	if (compound) {
- 		spin_lock(&to->deferred_split_queue.split_queue_lock);
--		list_add_tail(page_deferred_list(page),
--			      &to->deferred_split_queue.split_queue);
--		to->deferred_split_queue.split_queue_len++;
-+		if (list_empty(page_deferred_list(page))) {
-+			list_add_tail(page_deferred_list(page),
-+				      &to->deferred_split_queue.split_queue);
-+			to->deferred_split_queue.split_queue_len++;
-+		}
- 		spin_unlock(&to->deferred_split_queue.split_queue_lock);
- 	}
- #endif
--- 
-2.17.1
-
+-- Steve
