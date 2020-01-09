@@ -2,169 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23056C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB23C20705
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD3A20705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="TK7LNbfL"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AWr0fZWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgAIA00 (ORCPT
+        id S1727615AbgAIA2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:26:26 -0500
-Received: from onstation.org ([52.200.56.107]:53880 "EHLO onstation.org"
+        Wed, 8 Jan 2020 19:28:41 -0500
+Received: from ozlabs.org ([203.11.71.1]:38791 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgAIA0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:26:25 -0500
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1726438AbgAIA2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:28:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 0E27B3EE6F;
-        Thu,  9 Jan 2020 00:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1578529584;
-        bh=bSP4GLHNIkw9HeeIY0NybAJJvEgnnxZaLRa3yG6+E1Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TK7LNbfLzwC1F6wyfJLhAZh/bLnMAMGWyPQ+53Ef9F9qfGO8LdHQdNxZzdN/ApgLQ
-         spnXD0HCF2D5BgqAqnzHtGmbgkilGBxb8HwbfZjcP8Jtx2F3pGL+IMEfcms3ov2jp4
-         CwsIsk1ZiP73Lrd5/c1t4wIJrKy7VCeU3zbrKz+U=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robdclark@gmail.com, bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, joro@8bytes.org, linux-arm-msm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH RFC] ARM: dts: qcom: msm8974: add mdp5 iommu support
-Date:   Wed,  8 Jan 2020 19:26:06 -0500
-Message-Id: <20200109002606.35653-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.24.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tRmj2jn4z9sPK;
+        Thu,  9 Jan 2020 11:28:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578529718;
+        bh=LS814onkvSihhXZk/7WZnWj4SNUmJxqt5+CWEeqw6J4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=AWr0fZWg49Tb3lgOFEPexyIcJb6SxLVRjmGp6mQ/ODOsI98njzuK+5PWx+swcrukL
+         9lBCYtuuFsJ+3y0fwwjMY0zVuGClN9mDJyF84PRZBXQWrMlT+82tCK+KgcAoYjIjb+
+         g8iSkM18Qt5APK4p36hjwk353VpVLCQ5VafxlFo/BMFT9JijZyf08fi/BDYmhFUkpq
+         ehOAI9LHdHQye0ntDAqtnGRsxF8U7JHQLQuBd4u+QTZw/T97FxT4h3HTYLQa+Vm3Jc
+         7K9bn75h4H87aRtJyCtbbXsnEmCS04szPZ6gao3ogbRZfwiphuwoHtHGFyf+XCqb9V
+         GTPqQstkS8BFA==
+Date:   Thu, 9 Jan 2020 11:28:36 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ma Feng <mafeng.ma@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the pinctrl tree
+Message-ID: <20200109112836.0649c578@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/nnP7koDi38IvBl.12uEkaRd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds preliminary IOMMU support for the MDP5 on msm8974. It appears
-that the qcom-iommu driver in upstream can be used on this SoC. I marked
-this patch as a RFC since the frame buffer becomes corrupted when I boot
-the Nexus 5 phone with this patch:
+--Sig_/nnP7koDi38IvBl.12uEkaRd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-https://raw.githubusercontent.com/masneyb/nexus-5-upstream/master/images/broken-mdp5-iommu.jpg
+Hi all,
 
-A quick note about the ranges of the context banks below: Based on the
-downstream sources, I believe that the memory addresses should be mapped
-out like this:
+In commit
 
-	mdp_iommu: iommu@fd928000 {
-		reg = <0xfd928000 0x8000>;
-		ranges = <0 0xfd930000 0x8000>;
-		...
+  d5d3594db9f0 ("pinctrl: armada-37xx: Remove unneeded semicolon")
 
-		iommu-ctx@0 {
-			reg = <0x0 0x1000>;
-			...
-		};
+Fixes tag
 
-		iommu-ctx@1000 {
-			reg = <0x1000 0x1000>;
-			...
-		};
+  Fixes: commit 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
 
-		iommu-ctx@2000 {
-			reg = <0x2000 0x1000>;
-			...
-		};
-	};
+has these problem(s):
 
-However, the qcom-iommu driver in upstream expects the first context
-bank to exist at address 0x1000, and the address space identifier
-(asid) to be greater than 0. See get_asid() and qcom_iommu_of_xlate()
-in the upstream qcom-iommu.c driver. I put in the patch below what the
-driver expects. I modified the driver in my local tree to allow the
-mapping that I have above so that the extra 0x1000 of memory is mapped
-into the global address space and still experience the same screen
-corruption issue.
+  - leading word 'commit' unexpected
 
-Downstream MSM 3.4 IOMMU dts snippet for reference:
-https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm-iommu-v1.dtsi#L110
+Also, each line listating a fixed commit should have a Fixes: prefix and
+all the commit message tags should be kept together at the end of the
+commit message.
 
-I'm hoping that someone that's more familiar with this hardware has a
-suggestion for something to try.
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 44 +++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+--Sig_/nnP7koDi38IvBl.12uEkaRd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 4b161b809dd5..2515a3bd4aa7 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1305,6 +1305,46 @@ etm3_out: endpoint {
- 			};
- 		};
- 
-+		mdp_iommu: iommu@fd928000 {
-+			compatible = "qcom,msm8974-iommu",
-+			             "qcom,msm-iommu-v1";
-+			reg = <0xfd928000 0x7000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			#iommu-cells = <1>;
-+			ranges = <0 0xfd92f000 0x9000>;
-+
-+			clocks = <&mmcc MDSS_AHB_CLK>,
-+			         <&mmcc MDSS_AXI_CLK>;
-+			clock-names = "iface",
-+			              "bus";
-+
-+			qcom,iommu-secure-id = <1>;
-+
-+			// mdp_0
-+			iommu-ctx@1000 {
-+				compatible = "qcom,msm-iommu-v1-ns";
-+				reg = <0x1000 0x1000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			// mdp_1
-+			iommu-ctx@2000 {
-+				compatible = "qcom,msm-iommu-v1-sec";
-+				reg = <0x2000 0x1000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+				             <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			// mdp_2
-+			iommu-ctx@3000 {
-+				compatible = "qcom,msm-iommu-v1-sec";
-+				reg = <0x3000 0x1000>;
-+				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+				             <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+                };
-+
- 		ocmem@fdd00000 {
- 			compatible = "qcom,msm8974-ocmem";
- 			reg = <0xfdd00000 0x2000>,
-@@ -1427,6 +1467,10 @@ mdp: mdp@fd900000 {
- 				interconnects = <&mmssnoc MNOC_MAS_MDP_PORT0 &bimc BIMC_SLV_EBI_CH0>;
- 				interconnect-names = "mdp0-mem";
- 
-+				iommus = <&mdp_iommu 1
-+				          &mdp_iommu 2
-+				          &mdp_iommu 3>;
-+
- 				ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--- 
-2.24.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Wc7QACgkQAVBC80lX
+0GwsZAgAiaF/YbrsUyDMyB8fN2SjVm/9jhJKR106vntQ7DXPkxMoBgvJLtCmtnlS
+dYigvt4Ib2+SvkSgjRk8+J8dyAhSQNCX4Q6YqK+v3xKxmrEULcqE+5vKsBoOMy+k
+crFzq/NXmds7GH787ZDwS2gIUTF0LWi33Gy/Eztx2GEj0SDmCr0CEuTW9AND8kkR
+fO1ZY5h3RnDN0vE+o6UPvT2P0qiqSq14bwnvcrqDnT9GCEeAsioTYt8cfsy1EtFQ
+t/bCI7AYqvySf3mkRxKL0xA2UIFlQQxXO9vnJGkGuAj9EssbwzWMfAIf3jG2r5b1
+iiyDi0lahOSZydNNdeRel4rGpOW12g==
+=NuSv
+-----END PGP SIGNATURE-----
+
+--Sig_/nnP7koDi38IvBl.12uEkaRd--
