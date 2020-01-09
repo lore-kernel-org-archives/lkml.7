@@ -2,95 +2,66 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D785C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CA3C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451162075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TNviQdkx"
+	by mail.kernel.org (Postfix) with ESMTP id C6ADF2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578561638;
+	bh=17pCcLe4ROvs5zpvE5tGEghbWDf2T6LpIyRxzdcAFxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ev+G2X68jr2sL3YJWAdcq96PruwLir3XCkrDAaTGLTpjLAj9I4LMAo7UkIZty8F00
+	 Fx+PXfyel8ZZ13NncVlxG+UUpvNYJJtxDYdlr0j63CgfTAQQzOVdTr7Zzno7KJAzpi
+	 AAmgCGU6UneOpdlVulfeWfF/Mti/5IenrKqkUYZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgAIJTu (ORCPT
+        id S1729498AbgAIJUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:19:50 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:33121 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729445AbgAIJTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:19:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578561584; h=References: In-Reply-To: Message-Id: Date:
- Subject: To: From: Sender;
- bh=8q28cGrjhSMFMAwXbqIsPhh/PbRhjy2086swhnkM2fg=; b=TNviQdkxU3nsnTXVVxLOmtnZAqW2WYPrSvdA6am07eGTNeYC+jPJr1RVyiQv2ef6OCc5x04m
- BGrQk2XtFG3omDAGkRS3HOhfaO2BUcRzJ9gjobisRGPA18BZeCDjdvhMJQahpMbDCEkGDZf7
- 4Wc7LMuCwU/8d714CiLYF0BrAQs=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e16f02f.7ff573a914c8-smtp-out-n02;
- Thu, 09 Jan 2020 09:19:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CAE8FC447A3; Thu,  9 Jan 2020 09:19:41 +0000 (UTC)
-Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 9 Jan 2020 04:20:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729297AbgAIJUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:20:37 -0500
+Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8945FC447A4;
-        Thu,  9 Jan 2020 09:19:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8945FC447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-From:   Sricharan R <sricharan@codeaurora.org>
-To:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        robh+dt@kernel.org, sivaprak@codeaurora.org,
-        sricharan@codeaurora.org
-Subject: [PATCH V4 5/5] arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
-Date:   Thu,  9 Jan 2020 14:49:03 +0530
-Message-Id: <1578561543-23132-6-git-send-email-sricharan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
-References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DBFB20673;
+        Thu,  9 Jan 2020 09:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578561636;
+        bh=17pCcLe4ROvs5zpvE5tGEghbWDf2T6LpIyRxzdcAFxY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h5rB+Vf2Kojy9XKlrdumZkTsg8vxTXuUuPzgQMFP/gOCZ3m73NWpCbbQhSQgpqajU
+         Y7DfPLfSEIYdEdfnkm/FGnv/sN7ZXPHmJ2mLVmbkybl73MPLiaWVxuIVp9a2BhuU/M
+         wnDbr3K5sW6e10LsnqiY54tK7ZlgXNcb50zysGfs=
+Date:   Thu, 9 Jan 2020 17:20:28 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: imx: Enable compile testing of IMX_SCU_SOC
+Message-ID: <20200109092028.GM4456@T480>
+References: <20200103220557.24812-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103220557.24812-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These configs are required for booting kernel in qcom
-ipq6018 boards.
+On Fri, Jan 03, 2020 at 11:05:57PM +0100, Krzysztof Kozlowski wrote:
+> IMX_SCU_SOC can be compile tested to increase build coverage.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 28fed08..5e0b696 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -405,6 +405,7 @@ CONFIG_PINCTRL_IMX8MN=y
- CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_PINCTRL_IMX8QXP=y
- CONFIG_PINCTRL_IPQ8074=y
-+CONFIG_PINCTRL_IPQ6018=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8994=y
- CONFIG_PINCTRL_MSM8996=y
-@@ -714,6 +715,7 @@ CONFIG_QCOM_CLK_APCS_MSM8916=y
- CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
- CONFIG_IPQ_GCC_8074=y
-+CONFIG_IPQ_GCC_6018=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
--- 
-2.7.4
+Applied, thanks.
