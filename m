@@ -1,166 +1,122 @@
 Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD48C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA4C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77512067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEB92067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dJG86w1B"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="esTMORPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgAIIVm (ORCPT
+        id S1728430AbgAIIZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:21:42 -0500
-Received: from mail-mw2nam12on2050.outbound.protection.outlook.com ([40.107.244.50]:41312
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        Thu, 9 Jan 2020 03:25:07 -0500
+Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:9440
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728347AbgAIIVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:21:41 -0500
+        id S1728347AbgAIIZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:25:07 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MRR8tCI+EicrWCMVgk58uNvz6c1xIxOcc2JDrv0aoGvY3dyXGDkncs+Sjf9N7a3cTpgmVI+y/MZTEXrK7utUoV9UIFrSrAE5/NCMcA42soPhiu585u7W2k73CYAoO+vnP6sThObQqHQTEnyXjHKrU/XnlYH/lw3mJkQDMiyP0Nzn+po3Bl9ybUfFGsfKPSjXhD3p9s8CZI1a4nklrlrZ/3ALBUz2u/XsQwWtPbDI25mMU3bnCiImYjDq2ZiSFkILc8V7qRn4Ya77VzjG0vNU9le7rE9TEVhj72d/xYAT2UG9vj1/8N+D5SicK1sBnb1fNUB9tZEGPkTPqf7bW11HEg==
+ b=McjYQlRDKv1qB9yb9n4Ykg11XkgLZVxu37lBAIxNIwSVv040EgKh5jUzdGF0wjBEUb+9IEcvhZ5G4w2NsST1KUPKe+NUeQzZGLE84oIYqXMWzoeCM2zkLKS4v+Lx1guMCoP6rIYNRwVViQtqoX2pLcXAAxJNDkTv+yyPj91C/vvqD0hKZuDjy+SdxYppfCcf7ZTw291sjVLhe9AdS6Rq5OlK1P4p+mV8hAbCJkI27hQI0rZXo83XTu4SLxwtvH/c83Iilwx3xv0ywBQRwsUIOjk6lb9/jhzRY2bb+jwaoHfVbXF9io4b3awsYMIL/Ut/fDyoXVx64/5NPBvpHqQpwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WtX2f0YurQVONZgMxEmgegAHNVwEUC8ikZ+lp0Tqi5c=;
- b=OZ4Mrjiwx/2Ol+e7vpSBMczmDmO8L8iJ0NSSUH/eKXCcZ5EAKIdsSnLk8jNfXl5K7OxFssxnPrNjI7lE3X83TqxntCkq5+/1MNIlWsUKZZtPB5DQqMd5O4FYDzLoiwUoVFNbnuVeAQO185gWkdBvsjiQvkUqAypC+y+qeLoO12yXsmhqQP6PTF02YVLPjarOQWWf5j3XguRVQ2xPW9J997N5zdxhaKmvliDL67iZV02HsRbfnZql9R6MBcum8ztL6Z3kTgDYmfNkr47xQJl1i/z2NYIg15jhpTAxUU07NcURFByKCmuTqOgq1kd+IpOAhwmwqWqTI70GXL7iMxPZUQ==
+ bh=kxZcaIEVu1vc+vQ6DJdLtThVQkvGXLSmK659Deghx6k=;
+ b=aUoDdHMN8aeNtUz8BQgP4j2B9dqdEo9UYc4DDGBed1SiHgnIJlKggbVOqdOtHf5CBrvCl8unXWV4LCVxEF857Fi/yMG+ZBQPmUVXd1B2E3zilAJfKV8Hv5Oha8vvC6Sbv5vijH1+5qgawus+7giYk+uGdszosZrFsZDL0xc3PDHGF2t1tT9wErKks0ZjLgZfD7wbnkZY4tE2GDy0gydz5jyaatG9CkO3rm6pASiwsDj0RFmJeFl2EOlkgUHc+KdKVT0SkVe0zG1+9qqCjrezWThBRhHMjJNB0VDP/41G/z3zm2BXkPOoEhkmDDYK0RwDmdrfln//0K7N2MmSIyOmDA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WtX2f0YurQVONZgMxEmgegAHNVwEUC8ikZ+lp0Tqi5c=;
- b=dJG86w1BqyiMWssCEGUgjOWJBTIG27fbLwq4zrVD0xz1lUXgMDnxRMAhEj4NJxXsYH0n15MXuexMUsfjPbEYAzxqla5CVGuvw2rToqeyl1pW51S5J7RcxfFPGpZYKCJc0cjXdA3pdmoIcqpvdic1YUGZD4n3DEx9cim4nvwcKKg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sandeep.Singh@amd.com; 
-Received: from MN2PR12MB3598.namprd12.prod.outlook.com (20.178.244.84) by
- MN2PR12MB3504.namprd12.prod.outlook.com (20.178.244.74) with Microsoft SMTP
+ bh=kxZcaIEVu1vc+vQ6DJdLtThVQkvGXLSmK659Deghx6k=;
+ b=esTMORPm4Osxom9gV7sO39cyATBBFsRk+L5Z9ehE4+xxA8CRAIxU/CMBZYXV2nPvWbyEGKIzppoI5W4XW+0QGMdftJm/0Urbb1B4/Ga+/nUtKc5m1uGEVN8uq3nlqVo/2XnBqsbt5zL7YwySeqRq0zGlCyIJeoIpAqxp+0CviuA=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3929.eurprd04.prod.outlook.com (52.134.70.31) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Thu, 9 Jan 2020 08:21:37 +0000
-Received: from MN2PR12MB3598.namprd12.prod.outlook.com
- ([fe80::10ce:b4fb:586d:8b9c]) by MN2PR12MB3598.namprd12.prod.outlook.com
- ([fe80::10ce:b4fb:586d:8b9c%3]) with mapi id 15.20.2623.008; Thu, 9 Jan 2020
- 08:21:37 +0000
-From:   Sandeep Singh <Sandeep.Singh@amd.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        srinivas.pandruvada@linux.intel.com, jic23@kernel.org,
-        linux-iio@vger.kernel.org
-Cc:     Shyam-sundar.S-k@amd.com, Sandeep Singh <sandeep.singh@amd.com>
-Subject: [PATCH 0/4] SFH: Add Support for AMD Sensor Fusion Hub
-Date:   Thu,  9 Jan 2020 13:51:17 +0530
-Message-Id: <1578558077-9798-1-git-send-email-Sandeep.Singh@amd.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0036.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::22) To MN2PR12MB3598.namprd12.prod.outlook.com
- (2603:10b6:208:d1::20)
-MIME-Version: 1.0
-Received: from andbang2.amd.com (165.204.156.251) by MA1PR0101CA0036.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2623.9 via Frontend Transport; Thu, 9 Jan 2020 08:21:34 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 12fa5b8f-5d69-4936-a399-08d794dcf1fd
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3504:|MN2PR12MB3504:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3504B09C3132A4F43FA5F9A1E0390@MN2PR12MB3504.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 02778BF158
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(199004)(189003)(5660300002)(6666004)(66946007)(478600001)(16526019)(7696005)(52116002)(36756003)(4326008)(186003)(26005)(8676002)(6486002)(2906002)(2616005)(81156014)(66556008)(66476007)(81166006)(8936002)(316002)(956004)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3504;H:MN2PR12MB3598.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
+ 15.20.2623.9; Thu, 9 Jan 2020 08:25:03 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d968:56ad:4c0c:616f]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d968:56ad:4c0c:616f%7]) with mapi id 15.20.2602.018; Thu, 9 Jan 2020
+ 08:25:03 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "andreas@kemnade.info" <andreas@kemnade.info>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
+ supply assignment
+Thread-Topic: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
+ supply assignment
+Thread-Index: AQHVvrKzedU6q1PoEkWGPbnH76QqjKfiCd2AgAAE9sA=
+Date:   Thu, 9 Jan 2020 08:25:03 +0000
+Message-ID: <DB3PR0402MB39168406714A06869C33D037F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1577670071-1322-1-git-send-email-Anson.Huang@nxp.com>
+ <20200109080600.GH4456@T480>
+In-Reply-To: <20200109080600.GH4456@T480>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8074fc5f-98db-41f4-24b1-08d794dd6d0d
+x-ms-traffictypediagnostic: DB3PR0402MB3929:|DB3PR0402MB3929:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB39297396D9F4B5E859DA684EF5390@DB3PR0402MB3929.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(366004)(189003)(199004)(71200400001)(5660300002)(7416002)(33656002)(478600001)(4744005)(66946007)(76116006)(86362001)(66476007)(66446008)(54906003)(44832011)(316002)(66556008)(4326008)(81166006)(81156014)(64756008)(26005)(186003)(8676002)(7696005)(2906002)(6916009)(52536014)(6506007)(55016002)(9686003)(8936002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3929;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dZ4F9DKrY4SXv/p1I5Y7zInWcIqqfrXzFiIkPoqIhbnfApx07lhAckhLvnVFyULjgzeNzCAmV3AAFbrhP3GA2mYEZSmZtlcXyMtNKOZN3kjo1jrPVkp660otjs4D1b8EPRCFcjkySkDMz5dobq9ppu2FOhlzr3CGZXoklnKQd7wgSleZY3/EWfzNJgA9nxMnjjHv37wC9b4X9IieaYAQf0cL55TTIBwEh/0kRjg/Bx9QBkP4TEUrHOB96wqkcUBGXeHvzmsQrKQWsm0KuKR3eJuB659yxrDmuMdy4j7hnWSoKynwCsI/piJFoXBI7r7moPsRucjvw+SbUVKcJVyLpU77FwwWJUfxXKgUvTteqibf5myx0XkL2H13HMF6S13J7aNrqaMz6HRjdhLZRupLnsyd8FqbQ5Adq6nQNJjYgy3HVFJrb4frYZRw9LsgdlEC
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12fa5b8f-5d69-4936-a399-08d794dcf1fd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2020 08:21:37.2700
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ct4VT7xi54cAKcaFBYGgJ6GMdhFkB9fRA1r+5w37wUJ+UlYTnFZvbD5UewQd21+d7EzKq2x4d/OJxUXFXMk7ED5I2M7MmO0godrkvoBtPFHpYOTzk8RR/ooeu9hBMTLqzhRtEczYk20hXaEzWY5GU+N/KYP2r0xr5mAOlhMiBXHWaCpPbga0K6lIWhBnY1HcEmYBGjTDHea5Yb0/a9YJAsveH2uCiPcMqkoKobNGYPAg388t8lxCHkePBAsIJjbSgUHprb4z8f7KSId0l2ho6ld9lxROiToPQdaRPsgp+uJRf6qxa5Dj5VCr9kN83660/9IslVKl6c0UjoUJzxc4gep9vCk2aieTJFcA3YMvzZeBPkumwKCYUtBp8IgaZBICEevbHRjp9Rd9CaSDyHiPIQ+wLzREC+mAwen/W80yqO9eadsIxbZV3/UtbOQh3rIxLofpAJWhUsHNl6FuP2y7YjtfFoPWM1xoEePjra6gO8MV4YM9cCkfGKH9Lj3aXPEE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8074fc5f-98db-41f4-24b1-08d794dd6d0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 08:25:03.3466
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XpiVaYD0p7BZiFqc7QZ6ib7/a6RLZH6wHhDNQSPGP0VKA4e8rpvc/t14dCT/4dmW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3504
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0NLfMV3XHpwuV6F4cLNiVVrgJOG1HxrUI07u12NsA9QmxVwSLEmbVta0aVUFcx1PZIygKh5SHd18tonHMM9wdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3929
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Singh <sandeep.singh@amd.com>
-
-AMD SFH is HID based driver. SFH FW is part of MP2
-processor and it runs on MP2 where in driver resides
-on X86. The driver functionalities are divided  into
-three parts:-
-
-1: amd-mp2-pcie:- This module will communicate with MP2 FW and
-                   provide that data into DRAM.
-2: Client driver :- This part for driver will use dram data and
-                     convert that data into HID format based on
-                     HID reports.
-3: Transport driver :- This part of driver will communicate with
-                        HID core. Communication between devices and
-                        HID core is mostly done via HID reports
-
-In terms of architecture it is much more reassembles like ISH.
-However the major difference is all The hid reports are generated
-as part of kernel driver. AMD SFH driver has taken reference
-from ISH in terms of design and functionalities at fewer location.
-
-AMD sensor fusion Hub is part of a SOC starting from Ryzen
-based platforms. The solution is working well on windows OS
-in several OEM products. AMD SFH uses HID over PCIe bus.
-
-
-Sandeep Singh (4):
-  SFH: Add maintainer list and documentation for AMD SFH based      on
-    HID framework
-  SFH: PCI driver to add support of AMD sensor fusion Hub      using HID
-    framework
-  SFH: Transport Driver to add support of AMD sensor fusion      Hub
-    (SFH)
-  SFH: Create HID report to Enable support of AMD sensor fusion Hub
-    (SFH)
-
- Documentation/hid/amd-sfh-hid.rst                  | 159 +++++
- MAINTAINERS                                        |   8 +
- drivers/hid/Kconfig                                |   2 +
- drivers/hid/Makefile                               |   1 +
- drivers/hid/amd-sfh-hid/Kconfig                    |  17 +
- drivers/hid/amd-sfh-hid/Makefile                   |  17 +
- drivers/hid/amd-sfh-hid/amd_mp2_pcie.c             | 255 ++++++++
- drivers/hid/amd-sfh-hid/amd_mp2_pcie.h             | 169 ++++++
- drivers/hid/amd-sfh-hid/amdsfh-debugfs.c           | 251 ++++++++
- drivers/hid/amd-sfh-hid/amdsfh-debugfs.h           |  14 +
- drivers/hid/amd-sfh-hid/amdsfh-hid-client.c        | 257 +++++++++
- drivers/hid/amd-sfh-hid/amdsfh-hid.c               | 179 ++++++
- drivers/hid/amd-sfh-hid/amdsfh-hid.h               |  85 +++
- .../hid_descriptor/amd_sfh_hid_descriptor.c        | 275 +++++++++
- .../hid_descriptor/amd_sfh_hid_descriptor.h        | 125 ++++
- .../hid_descriptor/amd_sfh_hid_report_descriptor.h | 642 +++++++++++++++++++++
- 16 files changed, 2456 insertions(+)
- create mode 100644 Documentation/hid/amd-sfh-hid.rst
- create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
- create mode 100644 drivers/hid/amd-sfh-hid/Makefile
- create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
- create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
- create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.c
- create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.h
- create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid-client.c
- create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.c
- create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.h
- create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_descriptor.c
- create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_descriptor.h
- create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_descriptor.h
-
--- 
-2.7.4
-
+SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzVdIEFSTTogZHRzOiBpbXg2cWRs
+LXNhYnJlc2Q6IFJlbW92ZSBpbmNvcnJlY3QNCj4gcG93ZXIgc3VwcGx5IGFzc2lnbm1lbnQNCj4g
+DQo+IE9uIE1vbiwgRGVjIDMwLCAyMDE5IGF0IDA5OjQxOjA3QU0gKzA4MDAsIEFuc29uIEh1YW5n
+IHdyb3RlOg0KPiA+IFRoZSB2ZGQzcDAncyBpbnB1dCBzaG91bGQgYmUgZnJvbSBleHRlcm5hbCBV
+U0IgVkJVUyBkaXJlY3RseSwgTk9UDQo+IA0KPiBTaG91bGRuJ3QgVVNCIFZCVVMgdXN1YWxseSBi
+ZSA1Vj8gIEl0IGRvZXNuJ3Qgc2VlbSB0byBtYXRjaCAzLjBWIHdoaWNoIGlzDQo+IHN1Z2dlc3Rl
+ZCBieSB2ZGQzcDAgbmFtZS4NCj4gDQo+ID4gUE1JQydzIHN3Miwgc28gcmVtb3ZlIHRoZSBwb3dl
+ciBzdXBwbHkgYXNzaWdubWVudCBmb3IgdmRkM3AwLg0KPiA+DQo+ID4gRml4ZXM6IDkzMzg1NTQ2
+YmEzNiAoIkFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6IEFzc2lnbiBjb3JyZXNwb25kaW5nDQo+
+ID4gcG93ZXIgc3VwcGx5IGZvciBMRE9zIikNCj4gDQo+IElzIGl0IG9ubHkgYSBkZXNjcmlwdGlv
+biBjb3JyZWN0aW5nIG9yIGlzIGl0IGZpeGluZyBhIHJlYWwgcHJvYmxlbT8gIEknbSB0cnlpbmcg
+dG8NCj4gdW5kZXJzdGFuZCBpdCBpcyBhIDUuNS1yYyBtYXRlcmlhbCBvciBjYW4gYmUgYXBwbGll
+ZCBmb3IgNS42Lg0KPiANCg0KSXQgaXMgZml4aW5nIGEgcmVhbCBwcm9ibGVtIGFib3V0IFVTQiBM
+RE8gdm9sdGFnZSwgdGhhdCBpcyB3aHkgd2Ugbm90aWNlZCB0aGlzIGlzc3VlLg0KDQpUaGFua3Ms
+DQpBbnNvbi4NCg==
