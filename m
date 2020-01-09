@@ -2,97 +2,95 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EDCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346DEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2EDF206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB5B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ho+sL122"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IbXrPxQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgAID7i (ORCPT
+        id S1727838AbgAIEQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:59:38 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:35446 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726913AbgAID7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:59:37 -0500
-X-UUID: 680714b8ecd04aeeb45eaea5ad274877-20200109
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KCps6BgWrvdtsekJVTQpLbQ7cnpqG3IPNr8iggRA7dM=;
-        b=ho+sL122t//pXEShp7xu2qqXD4Jfem52dZMrA54A+CSHK9bzs7t7EzmRvsCTlml02icv1dXggfeysvFkwekJS7wbAPuk72kVutgjrx7bNSIdfvHQkJf7NMeSq2GwAVhOhQk4zhZb7l/E3XgRW1lLIfFsEN7Ern/85328KKXL6+4=;
-X-UUID: 680714b8ecd04aeeb45eaea5ad274877-20200109
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.liang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 363496259; Thu, 09 Jan 2020 11:59:32 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
- 2020 11:58:19 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 9 Jan 2020 11:59:40 +0800
-Message-ID: <1578542359.20923.16.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
-From:   Yong Liang <yong.liang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 9 Jan 2020 11:59:19 +0800
-In-Reply-To: <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
-References: <20191227141405.3396-1-yong.liang@mediatek.com>
-         <20191227141405.3396-2-yong.liang@mediatek.com>
-         <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-         <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 8 Jan 2020 23:16:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49265 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727417AbgAIEQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 23:16:18 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tXqN358vz9sNx;
+        Thu,  9 Jan 2020 15:16:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578543376;
+        bh=iaICvJ9ZzjYYZ/Zpogr/xO8dR8P1kdPICwWuKIKsVkw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IbXrPxQrHjjJ7zO1RAQdDQpJjtRKc4nuB/mODT3u7QcKpsOYXtco67wCjIiaXoXpY
+         GIntQ963gxTb2s49/QR8GZ4sSs4/ET11E73G1vWDZtiGn83qJrR4Ggk1w8VycWCZTV
+         hTN/54pK+g9AJIosxoXA7Y1JDs3I9GCbdgF27jHNhuklIiP5TMO3Ye3iUA09VG3UGl
+         MEvxCQcXD0Oa6kPZd6GnnzvMeiwTMfaAVf7mXgyxiTBSZHteCGF9WCYLjvAFaovqRG
+         c5MiaXhopAO18hCt0TGG5vRTlgi6brN1+2R7ac7tJ1kWNSqyk4V1M+gcTmgH/yqhFh
+         xR9BUNI5oy+fA==
+Date:   Thu, 9 Jan 2020 15:16:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: linux-next: build warning after merge of the gpio tree
+Message-ID: <20200109151615.388726ae@canb.auug.org.au>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 54C315E0B98D2A87DB338729E419450348F525FF59E3EDFD3BC0ECB9CBA3B6422000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/PazVQAIqXWrfb6_4GntgKtt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTA4IGF0IDE3OjE0ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
-DQo+IE9uIFdlZCwgSmFuIDgsIDIwMjAgYXQgNDo1NiBQTSBOaWNvbGFzIEJvaWNoYXQgPGRyaW5r
-Y2F0QGNocm9taXVtLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBtaW5vciBuaXQsIHMvYW1yNjQvYXJt
-NjQvIGluIHRoZSBjb21taXQgdGl0bGUuDQo+ID4NCj4gPiBPbiBGcmksIERlYyAyNywgMjAxOSBh
-dCAxMDoxNSBQTSBZb25nIExpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+
-ID4gPg0KPiA+ID4gRnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4N
-Cj4gPiA+DQo+ID4gPiAxLiBJbmNsdWRlIG10ODE4My1yZXNldC5oIGFuZCBhZGQgcmVzZXQtY2Vs
-bHMgaW4gaW5mcmFjZmcNCj4gPiA+IGluIGR0c2kgZmlsZQ0KPiANCj4gRXJyLCB3YWl0LCBkb2Vz
-bid0IHRoaXMgZGVwZW5kIG9uDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFp
-bC9saW51eC1tZWRpYXRlay8yMDIwLUphbnVhcnkvMDI2MTcwLmh0bWwNCj4gPw0KPiANCiAgWWVz
-LCBidXQgdGhpcyBwYXRjaCBjYW4gYmUgZGVsYXkgYSB3aGlsZSwgV2Ugd2lsbCBlbnN1cmUgamlh
-eGluJ3MNCnBhdGNoIGJlIHNlbmQgb3V0IHByaW9yaXRseS4NCg0KICBZb25nLkxpYW5nDQoNCj4g
-PiA+IDIuIEFkZCB3YXRjaGRvZyBkZXZpY2Ugbm9kZQ0KPiANCj4gQ2FuIHdlIGhhdmUgYSBwYXRj
-aCB3aXRoIGp1c3QgdGhpcyBjaGFuZ2UgaW5zdGVhZCwgc2luY2UgeW91J3JlDQo+IHNlbmRpbmcg
-dGhlIGJpbmRpbmcgd2l0aCBpdC4NCg0KICBJIHdpbGwgcmVtb3ZlIGJpbmRpbmcgdHh0IGZpbGUg
-ZnJvbSB0aGlzIHBhdGNoLg0KICBBbmQgd2Ugd2lsbCBlbnN1cmUgamlheGluJ3MgcGF0Y2ggYmUg
-c2VuZCBvdXQgcHJpb3JpdGx5Lg0KDQo+IA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IHlv
-bmcubGlhbmcgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0KPiA+DQo+ID4gVGVzdGVkLWJ5OiBO
-aWNvbGFzIEJvaWNoYXQgPGRyaW5rY2F0QGNocm9taXVtLm9yZz4NCj4gPg0KPiA+ID4gLS0tDQo+
-ID4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8IDggKysrKysr
-KysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4gPiBbc25pcF0N
-Cj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+
-IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtbWVkaWF0ZWsNCg0K
+--Sig_/PazVQAIqXWrfb6_4GntgKtt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+After merging the gpio tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+drivers/gpio/gpio-grgpio.c: In function 'grgpio_remove':
+drivers/gpio/gpio-grgpio.c:438:16: warning: unused variable 'flags' [-Wunus=
+ed-variable]
+  438 |  unsigned long flags;
+      |                ^~~~~
+
+Introduced by commit
+
+  25d071b3f6db ("gpio: gpio-grgpio: fix possible sleep-in-atomic-context bu=
+gs in grgpio_remove()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/PazVQAIqXWrfb6_4GntgKtt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WqQ8ACgkQAVBC80lX
+0GxwMAgAnqYP4eatOUydhL+hS4RT2E2M9I68srpRDDKui3EhmFq/ixVfZ4PiLk5N
+vPGDHBUdN9ft7WQKJbC/NAsCSkWAkJYoyyC1F1jl1JI+Ps7eytDYesGgVUB/8h1C
+W+OpgRfQwe8YViKO2HK6u+wCXJUIVZQIrWKRCZWLXQFPlJMFuKn4Ar1pT2bAdYm8
+TRgf8BMtyhLubZmtKpYvFeqBYdpcAinX6ON+vmgHDJEA7yIG7iv7KmcG/AoKXh1R
+Bp4O3PLxXnBsia9fbXmXsyvoW37L2zUqdfVjlYC+5+1OZ9g7gRbjERgVyNRX8OtY
+froM7cOKK6NtmwEa41zzzCg2nMnzUA==
+=KecU
+-----END PGP SIGNATURE-----
+
+--Sig_/PazVQAIqXWrfb6_4GntgKtt--
