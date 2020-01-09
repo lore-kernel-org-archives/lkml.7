@@ -2,142 +2,102 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CF7C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26ADC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FDC20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C778B20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qC64sf1x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgAIIwd (ORCPT
+        id S1728904AbgAIIwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:52:33 -0500
-Received: from mga05.intel.com ([192.55.52.43]:50456 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgAIIwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:52:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 00:52:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="421716257"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Jan 2020 00:52:31 -0800
-Date:   Thu, 9 Jan 2020 16:52:31 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200109085231.GA7305@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
- <20200106102345.GE12699@dhcp22.suse.cz>
- <20200107012241.GA15341@richard>
- <20200107083808.GC32178@dhcp22.suse.cz>
- <20200108003543.GA13943@richard>
- <20200108094041.GQ32178@dhcp22.suse.cz>
- <20200109031821.GA5206@richard>
- <20200109083641.GH4951@dhcp22.suse.cz>
+        Thu, 9 Jan 2020 03:52:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51969 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbgAIIwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:52:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d73so1938873wmd.1;
+        Thu, 09 Jan 2020 00:52:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3UC+FyBaxdvKcy8S6MwxaGbPaUPYnnimn1+HUbTZZ1I=;
+        b=qC64sf1xAlDktRkhCL5dnmg8OJ/xcLFfGXFkViGCkzMqD7YerY7tv7Fj/kwuLrA5r0
+         LbHPdylWkUO1KBOqeNBpbmBzoKtMxlo8xybIqssvrvLwT/5OFap443Z/U9Q9j3DiSzFo
+         9+aWnyTlLXvsgJvQ/jUsQCNfM3UyjqmcYUoiZ56zidYpQuFIF9a/QTUXjMa3C6UAFHXD
+         VbhFznLTU7ktnO726IyRe2MFwVr1JZxDTq0Bt5Xpc3HH5/BZMIs9NH4ozwUc3rC99wIo
+         4ukUk4X8gt7Ju1nDP1JpAGkWo9Yh+iipjqLJsxuytnRF+OuIm0Q7h/l0j64iRAmST1zW
+         Wk7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3UC+FyBaxdvKcy8S6MwxaGbPaUPYnnimn1+HUbTZZ1I=;
+        b=j066cgqNt/jfw54tqABDl9tC4K9a3Nd36YO9nFP47LhxOfxVfvXTdOWXpqXV5ipLey
+         BluVBt+xwu1wWIDNHm2sfRtcQF8LND+eltxlwjn5K2qwAWYrjlUsaMSDN6C67x4zN2/4
+         je7mmXQ+DBdIS89yHfZHYpTlvdow47Jl73YDahpQy/CzErBLo1HUd1wBJG0fxSW6Ns69
+         ZcyiB0yEQAGKICJzV+CmMNeifQaiJm4XvIWKsebvqC5nevPCyCHH9ZXJgZaYoYOn+Z1i
+         uhEuCu8vukmnY4UP4sydnUQXHaBmwWpQyLWVL+S86atjzQrDRGl10t4pLWUCJwrnz/w3
+         u0Qw==
+X-Gm-Message-State: APjAAAUF4oaBm74gKICT2EiQv+ZD3IMhJLb1hXCBtMHF79cifD/Bi9Ab
+        I+O79U5l9rgRSb0Bxb42AE4=
+X-Google-Smtp-Source: APXvYqzYXWh8VSyjzGZqoZsWgKwcqDzfcvDVzynWCy3+JIXEn4rpC9McK/lf7GDfkBNH1GAubm6PyA==
+X-Received: by 2002:a1c:6a07:: with SMTP id f7mr3488669wmc.171.1578559955600;
+        Thu, 09 Jan 2020 00:52:35 -0800 (PST)
+Received: from [192.168.2.41] ([46.227.18.67])
+        by smtp.gmail.com with ESMTPSA id i5sm7422343wrv.34.2020.01.09.00.52.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 00:52:35 -0800 (PST)
+Subject: Re: [PATCH] tty/serial: atmel: RS485 & ISO7816: wait for TXRDY before
+ sending data
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Codrin.Ciubotariu@microchip.com, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, jslaby@suse.com
+References: <20200107111656.26308-1-codrin.ciubotariu@microchip.com>
+ <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
+ <20200109073305.yn5y6sgomjniwwj6@pengutronix.de>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <0ea33918-2845-a750-faa7-fec729976136@gmail.com>
+Date:   Thu, 9 Jan 2020 09:52:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109083641.GH4951@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200109073305.yn5y6sgomjniwwj6@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:36:41AM +0100, Michal Hocko wrote:
->On Thu 09-01-20 11:18:21, Wei Yang wrote:
->> On Wed, Jan 08, 2020 at 10:40:41AM +0100, Michal Hocko wrote:
->> >On Wed 08-01-20 08:35:43, Wei Yang wrote:
->> >> On Tue, Jan 07, 2020 at 09:38:08AM +0100, Michal Hocko wrote:
->> >> >On Tue 07-01-20 09:22:41, Wei Yang wrote:
->> >> >> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
->> >> >> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
->> >> >> >> As all the other places, we grab the lock before manipulate the defer list.
->> >> >> >> Current implementation may face a race condition.
->> >> >> >
->> >> >> >Please always make sure to describe the effect of the change. Why a racy
->> >> >> >list_empty check matters?
->> >> >> >
->> >> >> 
->> >> >> Hmm... access the list without proper lock leads to many bad behaviors.
->> >> >
->> >> >My point is that the changelog should describe that bad behavior.
->> >> >
->> >> >> For example, if we grab the lock after checking list_empty, the page may
->> >> >> already be removed from list in split_huge_page_list. And then list_del_init
->> >> >> would trigger bug.
->> >> >
->> >> >And how does list_empty check under the lock guarantee that the page is
->> >> >on the deferred list?
->> >> 
->> >> Just one confusion, is this kind of description basic concept of concurrent
->> >> programming? How detail level we need to describe the effect?
->> >
->> >When I write changelogs for patches like this I usually describe, what
->> >is the potential race - e.g.
->> >	CPU1			CPU2
->> >	path1			path2
->> >	  check			  lock
->> >	  			    operation2
->> >				  unlock
->> >	    lock
->> >	    # check might not hold anymore
->> >	    operation1
->> >	    unlock
->> >
->> >and what is the effect of the race - e.g. a crash, data corruption,
->> >pointless attempt for operation1 which fails with user visible effect
->> >etc.
->> 
->> Hi, Michal, here is my attempt for an example. Hope this one looks good to
->> you.
->> 
->> 
->>     For example, the potential race would be:
->>     
->>         CPU1                      CPU2
->>         mem_cgroup_move_account   split_huge_page_to_list
->>           !list_empty
->>                                     lock
->>                                     !list_empty
->>                                     list_del
->>                                     unlock
->>           lock
->>           # !list_empty might not hold anymore
->>           list_del_init
->>           unlock
->>     
->>     When this sequence happens, the list_del_init() in
->>     mem_cgroup_move_account() would crash since the page is already been
->>     removed by list_del in split_huge_page_to_list().
->
->Yes this looks much more informative. I would just add that this will
->crash if CONFIG_DEBUG_LIST.
->
->Thanks!
+Le 09/01/2020 à 08:33, Uwe Kleine-König a écrit :
+> Hello,
+> 
+> On Wed, Jan 08, 2020 at 02:45:05PM +0100, Richard Genoud wrote:
+>> NB: MS exchange has added some =3D and =20 here and there, but git am
+>> doesn't seems to be bothered by them.
+> 
+> Unless I missed something I cannot confirm. In mutt I don't see any =3D
+> or =20.
+It's strange indeed. I double check under thunderbird and directly on my
+webmail (posteo.de), there're =3D lying around in the message source.
+But not on the other patches from linux-serial.
+weird...
 
-Glad you like it~
+> 
+> Best regards
+> Uwe
+> 
 
-Will prepare v2 with your suggestion :-)
-
->-- 
->Michal Hocko
->SUSE Labs
-
--- 
-Wei Yang
-Help you, Help me
