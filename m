@@ -2,189 +2,155 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD030C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77507C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E72B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4791520673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oWnYAgf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgAIJNR (ORCPT
+        id S1729166AbgAIJNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:13:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48357 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbgAIJNR (ORCPT
+        Thu, 9 Jan 2020 04:13:23 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41161 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728862AbgAIJNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:13:17 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1ipTsN-0003LV-5C; Thu, 09 Jan 2020 10:13:11 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d] (unknown [IPv6:2a03:f580:87bc:d400:197e:2d9b:882c:b51d])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 252AD49E98A;
-        Thu,  9 Jan 2020 09:13:09 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-can@vger.kernel.org, wg@grandegger.com,
-        sriram.dash@samsung.com
-References: <20191212161536.23264-1-dmurphy@ti.com>
- <b0560413-525c-39ba-30ce-816c098e51ab@pengutronix.de>
- <afa5c681-bbd1-a6f6-2b58-4f24c924144e@pengutronix.de>
- <01f16f0f-cfdf-0a3c-48b1-59e0824c83e8@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH linux-can/testing] can: tcan4x5x: Disable the INH pin
- device-state GPIO is unavailable
-Message-ID: <cbb1b67d-4ded-7b18-ee9f-8bf0a728c639@pengutronix.de>
-Date:   Thu, 9 Jan 2020 10:13:04 +0100
+        Thu, 9 Jan 2020 04:13:22 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00997oCh021592;
+        Thu, 9 Jan 2020 10:13:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=WeMi3HpOU5AF0rGrPKqX2WxavTF7Z+TyGKSaY1oSknc=;
+ b=oWnYAgf2miTJ94ASkmeXawkZn7a43R5ZQu/HUcQXoRuUmxx/jNDbbufLprF050RfmSoc
+ FKcPzdnfhEYDHzhXBmrkPyh+9keWY1lWsMY4JdQLyhPnpfXPFlgTeELJnmhVTNG3D+pJ
+ Pcpc8ncq2IiK5n3FCOYZgVuewJ2IoIgVUP5Fbk0qa5sy/EY4fxNxesWIfLfUJGjYXAM9
+ xYiJe4UQDMYCSc0Rn5paW6LJWC6C1pyUOB/Wl9E2HsjzIbdQ/SB0H8v2I8WrCmAXFonN
+ LAzniOJggG4aIcFKZN8JWhwJN6KCquIkxooO2vPVuEI44LkUXYTcptFXxRqBv7F5/jSb xA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakur0jsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 10:13:08 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 13E74100038;
+        Thu,  9 Jan 2020 10:13:04 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 033752A6184;
+        Thu,  9 Jan 2020 10:13:04 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
+ 2020 10:13:03 +0100
+Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <jic23@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
+Date:   Thu, 9 Jan 2020 10:13:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <01f16f0f-cfdf-0a3c-48b1-59e0824c83e8@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="fpYAuQt2XlEFQFDtw5R5YXONFkS9bkxgD"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200107114532.6697-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fpYAuQt2XlEFQFDtw5R5YXONFkS9bkxgD
-Content-Type: multipart/mixed; boundary="7xj7R9DykdC8qHiXWcS4m8WrFl6Rm9WSF";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
- linux-can@vger.kernel.org, wg@grandegger.com, sriram.dash@samsung.com
-Message-ID: <cbb1b67d-4ded-7b18-ee9f-8bf0a728c639@pengutronix.de>
-Subject: Re: [PATCH linux-can/testing] can: tcan4x5x: Disable the INH pin
- device-state GPIO is unavailable
-References: <20191212161536.23264-1-dmurphy@ti.com>
- <b0560413-525c-39ba-30ce-816c098e51ab@pengutronix.de>
- <afa5c681-bbd1-a6f6-2b58-4f24c924144e@pengutronix.de>
- <01f16f0f-cfdf-0a3c-48b1-59e0824c83e8@ti.com>
-In-Reply-To: <01f16f0f-cfdf-0a3c-48b1-59e0824c83e8@ti.com>
+On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+> 
+> Changes since v1:
+> - Fall back to IRQ mode for ADC only in case of ENODEV
 
---7xj7R9DykdC8qHiXWcS4m8WrFl6Rm9WSF
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+Hi Peter,
 
-On 1/8/20 9:47 PM, Dan Murphy wrote:
->> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/log/=
-?h=3Dtesting
->>
->> ...if I've collected every m_can related patch.
->=20
-> Is this still relevant or have you pulled this in?
+Thanks for the patch,
 
-Yes, it's still relevant, because it's upstream in the mean time. If
-there are any problems left, we should fix them.
+Please find a minor comment here after. Apart from that, you can add my:
 
-> It looks good to me.
-
-If you find time, please test.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
 
---7xj7R9DykdC8qHiXWcS4m8WrFl6Rm9WSF--
+> 
+> Regards,
+> Peter
+> 
+>  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index e493242c266e..74a2211bdff4 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
+>  {
+>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+>  
+> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+> -	if (!adc->dma_chan)
+> -		return -EINVAL;
+> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+> +	if (IS_ERR(adc->dma_chan)) {
+> +		int ret = PTR_ERR(adc->dma_chan);
+> +
+> +		adc->dma_chan = NULL;
+> +		return ret;
 
---fpYAuQt2XlEFQFDtw5R5YXONFkS9bkxgD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+You may "return PTR_ERR(adc->dma_chan);" directly here.
 
------BEGIN PGP SIGNATURE-----
+Best Regards,
+Fabrice
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4W7qAACgkQWsYho5Hk
-nSA3/wf8CSV/i981YFgY8ZAFJNg/jE7uzycNLKqGD71hO8d/8FPW9Kukyfrrhk5m
-BpF7tb4IY95mC0lbE5g0UUbQitgsDl3jGHLtwQO/vP6OwWD1m2JrKjUFA4Pw1TSl
-jIVaXHgwuS+xJFNdSAwsHOSry5iVedR8/3wxhPx67iCksJPe6t3YmXSHwV5PZw0c
-idYIoxpm62OE+9/nJgg+AwCfBT1TVaVlkXKknWdsi7PpVuTHV6WW/WTxxclbuh38
-LRN0Ec2UURJNwk2zTGK4KWlg231wYwXTmTAwIZKqmBks+pbtVqlJicZBdpIdEO66
-lz/H/owcB1V2Z0mV2wbZgsgbhmoIKQ==
-=IJve
------END PGP SIGNATURE-----
-
---fpYAuQt2XlEFQFDtw5R5YXONFkS9bkxgD--
+> +	}
+>  
+>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>  					 DFSDM_DMA_BUFFER_SIZE,
+> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
+>  	init_completion(&adc->completion);
+>  
+>  	/* Optionally request DMA */
+> -	if (stm32_dfsdm_dma_request(indio_dev)) {
+> +	ret = stm32_dfsdm_dma_request(indio_dev);
+> +	if (ret) {
+> +		if (ret != -ENODEV) {
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(&indio_dev->dev,
+> +					"DMA channel request failed with %d\n",
+> +					ret);
+> +			return ret;
+> +		}
+> +
+>  		dev_dbg(&indio_dev->dev, "No DMA support\n");
+>  		return 0;
+>  	}
+> 
