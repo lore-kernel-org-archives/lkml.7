@@ -2,112 +2,290 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0A9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222BAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A4F206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF631206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DI+KVUfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388428AbgAISMx (ORCPT
+        id S2388435AbgAISQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:12:53 -0500
-Received: from namei.org ([65.99.196.166]:56486 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730353AbgAISMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:12:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 009IBcbB024844;
-        Thu, 9 Jan 2020 18:11:38 GMT
-Date:   Fri, 10 Jan 2020 05:11:38 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-cc:     Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF
- (KRSI)
-In-Reply-To: <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
-Message-ID: <alpine.LRH.2.21.2001100437550.21515@namei.org>
-References: <20191220154208.15895-1-kpsingh@chromium.org> <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com> <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com> <201912301112.A1A63A4@keescook> <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org> <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Thu, 9 Jan 2020 13:16:42 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26334 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730866AbgAISQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 13:16:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578593799;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PuQZ01JccUJ9Y5jwRCJ72PmwXiqdqAnX2460fvsPeis=;
+        b=DI+KVUfgnEVvKVN0OpTvxfeOmbdtKFJbWlAluedsh6eBNtDRp+KfpNWMDeNx2XZApaOSob
+        A9JajGwgUXQ6mOVWIdFLteKdZrEt1PfgBL/7VypRFtKxgb0SyHYfcd/8mv+ZwjKmz3KuBU
+        Vplwst++6NtJUJX9VE732I6gS4kpgZk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-F7aFNrvhMs6PmI2LQyT55w-1; Thu, 09 Jan 2020 13:16:38 -0500
+X-MC-Unique: F7aFNrvhMs6PmI2LQyT55w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41EDC18B9F80;
+        Thu,  9 Jan 2020 18:16:37 +0000 (UTC)
+Received: from w520.home (ovpn-116-128.phx2.redhat.com [10.3.116.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC09760E3E;
+        Thu,  9 Jan 2020 18:16:36 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 11:16:36 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     zhenyuw@linux.intel.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        kevin.tian@intel.com
+Subject: Re: [PATCH 1/2] vfio: introduce vfio_iova_rw to read/write a range
+ of IOVAs
+Message-ID: <20200109111636.2158b24c@w520.home>
+In-Reply-To: <20200103010217.4201-1-yan.y.zhao@intel.com>
+References: <20200103010055.4140-1-yan.y.zhao@intel.com>
+ <20200103010217.4201-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jan 2020, Stephen Smalley wrote:
+On Thu,  2 Jan 2020 20:02:17 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-> The cover letter subject line and the Kconfig help text refer to it as a
-> BPF-based "MAC and Audit policy".  It has an enforce config option that
-> enables the bpf programs to deny access, providing access control. IIRC, in
-> the earlier discussion threads, the BPF maintainers suggested that Smack and
-> other LSMs could be entirely re-implemented via it in the future, and that
-> such an implementation would be more optimal.
+> vfio_iova_rw will read/write a range of userspace memory (starting form
+> device iova to iova + len -1) into a kenrel buffer without pinning the
+> userspace memory.
+> 
+> TODO: vfio needs to mark the iova dirty if vfio_iova_rw(write) is
+> called.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/vfio/vfio.c             | 45 ++++++++++++++++++
+>  drivers/vfio/vfio_iommu_type1.c | 81 +++++++++++++++++++++++++++++++++
+>  include/linux/vfio.h            |  5 ++
+>  3 files changed, 131 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index c8482624ca34..36e91e647ed5 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+>  }
+>  EXPORT_SYMBOL(vfio_unpin_pages);
+>  
+> +/*
+> + * Read/Write a range of userspace IOVAs for a device into/from a kernel
+> + * buffer without pinning the userspace memory
+> + * @dev [in]  : device
+> + * @iova [in] : base IOVA of a userspace buffer
+> + * @data [in] : pointer to kernel buffer
+> + * @len [in]  : kernel buffer length
+> + * @write     : indicate read or write
+> + * Return error on failure or 0 on success.
+> + */
+> +int vfio_iova_rw(struct device *dev, unsigned long iova, void *data,
+> +		   unsigned long len, bool write)
 
-In this case, the eBPF code is similar to a kernel module, rather than a 
-loadable policy file.  It's a loadable mechanism, rather than a policy, in 
-my view.
+Shouldn't iova be a dma_addr_t and len be a size_t?  AIUI this function
+performs the equivalent behavior of the device itself performing a DMA.
+Hmm, should the interface be named vfio_dma_rw()?
 
-This would be similar to the difference between iptables rules and 
-loadable eBPF networking code.  I'd be interested to know how the 
-eBPF networking scenarios are handled wrt kernel ABI.
+> +{
+> +	struct vfio_container *container;
+> +	struct vfio_group *group;
+> +	struct vfio_iommu_driver *driver;
+> +	int ret = 0;
+> +
+> +	if (!dev || !data || len <= 0)
+> +		return -EINVAL;
+> +
+> +	group = vfio_group_get_from_dev(dev);
+> +	if (!group)
+> +		return -ENODEV;
+> +
+> +	ret = vfio_group_add_container_user(group);
+> +	if (ret)
+> +		goto out;
+> +
+> +	container = group->container;
+> +	driver = container->iommu_driver;
+> +
+> +	if (likely(driver && driver->ops->iova_rw))
+> +		ret = driver->ops->iova_rw(container->iommu_data,
+> +					   iova, data, len, write);
+> +	else
+> +		ret = -ENOTTY;
+> +
+> +	vfio_group_try_dissolve_container(group);
+> +out:
+> +	vfio_group_put(group);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(vfio_iova_rw);
+> +
+>  static int vfio_register_iommu_notifier(struct vfio_group *group,
+>  					unsigned long *events,
+>  					struct notifier_block *nb)
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 2ada8e6cdb88..aee191077235 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mm.h>
+> +#include <linux/mmu_context.h>
+>  #include <linux/rbtree.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/sched/mm.h>
+> @@ -2326,6 +2327,85 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
+>  	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
+>  }
+>  
+> +static int next_segment(unsigned long len, int offset)
+> +{
+> +	if (len > PAGE_SIZE - offset)
+> +		return PAGE_SIZE - offset;
+> +	else
+> +		return len;
+> +}
+> +
+> +static int vfio_iommu_type1_rw_iova_seg(struct vfio_iommu *iommu,
+> +					  unsigned long iova, void *data,
+> +					  unsigned long seg_len,
+> +					  unsigned long offset,
+> +					  bool write)
+> +{
+> +	struct mm_struct *mm;
+> +	unsigned long vaddr;
+> +	struct vfio_dma *dma;
+> +	bool kthread = current->mm == NULL;
+> +	int ret = 0;
+> +
+> +	dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
+> +	if (!dma)
+> +		return -EINVAL;
+> +
+> +	mm = get_task_mm(dma->task);
+> +
+> +	if (!mm)
+> +		return -ENODEV;
+> +
+> +	if (kthread)
+> +		use_mm(mm);
+> +	else if (current->mm != mm) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	vaddr = dma->vaddr + iova - dma->iova + offset;
 
+Parenthesis here would be useful and might prevent overflow, ie:
 
-> Again, not arguing for or against, but wondering if people fully understand
-> the implications.  If it ends up being useful, people will build access
-> control systems with it, and it directly exposes a lot of kernel internals to
-> userspace.  There was a lot of concern originally about the LSM hook interface
-> becoming a stable ABI and/or about it being misused.  Exposing that interface
-> along with every kernel data structure exposed through it to userspace seems
-> like a major leap.
+  dma->vaddr + (iova - dma->iova) + offset
 
-Agreed this is a leap, although I'm not sure I'd characterize it as 
-exposure to userspace -- it allows dynamic extension of the LSM API from 
-userland, but the code is executed in the kernel.
+> +
+> +	ret = write ? __copy_to_user((void __user *)vaddr,
+> +			data, seg_len) :
+> +		__copy_from_user(data, (void __user *)vaddr,
+> +				seg_len);
+> +	if (ret)
+> +		ret = -EFAULT;
+> +
+> +	if (kthread)
+> +		unuse_mm(mm);
+> +out:
+> +	mmput(mm);
+> +	return ret;
+> +}
+> +
+> +static int vfio_iommu_type1_iova_rw(void *iommu_data, unsigned long iova,
+> +				    void *data, unsigned long len, bool write)
+> +{
+> +	struct vfio_iommu *iommu = iommu_data;
+> +	int offset = iova & ~PAGE_MASK;
+> +	int seg_len;
+> +	int ret = 0;
+> +
+> +	iova = iova & PAGE_MASK;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	while ((seg_len = next_segment(len, offset)) > 0) {
+> +		ret = vfio_iommu_type1_rw_iova_seg(iommu, iova, data,
+> +						   seg_len, offset, write);
 
-KP: One thing I'd like to understand better is the attack surface 
-introduced by this.  IIUC, the BTF fields are read only, so the eBPF code 
-should not be able to modify any LSM parameters, correct?
+Why do we need to split operations at page boundaries?  It seems really
+inefficient that at each page crossing we need to lookup the vfio_dma
+again (probably the same one), switch to the mm (probably the same one),
+and perform another copy_{to,from}_user() when potentially have
+everything we need to perform a larger copy.  Thanks,
 
+Alex
 
->  Even if the mainline kernel doesn't worry about any kind
-> of stable interface guarantees for it, the distros might be forced to provide
-> some kABI guarantees for it to appease ISVs and users...
-
-How is this handled currently for other eBPF use-cases?
-
--- 
-James Morris
-<jmorris@namei.org>
+> +		if (ret)
+> +			break;
+> +
+> +		offset = 0;
+> +		len -= seg_len;
+> +		data += seg_len;
+> +		iova += PAGE_SIZE;
+> +	}
+> +
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+>  	.name			= "vfio-iommu-type1",
+>  	.owner			= THIS_MODULE,
+> @@ -2338,6 +2418,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+>  	.unpin_pages		= vfio_iommu_type1_unpin_pages,
+>  	.register_notifier	= vfio_iommu_type1_register_notifier,
+>  	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
+> +	.iova_rw		= vfio_iommu_type1_iova_rw,
+>  };
+>  
+>  static int __init vfio_iommu_type1_init(void)
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index e42a711a2800..7bf18a31bbcf 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
+>  					     struct notifier_block *nb);
+>  	int		(*unregister_notifier)(void *iommu_data,
+>  					       struct notifier_block *nb);
+> +	int		(*iova_rw)(void *iommu_data, unsigned long iova,
+> +				   void *data, unsigned long len, bool write);
+>  };
+>  
+>  extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
+> @@ -107,6 +109,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
+>  extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
+>  			    int npage);
+>  
+> +extern int vfio_iova_rw(struct device *dev, unsigned long iova, void *data,
+> +			unsigned long len, bool write);
+> +
+>  /* each type has independent events */
+>  enum vfio_notify_type {
+>  	VFIO_IOMMU_NOTIFY = 0,
 
