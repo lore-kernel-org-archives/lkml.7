@@ -2,135 +2,150 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05E9C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718C8206F0
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06F320705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jWLAJLZg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ac4Etxra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgAIDdx (ORCPT
+        id S1727820AbgAIDh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:33:53 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37259 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgAIDdx (ORCPT
+        Wed, 8 Jan 2020 22:37:26 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62572 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727671AbgAIDh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:33:53 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m13so512823pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 19:33:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UEKrA4j5xg849HgxG4ZgJ3CHls4ZaTF+OB+u2nBy33w=;
-        b=jWLAJLZge6mjoh1B+Y+exKkX3xhYHt+O6tdsCcpbh8x45x/doL4BEYVF5JzTD65rh0
-         kZzfZVBlcTWckd+6njdzCCC2QQe+eyMk0FbyNASLAZ0Rsgvj8LQ+Z7vQfJO1OHetV4fg
-         Q3Ez3EgGL4mFqtojk2UnwqJM/KthIVG59SZ/7ORSUI8oGRJ1D2KXd9e4AJkY2f6ymYur
-         ssnptz8InuRmPaKuppPx8J1X+hoEX4Z31wDuetK+BwVdMPrn5oz8vHd7D9D1ySQt8bx3
-         iErcFc6+eppa5JicBfKErKsOinntQOstqc5Wu1agatr0LlLIjKIusMHeDLko5U4AeCnr
-         6uJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UEKrA4j5xg849HgxG4ZgJ3CHls4ZaTF+OB+u2nBy33w=;
-        b=GXnqhn2Qkms4W4EGtNpP1I/0m0K/PvJ7RhXgPLBIpY787JSQm0V3o4HF2eHBhxs8jh
-         DTdy9IkqZGuqOWuCV7LHhGpYLuZgIBIvSk9XNYJx5GtuKFoikVGg7Ko7ySxSbh0YyOQ/
-         NMCyTFsmsqnNre7VUBwRQH3SEB57H7khTdVN6I+tOERcZqy1IOFWlnUoC+I2gHqSCS7e
-         5TKGcQDpH9I8ShSTm6Y+xcEAoA5gQOJvQmYuVtj6CAtA8pCI9oCAaDwTAEfWVu9BF/3f
-         cpO7JbdwkepzZj7DxjBF9skDp5W4KWZ0/zoF8mcA235YBuzJ+NJeIGJ3ZaHUE5ZO+OwM
-         cQKw==
-X-Gm-Message-State: APjAAAVAm+aYkDC4rN+SP8h8Kd/6ClvLTzkD9l4n3dLLvJHS6FJfFXR2
-        e4SyIqOOQqXcyadyAXW9S0hC
-X-Google-Smtp-Source: APXvYqyFA9CYznyRkR2hqVgK4ysMEuFUTXN+FNbeSuaIQzFbysYpCBVZUkL6I/LUt8KQkOVuDS6NTg==
-X-Received: by 2002:a17:902:b709:: with SMTP id d9mr9348044pls.235.1578540831432;
-        Wed, 08 Jan 2020 19:33:51 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:795:afda:19cb:953c:6ae:6158])
-        by smtp.gmail.com with ESMTPSA id z6sm5261493pfa.155.2020.01.08.19.33.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Jan 2020 19:33:50 -0800 (PST)
-Date:   Thu, 9 Jan 2020 09:03:42 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        darshak.patel@einfochips.com, prajose.john@einfochips.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Add support for Thor96 board
-Message-ID: <20200109033342.GA3281@Mani-XPS-13-9360>
-References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
+        Wed, 8 Jan 2020 22:37:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578541045; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8NOMDbCsSCIKS4CuNp07DjdS52l2WkgyDWT2pjLqvKM=;
+ b=Ac4EtxraYub8QYrtDYNfvdaDAmcnNX9UIbhVzjyLmXD/n1uoWwNO5PSzsnB0LKyQ6+ByKtuU
+ oQNXowsebBGRzWuYS3l47h0GVhI6g1DE5PTCBU5A4dojBbIHbMeAkl7cM1AUoCvfyj7Rb66k
+ PV6wgA+jzm07EnglE3l0awrV2Hg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e169fed.7fdadd788f48-smtp-out-n02;
+ Thu, 09 Jan 2020 03:37:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65B0FC4479C; Thu,  9 Jan 2020 03:37:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D03C9C43383;
+        Thu,  9 Jan 2020 03:37:15 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 09 Jan 2020 11:37:15 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] Bluetooth: hci_qca: Add qca_power_on() API to
+ support both wcn399x and Rome power up
+In-Reply-To: <671e08d94aa70dc315fbaae0ba3429e4@codeaurora.org>
+References: <20200107052601.32216-1-rjliao@codeaurora.org>
+ <20200108090804.22889-1-rjliao@codeaurora.org>
+ <20200108183427.GE89495@google.com>
+ <671e08d94aa70dc315fbaae0ba3429e4@codeaurora.org>
+Message-ID: <24228a5c46c0fc811735e48b1efdcb4f@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+在 2020-01-09 11:22，Rocky Liao 写道：
+> Hi Matt,
+> 
+> 在 2020-01-09 02:34，Matthias Kaehlcke 写道：
+>> Hi Rocky,
+>> 
+>> On Wed, Jan 08, 2020 at 05:08:02PM +0800, Rocky Liao wrote:
+>>> This patch adds a unified API qca_power_on() to support both wcn399x 
+>>> and
+>>> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init 
+>>> the
+>>> regulators, and for Rome it pulls up the bt_en GPIO to power up the 
+>>> btsoc.
+>>> 
+>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>>> ---
+>>> 
+>>> Changes in v2: None
+>>> 
+>>>  drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++++++
+>>>  1 file changed, 21 insertions(+)
+>>> 
+>>> diff --git a/drivers/bluetooth/hci_qca.c 
+>>> b/drivers/bluetooth/hci_qca.c
+>>> index 9392cc7f9908..f6555bd1adbc 100644
+>>> --- a/drivers/bluetooth/hci_qca.c
+>>> +++ b/drivers/bluetooth/hci_qca.c
+>>> @@ -1532,6 +1532,27 @@ static int qca_wcn3990_init(struct hci_uart 
+>>> *hu)
+>>>  	return 0;
+>>>  }
+>>> 
+>>> +static int qca_power_on(struct hci_dev *hdev)
+>>> +{
+>>> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+>>> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>>> +	struct qca_serdev *qcadev;
+>>> +	int ret = 0;
+>>> +
+>>> +	if (qca_is_wcn399x(soc_type)) {
+>> 
+>> Why not include the qca_regulator_enable() call from qca_open() here?
+>> It is clearly part of power on.
+>> 
+> OK
+> 
+qca_wcn3990_init() already have the qca_regulator_enable() call, so we 
+just
+need to remove it from qca_open().
 
-On Wed, Oct 30, 2019 at 02:31:20PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
+>>> +		ret = qca_wcn3990_init(hu);
+>>> +	} else {
+>>> +		if (hu->serdev) {
+>> 
+>> nit: you could save a level of indentation (and IMO improve
+>> readability) by doing:
+>> 
+>>      	       if (!hu->serdev)
+>> 	            	return 0;
+>> 
+> OK
 > 
-> This patchset adds support for Thor96 board from Einfochips. This board is
-> one of the 96Boards Consumer Edition platform powered by the NXP i.MX8MQ
-> SoC.
-> 
-> Following are the features supported currently:
-> 
-> 1. uSD
-> 2. WiFi/BT
-> 3. Ethernet
-> 4. EEPROM (M24256)
-> 5. NOR Flash (W25Q256JW)
-> 6. 2xUSB3.0 ports and 1xUSB2.0 port at HS expansion
-> 
-> More information about this board can be found in Arrow website:
-> https://www.arrow.com/en/products/i.imx8-thor96/arrow-development-tools
-> 
-> Link to 96Boards CE Specification: https://linaro.co/ce-specification
-> 
-> Expecting patch 1 to go through LED/Rob's tree, 4 through MTD tree
-> and 2,3 through Freescale tree.
-> 
-
-Any update here? Patch 4 is already merged.
-
-Thanks,
-Mani
-
-> Thanks,
-> Mani
-> 
-> Changes in v2:
-> 
-> * Added patch for documenting commonly used LED triggers
-> * Added Reviewed-by tags for bindings patch
-> * Changed, fsl,uart-has-rtscts to uart-has-rtscts in dts
-> * Modified the commit message of MTD patch
-> 
-> Manivannan Sadhasivam (4):
->   dt-bindings: leds: Document commonly used LED triggers
->   dt-bindings: arm: Add devicetree binding for Thor96 Board
->   arm64: dts: freescale: Add devicetree support for Thor96 board
->   mtd: spi-nor: Add support for w25q256jw
-> 
->  .../devicetree/bindings/arm/fsl.yaml          |   1 +
->  .../devicetree/bindings/leds/common.txt       |  17 +
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/imx8mq-thor96.dts      | 581 ++++++++++++++++++
->  drivers/mtd/spi-nor/spi-nor.c                 |   2 +
->  5 files changed, 602 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-> 
-> -- 
-> 2.17.1
-> 
+>>> +			qcadev = serdev_device_get_drvdata(hu->serdev);
+>>> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>>> +			/* Controller needs time to bootup. */
+>>> +			msleep(150);
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>> 
+>> I think common practice would be to combine the 3 patches of this 
+>> series
+>> into one. The new function doesn't really add any new functionality, 
+>> but
+>> is a refactoring. This is more evident if you see in a single diff 
+>> that
+>> the pieces in qca_power_on() are removed elsewhere.
+> OK
