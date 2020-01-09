@@ -2,246 +2,275 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F3AC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2940C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FDF2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578580421;
-	bh=iGOEz/hd1dajLkuo+QJdAwuEYVey87O4SzhgybBzufo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1DiMMQbU1sMEBWDjInOy7TGPXLmz+7mWM624Jj3H/7eWJopp6mm/vXn7YGqwtijTo
-	 /lKFRyfBZ+FXJLG01NUWla8pTRI/n4eVVNYVVSGuYWPiAiECmHmAZbgAOmWCb2kUqa
-	 hDIrDTkEoo5Q83VMZblsvaB399HkXci63nlJxuL0=
+	by mail.kernel.org (Postfix) with ESMTP id 702432077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1mEbBFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbgAIOdk (ORCPT
+        id S1731725AbgAIOdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgAIOdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:33:39 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A4392077C;
-        Thu,  9 Jan 2020 14:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578580418;
-        bh=iGOEz/hd1dajLkuo+QJdAwuEYVey87O4SzhgybBzufo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k+txAh4DRhzHX9ZFz6UAQye8UQSO9GwCPT6GLUqRJ+e61xER8ry0es52k8mDrcgbH
-         k/htYVe8g5lfnmUQFDAGJpz/0A9uU2Fh7UAZ97L3kEltgclQ0NR6jVcphmeDEBv75b
-         8aWBr9pmFk5ubeRqFV4bUQzPhqoYhBU7L6Lb5Faw=
-Date:   Thu, 9 Jan 2020 14:33:34 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     iommu@lists.linux-foundation.org, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
-Message-ID: <20200109143333.GB12236@willie-the-truck>
-References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
- <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
+        Thu, 9 Jan 2020 09:33:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55121 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731715AbgAIOdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:33:54 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b19so3150724wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:33:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bsEH/6ZxbOWHzoiprvPjw2BBo+vXeuRRpym/r1C+eME=;
+        b=O1mEbBFAc+LTujgcgEW69/WpgHdDMwtg1j4VmjL2RtvVQgjMdjoBUGNViLAs9iwZfr
+         orNMBTb42seSump+jLcjdnzTzgIVLjqzaBt9p0/ew1v3eRl6LpqRov9OlEaXJ8KPXMjQ
+         6jhv9Zs9nWQDQ32hvNdui47FJ4o0adi+QUm0MEjTaWjMsTmgSU0qGsxoZIbuLz/jlmDC
+         NeQkTYpzWyh2Vywh4sRLd/BJQ1cLSKKu0SRIt4QZp5ZPd+TnrekzKVeUQHfL9ZOnMLvf
+         SjJOWnXL5RTUc6Uwzc7TlNZsCfGbT9Cx5G0OoZCCpeydWlnov3SXA3ml1Wgrt3iNNsMB
+         AYvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsEH/6ZxbOWHzoiprvPjw2BBo+vXeuRRpym/r1C+eME=;
+        b=jCucLMz9Mb/Kj2MeXb1PqSf+ugpDdIwd/gjKF4q6eFUiwjdYmRgAMzWRqcFpLcZNEa
+         Zw2WksXvOsSZuOSaVE+6yvlbXlavsLEeGuIcxqZcT27+FtKOfvvDQqc3PCsFrhqXrYuD
+         xSgVn5OqkgOVHd6u4gdaBzZb4+G+GXpuP71G+NEJSMdaj+OsCHXALbSWVwZ6MCtCSf5S
+         XBZsdqdPRndFS5GpWDL1VtUL9HCZPAvcLozYJPhSip6MgJnZz1k6d1/lE5eyVRHM4krx
+         E2DpXV3FwkzZlOoieN0G+91Yy7zfA/Cid7QZKJ/Ucv7KSbNm1Q64ffzpxORmMxzCVy7a
+         Sr8Q==
+X-Gm-Message-State: APjAAAXKFQmIdYLLTx7a10NVP26j/IxVuRHvXPXQQkGHOtJt0cvT1NSu
+        s+KklAI46oTVk+pU8azS7BK3IFe6JbJmMUVzu/RyDSNG5SQ=
+X-Google-Smtp-Source: APXvYqy/x4UOQADZ/0HLoRlmUlJwkD2WULQMcQ1qLLn581R7u9sQav6GqjVH9N4f/W5fMqVlrsHL5HWPHPm0sYSVCFc=
+X-Received: by 2002:a1c:9d52:: with SMTP id g79mr5356424wme.148.1578580432049;
+ Thu, 09 Jan 2020 06:33:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191224044146.232713-1-saravanak@google.com> <CAKv+Gu_yDWhvR80Wg1-bzpD1aGwGC-UA+obcgn8CEKKjMdR7rQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_yDWhvR80Wg1-bzpD1aGwGC-UA+obcgn8CEKKjMdR7rQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 9 Jan 2020 15:33:41 +0100
+Message-ID: <CAKv+Gu87zrOzN9GRrDdHsTOG=XGGY4sxXT_gZRD-BGfLuU0FiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] efi: arm: defer probe of PCIe backed efifb on DT systems
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 09:37:48AM -0700, Jordan Crouse wrote:
-> Add support to enable split pagetables (TTBR1) if the supporting driver
-> requests it via the DOMAIN_ATTR_SPLIT_TABLES flag. When enabled, the driver
-> will set up the TTBR0 and TTBR1 regions and program the default domain
-> pagetable on TTBR1.
-> 
-> After attaching the device, the value of he domain attribute can
-> be queried to see if the split pagetables were successfully programmed.
-> Furthermore the domain geometry will be updated so that the caller can
-> determine the active region for the pagetable that was programmed.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
-> 
->  drivers/iommu/arm-smmu.c | 40 +++++++++++++++++++++++++++++++++++-----
->  drivers/iommu/arm-smmu.h | 45 +++++++++++++++++++++++++++++++++++++++------
->  2 files changed, 74 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index c106406..7b59116 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -538,9 +538,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
->  			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
->  			cb->ttbr[1] = 0;
->  		} else {
-> -			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> -			cb->ttbr[0] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
-> -			cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> +			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-> +				cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> +				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> +				cb->ttbr[1] |=
-> +					FIELD_PREP(TTBRn_ASID, cfg->asid);
-> +			} else {
-> +				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> +				cb->ttbr[0] |=
-> +					FIELD_PREP(TTBRn_ASID, cfg->asid);
-> +				cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> +			}
+On Thu, 9 Jan 2020 at 15:05, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On Tue, 24 Dec 2019 at 05:41, Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > The new of_devlink support breaks PCIe probing on ARM platforms booting
+> > via UEFI if the firmware exposes a EFI framebuffer that is backed by a
+> > PCI device. The reason is that the probing order gets reversed,
+> > resulting in a resource conflict on the framebuffer memory window when
+> > the PCIe probes last, causing it to give up entirely.
+> >
+> > Given that we rely on PCI quirks to deal with EFI framebuffers that get
+> > moved around in memory, we cannot simply drop the memory reservation, so
+> > instead, let's use the device link infrastructure to register this
+> > dependency, and force the probing to occur in the expected order.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > Co-developed-by: Saravana Kannan <saravanak@google.com>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >
+> > Hi Ard,
+> >
+> > I compile tested it and I think it should work. If you can actually run
+> > and test it, that'd be nice.
+> >
+> > You can also optimize find_pci_overlap_node() by caching the result if
+> > you think that's necessary.
+> >
+> > Right now this code will run always just like your code did. But once I
+> > rename of_devlink to fw_devlink, this code won't be run if fw_devlink is
+> > disabled.
+> >
+> > v1 -> v2:
+> > - Rewrote the device linking part to not depend on initcall ordering
+> >
+> >  drivers/firmware/efi/arm-init.c | 106 ++++++++++++++++++++++++++++++--
+> >  1 file changed, 102 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> > index 904fa09e6a6b..8b789ff83af0 100644
+> > --- a/drivers/firmware/efi/arm-init.c
+> > +++ b/drivers/firmware/efi/arm-init.c
+> > @@ -10,10 +10,12 @@
+> >  #define pr_fmt(fmt)    "efi: " fmt
+> >
+> >  #include <linux/efi.h>
+> > +#include <linux/fwnode.h>
+> >  #include <linux/init.h>
+> >  #include <linux/memblock.h>
+> >  #include <linux/mm_types.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  #include <linux/of_fdt.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/screen_info.h>
+> > @@ -276,15 +278,111 @@ void __init efi_init(void)
+> >                 efi_memmap_unmap();
+> >  }
+> >
+> > +static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
+> > +{
+> > +       u64 fb_base = screen_info.lfb_base;
+> > +
+> > +       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+> > +               fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
+> > +
+> > +       return fb_base >= range->cpu_addr &&
+> > +              fb_base < (range->cpu_addr + range->size);
+> > +}
+> > +
+> > +static struct device_node *find_pci_overlap_node(void)
+> > +{
+> > +       struct device_node *np;
+> > +
+> > +       for_each_node_by_type(np, "pci") {
+> > +               struct of_pci_range_parser parser;
+> > +               struct of_pci_range range;
+> > +               int err;
+> > +
+> > +               err = of_pci_range_parser_init(&parser, np);
+> > +               if (err) {
+> > +                       pr_warn("of_pci_range_parser_init() failed: %d\n", err);
+> > +                       continue;
+> > +               }
+> > +
+> > +               for_each_of_pci_range(&parser, &range)
+> > +                       if (efifb_overlaps_pci_range(&range))
+> > +                               return np;
+> > +       }
+> > +       return NULL;
+> > +}
+> > +
+> > +/*
+> > + * If the efifb framebuffer is backed by a PCI graphics controller, we have
+> > + * to ensure that this relation is expressed using a device link when
+> > + * running in DT mode, or the probe order may be reversed, resulting in a
+> > + * resource reservation conflict on the memory window that the efifb
+> > + * framebuffer steals from the PCIe host bridge.
+> > + */
+> > +static int efifb_add_links(const struct fwnode_handle *fwnode,
+> > +                          struct device *dev)
+> > +{
+> > +       struct device_node *sup_np;
+> > +       struct device *sup_dev;
+> > +
+> > +       sup_np = find_pci_overlap_node();
+> > +
+> > +       /*
+> > +        * If there's no PCI graphics controller backing the efifb, we are
+> > +        * done here.
+> > +        */
+> > +       if (!sup_np)
+> > +               return 0;
+> > +
+> > +       sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+> > +       of_node_put(sup_np);
+> > +
+> > +       /*
+> > +        * Return -ENODEV if the PCI graphics controller device hasn't been
+> > +        * registered yet.  This ensures that efifb isn't allowed to probe
+> > +        * and this function is retried again when new devices are
+> > +        * registered.
+> > +        */
+> > +       if (!sup_dev)
+> > +               return -ENODEV;
+> > +
+> > +       /*
+> > +        * If this fails, retrying this function at a later point won't
+> > +        * change anything. So, don't return an error after this.
+> > +        */
+> > +       if (!device_link_add(dev, sup_dev, 0))
+> > +               dev_warn(dev, "device_link_add() failed\n");
+> > +
+> > +       put_device(sup_dev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static struct fwnode_operations efifb_fwnode_ops = {
+>
+> Please make this const
+>
+> > +       .add_links = efifb_add_links,
+> > +};
+> > +
+> > +static struct fwnode_handle efifb_fwnode = {
+> > +       .ops = &efifb_fwnode_ops,
+> > +};
+> > +
+> >  static int __init register_gop_device(void)
+> >  {
+> > -       void *pd;
+> > +       struct platform_device *pd;
+> > +       int err;
+> >
+> >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
+> >                 return 0;
+> >
+> > -       pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
+> > -                                          &screen_info, sizeof(screen_info));
+> > -       return PTR_ERR_OR_ZERO(pd);
+> > +       pd = platform_device_alloc("efi-framebuffer", 0);
+> > +       if (!pd)
+> > +               return -ENOMEM;
+> > +
+>
+> Add
+>
+>   if (IS_ENABLED(CONFIG_PCI))
+>
+> here
+>
+> > +       pd->dev.fwnode = &efifb_fwnode;
+> > +
+> > +       err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       return platform_device_add(pd);
+> >  }
+> >  subsys_initcall(register_gop_device);
+> > --
+> > 2.24.1.735.g03f4e72817-goog
+> >
+>
+> With the changes above
+>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>
+> but it still needs testing as well.
 
-I still don't understand why you have to set the ASID in both of the TTBRs.
-Assuming TCR.A1 is clear, then we should only need to set the field in
-TTBR0.
+I'm having trouble reproducing the original issue, so it is difficult
+to confirm that it works as before.
 
->  		}
->  	} else {
->  		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
-> @@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  	enum io_pgtable_fmt fmt;
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> +	u32 quirks = 0;
->  
->  	mutex_lock(&smmu_domain->init_mutex);
->  	if (smmu_domain->smmu)
-> @@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  		oas = smmu->ipa_size;
->  		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
->  			fmt = ARM_64_LPAE_S1;
-> +			if (smmu_domain->split_pagetables)
-> +				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
->  		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
->  			fmt = ARM_32_LPAE_S1;
->  			ias = min(ias, 32UL);
-> @@ -788,6 +799,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
->  		.tlb		= smmu_domain->flush_ops,
->  		.iommu_dev	= smmu->dev,
-> +		.quirks		= quirks,
->  	};
->  
->  	if (smmu_domain->non_strict)
-> @@ -801,8 +813,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  
->  	/* Update the domain's page sizes to reflect the page table format */
->  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
-> -	domain->geometry.aperture_end = (1UL << ias) - 1;
-> -	domain->geometry.force_aperture = true;
-> +
-> +	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-> +		domain->geometry.aperture_start = ~((1ULL << ias) - 1);
-> +		domain->geometry.aperture_end = ~0UL;
-> +	} else {
-> +		domain->geometry.aperture_end = (1UL << ias) - 1;
-> +		domain->geometry.force_aperture = true;
-> +		smmu_domain->split_pagetables = false;
-> +	}
->  
->  	/* Initialise the context bank with our page table cfg */
->  	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
-> @@ -1484,6 +1503,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->  		case DOMAIN_ATTR_NESTING:
->  			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->  			return 0;
-> +		case DOMAIN_ATTR_SPLIT_TABLES:
-> +			*(int *)data = smmu_domain->split_pagetables;
-> +			return 0;
->  		default:
->  			return -ENODEV;
->  		}
-> @@ -1524,6 +1546,14 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->  			else
->  				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
->  			break;
-> +		case DOMAIN_ATTR_SPLIT_TABLES:
-> +			if (smmu_domain->smmu) {
-> +				ret = -EPERM;
-> +				goto out_unlock;
-> +			}
-> +			if (*(int *)data)
-> +				smmu_domain->split_pagetables = true;
-> +			break;
->  		default:
->  			ret = -ENODEV;
->  		}
-> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> index afab9de..68526cc 100644
-> --- a/drivers/iommu/arm-smmu.h
-> +++ b/drivers/iommu/arm-smmu.h
-> @@ -177,6 +177,16 @@ enum arm_smmu_cbar_type {
->  #define TCR_IRGN0			GENMASK(9, 8)
->  #define TCR_T0SZ			GENMASK(5, 0)
->  
-> +#define TCR_TG1				GENMASK(31, 30)
-> +
-> +#define TG0_4K				0
-> +#define TG0_64K				1
-> +#define TG0_16K				2
-> +
-> +#define TG1_16K				1
-> +#define TG1_4K				2
-> +#define TG1_64K				3
-> +
->  #define ARM_SMMU_CB_CONTEXTIDR		0x34
->  #define ARM_SMMU_CB_S1_MAIR0		0x38
->  #define ARM_SMMU_CB_S1_MAIR1		0x3c
-> @@ -329,16 +339,39 @@ struct arm_smmu_domain {
->  	struct mutex			init_mutex; /* Protects smmu pointer */
->  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
->  	struct iommu_domain		domain;
-> +	bool				split_pagetables;
->  };
->  
-> +static inline u32 arm_smmu_lpae_tcr_tg(struct io_pgtable_cfg *cfg)
-> +{
-> +	u32 val;
-> +
-> +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
-> +		return FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg);
-> +
-> +	val = FIELD_PREP(TCR_TG1, cfg->arm_lpae_s1_cfg.tcr.tg);
-> +
-> +	if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
-> +		val |= FIELD_PREP(TCR_TG0, TG0_4K);
-> +	else if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
-> +		val |= FIELD_PREP(TCR_TG0, TG0_16K);
-> +	else
-> +		val |= FIELD_PREP(TCR_TG0, TG0_64K);
-
-This looks like it's making assumptions about the order in which page-tables
-are installed, which I'd really like to avoid. See below.
-
->  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
->  {
-> -	return TCR_EPD1 |
-> -	       FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-> -	       FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> -	       FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> -	       FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> -	       FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> +	u32 tcr = FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> +		FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> +		FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> +		FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> +
-> +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
-> +		return tcr | TCR_EPD1 | arm_smmu_lpae_tcr_tg(cfg);
-
-This is interesting. If the intention is to have both TTBR0 and TTBR1
-used concurrently by different domains, then we probably need to be a bit
-smarter about setting TCR_EPDx. Can we do something like start off with them
-both set, and then just clear the one we want when installing a page-table?
-
-Will
+In any case, I'm inclined to just take this through the EFI tree for
+v5.6, and if it needs additional tweaks, we can apply them as fixes on
+top.
