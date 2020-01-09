@@ -2,78 +2,94 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD87CC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A383C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89ABF2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578561493;
-	bh=SptgEpC6uBoCgIiwV8qQCok3tqCD2QV/W7Pb1LSHw4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DsUmP3hvkPjKc5qCerMGLeGbDpHmjt97XONlZSPmjbaxeEZr5YEA49kSr/N1F1caS
-	 3cb3KlHP7ug0goa6akD+UleBi/Nq16Ww4aooW/dcORSNF4HSilg5oSm9bBlPexMXCk
-	 jw+maA7+cfi3YiZdHDEuxJAZ/0SEcIYlIQdkZiWA=
+	by mail.kernel.org (Postfix) with ESMTP id 293CB20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgAIJSM (ORCPT
+        id S1729352AbgAIJSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:18:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40412 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 04:18:17 -0500
+Received: from mga18.intel.com ([134.134.136.126]:8755 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbgAIJSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:18:12 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDAC206ED;
-        Thu,  9 Jan 2020 09:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578561491;
-        bh=SptgEpC6uBoCgIiwV8qQCok3tqCD2QV/W7Pb1LSHw4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eQ/5B9lgXSzYjka9B4bj6vKedRzeeydEOcjwX9NXHRKjsE6taNt9sGg5YYlY/NxMK
-         QDGKoGxdmrsirdwC9qeE+OsStInPBdnQz04lKZpUfrkV793gmc0Rk1veZhWTRFThHF
-         VUgz83tCglEcNJXdYuS0eQ79VlUG46uck9wDLXB8=
-Date:   Thu, 9 Jan 2020 17:18:01 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Joris Offouga <offougajoris@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Otavio Salvador <otavio@ossystems.com.br>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4] ARM: dts: imx7d-pico: Add LCD support
-Message-ID: <20200109091800.GL4456@T480>
-References: <20200101235719.21466-1-offougajoris@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200101235719.21466-1-offougajoris@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1729319AbgAIJSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:18:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 01:18:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
+   d="scan'208";a="246606171"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 01:18:14 -0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Len Brown <lenb@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rui Zhang <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH] tools/power turbostat: Add Elkhart Lake support
+Date:   Thu,  9 Jan 2020 17:17:01 +0800
+Message-Id: <20200109091701.8197-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 12:57:18AM +0100, Joris Offouga wrote:
-> From: Fabio Estevam <festevam@gmail.com>
-> 
-> Add support for the VXT VL050-8048NT-C01 panel connected through
-> the 24 bit parallel LCDIF interface.
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+Elkhart Lake(TREMONT) succeed GOLDMONT, reuse the code.
 
-Applied, thanks.
+Elkhart Lake does not support group turbo limit counter
+register and might trigger failure in has_turbo_ratio_group_limits(),
+so it is not applicable to reuse GOLDMONT cpuid in intel_model_duplicates().
+
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+ tools/power/x86/turbostat/turbostat.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 5d0fddda842c..2d3d0a3d5e07 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3265,6 +3265,7 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 	case INTEL_FAM6_ATOM_GOLDMONT_D:	/* DNV */
++	case INTEL_FAM6_ATOM_TREMONT:	/* ELK */
+ 		pkg_cstate_limits = glm_pkg_cstate_limits;
+ 		break;
+ 	default:
+@@ -3888,6 +3889,7 @@ void rapl_probe_intel(unsigned int family, unsigned int model)
+ 		break;
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
++	case INTEL_FAM6_ATOM_TREMONT:	/* ELK */
+ 		do_rapl = RAPL_PKG | RAPL_PKG_POWER_INFO;
+ 		if (rapl_joules)
+ 			BIC_PRESENT(BIC_Pkg_J);
+@@ -4295,6 +4297,7 @@ int has_snb_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_ATOM_GOLDMONT:		/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 	case INTEL_FAM6_ATOM_GOLDMONT_D:	/* DNV */
++	case INTEL_FAM6_ATOM_TREMONT:		/* ELK */
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -4324,6 +4327,7 @@ int has_c8910_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_CANNONLAKE_L:	/* CNL */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
++	case INTEL_FAM6_ATOM_TREMONT:	/* ELK */
+ 		return 1;
+ 	}
+ 	return 0;
+-- 
+2.17.1
+
