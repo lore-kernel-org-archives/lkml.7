@@ -2,496 +2,257 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24A2C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407A7C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64127206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbpXomGm"
+	by mail.kernel.org (Postfix) with ESMTP id 04C152072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578561366;
+	bh=MdVSJRM+XiTSM3BMCfg4mQ79vWe50lYbOVZ92kj9+QY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=quoo5MfuqNiouT2BxA/H07ENJj+DVZ2Ozyy88OxvDEV2jSb8us5OQqjS4zEg56LkG
+	 o3fUYDz6DeKg5/zzQ/PBvldkGTbokNmo71EVth0nspQAdGvCkp9137RsITadmbSZ0a
+	 yS3FUvuPy9LjXseLqcNpdAvNqruYtc7SUW2uuTeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgAIJOy (ORCPT
+        id S1729315AbgAIJQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:14:54 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36958 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbgAIJOy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:14:54 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so3085000pfn.4;
-        Thu, 09 Jan 2020 01:14:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bjB+w3YtZtgGJqlFQbtPuwYxWcy4pFRsF5rah4vEdVA=;
-        b=UbpXomGmgvtaHf0o8spuX/mwETHNlnb0KQRRRlH4ImcpYEB3XaWFwZgwF7YcZe8sSV
-         hKRu7uD774gQIhSTwG9hdpkREnCRzNAW6Wtpurq7o3RkMPRj6rIkI/3pDIWrmWAohfTL
-         +0WWieEJWMVBzUl23SekhOaDKUWVywshZo08VHbg+gdbZh7JfUmWar/skLtbp2ikeSa1
-         J+AEmOROdRz6EPyMKtxp5gZimVNz7mOCgd/ZsMZZFjcV0vpF/reu5HsfCExSx93IzYOf
-         WLI7ixE/fssjNY7ukJr92bJtMqlVmMT+wfd6XtL3Ft7sCPtbNDPHFezh42mYU8yprTch
-         bKcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bjB+w3YtZtgGJqlFQbtPuwYxWcy4pFRsF5rah4vEdVA=;
-        b=S1fFTjnhBNe6OXpQhKkpIjsn4LnXSFKwZffcsyWWhhekhOKFLFn3RYpF5rHZ07fiNA
-         Np4xNNdM1Y9ZSTLxufaD4kyV6fQsJPy2cEb2giftRIugjVensKNEL1kTb4R60U22l1Va
-         MlFPvfHGS/SMJDt4rNV7vKcKmb+LyXCtvNdu+gb2skVbAXAuAxf90uKJ4tCIAdHbLV9l
-         7Yk5bYw2qJMKnGZhJGkrsq0tAicTLjCDGoNJlZ79P83XeWTWY3IYOuP++nyefTyk/GhV
-         VdQFVCIK+OWtwsK8Rs/pf4myfoV3vaKHvddYocKCdNw9TqeCPrG2l5sXbXRhGYhobA0S
-         fzDw==
-X-Gm-Message-State: APjAAAUd0lFVHjLnlnaEkeu19EmuSHTERmha/kOEwH3YB6+zVc5KKgwu
-        yQouN1EJB7r5bFlcrsJSB++x3CPH
-X-Google-Smtp-Source: APXvYqygW7A/q6mGO+1TG14ViyL4VIJ8OFsx8PewmGYnL4A096HMJA7w+O7JZ1A3HHw3wUJtPu/9tg==
-X-Received: by 2002:aa7:9474:: with SMTP id t20mr9887640pfq.241.1578561293032;
-        Thu, 09 Jan 2020 01:14:53 -0800 (PST)
-Received: from gli-arch.genesyslogic.com.tw (220-128-190-163.HINET-IP.hinet.net. [220.128.190.163])
-        by smtp.gmail.com with ESMTPSA id 144sm7383893pfc.124.2020.01.09.01.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 01:14:52 -0800 (PST)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        greg.tu@genesyslogic.com.tw, ben.chuang@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [RFC PATCH v2 6/6] mmc: sdhci-pci-gli: Fix power/reset/ZC/timeout for GL9755 UHS-II mode
-Date:   Thu,  9 Jan 2020 17:15:16 +0800
-Message-Id: <58988bcc0979969bba706a0eda94165b9cbae581.1578560282.git.benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1578560282.git.benchuanggli@gmail.com>
-References: <cover.1578560282.git.benchuanggli@gmail.com>
+        Thu, 9 Jan 2020 04:16:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728946AbgAIJQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:16:04 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD3B20673;
+        Thu,  9 Jan 2020 09:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578561363;
+        bh=MdVSJRM+XiTSM3BMCfg4mQ79vWe50lYbOVZ92kj9+QY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S+Fbk9kweZIwO+UapBHl3+6E9spys8FrmIsH9HikCZf5MRbnwZFNwCaxtQ3X8d36C
+         yIsvn60iStl50Z3Kqyw8/a4njJ+zeZYumK1AKbKnXbAyxUNgLBQzU0lbkohVrGs5JH
+         W3QJFOrudOtN15HZgQq9m88tQcYABcMIHDMgnUDo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1ipTv7-0002GW-MZ; Thu, 09 Jan 2020 09:16:01 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jan 2020 09:16:01 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
+In-Reply-To: <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20191210034026.45229-1-jianyong.wu@arm.com>
+ <20191210034026.45229-7-jianyong.wu@arm.com>
+ <7383dc06897bba253f174cd21a19b5c0@kernel.org>
+ <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+Message-ID: <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+On 2020-01-09 05:45, Jianyong Wu wrote:
+> Hi Marc,
+> 
+>> -----Original Message-----
+>> From: Marc Zyngier <maz@kernel.org>
+>> Sent: Tuesday, January 7, 2020 5:16 PM
+>> To: Jianyong Wu <Jianyong.Wu@arm.com>
+>> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+>> tglx@linutronix.de; pbonzini@redhat.com; 
+>> sean.j.christopherson@intel.com;
+>> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
+>> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
+>> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+>> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
+>> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; nd <nd@arm.com>
+>> Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for 
+>> ptp_kvm.
+>> 
+>> On 2019-12-10 03:40, Jianyong Wu wrote:
+>> > ptp_kvm modules will call hvc to get this service.
+>> > The service offers real time and counter cycle of host for guest.
+>> >
+>> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+>> > ---
+>> >  include/linux/arm-smccc.h | 12 ++++++++++++
+>> >  virt/kvm/arm/psci.c       | 22 ++++++++++++++++++++++
+>> >  2 files changed, 34 insertions(+)
+>> >
+>> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+>> > index 6f82c87308ed..aafb6bac167d 100644
+>> > --- a/include/linux/arm-smccc.h
+>> > +++ b/include/linux/arm-smccc.h
+>> > @@ -94,6 +94,7 @@
+>> >
+>> >  /* KVM "vendor specific" services */
+>> >  #define ARM_SMCCC_KVM_FUNC_FEATURES		0
+>> > +#define ARM_SMCCC_KVM_PTP			1
+>> >  #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
+>> >  #define ARM_SMCCC_KVM_NUM_FUNCS			128
+>> >
+>> > @@ -103,6 +104,17 @@
+>> >  			   ARM_SMCCC_OWNER_VENDOR_HYP,
+>> 		\
+>> >  			   ARM_SMCCC_KVM_FUNC_FEATURES)
+>> >
+>> > +/*
+>> > + * This ID used for virtual ptp kvm clock and it will pass second
+>> > value
+>> > + * and nanosecond value of host real time and system counter by vcpu
+>> > + * register to guest.
+>> > + */
+>> > +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID
+>> 		\
+>> > +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,
+>> 		\
+>> > +			   ARM_SMCCC_SMC_32,
+>> 	\
+>> > +			   ARM_SMCCC_OWNER_VENDOR_HYP,
+>> 		\
+>> > +			   ARM_SMCCC_KVM_PTP)
+>> > +
+>> 
+>> All of this depends on patches that have never need posted to any ML, 
+>> and
+>> just linger in Will's tree. You need to pick them up and post them as 
+>> part of
+>> this series so that they can at least be reviewed.
+>> 
+> Ok, I will add them next version.
+> 
+>> >  #ifndef __ASSEMBLY__
+>> >
+>> >  #include <linux/linkage.h>
+>> > diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c index
+>> > 0debf49bf259..682d892d6717 100644
+>> > --- a/virt/kvm/arm/psci.c
+>> > +++ b/virt/kvm/arm/psci.c
+>> > @@ -9,6 +9,7 @@
+>> >  #include <linux/kvm_host.h>
+>> >  #include <linux/uaccess.h>
+>> >  #include <linux/wait.h>
+>> > +#include <linux/clocksource_ids.h>
+>> >
+>> >  #include <asm/cputype.h>
+>> >  #include <asm/kvm_emulate.h>
+>> > @@ -389,6 +390,8 @@ static int kvm_psci_call(struct kvm_vcpu *vcpu)
+>> >
+>> >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)  {
+>> > +	struct system_time_snapshot systime_snapshot;
+>> > +	u64 cycles;
+>> >  	u32 func_id = smccc_get_function(vcpu);
+>> >  	u32 val[4] = {};
+>> >  	u32 option;
+>> > @@ -431,6 +434,25 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>> >  	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
+>> >  		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
+>> >  		break;
+>> > +	/*
+>> > +	 * This will used for virtual ptp kvm clock. three
+>> > +	 * values will be passed back.
+>> > +	 * reg0 stores high 32-bit host ktime;
+>> > +	 * reg1 stores low 32-bit host ktime;
+>> > +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
+>> > +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
+>> 
+>> That's either two or four values, and not three as you claim above.
+>> 
+> Sorry, I'm not sure what do you mean "three", the registers here is 4
+> from reg0 to reg3.
 
-Disable GL9755 overcurrent interrupt when power on/off on UHS-II.
-Enable the internal clock when do reset on UHS-II mode.
-Set ZC to 0x0 for Sandisk cards and set ZC to 0xB for others.
-Increase timeout value before detecting UHS-II interface.
-Add vendor settings fro UHS-II mode.
+Please read the comment you have written above...
 
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
----
- drivers/mmc/host/sdhci-pci-gli.c | 361 ++++++++++++++++++++++++++++++-
- 1 file changed, 360 insertions(+), 1 deletion(-)
+>> Also, I fail to understand the meaning of the host cycle vs cntvoff 
+>> comparison.
+>> This is something that guest can perform on its own (it has access to 
+>> both
+>> physical and virtual timers, and can compute cntvoff without 
+>> intervention of
+>> the hypervisor).
+>> 
+> To keep consistency and precision, clock time and counter cycle must
+> captured at the same time. It will perform at ktime_get_snapshot.
 
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-index 5eea8d70a85d..1be78a609dc3 100644
---- a/drivers/mmc/host/sdhci-pci-gli.c
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include "sdhci.h"
- #include "sdhci-pci.h"
-+#include "sdhci-uhs2.h"
- 
- /*  Genesys Logic extra registers */
- #define SDHCI_GLI_9750_WT         0x800
-@@ -60,6 +61,42 @@
- #define   SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY    GENMASK(2, 0)
- #define   GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE    0x1
- 
-+#define PCI_GLI_9755_WT       0x800
-+#define   PCI_GLI_9755_WT_EN    BIT(0)
-+#define   GLI_9755_WT_EN_ON	0x1
-+#define   GLI_9755_WT_EN_OFF    0x0
-+
-+#define PCI_GLI_9755_PLLSSC                 0x68
-+#define   PCI_GLI_9755_PLLSSC_RTL             BIT(24)
-+#define   GLI_9755_PLLSSC_RTL_VALUE           0x1
-+#define   PCI_GLI_9755_PLLSSC_TRANS_PASS      BIT(27)
-+#define   GLI_9755_PLLSSC_TRANS_PASS_VALUE    0x1
-+#define   PCI_GLI_9755_PLLSSC_RECV            GENMASK(29, 28)
-+#define   GLI_9755_PLLSSC_RECV_VALUE          0x3
-+#define   PCI_GLI_9755_PLLSSC_TRAN            GENMASK(31, 30)
-+#define   GLI_9755_PLLSSC_TRAN_VALUE          0x3
-+
-+#define PCI_GLI_9755_UHS2_PLL            0x6C
-+#define   PCI_GLI_9755_UHS2_PLL_SSC        GENMASK(9, 8)
-+#define   GLI_9755_UHS2_PLL_SSC_VALUE      0x0
-+#define   PCI_GLI_9755_UHS2_PLL_DELAY      BIT(18)
-+#define   GLI_9755_UHS2_PLL_DELAY_VALUE    0x1
-+#define   PCI_GLI_9755_UHS2_PLL_PDRST      BIT(27)
-+#define   GLI_9755_UHS2_PLL_PDRST_VALUE    0x1
-+
-+#define PCI_GLI_9755_UHS2_SERDES	    0x70
-+#define   PCI_GLI_9755_UHS2_SERDES_INTR       GENMASK(2, 0)
-+#define   GLI_9755_UHS2_SERDES_INTR_VALUE     0x3
-+#define   PCI_GLI_9755_UHS2_SERDES_ZC1        BIT(3)
-+#define   GLI_9755_UHS2_SERDES_ZC1_VALUE      0x0
-+#define   PCI_GLI_9755_UHS2_SERDES_ZC2        GENMASK(7, 4)
-+#define   GLI_9755_UHS2_SERDES_ZC2_DEFAULT    0xB
-+#define   GLI_9755_UHS2_SERDES_ZC2_SANDISK    0x0
-+#define   PCI_GLI_9755_UHS2_SERDES_TRAN       GENMASK(27, 24)
-+#define   GLI_9755_UHS2_SERDES_TRAN_VALUE     0xC
-+#define   PCI_GLI_9755_UHS2_SERDES_RECV       GENMASK(31, 28)
-+#define   GLI_9755_UHS2_SERDES_RECV_VALUE     0xF
-+
- #define GLI_MAX_TUNING_LOOP 40
- 
- /* Genesys Logic chipset */
-@@ -262,6 +299,324 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
- 	return 0;
- }
- 
-+static inline void gl9755_wt_on(struct pci_dev *pdev)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
-+	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9755_WT_EN_ON)
-+		return;
-+
-+	wt_value &= ~PCI_GLI_9755_WT_EN;
-+	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_ON);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
-+}
-+
-+static inline void gl9755_wt_off(struct pci_dev *pdev)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
-+	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9755_WT_EN_OFF)
-+		return;
-+
-+	wt_value &= ~PCI_GLI_9755_WT_EN;
-+	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_OFF);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
-+}
-+
-+static void gl9755_vendor_init(struct sdhci_host *host)
-+{
-+	struct sdhci_pci_slot *slot = sdhci_priv(host);
-+	struct pci_dev *pdev = slot->chip->pdev;
-+	u32 serdes;
-+	u32 pllssc;
-+	u32 uhs2_pll;
-+
-+	gl9755_wt_on(pdev);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, &serdes);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_TRAN;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_TRAN,
-+			     GLI_9755_UHS2_SERDES_TRAN_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_RECV;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_RECV,
-+			     GLI_9755_UHS2_SERDES_RECV_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_INTR;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_INTR,
-+			     GLI_9755_UHS2_SERDES_INTR_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC1;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC1,
-+			     GLI_9755_UHS2_SERDES_ZC1_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC2;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+			     GLI_9755_UHS2_SERDES_ZC2_DEFAULT);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, serdes);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_PLL, &uhs2_pll);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_SSC;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_SSC,
-+			  GLI_9755_UHS2_PLL_SSC_VALUE);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_DELAY;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_DELAY,
-+			  GLI_9755_UHS2_PLL_DELAY_VALUE);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_PDRST;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_PDRST,
-+			  GLI_9755_UHS2_PLL_PDRST_VALUE);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_PLL, uhs2_pll);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_PLLSSC, &pllssc);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_RTL;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_RTL,
-+			  GLI_9755_PLLSSC_RTL_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_TRANS_PASS;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_TRANS_PASS,
-+			  GLI_9755_PLLSSC_TRANS_PASS_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_RECV;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_RECV,
-+			  GLI_9755_PLLSSC_RECV_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_TRAN;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_TRAN,
-+			  GLI_9755_PLLSSC_TRAN_VALUE);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_PLLSSC, pllssc);
-+
-+	gl9755_wt_off(pdev);
-+}
-+
-+static void gl9755_pre_detect_init(struct sdhci_host *host)
-+{
-+	/* GL9755 need more time on UHS2 detect flow */
-+	sdhci_writeb(host, 0xA7, SDHCI_UHS2_TIMER_CTRL);
-+}
-+
-+static void gl9755_post_attach_sd(struct sdhci_host *host)
-+{
-+	struct pci_dev *pdev;
-+	struct sdhci_pci_chip *chip;
-+	struct sdhci_pci_slot *slot;
-+	u32 serdes;
-+
-+	slot = sdhci_priv(host);
-+	chip = slot->chip;
-+	pdev = chip->pdev;
-+
-+	gl9755_wt_on(pdev);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, &serdes);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC1;
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC2;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC1,
-+			     GLI_9755_UHS2_SERDES_ZC1_VALUE);
-+
-+	/* the manfid of sandisk card is 0x3 */
-+	if (host->mmc->card->cid.manfid == 0x3)
-+		serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+				     GLI_9755_UHS2_SERDES_ZC2_SANDISK);
-+	else
-+		serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+				     GLI_9755_UHS2_SERDES_ZC2_DEFAULT);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, serdes);
-+
-+	gl9755_wt_off(pdev);
-+}
-+
-+static void gl9755_overcurrent_event_enable(struct sdhci_host *host,
-+					    bool enable)
-+{
-+	u32 mask;
-+
-+	mask = sdhci_readl(host, SDHCI_SIGNAL_ENABLE);
-+	if (enable)
-+		mask |= SDHCI_INT_BUS_POWER;
-+	else
-+		mask &= ~SDHCI_INT_BUS_POWER;
-+
-+	sdhci_writel(host, mask, SDHCI_SIGNAL_ENABLE);
-+
-+	mask = sdhci_readl(host, SDHCI_INT_ENABLE);
-+	if (enable)
-+		mask |= SDHCI_INT_BUS_POWER;
-+	else
-+		mask &= ~SDHCI_INT_BUS_POWER;
-+
-+	sdhci_writel(host, mask, SDHCI_INT_ENABLE);
-+}
-+
-+static void gl9755_set_power(struct sdhci_host *host, unsigned char mode,
-+			     unsigned short vdd, unsigned short vdd2)
-+{
-+	u8 pwr = 0;
-+
-+	if (mode != MMC_POWER_OFF) {
-+		switch (1 << vdd) {
-+		case MMC_VDD_165_195:
-+		/*
-+		 * Without a regulator, SDHCI does not support 2.0v
-+		 * so we only get here if the driver deliberately
-+		 * added the 2.0v range to ocr_avail. Map it to 1.8v
-+		 * for the purpose of turning on the power.
-+		 */
-+		case MMC_VDD_20_21:
-+			pwr = SDHCI_POWER_180;
-+			break;
-+		case MMC_VDD_29_30:
-+		case MMC_VDD_30_31:
-+			pwr = SDHCI_POWER_300;
-+			break;
-+		case MMC_VDD_32_33:
-+		case MMC_VDD_33_34:
-+			pwr = SDHCI_POWER_330;
-+			break;
-+		default:
-+			WARN(1, "%s: Invalid vdd %#x\n",
-+			     mmc_hostname(host->mmc), vdd);
-+			break;
-+		}
-+	}
-+
-+	if (mode != MMC_POWER_OFF) {
-+		if (vdd2 != (unsigned short)-1) {
-+			switch (1 << vdd2) {
-+			case MMC_VDD2_165_195:
-+				pwr |= SDHCI_VDD2_POWER_180;
-+				break;
-+			default:
-+				WARN(1, "%s: Invalid vdd2 %#x\n",
-+				     mmc_hostname(host->mmc), vdd2);
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (host->pwr == pwr)
-+		return;
-+
-+	host->pwr = pwr;
-+
-+	if (pwr == 0) {
-+		gl9755_overcurrent_event_enable(host, false);
-+		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-+	} else {
-+		gl9755_overcurrent_event_enable(host, false);
-+		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-+
-+		pwr |= SDHCI_POWER_ON;
-+		if (vdd2 != (unsigned short)-1)
-+			pwr |= SDHCI_VDD2_POWER_ON;
-+
-+		sdhci_writeb(host, pwr&0xf, SDHCI_POWER_CONTROL);
-+		/* wait stable */
-+		mdelay(5);
-+		sdhci_writeb(host, pwr, SDHCI_POWER_CONTROL);
-+		/* wait stable */
-+		mdelay(5);
-+		gl9755_overcurrent_event_enable(host, true);
-+	}
-+}
-+
-+static bool sdhci_wait_clock_stable(struct sdhci_host *host)
-+{
-+	u16 clk = 0;
-+	ktime_t timeout;
-+
-+	/* Wait max 20 ms */
-+	timeout = ktime_add_ms(ktime_get(), 20);
-+	while (1) {
-+		bool timedout = ktime_after(ktime_get(), timeout);
-+
-+		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+		if (clk & SDHCI_CLOCK_INT_STABLE)
-+			break;
-+		if (timedout) {
-+			pr_err("%s: Internal clock never stabilised.\n",
-+				mmc_hostname(host->mmc));
-+			sdhci_dumpregs(host);
-+			return false;
-+		}
-+		udelay(10);
-+	}
-+	return true;
-+}
-+
-+static void gl9755_uhs2_reset_sd_tran(struct sdhci_host *host)
-+{
-+	/* do this on UHS2 mode */
-+	if (host->mmc->flags & MMC_UHS2_INITIALIZED) {
-+		sdhci_uhs2_reset(host, SDHCI_UHS2_SW_RESET_SD);
-+		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-+		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-+		sdhci_uhs2_clear_set_irqs(host,
-+					  SDHCI_INT_ALL_MASK,
-+					  SDHCI_UHS2_ERR_INT_STATUS_MASK);
-+	}
-+}
-+
-+static void sdhci_gl9755_reset(struct sdhci_host *host, u8 mask)
-+{
-+	ktime_t timeout;
-+	u16 ctrl2;
-+	u16 clk_ctrl;
-+
-+	/* need internal clock */
-+	if (mask & SDHCI_RESET_ALL) {
-+		ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+		clk_ctrl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+
-+		if ((ctrl2 & SDHCI_CTRL_V4_MODE) &&
-+		    (ctrl2 & SDHCI_CTRL_UHS2_INTERFACE_EN)) {
-+			sdhci_writew(host,
-+				     SDHCI_CLOCK_INT_EN,
-+				     SDHCI_CLOCK_CONTROL);
-+		} else {
-+			sdhci_writew(host,
-+				     SDHCI_CLOCK_INT_EN,
-+				     SDHCI_CLOCK_CONTROL);
-+			sdhci_wait_clock_stable(host);
-+			sdhci_writew(host,
-+				     SDHCI_CTRL_V4_MODE,
-+				     SDHCI_HOST_CONTROL2);
-+		}
-+	}
-+
-+	sdhci_writeb(host, mask, SDHCI_SOFTWARE_RESET);
-+
-+	/* reset sd-tran on UHS2 mode if need to reset cmd/data */
-+	if ((mask & SDHCI_RESET_CMD) | (mask & SDHCI_RESET_DATA))
-+		gl9755_uhs2_reset_sd_tran(host);
-+
-+	if (mask & SDHCI_RESET_ALL)
-+		host->clock = 0;
-+
-+	/* Wait max 100 ms */
-+	timeout = ktime_add_ms(ktime_get(), 100);
-+
-+	/* hw clears the bit when it's done */
-+	while (1) {
-+		bool timedout = ktime_after(ktime_get(), timeout);
-+
-+		if (!(sdhci_readb(host, SDHCI_SOFTWARE_RESET) & mask))
-+			break;
-+		if (timedout) {
-+			pr_err("%s: Reset 0x%x never completed.\n",
-+				mmc_hostname(host->mmc), (int)mask);
-+			sdhci_dumpregs(host);
-+			/* manual clear */
-+			sdhci_writeb(host, 0, SDHCI_SOFTWARE_RESET);
-+			return;
-+		}
-+		udelay(10);
-+	}
-+}
-+
- static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
- {
- 	struct sdhci_host *host = slot->host;
-@@ -278,6 +633,7 @@ static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
- 
- 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
- 	sdhci_enable_v4_mode(host);
-+	gl9755_vendor_init(host);
- 
- 	return 0;
- }
-@@ -319,11 +675,14 @@ static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
- 
- static const struct sdhci_ops sdhci_gl9755_ops = {
- 	.set_clock		= sdhci_set_clock,
-+	.set_power              = gl9755_set_power,
- 	.enable_dma		= sdhci_pci_enable_dma,
- 	.set_bus_width		= sdhci_set_bus_width,
--	.reset			= sdhci_reset,
-+	.reset			= sdhci_gl9755_reset,
- 	.set_uhs_signaling	= sdhci_set_uhs_signaling,
- 	.voltage_switch		= sdhci_gli_voltage_switch,
-+	.uhs2_pre_detect_init    = gl9755_pre_detect_init,
-+	.uhs2_post_attach_sd    = gl9755_post_attach_sd,
- };
- 
- const struct sdhci_pci_fixes sdhci_gl9755 = {
+Fair enough. It would vertainly help if you documented it. It would also
+help if you explained why it is so much worse to read the counter in the
+guest before *and* after the call, and assume that the clock time read
+happened right in the middle?
+
+That aside, what you are returning is something that *looks* like
+the virtual counter. What if the guest is using the physical counter,
+which is likely to be the case with nested virt? Do you expect the guest
+to always use the virtual counter? This isn't going to fly.
+
+>> Finally, how does it work with nested virt, where cntvoff is for the 
+>> the vEL2
+>> guest?
+>> 
+> For now, I have not considered ptp_kvm in nested virtualization. Also
+> I'm not sure about if nested virtualization is
+> ready on arm64 , as I need test ptp_kvm on it. If so, I can consider 
+> it.
+
+It is not about testing. It is about taking the architecture into 
+account.
+And ready or not doesn't come into play here. What you're defining here 
+is
+an ABI, and it better be totally future proof.
+
+But if you want to test, help yourself to [1] and have fun!
+> 
+>> > +	 */
+>> > +	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
+>> > +		ktime_get_snapshot(&systime_snapshot);
+>> > +		if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
+>> > +			return kvm_psci_call(vcpu);
+>> 
+>> What does this mean? Calling PSCI because you've failed to identify 
+>> the clock
+>> source? What result do you expect from this? Hint: this isn't a PSCI 
+>> call.
+>> 
+> Sorry, what I want to do here is that return to guest with the error 
+> info.
+> Maybe I should set val[0] to -1 and break to let the guest know that
+> error comes, as
+> the guest will check if val[0] is positive to determine the next step.
+
+What you should do is handle it like a normal SMCCC failure.
+
+         M.
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm64/nv-5.5-rc4-WIP
 -- 
-2.24.1
-
+Jazz is not dead. It just smells funny...
