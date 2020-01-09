@@ -2,101 +2,78 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48069C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC048C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E902067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD97E2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbgAIONx convert rfc822-to-8bit (ORCPT
+        id S1731568AbgAIOOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:13:53 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:48156 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729642AbgAIONw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:13:52 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-aevZXyfFPaql_ZCdCCrlLw-1; Thu, 09 Jan 2020 14:13:49 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 9 Jan 2020 14:13:48 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 9 Jan 2020 14:13:48 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sean Christopherson' <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
-Thread-Topic: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
-Thread-Index: AQHVxbk8+XHUyW1VS0SOYvyU0+7JlafiXjig
-Date:   Thu, 9 Jan 2020 14:13:48 +0000
-Message-ID: <c716f793e22e4885a3dee3c91f93e517@AcuMS.aculab.com>
-References: <20200108001859.25254-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200108001859.25254-1-sean.j.christopherson@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 9 Jan 2020 09:14:40 -0500
+Received: from verein.lst.de ([213.95.11.211]:54875 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731559AbgAIOOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:14:40 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 30C4468C4E; Thu,  9 Jan 2020 15:14:37 +0100 (CET)
+Date:   Thu, 9 Jan 2020 15:14:36 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Woody Suwalski <terraluna977@gmail.com>
+Cc:     hch@lst.de, DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+Message-ID: <20200109141436.GA22111@lst.de>
+References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: aevZXyfFPaql_ZCdCCrlLw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson
-> Sent: 08 January 2020 00:19
-> 
-> Use a Logical OR in __is_rsvd_bits_set() to combine the two reserved bit
-> checks, which are obviously intended to be logical statements.  Switching
-> to a Logical OR is functionally a nop, but allows the compiler to better
-> optimize the checks.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 7269130ea5e2..72e845709027 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -3970,7 +3970,7 @@ __is_rsvd_bits_set(struct rsvd_bits_validate *rsvd_check, u64 pte, int level)
->  {
->  	int bit7 = (pte >> 7) & 1, low6 = pte & 0x3f;
-> 
-> -	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) |
-> +	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) ||
->  		((rsvd_check->bad_mt_xwr & (1ull << low6)) != 0);
+Hi Woody,
 
-Are you sure this isn't deliberate?
-The best code almost certainly comes from also removing the '!= 0'.
-You also don't want to convert the expression result to zero.
+sorry for the late reply, I've been off to a vacation over the holidays.
 
-So:
-	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) | (rsvd_check->bad_mt_xwr & (1ull << low6));
-The code then doesn't have any branches to get mispredicted.
+On Sat, Dec 14, 2019 at 10:17:15PM -0500, Woody Suwalski wrote:
+> Regression in 5.4 kernel on 32-bit Radeon IBM T40
+> triggered by
+> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Thu Aug 15 09:27:00 2019 +0200
+>
+> Howdy,
+> The above patch has triggered a display problem on IBM Thinkpad T40, where 
+> the screen is covered with a lots of random short black horizontal lines, 
+> or distorted letters in X terms.
+>
+> The culprit seems to be that the dma_get_required_mask() is returning a 
+> value 0x3fffffff
+> which is smaller than dma_get_mask()0xffffffff.That results in 
+> dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma 
+> instead of 32-bits.
 
-	David
+Which is the intended behavior assuming your system has 1GB of memory.
+Does it?
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> If I hardcode "1" as the last parameter to ttm_bo_device_init() in place of 
+> a call to dma_addressing_limited(),the problem goes away.
 
+I'll need some help from the drm / radeon / TTM maintainers if there are
+any other side effects from not passing the need_dma32 paramters.
+Obviously if the device doesn't have more than 32-bits worth of dram and
+no DMA offset we can't feed unaddressable memory to the device.
+Unfortunately I have a very hard time following the implementation of
+the TTM pool if it does anything else in this case.
