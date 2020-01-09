@@ -2,94 +2,291 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E47C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7337CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D2920678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7062051A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emL8WP5m"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NkuSPyAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgAITZK (ORCPT
+        id S1730010AbgAITZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:25:10 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45069 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729901AbgAITZJ (ORCPT
+        Thu, 9 Jan 2020 14:25:54 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35704 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729901AbgAITZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:25:09 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so3656130pgk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:25:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jAjqIDcyKtCkeQ3NC3uPAZEniDBqyHWB4h3FVSAU1gQ=;
-        b=emL8WP5mcndb4EapKnqp6DcpdLGh22V4ZAtETfs70LQhMGpkcMCK2M6FIt9FktWfSP
-         ITH5i2lXEJkw0pAZw4Lnpdul+Y2lFBnLlav7skLg26FMFCFMQb4DULmdVeLLlRw6nUZ8
-         BDePsczDPhLnrtGVsAv0EbI1CfzIRcOVBd9Cgetm2+bIiZEvuGpWHTnf2OhvZ1NTB0tM
-         6A+6xHO95Aww7UAHOLT/nJs7bZ+HErEOe78wXEGpO2yKp+sfsytSnyfDuOpZ8xXNwtpC
-         BUdUNiqqVRNQ7IEn1uo1xBv0NHAk4N2ORCXeHt/gPl0sqWJCpsdbFsSYnWkTy1SEROMM
-         sLxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jAjqIDcyKtCkeQ3NC3uPAZEniDBqyHWB4h3FVSAU1gQ=;
-        b=XAIM6eI4ck56GekmSMt+JC0XC4ugEx+bB2PhEDukD4Dhi8gjxThN40C2L+abyt8VNG
-         j8tbvKG4MxfHQagGaKnnFxE1sPK2iNDa7M6FhYH0LFIYUFDdo1F6TjDSrgmpqQFRHlVv
-         PuRtDDfhI847N3C2lFMCWJtSP7tCp+7njdClbGzlxj6/KxEcUsBMmC2USvTOHTp+Mq0F
-         8M4Uz6HXCfnONmMJeNtr5ZXrKR6senVD1C4s7l2WGewK5UE8AUNTYBtlxRG0sBFyfI91
-         3R9wXUQbkJLIIDS1zrnciyFk47Ge1NNvi0be4vsZk9o9NcVV/rzoK2pa8BTtX9UMQW8P
-         MHPQ==
-X-Gm-Message-State: APjAAAVgdWxC6iVQuPgnPILEEihmHPjYVvV0Ci/Ao3XAoc2o67xyoU8z
-        MIw89qi8ylsSfTQZhJuuu2WMK4ti
-X-Google-Smtp-Source: APXvYqwpKe9ih+ecA7Wkx36FWbGA2ELIOsfDh8N4qe/F9W4Hy4j3PAhEFCZzTyifVojyCUEZC+dE4Q==
-X-Received: by 2002:a65:4206:: with SMTP id c6mr13181440pgq.46.1578597908828;
-        Thu, 09 Jan 2020 11:25:08 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d1sm4241576pjx.6.2020.01.09.11.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 11:25:08 -0800 (PST)
-Date:   Thu, 9 Jan 2020 11:25:06 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [GIT PULL] HID fixes
-Message-ID: <20200109192506.GI8314@dtor-ws>
-References: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm>
- <CAHk-=wj+zyWsZGhiCiopkrnu1_bkNE1Ax+82sP4Donsv9pUZuw@mail.gmail.com>
+        Thu, 9 Jan 2020 14:25:54 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578597953; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=P7iT6C4yS6d0pj4gGc3+4Aans4LpK2LQk8W2gXRqLqE=; b=NkuSPyAc/yCFLcwP3J9XDWvQy8P9uUuIP8phfmk2+HNRF3ALzXNdHzsYAME1xCS0Q4sZQtP0
+ /iKalIolzG+u0jrXevN2LGMm+skvuGfSYzZSoFFHJbj5QKH9PFyJeb5V2aSsnhAd+Jq6Uxir
+ Z65cZjdXRvk1UkxIpNtjykX4a8M=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e177e40.7fc07ec370d8-smtp-out-n01;
+ Thu, 09 Jan 2020 19:25:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6E713C433A2; Thu,  9 Jan 2020 19:25:51 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F006C433CB;
+        Thu,  9 Jan 2020 19:25:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F006C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 9 Jan 2020 12:25:47 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
+Message-ID: <20200109192547.GA14008@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Will Deacon <will@kernel.org>,
+        iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
+References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
+ <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
+ <20200109143333.GB12236@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj+zyWsZGhiCiopkrnu1_bkNE1Ax+82sP4Donsv9pUZuw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109143333.GB12236@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-On Thu, Jan 09, 2020 at 11:14:22AM -0800, Linus Torvalds wrote:
-> See
+On Thu, Jan 09, 2020 at 02:33:34PM +0000, Will Deacon wrote:
+> On Mon, Dec 16, 2019 at 09:37:48AM -0700, Jordan Crouse wrote:
+> > Add support to enable split pagetables (TTBR1) if the supporting driver
+> > requests it via the DOMAIN_ATTR_SPLIT_TABLES flag. When enabled, the driver
+> > will set up the TTBR0 and TTBR1 regions and program the default domain
+> > pagetable on TTBR1.
+> > 
+> > After attaching the device, the value of he domain attribute can
+> > be queried to see if the split pagetables were successfully programmed.
+> > Furthermore the domain geometry will be updated so that the caller can
+> > determine the active region for the pagetable that was programmed.
+> > 
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> > 
+> >  drivers/iommu/arm-smmu.c | 40 +++++++++++++++++++++++++++++++++++-----
+> >  drivers/iommu/arm-smmu.h | 45 +++++++++++++++++++++++++++++++++++++++------
+> >  2 files changed, 74 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index c106406..7b59116 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -538,9 +538,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+> >  			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+> >  			cb->ttbr[1] = 0;
+> >  		} else {
+> > -			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> > -			cb->ttbr[0] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > -			cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > +			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> > +				cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > +				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> > +				cb->ttbr[1] |=
+> > +					FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > +			} else {
+> > +				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> > +				cb->ttbr[0] |=
+> > +					FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > +				cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> > +			}
 > 
->     https://lore.kernel.org/lkml/20191209202254.GA107567@dtor-ws/
+> I still don't understand why you have to set the ASID in both of the TTBRs.
+> Assuming TCR.A1 is clear, then we should only need to set the field in
+> TTBR0.
+
+This is mostly out of a sense of symmetry with the non-split configuration. I'll
+clean it up.
+
 > 
-> for details, even if I haven't gotten a pull request from Dmitry since.
+> >  		}
+> >  	} else {
+> >  		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+> > @@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> >  	enum io_pgtable_fmt fmt;
+> >  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> >  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> > +	u32 quirks = 0;
+> >  
+> >  	mutex_lock(&smmu_domain->init_mutex);
+> >  	if (smmu_domain->smmu)
+> > @@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> >  		oas = smmu->ipa_size;
+> >  		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
+> >  			fmt = ARM_64_LPAE_S1;
+> > +			if (smmu_domain->split_pagetables)
+> > +				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+> >  		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
+> >  			fmt = ARM_32_LPAE_S1;
+> >  			ias = min(ias, 32UL);
+> > @@ -788,6 +799,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> >  		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
+> >  		.tlb		= smmu_domain->flush_ops,
+> >  		.iommu_dev	= smmu->dev,
+> > +		.quirks		= quirks,
+> >  	};
+> >  
+> >  	if (smmu_domain->non_strict)
+> > @@ -801,8 +813,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> >  
+> >  	/* Update the domain's page sizes to reflect the page table format */
+> >  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> > -	domain->geometry.aperture_end = (1UL << ias) - 1;
+> > -	domain->geometry.force_aperture = true;
+> > +
+> > +	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> > +		domain->geometry.aperture_start = ~((1ULL << ias) - 1);
+> > +		domain->geometry.aperture_end = ~0UL;
+> > +	} else {
+> > +		domain->geometry.aperture_end = (1UL << ias) - 1;
+> > +		domain->geometry.force_aperture = true;
+> > +		smmu_domain->split_pagetables = false;
+> > +	}
+> >  
+> >  	/* Initialise the context bank with our page table cfg */
+> >  	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+> > @@ -1484,6 +1503,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> >  		case DOMAIN_ATTR_NESTING:
+> >  			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+> >  			return 0;
+> > +		case DOMAIN_ATTR_SPLIT_TABLES:
+> > +			*(int *)data = smmu_domain->split_pagetables;
+> > +			return 0;
+> >  		default:
+> >  			return -ENODEV;
+> >  		}
+> > @@ -1524,6 +1546,14 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+> >  			else
+> >  				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+> >  			break;
+> > +		case DOMAIN_ATTR_SPLIT_TABLES:
+> > +			if (smmu_domain->smmu) {
+> > +				ret = -EPERM;
+> > +				goto out_unlock;
+> > +			}
+> > +			if (*(int *)data)
+> > +				smmu_domain->split_pagetables = true;
+> > +			break;
+> >  		default:
+> >  			ret = -ENODEV;
+> >  		}
+> > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > index afab9de..68526cc 100644
+> > --- a/drivers/iommu/arm-smmu.h
+> > +++ b/drivers/iommu/arm-smmu.h
+> > @@ -177,6 +177,16 @@ enum arm_smmu_cbar_type {
+> >  #define TCR_IRGN0			GENMASK(9, 8)
+> >  #define TCR_T0SZ			GENMASK(5, 0)
+> >  
+> > +#define TCR_TG1				GENMASK(31, 30)
+> > +
+> > +#define TG0_4K				0
+> > +#define TG0_64K				1
+> > +#define TG0_16K				2
+> > +
+> > +#define TG1_16K				1
+> > +#define TG1_4K				2
+> > +#define TG1_64K				3
+> > +
+> >  #define ARM_SMMU_CB_CONTEXTIDR		0x34
+> >  #define ARM_SMMU_CB_S1_MAIR0		0x38
+> >  #define ARM_SMMU_CB_S1_MAIR1		0x3c
+> > @@ -329,16 +339,39 @@ struct arm_smmu_domain {
+> >  	struct mutex			init_mutex; /* Protects smmu pointer */
+> >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+> >  	struct iommu_domain		domain;
+> > +	bool				split_pagetables;
+> >  };
+> >  
+> > +static inline u32 arm_smmu_lpae_tcr_tg(struct io_pgtable_cfg *cfg)
+> > +{
+> > +	u32 val;
+> > +
+> > +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
+> > +		return FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg);
+> > +
+> > +	val = FIELD_PREP(TCR_TG1, cfg->arm_lpae_s1_cfg.tcr.tg);
+> > +
+> > +	if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
+> > +		val |= FIELD_PREP(TCR_TG0, TG0_4K);
+> > +	else if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
+> > +		val |= FIELD_PREP(TCR_TG0, TG0_16K);
+> > +	else
+> > +		val |= FIELD_PREP(TCR_TG0, TG0_64K);
+> 
+> This looks like it's making assumptions about the order in which page-tables
+> are installed, which I'd really like to avoid. See below.
 
-Sorry, I really disconnected over the holidays. I just sent you a small
-pull request with this (and couple other) fixes.
+> >  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+> >  {
+> > -	return TCR_EPD1 |
+> > -	       FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> > -	       FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> > -	       FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> > -	       FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> > -	       FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> > +	u32 tcr = FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> > +		FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> > +		FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> > +		FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> > +
+> > +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
+> > +		return tcr | TCR_EPD1 | arm_smmu_lpae_tcr_tg(cfg);
+> 
+> This is interesting. If the intention is to have both TTBR0 and TTBR1
+> used concurrently by different domains, then we probably need to be a bit
+> smarter about setting TCR_EPDx. Can we do something like start off with them
+> both set, and then just clear the one we want when installing a page-table?
 
-Thanks.
+My intention is that there should only be one domain that programs the hardware
+and installs the TTBR1 page-table.
+
+Under the proposed design [1] we used an aux domain that was basically a wrapper
+for a page-table and a domain attribute to return the physical address of the
+page-table to the GPU hardware which can program the TTBR0 register at runtime
+[2].  
+
+The object of this patch is that in split pagetable mode the "master" domain
+programs both the TTBR0 and TTBR1 sides of the TCR register but leaves the
+actual TTBR0 register empty for the GPU to manage.
+
+The GPU isn't currently set up to program register configuration outside of
+swapping the TTBR0 register and hitting the TIBALL bit which is part of an
+built in opcode and its not practical to add TCR configuration to the mix.
+
+I also feel pretty strongly that we should leave register configuration to the
+arm-smmu driver as much as possible so that was my motivation for doing this
+patch in this manner.
+
+Jordan
+
+[1] https://patchwork.freedesktop.org/patch/306117/
+[2] https://patchwork.freedesktop.org/patch/307616/?series=57441&rev=3
+
+> Will
 
 -- 
-Dmitry
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
