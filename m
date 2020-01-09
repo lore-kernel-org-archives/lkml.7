@@ -2,179 +2,86 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A822C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0983BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD37206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gq6zgGEY"
+	by mail.kernel.org (Postfix) with ESMTP id C1A43206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578599057;
+	bh=aWYo5RikeExdUKjeA0IF0IiexjTlOjGLfvmX7ixDTrc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1rJXBa8HjrZAFHFgle37OZRWJnhzgzDeCj/wFdwDYwOe5Flg8U6kX0yRYwM/VVTd5
+	 MKMwAwWH3AxJIt1gbQyfhVdMPEKp/3sCoFWXyjDfY9BAFBe6Fp99/IPYPTSL35qMXW
+	 tvLksqG5hJW8MxYU92Ekl7vWNZkWuwGETM8bItzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731729AbgAITnH (ORCPT
+        id S1731816AbgAIToQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:43:07 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40997 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731574AbgAITnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:43:07 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so8682414wrw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jw28hdiJGOkCKx6DV/ZAWWtrssY8Hn/bW9QkvV8cGmI=;
-        b=gq6zgGEYKGXFXM2EbpaV389P3IoxQr30Jnhm7/E2wfq734f+k9jU5i9vJZ/c5z4chQ
-         pYXGDucfiGxafkwpCKXAQE9nFdGnpwkCYNwTt/AdJztjucF1TrS9VYHOScqW32D6Kw13
-         GQWuzD0jelFWxHO2SpYpdOF1JOr2mhNRiWHmw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jw28hdiJGOkCKx6DV/ZAWWtrssY8Hn/bW9QkvV8cGmI=;
-        b=ejjUEHr2VGLuB9Lzy6gTd1fmyNIcjBVEIZJ282q69rHiFGYTjYGYvw+DRKtiyTU05F
-         40sODzv36Ko5tc3Eiu/rv1aJ5yiUD6zVH34ZYrbx7z000XWynNAx2S3qANfl1fCJMZFc
-         XYdsK5sR+Le07xVNmN5Cc3hPDyqQRkqQYofCnDYiQNuyYr2HSltoG1l96RDfdyXeE9eO
-         mb4Bc/hqlukk1eoybyU3mCcVGPuP4pZNz2jO+BllONA1oLccewVNtt+KuSwkqedXpsQ+
-         0CB5QcI7vgRz0dboTI3ORMGDLHFT8N+5mFpkXTqS04Y3Qs2eO9Ldh7woWQkon0A4Tm4h
-         M5pQ==
-X-Gm-Message-State: APjAAAWMsi9WM4/G0KYCDq/dIisy+u5aL+8QzPN9OEzMC+hSvNA9MJR6
-        RMxGrUKYqf4LnvQa+v9O+Ob4Nw==
-X-Google-Smtp-Source: APXvYqxFrV0L2j8O/4RTuF6OYfIwcvV94yuOK6Qd6u8NVLbIqTCAF73WthoWgSDFZkahivXdF2VM/g==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr12573335wrq.176.1578598985376;
-        Thu, 09 Jan 2020 11:43:05 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id r62sm4071750wma.32.2020.01.09.11.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 11:43:04 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 9 Jan 2020 20:43:02 +0100
-To:     James Morris <jmorris@namei.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200109194302.GA85350@google.com>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
- <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
- <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100558550.31925@namei.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2001100558550.31925@namei.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 9 Jan 2020 14:44:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728567AbgAIToQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 14:44:16 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1155C206ED;
+        Thu,  9 Jan 2020 19:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578599056;
+        bh=aWYo5RikeExdUKjeA0IF0IiexjTlOjGLfvmX7ixDTrc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hI9/5ZJ6jUlP4EKQPf1wxWSOPUyG5LAlREt7GtxoKdzNXnPf1UT8pgHco6b2fQpH8
+         rJ5o/zai1Qlz483NNtHMgLbB+8eZ1oihjmcSEdUpcGCjNKlKMDZuxEBEnhfmF5MVNG
+         vnlDW9U6KJy3/T3EmH1vKZVjpFZAod5e6u7TDEbk=
+Date:   Thu, 9 Jan 2020 11:44:15 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+Message-Id: <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org>
+In-Reply-To: <20200109145236.GS4951@dhcp22.suse.cz>
+References: <20191127162400.GT20912@dhcp22.suse.cz>
+        <alpine.DEB.2.21.1911271625110.17727@www.lameter.com>
+        <20191127174317.GD26807@dhcp22.suse.cz>
+        <20191204132812.GF25242@dhcp22.suse.cz>
+        <alpine.DEB.2.21.1912041524290.18825@www.lameter.com>
+        <20191204153225.GM25242@dhcp22.suse.cz>
+        <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
+        <20191204173224.GN25242@dhcp22.suse.cz>
+        <20200106115733.GH12699@dhcp22.suse.cz>
+        <alpine.DEB.2.21.2001061550270.23163@www.lameter.com>
+        <20200109145236.GS4951@dhcp22.suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-Jan 06:07, James Morris wrote:
-> On Thu, 9 Jan 2020, Stephen Smalley wrote:
-> 
-> > On 1/9/20 1:11 PM, James Morris wrote:
-> > > On Wed, 8 Jan 2020, Stephen Smalley wrote:
-> > > 
-> > > > The cover letter subject line and the Kconfig help text refer to it as a
-> > > > BPF-based "MAC and Audit policy".  It has an enforce config option that
-> > > > enables the bpf programs to deny access, providing access control. IIRC,
-> > > > in
-> > > > the earlier discussion threads, the BPF maintainers suggested that Smack
-> > > > and
-> > > > other LSMs could be entirely re-implemented via it in the future, and that
-> > > > such an implementation would be more optimal.
-> > > 
-> > > In this case, the eBPF code is similar to a kernel module, rather than a
-> > > loadable policy file.  It's a loadable mechanism, rather than a policy, in
-> > > my view.
+On Thu, 9 Jan 2020 15:52:36 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+
+> On Mon 06-01-20 15:51:26, Cristopher Lameter wrote:
+> > On Mon, 6 Jan 2020, Michal Hocko wrote:
 > > 
-> > I thought you frowned on dynamically loadable LSMs for both security and
-> > correctness reasons?
-
-Based on the feedback from the lists we've updated the design for v2.
-
-In v2, LSM hook callbacks are allocated dynamically using BPF
-trampolines, appended to a separate security_hook_heads and run
-only after the statically allocated hooks.
-
-The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
-still remains __lsm_ro_after_init and cannot be modified. We are still
-working on v2 (not ready for review yet) but the general idea can be
-seen here:
-
-  https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
-
+> > > On Wed 04-12-19 18:32:24, Michal Hocko wrote:
+> > > > [Cc akpm - the email thread starts
+> > > > http://lkml.kernel.org/r/20191126121901.GE20912@dhcp22.suse.cz]
+> > >
+> > > ping.
+> > 
+> > There does not seem to be much of an interest in the patch?
 > 
-> Evaluating the security impact of this is the next step. My understanding 
-> is that eBPF via BTF is constrained to read only access to hook 
-> parameters, and that its behavior would be entirely restrictive.
-> 
-> I'd like to understand the security impact more fully, though.  Can the 
-> eBPF code make arbitrary writes to the kernel, or read anything other than 
-> the correctly bounded LSM hook parameters?
-> 
+> It seems it has just fallen through cracks.
 
-As mentioned, the BPF verifier does not allow writes to BTF types.
+I looked at it - there wasn't really any compelling followup.
 
-> > And a traditional security module would necessarily fall
-> > under GPL; is the eBPF code required to be likewise?  If not, KRSI is a
-> > gateway for proprietary LSMs...
-> 
-> Right, we do not want this to be a GPL bypass.
-
-This is not intended to be a GPL bypass and the BPF verifier checks
-for license compatibility of the loaded program with GPL.
-
-- KP
-
-> 
-> If these issues can be resolved, this may be a "safe" way to support 
-> loadable LSM applications.
-> 
-> Again, I'd be interested in knowing how this is is handled in the 
-> networking stack (keeping in mind that LSM is a much more invasive API, 
-> and may not be directly comparable).
-> 
-> -- 
-> James Morris
-> <jmorris@namei.org>
-> 
+If this change should be pursued then can we please have a formal
+resend?
