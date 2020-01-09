@@ -2,301 +2,108 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46ECC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1AAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708BD2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTylmqKv"
+	by mail.kernel.org (Postfix) with ESMTP id 304D42075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgAIVw5 (ORCPT
+        id S1729069AbgAIVyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:52:57 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53948 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgAIVw4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:52:56 -0500
-Received: by mail-wm1-f65.google.com with SMTP id m24so4640458wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PAFMu6OuGhlFpgqTP+gMhrDTcSSqhQcB2Fv6Lbqg4lQ=;
-        b=GTylmqKvLUYGPHq+UGy1uE9GCfNKR2u1GyzWM5p+PWxlS5lrIGX89TI5Yr0JiO4WSz
-         NeVLD49dLUfGQcQ7CptTMuGCHLOOLZVWigfFPbBgalw0WXszrgvrlxrSnPR5Ll6EDWmA
-         ZJ8TQLuD2UbgWsSpdnbbhqSUFcCofRIBPKwRQBSg66E+5wXD0rrAtN284rWkQ6wqbd2Y
-         VersxGc1+fgcVS0I2+tQK8V/YkcBHdZrjpchPIHospk4WpypBTqj7YYs+ajQA6ENWCXR
-         4P60LT5XoIg1UxK3mrIAT8gE4vJfgdX9ZyiME6sds5NnfoIAD/fkZ0ZIGp5I/gzCKvTu
-         KnIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PAFMu6OuGhlFpgqTP+gMhrDTcSSqhQcB2Fv6Lbqg4lQ=;
-        b=HoajU3ZXyF1h3Yc+68rJEgzANPTeX9kX4Yk8+APEl7kk5gThgGy+mo3oe5CoiRvGFt
-         CR419YH/FlqCgDRuDtPMaU+xPyE9hAGcB2Zx3Z63wLHTcDh5XifwFOzA5hN6K3XNjseL
-         nUSnR3HhzNW0ETQe01LtFulHncJQ6q+6ZGIwWFCorREF1Yk6uel90dUVTXJJfHMxdLtG
-         UML+4mnmfv0fghu5nVUcTkmiFU80ms3BQL/nRAfJ+Ficjlpb5iv0UVAPmLm2rPd0KKqy
-         bCZqmEoKTvnuvTXOgQl8JrqjL+PVmTsKb79zd7RFRmyMtPpUYJb3yp5igBtH71HmWmBY
-         4o3A==
-X-Gm-Message-State: APjAAAV6KhAj3Js2A7guaEbpBtqnJot0N/VUN0juzvnDRu4LWwS1nTq4
-        LUnP7XRGPOE45/n3TbjZZclfUPrgnxJi0PDUuwg1SA==
-X-Google-Smtp-Source: APXvYqwgFKnvqOmLtAbhuLtuEVA6cRgBG1Fk8JPtuX4xChOPDMzoisf01Fw3ZXQbdFSzwq1yuvpmpQTbeSPrh1KLw58=
-X-Received: by 2002:a1c:a795:: with SMTP id q143mr96751wme.52.1578606773706;
- Thu, 09 Jan 2020 13:52:53 -0800 (PST)
+        Thu, 9 Jan 2020 16:54:01 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47477 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgAIVyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:54:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 13:54:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="236219578"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2020 13:54:00 -0800
+Date:   Thu, 9 Jan 2020 13:59:03 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v8 06/10] iommu/vt-d: Cache virtual command capability
+ register
+Message-ID: <20200109135903.74b0220f@jacob-builder>
+In-Reply-To: <0f704b87-aad7-c864-91ac-423a05287f21@linux.intel.com>
+References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1576524252-79116-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        <0f704b87-aad7-c864-91ac-423a05287f21@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191224044146.232713-1-saravanak@google.com> <CAKv+Gu_yDWhvR80Wg1-bzpD1aGwGC-UA+obcgn8CEKKjMdR7rQ@mail.gmail.com>
- <CAGETcx9iA_irfpO2yJSPszeNrfwfYAV0KkZ+AyB7gcDo0v8p1g@mail.gmail.com>
-In-Reply-To: <CAGETcx9iA_irfpO2yJSPszeNrfwfYAV0KkZ+AyB7gcDo0v8p1g@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 9 Jan 2020 22:52:42 +0100
-Message-ID: <CAKv+Gu9Dk65GVY1x6YBUp1zbwhUNhbHF2KhnQSU7xdniALaiGQ@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: arm: defer probe of PCIe backed efifb on DT systems
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 at 19:53, Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Jan 9, 2020 at 6:06 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Tue, 24 Dec 2019 at 05:41, Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > The new of_devlink support breaks PCIe probing on ARM platforms booting
-> > > via UEFI if the firmware exposes a EFI framebuffer that is backed by a
-> > > PCI device. The reason is that the probing order gets reversed,
-> > > resulting in a resource conflict on the framebuffer memory window when
-> > > the PCIe probes last, causing it to give up entirely.
-> > >
-> > > Given that we rely on PCI quirks to deal with EFI framebuffers that get
-> > > moved around in memory, we cannot simply drop the memory reservation, so
-> > > instead, let's use the device link infrastructure to register this
-> > > dependency, and force the probing to occur in the expected order.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > Co-developed-by: Saravana Kannan <saravanak@google.com>
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >
-> > > Hi Ard,
-> > >
-> > > I compile tested it and I think it should work. If you can actually run
-> > > and test it, that'd be nice.
-> > >
-> > > You can also optimize find_pci_overlap_node() by caching the result if
-> > > you think that's necessary.
-> > >
-> > > Right now this code will run always just like your code did. But once I
-> > > rename of_devlink to fw_devlink, this code won't be run if fw_devlink is
-> > > disabled.
-> > >
-> > > v1 -> v2:
-> > > - Rewrote the device linking part to not depend on initcall ordering
-> > >
-> > >  drivers/firmware/efi/arm-init.c | 106 ++++++++++++++++++++++++++++++--
-> > >  1 file changed, 102 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> > > index 904fa09e6a6b..8b789ff83af0 100644
-> > > --- a/drivers/firmware/efi/arm-init.c
-> > > +++ b/drivers/firmware/efi/arm-init.c
-> > > @@ -10,10 +10,12 @@
-> > >  #define pr_fmt(fmt)    "efi: " fmt
-> > >
-> > >  #include <linux/efi.h>
-> > > +#include <linux/fwnode.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/memblock.h>
-> > >  #include <linux/mm_types.h>
-> > >  #include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > >  #include <linux/of_fdt.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/screen_info.h>
-> > > @@ -276,15 +278,111 @@ void __init efi_init(void)
-> > >                 efi_memmap_unmap();
-> > >  }
-> > >
-> > > +static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
-> > > +{
-> > > +       u64 fb_base = screen_info.lfb_base;
-> > > +
-> > > +       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> > > +               fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
-> > > +
-> > > +       return fb_base >= range->cpu_addr &&
-> > > +              fb_base < (range->cpu_addr + range->size);
-> > > +}
-> > > +
-> > > +static struct device_node *find_pci_overlap_node(void)
-> > > +{
-> > > +       struct device_node *np;
-> > > +
-> > > +       for_each_node_by_type(np, "pci") {
-> > > +               struct of_pci_range_parser parser;
-> > > +               struct of_pci_range range;
-> > > +               int err;
-> > > +
-> > > +               err = of_pci_range_parser_init(&parser, np);
-> > > +               if (err) {
-> > > +                       pr_warn("of_pci_range_parser_init() failed: %d\n", err);
-> > > +                       continue;
-> > > +               }
-> > > +
-> > > +               for_each_of_pci_range(&parser, &range)
-> > > +                       if (efifb_overlaps_pci_range(&range))
-> > > +                               return np;
-> > > +       }
-> > > +       return NULL;
-> > > +}
-> > > +
-> > > +/*
-> > > + * If the efifb framebuffer is backed by a PCI graphics controller, we have
-> > > + * to ensure that this relation is expressed using a device link when
-> > > + * running in DT mode, or the probe order may be reversed, resulting in a
-> > > + * resource reservation conflict on the memory window that the efifb
-> > > + * framebuffer steals from the PCIe host bridge.
-> > > + */
-> > > +static int efifb_add_links(const struct fwnode_handle *fwnode,
-> > > +                          struct device *dev)
-> > > +{
-> > > +       struct device_node *sup_np;
-> > > +       struct device *sup_dev;
-> > > +
-> > > +       sup_np = find_pci_overlap_node();
-> > > +
-> > > +       /*
-> > > +        * If there's no PCI graphics controller backing the efifb, we are
-> > > +        * done here.
-> > > +        */
-> > > +       if (!sup_np)
-> > > +               return 0;
-> > > +
-> > > +       sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-> > > +       of_node_put(sup_np);
-> > > +
-> > > +       /*
-> > > +        * Return -ENODEV if the PCI graphics controller device hasn't been
-> > > +        * registered yet.  This ensures that efifb isn't allowed to probe
-> > > +        * and this function is retried again when new devices are
-> > > +        * registered.
-> > > +        */
-> > > +       if (!sup_dev)
-> > > +               return -ENODEV;
-> > > +
-> > > +       /*
-> > > +        * If this fails, retrying this function at a later point won't
-> > > +        * change anything. So, don't return an error after this.
-> > > +        */
-> > > +       if (!device_link_add(dev, sup_dev, 0))
-> > > +               dev_warn(dev, "device_link_add() failed\n");
-> > > +
-> > > +       put_device(sup_dev);
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static struct fwnode_operations efifb_fwnode_ops = {
-> >
-> > Please make this const
->
-> Ack
->
-> > > +       .add_links = efifb_add_links,
-> > > +};
-> > > +
-> > > +static struct fwnode_handle efifb_fwnode = {
-> > > +       .ops = &efifb_fwnode_ops,
-> > > +};
-> > > +
-> > >  static int __init register_gop_device(void)
-> > >  {
-> > > -       void *pd;
-> > > +       struct platform_device *pd;
-> > > +       int err;
-> > >
-> > >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
-> > >                 return 0;
-> > >
-> > > -       pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
-> > > -                                          &screen_info, sizeof(screen_info));
-> > > -       return PTR_ERR_OR_ZERO(pd);
-> > > +       pd = platform_device_alloc("efi-framebuffer", 0);
-> > > +       if (!pd)
-> > > +               return -ENOMEM;
-> > > +
-> >
-> > Add
-> >
-> >   if (IS_ENABLED(CONFIG_PCI))
-> >
-> > here
->
-> As in around the line below where I set the fwnode? Then it's going to
-> warn about unused variable.
+On Wed, 18 Dec 2019 11:25:27 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-If you use if() instead of #if, the compiler will not warn about an
-unused variable here.
+> Hi,
+> 
+> On 12/17/19 3:24 AM, Jacob Pan wrote:
+> > Virtual command registers are used in the guest only, to prevent
+> > vmexit cost, we cache the capability and store it during
+> > initialization.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >   drivers/iommu/dmar.c        | 1 +
+> >   include/linux/intel-iommu.h | 4 ++++
+> >   2 files changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> > index f2f5d75da94a..3f98dd9ad004 100644
+> > --- a/drivers/iommu/dmar.c
+> > +++ b/drivers/iommu/dmar.c
+> > @@ -953,6 +953,7 @@ static int map_iommu(struct intel_iommu *iommu,
+> > u64 phys_addr) warn_invalid_dmar(phys_addr, " returns all ones");
+> >   		goto unmap;
+> >   	}
+> > +	iommu->vccap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
+> >   
+> >   	/* the registers might be more than one page */
+> >   	map_size = max_t(int, ecap_max_iotlb_offset(iommu->ecap),
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index ee26989df008..4d25141ec3df
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -189,6 +189,9 @@
+> >   #define ecap_max_handle_mask(e) ((e >> 20) & 0xf)
+> >   #define ecap_sc_support(e)	((e >> 7) & 0x1) /* Snooping
+> > Control */ 
+> > +/* Virtual command interface capabilities */
+> > +#define vccap_pasid(v)		((v & DMA_VCS_PAS)) /* PASID
+> > allocation */  
+> 
+> Has DMA_VCS_PAS ever been defined?
+> 
+Good catch, it is in the next patch, need to move the #define here.
+Thanks!
 
-> Maybe I should just do the if
-> (IS_ENABLED(CONFIG_PCI)) inside the add_links() function to short
-> circuit it.
->
+> Best regards,
+> baolu
+> 
+>  [...]  
 
-No, let's put it it here.
-
-> Responding to your other email here. Adding ifdef CONFIG_PCI was my
-> first inclination, but then those 2 functions are defined if
-> CONFIG_OF_ADDRESS are defined and if not the stubs are always there.
-> There's no #ifdef CONFIG_PCI around any of them AFAICT. So I'm
-> confused about what's going on.
->
-
-There is
-
-> > > +       pd->dev.fwnode = &efifb_fwnode;
-> > > +
-> > > +       err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
-> > > +       if (err)
-> > > +               return err;
-> > > +
-> > > +       return platform_device_add(pd);
-> > >  }
-> > >  subsys_initcall(register_gop_device);
-> > > --
-> > > 2.24.1.735.g03f4e72817-goog
-> > >
-> >
-> > With the changes above
->
-> Yeah, will make them all.
->
-> >
-> > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> >
->
-> Thanks!
->
-> -Saravana
+[Jacob Pan]
