@@ -2,199 +2,104 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A7C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B1EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401492072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1EB02077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbGSH8Kb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731102AbgAIMe5 (ORCPT
+        id S1729441AbgAIMhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:34:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37960 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbgAIMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:34:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 17702B2209;
-        Thu,  9 Jan 2020 12:34:05 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/14] MIPS: SGI-IP27: get rid of asm/sn/sn0/ip27.h
-Date:   Thu,  9 Jan 2020 13:33:41 +0100
-Message-Id: <20200109123353.5656-5-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200109123353.5656-1-tbogendoerfer@suse.de>
-References: <20200109123353.5656-1-tbogendoerfer@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jan 2020 07:37:22 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40541 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728660AbgAIMhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:37:22 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so7051585ljk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 04:37:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ILyj27kpbzRc1eaCPNmbbfVGQcieiuCYVBpFS2ugS84=;
+        b=YbGSH8KbHiX2OnuZEHVZRN0D/f2cz6cr08KN9ftefepnm25MtW8sh4fSM3vtIhj13j
+         V75f1YKs0HBf/hFdPXnetRIwFvcl6yE+2B3HjOx6J6SRIecx5zrRGwP5W8j77AowbWu5
+         ELB0dZE+bFlVwug5Q74EjcfzSE7rWn3sHkJFW0c8JWQ4UMA05SA8Fc2ZSpAHYuM7ZKc6
+         +MgLw0ZRPYkqcAXtbrIYkcWyh9hePY/FdUJK/EDHphOqPAzlNZDHtgH+SAdQ7HH64iDF
+         iq53mUM62W4F7aPhSNPdbTOlQM1jjFmc0dlX+TPMlXWA97pbqTjF3scFqgMvEfMEN2bv
+         K3+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ILyj27kpbzRc1eaCPNmbbfVGQcieiuCYVBpFS2ugS84=;
+        b=H2TisYObDS4nRglJNtCzUcTB4BBkJIQ564vn+LiKLBV9olO9NdU/p3mky54F9mSCnM
+         q0zQuCcYZfY0/TwGtkdoe5gGRCPbrGorbgJmtP0wmKQj9iXgn0u5pqtxshTPVYBc8LTx
+         o99p+ViE1054We7wCqUt8/54cr0soyoJEyeNtllf/K78ofNiaeMq3Bv6H6kNnGY/rPR4
+         ENCtLta+afmQrZZJaDRSnWISFXY5ao5MjuYH4XVtomRYjzh2YXx4UnMPCbOIQApLkbt9
+         Mi8VsANIR21OMUiSSiUO/g97Vwog5DAbdQ3x1A+omON6rAVCjh/2DvSkzVLR9jpWNIVz
+         ELOw==
+X-Gm-Message-State: APjAAAXae0D7QGpxdHbea/ssWmQw2VQz9GJ/hTeGeD8Y1c8eAKp8KqJX
+        W81HCPayz/Eh6gUw5u0RjBzL+A==
+X-Google-Smtp-Source: APXvYqwx9xv6MStqamHpaTUpKqBnkX2vMeFat8S2TiF7Ssa5I8APY9jOqVTJDiRRNVRm/n40ROdG3g==
+X-Received: by 2002:a2e:80cc:: with SMTP id r12mr6374813ljg.154.1578573439996;
+        Thu, 09 Jan 2020 04:37:19 -0800 (PST)
+Received: from jax.urgonet (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id u16sm2887724ljo.22.2020.01.09.04.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 04:37:18 -0800 (PST)
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH 0/5] tee: shared memory cleanup
+Date:   Thu,  9 Jan 2020 13:36:46 +0100
+Message-Id: <20200109123651.18520-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only piece needed in ip27.h is SEND_NMI. Move the define to the only
-place where it's used and remove ip27.h
+Hi,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/include/asm/sn/sn0/ip27.h | 85 -----------------------------
- arch/mips/sgi-ip27/ip27-init.c      |  1 -
- arch/mips/sgi-ip27/ip27-nmi.c       |  3 +
- arch/mips/sgi-ip27/ip27-smp.c       |  1 -
- arch/mips/sgi-ip27/ip27-timer.c     |  1 -
- 5 files changed, 3 insertions(+), 88 deletions(-)
- delete mode 100644 arch/mips/include/asm/sn/sn0/ip27.h
+Here's a group of patches to the tee subsystem with cleanups and not so
+urgent fixes related to tee shared memory.
 
-diff --git a/arch/mips/include/asm/sn/sn0/ip27.h b/arch/mips/include/asm/sn/sn0/ip27.h
-deleted file mode 100644
-index 3b5efeefcc3f..000000000000
---- a/arch/mips/include/asm/sn/sn0/ip27.h
-+++ /dev/null
-@@ -1,85 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Derived from IRIX <sys/SN/SN0/IP27.h>.
-- *
-- * Copyright (C) 1992 - 1997, 1999 Silicon Graphics, Inc.
-- * Copyright (C) 1999, 2006 by Ralf Baechle
-- */
--#ifndef _ASM_SN_SN0_IP27_H
--#define _ASM_SN_SN0_IP27_H
--
--#include <asm/mipsregs.h>
--
--/*
-- * Simple definitions for the masks which remove SW bits from pte.
-- */
--
--#define TLBLO_HWBITSHIFT	0		/* Shift value, for masking */
--
--#ifndef __ASSEMBLY__
--
--#define CAUSE_BERRINTR		IE_IRQ5
--
--#define ECCF_CACHE_ERR	0
--#define ECCF_TAGLO	1
--#define ECCF_ECC	2
--#define ECCF_ERROREPC	3
--#define ECCF_PADDR	4
--#define ECCF_SIZE	(5 * sizeof(long))
--
--#endif /* !__ASSEMBLY__ */
--
--#ifdef __ASSEMBLY__
--
--/*
-- * KL_GET_CPUNUM (similar to EV_GET_SPNUM for EVEREST platform) reads
-- * the processor number of the calling processor.  The proc parameters
-- * must be a register.
-- */
--#define KL_GET_CPUNUM(proc)				\
--	dli	proc, LOCAL_HUB(0);			\
--	ld	proc, PI_CPU_NUM(proc)
--
--#endif /* __ASSEMBLY__ */
--
--/*
-- * R10000 status register interrupt bit mask usage for IP27.
-- */
--#define SRB_SWTIMO	IE_SW0		/* 0x0100 */
--#define SRB_NET		IE_SW1		/* 0x0200 */
--#define SRB_DEV0	IE_IRQ0		/* 0x0400 */
--#define SRB_DEV1	IE_IRQ1		/* 0x0800 */
--#define SRB_TIMOCLK	IE_IRQ2		/* 0x1000 */
--#define SRB_PROFCLK	IE_IRQ3		/* 0x2000 */
--#define SRB_ERR		IE_IRQ4		/* 0x4000 */
--#define SRB_SCHEDCLK	IE_IRQ5		/* 0x8000 */
--
--#define SR_IBIT_HI	SRB_DEV0
--#define SR_IBIT_PROF	SRB_PROFCLK
--
--#define SRB_SWTIMO_IDX		0
--#define SRB_NET_IDX		1
--#define SRB_DEV0_IDX		2
--#define SRB_DEV1_IDX		3
--#define SRB_TIMOCLK_IDX		4
--#define SRB_PROFCLK_IDX		5
--#define SRB_ERR_IDX		6
--#define SRB_SCHEDCLK_IDX	7
--
--#define NUM_CAUSE_INTRS		8
--
--#define SCACHE_LINESIZE 128
--#define SCACHE_LINEMASK (SCACHE_LINESIZE - 1)
--
--#include <asm/sn/addrs.h>
--
--#define LED_CYCLE_MASK	0x0f
--#define LED_CYCLE_SHFT	4
--
--#define SEND_NMI(_nasid, _slice)	\
--	  REMOTE_HUB_S((_nasid),  (PI_NMI_A + ((_slice) * PI_NMI_OFFSET)), 1)
--
--#endif /* _ASM_SN_SN0_IP27_H */
-diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
-index b8758af4c5b7..484db3b73b7d 100644
---- a/arch/mips/sgi-ip27/ip27-init.c
-+++ b/arch/mips/sgi-ip27/ip27-init.c
-@@ -32,7 +32,6 @@
- #include <asm/thread_info.h>
- #include <asm/sn/launch.h>
- #include <asm/sn/sn_private.h>
--#include <asm/sn/sn0/ip27.h>
- #include <asm/sn/mapped_kernel.h>
- 
- #include "ip27-common.h"
-diff --git a/arch/mips/sgi-ip27/ip27-nmi.c b/arch/mips/sgi-ip27/ip27-nmi.c
-index 916e795fdac7..84889b57d5ff 100644
---- a/arch/mips/sgi-ip27/ip27-nmi.c
-+++ b/arch/mips/sgi-ip27/ip27-nmi.c
-@@ -17,6 +17,9 @@
- #define NODE_NUM_CPUS(n)	CPUS_PER_NODE
- #endif
- 
-+#define SEND_NMI(_nasid, _slice)	\
-+	REMOTE_HUB_S((_nasid),  (PI_NMI_A + ((_slice) * PI_NMI_OFFSET)), 1)
-+
- typedef unsigned long machreg_t;
- 
- static arch_spinlock_t nmi_lock = __ARCH_SPIN_LOCK_UNLOCKED;
-diff --git a/arch/mips/sgi-ip27/ip27-smp.c b/arch/mips/sgi-ip27/ip27-smp.c
-index 1ae053ecf75c..0f6df00ca00f 100644
---- a/arch/mips/sgi-ip27/ip27-smp.c
-+++ b/arch/mips/sgi-ip27/ip27-smp.c
-@@ -24,7 +24,6 @@
- #include <asm/sn/mapped_kernel.h>
- #include <asm/sn/sn_private.h>
- #include <asm/sn/types.h>
--#include <asm/sn/sn0/ip27.h>
- 
- #include "ip27-common.h"
- 
-diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
-index 1b285c042ca7..62c7da59f55a 100644
---- a/arch/mips/sgi-ip27/ip27-timer.c
-+++ b/arch/mips/sgi-ip27/ip27-timer.c
-@@ -27,7 +27,6 @@
- #include <asm/sn/addrs.h>
- #include <asm/sn/agent.h>
- #include <asm/sn/sn_private.h>
--#include <asm/sn/sn0/ip27.h>
- 
- #define TICK_SIZE (tick_nsec / 1000)
- 
+- Unused parts of the shared memory object (struct tee_shm) are removed.
+- Shared memory ids usable from user space are not assigned to driver
+  private shared memory objects
+- The TEE_SHM_USER_MAPPED is used instead of TEE_SHM_REGISTER to accurately
+  tell if a shared memory object originates from another user space mapping.
+
+Only unused "features" should be removed with this patch set, there should
+be no change in behaviour or breakage with other code.
+
+Thanks,
+Jens
+
+Jens Wiklander (5):
+  tee: remove linked list of struct tee_shm
+  tee: remove unused tee_shm_priv_alloc()
+  tee: don't assign shm id for private shms
+  tee: remove redundant teedev in struct tee_shm
+  tee: tee_shm_op_mmap(): use TEE_SHM_USER_MAPPED
+
+ drivers/tee/tee_core.c    |  1 -
+ drivers/tee/tee_private.h |  3 +-
+ drivers/tee/tee_shm.c     | 85 +++++++++++----------------------------
+ include/linux/tee_drv.h   | 19 +--------
+ 4 files changed, 27 insertions(+), 81 deletions(-)
+
 -- 
-2.24.1
+2.17.1
 
