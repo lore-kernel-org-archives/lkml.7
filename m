@@ -2,118 +2,123 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48878C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E513C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E7F20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D599E20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eaxlabs.cz header.i=@eaxlabs.cz header.b="XjaCUP7m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b412CnJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbgAIQRs (ORCPT
+        id S2387595AbgAIQRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:17:48 -0500
-Received: from ms9.eaxlabs.cz ([147.135.177.209]:57216 "EHLO ms9.eaxlabs.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbgAIQRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:17:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eaxlabs.cz; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=XxKBnJNt9e56ZyYpPr2hAC9xIc4T57rxccAPh3vRQeg=;
-        b=XjaCUP7mKXP2VXRj8RRoOZW/XYPNwgONi0ntcJO2YjeTt6KQpw59oSJeI0bMlTkDPBWdWUQC0LZgXBeUE2ice+ywQ/sAcsrBoro6crgyHy5i6+ZWEVHocE7BPMOJq5XgDbv9uJ3XXDVkdoFKinz11MbYFZ45/fqr5cHmmxGfDr8=;
-Received: from [82.99.129.6] (helo=[10.76.6.116])
-        by ms9.eaxlabs.cz with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <devik@eaxlabs.cz>)
-        id 1ipaV1-00068I-Lx; Thu, 09 Jan 2020 17:17:33 +0100
-Subject: Re: [PATCH] mtd: rawnand: Fix unexpected timeouts in waitrdy
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     linux-kernel@vger.kernel.org, jan.pohanka@merz.cz,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd@lists.infradead.org
-References: <20191210150319.3125-1-devik@eaxlabs.cz>
- <20200109163752.621c6248@xps13>
-From:   Martin DEVERA <devik@eaxlabs.cz>
-Message-ID: <73164aea-d889-21e4-4e7d-345ebd4e5197@eaxlabs.cz>
-Date:   Thu, 9 Jan 2020 17:17:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 9 Jan 2020 11:17:51 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47963 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730483AbgAIQRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:17:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578586669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=utdlm/aKlY7xAQfEyR3w7Eafs4aRDid1gJnviBYktXw=;
+        b=b412CnJIyZx0RcnAjmPw1hVXuHrWKydt40cxRNZhmiEfn9bDrBoR/LFo4SdbNXv/C3UF6b
+        cq1nsF6Uhi8ewafwQz9Kb3bL4kMQ3d7m+CJUDzTH0QSN3ogelNOo38m9Ayipl9X6m3M9w/
+        LlhxPuMRKNaQH6xM+p1hmQ/xWZWABcE=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-49-8gmgBvSWP3-oSv7hUfqH4A-1; Thu, 09 Jan 2020 11:17:45 -0500
+X-MC-Unique: 8gmgBvSWP3-oSv7hUfqH4A-1
+Received: by mail-qk1-f199.google.com with SMTP id x127so4477017qkb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:17:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=utdlm/aKlY7xAQfEyR3w7Eafs4aRDid1gJnviBYktXw=;
+        b=FOeoHBxZiQFYWH3WnSfR1vO/j8ft9vBqxAXN9ACKZQdan78wabhPPD3R1NQg2Sneev
+         vVDW6QmD8RxzvCo6ezvBN9Ad2zffyVNSXG8bhuXSaUjxNsBCfWdYMCgsouvVt0qU/250
+         l3X49dzcCoR8nGyWAGNeNRXQLsf2fwT7gylGYQgY8zEip595ht30j9nOyPwvRAw4wrwT
+         0IE4UfPXsuFZiw0yDHWqj7RMp+C3bupB/KpU/Y+/qUrNSrm2E8tXIuFP08klNF9VVRia
+         Lsw2PzTdpAhLyWUqawBVg6GaYnvKnOXOeb4XYylY7KNH2HT4PAy6IsX5OD0/d0eXPGem
+         7uWQ==
+X-Gm-Message-State: APjAAAXBFiVKI1hLl7zwoYmaci+px9s2ybYNstZTlFQAoXFCEmrV9MF0
+        w9/8SVpQd5d61XVH/tEZHTDaZa7bCWrdKJSveqO1Je7vnnhs+vZlai0S2laUFlCPr/oVL1T8sYe
+        Ut+Ftad7BPRpmMoN/e/xPF6zq
+X-Received: by 2002:ac8:544f:: with SMTP id d15mr8718695qtq.53.1578586665331;
+        Thu, 09 Jan 2020 08:17:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxOO77lSOX4HB1VsYJg95F5t9IBQf4gOicmO1+VK8TA5tARhYVtiz9nWGF7JPyZNSOqo/KKIw==
+X-Received: by 2002:ac8:544f:: with SMTP id d15mr8718671qtq.53.1578586665141;
+        Thu, 09 Jan 2020 08:17:45 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id m8sm3602484qtk.60.2020.01.09.08.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:17:43 -0800 (PST)
+Date:   Thu, 9 Jan 2020 11:17:42 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
+Message-ID: <20200109161742.GC15671@xz-x1>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109105443-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200109163752.621c6248@xps13>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200109105443-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 4:37 PM, Miquel Raynal wrote:
-> Hi Martin,
->
-> Martin Devera <devik@eaxlabs.cz> wrote on Tue, 10 Dec 2019 16:03:18
-> +0100:
->
->> The used way to compute jiffies timeout brokes when
->> jiffie difference is 1. Simply add 1 - it has no other
->> side effects.
->> Fixes STM32MP1 FMC2 NAND controller which sometimes failed
->> exactly in this way.
->>
->> Signed-off-by: Martin Devera <devik@eaxlabs.cz>
->> ---
->>   drivers/mtd/nand/raw/nand_base.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
->> index d527e448ce19..beab3a775cc7 100644
->> --- a/drivers/mtd/nand/raw/nand_base.c
->> +++ b/drivers/mtd/nand/raw/nand_base.c
->> @@ -721,7 +721,11 @@ int nand_soft_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
->>   	if (ret)
->>   		return ret;
->>   
->> -	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
->> +	/* +1 below is necessary because if we are now in the last fraction
->> +	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
->> +	 * small jiffy fraction - possibly leading to false timeout
->> +	 */
->> +	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
->>   	do {
->>   		ret = nand_read_data_op(chip, &status, sizeof(status), true);
->>   		if (ret)
-> I don't really what you are fixing here, I suspect the root cause to be
-> a wrongly calculated timeout_ms in the calling driver.
->
-> It is the responsibility of the caller to use this function with a
-> relevant timeout_ms parameter. Maybe Christophe can help you here?
->
-Hi Miquel,
+On Thu, Jan 09, 2020 at 10:59:50AM -0500, Michael S. Tsirkin wrote:
+> On Thu, Jan 09, 2020 at 09:57:08AM -0500, Peter Xu wrote:
+> > Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+> > (based on kvm/queue)
+> > 
+> > Please refer to either the previous cover letters, or documentation
+> > update in patch 12 for the big picture.
+> 
+> I would rather you pasted it here. There's no way to respond otherwise.
 
-assume that nand_soft_waitrdy is called with timeout_ms==1. I suppose it is
-valid case. Jiffies are 1000 for example (assume something more like 
-1000.99 -
-just before incrementing to 1001).
-We compute timeout_ms = 1000+msecs_to_jiffies(1) = 1001 (at least for my 
-jiffies rate).
-nand_read_data_op is called for the first time and returns 0. During the 
-call jiffies changes
-to 1001 thus "while loop" ends here (wrongly).
-Notice that routine was called with expected timeout 1ms but actual 
-timeout used was something
-between 0...1ms (which I also measured by tracing & scope on the bus).
-Or is my analysis flawed somewhere ?
+Sure, will do in the next post.
+
+> 
+> For something that's presumably an optimization, isn't there
+> some kind of testing that can be done to show the benefits?
+> What kind of gain was observed?
+
+Since the interface seems to settle soon, maybe it's time to work on
+the QEMU part so I can give some number.  It would be interesting to
+know the curves between dirty logging and dirty ring even for some
+small vms that have some workloads inside.
+
+> 
+> I know it's mostly relevant for huge VMs, but OTOH these
+> probably use huge pages.
+
+Yes huge VMs could benefit more, especially if the dirty rate is not
+that high, I believe.  Though, could you elaborate on why huge pages
+are special here?
 
 Thanks,
 
-Martin
+-- 
+Peter Xu
 
