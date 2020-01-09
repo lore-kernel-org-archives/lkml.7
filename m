@@ -2,165 +2,131 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7270C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851E7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4412067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ilmuuzlF"
+	by mail.kernel.org (Postfix) with ESMTP id 62F6B2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732539AbgAIPnv (ORCPT
+        id S1732563AbgAIPoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:43:51 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:10928 "EHLO pegase1.c-s.fr"
+        Thu, 9 Jan 2020 10:44:38 -0500
+Received: from mga09.intel.com ([134.134.136.24]:4559 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgAIPnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:43:50 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47tr4g08pGz9v3p8;
-        Thu,  9 Jan 2020 16:43:47 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ilmuuzlF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 6FBkiugPM--3; Thu,  9 Jan 2020 16:43:46 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47tr4f66Yyz9v3p6;
-        Thu,  9 Jan 2020 16:43:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578584626; bh=iw8kkZomOhkO3o0LAtBm1SIFpsx8uEZAgoFK9Pp3LQw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ilmuuzlFcmIFuyVy1qltF6zJgIcY/QacfPR0xgx+hahGZEzf7+zkFRtCPK4jF6ltQ
-         nRWBOULOE0hyYF+PcbYtJB7Kir2kWT7xsuCcCiEPJbWT5u/ZFWxD61ZGmkkD+SGawA
-         ICWLD/eJM+3BG7VMgWcfX+y95rICvukbD7i5WdGw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 62C3B8B82B;
-        Thu,  9 Jan 2020 16:43:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Dt_XbitFJ43g; Thu,  9 Jan 2020 16:43:48 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 266608B828;
-        Thu,  9 Jan 2020 16:43:47 +0100 (CET)
-Subject: Re: [RFC PATCH v2 01/10] lib: vdso: ensure all arches have 32bit
- fallback
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
- <47701b5fb73cf536db074031db8e6e3fa3695168.1577111365.git.christophe.leroy@c-s.fr>
- <CAK8P3a0QGtjygLJUWX_1-s1vfCzE6UoOzrb+OZWwjaBdh=RpVQ@mail.gmail.com>
- <CAK8P3a1gHvW2XEMDSHCcdOQ8NSs3iHk9GpujwkWZnnZ0dnw96w@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <0d8ffa6f-00fa-aefe-d255-b635fb90497f@c-s.fr>
-Date:   Thu, 9 Jan 2020 16:43:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1730913AbgAIPoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:44:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:37 -0800
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="246707087"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:35 -0800
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 2407420F35;
+        Thu,  9 Jan 2020 17:44:33 +0200 (EET)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1ipa01-00055E-G9; Thu, 09 Jan 2020 17:45:29 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH v3 4/5] media: i2c: imx319: Support probe while the device is off
+Date:   Thu,  9 Jan 2020 17:45:28 +0200
+Message-Id: <20200109154529.19484-5-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
+References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1gHvW2XEMDSHCcdOQ8NSs3iHk9GpujwkWZnnZ0dnw96w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rajmohan Mani <rajmohan.mani@intel.com>
 
+Tell ACPI device PM code that the driver supports the device being powered
+off when the driver's probe function is entered.
 
-Le 02/01/2020 à 12:29, Arnd Bergmann a écrit :
-> On Mon, Dec 30, 2019 at 1:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
->> On Mon, Dec 23, 2019 at 3:31 PM Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>> +static __always_inline
->>> +long clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
->>> +{
->>> +       struct __kernel_timespec ts;
->>> +       int ret = clock_getres_fallback(clock, &ts);
->>> +
->>> +       if (likely(!ret && _ts)) {
->>> +               _ts->tv_sec = ts.tv_sec;
->>> +               _ts->tv_nsec = ts.tv_nsec;
->>> +       }
->>> +       return ret;
->>> +}
->>
->> Please change these to call __NR_clock_gettime and __NR_clock_getres_time
->> instead of __NR_clock_gettime64/__NR_clock_getres_time64 for multiple reasons.
->>
->> - When doing migration between containers, the vdso may get copied into
->>    an application running on a kernel that does not support the time64
->>    variants, and then the fallback fails.
->>
->> - When CONFIG_COMPAT_32BIT_TIME is disabled, the time32 syscalls
->>    return -ENOSYS, and the vdso version should have the exact same behavior
->>    to avoid surprises. In particular an application that checks clock_gettime()
->>    to see if the time32 are in part of the kernel would get an incorrect result
->>    here.
->>
->> arch/arm64/include/asm/vdso/compat_gettimeofday.h already does this,
->> I think you can just copy the implementation or find a way to share it.
-> 
-> There was a related discussion on this after a vdso regression on mips,
-> and I suggested to drop the time32 functions completely from the
-> vdso when CONFIG_COMPAT_32BIT_TIME is disabled, such as
-> 
-> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> index 00c025ba4a92..605f259fa24c 100644
-> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> @@ -145,10 +145,12 @@ VERSION
-> 
->                  __kernel_get_syscall_map;
->   #ifndef CONFIG_PPC_BOOK3S_601
-> +#ifdef CONFIG_COMPAT_32BIT_TIME
->                  __kernel_gettimeofday;
->                  __kernel_clock_gettime;
->                  __kernel_clock_getres;
->                  __kernel_time;
-> +#endif
->                  __kernel_get_tbfreq;
->   #endif
->                  __kernel_sync_dicache;
-> 
-> Any opinions on this? If everyone agrees with that approach, I can
-> send a cross-architecture patch to do this everywhere. It's probably
-> best though if Christophe adds that to his series as it touches a lot
-> of the same files and I would prefer to avoid conflicting changes.
-> 
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/imx319.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-I guess it would be wise.
+diff --git a/drivers/media/i2c/imx319.c b/drivers/media/i2c/imx319.c
+index 17c2e4b41221e..3bb87154dd2cd 100644
+--- a/drivers/media/i2c/imx319.c
++++ b/drivers/media/i2c/imx319.c
+@@ -2424,6 +2424,7 @@ static struct imx319_hwcfg *imx319_get_hwcfg(struct device *dev)
+ static int imx319_probe(struct i2c_client *client)
+ {
+ 	struct imx319 *imx319;
++	bool low_power;
+ 	int ret;
+ 	u32 i;
+ 
+@@ -2436,11 +2437,14 @@ static int imx319_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx319->sd, client, &imx319_subdev_ops);
+ 
+-	/* Check module identity */
+-	ret = imx319_identify_module(imx319);
+-	if (ret) {
+-		dev_err(&client->dev, "failed to find sensor: %d", ret);
+-		goto error_probe;
++	low_power = acpi_dev_low_power_state_probe(&client->dev);
++	if (!low_power) {
++		/* Check module identity */
++		ret = imx319_identify_module(imx319);
++		if (ret) {
++			dev_err(&client->dev, "failed to find sensor: %d", ret);
++			goto error_probe;
++		}
+ 	}
+ 
+ 	imx319->hwcfg = imx319_get_hwcfg(&client->dev);
+@@ -2493,10 +2497,10 @@ static int imx319_probe(struct i2c_client *client)
+ 		goto error_media_entity;
+ 
+ 	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
++	 * Don't set the device's state to active if it's in a low power state.
+ 	 */
+-	pm_runtime_set_active(&client->dev);
++	if (!low_power)
++		pm_runtime_set_active(&client->dev);
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+@@ -2536,7 +2540,7 @@ static const struct dev_pm_ops imx319_pm_ops = {
+ };
+ 
+ static const struct acpi_device_id imx319_acpi_ids[] = {
+-	{ "SONY319A" },
++	{ "SONY319A", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(acpi, imx319_acpi_ids);
+@@ -2549,6 +2553,7 @@ static struct i2c_driver imx319_i2c_driver = {
+ 	},
+ 	.probe_new = imx319_probe,
+ 	.remove = imx319_remove,
++	.probe_low_power = true,
+ };
+ module_i2c_driver(imx319_i2c_driver);
+ 
+-- 
+2.20.1
 
-I don't think my series to switch powerpc to C VDSO will get ready 
-anytime soon, because (in addition to the performance impact) I'm having 
-hard time with the 32 bits VDSO for PPC64. Many of the powerpc header 
-files used by lib/vdso/gettimeofday.c are not ready for generating 32 
-bits code for PPC64. Main problem is that at many places, #ifdef 
-CONFIG_PPC64 is used instead of #ifdef __powerpc64__. There are also 
-some CONFIG options like CONFIG_GENERIC_ATOMIC64 that are selected only 
-when CONFIG_PPC32 is set, but which are required for building the 32 
-bits VDSO. For that I don't even know how to deal with it.
-
-So, feel free to send your patch, and if my series comes early enough to 
-conflict, I'll manage it.
-
-Christophe
