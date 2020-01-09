@@ -2,280 +2,134 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF47C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA99F20705
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082492070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jy21N5M1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgAICmx (ORCPT
+        id S1727960AbgAICnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:42:53 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:32303 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgAICmw (ORCPT
+        Wed, 8 Jan 2020 21:43:51 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39426 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgAICnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 21:42:52 -0500
-Received: from [10.28.39.63] (10.28.39.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 9 Jan
- 2020 10:43:14 +0800
-Subject: Re: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191220091611.36319-1-jian.hu@amlogic.com>
- <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <484f2273-80d2-87fe-2637-33f5313c580d@amlogic.com>
-Date:   Thu, 9 Jan 2020 10:43:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 8 Jan 2020 21:43:50 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so2601997pfs.6;
+        Wed, 08 Jan 2020 18:43:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RhY8GTZhfaP75ugnG9uBkRt3jDLbfbf7XwKJDnHpA9g=;
+        b=Jy21N5M1F7zTvapQPSsyY98ki9Gnih+f9EhbCGKrt1iBrY3BAmOHsEbt4eqdxlR7Im
+         /bM99l2z64BFfp6GUik7nNmnzGI+VCc/jUMwkO6Go0wt2ChVqEmeKizmYPUk9wZzZDII
+         zQSXomeQauss0DNPLOudoLFK3XsWk2wgxtfigpiUjwXcEO+m9Hm1Y7Aod2uIjyJ3JPcm
+         y/FQuwHgeM/L2Yh8PtvY2b7/U2vciMDFTs0n+FosJjUCLsWgQuArKfAHPxciv8dtwwCo
+         QUQmalVqCHibfjpvSJStnCEOO+IlgGXhszwUCGkCh5QeWQhs8vmRT1aNmEwdwep/UknP
+         BADg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RhY8GTZhfaP75ugnG9uBkRt3jDLbfbf7XwKJDnHpA9g=;
+        b=D60BgHKqPCQZRJjcLFXG0VKm79O8uK1vdxjNcxwnujgop47/FCnDHh/yGRmLrBi/T8
+         STFylw09UFLO9mbqVRBdxSMsZuxav0KBAHuex1yYBoaj5xKaOPxWQkf5OF2uSRcbVVGr
+         X7/zGzJ4eaAkQUyIWAmIZW/k/9s5qU80z57vAikPjhhKJ1GL+r1TcdKzHMaNecghCM2N
+         IgXInOB1KmrjHvNuuVebJGy2qoZ3+V7STJ73sxiTnzhAhkiR+Po7w4UY1Fzed8VR7duh
+         GQmBW6927UKJWU5+/705DzHHz+N3EcMGdohzsTXBUS/1wMwJvHr7GEv2pJL2xRjvOkC2
+         xJ2g==
+X-Gm-Message-State: APjAAAWajUHThxphDaCjZpiRbCBYK6wYQDEQHZVZWoSujO+Uw0JbRCAC
+        Tz8S/ScSI7qVFl3Kc7dySw0=
+X-Google-Smtp-Source: APXvYqyPlo6A/2anGMn9odETNKUmUN3DtimATDHq05U8OR2czkMBBNhG97e69o3fBqO48PRYc6inrg==
+X-Received: by 2002:aa7:8e13:: with SMTP id c19mr8741487pfr.227.1578537830015;
+        Wed, 08 Jan 2020 18:43:50 -0800 (PST)
+Received: from [192.168.1.60] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id r2sm4876361pgv.16.2020.01.08.18.43.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 18:43:49 -0800 (PST)
+Subject: Re: [PATCH V2 7/7] USB: serial: f81232: Add gpiolib to GPIO device
+To:     Johan Hovold <johan@kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
+ <20190923022449.10952-8-hpeter+linux_kernel@gmail.com>
+ <20191023122208.GW24768@localhost>
+ <ef91b42d-e81d-ecdd-c688-0cb3f0b94906@gmail.com>
+ <20200108144600.GK30908@localhost>
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Message-ID: <2908e99e-ae4e-9385-92af-58381aa119a9@gmail.com>
+Date:   Thu, 9 Jan 2020 10:43:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20200108144600.GK30908@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome
+Hi Johan,
 
-Thanks for your review
+Johan Hovold 於 2020/1/8 下午 10:46 寫道:
+> On Wed, Oct 30, 2019 at 10:00:12AM +0800, Ji-Ze Hong (Peter Hong) wrote:
 
-On 2020/1/7 17:58, Jerome Brunet wrote:
-> 
-> On Fri 20 Dec 2019 at 10:16, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG. Compared to AXG,
->> Drive strength feature is newly added in A1.
+>> We had 2 type about GPIO pins, MODEx_y & GPIOxx. All MODEx_y & GPIOxx
+>> are GPIOs and can be controlled by GPIO device, but they had some
+>> difference about usage.
+>> 	MODEx_y:
+>> 		1. 3 pins(x: 0/1/2) can be access by UART port y.
+>> 		2. Used to control UART's transceiver normally, but it
+>> 		   also can be configure as GPIO when UART disabled by
+>> 		   H/W (DTR strap to GND).
+>> 	GPIOxx:
+>> 		1. Access only by GPIO device.
 >>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>
->> ---
->> This patch depends on A1 clock patchset at [0][3]
->>
->> Changes since v1 at [1]:
->> -change reg length to 0x20
->> -assign i2c bus alias in dts file
->> -add new feature note compared to AXG in changelog
->>
->> Changes since v2 at [2]:
->> -remove the dependence the commit description
->> -remove i2c alias in dtsi
->> -reorder the i2c nodes
->> -reorder the i2c pins
->>
->> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
->> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
->> [2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
->> [3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
->> ---
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
->>   1 file changed, 142 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..1542eeee699d 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -117,6 +117,16 @@
->>   				};
->>   			};
->>   
->> +			i2c0: i2c@1400 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x1400 0x0 0x20>;
->> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
->> +				status = "disabled";
->> +			};
->> +
->>   			uart_AO: serial@1c00 {
->>   				compatible = "amlogic,meson-gx-uart",
->>   					     "amlogic,meson-ao-uart";
->> @@ -136,6 +146,36 @@
->>   				clock-names = "xtal", "pclk", "baud";
->>   				status = "disabled";
->>   			};
->> +
->> +			i2c1: i2c@5c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x5c00 0x0 0x20>;
->> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c2: i2c@6800 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6800 0x0 0x20>;
->> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c3: i2c@6c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6c00 0x0 0x20>;
->> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
->> +				status = "disabled";
->> +			};
->>   		};
->>   
->>   		gic: interrupt-controller@ff901000 {
->> @@ -171,3 +211,105 @@
->>   		#clock-cells = <0>;
->>   	};
->>   };
->> +
->> +&periphs_pinctrl {
+>> The series patch only support RS233 mode for all serial port, So we'll
+>> direct set all MODEx_y to (0/0/1) for our demo board for default. If
+>> user really want to use the pin, we had provide the gpiolib with GPIO
+>> device, but we'll recommend user to use GPIOxy first.
 > 
-> Why is this not directly under the periphs_pinctrl node ?
+> Do you mean that you'd need to register a separate gpio chip per port in
+> order to expose an interface for changing the MODEx_y pins for an
+> enabled UART? Or can you do that through the "global" gpio device?
+
+No, I still implement the gpiolib in GPIO Device. Sorry for bad
+describe.
+
+>> Is any suggest about this ? Could I maintain this for this series patch?
 > 
-OK, I will put them under periphs_pinctrl node
->> +	i2c0_f9_pins:i2c0-f9 {
->                       ^
->                       Missing space here. Same for the other nodes
-> 
->> +		mux {
->> +			groups = "i2c0_sck_f9",
->> +				"i2c0_sda_f10";
->> +			function = "i2c0";
->> +			bias-pull-up;
-> 
-> Most device we have seen so far have the pull-up on the PCB.
-> 
-> If you look at the other dts file, the i2c pad bias is disabled. If the
-> pull-up resistor is missing on the PCB, this setting can overloaded in
-> the board dt.
-> 
-> Bottom line please put "bias-disable" or justify why a1 is different
-> from the SoC.
-Yes, there is pull-up resistor on PCB, I will replace it as
-'bias-disable'
-> 
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c0_f11_pins:i2c0-f11 {
->> +		mux {
->> +			groups = "i2c0_sck_f11",
->> +				"i2c0_sda_f12";
->> +			function = "i2c0";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c1_a_pins:i2c1-a {
->> +		mux {
->> +			groups = "i2c1_sck_a",
->> +				"i2c1_sda_a";
->> +			function = "i2c1";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c1_x_pins:i2c1-x {
->> +		mux {
->> +			groups = "i2c1_sck_x",
->> +				"i2c1_sda_x";
->> +			function = "i2c1";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_a4_pins:i2c2-a4 {
->> +		mux {
->> +			groups = "i2c2_sck_a4",
->> +				"i2c2_sda_a5";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_a8_pins:i2c2-a8 {
->> +		mux {
->> +			groups = "i2c2_sck_a8",
->> +				"i2c2_sda_a9";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_x0_pins:i2c2-x0 {
->> +		mux {
->> +			groups = "i2c2_sck_x0",
->> +				"i2c2_sda_x1";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_x15_pins:i2c2-x15 {
->> +		mux {
->> +			groups = "i2c2_sck_x15",
->> +				"i2c2_sda_x16";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c3_f_pins:i2c3-f {
->> +		mux {
->> +			groups = "i2c3_sck_f",
->> +				"i2c3_sda_f";
->> +			function = "i2c3";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c3_x_pins:i2c3-x {
->> +		mux {
->> +			groups = "i2c3_sck_x",
->> +				"i2c3_sda_x";
->> +			function = "i2c3";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +};
-> 
-> .
-> 
+> I understood from your other mail that the gpio device would not be able
+> to control the pins of an enabled port. In either case, I think you need
+> to refuse a request for a pin that's already in use by the corresponding
+> port.
+
+OK, I'll change the code as previous mail as following:
+
+I can read the UART enable state from GPIO Device, so I can do when the
+GPIO is associated with UART enabled, change it as output only otherwise
+can be set to input/output.
+
+> Also is there a way to determine the number of available pins by
+> detecting the chip/package type? I'm assuming not all 36 pins are always
+> accessible?
+
+Yes, we had register to get package type, I'll add UART enable & package
+type to determinate final GPIO pin out.
+
+-- 
+With Best Regards,
+Peter Hong
