@@ -2,84 +2,446 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_RED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90EDC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA44C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3D320842
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD4820721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dV4vHbO3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QkFCL5z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbgAITc6 (ORCPT
+        id S1731140AbgAITgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:32:58 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43701 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbgAITc6 (ORCPT
+        Thu, 9 Jan 2020 14:36:05 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54225 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730998AbgAITf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:32:58 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so8393885oth.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:32:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=15Z89BEz3MyoZ6v5HIMpK8EJU4eXUmvvtENLzMT47po=;
-        b=dV4vHbO3yJC1YETzxVL8c6ZqJvPK9/XcK4jmRax+j7rcA7nRe6Tg5p7OfTgAMVhZxj
-         e5Z5Wz8HFFnS/PXc5hVscrwiMThqKeZZ1RlE97vx/ne+T3jFL6xiKrKa7+wn04fW3D8P
-         4HxzwPNHX2cV8MwihYbe3NTfU6UU+isJM2TQyQx0nsSf8MLY4U00rc5+n0z0LxSifQ49
-         lpG9eFHrMCgEfgnF+hQ9i4kDziMqVe8WLeI9l/ve93HrMOh1zJ737sTQeqUZ/ZA0uVYI
-         iD/QwSOGX7LLSmYE2fJ9xkCp4ULxjKOvURfi9psbijceK5Bpevv4hGaK622MC6wVDylv
-         X3EQ==
+        Thu, 9 Jan 2020 14:35:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578598555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lMFm0Z3S/Vk1hYMg4RMql2dW6vnWqvhCym5yaQwkrkg=;
+        b=QkFCL5z6g//qlZF5qsh7MXAd+I1PM/xzequWii+YYE87h6OnXldXBQcs1uaBDewADpSSsv
+        IMuSpba/j2/v/TbwZIg7vcKvkl6jQ+aWeLMjgB5baa/2USWwXegiTIRYE2CQi/OsQpX4Az
+        aln+LrhTnAg2ohdM52kJsmPAgWgmYjw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-nu0ncsolMg248GadKPEPkA-1; Thu, 09 Jan 2020 14:35:54 -0500
+X-MC-Unique: nu0ncsolMg248GadKPEPkA-1
+Received: by mail-qt1-f199.google.com with SMTP id x8so4865745qtq.14
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:35:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=15Z89BEz3MyoZ6v5HIMpK8EJU4eXUmvvtENLzMT47po=;
-        b=hEJWIumiYiHDQVwkaA71YKWXh/1WIfDn5maMWOEUJozzfNhKoeiD14NaDLpUwgC5MA
-         6DlxAx/XqfsKw1Jcb5qkXDed/e6Z7f6JLYlnnBjfQWyI9HzVKxZNIic2he+EyAn3Ueo9
-         MmTlCDnRAtlMsdLYJ6X7IgqyQi4/wi5mu4tlJud41i7ar0vXRUxiX2sMjQm0wfudj3i5
-         HMux50u/39wCSh5v0zFPzPCweksWkqGhQxYKTB7RyMDPaGexWqrf1lMh2X6gHXaIC6jv
-         eCfXnHPFvDQCbu/bia7ghtI/RKkoUaJ9cO0kjZqq0L187soqkWZztR2WBcw6B9yz5576
-         k3WQ==
-X-Gm-Message-State: APjAAAVAnFfIw8gp7gp/bXBjyPRDKC4E2DfgycSj1v1iIZwRISSGoYDq
-        00MkBXvFHIRaW/v4HFtPa5otwiUN9w3Jv4oIH540oA==
-X-Google-Smtp-Source: APXvYqwP3eFYrodvtdZcfAfAqu8xqamJQA9sIs1h0qRh427F+yfPvleK68+NS8Lx2t66bO7knqd07EAla5mtgaQWbio=
-X-Received: by 2002:a9d:4e99:: with SMTP id v25mr10115311otk.363.1578598377813;
- Thu, 09 Jan 2020 11:32:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lMFm0Z3S/Vk1hYMg4RMql2dW6vnWqvhCym5yaQwkrkg=;
+        b=MkagLPYXJ06UXlNIcj5gEYNxxtnKFbQKOWrG0hKW2AmZ4GZV4tfyuPw2Ojhh3cuQ08
+         dCxxKQU1bTVlzPBgWW/HbSlOQ53YR8kRMVsVuo9qQJyVlmllQ0rSfO39IawpneZxn9Ni
+         dXUfAy70NIm9S4oG4b+XaX/a277MAkE3cyHUuAGLaTOtBCGzv22vAI+8AwJSzLb6L/DY
+         kH9WVk/2YXyOkczgiXVfJWFrxgaJDK6v/AEYgbJZ90vPOxhRXko/oAL0Orma38/ff4Sl
+         ygNxGp6nc928L8raD3kIkwlFywkjVY6BZ2M/t7sQZpVBkMVrb1jiOSxlWax6gPYu/xEm
+         PFEA==
+X-Gm-Message-State: APjAAAUgkx4uCaiouiL7qm9kTqIVC9IlB5FDj0yGbsCiwxtW3/Bb7R0q
+        b5yMDCzPKwxxMPf8CPt/rwn7uFQcdlLoDz8kU46HalouBOlhUXDl+q0Lu+GbLUfltX4ZDYBkaeJ
+        LcPf43tuzbjuXPoSONpKxhnTP
+X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr10373609qvi.63.1578598553475;
+        Thu, 09 Jan 2020 11:35:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqylgt6lQU8eg9lz0eLJmfbRkNFIoLHXT/O2TpWNI7jmJbPQowwPmWnWHdaZiDRJxzlUx6Ugiw==
+X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr10373583qvi.63.1578598552992;
+        Thu, 09 Jan 2020 11:35:52 -0800 (PST)
+Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
+        by smtp.gmail.com with ESMTPSA id w29sm3981370qtc.72.2020.01.09.11.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 11:35:52 -0800 (PST)
+Date:   Thu, 9 Jan 2020 14:35:46 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
+ tracking
+Message-ID: <20200109141634-mutt-send-email-mst@kernel.org>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-13-peterx@redhat.com>
+ <20200109110110-mutt-send-email-mst@kernel.org>
+ <20200109191514.GD36997@xz-x1>
 MIME-Version: 1.0
-References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
- <157835764298.1456824.224151767362114611.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20200107040415.GA19309@dhcp-128-65.nay.redhat.com> <CAPcyv4g_W4PoH6Wfj_SDGzGLpNLwxtoeGP7uwpzVMS4JWbXSTg@mail.gmail.com>
- <20200107051919.GC19080@dhcp-128-65.nay.redhat.com> <CAKv+Gu-djB=3zTxjEbyjJXXpw=8NE6YA82hMW-JYyAQ2TSywtQ@mail.gmail.com>
- <CAPcyv4ixPchDOet=ztRQxLMgnJf9DauSFgBs3+TEoaua7R1s_Q@mail.gmail.com> <CAKv+Gu8W_EyMNAtDG6zK+dKRcaUEzeJ3fmPAiASdqatD3ewQJQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8W_EyMNAtDG6zK+dKRcaUEzeJ3fmPAiASdqatD3ewQJQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 9 Jan 2020 11:32:46 -0800
-Message-ID: <CAPcyv4gjLaDgV0rVttrWHivkzPJ+-OesT3srNomENmT8_FhmFQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] efi: Fix handling of multiple efi_fake_mem= entries
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109191514.GD36997@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 1:36 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-[..]
-> If it's just for the comment, I can just slap that on, as I already
-> queued the patches with the fixes tags dropped.
+On Thu, Jan 09, 2020 at 02:15:14PM -0500, Peter Xu wrote:
+> On Thu, Jan 09, 2020 at 11:29:28AM -0500, Michael S. Tsirkin wrote:
+> > On Thu, Jan 09, 2020 at 09:57:20AM -0500, Peter Xu wrote:
+> > > This patch is heavily based on previous work from Lei Cao
+> > > <lei.cao@stratus.com> and Paolo Bonzini <pbonzini@redhat.com>. [1]
+> > > 
+> > > KVM currently uses large bitmaps to track dirty memory.  These bitmaps
+> > > are copied to userspace when userspace queries KVM for its dirty page
+> > > information.  The use of bitmaps is mostly sufficient for live
+> > > migration, as large parts of memory are be dirtied from one log-dirty
+> > > pass to another.  However, in a checkpointing system, the number of
+> > > dirty pages is small and in fact it is often bounded---the VM is
+> > > paused when it has dirtied a pre-defined number of pages. Traversing a
+> > > large, sparsely populated bitmap to find set bits is time-consuming,
+> > > as is copying the bitmap to user-space.
+> > > 
+> > > A similar issue will be there for live migration when the guest memory
+> > > is huge while the page dirty procedure is trivial.  In that case for
+> > > each dirty sync we need to pull the whole dirty bitmap to userspace
+> > > and analyse every bit even if it's mostly zeros.
+> > > 
+> > > The preferred data structure for above scenarios is a dense list of
+> > > guest frame numbers (GFN).
+> > 
+> > No longer, this uses an array of structs.
+> 
+> (IMHO it's more or less a wording thing, because it's still an array
+>  of GFNs behind it...)
+> 
+> [...]
+> 
+> > > +Dirty GFNs (Guest Frame Numbers) are stored in the dirty_gfns array.
+> > > +For each of the dirty entry it's defined as:
+> > > +
+> > > +struct kvm_dirty_gfn {
+> > > +        __u32 pad;
+> > 
+> > How about sticking a length here?
+> > This way huge pages can be dirtied in one go.
+> 
+> As we've discussed previously, current KVM tracks dirty in 4K page
+> only, so it seems to be something that is not easily covered in this
+> series.
+> 
+> We probably need to justify on having KVM to track huge pages first,
+> or at least a trend that we're going to do that, then we can properly
+> reserve it here.
+> 
+> > 
+> > > +        __u32 slot; /* as_id | slot_id */
+> > > +        __u64 offset;
+> > > +};
+> > > +
+> > > +Most of the ring structure is used by KVM internally, while only the
+> > > +indices are exposed to userspace:
+> > > +
+> > > +struct kvm_dirty_ring_indices {
+> > > +	__u32 avail_index; /* set by kernel */
+> > > +	__u32 fetch_index; /* set by userspace */
+> > > +};
+> > > +
+> > > +The two indices in the ring buffer are free running counters.
+> > > +
+> > > +Userspace calls KVM_ENABLE_CAP ioctl right after KVM_CREATE_VM ioctl
+> > > +to enable this capability for the new guest and set the size of the
+> > > +rings.  It is only allowed before creating any vCPU, and the size of
+> > > +the ring must be a power of two.
+> > 
+> > 
+> > I know index design is popular, but testing with virtio showed
+> > that it's better to just have a flags field marking
+> > an entry as valid. In particular this gets rid of the
+> > running counters and power of two limitations.
+> > It also removes the need for a separate index page, which is nice.
+> 
+> Firstly, note that the separate index page has already been dropped
+> since V2, so we don't need to worry on that.
 
-That would be great. Thanks Ard!
+changelog would be nice.
+So now, how does userspace tell kvm it's done with the ring?
+
+> Regarding dropping the indices: I feel like it can be done, though we
+> probably need two extra bits for each GFN entry, for example:
+> 
+>   - Bit 0 of the GFN address to show whether this is a valid publish
+>     of dirty gfn
+> 
+>   - Bit 1 of the GFN address to show whether this is collected by the
+>     user
+
+
+I wonder whether you will end up reinventing virtio.
+You are already pretty close with avail/used bits in flags.
+
+
+
+> We can also use the padding field, but just want to show the idea
+> first.
+> 
+> Then for each GFN we can go through state changes like this (things
+> like "00b" stands for "bit1 bit0" values):
+> 
+>   00b (invalid GFN) ->
+>     01b (valid gfn published by kernel, which is dirty) ->
+>       10b (gfn dirty page collected by userspace) ->
+>         00b (gfn reset by kernel, so goes back to invalid gfn)
+> 
+> And we should always guarantee that both the userspace and KVM walks
+> the GFN array in a linear manner, for example, KVM must publish a new
+> GFN with bit 1 set right after the previous publish of GFN.  Vice
+> versa to the userspace when it collects the dirty GFN and mark bit 2.
+> 
+> Michael, do you mean something like this?
+> 
+> I think it should work logically, however IIUC it can expose more
+> security risks, say, dirty ring is different from virtio in that
+> userspace is not trusted,
+
+In what sense?
+
+> while for virtio, both sides (hypervisor,
+> and the guest driver) are trusted.
+
+What gave you the impression guest is trusted in virtio?
+
+
+>  Above means we need to do these to
+> change to the new design:
+> 
+>   - Allow the GFN array to be mapped as writable by userspace (so that
+>     userspace can publish bit 2),
+> 
+>   - The userspace must be trusted to follow the design (just imagine
+>     what if the userspace overwrites a GFN when it publishes bit 2
+>     over a valid dirty gfn entry?  KVM could wrongly unprotect a page
+>     for the guest...).
+
+You mean protect, right?  So what?
+
+> While if we use the indices, we restrict the userspace to only be able
+> to write to one index only (which is the reset_index).  That's all it
+> can do to mess things up (and it could never as long as we properly
+> validate the reset_index when read, which only happens during
+> KVM_RESET_DIRTY_RINGS and is very rare).  From that pov, it seems the
+> indices solution still has its benefits.
+
+So if you mess up index how is this different?
+
+I agree RO page kind of feels safer generally though.
+
+I will have to re-read how does the ring works though,
+my comments were based on the old assumption of mmaped
+page with indices.
+
+
+
+> > 
+> > 
+> > 
+> > >  The larger the ring buffer, the less
+> > > +likely the ring is full and the VM is forced to exit to userspace. The
+> > > +optimal size depends on the workload, but it is recommended that it be
+> > > +at least 64 KiB (4096 entries).
+> > 
+> > Where's this number coming from? Given you have indices as well,
+> > 4K size rings is likely to cause cache contention.
+> 
+> I think we've had some similar discussion in previous versions on the
+> size of ring.  Again imho it's really something that may not have a
+> direct clue as long as it's big enough (4K should be).
+> 
+> Regarding to the cache contention: could you explain more?
+
+4K is a whole cache way. 64K 16 ways.  If there's anything else is a hot
+path then you are pushing everything out of cache.  To re-read how do
+indices work so see whether an index is on hot path or not. If yes your
+structure won't fit in L1 cache which is not great.
+
+
+>  Do you
+> have a suggestion on the size of ring instead considering the issue?
+> 
+> [...]
+
+I'll have to re-learn how do things work with indices gone
+from shared memory.
+
+> > > +int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
+> > > +{
+> > > +	u32 cur_slot, next_slot;
+> > > +	u64 cur_offset, next_offset;
+> > > +	unsigned long mask;
+> > > +	u32 fetch;
+> > > +	int count = 0;
+> > > +	struct kvm_dirty_gfn *entry;
+> > > +	struct kvm_dirty_ring_indices *indices = ring->indices;
+> > > +	bool first_round = true;
+> > > +
+> > > +	fetch = READ_ONCE(indices->fetch_index);
+> > 
+> > So this does not work if the data cache is virtually tagged.
+> > Which to the best of my knowledge isn't the case on any
+> > CPU kvm supports. However it might not stay being the
+> > case forever. Worth at least commenting.
+> 
+> This is the read side.  IIUC even if with virtually tagged archs, we
+> should do the flushing on the write side rather than the read side,
+> and that should be enough?
+
+No.
+See e.g.  Documentation/core-api/cachetlb.rst
+
+  ``void flush_dcache_page(struct page *page)``
+
+        Any time the kernel writes to a page cache page, _OR_
+        the kernel is about to read from a page cache page and
+        user space shared/writable mappings of this page potentially
+        exist, this routine is called.
+
+
+> Also, I believe this is the similar question that Jason has asked in
+> V2.  Sorry I should mention this earlier, but I didn't address that in
+> this series because if we need to do so we probably need to do it
+> kvm-wise, rather than only in this series.
+
+You need to document these things.
+
+>  I feel like it's missing
+> probably only because all existing KVM supported archs do not have
+> virtual-tagged caches as you mentioned.
+
+But is that a fact? ARM has such a variety of CPUs,
+I can't really tell. Did you research this to make sure?
+
+> If so, I would prefer if you
+> can allow me to ignore that issue until KVM starts to support such an
+> arch.
+
+Document limitations pls.  Don't ignore them.
+
+> > 
+> > 
+> > > +
+> > > +	/*
+> > > +	 * Note that fetch_index is written by the userspace, which
+> > > +	 * should not be trusted.  If this happens, then it's probably
+> > > +	 * that the userspace has written a wrong fetch_index.
+> > > +	 */
+> > > +	if (fetch - ring->reset_index > ring->size)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (fetch == ring->reset_index)
+> > > +		return 0;
+> > > +
+> > > +	/* This is only needed to make compilers happy */
+> > > +	cur_slot = cur_offset = mask = 0;
+> > > +	while (ring->reset_index != fetch) {
+> > > +		entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
+> > > +		next_slot = READ_ONCE(entry->slot);
+> > > +		next_offset = READ_ONCE(entry->offset);
+> > 
+> > What is this READ_ONCE doing? Entries are only written by kernel
+> > and it's under lock.
+> 
+> The entries are written in kvm_dirty_ring_push() where there should
+> have no lock (there's one wmb() though to guarantee ordering of these
+> and the index update).
+> 
+> With the wmb(), the write side should guarantee to make it to memory.
+> For the read side here, I think it's still good to have it to make
+> sure we read from memory?
+> 
+> > 
+> > > +		ring->reset_index++;
+> > > +		count++;
+> > > +		/*
+> > > +		 * Try to coalesce the reset operations when the guest is
+> > > +		 * scanning pages in the same slot.
+> > > +		 */
+> > > +		if (!first_round && next_slot == cur_slot) {
+> > > +			s64 delta = next_offset - cur_offset;
+> > > +
+> > > +			if (delta >= 0 && delta < BITS_PER_LONG) {
+> > > +				mask |= 1ull << delta;
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			/* Backwards visit, careful about overflows!  */
+> > > +			if (delta > -BITS_PER_LONG && delta < 0 &&
+> > > +			    (mask << -delta >> -delta) == mask) {
+> > > +				cur_offset = next_offset;
+> > > +				mask = (mask << -delta) | 1;
+> > > +				continue;
+> > > +			}
+> > > +		}
+> > 
+> > Well how important is this logic? Because it will not be
+> > too effective on an SMP system, so don't you need a per-cpu ring?
+> 
+> It's my fault to have omit the high-level design in the cover letter,
+> but we do have per-vcpu ring now.  Actually that's what we only have
+> (we dropped the per-vm ring already) so ring access does not need lock
+> any more.
+> 
+> This logic is good because kvm_reset_dirty_gfn, especially inside that
+> there's kvm_arch_mmu_enable_log_dirty_pt_masked() that supports masks,
+> so it would be good to do the reset for continuous pages (or page
+> that's close enough) in a single shot.
+> 
+> > 
+> > 
+> > 
+> > > +		kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+> > > +		cur_slot = next_slot;
+> > > +		cur_offset = next_offset;
+> > > +		mask = 1;
+> > > +		first_round = false;
+> > > +	}
+> > > +	kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+> > > +
+> > > +	trace_kvm_dirty_ring_reset(ring);
+> > > +
+> > > +	return count;
+> > > +}
+> > > +
+> > > +void kvm_dirty_ring_push(struct kvm_dirty_ring *ring, u32 slot, u64 offset)
+> > > +{
+> > > +	struct kvm_dirty_gfn *entry;
+> > > +	struct kvm_dirty_ring_indices *indices = ring->indices;
+> > > +
+> > > +	/* It should never get full */
+> > > +	WARN_ON_ONCE(kvm_dirty_ring_full(ring));
+> > > +
+> > > +	entry = &ring->dirty_gfns[ring->dirty_index & (ring->size - 1)];
+> > > +	entry->slot = slot;
+> > > +	entry->offset = offset;
+> > > +	/*
+> > > +	 * Make sure the data is filled in before we publish this to
+> > > +	 * the userspace program.  There's no paired kernel-side reader.
+> > > +	 */
+> > > +	smp_wmb();
+> > > +	ring->dirty_index++;
+> > 
+> > 
+> > Do I understand it correctly that the ring is shared between CPUs?
+> > If so I don't understand why it's safe for SMP guests.
+> > Don't you need atomics or locking?
+> 
+> No, it's per-vcpu.
+> 
+> Thanks,
+> 
+> -- 
+> Peter Xu
+
