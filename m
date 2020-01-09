@@ -2,117 +2,94 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA848C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD89C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8910220721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imm5wHyc"
+	by mail.kernel.org (Postfix) with ESMTP id 88D5C2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgAIVFL (ORCPT
+        id S1727995AbgAIVFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:05:11 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34180 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgAIVFL (ORCPT
+        Thu, 9 Jan 2020 16:05:38 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34108 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIVFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:05:11 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r11so3806815pgf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:05:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pg5x4483JWBqI1Bbmsf56qLvZ2BmXpfD9hK5FoGuIvo=;
-        b=Imm5wHycOANnogJCYNNwbbJaqTm625dEYfX4VQOjq9pFSv916dng3G49QQbwyY2BzT
-         Grevd5V6/Jybn20m5HflcBraYzK8f5XW3mm8/SWakJYJ17fVJmbAq0uB+52gjNOnHewx
-         9TpVqOLinrbAovJQDb9QIUh3eGag/TD7cdaWC/l+52We0/XGgSukM5KOX7D2KzsvhzNs
-         9kY1xSyF9/rMUBct72PgUAINShfpIj8yi1ODaNxbTGGUUWS3V+Ea9RuFT6hAFspLG63P
-         Sp3TP1LZE4pvhQYkNr0Q4oRD+wuK3ASAG0j5Xmfh4HMGHlGjw+JxVk71gPaACsFdFq8I
-         9wHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pg5x4483JWBqI1Bbmsf56qLvZ2BmXpfD9hK5FoGuIvo=;
-        b=ZgG+lyq/IWUtQuWtHkBg31PPlz4YTMxw5N1pknCMEp4hAEgkuqXs0m3mdyc1FBCgDd
-         sYK6vejJ4QlKNy+NZliWFGk1JwfN/lSwI3JHgIPK/LfTjWk2BKR32ewlkCiam85adSTT
-         HRRjFVoYFfOAos0MRQAl0aGQ+Y/nSTbexq4ZWmRaj3LhQ9O+cFYn6S/bggwRyAGG6hKi
-         X3dewEM3p8hNJjCUDL4kpFhKmqbJFPVZvJZ28fzER2eCg/FUCceP8uSKpx+gru//lzgi
-         Zd/dgtzoPrPaDqj7vOOnB3r39bz9ggneNaMkWbx+9mjlUYEWp5MGj4wvLfEcIYes9AxE
-         U9rw==
-X-Gm-Message-State: APjAAAWZZNlxCfASQ59TQPRMOj/JwUexU2mdkjWIRSMIjfG1k01tF88l
-        DrArLf3dJ5m8LX37swbrB8R9k7Cldy9h0sHMitc=
-X-Google-Smtp-Source: APXvYqyOUOiQvWbT7Mn0s0sPosqtwKuh6AnBMFpJdGNTkY1X/QC3QN6ZJ+HiH8AYFddn/3ay2Z5mpcF+px2qqS4QxD4=
-X-Received: by 2002:aa7:9474:: with SMTP id t20mr507237pfq.241.1578603910412;
- Thu, 09 Jan 2020 13:05:10 -0800 (PST)
+        Thu, 9 Jan 2020 16:05:38 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E2A021C25CE; Thu,  9 Jan 2020 22:05:36 +0100 (CET)
+Date:   Thu, 9 Jan 2020 22:05:36 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: OOM killer not nearly agressive enough?
+Message-ID: <20200109210535.GB1553@duo.ucw.cz>
+References: <20200107204412.GA29562@amd>
+ <20200109115633.GR4951@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200109103601.45929-1-andriy.shevchenko@linux.intel.com>
- <20200109103601.45929-2-andriy.shevchenko@linux.intel.com> <20200109120814.27198f300bbe209cdc411fc6@linux-foundation.org>
-In-Reply-To: <20200109120814.27198f300bbe209cdc411fc6@linux-foundation.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jan 2020 23:04:59 +0200
-Message-ID: <CAHp75Vd6JLjPfrA4f2ugwfiZS3fBSxN48ja7OjnZ4s_pqWJZng@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] lib/test_bitmap: Fix address space when test user buffer
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
+Content-Disposition: inline
+In-Reply-To: <20200109115633.GR4951@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:53 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Thu,  9 Jan 2020 12:36:01 +0200 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
->
-> > Force address space to avoid the following warning:
-> >
-> > lib/test_bitmap.c:461:53: warning: incorrect type in argument 1 (different address spaces)
-> > lib/test_bitmap.c:461:53:    expected char const [noderef] <asn:1> *ubuf
-> > lib/test_bitmap.c:461:53:    got char const *in
->
-> We did this in
->
-> commit 17b6753ff08bc47f50da09f5185849172c598315
-> Author:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> AuthorDate: Wed Dec 4 16:53:06 2019 -0800
-> Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-> CommitDate: Wed Dec 4 19:44:14 2019 -0800
->
->     lib/test_bitmap: force argument of bitmap_parselist_user() to proper address space
 
-This is for "parseLIST", while new patch for "parse".
+--p4qYPpj5QlsIQJ0K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> > --- a/lib/test_bitmap.c
-> > +++ b/lib/test_bitmap.c
-> > @@ -458,7 +458,8 @@ static void __init __test_bitmap_parse(int is_user)
-> >
-> >                       set_fs(KERNEL_DS);
-> >                       time = ktime_get();
-> > -                     err = bitmap_parse_user(test.in, len, bmap, test.nbits);
-> > +                     err = bitmap_parse_user((__force const char __user *)test.in, len,
-> > +                                             bmap, test.nbits);
-> >                       time = ktime_get() - time;
-> >                       set_fs(orig_fs);
-> >               } else {
->
-> Except your tree has `test' where mainline has `ptest'.  I'm not sure
-> what has happened here?
->
+On Thu 2020-01-09 12:56:33, Michal Hocko wrote:
+> On Tue 07-01-20 21:44:12, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > I updated my userspace to x86-64, and now chromium likes to eat all
+> > the memory and bring the system to standstill.
+> >=20
+> > Unfortunately, OOM killer does not react:
+> >=20
+> > I'm now running "ps aux", and it prints one line every 20 seconds or
+> > more. Do we agree that is "unusable" system? I attempted to do kill
+> > from other session.
+>=20
+> Does sysrq+f help?
+>=20
+> > Do we agree that OOM killer should have reacted way sooner?
+>=20
+> This is impossible to answer without knowing what was going on at the
+> time. Was the system threshing over page cache/swap? In other words, is
+> the system completely out of memory or refaulting the working set all
+> the time because it doesn't fit into memory?
 
+What statistics are best to collect? Would the memory lines from top
+do the trick? I normally have gkrellm running, but I found its results
+hard to interpret.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--p4qYPpj5QlsIQJ0K
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXheVnwAKCRAw5/Bqldv6
+8ltpAJ96WOJA8wlWQlNnrSUmaHkimRk6dwCdHRfTvxQxVf+vUV01MoDCPPpBrWw=
+=3Jem
+-----END PGP SIGNATURE-----
+
+--p4qYPpj5QlsIQJ0K--
