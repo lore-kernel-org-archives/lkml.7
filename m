@@ -2,177 +2,125 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA8EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E757FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0701920661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEAD20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG4db/Ul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbgAIQKT convert rfc822-to-8bit (ORCPT
+        id S1732132AbgAIQNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:10:19 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:39659 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387494AbgAIQKR (ORCPT
+        Thu, 9 Jan 2020 11:13:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42678 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbgAIQNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:10:17 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3A6C620017;
-        Thu,  9 Jan 2020 16:10:15 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 17:10:14 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH 3/3] mtd: rawnand: brcmnand: Add support for flash-edu
- for dma transfers
-Message-ID: <20200109171014.527e6d5d@xps13>
-In-Reply-To: <20191120182153.29732-3-kdasu.kdev@gmail.com>
-References: <20191120182153.29732-1-kdasu.kdev@gmail.com>
-        <20191120182153.29732-3-kdasu.kdev@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 11:13:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q6so7960502wro.9;
+        Thu, 09 Jan 2020 08:13:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6yj/7YzjyQLNXZxnms2P7cgL7F7rs/s3UQWjrOh43+M=;
+        b=kG4db/UlXTZTtrXORtrdw0qjW5GSB/oI1yoHqtyCKe5w1V0xdEvFji7JXxeNi7/9gq
+         WKknDUKq0fWfzzKlsNbDxJzuMB2ddozV8I4blStX/mY6liPmlKZa58s4/4gLaEJZ3wxi
+         K9hNxynYWjq0bZxBYcTQ7Nar+MnPQC1lFAip5OaqxoseMEwEpqgblyO2eXU3exoQ55vj
+         op0cQq6WM3ZI0stiQdTw9X0s49/ZWg9xhlzXa6EiPRzCtmbHVyAetl25FyCXLWA2utU/
+         5HGdKD0gfOz3Bnv0GAfYKf7X9gkj5ortU4/AeRXtnDx+aIa/4KVUNv7AZlcpvbneaqtl
+         MVbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6yj/7YzjyQLNXZxnms2P7cgL7F7rs/s3UQWjrOh43+M=;
+        b=aUd4mrU69zenWgIlh2odpfs2L7DvyTN20LKnElxfikS/FDzkKsfpEC6HTnQQGMSi2e
+         B4zc82pzbFeU2+eruIbjHU1eFEd9+VECqKdr0FyNh526nYpAUAlD4kCKr4Yi7jDwT5oK
+         8TsKOFX7NwgI96itJirJxcYBaZwgbw3ARD0JIVPGL3U/rqisI1FIh4qg5JPtMr9KxjPb
+         QdUUoKJPDqOzG7//HqAdqV+YIGKx2/bKBdx3Vqs6Rr+TXLdq2WsaLDj8cRvFnMWrtJKz
+         X9lx98kL1QAcoBL8ITGT4Oe2iEN8vGUXwZz5CvF3L3dZSZXMNV8/D/STVkn4HfbvpQ/N
+         4BQg==
+X-Gm-Message-State: APjAAAUBmDy1h/BVNI1/0AIT4ouXXNN+HsPoP9HlFPjL5Tsk2+HE4BF8
+        cj6wxCOJqLiag/7G1mlM87JAIH7OSwSzROQ/
+X-Google-Smtp-Source: APXvYqz/XsB+7WKpfDYPN9KlZHkXtMjU9SVQU7TYvChK4c06DMBhMUujcTYbpkxMDPbZ8CFxvnbACQ==
+X-Received: by 2002:adf:eb8e:: with SMTP id t14mr11737489wrn.384.1578586383105;
+        Thu, 09 Jan 2020 08:13:03 -0800 (PST)
+Received: from andrea ([159.253.226.36])
+        by smtp.gmail.com with ESMTPSA id z6sm8467573wrw.36.2020.01.09.08.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:13:02 -0800 (PST)
+Date:   Thu, 9 Jan 2020 17:12:57 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH 0/2] clocksource/hyperv: Miscellaneous changes
+Message-ID: <20200109161257.GA16332@andrea>
+References: <20191210093054.32230-1-parri.andrea@gmail.com>
+ <20200108133344.GA8179@andrea>
+ <7069f7ce-4ff7-3569-0d7e-615d1399283a@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7069f7ce-4ff7-3569-0d7e-615d1399283a@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
-
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Wed, 20 Nov 2019 13:20:59
--0500:
-
-> Legacy mips soc platforms that have controller v5.0 and 6.0 use
-> flash-edu block for dma transfers. This change adds support for
-> nand dma transfers using the EDU block.
+On Thu, Jan 09, 2020 at 12:40:04PM +0100, Daniel Lezcano wrote:
+> On 08/01/2020 14:33, Andrea Parri wrote:
+> > Thomas, Daniel,
+> > 
+> > On Tue, Dec 10, 2019 at 10:30:52AM +0100, Andrea Parri wrote:
+> >> Provide some refactoring and adjustments to the Hyper-V clocksources
+> >> code.  Applies to -rc1 plus Boqun's:
+> >>
+> >>   https://lkml.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
+> >>
+> >> Thanks,
+> >>   Andrea
+> >>
+> >> Andrea Parri (2):
+> >>   clocksource/hyperv: Untangle stimers and timesync from clocksources
+> >>   clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
+> > 
+> > I'm wondering if you could route these patches via tip; for reference,
+> > 
+> >    https://lkml.kernel.org/r/20191210093054.32230-1-parri.andrea@gmail.com
+> > 
+> > Both patches got Reviewed-by: Michael (even though I can't find his replies
+> > on lore ATM).
+> > 
+> > Also, I realized that this series has a minor conflict with Dexuan's:
+> > 
+> >   https://lkml.kernel.org/r/1578350617-130430-1-git-send-email-decui@microsoft.com
+> > 
+> > (added to Cc:); please let me know if a rebase/resend is needed.
 > 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> Yes please based on:
+> 
+> https://git.linaro.org/people/daniel.lezcano/linux.git timers/drivers/next
 
-I don't have the patch 2/3 in my mailbox :-/ Can you please resend with
-the right numbering or Cc myself on the 2nd?
+Done: https://lkml.kernel.org/r/20200109160650.16150-1-parri.andrea@gmail.com
 
-Otherwise, minor comments below :)
+Thanks Daniel.
 
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 269 ++++++++++++++++++++++-
->  1 file changed, 263 insertions(+), 6 deletions(-)
-
-[...]
-
-> +/* edu irq */
-> +static irqreturn_t brcmnand_edu_irq(int irq, void *data)
-> +{
-> +	struct brcmnand_controller *ctrl = data;
-> +
-> +	if (ctrl->edu_count) {
-> +		ctrl->edu_count--;
-> +		while (!edu_readl(ctrl, EDU_DONE))
-> +			udelay(1);
-> +		edu_writel(ctrl, EDU_DONE, 0);
-> +		(void)edu_readl(ctrl, EDU_DONE);
-
-Why this cast? (and all the others)
-
-> +	}
-> +
-> +	if (ctrl->edu_count) {
-> +		ctrl->edu_dram_addr += FC_BYTES;
-> +		ctrl->edu_ext_addr += FC_BYTES;
-> +
-> +		edu_writel(ctrl, EDU_DRAM_ADDR, (u32)ctrl->edu_dram_addr);
-> +		(void)edu_readl(ctrl, EDU_DRAM_ADDR);
-> +		edu_writel(ctrl, EDU_EXT_ADDR, ctrl->edu_ext_addr);
-> +		(void)edu_readl(ctrl, EDU_EXT_ADDR);
-
-[...]
-
->  
-> @@ -2561,6 +2767,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  
->  	init_completion(&ctrl->done);
->  	init_completion(&ctrl->dma_done);
-> +	init_completion(&ctrl->edu_done);
->  	nand_controller_init(&ctrl->controller);
->  	ctrl->controller.ops = &brcmnand_controller_ops;
->  	INIT_LIST_HEAD(&ctrl->host_list);
-> @@ -2650,6 +2857,56 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  		dev_info(dev, "enabling FLASH_DMA\n");
->  	}
->  
-> +	/* use EDU DMA only no FLASH_DMA present */
-> +	if (has_flash_dma(ctrl))
-> +		res = 0;
-> +	else
-> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   "flash-edu");
-
-Can we simplify this block?
-
-> +
-> +	if (res) {
-
-What about a dedicated helper to do the EDU configuration only?
-
-> +		ctrl->edu_base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(ctrl->edu_base))
-> +			return PTR_ERR(ctrl->edu_base);
-> +
-> +		ctrl->edu_offsets = edu_regs;
-> +
-> +		edu_writel(ctrl, EDU_CONFIG, EDU_CONFIG_MODE_NAND |
-> +			   EDU_CONFIG_SWAP_CFG);
-> +		(void)edu_readl(ctrl, EDU_CONFIG);
-> +
-> +		/* initialize edu */
-> +		edu_writel(ctrl, EDU_ERR_STATUS, 0);
-> +		edu_writel(ctrl, EDU_DONE, 0);
-> +		(void)edu_readl(ctrl, EDU_DONE);
-> +
-> +		ctrl->edu_irq = platform_get_irq(pdev, 1);
-> +		if ((int)ctrl->edu_irq < 0) {
-> +			dev_warn(dev,
-> +				 "FLASH EDU enabled, using ctlrdy irq\n");
-> +		} else {
-> +			ret = devm_request_irq(dev, ctrl->edu_irq,
-> +					       brcmnand_edu_irq, 0,
-> +					       "brcmnand-edu", ctrl);
-> +			if (ret < 0) {
-> +				dev_err(dev, "can't allocate IRQ %d: error %d\n",
-> +					ctrl->edu_irq, ret);
-> +				return ret;
-> +			}
-> +
-> +			dev_info(dev, "FLASH EDU enabled using irq %u\n",
-> +				 ctrl->edu_irq);
-> +		}
-> +	}
-> +
-> +	/* set the appropriate dma transfer function to call */
-> +	if (has_flash_dma(ctrl))
-> +		ctrl->dma_trans = brcmnand_dma_trans;
-> +	else if (has_edu(ctrl))
-> +		ctrl->dma_trans = brcmnand_edu_trans;
-> +	else
-> +		ctrl->dma_trans = NULL;
-> +
->  	/* Disable automatic device ID config, direct addressing */
->  	brcmnand_rmw_reg(ctrl, BRCMNAND_CS_SELECT,
->  			 CS_SELECT_AUTO_DEVICE_ID_CFG | 0xff, 0, 0);
-
-Thanks,
-Miquèl
+  Andrea
