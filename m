@@ -2,169 +2,181 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E0FC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEAEC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8E32087F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5961C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PorJPIog"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GSTyUgzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgAIJeq (ORCPT
+        id S1729701AbgAIJgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:34:46 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33589 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729623AbgAIJeq (ORCPT
+        Thu, 9 Jan 2020 04:36:06 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43710 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729623AbgAIJgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:34:46 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so2325445plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:34:45 -0800 (PST)
+        Thu, 9 Jan 2020 04:36:06 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so6564174wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:36:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L9XB5AN+fravHpIS0JAibGbZsaJ2BHkQqcH0VnEvYUE=;
-        b=PorJPIogHEcRiQQYYPYQA93p0KSOs7yXFv+DdBN6acem8TD7Q8Gdw/GBdgjYOLD2n+
-         7PVACTQFrcSvfZzuHf00SmwP9JzAHHXkWuqN8iZFHMERgQWA+66Ps8WgZotTIb+J3Ipi
-         0erZX5Z6d+JOwrdoC0tGEjNJ5DTnri5NPSEtKZEBu5KczVTo9PkhQn718ncCtZMKizlq
-         uGqRveykBhnuLY/k/qj17tJNcCy/1wwPUR8VebD6NpWzeedf71pvVoDAw4ELbcD4tLbR
-         syKYkI1jnRsv28E+lqRM/dUpTMB9+3nVY3yptr8p4W0KjreyhDatY9+WIfWXrcmOUj97
-         mJbg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CIc6Iu6FY3kQRSrHRSdV1kpKIbP+jBfUPikfJIi636g=;
+        b=GSTyUgzlPbACkH+mluJA7fEz/H2vqhWQOda9lk2E6T6LqFWlNiqdJHilTmH0IiOzT8
+         VOrbwmlUPY1ZUNoaqfxjtoHV5sAeY4bmZU6fqYRoo4/VRPA7xJTRhYltzYYHCIYyE9j/
+         JzQ/8hnHIWlyr7ApQ1mEVijYpa0nY76wkm3B0dfPtJAELcNkqVAQI2bMPu9wV5d6iKVA
+         jZQdh5a4Wtm2YH1Eft1s3/uhDJVZBbjNQUlhxSP1KrSMS4JokKwJMMzNUV7W79FaKnjc
+         kVftJ/dhYV8pwGX8SplEYRrxsB/CDfPKNIm/V/Z2zsKQw9mT+YgyEvzWXONmtwmf1nyJ
+         negA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L9XB5AN+fravHpIS0JAibGbZsaJ2BHkQqcH0VnEvYUE=;
-        b=Bv3kgd8dI8l9W7Ts/iB5J61pksproAag67mRTw0fQFFhs2D8x8UGEpcrn3Fg3HZa+V
-         yv58zsGLT5/AEw/rTHt4wj1ae+ekzZ+ql7jlvyH1LfOk0kdZeUx4Lbt0BzFFXz02fbVU
-         OSy79Ai49jWLloryzW1sdeRu6fAYb4GSO6QjysOemC5YEoYxWni3uKGJ5LcQebZbdlpm
-         keBIDvoGj7ERdZ5ZgoEHK3znkigCAOla4w78Z+oH/SLI7JPOUyqqIDUiKiD/4zWJOCc8
-         DLlvwWwgnv0r9Pe55p//NWk+QLrw7XKT8FCOGQl/KWxRlMikOe/PY8xVH84AqOb5DMzu
-         qKZg==
-X-Gm-Message-State: APjAAAUEBJgE0zPNzy6DkmjFPX0FIbaAZtOGHgnhu0LPGy3vJHec6AZo
-        ivxXEKW31pjZjvur8VZkHANQ5Q==
-X-Google-Smtp-Source: APXvYqzBfewSQPZvAwkpT36xnTY57nZ7Sz3UFzijvnhCeEbYI1srm+RA/XMXe2Dpmu86TBCiFsqYnQ==
-X-Received: by 2002:a17:90a:778a:: with SMTP id v10mr4042349pjk.26.1578562485403;
-        Thu, 09 Jan 2020 01:34:45 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id e16sm6522308pgk.77.2020.01.09.01.34.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jan 2020 01:34:44 -0800 (PST)
-Date:   Thu, 9 Jan 2020 15:04:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, peng.fan@nxp.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CIc6Iu6FY3kQRSrHRSdV1kpKIbP+jBfUPikfJIi636g=;
+        b=KsGFMLvQwJpJY8Vc/n4KbTqV4tVzUy6Wurdm5+eN6Kbv4meH/5nmp4llY0UPyQ9V5Q
+         okVGOAWX+TFshZJdHbDV7NB1DxvUMZgnqt7Y7K6qk8GzGx5ycU5x6TVxWoYIY/pxt6Xh
+         z+DnI35701vixvY1CMJcg7lvCAh8DGIXbMw4tLMxvu0wKYNKezfuJEjj37skFwXLq369
+         RLpO+uGFnYWq5uMfxV9oHqY1DXPlewpadAubyBXE2cGdp706O4ppKWEDM6oIKiQvVZ4y
+         0+AlSNe3qK7eSekf8a6cEkU/g5YUT9h3b99edUtVXBxMqAd3yFbYSbggnTXA1kP1S+1m
+         R9MA==
+X-Gm-Message-State: APjAAAVjy9XE40uV+SH4NR1InZfYtqY6uC2mo5LhAVYJZEvJROh6oEGV
+        7LhwJmNjP04Nn4EQeMrpQv6o2XMYKIrgRBKdLAboYQ==
+X-Google-Smtp-Source: APXvYqwzpmoVz3XcxijGfOaz1ACHmsnjXCEqLojhNnSJC/ywgDelLfgn8bjgYuyLRffW+lo9jFhu41/Zy27UzteA8ZA=
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr9631274wrs.200.1578562563449;
+ Thu, 09 Jan 2020 01:36:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157835764298.1456824.224151767362114611.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200107040415.GA19309@dhcp-128-65.nay.redhat.com> <CAPcyv4g_W4PoH6Wfj_SDGzGLpNLwxtoeGP7uwpzVMS4JWbXSTg@mail.gmail.com>
+ <20200107051919.GC19080@dhcp-128-65.nay.redhat.com> <CAKv+Gu-djB=3zTxjEbyjJXXpw=8NE6YA82hMW-JYyAQ2TSywtQ@mail.gmail.com>
+ <CAPcyv4ixPchDOet=ztRQxLMgnJf9DauSFgBs3+TEoaua7R1s_Q@mail.gmail.com>
+In-Reply-To: <CAPcyv4ixPchDOet=ztRQxLMgnJf9DauSFgBs3+TEoaua7R1s_Q@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 9 Jan 2020 10:35:52 +0100
+Message-ID: <CAKv+Gu8W_EyMNAtDG6zK+dKRcaUEzeJ3fmPAiASdqatD3ewQJQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] efi: Fix handling of multiple efi_fake_mem= entries
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-01-20, 09:18, Arnd Bergmann wrote:
-> On Fri, Nov 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, 8 Jan 2020 at 22:53, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Tue, Jan 7, 2020 at 9:52 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 > >
-> > The SCMI specification is fairly independent of the transport protocol,
-> > which can be a simple mailbox (already implemented) or anything else.
-> > The current Linux implementation however is very much dependent of the
-> > mailbox transport layer.
+> > On Tue, 7 Jan 2020 at 06:19, Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > On 01/06/20 at 08:16pm, Dan Williams wrote:
+> > > > On Mon, Jan 6, 2020 at 8:04 PM Dave Young <dyoung@redhat.com> wrote:
+> > > > >
+> > > > > On 01/06/20 at 04:40pm, Dan Williams wrote:
+> > > > > > Dave noticed that when specifying multiple efi_fake_mem= entries only
+> > > > > > the last entry was successfully being reflected in the efi memory map.
+> > > > > > This is due to the fact that the efi_memmap_insert() is being called
+> > > > > > multiple times, but on successive invocations the insertion should be
+> > > > > > applied to the last new memmap rather than the original map at
+> > > > > > efi_fake_memmap() entry.
+> > > > > >
+> > > > > > Rework efi_fake_memmap() to install the new memory map after each
+> > > > > > efi_fake_mem= entry is parsed.
+> > > > > >
+> > > > > > This also fixes an issue in efi_fake_memmap() that caused it to litter
+> > > > > > emtpy entries into the end of the efi memory map. An empty entry causes
+> > > > > > efi_memmap_insert() to attempt more memmap splits / copies than
+> > > > > > efi_memmap_split_count() accounted for when sizing the new map. When
+> > > > > > that happens efi_memmap_insert() may overrun its allocation, and if you
+> > > > > > are lucky will spill over to an unmapped page leading to crash
+> > > > > > signature like the following rather than silent corruption:
+> > > > > >
+> > > > > >     BUG: unable to handle page fault for address: ffffffffff281000
+> > > > > >     [..]
+> > > > > >     RIP: 0010:efi_memmap_insert+0x11d/0x191
+> > > > > >     [..]
+> > > > > >     Call Trace:
+> > > > > >      ? bgrt_init+0xbe/0xbe
+> > > > > >      ? efi_arch_mem_reserve+0x1cb/0x228
+> > > > > >      ? acpi_parse_bgrt+0xa/0xd
+> > > > > >      ? acpi_table_parse+0x86/0xb8
+> > > > > >      ? acpi_boot_init+0x494/0x4e3
+> > > > > >      ? acpi_parse_x2apic+0x87/0x87
+> > > > > >      ? setup_acpi_sci+0xa2/0xa2
+> > > > > >      ? setup_arch+0x8db/0x9e1
+> > > > > >      ? start_kernel+0x6a/0x547
+> > > > > >      ? secondary_startup_64+0xb6/0xc0
+> > > > > >
+> > > > > > Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
+> > > > > > services data to fix kexec breakage" is listed in Fixes: since it
+> > > > > > introduces more occurrences where efi_memmap_insert() is invoked after
+> > > > > > an efi_fake_mem= configuration has been parsed. Previously the side
+> > > > > > effects of vestigial empty entries were benign, but with commit
+> > > > > > af1648984828 that follow-on efi_memmap_insert() invocation triggers
+> > > > > > efi_memmap_insert() overruns.
+> > > > > >
+> > > > > > Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
+> > > > > > Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
+> > > > >
+> > > > > A nitpick for the Fixes flags, as I replied in the thread below:
+> > > > > https://lore.kernel.org/linux-efi/CAPcyv4jLxqPaB22Ao9oV31Gm=b0+Phty+Uz33Snex4QchOUb0Q@mail.gmail.com/T/#m2bb2dd00f7715c9c19ccc48efef0fcd5fdb626e7
+> > > > >
+> > > > > I reproduced two other panics without the patches applied, so this issue
+> > > > > is not caused by either of the commits, maybe just drop the Fixes.
+> > > >
+> > > > Just the "Fixes: af1648984828", right? No objection from me. I'll let
+> > > > Ingo say if he needs a resend for that.
+> > > >
+> > > > The "Fixes: 0f96a99dab36" is valid because the original implementation
+> > > > failed to handle the multiple argument case from the beginning.
+> > >
+> > > Agreed, thanks!
+> > >
 > >
-> > This patch makes the SCMI core code (driver.c) independent of the
-> > mailbox transport layer and moves all mailbox related code to a new
-> > file: mailbox.c.
-> >
-> > We can now implement more transport protocols to transport SCMI
-> > messages.
-> >
-> > The transport protocols just need to provide struct scmi_transport_ops,
-> > with its version of the callbacks to enable exchange of SCMI messages.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> Conceptually I think this is fine, but as others have said, it would be
-> better to have another transport implementation posted along with this
-> to see if the interfaces actually work out.
+> > I'll queue this but without the fixes tags. The -stable maintainers
+> > are far too trigger happy IMHO, and this really needs careful review
+> > before being backported. efi_fake_mem is a debug feature anyway, so I
+> > don't see an urgent need to get this fixed retroactively in older
+> > kernels.
+>
+> I'm fine to drop the fixes tags.
+>
+> However, I do want to point out my driving motive for digging in on
+> efi_fake_mem=nn@ss:0x40000, is that it is a better interface for
+> diverting memory ranges to device-dax than the current standard bearer
+> memmap=nn!ss. The main benefit is that the kernel only considers the
+> attribute when it is applied to EFI_CONVENTIONAL_MEMORY. This fixes a
+> long standing unsolvable issue of people picking busted memmap=nn!ss
+> settings that clobber platform memory ranges, or vector off into
+> nothing.
+>
+> So yes, efi_fake_mem is a debug feature, but if the popularity of
+> memmap=nn!ss is any clue I expect efi_fake_mem=nn@ss:0x40000 will be a
+> useful tool going forward for late enabling, or repairing platform
+> "soft reservation" declarations.
+>
 
-@Sudeep/Vincent: Do you think we can add another transport
-implementation something right away for it ?
+OK, good to know.
 
-@Peng ?
+> I'll respin the series with those tags dropped and add the comment you
+> recommended about the cases when efi_memmap_free() is expected to be a
+> nop. Holler if there's anything else, but that's all I had on my list
+> to fix up.
 
-> > +/**
-> > + * struct scmi_chan_info - Structure representing a SCMI channel information
-> > + *
-> > + * @payload: Transmit/Receive payload area
-> > + * @dev: Reference to device in the SCMI hierarchy corresponding to this
-> > + *      channel
-> > + * @handle: Pointer to SCMI entity handle
-> > + * @transport_info: Transport layer related information
-> > + */
-> > +struct scmi_chan_info {
-> > +       void __iomem *payload;
-> > +       struct device *dev;
-> > +       struct scmi_handle *handle;
-> > +       void *transport_info;
-> > +};
-> 
-> I would assume that with another transport, the 'payload' pointer would
-> not be __iomem
-
-Hmm, okay. I just separated things based on the current transport and
-didn't add much changes on top of it as I wasn't sure how things are
-going to look with next transport and so left the changes for then.
-
-I can now drop it though.
-
-> > +static int scmi_set_transport_ops(struct scmi_info *info)
-> > +{
-> > +       struct scmi_transport_ops *ops;
-> > +       struct device *dev = info->dev;
-> > +
-> > +       /* Only mailbox method supported for now */
-> > +       ops = scmi_mailbox_get_ops(dev);
-> > +       if (!ops) {
-> > +               dev_err(dev, "Transport protocol not found in %pOF\n",
-> > +                       dev->of_node);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       info->transport_ops = ops;
-> > +       return 0;
-> > +}
-> 
-> This looks odd: rather than guessing the transport type based on
-> random DT properties, I would prefer to have it determined by
-> the device compatible string, and have different drivers bind
-> to one of them each, with each driver linking against a common
-> base implementation, either as separate modules or in one file.
-
-Since there are no platforms using the scmi binding in mainline kernel
-for now, it won't be difficult to add new compatible strings. So
-should this be done like:
-
-        compatible = "arm,scmi", "arm,scmi-mailbox";
-
-or just
-        compatible = "arm,scmi-mailbox";
-
-?
--- 
-viresh
+If it's just for the comment, I can just slap that on, as I already
+queued the patches with the fixes tags dropped. Or respin, whichever
+you prefer (efi/next branch is not stable anyway)
