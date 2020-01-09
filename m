@@ -2,32 +2,45 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83CBC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0709C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68022067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A902072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IiPiGmuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgAIIlN convert rfc822-to-8bit (ORCPT
+        id S1728856AbgAIIlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:41:13 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:11766 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgAIIlE (ORCPT
+        Thu, 9 Jan 2020 03:41:22 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.223]:21636 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbgAIIlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:41:04 -0500
+        Thu, 9 Jan 2020 03:41:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578559266;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=PYm8Gfs+nO0qPhM7QUoBsJ0iR80+RLCpJWdZzLY/ikM=;
+        b=IiPiGmuqdkcZsXBvkhanH5NH2YF6OK8FN5Cl+z2BOtz0dzJuQDcgizxHZ/n+1E92Wk
+        bvIoKtNoxvVE2Nert010oTKr+qc5g9F9Mju4gtU9cjYG0Grt6c2YgN8syY3QdQNPFfZD
+        uC4/DoYKPVL147QXuOjRAixrFjao2SR6GY5kOjvPoaKxK2QD0KKP3SHhYUYiFwFHMUZB
+        cK8WrngGDKcBS2EJLMGG64zBmPgG6jgFnBVRrBZm5r83cUZbsubI9py2W5m/WkAwOjU5
+        F2H7JUoKtBV6VAAT0HfwcMsQ+C43zGiF1pWjxSSXzo2gLBcchxMLwfsbyP/h/Y0ggPAi
+        ILUg==
 X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
 X-RZG-CLASS-ID: mo00
 Received: from positron.chronox.de
         by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w098c22Zb
+        with ESMTPSA id u04585w098cF2Zt
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Thu, 9 Jan 2020 09:38:02 +0100 (CET)
+        Thu, 9 Jan 2020 09:38:15 +0100 (CET)
 From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -53,36 +66,185 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Neil Horman <nhorman@redhat.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Julia Lawall <julia.lawall@inria.fr>
-Subject: [PATCH v27 11/12] LRNG - add interface for gathering of raw entropy
-Date:   Thu, 09 Jan 2020 09:35:01 +0100
-Message-ID: <1617334.xIvO9ur7bq@positron.chronox.de>
-In-Reply-To: <2641155.iNH938UiKq@positron.chronox.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2722222.P16TYeLAVu@positron.chronox.de> <2641155.iNH938UiKq@positron.chronox.de>
+Subject: [PATCH v27 00/12] /dev/random - a new approach with full SP800-90B
+Date:   Thu, 09 Jan 2020 09:29:50 +0100
+Message-ID: <2641155.iNH938UiKq@positron.chronox.de>
+In-Reply-To: <2722222.P16TYeLAVu@positron.chronox.de>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2787174.DQlWHN5GGo@positron.chronox.de> <2722222.P16TYeLAVu@positron.chronox.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test interface allows a privileged process to capture the raw
-unconditioned noise that is collected by the LRNG for statistical
-analysis. Such testing allows the analysis how much entropy
-the interrupt noise source provides on a given platform.
-Extracted noise data is not used to seed the LRNG. This
-is a test interface and not appropriate for production systems.
-Yet, the interface is considered to be sufficiently secured for
-production systems.
+Hi,
 
-Access to the data is given through the lrng_raw debugfs file. The
-data buffer should be multiples of sizeof(u32) to fill the entire
-buffer. Using the option lrng_testing.boot_test=1 the raw noise of
-the first 1000 entropy events since boot can be sampled.
+The following patch set provides a different approach to /dev/random which =
+is
+called Linux Random Number Generator (LRNG) to collect entropy within the L=
+inux
+kernel. The main improvements compared to the existing /dev/random is to pr=
+ovide
+sufficient entropy during boot time as well as in virtual environments and =
+when
+using SSDs. A secondary design goal is to limit the impact of the entropy
+collection on massive parallel systems and also allow the use accelerated
+cryptographic primitives. Also, all steps of the entropic data processing a=
+re
+testable.
 
-This test interface allows generating the data required for
-analysis whether the LRNG is in compliance with SP800-90B
-sections 3.1.3 and 3.1.4.
+The LRNG patch set allows a user to select use of the existing /dev/random =
+or
+the LRNG during compile time. As the LRNG provides API and ABI compatible
+interfaces to the existing /dev/random implementation, the user can freely =
+chose
+the RNG implementation without affecting kernel or user space operations.
+
+This patch set provides early boot-time entropy which implies that no
+additional flags to the getrandom(2) system call discussed recently on
+the LKML is considered to be necessary. Yet, if additional flags are
+introduced to cover special hardware, the LRNG implementation will also
+provide them to be fully ABI and API compliant as already discussed on
+LKML.
+
+The LRNG is fully compliant to SP800-90B requirements and is shipped with a
+full SP800-90B assessment and all required test tools. The existing /dev/ra=
+ndom
+implementation on the other hand has architectural limitations which
+does not easily allow to bring the implementation in compliance with
+SP800-90B. The key statement that causes concern is SP800-90B section
+3.1.6. This section denies crediting entropy to multiple similar noise
+sources. This section explicitly references different noise sources resting
+on the timing of events and their derivatives (i.e. it is a direct complaint
+to the existing existing /dev/random implementation). Therefore, SP800-90B
+now denies the very issue mentioned in [1] with the existing /dev/random
+implementation for a long time: crediting entropy to interrupts as well as
+crediting entropy to derivatives of interrupts (HID and disk events). This =
+is
+not permissible with SP800-90B.
+
+SP800-90B specifies various requirements for the noise source(s) that seed =
+any
+DRNG including SP800-90A DRBGs. In about a year from now, SP800-90B will be
+mandated for all noise sources that provide entropy to DRBGs as part of a F=
+IPS
+140-[2|3] validation or other evaluation types. That means, if we there are=
+ no
+solutions to comply with the requirements of SP800-90B found till one year
+from now, any random number generation and ciphers based on random numbers
+on Linux will be considered and treated as not applicable and delivering
+no entropy! As /dev/urandom, getrandom(2) and /dev/random are the most
+common and prevalent noise sources for DRNGs, all these DRNGs are affected.
+This applies across the board for all validations of cryptography executing=
+ on
+Linux (kernel and user space modules).
+
+=46or users that are not interested in SP800-90B, the entire code for the
+compliance as well as test interfaces can be deselected at compile time.
+
+The design and implementation is driven by a set of goals described in [1]
+that the LRNG completely implements. Furthermore, [1] includes the full
+assessment of the SP800-90B compliance as well as a comparison with RNG
+design suggestions of SP800-90C, and AIS20/31.
+
+The LRNG provides a complete separation of the noise source maintenance
+and the collection of entropy into an entropy pool from the post-processing
+using a pseudo-random number generator. Different DRNGs are supported,
+including:
+
+* The LRNG can be compile-time enabled to replace the existing /dev/random
+  implementation. When not selecting the LRNG at compile time (default), the
+  existing /dev/random implementation is built.
+
+* Built-in ChaCha20 DRNG which has no dependency to other kernel
+  frameworks.
+
+* SP800-90A DRBG using the kernel crypto API including its accelerated
+  raw cipher implementations. This implies that the output of /dev/random,
+  getrandom(2), /dev/urandom or get_random_bytes is fully compliant to
+  SP800-90A.
+
+* Arbitrary DRNGs registered with the kernel crypto API
+
+* Full compliance with SP800-90B which covers the startup and runtime health
+  tests mandated by SP800-90B as well as providing the test tools and test
+  interfaces to obtain raw noise data securely. The test tools are provided=
+ at
+  [1].
+
+Booting the patch with the kernel command line option
+"dyndbg=3Dfile drivers/char/lrng/* +p" generates logs indicating the operat=
+ion
+of the LRNG. Each log is pre-pended with "lrng".
+
+The LRNG has a flexible design by allowing an easy replacement of the
+deterministic random number generator component.
+
+Compared to the existing /dev/random implementation, the compiled binary
+is smaller when the LRNG is compiled with all options equal to the
+existing /dev/random (i.e. only CONFIG_LRNG is set): random.o is 52.5 kBytes
+whereas all LRNG object files are in 49 kBytes in size. The fully
+SP800-90A/SP800-90B compliant binary code (CONFIG_LRNG,
+CONFIG_LRNG_DRNG_SWITCH, CONFIG_LRNG_DRBG, CONFIG_LRNG_HEALTH_TESTS)
+uses some 61 kBytes. In addition, the LRNG is about 50% faster in the
+performance critical interrupt handler code path compared to the existing
+/dev/random implementation.
+
+[1] http://www.chronox.de/lrng.html - If the patch is accepted, I would
+be volunteering to convert the documentation into RST format and
+contribute it to the Linux kernel documentation directory.
+
+Changes (compared to the previous patch set):
+
+* fix function prototype of lrng_init_time_source
+
+* fix indentation in getrandom
+
+* add unlock to error code path as reported by Julia Lawall
+
+* integrate 0da522107e5d9c000a4871d52e570912aa1225a2 from Arnd Bergmann and
+  supplemental patch 4aa37c463764052c68c5c430af2a67b5d784c1e0 from
+  Jason A. Donenfeld
+
+* use new jitterentropy.h header file
+
+* add power-on self-tests of security critical functions of hash_df, LFSR,
+  ChaCha20 DRNG, and time stamp array management
+
+* add support for significantly reduced runtime memory footprint as outlined
+  in patch 1
+
+* drop TRNG support - the LRNG has the same user experience as random.c
+  with Andy Lutomirski's recent patch removing the blocking_pool - rename
+  all *sdrng* symbols to *drng*
+
+* ensure that external noise sources can provide seed at least once when a
+  DRNG is reseeded to ensure internal and external noise sources are balanc=
+ed
+
+* add full documentation to all API calls provided to the remainder of the
+  kernel
+
+* ensure that after a SP800-90B health test failure the interrupt handler
+  triggers reseeds like during boot time
+
+This patch requires the presence of patch
+75551dbf112c992bc6c99a972990b3f272247e23 from Ted Tso's kernel tree
+(specifically the addition of GRND_INSECURE to random.h)
+
+As a side node: With the switchable DRNG support offered in this patch set,
+the following areas could be removed. As the existing /dev/random has no su=
+pport
+for switchable DRNGs, however, this is not yet feasible though.
+
+* remove lrng_ready_list and all code around it in lrng_interfaces.c
+
+* remove the kernel crypto API RNG API to avoid having two random number
+  providing APIs - this would imply that all RNGs developed for this API wo=
+uld
+  be converted to the LRNG interface
 
 CC: "Eric W. Biederman" <ebiederm@xmission.com>
 CC: "Alexander E. Patrakov" <patrakov@gmail.com>
@@ -100,330 +262,81 @@ CC: Andy Lutomirski <luto@kernel.org>
 CC: Florian Weimer <fweimer@redhat.com>
 CC: Lennart Poettering <mzxreary@0pointer.de>
 CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-Tested-by: Roman Drahtmüller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
 Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Tested-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
----
- drivers/char/lrng/Kconfig        |  16 ++
- drivers/char/lrng/Makefile       |   1 +
- drivers/char/lrng/lrng_testing.c | 271 +++++++++++++++++++++++++++++++
- 3 files changed, 288 insertions(+)
- create mode 100644 drivers/char/lrng/lrng_testing.c
 
-diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-index 7b2bb3da066c..394066aa5a86 100644
---- a/drivers/char/lrng/Kconfig
-+++ b/drivers/char/lrng/Kconfig
-@@ -159,4 +159,20 @@ config LRNG_APT_CUTOFF
- 	default 325 if !LRNG_APT_BROKEN
- 	default 32 if LRNG_APT_BROKEN
- 
-+config LRNG_TESTING
-+	bool "Enable entropy test interface to LRNG noise source"
-+	depends on DEBUG_FS
-+	help
-+	  The test interface allows a privileged process to capture
-+	  the raw unconditioned noise that is collected by the LRNG
-+	  for statistical analysis. Extracted noise data is not used
-+	  to seed the LRNG.
-+
-+	  The raw noise data can be obtained using the lrng_raw
-+	  debugfs file. Using the option lrng_testing.boot_test=1
-+	  the raw noise of the first 1000 entropy events since boot
-+	  can be sampled.
-+
-+	  If unsure, say N.
-+
- endif # LRNG
-diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index c3008763dd14..b2ce1979dc4b 100644
---- a/drivers/char/lrng/Makefile
-+++ b/drivers/char/lrng/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_LRNG_DRBG)		+= lrng_drbg.o
- obj-$(CONFIG_LRNG_KCAPI)	+= lrng_kcapi.o
- obj-$(CONFIG_LRNG_JENT)		+= lrng_jent.o
- obj-$(CONFIG_LRNG_HEALTH_TESTS)	+= lrng_health.o
-+obj-$(CONFIG_LRNG_TESTING)	+= lrng_testing.o
-diff --git a/drivers/char/lrng/lrng_testing.c b/drivers/char/lrng/lrng_testing.c
-new file mode 100644
-index 000000000000..0e287eccd622
---- /dev/null
-+++ b/drivers/char/lrng/lrng_testing.c
-@@ -0,0 +1,271 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/*
-+ * Linux Random Number Generator (LRNG) Raw entropy collection tool
-+ *
-+ * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/atomic.h>
-+#include <linux/bug.h>
-+#include <linux/debugfs.h>
-+#include <linux/module.h>
-+#include <linux/sched.h>
-+#include <linux/sched/signal.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+#include <linux/workqueue.h>
-+#include <asm/errno.h>
-+
-+#include "lrng_internal.h"
-+
-+#define LRNG_TESTING_RINGBUFFER_SIZE	1024
-+#define LRNG_TESTING_RINGBUFFER_MASK	(LRNG_TESTING_RINGBUFFER_SIZE - 1)
-+
-+static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-+static u32 lrng_rb_reader = 0;
-+static u32 lrng_rb_writer = 0;
-+static atomic_t lrng_testing_enabled = ATOMIC_INIT(0);
-+
-+static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-+static DEFINE_SPINLOCK(lrng_raw_lock);
-+
-+/*
-+ * 0 ==> No boot test, gathering of runtime data allowed
-+ * 1 ==> Boot test enabled and ready for collecting data, gathering runtime
-+ *	 data is disabled
-+ * 2 ==> Boot test completed and disabled, gathering of runtime data is
-+ *	 disabled
-+ */
-+static u32 boot_test = 0;
-+module_param(boot_test, uint, 0644);
-+MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the first"
-+			    " entropy events");
-+
-+static inline void lrng_raw_entropy_reset(void)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&lrng_raw_lock, flags);
-+	lrng_rb_reader = 0;
-+	lrng_rb_writer = 0;
-+	spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+}
-+
-+static void lrng_raw_entropy_init(void)
-+{
-+	/*
-+	 * The boot time testing implies we have a running test. If the
-+	 * caller wants to clear it, he has to unset the boot_test flag
-+	 * at runtime via sysfs to enable regular runtime testing
-+	 */
-+	if (boot_test)
-+		return;
-+
-+	lrng_raw_entropy_reset();
-+	atomic_set(&lrng_testing_enabled, 1);
-+	pr_warn("Enabling raw entropy collection\n");
-+}
-+
-+static void lrng_raw_entropy_fini(void)
-+{
-+	if (boot_test)
-+		return;
-+
-+	atomic_set(&lrng_testing_enabled, 0);
-+	lrng_raw_entropy_reset();
-+	pr_warn("Disabling raw entropy collection\n");
-+}
-+
-+bool lrng_raw_entropy_store(u32 value)
-+{
-+	unsigned long flags;
-+
-+	if (!atomic_read(&lrng_testing_enabled) && (boot_test != 1))
-+		return false;
-+
-+	spin_lock_irqsave(&lrng_raw_lock, flags);
-+
-+	/*
-+	 * Disable entropy testing for boot time testing after ring buffer
-+	 * is filled.
-+	 */
-+	if (boot_test) {
-+		if (lrng_rb_writer > LRNG_TESTING_RINGBUFFER_SIZE) {
-+			boot_test = 2;
-+			pr_warn_once("Boot time entropy collection test "
-+				     "disabled\n");
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+			return false;
-+		}
-+
-+		if (lrng_rb_writer == 1)
-+			pr_warn("Boot time entropy collection test enabled\n");
-+	}
-+
-+	lrng_testing_rb[lrng_rb_writer & LRNG_TESTING_RINGBUFFER_MASK] = value;
-+	lrng_rb_writer++;
-+
-+	spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+	if (wq_has_sleeper(&lrng_raw_read_wait))
-+		wake_up_interruptible(&lrng_raw_read_wait);
-+
-+	return true;
-+}
-+
-+static inline bool lrng_raw_have_data(void)
-+{
-+	return ((lrng_rb_writer & LRNG_TESTING_RINGBUFFER_MASK) !=
-+		 (lrng_rb_reader & LRNG_TESTING_RINGBUFFER_MASK));
-+}
-+
-+static int lrng_raw_entropy_reader(u8 *outbuf, u32 outbuflen)
-+{
-+	unsigned long flags;
-+	int collected_data = 0;
-+
-+	lrng_raw_entropy_init();
-+
-+	while (outbuflen) {
-+		spin_lock_irqsave(&lrng_raw_lock, flags);
-+
-+		/* We have no data or reached the writer. */
-+		if (!lrng_rb_writer || (lrng_rb_writer == lrng_rb_reader)) {
-+
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+			/*
-+			 * Now we gathered all boot data, enable regular data
-+			 * collection.
-+			 */
-+			if (boot_test) {
-+				boot_test = 0;
-+				goto out;
-+			}
-+
-+			wait_event_interruptible(lrng_raw_read_wait,
-+						 lrng_raw_have_data());
-+			if (signal_pending(current)) {
-+				collected_data = -ERESTARTSYS;
-+				goto out;
-+			}
-+
-+			continue;
-+		}
-+
-+		/* We copy out word-wise */
-+		if (outbuflen < sizeof(u32)) {
-+			spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+			goto out;
-+		}
-+
-+		memcpy(outbuf, &lrng_testing_rb[lrng_rb_reader], sizeof(u32));
-+		lrng_rb_reader++;
-+
-+		spin_unlock_irqrestore(&lrng_raw_lock, flags);
-+
-+		outbuf += sizeof(u32);
-+		outbuflen -= sizeof(u32);
-+		collected_data += sizeof(u32);
-+	}
-+
-+out:
-+	lrng_raw_entropy_fini();
-+	return collected_data;
-+}
-+
-+/**************************************************************************
-+ * Debugfs interface
-+ **************************************************************************/
-+static int lrng_raw_extract_user(char __user *buf, size_t nbytes)
-+{
-+	u8 *tmp, *tmp_aligned;
-+	int ret = 0, large_request = (nbytes > 256);
-+
-+	/*
-+	 * The intention of this interface is for collecting at least
-+	 * 1000 samples due to the SP800-90B requirements. So, we make no
-+	 * effort in avoiding allocating more memory that actually needed
-+	 * by the user. Hence, we allocate sufficient memory to always hold
-+	 * that amount of data.
-+	 */
-+	tmp = kmalloc(LRNG_TESTING_RINGBUFFER_SIZE + sizeof(u32), GFP_KERNEL);
-+	if (!tmp)
-+		return -ENOMEM;
-+
-+	tmp_aligned = PTR_ALIGN(tmp, sizeof(u32));
-+
-+	while (nbytes) {
-+		int i;
-+
-+		if (large_request && need_resched()) {
-+			if (signal_pending(current)) {
-+				if (ret == 0)
-+					ret = -ERESTARTSYS;
-+				break;
-+			}
-+			schedule();
-+		}
-+
-+		i = min_t(int, nbytes, LRNG_TESTING_RINGBUFFER_SIZE);
-+		i = lrng_raw_entropy_reader(tmp_aligned, i);
-+		if (i <= 0) {
-+			if (i < 0)
-+				ret = i;
-+			break;
-+		}
-+		if (copy_to_user(buf, tmp_aligned, i)) {
-+			ret = -EFAULT;
-+			break;
-+		}
-+
-+		nbytes -= i;
-+		buf += i;
-+		ret += i;
-+	}
-+
-+	kzfree(tmp);
-+	return ret;
-+}
-+
-+/* DebugFS operations and definition of the debugfs files */
-+static ssize_t lrng_raw_read(struct file *file, char __user *to,
-+			     size_t count, loff_t *ppos)
-+{
-+	loff_t pos = *ppos;
-+	int ret;
-+
-+	if (!count)
-+		return 0;
-+
-+	ret = lrng_raw_extract_user(to, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	count -= ret;
-+	*ppos = pos + count;
-+
-+	return ret;
-+}
-+
-+static const struct file_operations lrng_raw_name_fops = {
-+	.owner = THIS_MODULE,
-+	.read = lrng_raw_read,
-+};
-+
-+static int __init lrng_raw_init(void)
-+{
-+	struct dentry *lrng_raw_debugfs_root;
-+
-+	lrng_raw_debugfs_root = debugfs_create_dir(KBUILD_MODNAME, NULL);
-+	debugfs_create_file_unsafe("lrng_raw", 0400, lrng_raw_debugfs_root,
-+				   NULL, &lrng_raw_name_fops);
-+
-+	return 0;
-+}
-+
-+module_init(lrng_raw_init);
--- 
+Stephan Mueller (12):
+  Linux Random Number Generator
+  LRNG - allocate one DRNG instance per NUMA node
+  LRNG - sysctls and /proc interface
+  LRNG - add switchable DRNG support
+  crypto: DRBG - externalize DRBG functions for LRNG
+  LRNG - add SP800-90A DRBG extension
+  LRNG - add kernel crypto API PRNG extension
+  crypto: provide access to a static Jitter RNG state
+  LRNG - add Jitter RNG fast noise source
+  LRNG - add SP800-90B compliant health tests
+  LRNG - add interface for gathering of raw entropy
+  LRNG - add power-on and runtime self-tests
+
+ MAINTAINERS                                   |   7 +
+ crypto/drbg.c                                 |  16 +-
+ crypto/jitterentropy-kcapi.c                  |   3 +-
+ crypto/jitterentropy.c                        |  25 +-
+ drivers/char/Kconfig                          |   2 +
+ drivers/char/Makefile                         |   9 +-
+ drivers/char/lrng/Kconfig                     | 203 ++++++
+ drivers/char/lrng/Makefile                    |  19 +
+ drivers/char/lrng/lrng_archrandom.c           |  92 +++
+ drivers/char/lrng/lrng_aux.c                  | 148 +++++
+ drivers/char/lrng/lrng_chacha20.c             | 317 +++++++++
+ drivers/char/lrng/lrng_chacha20.h             |  25 +
+ drivers/char/lrng/lrng_drbg.c                 | 261 ++++++++
+ drivers/char/lrng/lrng_drng.c                 | 397 +++++++++++
+ drivers/char/lrng/lrng_health.c               | 409 ++++++++++++
+ drivers/char/lrng/lrng_interfaces.c           | 622 ++++++++++++++++++
+ drivers/char/lrng/lrng_internal.h             | 305 +++++++++
+ drivers/char/lrng/lrng_jent.c                 |  87 +++
+ drivers/char/lrng/lrng_kcapi.c                | 328 +++++++++
+ drivers/char/lrng/lrng_lfsr.h                 | 152 +++++
+ drivers/char/lrng/lrng_numa.c                 | 101 +++
+ drivers/char/lrng/lrng_pool.c                 | 585 ++++++++++++++++
+ drivers/char/lrng/lrng_proc.c                 | 163 +++++
+ drivers/char/lrng/lrng_selftest.c             | 418 ++++++++++++
+ drivers/char/lrng/lrng_sw_noise.c             | 102 +++
+ drivers/char/lrng/lrng_sw_noise.h             |  57 ++
+ drivers/char/lrng/lrng_switch.c               | 179 +++++
+ drivers/char/lrng/lrng_testing.c              | 271 ++++++++
+ include/crypto/drbg.h                         |   7 +
+ .../crypto/internal}/jitterentropy.h          |   3 +
+ include/linux/lrng.h                          |  71 ++
+ 31 files changed, 5374 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/char/lrng/Kconfig
+ create mode 100644 drivers/char/lrng/Makefile
+ create mode 100644 drivers/char/lrng/lrng_archrandom.c
+ create mode 100644 drivers/char/lrng/lrng_aux.c
+ create mode 100644 drivers/char/lrng/lrng_chacha20.c
+ create mode 100644 drivers/char/lrng/lrng_chacha20.h
+ create mode 100644 drivers/char/lrng/lrng_drbg.c
+ create mode 100644 drivers/char/lrng/lrng_drng.c
+ create mode 100644 drivers/char/lrng/lrng_health.c
+ create mode 100644 drivers/char/lrng/lrng_interfaces.c
+ create mode 100644 drivers/char/lrng/lrng_internal.h
+ create mode 100644 drivers/char/lrng/lrng_jent.c
+ create mode 100644 drivers/char/lrng/lrng_kcapi.c
+ create mode 100644 drivers/char/lrng/lrng_lfsr.h
+ create mode 100644 drivers/char/lrng/lrng_numa.c
+ create mode 100644 drivers/char/lrng/lrng_pool.c
+ create mode 100644 drivers/char/lrng/lrng_proc.c
+ create mode 100644 drivers/char/lrng/lrng_selftest.c
+ create mode 100644 drivers/char/lrng/lrng_sw_noise.c
+ create mode 100644 drivers/char/lrng/lrng_sw_noise.h
+ create mode 100644 drivers/char/lrng/lrng_switch.c
+ create mode 100644 drivers/char/lrng/lrng_testing.c
+ rename {crypto =3D> include/crypto/internal}/jitterentropy.h (84%)
+ create mode 100644 include/linux/lrng.h
+
+=2D-=20
 2.24.1
 
 
