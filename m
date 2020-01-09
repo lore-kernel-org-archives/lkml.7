@@ -2,176 +2,108 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFFCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2B4C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E58A20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC31206F0
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fjyE/L+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgAIDZC (ORCPT
+        id S1727789AbgAIDdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:25:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:53120 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbgAIDZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:25:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4613431B;
-        Wed,  8 Jan 2020 19:25:01 -0800 (PST)
-Received: from [10.162.40.138] (p8cg001049571a15.blr.arm.com [10.162.40.138])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE4BE3F534;
-        Wed,  8 Jan 2020 19:24:56 -0800 (PST)
-Subject: Re: [PATCH 1/1] arm/arm64: add support for folded p4d page tables
-To:     Mike Rapoport <rppt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20191230082734.28954-1-rppt@kernel.org>
- <20191230082734.28954-2-rppt@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7f18fc35-3380-564b-b660-0c003d7d3107@arm.com>
-Date:   Thu, 9 Jan 2020 08:56:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Jan 2020 22:33:22 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46754 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAIDdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 22:33:21 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0093X6ZQ172912;
+        Thu, 9 Jan 2020 03:33:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=VZ2TqqhPaSVHPFCAp9VkRzjFCSnuYTScC7/s8agUkio=;
+ b=fjyE/L+jNX+n98vIuWlmkegIicSZka25fXXqO1N0OaEemyKeMKzZT0UyBvlSMvjESw/S
+ C96XCfmhYBPaDucAw0Vz+pF9OWrZZmP82UpDN98Hp7Aq9oHVQAqjx+SaPP63YY19msNh
+ ZtPXQkzjSPoc1QACp/6BaT+Pl8MKlhAzmSKHdyFzpLTHXu5Rz55O7vTfP9KnTBuTnj9n
+ fxTrXAmYHMexVm7uOIj4NY8Zv5bJ9lFpGAHTy9nI2urV8mq3EItqeqR2BYBSeG62EgmY
+ QQRCQKgJH13O91NdBKcy/lDtQLpv7MqH0qeGumW4Sx8s5HBsjjlPXqAg0fFZIJk1Gwiq vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xakbr00d4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 03:33:09 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0093X9LJ106882;
+        Thu, 9 Jan 2020 03:33:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xdmrx8p5g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 03:33:08 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0093X3XP026880;
+        Thu, 9 Jan 2020 03:33:04 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 08 Jan 2020 19:33:02 -0800
+To:     "hch\@lst.de" <hch@lst.de>
+Cc:     "Singh\, Balbir" <sblbir@amazon.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chaitanya.Kulkarni\@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
+        "linux-block\@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme\@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "jejb\@linux.ibm.com" <jejb@linux.ibm.com>,
+        "mst\@redhat.com" <mst@redhat.com>,
+        "axboe\@kernel.dk" <axboe@kernel.dk>,
+        "Sangaraju\, Someswarudu" <ssomesh@amazon.com>
+Subject: Re: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use disk_set_capacity
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200102075315.22652-1-sblbir@amazon.com>
+        <20200102075315.22652-5-sblbir@amazon.com>
+        <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
+        <1b88bedc6d5435fa7154f3356fa3f1a3e6888ded.camel@amazon.com>
+        <20200108150447.GC10975@lst.de>
+Date:   Wed, 08 Jan 2020 22:33:00 -0500
+In-Reply-To: <20200108150447.GC10975@lst.de> (hch@lst.de's message of "Wed, 8
+        Jan 2020 16:04:47 +0100")
+Message-ID: <yq1k161xq1f.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191230082734.28954-2-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001090033
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=915 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001090033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Christoph,
 
-On 12/30/2019 01:57 PM, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Implement primitives necessary for the 4th level folding, add walks of p4d
-> level where appropriate, replace 5level-fixup.h with pgtable-nop4d.h and
-> remove __ARCH_USE_5LEVEL_HACK.
-> 
-> Since arm and arm64 share kvm memory management bits, make the conversion
-> for both variants at once to avoid breaking the builds in the middle.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arm/include/asm/kvm_mmu.h          |   5 +-
->  arch/arm/include/asm/pgtable.h          |   1 -
->  arch/arm/include/asm/stage2_pgtable.h   |  15 +-
->  arch/arm/lib/uaccess_with_memcpy.c      |   9 +-
->  arch/arm/mach-sa1100/assabet.c          |   2 +-
->  arch/arm/mm/dump.c                      |  29 +++-
->  arch/arm/mm/fault-armv.c                |   7 +-
->  arch/arm/mm/fault.c                     |  28 +++-
->  arch/arm/mm/idmap.c                     |   3 +-
->  arch/arm/mm/init.c                      |   2 +-
->  arch/arm/mm/ioremap.c                   |  12 +-
->  arch/arm/mm/mm.h                        |   2 +-
->  arch/arm/mm/mmu.c                       |  35 +++-
->  arch/arm/mm/pgd.c                       |  40 ++++-
->  arch/arm64/include/asm/kvm_mmu.h        |  10 +-
->  arch/arm64/include/asm/pgalloc.h        |  10 +-
->  arch/arm64/include/asm/pgtable-types.h  |   5 +-
->  arch/arm64/include/asm/pgtable.h        |  37 +++--
->  arch/arm64/include/asm/stage2_pgtable.h |  48 ++++--
->  arch/arm64/kernel/hibernate.c           |  46 +++++-
->  arch/arm64/mm/dump.c                    |  29 +++-
->  arch/arm64/mm/fault.c                   |   9 +-
->  arch/arm64/mm/hugetlbpage.c             |  15 +-
->  arch/arm64/mm/kasan_init.c              |  41 ++++-
->  arch/arm64/mm/mmu.c                     |  52 ++++--
->  arch/arm64/mm/pageattr.c                |   7 +-
->  virt/kvm/arm/mmu.c                      | 209 ++++++++++++++++++++----
->  27 files changed, 565 insertions(+), 143 deletions(-)
-> 
+>> The expected behaviour is not clear, but the functionality is not
+>> broken, user space should be able to deal with a resize event where
+>> the previous capacity == new capacity IMHO.
+>
+> I think it makes sense to not bother with a notification unless there
+> is an actual change.
 
-^^^^^^
+I agree.
 
-> diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-> index f87a32484ea8..fd6220508711 100644
-> --- a/arch/arm64/mm/kasan_init.c
-> +++ b/arch/arm64/mm/kasan_init.c
-> @@ -84,17 +84,32 @@ static pmd_t *__init kasan_pmd_offset(pud_t *pudp, unsigned long addr, int node,
->  	return early ? pmd_offset_kimg(pudp, addr) : pmd_offset(pudp, addr);
->  }
->  
-> -static pud_t *__init kasan_pud_offset(pgd_t *pgdp, unsigned long addr, int node,
-> +static pud_t *__init kasan_pud_offset(p4d_t *p4dp, unsigned long addr, int node,
->  				      bool early)
->  {
-> -	if (pgd_none(READ_ONCE(*pgdp))) {
-> +	if (p4d_none(READ_ONCE(*p4dp))) {
->  		phys_addr_t pud_phys = early ?
->  				__pa_symbol(kasan_early_shadow_pud)
->  					: kasan_alloc_zeroed_page(node);
-> -		__pgd_populate(pgdp, pud_phys, PMD_TYPE_TABLE);
-> +		__p4d_populate(p4dp, pud_phys, PMD_TYPE_TABLE);
-> +	}
-> +
-> +	return early ? pud_offset_kimg(p4dp, addr) : pud_offset(p4dp, addr);
-> +}
-> +
-> +static p4d_t *__init kasan_p4d_offset(pgd_t *pgdp, unsigned long addr, int node,
-> +				      bool early)
-> +{
-> +#ifndef __PAGETABLE_P4D_FOLDED
-> +	if (pgd_none(READ_ONCE(*pgdp))) {
-> +		phys_addr_t p4d_phys = early ?
-> +				__pa_symbol(kasan_early_shadow_p4d)
-> +					: kasan_alloc_zeroed_page(node);
-> +		__pgd_populate(pgdp, p4d_phys, PMD_TYPE_TABLE);
-
-We dont have __pgd_populate() definition any more. AFAICS __PAGETABLE_P4D_FOLDED
-is always defined because pgtable-nop4d.h gets pulled in for all configurations
-via pgtable-nopud.h and pgtable-nopmd.h headers.
-
->  	}
-> +#endif
->  
-> -	return early ? pud_offset_kimg(pgdp, addr) : pud_offset(pgdp, addr);
-> +	return early ? p4d_offset_kimg(pgdp, addr) : p4d_offset(pgdp, addr);
->  }
->  
->  static void __init kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
-> @@ -126,11 +141,11 @@ static void __init kasan_pmd_populate(pud_t *pudp, unsigned long addr,
->  	} while (pmdp++, addr = next, addr != end && pmd_none(READ_ONCE(*pmdp)));
->  }
->  
-> -static void __init kasan_pud_populate(pgd_t *pgdp, unsigned long addr,
-> +static void __init kasan_pud_populate(p4d_t *p4dp, unsigned long addr,
->  				      unsigned long end, int node, bool early)
->  {
->  	unsigned long next;
-> -	pud_t *pudp = kasan_pud_offset(pgdp, addr, node, early);
-> +	pud_t *pudp = kasan_pud_offset(p4dp, addr, node, early);
->  
->  	do {
->  		next = pud_addr_end(addr, end);
-> @@ -138,6 +153,18 @@ static void __init kasan_pud_populate(pgd_t *pgdp, unsigned long addr,
->  	} while (pudp++, addr = next, addr != end && pud_none(READ_ONCE(*pudp)));
->  }
->  
-> +static void __init kasan_p4d_populate(pgd_t *pgdp, unsigned long addr,
-> +				      unsigned long end, int node, bool early)
-> +{
-> +	unsigned long next;
-> +	p4d_t *p4dp = kasan_p4d_offset(pgdp, addr, node, early);
-> +
-> +	do {
-> +		next = p4d_addr_end(addr, end);
-> +		kasan_pmd_populate(p4dp, addr, next, node, early);
-
-s/kasan_pmd_populate()/kasan_pud_populate()
+-- 
+Martin K. Petersen	Oracle Linux Engineering
