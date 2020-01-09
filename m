@@ -2,123 +2,99 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E513C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29A4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D599E20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E67C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b412CnJI"
+	dkim=pass (2048-bit key) header.d=ossystems-com-br.20150623.gappssmtp.com header.i=@ossystems-com-br.20150623.gappssmtp.com header.b="rwFdPy8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387595AbgAIQRv (ORCPT
+        id S1732836AbgAIQTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:17:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47963 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730483AbgAIQRt (ORCPT
+        Thu, 9 Jan 2020 11:19:03 -0500
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:35930 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbgAIQTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:17:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578586669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=utdlm/aKlY7xAQfEyR3w7Eafs4aRDid1gJnviBYktXw=;
-        b=b412CnJIyZx0RcnAjmPw1hVXuHrWKydt40cxRNZhmiEfn9bDrBoR/LFo4SdbNXv/C3UF6b
-        cq1nsF6Uhi8ewafwQz9Kb3bL4kMQ3d7m+CJUDzTH0QSN3ogelNOo38m9Ayipl9X6m3M9w/
-        LlhxPuMRKNaQH6xM+p1hmQ/xWZWABcE=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-49-8gmgBvSWP3-oSv7hUfqH4A-1; Thu, 09 Jan 2020 11:17:45 -0500
-X-MC-Unique: 8gmgBvSWP3-oSv7hUfqH4A-1
-Received: by mail-qk1-f199.google.com with SMTP id x127so4477017qkb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:17:45 -0800 (PST)
+        Thu, 9 Jan 2020 11:19:03 -0500
+Received: by mail-qk1-f177.google.com with SMTP id a203so6504283qkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:19:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ossystems-com-br.20150623.gappssmtp.com; s=20150623;
+        h=from:mime-version:date:message-id:subject:to;
+        bh=d88Xq53MKTDEJhK31IGTSeb6nL+720DGGuqob3OXfa0=;
+        b=rwFdPy8zJV4rDrzUrwoPihzrxRWL7XDmnNQCU13Evd8P428xLWbB0UgvxHcq2BJqY3
+         YbBbyQPLxRfmJGz+MMr10dlPkhL6KjBEZrFaYA7R7ZFC7IfUfETQwL2h4rUcF4zEdUlj
+         la/rkaKJqCSfxyRTKFV3YB8ZXwbEUgeIBpJEOeoJANe+C8lJE7c/jznxB5bn7evGqJJM
+         UfZqc8Y1CsOIQAFM7wl5hYnqpscgaqkaamRsrOIpuAxyQU20x5geSNeLEZHXftaWYeFL
+         7RYDenLf2lsm9oJMxdfMul82aUBQm8VNgaBo3k6oPk/LR09QV7XrzolQl9klQ4lqkiTn
+         Tc/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=utdlm/aKlY7xAQfEyR3w7Eafs4aRDid1gJnviBYktXw=;
-        b=FOeoHBxZiQFYWH3WnSfR1vO/j8ft9vBqxAXN9ACKZQdan78wabhPPD3R1NQg2Sneev
-         vVDW6QmD8RxzvCo6ezvBN9Ad2zffyVNSXG8bhuXSaUjxNsBCfWdYMCgsouvVt0qU/250
-         l3X49dzcCoR8nGyWAGNeNRXQLsf2fwT7gylGYQgY8zEip595ht30j9nOyPwvRAw4wrwT
-         0IE4UfPXsuFZiw0yDHWqj7RMp+C3bupB/KpU/Y+/qUrNSrm2E8tXIuFP08klNF9VVRia
-         Lsw2PzTdpAhLyWUqawBVg6GaYnvKnOXOeb4XYylY7KNH2HT4PAy6IsX5OD0/d0eXPGem
-         7uWQ==
-X-Gm-Message-State: APjAAAXBFiVKI1hLl7zwoYmaci+px9s2ybYNstZTlFQAoXFCEmrV9MF0
-        w9/8SVpQd5d61XVH/tEZHTDaZa7bCWrdKJSveqO1Je7vnnhs+vZlai0S2laUFlCPr/oVL1T8sYe
-        Ut+Ftad7BPRpmMoN/e/xPF6zq
-X-Received: by 2002:ac8:544f:: with SMTP id d15mr8718695qtq.53.1578586665331;
-        Thu, 09 Jan 2020 08:17:45 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxOO77lSOX4HB1VsYJg95F5t9IBQf4gOicmO1+VK8TA5tARhYVtiz9nWGF7JPyZNSOqo/KKIw==
-X-Received: by 2002:ac8:544f:: with SMTP id d15mr8718671qtq.53.1578586665141;
-        Thu, 09 Jan 2020 08:17:45 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id m8sm3602484qtk.60.2020.01.09.08.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:17:43 -0800 (PST)
-Date:   Thu, 9 Jan 2020 11:17:42 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
-Message-ID: <20200109161742.GC15671@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109105443-mutt-send-email-mst@kernel.org>
+        h=x-gm-message-state:from:mime-version:date:message-id:subject:to;
+        bh=d88Xq53MKTDEJhK31IGTSeb6nL+720DGGuqob3OXfa0=;
+        b=uEmYknCWvKFdjVaWB9dULeAyhPtkhjFfJGPYojH0PeoA7hKkJAFJbYw96VfjnmcqWf
+         jmuMU/hsB8o+T4JN1ar2TCqwGN8PZlxTyrjIg9nexQ4yrBFwmJZgDnjGh7cgFVoLZBdF
+         5H16ItJSRdfm8qg1o/RHjylxec6iVWYtKu+cW8T4dODdA3JcLirLOZKuR5uDotOmAAiV
+         OmDiA39ocy/6bnBQ1tbQLi+KJF3bHnbckBLfynDaYrqu2PNyC3O3gd9uSedTG+gjEsmA
+         /BBpnefxiKoZHr4M3uVhj3E1oIKSVxU+PQggr4SvplJxjPz1kaeIDwjVJ8nNtXyXG7zS
+         2IRQ==
+X-Gm-Message-State: APjAAAXifB/ub8mJhVbkBaMdE8ucrYQBGb/7nW63m6DQYM4NoOsBI9H3
+        mgBeHsEOzLWoHAD2xJvQDReu56ld8a9H1w==
+X-Google-Smtp-Source: APXvYqzY0QqnYHRnYMP4cGRYSbA/2KvYtSJlsbAI3OKFEVU5zpZtf4rrOSOB+zbNVeZ//Fu2wheJ6Q==
+X-Received: by 2002:a05:620a:1001:: with SMTP id z1mr9174643qkj.99.1578586742112;
+        Thu, 09 Jan 2020 08:19:02 -0800 (PST)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
+        by smtp.gmail.com with ESMTPSA id h1sm3645079qte.42.2020.01.09.08.19.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 08:19:01 -0800 (PST)
+From:   Otavio Salvador <otavio.salvador@ossystems.com.br>
+X-Google-Original-From: Otavio Salvador <otavio@ossystems.com.br>
+Received: by mail-qt1-f170.google.com with SMTP id v25so4480856qto.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:19:01 -0800 (PST)
+X-Received: by 2002:ac8:3510:: with SMTP id y16mr8837483qtb.6.1578586740862;
+ Thu, 09 Jan 2020 08:19:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200109105443-mutt-send-email-mst@kernel.org>
+Date:   Thu, 9 Jan 2020 13:18:48 -0300
+X-Gmail-Original-Message-ID: <CAP9ODKo8UPbU+JR45T2rjJH3FefcWw=tS71EmjFzVyPMA_R7gg@mail.gmail.com>
+Message-ID: <CAP9ODKo8UPbU+JR45T2rjJH3FefcWw=tS71EmjFzVyPMA_R7gg@mail.gmail.com>
+Subject: RV1108G run-time detection
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:59:50AM -0500, Michael S. Tsirkin wrote:
-> On Thu, Jan 09, 2020 at 09:57:08AM -0500, Peter Xu wrote:
-> > Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
-> > (based on kvm/queue)
-> > 
-> > Please refer to either the previous cover letters, or documentation
-> > update in patch 12 for the big picture.
-> 
-> I would rather you pasted it here. There's no way to respond otherwise.
+Hi,
 
-Sure, will do in the next post.
+We would like to know if there is a way to distinguish between RV1108
+and RV1108G versions in run-time.
 
-> 
-> For something that's presumably an optimization, isn't there
-> some kind of testing that can be done to show the benefits?
-> What kind of gain was observed?
+The reason we are asking is because arch/arm/boot/dts/rv1108.dtsi
+defines the following operational points: 408, 600, 816, 1008 MHz, but
+the RV1108G version does not support 1GHz and its maximum operating
+frequency is 800MHz (not 816 MHz).
 
-Since the interface seems to settle soon, maybe it's time to work on
-the QEMU part so I can give some number.  It would be interesting to
-know the curves between dirty logging and dirty ring even for some
-small vms that have some workloads inside.
+In the i.MX SoCs we can read a fuse that indicates the "speed grading"
+of the chip and decide which operating points could be used for that
+particular version.
 
-> 
-> I know it's mostly relevant for huge VMs, but OTOH these
-> probably use huge pages.
+Is there such a mechanism in RV1108? Any suggestions to limiting the
+RV1108G operational point at 800MHz?
 
-Yes huge VMs could benefit more, especially if the dirty rate is not
-that high, I believe.  Though, could you elaborate on why huge pages
-are special here?
-
-Thanks,
+Thanks
 
 -- 
-Peter Xu
-
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9 9981-7854          Mobile: +1 (347) 903-9750
