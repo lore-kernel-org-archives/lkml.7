@@ -2,112 +2,124 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2262AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D10C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43882067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xqx3KGA2"
+	by mail.kernel.org (Postfix) with ESMTP id 836E42067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgAIM4b (ORCPT
+        id S1729504AbgAIM5K convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:56:31 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44907 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgAIM4a (ORCPT
+        Thu, 9 Jan 2020 07:57:10 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:47059 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgAIM5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:56:30 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so7250778wrm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 04:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4ouFtmfEELWvJ13DB/hJHUscdWjOjJrZEj66Pak4s1Y=;
-        b=xqx3KGA2++yS7R7TG0QaX013kZuCurED29C3mgaK4YpOHQgMXTh3VzeqcYiZZP8Rib
-         NEHA0voQO6ezOb/WhLv5Sj32sc7JLUVaC4S33L6R3aJLCX8nI/GHgJ9X7t74o4LJxNTc
-         R1wYVKvmF+xykpBEnXE01+nf30lNxgY9Hs+3jQrE6g9aAMd4o/QbSAbpeFRTxi9w3Ozu
-         grHcFTufOto7YoQ0Uptj+Wlz4AU/462tVJ3PsyguagKTdQPzWH8wMGRh93Zgcd38Whne
-         Xk9KEOOUoIn75OGZtFnLRLo64y+OKD9efik9MkCtTSTVA3QfqpYT5zmvpQu9rVBjLQQ+
-         LfLA==
+        Thu, 9 Jan 2020 07:57:10 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 13so3860014oij.13;
+        Thu, 09 Jan 2020 04:57:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4ouFtmfEELWvJ13DB/hJHUscdWjOjJrZEj66Pak4s1Y=;
-        b=TSxUv0+spsazVm/2cD7/vY7GhdMsyjIxk1fyHNjxWBlDDE2eaeZIcbOURlOBhoSKQK
-         GGfpY5JHsxQsYdmA8PJ+dGhPdby+Sg7tKdP7eKQrUFJF/xpD+PhjgfC5UB6TeyW4AB7F
-         PD+SHYy8XDixun4A58YC9uykKDnLo+h9ywzUhMp/NTrXBF986JBMWLoRGdgC2tUotM03
-         K0vxeSe/lT7xu9G6jqBA8IW+OLo7L++5AbOPaleaciFSAdVOr9V8GQNV63TFeE9aMOaY
-         We0jnjT+8+v66tXWi+xew58Z8crL//vXcXoHh0vHhWEzogIZAhzqCryNzwW3jLKChYEZ
-         ZY4A==
-X-Gm-Message-State: APjAAAX6KtTf6Nqzo7UowNCQyn6xeVzt+U+woNrt9dWj8kUFw/JNubul
-        ToSoQzagfq0EIaQXwH5Dj4G3AA==
-X-Google-Smtp-Source: APXvYqyidWpQLwOtKY0+Wld9OKT8eLhNt7m1m0B1gGsx5ougaUpJZEQwCZEQtepaBG9XX3KOxu4f/A==
-X-Received: by 2002:a5d:6a52:: with SMTP id t18mr10371786wrw.391.1578574589653;
-        Thu, 09 Jan 2020 04:56:29 -0800 (PST)
-Received: from debian-brgl.home (amontpellier-652-1-53-230.w109-210.abo.wanadoo.fr. [109.210.44.230])
-        by smtp.gmail.com with ESMTPSA id f207sm3163471wme.9.2020.01.09.04.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 04:56:29 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] kconfig: fix an "implicit declaration of function" warning
-Date:   Thu,  9 Jan 2020 13:56:27 +0100
-Message-Id: <20200109125627.24654-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=39RtL8rk7bDV6g9PvKUtpmQ7zFMxOJOdNZ+12WIVKnY=;
+        b=h1XxKiBStXHpHoGM1c3e1YqFMdLu9BjUv5GwYB3oDS9oMRhi+aVVgj45Q++/tkiZ7T
+         LnI7UEH5iaWXxiRbodolJi0sidQguoubJREoJ9MQvjAOo7Yw4D2FZ1ql24U14iqCdNfj
+         oD6wz4QxbDWR2ocKdPK7pN8VxA0EQoKP70sNEL8xDsq+1873rhhDEm66UAniY3o4YR9k
+         /sELO9rmaxNJtEPY/56GxGQjX6Ia1CYNfaL+dY1Y30Z7x9Ucj4RJPRG1AQb56xSrgu/Z
+         JLupZa4PvRl2xyJss9mfJoKkO+uYT4JXhmnuhAGwMy0vYIRyXZ71aN61qbiGZGCQEIfe
+         oWCg==
+X-Gm-Message-State: APjAAAWnLJUswRdHPgTrNHObaOAUSSmQ9tOoBuUeErBfgP+bVpjeZ8kL
+        6O4mwmXEDaCWU9VCKnFnP94R4oLIV3vy54pcw8g=
+X-Google-Smtp-Source: APXvYqzXIeHRSEaojF1m+3afdoHrMEVdpGnWdqm+Ic8pQMZKUJ2siNc76OEtMGXSFfhO06nJEdD1sPQJKoj5PuXTjfg=
+X-Received: by 2002:a05:6808:292:: with SMTP id z18mr2863814oic.131.1578574629374;
+ Thu, 09 Jan 2020 04:57:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200108194520.3341-1-krzk@kernel.org>
+In-Reply-To: <20200108194520.3341-1-krzk@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 9 Jan 2020 13:56:58 +0100
+Message-ID: <CAMuHMdULhY=_GF2MsX-h_j=eLKL+2x3=YcgmFRsAy1_LUOdZ+g@mail.gmail.com>
+Subject: Re: [PATCH] sh: sh4a: Remove unused tmu3_device
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Krzysztof,
 
-strncasecmp() & strcasecmp() functions are declared in strings.h, not
-string.h. On most environments the former is implicitly included by
-the latter but on some setups, building menuconfig results in the
-following warning:
+On Wed, Jan 8, 2020 at 8:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> Remove left-over from previous cleanups to silence the warning:
+>
+>     arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
+>         warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 21 ---------------------
+>  1 file changed, 21 deletions(-)
+>
+> diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
+> index 4b0db8259e3d..22d1c38f742f 100644
+> --- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
+> +++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
+> @@ -229,27 +229,6 @@ static struct platform_device tmu2_device = {
+>         .num_resources  = ARRAY_SIZE(tmu2_resources),
+>  };
+>
+> -static struct sh_timer_config tmu3_platform_data = {
+> -       .channels_mask = 7,
+> -};
+> -
+> -static struct resource tmu3_resources[] = {
+> -       DEFINE_RES_MEM(0xffde0000, 0x2c),
+> -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
+> -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
+> -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
+> -};
+> -
+> -static struct platform_device tmu3_device = {
+> -       .name           = "sh-tmu",
+> -       .id             = 3,
+> -       .dev = {
+> -               .platform_data  = &tmu3_platform_data,
+> -       },
+> -       .resource       = tmu3_resources,
+> -       .num_resources  = ARRAY_SIZE(tmu3_resources),
+> -};
+> -
+>  static const struct sh_dmae_channel dmac0_channels[] = {
+>         {
+>                 .offset = 0,
 
-  HOSTCC  scripts/kconfig/mconf.o
-scripts/kconfig/mconf.c: In function ‘search_conf’:
-scripts/kconfig/mconf.c:423:6: warning: implicit declaration of function ‘strncasecmp’ [-Wimplicit-function-declaration]
-  if (strncasecmp(dialog_input_result, CONFIG_, strlen(CONFIG_)) == 0)
-      ^~~~~~~~~~~
-scripts/kconfig/mconf.c: In function ‘main’:
-scripts/kconfig/mconf.c:1021:8: warning: implicit declaration of function ‘strcasecmp’ [-Wimplicit-function-declaration]
-   if (!strcasecmp(mode, "single_menu"))
-        ^~~~~~~~~~
+Looks like the previous cleanup accidentally removed one too many tmu
+device pointers.  The old style used one device per timer, the new style
+uses one device per 3 timers, i.e. 4 devices for 12 timers.
 
-Fix it by explicitly including strings.h.
+So the correct fix would be to re-add "&tmu3_device" to
+sh7786_early_devices[].
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- scripts/kconfig/mconf.c | 1 +
- 1 file changed, 1 insertion(+)
+Fixes: 1399c195ef5009bf ("sh: Switch to new style TMU device")
 
-diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
-index 49c26ea9dd98..4063dbc1b927 100644
---- a/scripts/kconfig/mconf.c
-+++ b/scripts/kconfig/mconf.c
-@@ -15,6 +15,7 @@
- #include <stdarg.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <strings.h>
- #include <signal.h>
- #include <unistd.h>
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
