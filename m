@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90D2C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170C2C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EC020721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E192077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="rLpUWQAM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZWULgXyt"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="B0hpeXFP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kSFtAj6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgAIGCU (ORCPT
+        id S1728053AbgAIGCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 01:02:20 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:37905 "EHLO
+        Thu, 9 Jan 2020 01:02:36 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:56123 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725899AbgAIGCU (ORCPT
+        by vger.kernel.org with ESMTP id S1725899AbgAIGCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 01:02:20 -0500
+        Thu, 9 Jan 2020 01:02:35 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E326721B2C;
-        Thu,  9 Jan 2020 01:02:18 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5323321BF7;
+        Thu,  9 Jan 2020 01:02:34 -0500 (EST)
 Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 09 Jan 2020 01:02:18 -0500
+  by compute4.internal (MEProxy); Thu, 09 Jan 2020 01:02:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
         mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=UdhEr+iyYXu1wWyUc29O8TnTBKmF7NO
-        gM7/OFTNWI8g=; b=rLpUWQAMg9zjllbFbX0l6+mEXKvU22ZzreE0ZBYGm18gMes
-        XwZ1n6ZNqHZAKpOFj282xyfOdS3hMuuNsQn6lfFFojiw+JAjPiMr9z628Osvcf5V
-        GCqSYHPlB5Sl5y08Dy7AEL4F1EiuYa+s0rW6x0GqHi3scCYXRFVjUPbT0qn2U4Uz
-        G+JzFKLP8j1CuU/OskDKD8Vz1jNc2r4rfMQ/myPWjfhNctVzknczuUgLsqeuW0m0
-        2gTlYgPoj2TL6ZM/t6ETl8Eh1adVJJsyhCyqjzih/DFEw79Ug3pMx+q4Q+sez7iF
-        XVGaQan8V66IiZutbGJZfkhMTiyLXMd2K+bP6qA==
+        :subject:content-type; s=fm1; bh=ppk6M6O6bxPK+JewvhdNsOJ1iYuNVFY
+        lJvw1PiZgh8Q=; b=B0hpeXFPAmqPgfvxlO1xgdGc9W4ovITpbnU0RsbA1Z5pNPQ
+        7dRZ1UCJQLxqtc3EsCctkZQxpbJqJ4tpBEypoOYDQ0T2Z+8z5gqvzoHdnsBiG8Yd
+        lYx3Ev7jmZWNzbBi0SAZeP6U+P9qnqzJ1dgPTysjnIYbPNfFNmbyRPwWP82oHAxq
+        WYjiGLwrBCKaCZpqNzXFqN9Z4tgiW7gjthsaxc3ZJTgKeN3AIyULZzOGxPWEkWmm
+        vFM5GM35nCJZ6JakcmAnOV/d25qXCYETYgLCPuR7TbByCOehK9X1YZv0Y10X1GLA
+        xXcE+4qBM9kY6Rx7u2ixfbOCmAnFrWL3BDYzbWw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=UdhEr+
-        iyYXu1wWyUc29O8TnTBKmF7NOgM7/OFTNWI8g=; b=ZWULgXyte3UDblGEVjFP83
-        H7pmqVzxZ5Bjj3BYaiwHr+Ocp93CnJnhV+f3Hnno44amS28k+ofMS1Cx+B5kPIGZ
-        xp05MgyJ+I7XUFTizStJjwgRmgky8rKDQWWtVDWIDbtD53VPwBDiv6NOBytTbbUH
-        vQvFbT07gWvV9LA+dEPoPjK04IRiwtzzC6UhcTzf4eQjCATi2mnrLwe/bTw8KxB3
-        7Bp6Rc3PF8c2ZyrocnFNa89zxa8M9rlkybrad9MWdCdJsmiKK1SG+Bh9mzDPrkeA
-        RVnufIFWZyVtwcUUlT2OukIc7wU5HW2rRm+4/w84YsdZAZll83/Zk+CIEf5QXVtQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ppk6M6
+        O6bxPK+JewvhdNsOJ1iYuNVFYlJvw1PiZgh8Q=; b=kSFtAj6j6HtWpkHKTAI8Cq
+        7C57n/SAS3iEbp0KB4iJTYbrNNIEbEJBkFuGmHbAUYiWrVRFvKoePLlmYkuxU39C
+        Coth+kwtf/ieLc823Fu2QNgnnTNjLtvLPYJmFEI03AwOfH6MLCxYeskxVLkZNqvC
+        FW3QC5vgaTpc6QZXKDJPwyyL2LRen6eEiJIrDOkKwR3R9YABwh/0P8qB/pCBdusT
+        NifP7oxIv41Lfovjm+90xQ5W2DSsWebAHY+FUaAiRLYxRnxIjvAjn+6njrlD2FKT
+        BlDH9cjSLUD+fWOSZIaRDVIdDfoaRs4YOIGk0x8qOhTmg6Jbt2BCyFlZ8N+PKKYQ
         ==
-X-ME-Sender: <xms:6sEWXkYnFMnb33JNiq_p5QOLzvKXqGsJ3YMmVBWtJaw_gc02k4hLPA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehledgkedvucetufdoteggodetrfdotf
+X-ME-Sender: <xms:-sEWXjpUgwtbXt30ED_DEhtYGbopYmtI0LvMsVX-S2QogaiIgk2OEw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehledgkeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
     rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
     grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
     rhfuihiivgeptd
-X-ME-Proxy: <xmx:6sEWXvQbSMIOyc6STMnCnNkXJm3drNIFz8yrduvuk5OPMfSzjNTyxQ>
-    <xmx:6sEWXsQlmTVlq5-4Dt9JKUfhhOUHQNq2pBSmMQwfYsrX3Hg3z1LR4A>
-    <xmx:6sEWXq3jgxqim-eSCFAWa2Lx75yxsolvOE-mSYxW66IEy7hipbQ7kA>
-    <xmx:6sEWXjoD3DzI_1heMWWewmrPWDwOnZ2kcWH6PXqXWb3xt4uwDrJpGQ>
+X-ME-Proxy: <xmx:-sEWXrDvjiy4rSKux5RzcKiWm9srq7NdIO6zuaprIyQ4_5aQ2HAujA>
+    <xmx:-sEWXsMiVs-QJC4e1jEJuVJ_0N3RYdihXR0rCalhppO7fa-CRkOtug>
+    <xmx:-sEWXqmBdnKpthE31yp8pbtEJ1NglT8E3Uds2OzOIzMjZIEVBZKRbQ>
+    <xmx:-sEWXuf9_HayNTQAZa2x6ywxPcOJampgeOG5SU4vf1qMIYCuzOFIDQ>
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id E69FEE00A1; Thu,  9 Jan 2020 01:02:16 -0500 (EST)
+        id 281D0E00A2; Thu,  9 Jan 2020 01:02:34 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.1.7-740-g7d9d84e-fmstable-20200109v1
 Mime-Version: 1.0
-Message-Id: <406ac609-129e-4e11-8654-e4a48d8f72f8@www.fastmail.com>
-In-Reply-To: <1577993276-2184-12-git-send-email-eajames@linux.ibm.com>
+Message-Id: <fa16ef12-b301-4a1d-aaf4-ee8fcd0f398e@www.fastmail.com>
+In-Reply-To: <1577993276-2184-13-git-send-email-eajames@linux.ibm.com>
 References: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
- <1577993276-2184-12-git-send-email-eajames@linux.ibm.com>
-Date:   Thu, 09 Jan 2020 16:34:14 +1030
+ <1577993276-2184-13-git-send-email-eajames@linux.ibm.com>
+Date:   Thu, 09 Jan 2020 16:34:32 +1030
 From:   "Andrew Jeffery" <andrew@aj.id.au>
 To:     "Eddie James" <eajames@linux.ibm.com>,
         linux-aspeed@lists.ozlabs.org
@@ -79,8 +79,7 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         "Marc Zyngier" <maz@kernel.org>,
         "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
         "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v4_11/12]_ARM:_dts:_aspeed:_witherspoon:_Enable_XDM?=
- =?UTF-8?Q?A_Engine?=
+Subject: Re: [PATCH v4 12/12] ARM: dts: aspeed: tacoma: Enable XDMA engine
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -94,21 +93,23 @@ On Fri, 3 Jan 2020, at 05:57, Eddie James wrote:
 > 
 > Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
->  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 5 +++++
+>  arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 5 +++++
 >  1 file changed, 5 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> index 569dad93e162..1a28b86f00ea 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> @@ -658,4 +658,9 @@ &video {
->  	memory-region = <&video_engine_memory>;
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> index f02de4ab058c..2e5cd51db7c2 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+> @@ -1193,3 +1193,8 @@ &pinctrl {
+>  	pinctrl-0 = <&pinctrl_lpc_default>,
+>  		    <&pinctrl_lsirq_default>;
 >  };
->  
+> +
 > +&xdma {
 > +	status = "okay";
-> +	memory = <0x9f000000 0x01000000>;
+> +	memory = <0xbf800000 0x00800000>;
+> +};
 
 Can you please add a comment about how the memory range was
 derived?
