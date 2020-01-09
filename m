@@ -2,129 +2,146 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15389C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524F4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8254206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IpkS1SiF"
+	by mail.kernel.org (Postfix) with ESMTP id 268E920721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578591090;
+	bh=kAELsAus/a9uHAqw2aOdcjqraa5dn308eu6P5pHzB1Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=tp6CVvc/1xf66kiuUQaFdkTyUP5CfxFDEoCGetMvwZpTYK2gRI0oFCegS3ql5wq21
+	 ZqFttLX+CGwWhtcTtuzvbNp1yuJ/I4Rj5RGLQYqZspcGveMrPxpvwvaVX5NMZcT/Ip
+	 ArTxsWZheyVWcRQS8H1UAVzYZzNw8gAT4REhq6HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgAIRay (ORCPT
+        id S1731787AbgAIRb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:30:54 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:32904 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgAIRay (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:30:54 -0500
-Received: by mail-il1-f195.google.com with SMTP id v15so6398308iln.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:30:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twOuUpbQw49zp8/G9wABCGIBfFXQkj0331JfE2v3Btw=;
-        b=IpkS1SiFTZyaeAz8LcGQFXVLSgaAWLn2D3zMJu8CW/ezuu9PLFx7/bjfx7abwWmzLe
-         mH8tW0Vw5fBvvRp2ws6Un6gJxCwJoNsZZD2fl+HDzBFlm7L/9Zqd5PNw3slGZlzEiMtR
-         cbe1AKq7Jcc1WxWM3FvvImDCU5swQxFhx+kks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twOuUpbQw49zp8/G9wABCGIBfFXQkj0331JfE2v3Btw=;
-        b=bBx4eqlFHVXrFg53XKHlcYUwXA8soqdepSkJzvYSrmywvX3dvnb6LtFeZhhGcZl3tY
-         PdkobAzG/6A4xtLiJJa2OXbGAxI4uuZ9Rn9RDILFVWeZldseZtA9Byb0yey7lHLiVwoj
-         vawNh1GCt3ZZcVQOMN05uR5yhoTyN9kxJ86ZviKImq2zw8DEa3kR1G9eCqi0SjZoyFyg
-         93tovFwe3u8gOVF4XF+FdZqIJDdFO0kcTfprE5sp7nRREHf31HNxcxA09z3/yllvH6fK
-         I2yFL5KJ61bhdC2TkWVvc5bJthSOMWyX33QrYrK2pUUMsGGiuS+agKDePdaI/wVgo2TH
-         lsoA==
-X-Gm-Message-State: APjAAAUESJ3/RHSqgLTbF1+l9qGKWixXuFZAl9633MI8Lo4I2y6qSwVo
-        tBLIKXXBT6BGw1r2wwh9+TOT6Q==
-X-Google-Smtp-Source: APXvYqw6m3bMUlK1F5HGHoGIdsjw0E6YGiTW702ZHqWgdcajvP8XZ0JWU20bQgKzUYIiXjzvLM0l2A==
-X-Received: by 2002:a92:911b:: with SMTP id t27mr9645184ild.142.1578591053869;
-        Thu, 09 Jan 2020 09:30:53 -0800 (PST)
-Received: from chromium.org ([2620:15c:183:200:5d69:b29f:8fd8:6f45])
-        by smtp.gmail.com with ESMTPSA id b1sm2192114ilc.33.2020.01.09.09.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 09:30:53 -0800 (PST)
-Date:   Thu, 9 Jan 2020 10:30:51 -0700
-From:   Daniel Campello <campello@chromium.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Fix unregistration order
-Message-ID: <20200109173051.GA78461@chromium.org>
-References: <20200108093459.2.Ia8f971d42dcf892541a806b906414ddfbe4fea36@changeid>
- <9cf68a0b-ed58-168a-4c04-753a7a9f55bd@collabora.com>
+        Thu, 9 Jan 2020 12:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgAIRb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:31:28 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E551D206ED;
+        Thu,  9 Jan 2020 17:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578591088;
+        bh=kAELsAus/a9uHAqw2aOdcjqraa5dn308eu6P5pHzB1Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=okV7QnL7vCzfcUCT1UIXSsGC75JmDLCt3ZNyzEhGn4w9Keg7+4Q1hgpcF6Rks4Ycn
+         UgEIEo+JoWHgEb0ecWjfGJuWedMJnJlmgZ6PlI8DmayJX9hWIIjcoQ9ELJlKqWnDTW
+         2dKjJdh3KYMOkxEsKzKwUaYGVoDWJAw3LB1XvYnY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 94605352272E; Thu,  9 Jan 2020 09:31:27 -0800 (PST)
+Date:   Thu, 9 Jan 2020 09:31:27 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -rcu 0/2] kcsan: Improvements to reporting
+Message-ID: <20200109173127.GU13449@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200109152322.104466-1-elver@google.com>
+ <20200109162739.GS13449@paulmck-ThinkPad-P72>
+ <CANpmjNOR4oT+yuGsjajMjWduKjQOGg9Ybd97L2jwY2ZJN8hgqg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9cf68a0b-ed58-168a-4c04-753a7a9f55bd@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CANpmjNOR4oT+yuGsjajMjWduKjQOGg9Ybd97L2jwY2ZJN8hgqg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
-
-Thanks for helping get this in.
-
-On Thu, Jan 09, 2020 at 10:06:37AM +0100, Enric Balletbo i Serra wrote:
-> Hi Daniel,
->
-> Many thanks for the patch, some comments below.
->
-> On 8/1/20 17:35, Daniel Campello wrote:
-> > Fixes the unregistration order on the Wilco EC core driver to follow the
-> > christmas tree pattern.
+On Thu, Jan 09, 2020 at 06:03:39PM +0100, Marco Elver wrote:
+> On Thu, 9 Jan 2020 at 17:27, Paul E. McKenney <paulmck@kernel.org> wrote:
 > >
->
-> It is logical to cleanup in remove's function in reverse order to probe, but
-> that's not related to the Christmas tree pattern. I changed the commit
-> description and queued for the autobuilders to play with. If all goes well will
-> appear in chrome-platform-5.5
->
-I got this confused. Thanks for pointing it out.
->
-> > Signed-off-by: Daniel Campello <campello@chromium.org>
->
-> Is this patch fixing an actual issue?
->
-No issue, just style cleanup.
->
+> > On Thu, Jan 09, 2020 at 04:23:20PM +0100, Marco Elver wrote:
+> > > Improvements to KCSAN data race reporting:
+> > > 1. Show if access is marked (*_ONCE, atomic, etc.).
+> > > 2. Rate limit reporting to avoid spamming console.
+> > >
+> > > Marco Elver (2):
+> > >   kcsan: Show full access type in report
+> > >   kcsan: Rate-limit reporting per data races
+> >
+> > Queued and pushed, thank you!  I edited the commit logs a bit, so could
+> > you please check to make sure that I didn't mess anything up?
+> 
+> Looks good to me, thank you.
+> 
+> > At some point, boot-time-allocated per-CPU arrays might be needed to
+> > avoid contention on large systems, but one step at a time.  ;-)
+> 
+> I certainly hope the rate of fixing/avoiding data races will not be
+> eclipsed by the rate at which new ones are introduced. :-)
+
+Me too!
+
+However, on a large system, duplicate reports might happen quite
+frequently, which might cause slowdowns given the single global
+array.  Or maybe not -- I guess we will find out soon enough. ;-)
+
+But I must confess that I am missing how concurrent access to the
+report_times[] array is handled.  I would have expected that
+rate_limit_report() would choose a random starting entry and
+search circularly.  And I would expect that the code at the end
+of that function would instead look something like this:
+
+	if (ktime_before(oldtime, invalid_before) &&
+	    cmpxchg(&use_entry->time, oldtime, now) == oldtime) {
+		use_entry->frame1 = frame1;
+		use_entry->frame2 = frame2;
+	} else {
+		// Too bad, next duplicate report won't be suppressed.
+	}
+
+Where "oldtime" is captured from the entry during the scan, and from the
+first entry scanned.  This cmpxchg() approach is of course vulnerable
+to the ->frame1 and ->frame2 assignments taking more than three seconds
+(by default), but if that becomes a problem, a WARN_ON() could be added:
+
+	if (ktime_before(oldtime, invalid_before) &&
+	    cmpxchg(&use_entry->time, oldtime, now) == oldtime) {
+		use_entry->frame1 = frame1;
+		use_entry->frame2 = frame2;
+		WARN_ON_ONCE(use_entry->time != now);
+	} else {
+		// Too bad, next duplicate report won't be suppressed.
+	}
+
+So what am I missing here?
+
+							Thanx, Paul
+
 > Thanks,
->  Enric
->
-> > ---
+> -- Marco
+> 
+> >                                                         Thanx, Paul
 > >
-> >  drivers/platform/chrome/wilco_ec/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >  kernel/kcsan/core.c   |  15 +++--
+> > >  kernel/kcsan/kcsan.h  |   2 +-
+> > >  kernel/kcsan/report.c | 153 +++++++++++++++++++++++++++++++++++-------
+> > >  lib/Kconfig.kcsan     |  10 +++
+> > >  4 files changed, 148 insertions(+), 32 deletions(-)
+> > >
+> > > --
+> > > 2.25.0.rc1.283.g88dfdc4193-goog
+> > >
 > >
-> > diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
-> > index 5210c357feefd4..2d5f027d8770f8 100644
-> > --- a/drivers/platform/chrome/wilco_ec/core.c
-> > +++ b/drivers/platform/chrome/wilco_ec/core.c
-> > @@ -137,9 +137,9 @@ static int wilco_ec_remove(struct platform_device *pdev)
-> >  {
-> >  	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
-> >
-> > +	platform_device_unregister(ec->telem_pdev);
-> >  	platform_device_unregister(ec->charger_pdev);
-> >  	wilco_ec_remove_sysfs(ec);
-> > -	platform_device_unregister(ec->telem_pdev);
-> >  	platform_device_unregister(ec->rtc_pdev);
-> >  	if (ec->debugfs_pdev)
-> >  		platform_device_unregister(ec->debugfs_pdev);
 > > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
+> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200109162739.GS13449%40paulmck-ThinkPad-P72.
