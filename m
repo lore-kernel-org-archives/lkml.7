@@ -2,93 +2,106 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45751C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60316206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B85B206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgAIBKl (ORCPT
+        id S1727752AbgAIBOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:10:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36584 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgAIBKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:10:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D9118AAA6;
-        Thu,  9 Jan 2020 01:10:38 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 7D357DA791; Thu,  9 Jan 2020 02:10:26 +0100 (CET)
-Date:   Thu, 9 Jan 2020 02:10:25 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
- compression
-Message-ID: <20200109011025.GM3929@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200107143058.GU3929@twin.jikos.cz>
- <20200108105103.29028-1-zaslonko@linux.ibm.com>
- <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
- <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
+        Wed, 8 Jan 2020 20:14:24 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:45890 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726654AbgAIBOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:14:23 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipMOz-0008Oi-J2; Thu, 09 Jan 2020 01:14:21 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ipMOz-007fLg-5i; Thu, 09 Jan 2020 01:14:21 +0000
+Message-ID: <4f30b4b46b24a498fca7c4b540bc1723c9ff569f.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 00/63] 3.16.81-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Thu, 09 Jan 2020 01:14:15 +0000
+In-Reply-To: <20200108225224.GA29712@roeck-us.net>
+References: <lsq.1578512578.117275639@decadent.org.uk>
+         <20200108225224.GA29712@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-gAE8Rj3J3DtYeniKFiiG"
+User-Agent: Evolution 3.34.1-2+b1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 07:48:31PM +0100, Zaslonko Mikhail wrote:
-> >> +        } else if (workspace->strm.avail_out == 0) {
-> >> +            /* get another page for the stream end */
-> >> +            kunmap(out_page);
-> >> +            if (nr_pages == nr_dest_pages) {
-> >> +                out_page = NULL;
-> >> +                ret = -E2BIG;
-> >> +                goto out;
-> >> +            }
-> >> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
-> >> +            if (out_page == NULL) {
-> >> +                ret = -ENOMEM;
-> >> +                goto out;
-> >> +            }
-> > 
-> > Do we need zlib_deflateEnd() for the above error cases?  Thanks,
-> 
-> The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
-> -ENOMEM cases, so I stick to the same logic.
-> Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
-> memory, in the kernel it doesn't do much apart from setting the return 
-> code (since all the memory allocations for kernel zlib are performed in advance).
 
-Agreed, deflateEnd is not necessary in the error cases.
+--=-gAE8Rj3J3DtYeniKFiiG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2020-01-08 at 14:52 -0800, Guenter Roeck wrote:
+> On Wed, Jan 08, 2020 at 07:42:58PM +0000, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.81 release.
+> > There are 63 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Fri Jan 10 20:00:00 UTC 2020.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 227 pass: 227 fail: 0
+
+Great, thanks for checking,
+
+Ben.
+
+--=20
+Ben Hutchings
+If God had intended Man to program,
+we'd have been born with serial I/O ports.
+
+
+
+--=-gAE8Rj3J3DtYeniKFiiG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl4WfmgACgkQ57/I7JWG
+EQl6aw/+I6sYnW50Y2lEb1yIKHKsebZY5CJnMgcfxnHdCEhJ+YPQxoixcz6AYVwY
+B+R+UDRzeBwEtJO0aEPKtEpZZisfG2zY5ul5V+CQjhjdosYLSV1yaTwiL9y5DyP9
+0AKu6u95xKn2r+GcgqSLCFzTQfjDyQX54pp/9XSZa98+C8NxIKCgROJqaNQVa5f0
+KucuRXMAaynBbIZUHKbDgE72JiEzx14AmmaHJ5QcPbpNSHg/3YhxB60Bv/Lh6Nl3
+mT1ISJ4rJWeTeEhJGnqn924ZDdOeVhvjI7WbtGsQgcitDfG3LdAMg1XM9ihfAeHl
+xOvlH26sDWsl/RJQXrZnr3+ZWJAXqEB2mpUMiCa4EBinUR4gDgC6hzib2O9A7Ssg
+eGoFQffurIrER/5VS5hzNRwl6XPaGE2rYujYidMaIxRlLBuPEiK2FtEBuS6Q4m3y
+IYZtrwge2q1gYQUz8ntsGfDqt/mCRk3ebSSwX5KQssXYWNFZVrkNo3e4whxHSkAX
+Fs5iT81pSz/+FvKsVIJl6XBBuqhaaYQIqjWHU/FHBy/HUPRNqV2SRYb5UPq9b8P9
+Tj8aaM40eUR74pptJvk3mL5FsPgrPmsx2PaRvWcq98HnQB5tvC+SF/f1KNN5MGpr
+60H5X4dFc8urZucA96VLhYkOvwU+6NJRSrRMn9wgHl/D1S9hVjU=
+=eQmm
+-----END PGP SIGNATURE-----
+
+--=-gAE8Rj3J3DtYeniKFiiG--
